@@ -36,14 +36,22 @@ namespace ARO.Vehicles
         public int Indicator { get; private set; }          // -1 left, 0 off, 1 right
         public bool HornActive { get; private set; }
         public bool OutOfFuel => fuelL <= 0f;
+        public bool BrakeLit { get; private set; }
+        public bool Reversing => CurrentGear == -1;
+        /// <summary>1 = dry. WeatherSystem lowers it in rain; applied to tyre friction.</summary>
+        public float GripMultiplier { get; set; } = 1f;
+        public float SuspensionJolt { get; private set; }   // 0..1 recent vertical impulse, for camera/audio
         public event Action<float> Damaged;                  // impact damage percent added
 
         Rigidbody _rb;
         IVehicleInput _input;
         VehicleInputState _state;
         float _lastKm;
+        float[] _baseFwd, _baseSide; float _appliedGrip = 1f;
+        float _lastVy;
 
         public void SetInput(IVehicleInput input) => _input = input;
+        public void SetLights(bool on) => LightsOn = on;
 
         void Awake()
         {
@@ -52,6 +60,32 @@ namespace ARO.Vehicles
             _rb.centerOfMass = centerOfMass != null ? transform.InverseTransformPoint(centerOfMass.position) : new Vector3(0, -0.6f, 0);
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
             if (_input == null) _input = GetComponent<IVehicleInput>();
+            CacheFriction();
+        }
+
+        void CacheFriction()
+        {
+            _baseFwd = new float[axles.Length * 2]; _baseSide = new float[axles.Length * 2];
+            for (int i = 0; i < axles.Length; i++)
+            {
+                _baseFwd[i * 2] = axles[i].left.forwardFriction.stiffness; _baseFwd[i * 2 + 1] = axles[i].right.forwardFriction.stiffness;
+                _baseSide[i * 2] = axles[i].left.sidewaysFriction.stiffness; _baseSide[i * 2 + 1] = axles[i].right.sidewaysFriction.stiffness;
+            }
+        }
+
+        void ApplyGrip(float g)
+        {
+            _appliedGrip = g;
+            for (int i = 0; i < axles.Length; i++)
+            {
+                SetStiff(axles[i].left, _baseFwd[i * 2] * g, _baseSide[i * 2] * g);
+                SetStiff(axles[i].right, _baseFwd[i * 2 + 1] * g, _baseSide[i * 2 + 1] * g);
+            }
+        }
+        static void SetStiff(WheelCollider w, float fwd, float side)
+        {
+            var f = w.forwardFriction; f.stiffness = fwd; w.forwardFriction = f;
+            var sd = w.sidewaysFriction; sd.stiffness = side; w.sidewaysFriction = sd;
         }
 
         void Update()
@@ -69,6 +103,8 @@ namespace ARO.Vehicles
         {
             if (definition == null) return;
             var st = definition.stats;
+            if (!Mathf.Approximately(_appliedGrip, GripMultiplier)) ApplyGrip(GripMultiplier);
+            float vy = _rb.linearVelocity.y; SuspensionJolt = Mathf.Lerp(SuspensionJolt, Mathf.Clamp01(Mathf.Abs(vy - _lastVy) * 4f), 0.3f); _lastVy = vy;
             float forwardSpeed = Vector3.Dot(_rb.linearVelocity, transform.forward);
             SpeedKmh = Mathf.Abs(forwardSpeed) * 3.6f;
 
@@ -104,6 +140,7 @@ namespace ARO.Vehicles
                 : throttle * st.torqueNm * rpmFactor * gearRatio * st.finalDrive / Mathf.Max(driven, 1);
 
             // Steering reduces with speed so a truck does not flip at 100 km/h.
+            BrakeLit = brake > 0.05f || _state.Handbrake;
             float steerAngle = _state.Steer * st.maxSteerDeg * Mathf.Lerp(1f, 0.25f, SpeedKmh / definition.maxSpeedKmh);
             float brakeTorque = brake * st.brakeTorqueNm * 0.5f;
             float handbrake = _state.Handbrake ? st.brakeTorqueNm : 0f;

@@ -33,6 +33,15 @@ namespace ARO.Game
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
             new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud);
 
+            // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
+            Light sun = null;
+            foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }
+            var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
+            var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
+            weather.timeOfDay = tod; weather.roadMaterials = new[] { roadGood, roadWorn, roadDamaged };
+            drive.VehicleSpawned += v => { weather.vehicle = v.transform; v.SetLights(tod.IsNight); };
+            tod.NightChanged += night => { if (drive.Vehicle != null) drive.Vehicle.SetLights(night); };
+
             // Menu backdrop camera position: above the start of the route.
             var n0 = route.nodes[0].position; streamer.target = new GameObject("MenuFocus").transform; streamer.target.position = n0;
             Camera.main.transform.position = n0 + new Vector3(-20, 12, -30); Camera.main.transform.LookAt(n0 + Vector3.up * 3);

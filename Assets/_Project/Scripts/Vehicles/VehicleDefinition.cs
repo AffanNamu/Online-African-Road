@@ -39,6 +39,11 @@ namespace ARO.Vehicles
         public float downshiftRpm = 1400f;
         public VehicleStats stats = new VehicleStats();
 
+        [Header("Visuals")]
+        [Tooltip("Production model prefab with a VehicleRig. When empty, a primitive placeholder is built and a warning is logged.")]
+        public GameObject visualPrefab;
+        public float rainGripPenalty = 0.35f;   // fraction of grip lost in full rain
+
         /// <summary>Overlay backend `stats` json onto this definition (runtime instance only).</summary>
         public void ApplyBackendStats(string statsJson)
         {

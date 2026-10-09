@@ -34,6 +34,7 @@ namespace ARO.Game
         GameObject _markerGo; bool _busy; float _startOdo;
         string _vehicleId;
         public System.Action<CompleteJobResult> JobCompleted;
+        public System.Action<VehicleController> VehicleSpawned;
 
         public void Init(GameServices svc, RouteDefinition route, Dictionary<string, VehicleDefinition> defs,
                          Material body, Material wheel, Material marker, ChunkStreamer streamer)
@@ -50,10 +51,12 @@ namespace ARO.Game
             var n0 = _route.nodes[0].position;
             var dir = (_route.nodes[1].position - n0).normalized;
             Vehicle = TruckFactory.Create(def, n0 + Vector3.up * 1.5f, Quaternion.LookRotation(dir), _body, _wheel);
+            if (Vehicle == null) { Say("Vehicle model failed to load.", 8f); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             _vehicleId = owned.id;
             Cam.target = Vehicle.transform; Streamer.target = Vehicle.transform; Streamer.route = _route;
             Active = true; Time.timeScale = 1f;
+            VehicleSpawned?.Invoke(Vehicle);
         }
 
         public void Pause(bool paused) { Active = !paused; Time.timeScale = paused ? 0f : 1f; }
