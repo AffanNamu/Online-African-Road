@@ -1,0 +1,1 @@
+{ "name": "ARO.Input", "rootNamespace": "ARO.Input", "references": ["ARO.Core","Unity.InputSystem"], "autoReferenced": true }

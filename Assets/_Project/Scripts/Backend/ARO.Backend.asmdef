@@ -1,0 +1,1 @@
+{ "name": "ARO.Backend", "rootNamespace": "ARO.Backend", "references": ["ARO.Core"], "autoReferenced": true }

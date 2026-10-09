@@ -1,0 +1,4 @@
+{ "name": "ARO.Tests.EditMode", "rootNamespace": "ARO.Tests",
+  "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","ARO.World","UnityEngine.TestRunner","UnityEditor.TestRunner"],
+  "includePlatforms": ["Editor"], "optionalUnityReferences": ["TestAssemblies"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"], "autoReferenced": false }

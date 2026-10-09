@@ -1,0 +1,1 @@
+{ "name": "ARO.World", "rootNamespace": "ARO.World", "references": ["ARO.Core"], "autoReferenced": true }

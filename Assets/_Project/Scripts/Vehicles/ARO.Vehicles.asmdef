@@ -1,0 +1,1 @@
+{ "name": "ARO.Vehicles", "rootNamespace": "ARO.Vehicles", "references": ["ARO.Core","ARO.Input"], "autoReferenced": true }
