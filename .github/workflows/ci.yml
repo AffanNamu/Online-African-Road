@@ -17,7 +17,10 @@ jobs:
     env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
-      - run: ./supabase/tests/run.sh
+      - name: Rule, security-matrix and concurrency tests
+        run: ./supabase/tests/run.sh
+      - name: Mutation test (every protection must be caught by a test)
+        run: python3 supabase/tests/mutation.py
 
   unity:
     name: Unity tests + WebGL build
