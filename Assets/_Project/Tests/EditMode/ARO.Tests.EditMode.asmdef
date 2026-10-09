@@ -1,4 +1,10 @@
-{ "name": "ARO.Tests.EditMode", "rootNamespace": "ARO.Tests",
-  "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","ARO.World","UnityEngine.TestRunner","UnityEditor.TestRunner"],
-  "includePlatforms": ["Editor"], "optionalUnityReferences": ["TestAssemblies"],
-  "defineConstraints": ["UNITY_INCLUDE_TESTS"], "autoReferenced": false }
+{
+  "name": "ARO.Tests.EditMode",
+  "rootNamespace": "ARO.Tests",
+  "references": ["ARO.Core","ARO.NetCore","ARO.Vehicles","ARO.Backend","ARO.World","UnityEngine.TestRunner","UnityEditor.TestRunner"],
+  "includePlatforms": ["Editor"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "autoReferenced": false,
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll"]
+}
