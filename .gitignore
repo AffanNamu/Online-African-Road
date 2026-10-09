@@ -24,3 +24,6 @@ supabase/.branches/
 .DS_Store
 .idea/
 .vscode/
+
+# Keep hand-written test projects (Unity-generated csproj stay ignored)
+!tests/**/*.csproj
