@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ARO.Backend;
+using ARO.Multiplayer;
 using ARO.Vehicles;
 using ARO.World;
 using UnityEngine;
@@ -30,6 +31,11 @@ namespace ARO.Game
 
             var drive = new GameObject("DrivingSession").AddComponent<DrivingSession>();
             drive.Init(svc, route, defs, truckBody, truckWheel, marker, streamer);
+            // Networked puppets are built from the same definitions/materials as the local vehicle.
+            NetVisualContext.Definitions = defs; NetVisualContext.BodyMaterial = truckBody; NetVisualContext.WheelMaterial = truckWheel;
+            NetVisualContext.LocalVehicle = () => drive.Vehicle;
+            NetVisualContext.LocalName = () => svc.Profile != null ? svc.Profile.display_name : "Driver";
+            NetVisualContext.LocalVehicleDefinitionId = () => drive.Vehicle != null && drive.Vehicle.definition != null ? drive.Vehicle.definition.id : "truck_light_01";
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
             new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud);
 

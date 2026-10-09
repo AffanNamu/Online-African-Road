@@ -1,5 +1,6 @@
 using ARO.Backend;
 using ARO.Jobs;
+using ARO.Multiplayer;
 using UnityEngine;
 
 namespace ARO.Game
@@ -10,6 +11,8 @@ namespace ARO.Game
         public BackendConfig Config { get; }
         public SupabaseClient Api { get; }
         public JobService Jobs { get; }
+        public SessionService Session { get; }
+        public ConvoyService Convoys { get; }
         public ProfileDto Profile;
         public WalletDto Wallet;
         public OwnedVehicleDto[] Vehicles = new OwnedVehicleDto[0];
@@ -18,6 +21,7 @@ namespace ARO.Game
         public GameServices(BackendConfig cfg)
         {
             Config = cfg; Api = new SupabaseClient(cfg); Jobs = new JobService(Api);
+            Session = new SessionService(); Convoys = new ConvoyService(Api, Session);
         }
 
         public async System.Threading.Tasks.Task<string> RefreshPlayer()

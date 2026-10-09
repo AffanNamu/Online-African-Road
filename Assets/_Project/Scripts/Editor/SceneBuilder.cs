@@ -1,5 +1,9 @@
 using System.IO;
 using ARO.Game;
+using ARO.Multiplayer;
+using Unity.Netcode;
+using Unity.Netcode.Components;
+using Unity.Netcode.Transports.UTP;
 using ARO.Vehicles;
 using ARO.World;
 using UnityEditor;
@@ -67,6 +71,8 @@ namespace ARO.Editor
             boot.roadGood = mats.good; boot.roadWorn = mats.worn; boot.roadDamaged = mats.damaged; boot.ground = mats.ground;
             boot.truckBody = mats.body; boot.truckWheel = mats.wheel; boot.marker = mats.marker; boot.buildingMats = buildings;
 
+            AddNetworking();
+
             string path = $"{Root}/Scenes/Bootstrap.unity";
             EditorSceneManager.SaveScene(scene, path);
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(path, true) };
@@ -75,6 +81,32 @@ namespace ARO.Editor
             if (Resources.Load("BackendConfig") == null)
                 Debug.LogWarning("[ARO] Create Resources/BackendConfig (Create > African Roads > Backend Config) and fill in your Supabase URL + anon key.");
             Debug.Log("[ARO] Bootstrap scene built: " + path);
+        }
+
+        /// <summary>
+        /// NetworkManager (Unity Transport) + the NetworkPlayer prefab. The Multiplayer Services SDK starts/stops this
+        /// NetworkManager when a Relay session is created/joined, so it must exist in the scene.
+        /// </summary>
+        static void AddNetworking()
+        {
+            Directory.CreateDirectory($"{Root}/Prefabs");
+            var go = new GameObject("NetworkPlayer");
+            go.AddComponent<NetworkObject>();
+            var nt = go.AddComponent<OwnerNetworkTransform>(); nt.Interpolate = true;
+            nt.SyncScaleX = nt.SyncScaleY = nt.SyncScaleZ = false;
+            go.AddComponent<NetworkVehicle>();
+            var prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{Root}/Prefabs/NetworkPlayer.prefab");
+            Object.DestroyImmediate(go);
+
+            var list = AssetDatabase.LoadAssetAtPath<NetworkPrefabsList>($"{Root}/Prefabs/NetworkPrefabs.asset");
+            if (list == null) { list = ScriptableObject.CreateInstance<NetworkPrefabsList>(); AssetDatabase.CreateAsset(list, $"{Root}/Prefabs/NetworkPrefabs.asset"); }
+            list.Remove(new NetworkPrefab { Prefab = prefab }); list.Add(new NetworkPrefab { Prefab = prefab });
+            EditorUtility.SetDirty(list);
+
+            var nmGo = new GameObject("NetworkManager");
+            var nm = nmGo.AddComponent<NetworkManager>(); var utp = nmGo.AddComponent<UnityTransport>();
+            nm.NetworkConfig = new NetworkConfig { NetworkTransport = utp, PlayerPrefab = prefab, EnableSceneManagement = false, ConnectionApproval = false };
+            nm.NetworkConfig.Prefabs.NetworkPrefabsLists.Add(list);
         }
 
         /// <summary>Creates and assigns a URP pipeline asset if the project has none (so headless CI renders with URP shaders).</summary>

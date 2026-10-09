@@ -53,13 +53,36 @@ namespace ARO.Vehicles
         public void SetInput(IVehicleInput input) => _input = input;
         public void SetLights(bool on) => LightsOn = on;
 
+        /// <summary>True for a networked puppet: physics and input are disabled, state comes from the owner.</summary>
+        public bool IsRemote { get; private set; }
+
+        /// <summary>Turn this vehicle into a non-colliding visual puppet (other players are ghosts for now).</summary>
+        public void MakeRemote()
+        {
+            IsRemote = true;
+            if (_rb == null) _rb = GetComponent<Rigidbody>();
+            _rb.isKinematic = true;
+            foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false;
+        }
+
+        public void ApplyRemoteState(bool lights, int indicator, bool brake, bool reverse, bool horn, float speedKmh, float damage)
+        {
+            LightsOn = lights; Indicator = indicator; BrakeLit = brake; HornActive = horn;
+            CurrentGear = reverse ? -1 : 1; SpeedKmh = speedKmh; damagePct = damage;
+        }
+
         void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            if (definition != null) _rb.mass = definition.stats.massKg;
-            _rb.centerOfMass = centerOfMass != null ? transform.InverseTransformPoint(centerOfMass.position) : new Vector3(0, -0.6f, 0);
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
             if (_input == null) _input = GetComponent<IVehicleInput>();
+        }
+
+        /// <summary>Call once after assigning definition/axles/centerOfMass (AddComponent runs Awake before those exist).</summary>
+        public void Initialize()
+        {
+            if (definition != null) _rb.mass = definition.stats.massKg;
+            _rb.centerOfMass = centerOfMass != null ? transform.InverseTransformPoint(centerOfMass.position) : new Vector3(0, -0.6f, 0);
             CacheFriction();
         }
 
@@ -90,6 +113,7 @@ namespace ARO.Vehicles
 
         void Update()
         {
+            if (IsRemote) return;
             if (_input == null) return;
             _state = _input.Read();
             if (_state.LightsToggled) LightsOn = !LightsOn;
@@ -101,7 +125,7 @@ namespace ARO.Vehicles
 
         void FixedUpdate()
         {
-            if (definition == null) return;
+            if (IsRemote || definition == null) return;
             var st = definition.stats;
             if (!Mathf.Approximately(_appliedGrip, GripMultiplier)) ApplyGrip(GripMultiplier);
             float vy = _rb.linearVelocity.y; SuspensionJolt = Mathf.Lerp(SuspensionJolt, Mathf.Clamp01(Mathf.Abs(vy - _lastVy) * 4f), 0.3f); _lastVy = vy;

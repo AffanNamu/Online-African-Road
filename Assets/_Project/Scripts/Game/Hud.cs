@@ -1,3 +1,4 @@
+using ARO.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ namespace ARO.Game
     public class Hud : MonoBehaviour
     {
         DrivingSession _s; GameServices _svc;
-        Text _speed, _gear, _job, _msg, _wallet, _status;
+        Text _speed, _gear, _job, _msg, _wallet, _status, _convoy; GameObject _convoyPanel;
         RectTransform _fuelBar, _dmgBar, _arrow; GameObject _root;
 
         public void Init(DrivingSession s, GameServices svc)
@@ -33,6 +34,9 @@ namespace ARO.Game
             var wal = UIKit.Box(t, "Wallet", UIKit.Panel, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-330, -80), new Vector2(-30, -24));
             _wallet = UIKit.Label(wal, "", 26, UIKit.Accent, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
+            var cv = UIKit.Box(t, "Convoy", UIKit.Panel, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-330, -330), new Vector2(-30, -96));
+            _convoyPanel = cv.gameObject;
+            _convoy = UIKit.Label(cv, "", 20, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, new Vector2(16, 12), new Vector2(-16, -12));
             _msg = UIKit.Label(t, "", 30, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0.2f, 0.12f), new Vector2(0.8f, 0.24f), Vector2.zero, Vector2.zero);
             _status = UIKit.Label(t, "[W/S] drive  [A/D] steer  [Space] handbrake  [L] lights  [H] horn  [C] camera  [Esc] menu", 18, UIKit.Muted,
                 TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.05f), Vector2.zero, Vector2.zero);
@@ -64,6 +68,15 @@ namespace ARO.Game
                 string where = _s.Phase == JobPhase.ToDestination ? "DELIVER TO " + _s.Job.destination.name : "PICK UP AT " + _s.Job.origin.name;
                 _job.text = $"{_s.Job.code} · {_s.Job.cargo_type}\n{where} · {(_s.DistanceToTarget / 1000f):F1} km · {_s.Job.reward:N0} coins";
                 ((RectTransform)_arrow.parent).localRotation = Quaternion.Euler(0, 0, -_s.BearingToTarget());
+            }
+            bool inConvoy = NetworkVehicle.Players.Count > 0;
+            _convoyPanel.SetActive(inConvoy);
+            if (inConvoy)
+            {
+                var sb = new System.Text.StringBuilder($"CONVOY ({NetworkVehicle.Players.Count})\n");
+                var leader = NetworkVehicle.Players.Leader;
+                foreach (var m in NetworkVehicle.Players.Members) sb.Append(m == leader ? "★ " : "● ").Append(m.Name).Append('\n');
+                _convoy.text = sb.ToString();
             }
             _msg.text = Time.unscaledTime < _s.MessageUntil ? _s.Message : "";
         }

@@ -31,6 +31,7 @@ namespace ARO.Vehicles
 
             var v = root.AddComponent<VehicleController>();
             v.definition = def; v.axles = new[] { front, rear }; v.centerOfMass = com; v.fuelL = def.fuelCapacityL;
+            v.Initialize();
             AddPlaceholderLights(root, v, bodySize);
             Finish(root, v, localPlayer);
             return v;
@@ -45,6 +46,7 @@ namespace ARO.Vehicles
             rb.mass = def.stats.massKg;
             var v = root.AddComponent<VehicleController>();
             v.definition = def; v.axles = rig.axles; v.centerOfMass = rig.centerOfMass; v.fuelL = def.fuelCapacityL;
+            v.Initialize();
             var lights = root.AddComponent<VehicleLights>(); lights.Bind(rig);
             Finish(root, v, localPlayer);
             return v;

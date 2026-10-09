@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ARO.Backend;
+using ARO.Multiplayer;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace ARO.Game
     /// <summary>Menu/screen state machine: Login -> Menu -> JobBoard / Garage / Profile -> Driving.</summary>
     public class GameFlow : MonoBehaviour
     {
-        enum Screen { Login, Menu, Jobs, Garage, Profile }
+        enum Screen { Login, Menu, Jobs, Garage, Profile, Convoy }
 
         GameServices _svc; DrivingSession _drive; Hud _hud;
         Canvas _canvas; RectTransform _panel; Text _toast; float _toastUntil;
@@ -23,6 +24,7 @@ namespace ARO.Game
             UIKit.Box(_canvas.transform, "Backdrop", new Color(0.03f, 0.04f, 0.06f, 0.78f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
             _drive.JobCompleted += async _ => { await _svc.RefreshPlayer(); };
+            _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f); };
             _ = StartUp();
         }
 
@@ -66,6 +68,7 @@ namespace ARO.Game
                 case Screen.Jobs: _ = ShowJobs(); break;
                 case Screen.Garage: ShowGarage(); break;
                 case Screen.Profile: ShowProfile(); break;
+                case Screen.Convoy: _ = ShowConvoy(); break;
             }
         }
 
@@ -118,6 +121,7 @@ namespace ARO.Game
             if (_drive.Vehicle != null) UIKit.Btn(p, "RESUME DRIVING", Resume);
             UIKit.Btn(p, _drive.Vehicle != null ? "JOB BOARD" : "DRIVE · JOB BOARD", () => _ = ShowJobs(), _drive.Vehicle == null);
             UIKit.Btn(p, "GARAGE", ShowGarage, false);
+            UIKit.Btn(p, "CONVOY", () => _ = ShowConvoy(), false);
             UIKit.Btn(p, "PROFILE", ShowProfile, false);
             if (_drive.Vehicle == null) UIKit.Btn(p, "FREE DRIVE", () => StartDrive(null), false);
             UIKit.Btn(p, "SIGN OUT", () => { _svc.Api.SignOut(); ShowLogin(null); }, false, 44);
@@ -197,6 +201,44 @@ namespace ARO.Game
             if (_busy) return; _busy = true; var r = await call(); _busy = false;
             Toast(r.Ok ? ok : r.UserMessage, 5f);
             await _svc.RefreshPlayer(); ShowGarage();
+        }
+
+        // ---------------------------------------------------------------- convoy
+        async Task ShowConvoy()
+        {
+            var p = NewPanel("Convoy", 900f);
+            if (_svc.Session.State == ARO.NetCore.SessionState.InSession)
+            {
+                UIKit.Label(p, $"{_svc.Convoys.CurrentConvoyName}\nSession code: {_svc.Session.Code}   {(_svc.Session.IsHost ? "(you are hosting)" : "")}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 80;
+                var sb = new System.Text.StringBuilder(); var leader = NetworkVehicle.Players.Leader;
+                foreach (var m in NetworkVehicle.Players.Members) sb.AppendLine((m == leader ? "★ " : "● ") + m.Name);
+                UIKit.Label(p, sb.Length > 0 ? sb.ToString() : "Waiting for drivers...", 24, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 240;
+                UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
+                UIKit.Btn(p, "LEAVE CONVOY", async () => { await _svc.Convoys.Leave(); Toast("You left the convoy."); await ShowConvoy(); }, false, 48);
+                UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+                return;
+            }
+            UIKit.Label(p, "Loading convoys...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var list = await _svc.Convoys.ListOpen();
+            p = NewPanel("Convoy", 900f);
+            if (!list.Ok) UIKit.Label(p, list.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            else if (list.Value.Length == 0) UIKit.Label(p, "No open convoys. Create one below.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            int shown = 0;
+            if (list.Ok) foreach (var c in list.Value)
+            {
+                if (shown++ >= 4) break; var convoy = c;
+                UIKit.Btn(p, $"{convoy.name}  ·  led by {(convoy.leader != null ? convoy.leader.display_name : "?")}  ·  {convoy.Members}/{SessionService.MaxPlayers}",
+                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f); await ShowConvoy(); }, false, 60);
+            }
+            var nameField = UIKit.Input(p, "New convoy name");
+            UIKit.Btn(p, "CREATE CONVOY", async () =>
+            {
+                if (_busy) return; _busy = true; Toast("Creating convoy session...");
+                var r = await _svc.Convoys.Create(nameField.text); _busy = false;
+                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f); await ShowConvoy();
+            });
+            UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
+            UIKit.Btn(p, "BACK", ShowMenu, false, 48);
         }
 
         // ---------------------------------------------------------------- profile
