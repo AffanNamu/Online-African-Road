@@ -51,7 +51,7 @@ namespace ARO.World
             _limits = new float[route.nodes.Length - 1];
             for (int i = 0; i < _limits.Length; i++) _limits[i] = LimitFor(route.nodes[i]);
             _sim = new TrafficSim(route.TotalLength, new TrafficConfig { Seed = route.seed });
-            _sim.SpeedLimit = s => { route.SegmentAt(s, out _); return _limits[Mathf.Clamp(SegIndex(s), 0, _limits.Length - 1)]; };
+            _sim.SpeedLimit = s => _limits[Mathf.Clamp(SegIndex(s), 0, _limits.Length - 1)];
             ApplyQuality();
         }
 
@@ -75,7 +75,7 @@ namespace ARO.World
         void FixedUpdate()
         {
             if (_sim == null) return;
-            float lateral; float ps = player != null ? route.Project(player.position, out lateral) : 0f;
+            float ps = player != null ? route.Project(player.position, out _) : 0f;
             if (player != null)
             {
                 var tan = route.TangentAt(ps);
