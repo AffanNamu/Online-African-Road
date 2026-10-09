@@ -27,6 +27,12 @@ against the real SDK at first compile. Until then multiplayer is expected to wor
 ## CI status log (2026-10-09)
 - Unity 6000.0.58f2 boots in CI; all packages resolve; **the whole project compiles** (game, editor, test and networking assemblies: `Tundra build success`).
 - Docker Hub throttling of the `unityci/editor` image is mitigated by a pre-pull step with retries (`ci.yml`).
-- Remaining blocker at last run: Unity aborts after project load with `No valid Unity Editor license found` (exit 198) - license activation, not code.
-  The workflow now passes only `UNITY_LICENSE` (the .ulf). If that still fails, the .ulf is not valid for this editor build
-  (regenerate it with the "Unity license activation" workflow, which requests an activation file for 6000.0.58f2).
+- **Remaining blocker (runs 20 and 21, identical):** Unity aborts after the project loads with `No valid Unity Editor license found`
+  (exit code 198), so no EditMode test has executed yet and the WebGL build has not been attempted. Run 21 passed only the `.ulf`
+  (`UNITY_LICENSE`), no email/password, and failed the same way - so the `.ulf` in the secret is not accepted by the 6000.0.58f2
+  editor in CI. This is an account/licensing problem, not a code problem.
+  Fix options (need the repo owner): (a) regenerate: run the "Unity license activation" workflow, upload the `.alf` at
+  license.unity3d.com/manual (Unity Personal), paste the **entire** `.ulf` as `UNITY_LICENSE`; (b) use a Unity Plus/Pro serial
+  (`UNITY_SERIAL` + email/password); (c) a cloud build service such as Unity Build Automation. If manual activation is no longer
+  offered for your account type, (b) or (c) is required - I could not verify which applies.
+- Verified so far in CI: SQL suite + mutation run, .NET unit tests, full C# compile of the Unity project.
