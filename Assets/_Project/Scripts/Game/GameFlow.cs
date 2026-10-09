@@ -1,0 +1,213 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ARO.Backend;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
+namespace ARO.Game
+{
+    /// <summary>Menu/screen state machine: Login -> Menu -> JobBoard / Garage / Profile -> Driving.</summary>
+    public class GameFlow : MonoBehaviour
+    {
+        enum Screen { Login, Menu, Jobs, Garage, Profile }
+
+        GameServices _svc; DrivingSession _drive; Hud _hud;
+        Canvas _canvas; RectTransform _panel; Text _toast; float _toastUntil;
+        bool _busy;
+
+        public void Init(GameServices svc, DrivingSession drive, Hud hud)
+        {
+            _svc = svc; _drive = drive; _hud = hud;
+            _canvas = UIKit.CreateCanvas("Menus", 10);
+            UIKit.Box(_canvas.transform, "Backdrop", new Color(0.03f, 0.04f, 0.06f, 0.78f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
+            _drive.JobCompleted += async _ => { await _svc.RefreshPlayer(); };
+            _ = StartUp();
+        }
+
+        async Task StartUp()
+        {
+            if (!_svc.Config.IsConfigured) { ShowLogin("Backend not configured (see docs/DEVELOPMENT.md). Jobs and persistence are disabled."); return; }
+            Toast("Checking saved session...");
+            if (await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);
+        }
+
+        void Update()
+        {
+            if (_toast != null && Time.unscaledTime > _toastUntil) _toast.text = "";
+            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && _svc.Api.IsSignedIn)
+            {
+                if (_drive.Active) { _drive.Pause(true); _hud.SetVisible(false); _canvas.gameObject.SetActive(true); Show(Screen.Menu); }
+                else if (_drive.Vehicle != null) Resume();
+            }
+        }
+
+        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; }
+
+        // ---------------------------------------------------------------- panels
+        RectTransform NewPanel(string title, float h = 760f)
+        {
+            if (_panel != null) Destroy(_panel.gameObject);
+            var box = UIKit.Box(_canvas.transform, "Panel", UIKit.Panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-380, -h / 2f), new Vector2(380, h / 2f));
+            _panel = box;
+            UIKit.Label(box, "AFRICAN ROADS ONLINE", 20, UIKit.Accent, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(32, -48), new Vector2(-32, -20));
+            UIKit.Label(box, title, 44, UIKit.TextCol, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(32, -110), new Vector2(-32, -50));
+            var stack = UIKit.VStack(box, "Stack", Vector2.zero, 12, 32);
+            stack.anchorMin = Vector2.zero; stack.anchorMax = Vector2.one; stack.offsetMin = new Vector2(0, 0); stack.offsetMax = new Vector2(0, -130);
+            return stack;
+        }
+
+        void Show(Screen s)
+        {
+            switch (s)
+            {
+                case Screen.Menu: ShowMenu(); break;
+                case Screen.Jobs: _ = ShowJobs(); break;
+                case Screen.Garage: ShowGarage(); break;
+                case Screen.Profile: ShowProfile(); break;
+            }
+        }
+
+        // ---------------------------------------------------------------- login
+        void ShowLogin(string info)
+        {
+            var p = NewPanel("Sign in", 700f);
+            if (info != null) UIKit.Label(p, info, 20, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 70;
+            var email = UIKit.Input(p, "Email"); var pass = UIKit.Input(p, "Password", true); var name = UIKit.Input(p, "Display name (new accounts)");
+            var status = UIKit.Label(p, "", 20, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            status.gameObject.AddComponent<LayoutElement>().preferredHeight = 50;
+            UIKit.Btn(p, "SIGN IN", async () =>
+            {
+                if (_busy) return; _busy = true; status.text = "Signing in...";
+                var r = await _svc.Api.SignIn(email.text.Trim(), pass.text); _busy = false;
+                if (!r.Ok) { status.text = r.UserMessage; return; }
+                await EnterMenu();
+            });
+            UIKit.Btn(p, "CREATE ACCOUNT", async () =>
+            {
+                if (_busy) return;
+                if (pass.text.Length < 8) { status.text = "Password must be at least 8 characters."; return; }
+                _busy = true; status.text = "Creating account...";
+                var r = await _svc.Api.SignUp(email.text.Trim(), pass.text, name.text.Trim()); _busy = false;
+                if (!r.Ok) { status.text = r.UserMessage; return; }
+                await EnterMenu();
+            }, false);
+            UIKit.Btn(p, "Forgot password", async () =>
+            {
+                if (email.text.Trim().Length == 0) { status.text = "Enter your email first."; return; }
+                var r = await _svc.Api.RecoverPassword(email.text.Trim());
+                status.text = r.Ok ? "Recovery email sent." : r.UserMessage; status.color = r.Ok ? UIKit.Good : UIKit.Bad;
+            }, false, 44);
+        }
+
+        async Task EnterMenu()
+        {
+            Toast("Loading your profile...");
+            string err = await _svc.RefreshPlayer();
+            if (err != null) { _svc.Api.SignOut(); ShowLogin(err); return; }
+            ShowMenu();
+        }
+
+        // ---------------------------------------------------------------- menu
+        void ShowMenu()
+        {
+            var p = NewPanel("Welcome, " + _svc.Profile.display_name);
+            string stats = $"Level {_svc.Profile.level}  ·  {_svc.Wallet.balance:N0} coins  ·  {_svc.Profile.jobs_completed} jobs  ·  {_svc.Profile.distance_km:F1} km";
+            UIKit.Label(p, stats, 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
+            if (_drive.Vehicle != null) UIKit.Btn(p, "RESUME DRIVING", Resume);
+            UIKit.Btn(p, _drive.Vehicle != null ? "JOB BOARD" : "DRIVE · JOB BOARD", () => _ = ShowJobs(), _drive.Vehicle == null);
+            UIKit.Btn(p, "GARAGE", ShowGarage, false);
+            UIKit.Btn(p, "PROFILE", ShowProfile, false);
+            if (_drive.Vehicle == null) UIKit.Btn(p, "FREE DRIVE", () => StartDrive(null), false);
+            UIKit.Btn(p, "SIGN OUT", () => { _svc.Api.SignOut(); ShowLogin(null); }, false, 44);
+        }
+
+        void Resume() { _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false); }
+
+        void StartDrive(JobDto job, string assignmentId = null)
+        {
+            if (_drive.Vehicle == null)
+            {
+                var owned = _svc.Vehicles.Length > 0 ? _svc.Vehicles[0] : null;
+                if (owned == null) { Toast("You do not own a vehicle."); return; }
+                _drive.Enter(owned);
+            }
+            if (job != null) _drive.BeginJob(job, assignmentId);
+            _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
+        }
+
+        // ---------------------------------------------------------------- jobs
+        async Task ShowJobs()
+        {
+            var p = NewPanel("Job Board", 900f);
+            UIKit.Label(p, "Loading jobs...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var r = await _svc.Jobs.LoadBoard();
+            p = NewPanel("Job Board", 900f);
+            if (!r.Ok) { UIKit.Label(p, r.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero); UIKit.Btn(p, "BACK", ShowMenu, false); return; }
+            if (_drive.Job != null) UIKit.Label(p, $"Active: {_drive.Job.code}. Finish or abandon it first.", 22, UIKit.Accent, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
+            if (r.Value.Length == 0) UIKit.Label(p, "No open jobs right now. Jobs are generated by the server; check back soon.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            int shown = 0;
+            foreach (var j in r.Value)
+            {
+                if (shown++ >= 6) break;
+                var job = j;
+                UIKit.Btn(p, $"{job.code}  {job.origin.name} → {job.destination.name}\n{job.cargo_type} · {job.distance_km:F1} km · {Stars(job.difficulty)} · {job.reward:N0} coins",
+                    async () => await AcceptJob(job), false, 84);
+            }
+            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+        }
+        static string Stars(int d) => new string('★', d) + new string('☆', 5 - d);
+
+        async Task AcceptJob(JobDto job)
+        {
+            if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
+            var owned = FindVehicleFor(job.required_category);
+            if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return; }
+            _busy = true; var r = await _svc.Jobs.Accept(job.id, owned.id); _busy = false;
+            if (!r.Ok) { Toast(r.UserMessage, 6f); await ShowJobs(); return; }
+            StartDrive(job, r.Value);
+        }
+
+        OwnedVehicleDto FindVehicleFor(string category)
+        {
+            var cat = new Dictionary<string, string>(); foreach (var d in _svc.Definitions) cat[d.id] = d.category;
+            foreach (var v in _svc.Vehicles) if (cat.TryGetValue(v.definition_id, out var c) && c == category) return v;
+            return null;
+        }
+
+        // ---------------------------------------------------------------- garage
+        void ShowGarage()
+        {
+            var p = NewPanel("Garage", 800f);
+            var names = new Dictionary<string, VehicleDefDto>(); foreach (var d in _svc.Definitions) names[d.id] = d;
+            foreach (var v in _svc.Vehicles)
+            {
+                var veh = v; names.TryGetValue(v.definition_id, out var def);
+                UIKit.Label(p, $"{(def != null ? def.name : v.definition_id)}\nFuel {v.fuel_l:F0}/{(def != null ? def.fuel_capacity_l : 0):F0} L · Damage {v.damage_pct:F0}% · {v.odometer_km:F1} km",
+                    22, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 70;
+                UIKit.Btn(p, "REFUEL (full tank)", async () => await Service(() => _svc.Api.Rpc("buy_fuel", $"{{\"p_vehicle\":\"{veh.id}\",\"p_liters\":9999}}"), "Refuelled."), false, 48);
+                UIKit.Btn(p, "REPAIR", async () => await Service(() => _svc.Api.Rpc("repair_vehicle", $"{{\"p_vehicle\":\"{veh.id}\"}}"), "Repaired."), false, 48);
+            }
+            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+        }
+
+        async Task Service(System.Func<Task<Result<string>>> call, string ok)
+        {
+            if (_busy) return; _busy = true; var r = await call(); _busy = false;
+            Toast(r.Ok ? ok : r.UserMessage, 5f);
+            await _svc.RefreshPlayer(); ShowGarage();
+        }
+
+        // ---------------------------------------------------------------- profile
+        void ShowProfile()
+        {
+            var p = NewPanel("Profile");
+            var pr = _svc.Profile;
+            UIKit.Label(p, $"{pr.display_name}\nLevel {pr.level} · {pr.experience:N0} XP\nWallet: {_svc.Wallet.balance:N0} coins\nJobs completed: {pr.jobs_completed}\nDistance: {pr.distance_km:F1} km\nVehicles owned: {_svc.Vehicles.Length}",
+                26, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 260;
+            if (_drive.Job != null) UIKit.Btn(p, "ABANDON CURRENT JOB", () => { _drive.AbandonJob(); ShowProfile(); }, false);
+            UIKit.Btn(p, "BACK", ShowMenu);
+        }
+    }
+}

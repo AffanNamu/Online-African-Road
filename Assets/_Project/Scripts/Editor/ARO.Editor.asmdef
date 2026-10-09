@@ -1,3 +1,3 @@
 { "name": "ARO.Editor", "rootNamespace": "ARO.Editor",
-  "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","ARO.World","ARO.UI","Unity.InputSystem"],
+  "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","ARO.World","ARO.Game","Unity.InputSystem"],
   "includePlatforms": ["Editor"], "autoReferenced": true }

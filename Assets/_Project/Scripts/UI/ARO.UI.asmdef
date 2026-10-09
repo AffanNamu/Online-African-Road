@@ -1,1 +1,0 @@
-{ "name": "ARO.UI", "rootNamespace": "ARO.UI", "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","Unity.TextMeshPro","Unity.InputSystem"], "autoReferenced": true }

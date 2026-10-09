@@ -1,0 +1,3 @@
+{ "name": "ARO.Game", "rootNamespace": "ARO.Game",
+  "references": ["ARO.Core","ARO.Input","ARO.Vehicles","ARO.Backend","ARO.Jobs","ARO.World","UnityEngine.UI","Unity.InputSystem"],
+  "autoReferenced": true }
