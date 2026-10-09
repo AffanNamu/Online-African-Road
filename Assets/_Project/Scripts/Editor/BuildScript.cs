@@ -14,6 +14,7 @@ namespace ARO.Editor
         static void Build(BuildTarget target, string output)
         {
             // Headless CI has no human to click the menu: generate the scene, materials and URP asset first.
+            ProjectLinker.Apply();
             SceneBuilder.Build();
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0) { Console.Error.WriteLine("Scene generation produced no scenes."); EditorApplication.Exit(2); return; }

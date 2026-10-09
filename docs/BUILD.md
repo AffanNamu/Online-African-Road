@@ -12,3 +12,14 @@ Blocker: a Unity license must be provided once (GameCI cannot build without one)
 4. Push: CI runs EditMode tests, then `ARO.Editor.BuildScript.BuildWebGL`, then uploads `webgl-build`.
 The project is **not build-ready** until that job is green. Before the first build, `Assets/_Project/Scenes/Bootstrap.unity`
 must exist: `BuildScript` runs `SceneBuilder.Build()` first (generates scene, materials, URP asset), so no manual editor step is needed.
+
+## Unity Cloud project link
+Unity project name: **African Online Roads**, Cloud project ID `1844ea76-e24a-45de-bcb2-2ec2426f8ff6` (stored in
+`ProjectSettings/ARO_UnityProject.json`; identifiers, not secrets). `ARO.Editor.ProjectLinker` writes the ID into PlayerSettings
+on editor load and before every scripted build, so CI builds are linked. **Unverified** until the first Unity run.
+In the Unity Dashboard (cloud.unity.com) for that project you must still: enable **Authentication (anonymous)**, **Relay** and
+**Multiplayer Sessions/Lobby**. I cannot do that for you.
+
+### Open risk: WebGL + Relay
+Browsers cannot use UDP. Relay on WebGL needs WebSockets (WSS) transport; the Sessions API option for that must be confirmed
+against the real SDK at first compile. Until then multiplayer is expected to work on desktop/Android/iOS builds first.
