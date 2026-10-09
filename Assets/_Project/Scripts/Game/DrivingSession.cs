@@ -29,8 +29,8 @@ namespace ARO.Game
         public JobDto Job { get; private set; }
         public string AssignmentId { get; private set; }
         public JobPhase Phase { get; private set; }
-        public string Message { get; private set; }
-        public float MessageUntil;
+        public readonly ARO.NetCore.NotificationQueue Notifications = new ARO.NetCore.NotificationQueue(3);
+        public float RouteDistance { get; private set; }   // straight-line pickup->destination, for the progress bar
         GameObject _markerGo; bool _busy; bool _sampling; float _nextSample, _retryAt; const float SampleInterval = 2f;
         string _vehicleId;
         public System.Action<CompleteJobResult> JobCompleted;
@@ -51,7 +51,7 @@ namespace ARO.Game
             var n0 = _route.nodes[0].position;
             var dir = (_route.nodes[1].position - n0).normalized;
             Vehicle = TruckFactory.Create(def, n0 + Vector3.up * 1.5f, Quaternion.LookRotation(dir), _body, _wheel);
-            if (Vehicle == null) { Say("Vehicle model failed to load.", 8f); return; }
+            if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             _vehicleId = owned.id;
             Cam.target = Vehicle.transform; Streamer.target = Vehicle.transform; Streamer.route = _route;
@@ -66,6 +66,7 @@ namespace ARO.Game
         public void BeginJob(JobDto job, string assignmentId)
         {
             Job = job; AssignmentId = assignmentId; Phase = JobPhase.ToPickup;
+            RouteDistance = Vector2.Distance(new Vector2((float)job.origin.world_x, (float)job.origin.world_z), new Vector2((float)job.destination.world_x, (float)job.destination.world_z));
             PlaceMarker(new Vector3((float)job.origin.world_x, 0, (float)job.origin.world_z));
             Say($"Job {job.code}: drive to {job.origin.name} to load.");
         }
@@ -114,7 +115,7 @@ namespace ARO.Game
             _busy = true; Say("Loading cargo...");
             var r = await _svc.Jobs.Start(AssignmentId, Vehicle.transform.position);   // server stamps started_at: the clock for delivery validation
             _busy = false;
-            if (!r.Ok) { Say(r.UserMessage, 6f); _retryAt = Time.time + 5f; if (r.ErrorCode == "invalid_state") Phase = JobPhase.ToDestination; return; }
+            if (!r.Ok) { Say(r.UserMessage, 6f, ARO.NetCore.Severity.Error); _retryAt = Time.time + 5f; if (r.ErrorCode == "invalid_state") Phase = JobPhase.ToDestination; return; }
             Phase = JobPhase.ToDestination; _nextSample = Time.time + SampleInterval;
             PlaceMarker(TargetPos);
             Say($"Cargo loaded ({Job.cargo_type}). Deliver to {Job.destination.name}.");
@@ -129,11 +130,11 @@ namespace ARO.Game
             _busy = false;
             if (!r.Ok)
             {
-                Say(r.UserMessage, 8f); _retryAt = Time.time + 6f;
+                Say(r.UserMessage, 8f, ARO.NetCore.Severity.Error); _retryAt = Time.time + 6f;
                 if (r.ErrorCode == "already_completed") Clear();
                 return;   // other rejections: player can keep driving and retry (e.g. not_at_destination)
             }
-            Say($"Delivered! +{r.Value.reward + r.Value.bonus} coins, +{r.Value.xp} XP", 8f);
+            Say($"Delivered! +{r.Value.reward + r.Value.bonus} coins, +{r.Value.xp} XP", 8f, ARO.NetCore.Severity.Success);
             Clear();
             JobCompleted?.Invoke(r.Value);
         }
@@ -155,6 +156,6 @@ namespace ARO.Game
             if (_marker != null) _markerGo.GetComponent<Renderer>().sharedMaterial = _marker;
         }
 
-        public void Say(string m, float seconds = 4f) { Message = m; MessageUntil = Time.unscaledTime + seconds; }
+        public void Say(string m, float seconds = 4f, ARO.NetCore.Severity level = ARO.NetCore.Severity.Info) => Notifications.Push(m, level, seconds);
     }
 }

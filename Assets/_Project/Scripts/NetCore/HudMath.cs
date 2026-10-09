@@ -26,16 +26,20 @@ namespace ARO.NetCore
         public static string Distance(float metres)
         {
             if (float.IsNaN(metres) || metres < 0) metres = 0;
-            if (metres < 1000f) return Math.Round(metres / 10f) * 10f < 1000f ? $"{(int)(Math.Round(metres / 10f) * 10f)} m" : "1.0 km";
+            if (metres < 1000f)
+            {
+                int tens = (int)(Math.Round(metres / 10f, MidpointRounding.AwayFromZero) * 10.0);   // nearest 10 m
+                return tens < 1000 ? tens + " m" : "1.0 km";
+            }
             if (metres < 10000f) return (metres / 1000f).ToString("0.0", Inv) + " km";
-            return Math.Round(metres / 1000f).ToString("0", Inv) + " km";
+            return Math.Round(metres / 1000f, MidpointRounding.AwayFromZero).ToString("0", Inv) + " km";
         }
 
         public static string Eta(float seconds)
         {
             if (float.IsNaN(seconds) || float.IsInfinity(seconds) || seconds < 0) return "--";
             if (seconds < 60f) return "< 1 min";
-            int mins = (int)Math.Round(seconds / 60f);
+            int mins = (int)Math.Round(seconds / 60f, MidpointRounding.AwayFromZero);
             if (mins < 60) return mins + " min";
             return (mins / 60) + "h " + (mins % 60).ToString("00", Inv) + "m";
         }
