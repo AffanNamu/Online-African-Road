@@ -8,7 +8,7 @@ Status: **NOT YET BUILT.** The pipeline exists but has never produced an artifac
 Blocker: a Unity license must be provided once (GameCI cannot build without one):
 1. Actions > "Unity license activation" > Run workflow; download the `.alf` artifact.
 2. Upload it at https://license.unity3d.com/manual (Unity Personal), download the `.ulf`.
-3. Repo Settings > Secrets: `UNITY_LICENSE` (contents of `.ulf`), `UNITY_EMAIL`, `UNITY_PASSWORD`; Variables: `UNITY_CI_ENABLED=true`.
+3. Repo Settings > Secrets: `UNITY_LICENSE` (full contents of the `.ulf` file); Variables: `UNITY_CI_ENABLED=true`. (Email/password are not used.)
 4. Push: CI runs EditMode tests, then `ARO.Editor.BuildScript.BuildWebGL`, then uploads `webgl-build`.
 The project is **not build-ready** until that job is green. Before the first build, `Assets/_Project/Scenes/Bootstrap.unity`
 must exist: `BuildScript` runs `SceneBuilder.Build()` first (generates scene, materials, URP asset), so no manual editor step is needed.
@@ -23,3 +23,10 @@ In the Unity Dashboard (cloud.unity.com) for that project you must still: enable
 ### Open risk: WebGL + Relay
 Browsers cannot use UDP. Relay on WebGL needs WebSockets (WSS) transport; the Sessions API option for that must be confirmed
 against the real SDK at first compile. Until then multiplayer is expected to work on desktop/Android/iOS builds first.
+
+## CI status log (2026-10-09)
+- Unity 6000.0.58f2 boots in CI; all packages resolve; **the whole project compiles** (game, editor, test and networking assemblies: `Tundra build success`).
+- Docker Hub throttling of the `unityci/editor` image is mitigated by a pre-pull step with retries (`ci.yml`).
+- Remaining blocker at last run: Unity aborts after project load with `No valid Unity Editor license found` (exit 198) - license activation, not code.
+  The workflow now passes only `UNITY_LICENSE` (the .ulf). If that still fails, the .ulf is not valid for this editor build
+  (regenerate it with the "Unity license activation" workflow, which requests an activation file for 6000.0.58f2).
