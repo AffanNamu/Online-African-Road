@@ -1,0 +1,8 @@
+ALL SQL TESTS PASSED
+SECURITY MATRIX PASSED
+race 1 (single-slot job): exactly one acceptor
+race 2 (double delivery): reward paid exactly once (+1000)
+race 3 (double repair): charged exactly once (-200)
+race 4 (double refuel): tank 120 L, charged exactly once (-240)
+CONCURRENCY TESTS PASSED
+psql (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)

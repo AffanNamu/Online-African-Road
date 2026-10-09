@@ -1,0 +1,37 @@
+KILLED   wallet UPDATE re-granted to clients
+KILLED   profiles UPDATE re-granted (self-award XP)
+KILLED   job_assignments UPDATE re-granted
+KILLED   jobs UPDATE re-granted (edit reward)
+KILLED   convoy_members INSERT re-granted
+KILLED   RLS: wallet visible to everyone
+KILLED   RLS: vehicles visible to everyone
+KILLED   anon can read jobs
+KILLED   RLS disabled on transactions
+KILLED   _apply_transaction executable by clients
+KILLED   generate_jobs executable by clients
+KILLED   search_path unpinned on buy_fuel
+KILLED   time check removed
+KILLED   distance floor removed
+KILLED   distance ceiling removed
+KILLED   position radius widened
+KILLED   fuel sanity removed
+KILLED   damage can be reduced for free
+KILLED   ownership check removed in accept_job
+KILLED   assignment owner check removed (start)
+KILLED   assignment owner check removed (complete)
+KILLED   completed-state guard removed
+KILLED   idempotency lookup removed
+KILLED   job_full check removed
+KILLED   expiry check removed
+KILLED   category check removed
+KILLED   convoy size cap raised
+KILLED   disbanded convoy joinable
+KILLED   fuel ownership check removed
+KILLED   fuel row lock removed
+KILLED   repair row lock removed
+KILLED   negative balance allowed (both CHECKs dropped)
+SURVIVED wallet CHECK dropped alone (defence in depth: expected to SURVIVE)
+KILLED   shared bonus uncapped
+
+33 killed, 1 survived of 34
+  SURVIVOR: wallet CHECK dropped alone (defence in depth: expected to SURVIVE)
