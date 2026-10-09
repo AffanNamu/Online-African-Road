@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15
+        image: public.ecr.aws/docker/library/postgres:15   # AWS mirror: avoids Docker Hub anonymous rate limits
         env: { POSTGRES_PASSWORD: postgres }
         ports: ['5432:5432']
         options: >-
@@ -42,6 +42,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { lfs: true }
+      # Optional: set repo secrets DOCKERHUB_USERNAME / DOCKERHUB_TOKEN to avoid Docker Hub anonymous pull limits
+      # when pulling the (large) unityci/editor image. Skipped when absent.
+      - name: Docker Hub login (optional)
+        env: { DH_USER: "${{ secrets.DOCKERHUB_USERNAME }}", DH_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}" }
+        run: |
+          if [ -n "$DH_USER" ] && [ -n "$DH_TOKEN" ]; then echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin; else echo "no Docker Hub credentials; using anonymous pulls"; fi
       - uses: actions/cache@v4
         with:
           path: Library
