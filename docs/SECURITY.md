@@ -39,6 +39,12 @@ Environment: throwaway local Postgres 16.15 cluster, `supabase/tests/run.sh`; lo
 
 Simulation note: tests move the server clock by back-dating `last_at`/`started_at` (superuser fixtures) and drive real simulated paths through `submit_telemetry`; they do not sleep.
 
+## Convoy sessions (2026-10-09) — VERIFIED
+Migration `20261009000004`: the Unity join code column is hidden from clients (column-level grants); only convoy members can fetch it
+(`get_convoy_session_code`), only the leader can change it, format-checked, unique. Tests: member/non-member/leaver, leader/non-leader,
+bad format, duplicate, column and `select *` denied. Mutation run: 56 of 57 caught (survivor = intended defence in depth).
+GitHub CI (Postgres 15) passes the same suite and mutation run.
+
 ### What is still forgeable (honest residual risk)
 - A cheater who runs a modified client that sends *legal-looking* positions at legal speeds along any path still earns the reward - but only after spending the real driving time. There is no check that samples follow the road, so a bot cutting straight across terrain is not detected.
 - Position samples are not signed; a stolen JWT can submit samples from another machine.

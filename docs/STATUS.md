@@ -4,16 +4,16 @@ Legend: IMPLEMENTED = code written; NOT TESTED = never compiled or run (no Unity
 
 | Area | State |
 |---|---|
-| Repo, LFS rules, CI workflow | IMPLEMENTED, CI NOT RUN |
-| Supabase schema, RLS, ledger, job state machine, delivery validation, convoy RPCs | IMPLEMENTED, NOT TESTED (tests written: `supabase/tests`) |
-| Unity client: auth, job board, accept/load/deliver loop, garage refuel/repair, profile | IMPLEMENTED, NOT COMPILED |
-| Vehicle controller (gearbox, fuel, damage, rain grip), VehicleRig contract, lights | IMPLEMENTED, NOT COMPILED |
-| Chunk streaming + procedural road/roadside | IMPLEMENTED (placeholder geometry), NOT COMPILED |
-| Time of day (live WAT), rain, wet roads, camera, synth engine audio | IMPLEMENTED, NOT COMPILED |
-| Multiplayer / convoy networking (Netcode) | **INCOMPLETE - not started** (only DB convoy tables/RPCs exist) |
-| Traffic | **INCOMPLETE - not started** |
-| Navigation map/minimap | INCOMPLETE (HUD distance + direction arrow only) |
+| Supabase schema, RLS, ledger, job state machine, server telemetry, convoy session privacy | **VERIFIED** (Postgres 16 local + Postgres 15 CI): security matrix, 4 concurrency races, 57 mutants -> 56 caught, 1 survivor by design. See SECURITY.md, `docs/test-results/` |
+| Network core logic (lifecycle, reconnect, codec, roster) | **VERIFIED**: 49 .NET tests green in CI |
+| CI pipeline for SQL + .NET | **VERIFIED** (runs green on GitHub) |
+| Unity client (auth, jobs, telemetry streaming, garage, HUD, camera, weather, audio, streaming) | WRITTEN, **NOT COMPILED** |
+| Unity networking (Netcode avatars, Relay sessions, convoy UI) | WRITTEN, **NOT COMPILED, NOT RUN** |
+| **Unity build -> artifact** | **NOT DONE. Blocked on a Unity license secret** (docs/BUILD.md). Project is NOT build-ready. |
+| Two-player / four-player play, reconnect in a real session | NOT TESTED |
+| Traffic | INCOMPLETE - not started |
+| Minimap / full navigation | INCOMPLETE (distance + arrow only) |
+| Premium UI/HUD to the visual standard | INCOMPLETE (basic dark uGUI) |
+| Production art (vehicles, roads, buildings, vegetation, signage) | INCOMPLETE - all visuals are primitives |
 | Bus gameplay, companies, leaderboards, touch UI, Flutter shell | INCOMPLETE - not started |
-| Production art (truck/bus models, PBR road/terrain, buildings, props, signage, pedestrians) | **INCOMPLETE - all visuals are primitives** |
-| Windscreen rain, interior, per-gear audio loops, occlusion, baked lighting, LOD | INCOMPLETE |
-| Web build / performance measurements | NOT DONE - no numbers exist yet |
+| Performance measurements (FPS, memory, load, bandwidth) | NOT DONE - no numbers exist |
