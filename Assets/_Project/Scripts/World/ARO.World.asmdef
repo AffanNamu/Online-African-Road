@@ -1,1 +1,1 @@
-{ "name": "ARO.World", "rootNamespace": "ARO.World", "references": ["ARO.Core","ARO.NetCore"], "autoReferenced": true }
+{ "name": "ARO.World", "rootNamespace": "ARO.World", "references": ["ARO.Core","ARO.NetCore","ARO.Vehicles","Unity.InputSystem"], "autoReferenced": true }
