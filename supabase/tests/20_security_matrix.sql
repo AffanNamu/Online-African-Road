@@ -55,7 +55,8 @@ do $$ declare extra text; begin
   select string_agg(p.oid::regprocedure::text, ', ') into extra from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job',
-                           'buy_fuel','repair_vehicle','create_convoy','join_convoy','leave_convoy');
+                           'buy_fuel','repair_vehicle','create_convoy','join_convoy','leave_convoy',
+                           'get_convoy_session_code','set_convoy_session_code');
   if extra is not null then raise exception 'unexpected client-executable functions: %', extra; end if;
 end $$;
 do $$ declare bad text; begin
@@ -257,6 +258,26 @@ do $$ declare g int; begin
 end $$;
 select testkit.assert_eq('empty convoy disbanded', (select (disbanded_at is not null)::text from convoys where id = pg_temp.asg('conv')), 'true');
 select testkit.expect_error('authenticated', pg_temp.u('late'), format('select join_convoy(%L)', pg_temp.asg('conv')), 'convoy_not_found');
+
+-- ===== R9b: multiplayer session codes are member-only; only the leader may set them
+insert into fx select 'conv2', testkit.as_user(pg_temp.u('A'), $$select create_convoy('Session Convoy', 'ABCD1234')$$);
+select testkit.expect_error('authenticated', pg_temp.u('B'), 'select session_code from convoys', 'permission denied');          -- column hidden
+select testkit.expect_error('authenticated', pg_temp.u('B'), 'select * from convoys', 'permission denied');
+select testkit.expect_error('anon', null, format('select get_convoy_session_code(%L)', pg_temp.asg('conv2')), 'permission denied');
+select testkit.expect_error('authenticated', pg_temp.u('B'), format('select get_convoy_session_code(%L)', pg_temp.asg('conv2')), 'not_a_member');
+select testkit.assert_eq('public columns still readable', testkit.as_user(pg_temp.u('B'), format('select name from convoys where id = %L', pg_temp.asg('conv2'))), 'Session Convoy');
+select testkit.assert_eq('member gets the code', testkit.as_user(pg_temp.u('A'), format('select get_convoy_session_code(%L)', pg_temp.asg('conv2'))), 'ABCD1234');
+select testkit.as_user(pg_temp.u('B'), format('select join_convoy(%L)::text', pg_temp.asg('conv2')));
+select testkit.assert_eq('new member gets the code', testkit.as_user(pg_temp.u('B'), format('select get_convoy_session_code(%L)', pg_temp.asg('conv2'))), 'ABCD1234');
+select testkit.expect_error('authenticated', pg_temp.u('B'), format($$select set_convoy_session_code(%L, 'HIJACK99')$$, pg_temp.asg('conv2')), 'not_leader');
+select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_convoy_session_code(%L, 'bad code!')$$, pg_temp.asg('conv2')), 'invalid_code');
+select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_convoy_session_code(%L, 'ab')$$, pg_temp.asg('conv2')), 'invalid_code');
+select testkit.as_user(pg_temp.u('A'), format($$select set_convoy_session_code(%L, 'NEWCODE77')$$, pg_temp.asg('conv2')));
+select testkit.assert_eq('leader changed code', testkit.as_user(pg_temp.u('B'), format('select get_convoy_session_code(%L)', pg_temp.asg('conv2'))), 'NEWCODE77');
+select testkit.expect_error('authenticated', pg_temp.u('C'), $$select create_convoy('Dup Code Convoy', 'NEWCODE77')$$, 'already_in_convoy_or_code_taken');
+select testkit.as_user(pg_temp.u('B'), 'select leave_convoy()::text');
+select testkit.expect_error('authenticated', pg_temp.u('B'), format('select get_convoy_session_code(%L)', pg_temp.asg('conv2')), 'not_a_member');   -- leaving revokes access
+select testkit.as_user(pg_temp.u('A'), 'select leave_convoy()::text');
 
 -- ===== R10: display names
 select testkit.expect_error('authenticated', pg_temp.u('B'), $$select set_display_name('MatrixA')$$, 'display_name_taken');

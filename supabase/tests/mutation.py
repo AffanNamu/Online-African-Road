@@ -4,7 +4,7 @@ A mutant that survives (tests still pass) means a protection is not actually cov
 import os, re, shutil, subprocess, sys, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MIG = os.path.join(ROOT, "migrations")
-NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql"}
+NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
 
 def sub(txt, old, new, count=1):
@@ -70,6 +70,12 @@ MUTANTS = {
  "grants: submit_telemetry to anon":           (3, lambda t: t + "\ngrant execute on function submit_telemetry(uuid, double precision, double precision) to anon;\n"),
  "grants: job_telemetry readable by clients":  (3, lambda t: t + "\ngrant select on job_telemetry to authenticated;\n"),
  "grants: job_telemetry writable by clients":  (3, lambda t: t + "\ngrant update on job_telemetry to authenticated;\n"),
+ "convoy: session_code column readable":      (4, lambda t: t + "\ngrant select (session_code) on convoys to authenticated;\n"),
+ "convoy: table-wide select restored":        (4, lambda t: sub(t, "revoke select on convoys from authenticated;", "")),
+ "convoy: member check removed (get code)":   (4, lambda t: sub(t, "if not exists (select 1 from convoy_members where convoy_id = p_convoy and player_id = auth.uid()) then", "if false then")),
+ "convoy: leader check removed (set code)":   (4, lambda t: sub(t, "where id = p_convoy and leader_id = auth.uid() and disbanded_at is null;", "where id = p_convoy and disbanded_at is null;")),
+ "convoy: code format constraint removed":    (4, lambda t: sub(t, "alter table convoys add constraint convoy_code_fmt check (session_code is null or session_code ~ '^[A-Za-z0-9]{4,16}$');", "")),
+ "convoy: code fns left at default EXECUTE":  (4, lambda t: resub(t, r"revoke execute on function get_convoy_session_code.*?from public, anon, authenticated;", "")),
  "RLS disabled on job_telemetry":              (3, lambda t: sub(t, "alter table job_telemetry enable row level security;", "")),
 }
 

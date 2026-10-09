@@ -1,0 +1,60 @@
+KILLED   wallet UPDATE re-granted to clients
+KILLED   profiles UPDATE re-granted (self-award XP)
+KILLED   job_assignments UPDATE re-granted
+KILLED   jobs UPDATE re-granted (edit reward)
+KILLED   convoy_members INSERT re-granted
+KILLED   RLS: wallet visible to everyone
+KILLED   RLS: vehicles visible to everyone
+KILLED   anon can read jobs
+KILLED   RLS disabled on transactions
+KILLED   negative balance allowed (both CHECKs dropped)
+SURVIVED wallet CHECK dropped alone (defence in depth: expected to SURVIVE)
+KILLED   _apply_transaction executable by clients
+KILLED   generate_jobs executable by clients
+KILLED   search_path unpinned on buy_fuel
+KILLED   ownership check removed in accept_job
+KILLED   idempotency lookup removed
+KILLED   job_full check removed
+KILLED   expiry check removed
+KILLED   category check removed
+KILLED   convoy size cap raised
+KILLED   disbanded convoy joinable
+KILLED   fuel ownership check removed
+KILLED   fuel row lock removed
+KILLED   repair row lock removed
+KILLED   telemetry: speed limit removed
+KILLED   telemetry: speed slack x100
+KILLED   telemetry: rate limit removed
+KILLED   telemetry: flag threshold disabled
+KILLED   telemetry: flagged samples still accepted
+KILLED   telemetry: owner check removed (submit)
+KILLED   telemetry: samples accepted after completion
+KILLED   telemetry: search_path unpinned (submit)
+KILLED   start: pickup radius removed
+KILLED   start: owner check removed
+KILLED   complete: time check removed
+KILLED   complete: distance floor removed
+KILLED   complete: distance ceiling removed
+KILLED   complete: position radius widened
+KILLED   complete: stale-telemetry check removed
+KILLED   complete: flagged check removed
+KILLED   complete: damage can be reduced
+KILLED   complete: damage rise uncapped
+KILLED   complete: fuel burn not applied
+KILLED   complete: owner check removed
+KILLED   complete: completed-state guards removed
+KILLED   complete: shared bonus uncapped
+KILLED   grants: telemetry fns left at default EXECUTE
+KILLED   grants: submit_telemetry to anon
+KILLED   grants: job_telemetry readable by clients
+KILLED   grants: job_telemetry writable by clients
+KILLED   convoy: session_code column readable
+KILLED   convoy: table-wide select restored
+KILLED   convoy: member check removed (get code)
+KILLED   convoy: leader check removed (set code)
+KILLED   convoy: code format constraint removed
+KILLED   convoy: code fns left at default EXECUTE
+KILLED   RLS disabled on job_telemetry
+
+56 killed, 1 survived of 57
+  SURVIVOR: wallet CHECK dropped alone (defence in depth: expected to SURVIVE)
