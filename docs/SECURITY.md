@@ -24,6 +24,26 @@ Environment: throwaway local Postgres 16.15 cluster, `supabase/tests/run.sh`; lo
 | Convoy abuse | R9: duplicate create/join, full (8), disbanded, hijack/kick denied, leadership transfer |
 | RLS behaves as intended | R3 isolation + catalog check; anon denied everywhere (R2) |
 
+## Phase 4 result (2026-10-09) — server-verifiable telemetry, VERIFIED on PostgreSQL 16.15
+`start_job`/`complete_job` no longer accept client distance, position, fuel or time. Migration `20261009000003_server_telemetry.sql`:
+- `submit_telemetry`: only the **server clock** is used. A sample is accepted if distance moved <= (top speed x 1.3) x elapsed + 15 m. Rejected samples do not advance state; 10 rejections flag the assignment (completion then refused). Samples are rate-limited (0.5 s) and require an in-progress assignment owned by the caller. Function never raises for cheating, so thresholds cannot be probed from error text.
+- `start_job(asg, x, z)`: reported position must be within 120 m of the pickup; server stamps the start time.
+- `complete_job(asg, damage)`: requires fresh (<60 s) last accepted position within 150 m of the destination, server-verified distance within [0.8x, 5x] of route length, trip time >= distance / (1.25 x top speed), no flag. **Fuel is computed server-side** (verified km x vehicle burn rate). **Damage may only rise**, by at most 3 % per verified km. Profile distance uses verified km.
+- Reward, XP, bonus come only from the `jobs` row.
+
+| Suite | Result |
+|---|---|
+| `20_security_matrix.sql` (all of phase 1 + teleport, speed-hack, flood, wait-then-teleport, stale, wrong place, inconsistent route length both directions, flag-after-10, completed-assignment samples, server fuel burn, damage monotonicity/cap, telemetry table inaccessible, only-intended-RPCs-executable catalog check) | PASS |
+| `30_concurrency.sh` (4 races, now through the telemetry path) | PASS |
+| `mutation.py` | **50 of 50 protections caught**; 1 survivor by design (wallet CHECK alone). It found and led to one more test (verified-distance ceiling). |
+
+Simulation note: tests move the server clock by back-dating `last_at`/`started_at` (superuser fixtures) and drive real simulated paths through `submit_telemetry`; they do not sleep.
+
+### What is still forgeable (honest residual risk)
+- A cheater who runs a modified client that sends *legal-looking* positions at legal speeds along any path still earns the reward - but only after spending the real driving time. There is no check that samples follow the road, so a bot cutting straight across terrain is not detected.
+- Position samples are not signed; a stolen JWT can submit samples from another machine.
+- Damage figure is client-reported within bounds; it can only hurt the player.
+- Planned hardening: path-adherence check against route geometry (stored server-side), multiplayer server-authoritative position from Netcode host/dedicated server.
+
 ### Caveats (what this does NOT prove)
 - Tests run on plain Postgres with a **stub `auth` schema** and role switching, not on real Supabase (GoTrue/PostgREST). RLS and GRANT behaviour is standard Postgres, but PostgREST/JWT plumbing is unverified. Run the same SQL against a Supabase branch before launch.
-- Client-reported distance/position are still trusted within plausibility bounds. Phase 4 (server telemetry) addresses this; see below once verified.

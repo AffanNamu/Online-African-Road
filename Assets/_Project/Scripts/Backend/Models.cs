@@ -32,6 +32,7 @@ namespace ARO.Backend
     }
     [Serializable] public class AssignmentDto { public string id, job_id, vehicle_id, status; }
 
+    [Serializable] public class TelemetryResult { public bool accepted; public string reason; public double verified_km; }
     [Serializable] public class CompleteJobResult { public long reward, bonus, xp, balance; public int level; }
     [Serializable] public class ListWrapper<T> { public T[] items; }
 }

@@ -24,23 +24,30 @@ namespace ARO.Jobs
             return r.Ok ? Result<string>.Success(r.Value.Trim('"')) : r;   // returns assignment id
         }
 
-        public Task<Result<string>> Start(string assignmentId) =>
-            _api.Rpc("start_job", $"{{\"p_assignment\":\"{assignmentId}\"}}");
+        static string Pos(Vector3 p) => $"\"p_x\":{p.x.ToString("F2", CultureInfo.InvariantCulture)},\"p_z\":{p.z.ToString("F2", CultureInfo.InvariantCulture)}";
+
+        /// <summary>Load cargo. The server requires the reported position to be at the pickup and starts its own clock.</summary>
+        public Task<Result<string>> Start(string assignmentId, Vector3 pos) =>
+            _api.Rpc("start_job", $"{{\"p_assignment\":\"{assignmentId}\",{Pos(pos)}}}");
+
+        /// <summary>One position sample. The server judges plausibility with ITS clock; rejected samples are silently ignored.</summary>
+        public async Task<Result<TelemetryResult>> SubmitTelemetry(string assignmentId, Vector3 pos)
+        {
+            var r = await _api.Rpc("submit_telemetry", $"{{\"p_assignment\":\"{assignmentId}\",{Pos(pos)}}}");
+            if (!r.Ok) return Result<TelemetryResult>.Fail(r.ErrorCode, r.UserMessage);
+            return Result<TelemetryResult>.Success(JsonUtility.FromJson<TelemetryResult>(r.Value));
+        }
 
         public Task<Result<string>> Abandon(string assignmentId) =>
             _api.Rpc("abandon_job", $"{{\"p_assignment\":\"{assignmentId}\"}}");
 
-        /// <summary>Report delivery. The server re-validates time, distance and position before paying.</summary>
-        public async Task<Result<CompleteJobResult>> Complete(string assignmentId, float distanceKm, Vector3 finalPos, float fuelL, float damagePct)
+        /// <summary>
+        /// Request delivery. Distance, position, time and fuel are derived server-side from accepted telemetry;
+        /// the only client input is the damage figure, which the server bounds and never lets decrease.
+        /// </summary>
+        public async Task<Result<CompleteJobResult>> Complete(string assignmentId, float damagePct)
         {
-            var ci = CultureInfo.InvariantCulture;
-            string args = "{" +
-                $"\"p_assignment\":\"{assignmentId}\"," +
-                $"\"p_distance_km\":{distanceKm.ToString("F3", ci)}," +
-                $"\"p_final_x\":{finalPos.x.ToString("F2", ci)}," +
-                $"\"p_final_z\":{finalPos.z.ToString("F2", ci)}," +
-                $"\"p_fuel_remaining_l\":{fuelL.ToString("F2", ci)}," +
-                $"\"p_damage_pct\":{damagePct.ToString("F2", ci)}}}";
+            string args = $"{{\"p_assignment\":\"{assignmentId}\",\"p_damage_pct\":{damagePct.ToString("F2", CultureInfo.InvariantCulture)}}}";
             var r = await _api.Rpc("complete_job", args);
             if (!r.Ok) return Result<CompleteJobResult>.Fail(r.ErrorCode, r.UserMessage);
             return Result<CompleteJobResult>.Success(JsonUtility.FromJson<CompleteJobResult>(r.Value));

@@ -31,7 +31,7 @@ namespace ARO.Game
         public JobPhase Phase { get; private set; }
         public string Message { get; private set; }
         public float MessageUntil;
-        GameObject _markerGo; bool _busy; float _startOdo;
+        GameObject _markerGo; bool _busy; bool _sampling; float _nextSample, _retryAt; const float SampleInterval = 2f;
         string _vehicleId;
         public System.Action<CompleteJobResult> JobCompleted;
         public System.Action<VehicleController> VehicleSpawned;
@@ -89,22 +89,33 @@ namespace ARO.Game
         {
             if (!Active || Vehicle == null) return;
             if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame) Cam.ToggleCockpit();
-            if (Job == null || _busy) return;
+            if (Job == null || _busy || Time.time < _retryAt) return;
 
             bool stopped = Vehicle.SpeedKmh < StopSpeedKmh;
             float d = DistanceToTarget;
             if (Phase == JobPhase.ToPickup && d < PickupRadius && stopped) _ = LoadCargo();
             else if (Phase == JobPhase.ToDestination && d < DeliverRadius && stopped) _ = Deliver();
             if (_markerGo != null) _markerGo.transform.Rotate(0, 60f * Time.deltaTime, 0);
+            if (Phase == JobPhase.ToDestination && !_sampling && Time.time >= _nextSample) _ = SendSample();
+        }
+
+        /// <summary>Stream position to the server. It validates speed against its own clock; we only log rejections.</summary>
+        async System.Threading.Tasks.Task SendSample()
+        {
+            _sampling = true; _nextSample = Time.time + SampleInterval;
+            var r = await _svc.Jobs.SubmitTelemetry(AssignmentId, Vehicle.transform.position);
+            _sampling = false;
+            if (r.Ok && !r.Value.accepted && r.Value.reason == "flagged") Say("Your movement data was rejected. This job cannot be completed.", 8f);
+            else if (r.Ok && !r.Value.accepted && r.Value.reason == "too_fast") Debug.LogWarning("[Telemetry] sample rejected by server (too fast)");
         }
 
         async System.Threading.Tasks.Task LoadCargo()
         {
             _busy = true; Say("Loading cargo...");
-            var r = await _svc.Jobs.Start(AssignmentId);   // server stamps started_at: the clock for delivery validation
+            var r = await _svc.Jobs.Start(AssignmentId, Vehicle.transform.position);   // server stamps started_at: the clock for delivery validation
             _busy = false;
-            if (!r.Ok) { Say(r.UserMessage, 6f); if (r.ErrorCode == "invalid_state") Phase = JobPhase.ToDestination; return; }
-            _startOdo = Vehicle.odometerKm; Phase = JobPhase.ToDestination;
+            if (!r.Ok) { Say(r.UserMessage, 6f); _retryAt = Time.time + 5f; if (r.ErrorCode == "invalid_state") Phase = JobPhase.ToDestination; return; }
+            Phase = JobPhase.ToDestination; _nextSample = Time.time + SampleInterval;
             PlaceMarker(TargetPos);
             Say($"Cargo loaded ({Job.cargo_type}). Deliver to {Job.destination.name}.");
         }
@@ -112,12 +123,13 @@ namespace ARO.Game
         async System.Threading.Tasks.Task Deliver()
         {
             _busy = true; Say("Delivering... waiting for server validation.");
-            float dist = Vehicle.odometerKm - _startOdo;
-            var r = await _svc.Jobs.Complete(AssignmentId, dist, Vehicle.transform.position, Vehicle.fuelL, Vehicle.damagePct);
+            while (_sampling) await System.Threading.Tasks.Task.Yield();
+            await _svc.Jobs.SubmitTelemetry(AssignmentId, Vehicle.transform.position);   // final fresh sample at the destination
+            var r = await _svc.Jobs.Complete(AssignmentId, Vehicle.damagePct);
             _busy = false;
             if (!r.Ok)
             {
-                Say(r.UserMessage, 8f);
+                Say(r.UserMessage, 8f); _retryAt = Time.time + 6f;
                 if (r.ErrorCode == "already_completed") Clear();
                 return;   // other rejections: player can keep driving and retry (e.g. not_at_destination)
             }

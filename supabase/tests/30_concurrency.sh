@@ -30,12 +30,12 @@ WINNER=$( [ -s "$out1" ] && grep -q '^ACCEPTED:' "$out1" && echo "$A" || echo "$
 
 # --- RACE 2: the winner double-submits delivery concurrently: reward paid once
 ASG=$(q -c "select id from job_assignments where job_id='$J' and player_id='$WINNER'")
-q -c "update job_assignments set status='in_progress', started_at=now()-interval '10 minutes' where id='$ASG'"
+q -c "select testkit.as_user('$WINNER', format('select start_job(%L,0,0)::text','$ASG')); select testkit.drive('$WINNER','$ASG',0,0,2600,-900);" >/dev/null
 BEFORE=$(q -c "select balance from player_wallets where player_id='$WINNER'")
 r1=$(mktemp); r2=$(mktemp)
 deliver() {
   psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$WINNER',false);
-    begin; select pg_sleep(0.2); select complete_job('$ASG',3.2,2600,-900,100,0)::text; select pg_sleep(0.5); commit;" >"$1" 2>&1 || true
+    begin; select pg_sleep(0.2); select complete_job('$ASG',0)::text; select pg_sleep(0.5); commit;" >"$1" 2>&1 || true
 }
 deliver "$r1" & deliver "$r2" & wait
 AFTER=$(q -c "select balance from player_wallets where player_id='$WINNER'")
