@@ -39,6 +39,11 @@ namespace ARO.Game
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
             new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud);
 
+            // Ambient traffic (pooled, quality-scaled); follows the player's vehicle once spawned.
+            var traffic = new GameObject("Traffic").AddComponent<TrafficManager>();
+            traffic.route = route; traffic.bodyTemplate = truckBody;
+            drive.VehicleSpawned += v => traffic.player = v.transform;
+
             // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
             Light sun = null;
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }
