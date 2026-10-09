@@ -48,6 +48,18 @@ jobs:
         env: { DH_USER: "${{ secrets.DOCKERHUB_USERNAME }}", DH_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}" }
         run: |
           if [ -n "$DH_USER" ] && [ -n "$DH_TOKEN" ]; then echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin; else echo "no Docker Hub credentials; using anonymous pulls"; fi
+      # Docker Hub is flaky/throttled for anonymous pulls from shared runners (toomanyrequests, auth.docker.io timeouts).
+      # Pre-pull the exact images GameCI will use, with retries + backoff, so game-ci finds them locally.
+      - name: Pre-pull Unity editor images (retry with backoff)
+        run: |
+          for img in unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 unityci/editor:ubuntu-6000.0.58f2-webgl-3; do
+            ok=0
+            for i in 1 2 3 4 5 6 7 8; do
+              if docker pull "$img"; then ok=1; break; fi
+              echo "pull of $img failed (attempt $i); sleeping $((i*30))s"; sleep $((i*30))
+            done
+            [ "$ok" = 1 ] || { echo "could not pull $img after retries"; exit 1; }
+          done
       - uses: actions/cache@v4
         with:
           path: Library
