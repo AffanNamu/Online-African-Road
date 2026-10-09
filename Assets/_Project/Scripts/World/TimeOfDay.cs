@@ -36,7 +36,7 @@ namespace ARO.World
         {
             _sky = new Material(Shader.Find("Skybox/Procedural"));
             RenderSettings.skybox = _sky; RenderSettings.sun = sun;
-            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilinear;
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
         }
 
