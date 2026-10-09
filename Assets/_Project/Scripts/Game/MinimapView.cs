@@ -16,7 +16,7 @@ namespace ARO.Game
         Camera _cam; RenderTexture _rt; RectTransform _marker; Image _markerImg; Transform _target; float _next;
         bool _enabled = true;
 
-        public void Build(Transform parent, Vector2 centre, float size)
+        public void Build(Transform parent, Vector2 centre, float size)  // centre is relative to the parent centre
         {
             // Circular mask + render texture + player arrow + destination marker.
             var root = UIGfx.Shape(parent, "Minimap", UIGfx.Disc, new Color(0.04f, 0.05f, 0.06f, 0.92f), centre, size);

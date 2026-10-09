@@ -49,10 +49,12 @@ namespace ARO.Game
             return img;
         }
 
-        public static Image Shape(Transform parent, string name, Sprite sprite, Color tint, Vector2 centre, float size)
+        /// <summary>Square shape. anchor = the point of the parent that anchoredPosition is measured from (default: parent centre).</summary>
+        public static Image Shape(Transform parent, string name, Sprite sprite, Color tint, Vector2 centre, float size, Vector2? anchor = null)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Image)); go.transform.SetParent(parent, false);
-            var rt = (RectTransform)go.transform; rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f); rt.anchoredPosition = centre; rt.sizeDelta = new Vector2(size, size);
+            var a = anchor ?? new Vector2(0.5f, 0.5f);
+            var rt = (RectTransform)go.transform; rt.anchorMin = rt.anchorMax = a; rt.anchoredPosition = centre; rt.sizeDelta = new Vector2(size, size);
             var img = go.GetComponent<Image>(); img.sprite = sprite; img.color = tint; img.raycastTarget = false; return img;
         }
     }

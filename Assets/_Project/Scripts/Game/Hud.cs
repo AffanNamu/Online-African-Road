@@ -37,10 +37,14 @@ namespace ARO.Game
         // ---------------------------------------------------------------- layout
         void BuildDial(Transform t)
         {
-            var dial = UIGfx.Panel(t, "DialPanel", Glass, new Vector2(0, 0), new Vector2(0, 0), new Vector2(28, 28), new Vector2(560, 272)).transform;
+            var panel = UIGfx.Panel(t, "DialPanel", Glass, new Vector2(0, 0), new Vector2(0, 0), new Vector2(28, 28), new Vector2(560, 272)).transform;
+            // Zero-size node at the panel's bottom-left: children use (0,0) anchors, so anchoredPosition is measured from there.
+            var originGo = new GameObject("Origin", typeof(RectTransform)); originGo.transform.SetParent(panel, false);
+            var originRt = (RectTransform)originGo.transform; originRt.anchorMin = originRt.anchorMax = Vector2.zero; originRt.pivot = Vector2.zero; originRt.anchoredPosition = Vector2.zero; originRt.sizeDelta = Vector2.zero;
+            var dial = originGo.transform;
             const float size = 214f; var c = new Vector2(122, 122);
-            var back = UIGfx.Shape(dial, "Back", UIGfx.Ring, new Color(1, 1, 1, 0.10f), c, size); back.type = Image.Type.Filled; Arc(back, 0.75f);
-            _arc = UIGfx.Shape(dial, "Arc", UIGfx.Ring, UIKit.Accent, c, size); _arc.type = Image.Type.Filled; Arc(_arc, 0f);
+            var back = UIGfx.Shape(dial, "Back", UIGfx.Ring, new Color(1, 1, 1, 0.10f), c, size, Vector2.zero); back.type = Image.Type.Filled; Arc(back, 0.75f);
+            _arc = UIGfx.Shape(dial, "Arc", UIGfx.Ring, UIKit.Accent, c, size, Vector2.zero); _arc.type = Image.Type.Filled; Arc(_arc, 0f);
             // tick marks every 20 km/h
             for (int v = 0; v <= (int)MaxDialKmh; v += 20)
             {
@@ -54,7 +58,7 @@ namespace ARO.Game
             var needle = UIGfx.Panel(dial, "Needle", UIKit.TextCol, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero, pill: true);
             _needle = (RectTransform)needle.transform; _needle.anchorMin = _needle.anchorMax = Vector2.zero; _needle.pivot = new Vector2(0.5f, 0f);
             _needle.sizeDelta = new Vector2(5f, 78f); _needle.anchoredPosition = c;
-            UIGfx.Shape(dial, "Hub", UIGfx.Disc, new Color(0.1f, 0.12f, 0.15f, 1f), c, 26f);
+            UIGfx.Shape(dial, "Hub", UIGfx.Disc, new Color(0.1f, 0.12f, 0.15f, 1f), c, 26f, Vector2.zero);
 
             _speed = Lbl(dial, "0", 62, UIKit.TextCol, TextAnchor.MiddleCenter, c + new Vector2(0, -52), new Vector2(130, 70));
             Lbl(dial, "km/h", 20, UIKit.Muted, TextAnchor.MiddleCenter, c + new Vector2(0, -92), new Vector2(100, 24));
@@ -92,7 +96,7 @@ namespace ARO.Game
             var holder = new GameObject("MinimapHolder", typeof(RectTransform)); holder.transform.SetParent(t, false);
             var rt = (RectTransform)holder.transform; rt.anchorMin = rt.anchorMax = new Vector2(1, 1); rt.pivot = new Vector2(1, 1);
             rt.anchoredPosition = new Vector2(-28, -28); rt.sizeDelta = new Vector2(300, 300);
-            _map = gameObject.AddComponent<MinimapView>(); _map.Build(holder.transform, new Vector2(-150, -150), 240f);
+            _map = gameObject.AddComponent<MinimapView>(); _map.Build(holder.transform, Vector2.zero, 240f);
             var chip = UIGfx.Panel(t, "EtaChip", Glass, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-298, -352), new Vector2(-28, -300), true);
             _eta = UIKit.Label(chip.transform, "", 22, UIKit.TextCol, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             var wal = UIGfx.Panel(t, "Wallet", Glass, new Vector2(1, 1), new Vector2(1, 1), new Vector2(-298, -410), new Vector2(-28, -364), true);
