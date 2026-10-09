@@ -132,7 +132,7 @@ begin
   v_min_seconds := v_job.distance_km / (v_def.max_speed_kmh * 1.25) * 3600;
   if v_elapsed < v_min_seconds then raise exception 'delivery_too_fast'; end if;
   -- 2. Distance driven must be consistent with the route (not near zero, not absurd).
-  if p_distance_km < v_job.distance_km * 0.9 or p_distance_km > v_job.distance_km * 3 then
+  if p_distance_km < v_job.distance_km * 0.8 or p_distance_km > v_job.distance_km * 3 then
     raise exception 'distance_implausible';
   end if;
   -- 3. Final position must be at the destination (150 m radius).
@@ -259,8 +259,8 @@ begin
     select * into o from locations order by random() limit 1;
     select * into d from locations where id <> o.id order by random() limit 1;
     exit when d.id is null;
-    -- straight-line world distance in km, scaled by 1.2 for road winding
-    v_dist := round((sqrt(power(o.world_x - d.world_x, 2) + power(o.world_z - d.world_z, 2)) / 1000.0 * 1.2)::numeric, 1);
+    -- straight-line world distance in km, scaled by 1.1 for road winding
+    v_dist := round((sqrt(power(o.world_x - d.world_x, 2) + power(o.world_z - d.world_z, 2)) / 1000.0 * 1.1)::numeric, 1);
     continue when v_dist < 0.5;
     v_diff := 1 + floor(random() * 5)::int;
     v_cargo := cargos[1 + floor(random() * array_length(cargos, 1))::int];
