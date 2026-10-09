@@ -5,6 +5,8 @@ using ARO.World;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace ARO.Editor
@@ -23,6 +25,7 @@ namespace ARO.Editor
         {
             foreach (var d in new[] { "Data", "Materials", "Scenes", "Resources" }) Directory.CreateDirectory($"{Root}/{d}");
 
+            EnsureUrp();
             var mats = new
             {
                 good = Mat("RoadGood", new Color(0.16f, 0.16f, 0.17f)),
@@ -69,11 +72,24 @@ namespace ARO.Editor
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(path, true) };
             AssetDatabase.SaveAssets();
 
-            if (UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline == null)
-                Debug.LogWarning("[ARO] No URP asset assigned. Create > Rendering > URP Asset (with Universal Renderer) and assign it in Project Settings > Graphics and Quality.");
             if (Resources.Load("BackendConfig") == null)
                 Debug.LogWarning("[ARO] Create Resources/BackendConfig (Create > African Roads > Backend Config) and fill in your Supabase URL + anon key.");
             Debug.Log("[ARO] Bootstrap scene built: " + path);
+        }
+
+        /// <summary>Creates and assigns a URP pipeline asset if the project has none (so headless CI renders with URP shaders).</summary>
+        static void EnsureUrp()
+        {
+            if (GraphicsSettings.defaultRenderPipeline != null) return;
+            string dir = $"{Root}/Settings"; Directory.CreateDirectory(dir);
+            var rd = ScriptableObject.CreateInstance<UniversalRendererData>();
+            AssetDatabase.CreateAsset(rd, $"{dir}/ARO_Renderer.asset");
+            var pipe = UniversalRenderPipelineAsset.Create(rd);
+            pipe.shadowDistance = 150f;
+            AssetDatabase.CreateAsset(pipe, $"{dir}/ARO_URP.asset");
+            GraphicsSettings.defaultRenderPipeline = pipe;
+            for (int i = 0; i < QualitySettings.names.Length; i++) { QualitySettings.SetQualityLevel(i); QualitySettings.renderPipeline = pipe; }
+            AssetDatabase.SaveAssets();
         }
 
         static Material Mat(string name, Color c)

@@ -11,4 +11,4 @@ Blocker: a Unity license must be provided once (GameCI cannot build without one)
 3. Repo Settings > Secrets: `UNITY_LICENSE` (contents of `.ulf`), `UNITY_EMAIL`, `UNITY_PASSWORD`; Variables: `UNITY_CI_ENABLED=true`.
 4. Push: CI runs EditMode tests, then `ARO.Editor.BuildScript.BuildWebGL`, then uploads `webgl-build`.
 The project is **not build-ready** until that job is green. Before the first build, `Assets/_Project/Scenes/Bootstrap.unity`
-must exist: CI step `BuildScript.PrepareProject` generates it headlessly (SceneBuilder), so no manual editor step is needed.
+must exist: `BuildScript` runs `SceneBuilder.Build()` first (generates scene, materials, URP asset), so no manual editor step is needed.
