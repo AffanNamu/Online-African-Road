@@ -40,7 +40,7 @@ jobs:
   unity:
     name: Unity tests + WebGL build
     runs-on: ubuntu-latest
-    # Needs repository secret UNITY_LICENSE (manual-activation .ulf; see docs/BUILD.md). Email/password login activation is intentionally NOT used (fails for Unity 6 Personal in CI).
+    # Needs repository secrets UNITY_LICENSE (the .ulf contents), UNITY_EMAIL and UNITY_PASSWORD (a Unity ID WITH a password, no 2FA). Run 'Unity license check' first: it tells you if the secrets look right.
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
     steps:
       - uses: actions/checkout@v4
@@ -70,10 +70,14 @@ jobs:
       - uses: game-ci/unity-test-runner@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with: { testMode: editmode }
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
           buildMethod: ARO.Editor.BuildScript.BuildWebGL

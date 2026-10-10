@@ -1,0 +1,53 @@
+# Diagnostic only: tells you, in plain words, whether the Unity secrets look right. Prints the SHAPE of each secret
+# (set / not set, which kind of file it is, whether it is complete) and never prints any secret value.
+# Run it from Actions > "Unity license check" > Run workflow. Takes a few seconds, uses no Docker and no Unity.
+name: Unity license check
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect Unity secrets (shape only)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          lic = os.environ.get("UNITY_LICENSE", "")
+          mail = os.environ.get("UNITY_EMAIL", "")
+          pw = os.environ.get("UNITY_PASSWORD", "")
+          ser = os.environ.get("UNITY_SERIAL", "")
+          ok = lambda b: "OK   " if b else "PROBLEM"
+          print("== UNITY_LICENSE ==")
+          if not lic.strip():
+              print("PROBLEM  not set (or empty). Paste the WHOLE contents of the license file into this secret.")
+          else:
+              s = lic.strip()
+              print(f"set, {len(s)} characters, {len(s.splitlines())} lines")
+              is_alf = "<SystemInfo" in s or "<SystemInfo>" in s
+              is_serial = re.fullmatch(r"[A-Za-z0-9]{2}(-[A-Za-z0-9]{4}){5}", s) is not None
+              looks_xml = s.startswith("<?xml") or s.startswith("<root")
+              print(ok(looks_xml and not is_alf and not is_serial), "starts like a Unity license file (XML):", looks_xml)
+              if is_alf: print("PROBLEM  this is the ACTIVATION REQUEST (.alf), not a license. A license file ends in .ulf.")
+              if is_serial: print("PROBLEM  this is a serial key. UNITY_LICENSE needs the .ulf FILE contents; put a serial in UNITY_SERIAL instead.")
+              print(ok("<License" in s), "contains <License ...>:", "<License" in s)
+              print(ok("<Signature" in s or "</root>" in s), "ends like a complete file (</root>):", s.endswith("</root>"))
+              print(ok(s.endswith("</root>")), "not cut off at the end:", s.endswith("</root>"))
+              print("INFO     has DeveloperData (serial-backed license):", "DeveloperData" in s)
+              print("INFO     has Entitlement markup (new-style Hub license, not a classic .ulf):", "Entitlement" in s)
+              if '"' in s[:3] or s.startswith("'"): print("PROBLEM  value starts with a quote character; paste the raw file contents without quotes.")
+          print("\n== UNITY_EMAIL ==")
+          print(ok(bool(mail.strip()) and "@" in mail), "set and looks like an email:", bool(mail.strip()) and "@" in mail)
+          if mail != mail.strip(): print("PROBLEM  has leading/trailing whitespace; re-enter it without spaces or a newline.")
+          print("\n== UNITY_PASSWORD ==")
+          print(ok(bool(pw)), "set:", bool(pw))
+          if pw != pw.strip(): print("PROBLEM  has leading/trailing whitespace or a newline at the end; re-enter it exactly.")
+          if mail.lower().endswith("@gmail.com"):
+              print("NOTE     The email is a Gmail address. If you sign in to Unity with 'Continue with Google', that Unity ID has NO password of its own;")
+              print("         any password stored here would be wrong. Set a Unity password first (id.unity.com > forgot password), or use a dedicated Unity ID.")
+          print("\n== UNITY_SERIAL (optional) ==")
+          print("set:", bool(ser.strip()))
+          PY
