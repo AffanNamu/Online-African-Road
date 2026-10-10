@@ -1,0 +1,295 @@
+{
+ "schemaVersion": 1,
+ "props": [
+  {
+   "id": "palm_tree",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/palm_tree (same id, same real-world size and pivot).",
+   "source": "dev:palm_tree",
+   "collider": "none",
+   "heightM": 12,
+   "widthM": 6,
+   "depthM": 6,
+   "cullDistance": 350,
+   "lodTriangles": [
+    900,
+    300,
+    60
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "tropical_tree",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/tropical_tree (same id, same real-world size and pivot).",
+   "source": "dev:tropical_tree",
+   "collider": "none",
+   "heightM": 14,
+   "widthM": 9,
+   "depthM": 9,
+   "cullDistance": 350,
+   "lodTriangles": [
+    1200,
+    400,
+    80
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "bush",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/bush (same id, same real-world size and pivot).",
+   "source": "dev:bush",
+   "collider": "none",
+   "heightM": 1.2,
+   "widthM": 2,
+   "depthM": 2,
+   "cullDistance": 140,
+   "lodTriangles": [
+    200,
+    80
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "concrete_house",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/concrete_house (same id, same real-world size and pivot).",
+   "source": "dev:concrete_house",
+   "collider": "box",
+   "heightM": 6,
+   "widthM": 10,
+   "depthM": 9,
+   "cullDistance": 420,
+   "lodTriangles": [
+    300,
+    120
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "apartment_block",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/apartment_block (same id, same real-world size and pivot).",
+   "source": "dev:apartment_block",
+   "collider": "box",
+   "heightM": 16,
+   "widthM": 18,
+   "depthM": 14,
+   "cullDistance": 520,
+   "lodTriangles": [
+    500,
+    200
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "shop_row",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/shop_row (same id, same real-world size and pivot).",
+   "source": "dev:shop_row",
+   "collider": "box",
+   "heightM": 4.2,
+   "widthM": 18,
+   "depthM": 8,
+   "cullDistance": 380,
+   "lodTriangles": [
+    500,
+    200
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "kiosk",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/kiosk (same id, same real-world size and pivot).",
+   "source": "dev:kiosk",
+   "collider": "box",
+   "heightM": 2.6,
+   "widthM": 3,
+   "depthM": 3,
+   "cullDistance": 220,
+   "lodTriangles": [
+    150,
+    60
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "market_stall",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/market_stall (same id, same real-world size and pivot).",
+   "source": "dev:market_stall",
+   "collider": "none",
+   "heightM": 2.4,
+   "widthM": 3.5,
+   "depthM": 3,
+   "cullDistance": 200,
+   "lodTriangles": [
+    180,
+    80
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "warehouse",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/warehouse (same id, same real-world size and pivot).",
+   "source": "dev:warehouse",
+   "collider": "box",
+   "heightM": 10,
+   "widthM": 30,
+   "depthM": 20,
+   "cullDistance": 600,
+   "lodTriangles": [
+    400,
+    150
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "fuel_station",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/fuel_station (same id, same real-world size and pivot).",
+   "source": "dev:fuel_station",
+   "collider": "box",
+   "heightM": 6,
+   "widthM": 28,
+   "depthM": 18,
+   "cullDistance": 500,
+   "lodTriangles": [
+    900,
+    350
+   ],
+   "castShadow": true,
+   "tags": []
+  },
+  {
+   "id": "bus_stop",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/bus_stop (same id, same real-world size and pivot).",
+   "source": "dev:bus_stop",
+   "collider": "none",
+   "heightM": 3,
+   "widthM": 5,
+   "depthM": 2,
+   "cullDistance": 260,
+   "lodTriangles": [
+    260,
+    100
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "utility_pole",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/utility_pole (same id, same real-world size and pivot).",
+   "source": "dev:utility_pole",
+   "collider": "none",
+   "heightM": 9,
+   "widthM": 0.4,
+   "depthM": 0.4,
+   "cullDistance": 260,
+   "lodTriangles": [
+    90,
+    40
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "street_light",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/street_light (same id, same real-world size and pivot).",
+   "source": "dev:street_light",
+   "collider": "none",
+   "heightM": 9,
+   "widthM": 3,
+   "depthM": 0.6,
+   "cullDistance": 260,
+   "lodTriangles": [
+    250,
+    100
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "road_sign",
+   "category": "signs",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/road_sign (same id, same real-world size and pivot).",
+   "source": "dev:road_sign",
+   "collider": "none",
+   "heightM": 3.2,
+   "widthM": 2.6,
+   "depthM": 0.2,
+   "cullDistance": 300,
+   "lodTriangles": [
+    60,
+    30
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "billboard",
+   "category": "signs",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/billboard (same id, same real-world size and pivot).",
+   "source": "dev:billboard",
+   "collider": "none",
+   "heightM": 8,
+   "widthM": 8,
+   "depthM": 0.6,
+   "cullDistance": 700,
+   "lodTriangles": [
+    120,
+    60
+   ],
+   "castShadow": false,
+   "tags": []
+  },
+  {
+   "id": "telecom_mast",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/telecom_mast (same id, same real-world size and pivot).",
+   "source": "dev:telecom_mast",
+   "collider": "none",
+   "heightM": 30,
+   "widthM": 3,
+   "depthM": 3,
+   "cullDistance": 1200,
+   "lodTriangles": [
+    300,
+    120
+   ],
+   "castShadow": false,
+   "tags": []
+  }
+ ]
+}
