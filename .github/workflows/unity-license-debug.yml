@@ -1,0 +1,48 @@
+# Diagnostic: tries the ways Unity 6 can accept a Personal license inside the same editor image CI uses, and prints a short
+# filtered verdict for each (secrets masked, nothing secret printed). Run: Actions > "Unity license debug" > Run workflow (~10 min).
+name: Unity license debug
+on: workflow_dispatch
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull the editor image (retry)
+        run: |
+          for i in 1 2 3 4 5 6; do docker pull unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 && exit 0; echo "retry $i"; sleep $((i*30)); done; exit 1
+      - name: Prepare license files and mask derived secrets
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          mkdir -p /tmp/lic
+          python3 - <<'PY'
+          import os, re, base64
+          lic = os.environ["UNITY_LICENSE"]
+          open("/tmp/lic/Unity_lic.ulf", "w").write(lic)
+          serial = ""
+          m = re.search(r'DeveloperData Value="([^"]+)"', lic)
+          if m:
+              raw = base64.b64decode(m.group(1))
+              s = re.search(rb"[A-Za-z0-9]{2}(?:-[A-Za-z0-9]{4}){5}", raw)
+              if s: serial = s.group(0).decode()
+          print("serial recovered from the license file:", bool(serial))
+          if serial:
+              print("::add-mask::" + serial)
+              open("/tmp/lic/serial", "w").write(serial)
+          PY
+      - name: "E1: .ulf at the legacy per-user path"
+        if: always()
+        run: docker run --rm -v /tmp/lic:/lic:ro -v "$PWD/.github/scripts:/s:ro" unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 bash /s/license-exp.sh E1
+      - name: "E2: -manualLicenseFile"
+        if: always()
+        run: docker run --rm -v /tmp/lic:/lic:ro -v "$PWD/.github/scripts:/s:ro" unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 bash /s/license-exp.sh E2
+      - name: "E3: serial + account login"
+        if: always()
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: docker run --rm -e UNITY_EMAIL -e UNITY_PASSWORD -v /tmp/lic:/lic:ro -v "$PWD/.github/scripts:/s:ro" unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 bash /s/license-exp.sh E3
+      - name: "E4: licensing client options"
+        if: always()
+        run: docker run --rm -v /tmp/lic:/lic:ro -v "$PWD/.github/scripts:/s:ro" unityci/editor:ubuntu-6000.0.58f2-linux-il2cpp-3 bash /s/license-exp.sh E4
