@@ -159,7 +159,8 @@ namespace ARO.Game
 
             var v = _s.Vehicle; var def = v.definition;
             _smoothSpeed = Mathf.Lerp(_smoothSpeed, v.SpeedKmh, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
-            _speed.text = Mathf.RoundToInt(_smoothSpeed).ToString();
+            _speed.horizontalOverflow = HorizontalWrapMode.Overflow;   // 4 digits used to wrap onto a second line
+            _speed.text = Mathf.Clamp(Mathf.RoundToInt(_smoothSpeed), 0, 999).ToString();
             _gear.text = v.CurrentGear < 0 ? "R" : "D" + v.CurrentGear;
             float frac = Gauge.Fraction(_smoothSpeed, 0f, MaxDialKmh);
             _arc.fillAmount = 0.75f * frac; _arc.color = frac > 0.85f ? UIKit.Bad : UIKit.Accent;

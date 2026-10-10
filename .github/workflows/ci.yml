@@ -119,6 +119,7 @@ jobs:
     needs: unity
     runs-on: ubuntu-latest
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
+    permissions: { contents: write }   # only to publish screenshots to the ci-screenshots branch
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -133,6 +134,19 @@ jobs:
         env:
           EXPECT_BACKEND: ${{ secrets.SUPABASE_ANON_KEY != '' && '1' || '' }}   # when the anon key exists the build must have been configured with it
         run: node tools/webgl-smoke.js Builds/WebGL webgl-smoke.png
+      - name: Drive scenario (?smoke=drive) - the truck must land on real ground, accelerate and move
+        if: always()
+        run: node tools/webgl-drive.js Builds/WebGL webgl-drive
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: webgl-smoke-screenshot, path: webgl-smoke*.png, if-no-files-found: ignore }
+        with: { name: webgl-smoke-screenshot, path: "webgl-*.png", if-no-files-found: ignore }
+      - name: Publish screenshots to the ci-screenshots branch (reviewable without downloading artifacts)
+        if: always() && github.event_name == 'push'
+        run: |
+          mkdir -p /tmp/shots && cp webgl-*.png /tmp/shots/ 2>/dev/null || true
+          cd /tmp/shots
+          echo "run ${{ github.run_id }} commit ${{ github.sha }}" > README.txt
+          git init -q && git checkout -q -b ci-screenshots
+          git config user.name "ci" && git config user.email "ci@users.noreply.github.com"
+          git add -A && git commit -qm "screenshots for ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-screenshots

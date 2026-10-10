@@ -32,6 +32,14 @@ namespace ARO.Game
 
         async Task StartUp()
         {
+            if (SmokeMode.Drive)
+            {
+                await Task.Yield();
+                Debug.Log("[Smoke] drive scenario: skipping sign-in");
+                _drive.Enter(new OwnedVehicleDto { id = "smoke-truck", definition_id = "truck_light_01", fuel_l = 120, damage_pct = 0 });
+                _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
+                return;
+            }
             if (!_svc.Config.IsConfigured) { ShowLogin("Backend not configured (see docs/DEVELOPMENT.md). Jobs and persistence are disabled."); return; }
             Toast("Checking saved session...");
             if (await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);

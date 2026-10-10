@@ -33,6 +33,8 @@ namespace ARO.Game
         public float RouteDistance { get; private set; }   // straight-line pickup->destination, for the progress bar
         GameObject _markerGo; bool _busy; bool _sampling; float _nextSample, _retryAt; const float SampleInterval = 2f;
         string _vehicleId;
+        Rigidbody _holdRb; bool _holding; float _holdSince, _nextSafe, _nextLog; Vector3 _lastSafe, _spawnPos; Quaternion _lastSafeRot;
+        const float KillY = -25f, HoldTimeout = 10f;
         public System.Action<CompleteJobResult> JobCompleted;
         public System.Action<VehicleController> VehicleSpawned;
 
@@ -54,6 +56,9 @@ namespace ARO.Game
             Vehicle = TruckFactory.Create(def, (at ?? n0) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
+            // Freeze the vehicle until the streamer has built the ground under it; otherwise it drops through the world.
+            _holdRb = Vehicle.GetComponent<Rigidbody>(); _holdRb.constraints = RigidbodyConstraints.FreezeAll; _holdSince = Time.unscaledTime; _holding = true;
+            _lastSafe = Vehicle.transform.position; _lastSafeRot = Vehicle.transform.rotation; _nextSafe = 0f;
             _vehicleId = owned.id;
             Cam.target = Vehicle.transform; Streamer.target = Vehicle.transform; Streamer.route = _route;
             Active = true; Time.timeScale = 1f;
@@ -90,6 +95,8 @@ namespace ARO.Game
         void Update()
         {
             if (!Active || Vehicle == null) return;
+            if (_holding) { TryRelease(); return; }
+            WatchVehicle();
             if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame) Cam.ToggleCockpit();
             if (Job == null || _busy || Time.time < _retryAt) return;
 
@@ -99,6 +106,43 @@ namespace ARO.Game
             else if (Phase == JobPhase.ToDestination && d < DeliverRadius && stopped) _ = Deliver();
             if (_markerGo != null) _markerGo.transform.Rotate(0, 60f * Time.deltaTime, 0);
             if (Phase == JobPhase.ToDestination && !_sampling && Time.time >= _nextSample) _ = SendSample();
+        }
+
+        void TryRelease()
+        {
+            var pos = Vehicle.transform.position;
+            if (Streamer.GroundBelow(pos, Vehicle.transform, out float gy))
+            {
+                Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
+                _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = Vehicle.transform.position; _lastSafe = _spawnPos;
+                Debug.Log($"[Drive] ground ready after {Time.unscaledTime - _holdSince:F1}s at y={gy:F2}; vehicle released");
+            }
+            else if (Time.unscaledTime - _holdSince > HoldTimeout)
+            {
+                _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = pos;
+                Debug.LogError("[Drive] no ground after " + HoldTimeout + "s; releasing the vehicle anyway");
+            }
+        }
+
+        /// <summary>Remember the last good spot; if the vehicle ever leaves the world, put it back instead of letting it fall forever.</summary>
+        void WatchVehicle()
+        {
+            var t = Vehicle.transform; var pos = t.position;
+            if (pos.y < KillY || float.IsNaN(pos.y))
+            {
+                var rb = Vehicle.GetComponent<Rigidbody>();
+                rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+                t.SetPositionAndRotation(_lastSafe + Vector3.up * 1.2f, _lastSafeRot);
+                Debug.LogError($"[Drive] vehicle left the world at y={pos.y:F1}; recovered to {_lastSafe}");
+                Say("Vehicle recovered to the road.", 4f, ARO.NetCore.Severity.Error);
+                return;
+            }
+            if (Time.time >= _nextSafe && Vehicle.SpeedKmh < 250f && pos.y > -2f) { _nextSafe = Time.time + 1f; _lastSafe = pos; _lastSafeRot = Quaternion.Euler(0f, t.eulerAngles.y, 0f); }
+            if (SmokeMode.Drive && Time.unscaledTime >= _nextLog)
+            {
+                _nextLog = Time.unscaledTime + 1f;
+                Debug.Log($"[Drive] t={Time.time:F1} pos=({pos.x:F1},{pos.y:F2},{pos.z:F1}) kmh={Vehicle.SpeedKmh:F1} dist={Vector3.Distance(pos, _spawnPos):F1} fuel={Vehicle.fuelL:F1} chunks={Streamer.LoadedChunkCount}");
+            }
         }
 
         /// <summary>Stream position to the server. It validates speed against its own clock; we only log rejections.</summary>

@@ -35,6 +35,18 @@ namespace ARO.World
 
         void Start() { StartCoroutine(Pump()); }
 
+        /// <summary>True when something solid (other than `ignore`'s own colliders) lies under p; y receives the highest such surface.</summary>
+        public bool GroundBelow(Vector3 p, Transform ignore, out float y)
+        {
+            y = 0f; bool found = false;
+            foreach (var h in Physics.RaycastAll(p + Vector3.up * 300f, Vector3.down, 600f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (ignore != null && h.collider.transform.IsChildOf(ignore)) continue;
+                if (!found || h.point.y > y) { y = h.point.y; found = true; }
+            }
+            return found;
+        }
+
         Vector2Int ToChunk(Vector3 p) => new Vector2Int(Mathf.FloorToInt(p.x / chunkSize), Mathf.FloorToInt(p.z / chunkSize));
 
         void Update()
@@ -69,7 +81,8 @@ namespace ARO.World
                 while (_loadQueue.Count > 0 && sw.Elapsed.TotalMilliseconds < frameBudgetMs)
                 {
                     var c = _loadQueue.Dequeue(); _queued.Remove(c);
-                    if (!_chunks.ContainsKey(c)) Build(c);
+                    // One bad chunk must never kill the pump: the world would silently stop loading (the truck then falls through nothing).
+                    if (!_chunks.ContainsKey(c)) { try { Build(c); } catch (System.Exception e) { Debug.LogError($"[World] chunk {c} failed to build: {e}"); } }
                 }
                 yield return null;
             }
@@ -113,6 +126,9 @@ namespace ARO.World
             ground.transform.localScale = new Vector3(chunkSize / 10f, 1f, chunkSize / 10f);
             ground.GetComponent<Renderer>().sharedMaterial = groundMat;
             ground.isStatic = true;
+            // The plane's own mesh collider is a zero-thickness sheet; a heavy vehicle landing on it can tunnel through. Use a thick box.
+            Destroy(ground.GetComponent<MeshCollider>());
+            var box = ground.AddComponent<BoxCollider>(); box.center = new Vector3(0f, -1f, 0f); box.size = new Vector3(10f, 2f, 10f);
 
             var rng = new System.Random(route.seed ^ (c.x * 73856093) ^ (c.y * 19349663));
             for (int i = 1; i < route.nodes.Length; i++)
