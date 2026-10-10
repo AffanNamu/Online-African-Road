@@ -110,7 +110,7 @@ jobs:
           buildMethod: ARO.Editor.BuildScript.BuildWebGL
           versioning: None   # semantic versioning refuses a dirty tree, and Unity just generated untracked .meta files (run 28)
           # Bake the backend into the player when configured (repo variable SUPABASE_URL + secret SUPABASE_ANON_KEY, the PUBLIC anon key only).
-          customParameters: ${{ vars.SUPABASE_URL != '' && secrets.SUPABASE_ANON_KEY != '' && format('-supabaseUrl {0} -supabaseAnonKey {1}', vars.SUPABASE_URL, secrets.SUPABASE_ANON_KEY) || '' }}
+          customParameters: ${{ secrets.SUPABASE_ANON_KEY != '' && format('-supabaseUrl {0} -supabaseAnonKey {1}', vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co', secrets.SUPABASE_ANON_KEY) || '' }}
       - uses: actions/upload-artifact@v4
         with: { name: webgl-build, path: Builds/WebGL, if-no-files-found: error }   # BuildScript writes Builds/WebGL (run 29: the old path build/WebGL was empty)
 

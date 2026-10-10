@@ -21,7 +21,7 @@ jobs:
       - name: Check the connection string shape (nothing secret is printed)
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co' }}
         run: |
           python3 - <<'PY'
           import os, re

@@ -12,6 +12,6 @@ jobs:
         with: { node-version: 22 }
       - name: Live backend end-to-end test
         env:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co' }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: node tools/backend-smoke.js
