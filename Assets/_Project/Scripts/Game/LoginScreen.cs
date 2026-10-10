@@ -136,8 +136,8 @@ namespace ARO.Game
         {
             var pill = Rounded(_root, "Language", new Color(0.06f, 0.065f, 0.08f, 0.78f), 46f, 44f, 212f, 58f, 29f, Anchor.TopRight);
             Icon(pill.transform, "icon_globe", Color.white, 18f, 13f, 32f);
-            Txt(pill.transform, "English (UK)", "SemiBold", 20, Color.white, 62f, 15f, 150f, 28f, TextAnchor.MiddleLeft);
-            Icon(pill.transform, "icon_chevron", Color.white, 170f, 17f, 24f);
+            Txt(pill.transform, "English (UK)", "SemiBold", 19, Color.white, 60f, 15f, 120f, 28f, TextAnchor.MiddleLeft);
+            Icon(pill.transform, "icon_chevron", Color.white, 182f, 17f, 22f);
             Hit(pill.transform, "Btn_Language", 0f, 0f, 212f, 58f, () => { _langNote.text = "More languages are coming soon."; _langNoteUntil = Time.unscaledTime + 2.6f; });
             _langNote = Txt(_root, "", "Regular", 18, new Color(0.95f, 0.95f, 0.97f), 46f, 110f, 300f, 26f, TextAnchor.UpperRight, Anchor.TopRight);
             _langNote.horizontalOverflow = HorizontalWrapMode.Overflow;

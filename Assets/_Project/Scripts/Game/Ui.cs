@@ -155,9 +155,10 @@ namespace ARO.Game
     public sealed class StageFitter : MonoBehaviour
     {
         RectTransform _stage, _parent; Vector2 _last;
-        void Awake() { _stage = (RectTransform)transform; _parent = (RectTransform)transform.parent; }
         void LateUpdate()
         {
+            // The parent is resolved lazily: Awake runs while the stage is being created, before it has been parented (that was a per-frame NullReferenceException).
+            if (_parent == null) { _stage = (RectTransform)transform; _parent = transform.parent as RectTransform; if (_parent == null) return; }
             var size = _parent.rect.size; if (size == _last || size.x < 1f) return; _last = size;
             _stage.localScale = Vector3.one * Mathf.Min(size.x / 1920f, size.y / 1080f);
         }

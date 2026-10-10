@@ -304,16 +304,18 @@ namespace ARO.Game
         void JobCard(JobDto j, float x, float y, float w)
         {
             var host = _jobsHost;
-            Ui.Outlined(host, "JobCard", new Color(0.045f, 0.052f, 0.07f, 0.98f), new Color(1, 1, 1, 0.09f), x, y, w, 226, 12, 1.2f);
-            Ui.Photo(host, "JobPhoto", Brand.Texture(CargoArt(j.cargo_type)), new Rect(0, 0, 1, 1), x + 1.2f, y + 1.2f, w - 2.4f, 84, 11);
-            string route = $"{(j.origin != null ? j.origin.name : "?")} → {(j.destination != null ? j.destination.name : "?")}";
-            var rt = Ui.Label(host, route, "Bold", 20, White, x + 10, y + 92, w - 14, 28); rt.horizontalOverflow = HorizontalWrapMode.Wrap; rt.resizeTextForBestFit = true; rt.resizeTextMinSize = 14; rt.resizeTextMaxSize = 20;
-            Ui.Icon(host, "ic_box", Muted, x + 10, y + 122, 22); Ui.Label(host, j.cargo_type, "Regular", 17, new Color(0.84f, 0.86f, 0.9f), x + 38, y + 121, w - 48, 24);
-            Ui.Icon(host, "ic_road", Muted, x + 10, y + 148, 22); Ui.Label(host, $"{j.distance_km:0.#} km", "Regular", 17, new Color(0.84f, 0.86f, 0.9f), x + 38, y + 147, 100, 24);
-            Ui.Icon(host, "ic_coin", Gold, x + 10, y + 173, 22); Ui.Label(host, j.reward.ToString("N0"), "SemiBold", 17, White, x + 38, y + 172, 90, 24);
+            Ui.Outlined(host, "JobCard", new Color(0.045f, 0.052f, 0.07f, 0.98f), new Color(1, 1, 1, 0.09f), x, y, w, 230, 12, 1.2f);
+            Ui.Photo(host, "JobPhoto", Brand.Texture(CargoArt(j.cargo_type)), new Rect(0, 0, 1, 1), x + 1.2f, y + 1.2f, w - 2.4f, 70, 11);
+            // origin and destination on two lines so long depot names never collide with the rows below
+            string from = j.origin != null ? j.origin.name : "?", to = j.destination != null ? j.destination.name : "?";
+            var t1 = Ui.Label(host, from, "Bold", 17, White, x + 10, y + 76, w - 16, 22); t1.horizontalOverflow = HorizontalWrapMode.Wrap; t1.resizeTextForBestFit = true; t1.resizeTextMinSize = 12; t1.resizeTextMaxSize = 17;
+            var t2 = Ui.Label(host, "→ " + to, "Bold", 17, Gold, x + 10, y + 98, w - 16, 22); t2.horizontalOverflow = HorizontalWrapMode.Wrap; t2.resizeTextForBestFit = true; t2.resizeTextMinSize = 12; t2.resizeTextMaxSize = 17;
+            Ui.Icon(host, "ic_box", Muted, x + 10, y + 124, 20); Ui.Label(host, j.cargo_type, "Regular", 16, new Color(0.84f, 0.86f, 0.9f), x + 36, y + 123, w - 46, 22);
+            Ui.Icon(host, "ic_road", Muted, x + 10, y + 148, 20); Ui.Label(host, $"{j.distance_km:0.#} km", "Regular", 16, new Color(0.84f, 0.86f, 0.9f), x + 36, y + 147, 100, 22);
+            Ui.Icon(host, "ic_coin", Gold, x + 10, y + 172, 20); Ui.Label(host, j.reward.ToString("N0"), "SemiBold", 16, White, x + 36, y + 171, 90, 22);
             Color dc = j.difficulty <= 2 ? Brand.Good : j.difficulty == 3 ? Gold : Brand.Bad; string dl = j.difficulty <= 2 ? "Easy" : j.difficulty == 3 ? "Medium" : "Hard";
-            Ui.Icon(host, "ic_bars", dc, x + w - 112, y + 173, 22); Ui.Label(host, dl, "SemiBold", 17, dc, x + w - 86, y + 172, 80, 24);
-            var ab = Ui.Rounded(host, "AcceptBg", Gold, x + 8, y + 196 - 2, w - 16, 28, 7);
+            Ui.Icon(host, "ic_bars", dc, x + w - 104, y + 172, 20); Ui.Label(host, dl, "SemiBold", 16, dc, x + w - 80, y + 171, 74, 22);
+            Ui.Rounded(host, "AcceptBg", Gold, x + 8, y + 196, w - 16, 28, 7);
             Ui.Label(host, "Accept", "Bold", 17, Ink, x + 8, y + 199, w - 16, 24, TextAnchor.UpperCenter);
             var job = j; Ui.Click(host, "Btn_Accept_" + j.code, x + 8, y + 194, w - 16, 30, () => _act.AcceptJob(job));
         }
