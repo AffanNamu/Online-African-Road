@@ -69,27 +69,25 @@ function serve() {
       .map(m => ({ kind: m[1], name: m[2], x: parseFloat(m[3]), y: parseFloat(m[4]) }));
     console.log(`UI targets reported by the game: ${targets.length}`);
     targets.slice(0, 12).forEach(t => console.log(`  ${t.kind} ${t.name} (${t.x}, ${t.y})`));
-    const btn = targets.find(t => t.name === 'Btn_CREATE ACCOUNT') || { x: 0.5, y: 0.606 };
-    const fld = targets.find(t => t.kind === 'InputField') || { x: 0.5, y: 0.32 };
+    const inputsByY = targets.filter(t => t.kind === 'InputField').sort((a, b) => a.y - b.y);
+    const btn = targets.find(t => t.name === 'Btn_SIGNIN') || { x: 0.745, y: 0.634 };
+    const fld = inputsByY[0] || { x: 0.745, y: 0.40 };
     if (!targets.length) failures.push('the game reported no UI targets (login screen not built?)');
     const press = async (x, y) => { await page.mouse.move(...at(x, y)); await page.waitForTimeout(400); await page.mouse.down(); await page.waitForTimeout(250); await page.mouse.up(); };
     const before = await frame(shot.replace('.png', '-0-start.png'));
-    await press(btn.x, btn.y);                              // CREATE ACCOUNT with empty fields: hover/press colour change and/or a red message
+    await press(btn.x, btn.y);                              // SIGN IN with empty fields: a status message appears under the button
     await page.waitForTimeout(1500);
     const afterClick = await frame(shot.replace('.png', '-1-clicked.png'));
-    // the red validation message is the status label between the last input field and the SIGN IN button
-    const inputs = targets.filter(t => t.kind === 'InputField').sort((a, b) => a.y - b.y);
-    const lastInput = inputs[inputs.length - 1] || { y: 0.47 };
-    const signIn = targets.find(t => t.name === 'Btn_SIGN IN') || { y: 0.583 };
-    const msgPixels = diffCount(before, afterClick, box, 0.30, lastInput.y + 0.03, 0.70, signIn.y - 0.025);
-    console.log(`click test: ${msgPixels} pixels changed where the validation message appears`);
-    if (msgPixels < 150) failures.push('clicking CREATE ACCOUNT did nothing (the UI is not receiving mouse input)');
+    // Sign In with empty fields shows "Enter your email and password." in the status line just under the button
+    const msgPixels = diffCount(before, afterClick, box, 0.58, btn.y + 0.012, 0.91, btn.y + 0.075);
+    console.log(`click test: ${msgPixels} pixels changed where the status message appears`);
+    if (msgPixels < 150) failures.push('clicking SIGN IN did nothing (the UI is not receiving mouse input)');
     await press(fld.x, fld.y);                              // focus the first input field and type into it
     await page.waitForTimeout(500);
     await page.keyboard.type('player@example.com', { delay: 80 });
     await page.waitForTimeout(1500);
     const afterType = await frame(shot.replace('.png', '-2-typed.png'));
-    const typedPixels = diffCount(afterClick, afterType, box, fld.x - 0.12, fld.y - 0.03, fld.x + 0.12, fld.y + 0.03);
+    const typedPixels = diffCount(afterClick, afterType, box, fld.x - 0.14, fld.y - 0.025, fld.x + 0.14, fld.y + 0.025);
     console.log(`typing test: ${typedPixels} pixels changed inside the first input field`);
     if (typedPixels < 150) failures.push('typing into the Email field did nothing (the UI is not receiving keyboard input)');
     console.log('--- UIDiag lines ---');

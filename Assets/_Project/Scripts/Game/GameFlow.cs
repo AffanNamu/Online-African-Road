@@ -41,8 +41,16 @@ namespace ARO.Game
                 return;
             }
             if (!_svc.Config.IsConfigured) { ShowLogin("Backend not configured (see docs/DEVELOPMENT.md). Jobs and persistence are disabled."); return; }
+            string url = Application.absoluteURL ?? "";
+            if (url.Contains("error_description="))   // an OAuth provider sent the player back with an error
+            {
+                string msg = "Sign-in was cancelled or failed. Please try again.";
+                int i = url.IndexOf("error_description=", System.StringComparison.Ordinal);
+                if (i >= 0) { string d = url.Substring(i + 18); int amp = d.IndexOf('&'); if (amp >= 0) d = d.Substring(0, amp); msg = UnityEngine.Networking.UnityWebRequest.UnEscapeURL(d).Replace('+', ' '); }
+                ARO.Backend.WebBridge.ClearUrlHash(); ShowLogin(msg); return;
+            }
             Toast("Checking saved session...");
-            if (await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);
+            if (await _svc.Api.TryCompleteOAuthRedirect(url) || await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);
         }
 
         void Update()
@@ -85,35 +93,19 @@ namespace ARO.Game
         }
 
         // ---------------------------------------------------------------- login
+        LoginScreen _login;
+
         void ShowLogin(string info)
         {
-            var p = NewPanel("Sign in", 700f);
-            if (info != null) UIKit.Label(p, info, 20, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 70;
-            var email = UIKit.Input(p, "Email"); var pass = UIKit.Input(p, "Password", true); var name = UIKit.Input(p, "Display name (new accounts)");
-            var status = UIKit.Label(p, "", 20, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            status.gameObject.AddComponent<LayoutElement>().preferredHeight = 50;
-            UIKit.Btn(p, "SIGN IN", async () =>
+            if (_panel != null) Destroy(_panel.gameObject);
+            if (_login != null) Destroy(_login.gameObject);
+            _canvas.gameObject.SetActive(false);   // the login screen is a full-screen canvas of its own
+            _login = LoginScreen.Create(_svc, async () =>
             {
-                if (_busy) return; _busy = true; status.text = "Signing in...";
-                var r = await _svc.Api.SignIn(email.text.Trim(), pass.text); _busy = false;
-                if (!r.Ok) { status.text = r.UserMessage; return; }
+                if (_login != null) Destroy(_login.gameObject);
+                _canvas.gameObject.SetActive(true);
                 await EnterMenu();
-            });
-            UIKit.Btn(p, "CREATE ACCOUNT", async () =>
-            {
-                if (_busy) return;
-                if (pass.text.Length < 8) { status.text = "Password must be at least 8 characters."; return; }
-                _busy = true; status.text = "Creating account...";
-                var r = await _svc.Api.SignUp(email.text.Trim(), pass.text, name.text.Trim()); _busy = false;
-                if (!r.Ok) { status.text = r.UserMessage; return; }
-                await EnterMenu();
-            }, false);
-            UIKit.Btn(p, "Forgot password", async () =>
-            {
-                if (email.text.Trim().Length == 0) { status.text = "Enter your email first."; return; }
-                var r = await _svc.Api.RecoverPassword(email.text.Trim());
-                status.text = r.Ok ? "Recovery email sent." : r.UserMessage; status.color = r.Ok ? UIKit.Good : UIKit.Bad;
-            }, false, 44);
+            }, info);
         }
 
         async Task EnterMenu()

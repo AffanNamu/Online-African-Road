@@ -18,6 +18,9 @@ namespace ARO.Backend
         SessionDto _session;
         DateTime _expiresAt;
 
+        /// <summary>False = "Remember me" is off: the session lives only until the page is closed (no refresh token is stored).</summary>
+        public bool RememberSession = true;
+
         public SupabaseClient(BackendConfig cfg) { _cfg = cfg; }
         public bool IsSignedIn => _session != null;
         public string UserId => _session?.user?.id;
@@ -44,6 +47,34 @@ namespace ARO.Backend
             return r.Ok;
         }
 
+        /// <summary>True when the Supabase project has this OAuth provider ("google", "apple") switched on. Public endpoint.</summary>
+        public async Task<bool> ProviderEnabled(string provider)
+        {
+            var r = await Send("GET", "/auth/v1/settings", null, authed: false);
+            return r.Ok && r.Value.Replace(" ", "").Contains("\"" + provider + "\":true");
+        }
+
+        /// <summary>Where to send the browser to start an OAuth sign-in. `redirect` must be on the project's Auth redirect allow-list.</summary>
+        public string OAuthUrl(string provider, string redirect) =>
+            _cfg.supabaseUrl.TrimEnd('/') + "/auth/v1/authorize?provider=" + provider + "&redirect_to=" + UnityWebRequest.EscapeURL(redirect);
+
+        /// <summary>After an OAuth round trip the page address carries #access_token=...&refresh_token=...; turn that into a session.</summary>
+        public async Task<bool> TryCompleteOAuthRedirect(string url)
+        {
+            int i = string.IsNullOrEmpty(url) ? -1 : url.IndexOf('#');
+            if (i < 0) return false;
+            string rt = null;
+            foreach (var kv in url.Substring(i + 1).Split('&'))
+            {
+                int eq = kv.IndexOf('=');
+                if (eq > 0 && kv.Substring(0, eq) == "refresh_token") rt = UnityWebRequest.UnEscapeURL(kv.Substring(eq + 1));
+            }
+            if (string.IsNullOrEmpty(rt)) return false;
+            var r = await AuthCall("/auth/v1/token?grant_type=refresh_token", JsonUtility.ToJson(new RefreshBody { refresh_token = rt }));
+            if (r.Ok) WebBridge.ClearUrlHash();
+            return r.Ok;
+        }
+
         public async Task<Result<bool>> RecoverPassword(string email)
         {
             var r = await Send("POST", "/auth/v1/recover", JsonUtility.ToJson(new RecoverBody { email = email }), authed: false);
@@ -60,7 +91,8 @@ namespace ARO.Backend
             if (s == null || string.IsNullOrEmpty(s.access_token))
                 return Result<SessionDto>.Fail("no_session", "Check your email to confirm your account, then sign in.");
             _session = s; _expiresAt = DateTime.UtcNow.AddSeconds(s.expires_in - 30);
-            PlayerPrefs.SetString(RefreshKey, s.refresh_token); PlayerPrefs.Save();
+            if (RememberSession) PlayerPrefs.SetString(RefreshKey, s.refresh_token); else PlayerPrefs.DeleteKey(RefreshKey);
+            PlayerPrefs.Save();
             return Result<SessionDto>.Success(s);
         }
 
