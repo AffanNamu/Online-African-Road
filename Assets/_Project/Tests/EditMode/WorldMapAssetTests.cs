@@ -33,7 +33,7 @@ namespace ARO.Tests
 
         [Test] public void ImportSettingsAreTheIntendedOnes()
         {
-            var imp = (TextureImporter)AssetImporter.GetAtPath(WorldMapTextureImporter.Folder + "west_africa_world_map.jpg");
+            var imp = (TextureImporter)AssetImporter.GetAtPath("Assets/_Project/Resources/WorldMap/west_africa_world_map.jpg");
             Assert.NotNull(imp); Assert.IsTrue(imp.mipmapEnabled); Assert.IsFalse(imp.isReadable); Assert.AreEqual(TextureImporterNPOTScale.None, imp.npotScale);
             Assert.AreEqual(2048, imp.maxTextureSize);
             var web = imp.GetPlatformTextureSettings("WebGL"); Assert.IsTrue(web.overridden); Assert.AreEqual(TextureImporterFormat.DXT1, web.format);
