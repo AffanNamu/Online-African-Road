@@ -144,7 +144,7 @@ namespace ARO.Game
             if (SmokeMode.Drive && Time.unscaledTime >= _nextLog)
             {
                 _nextLog = Time.unscaledTime + 1f;
-                Debug.Log($"[Drive] t={Time.time:F1} pos=({pos.x:F1},{pos.y:F2},{pos.z:F1}) kmh={Vehicle.SpeedKmh:F1} dist={Vector3.Distance(pos, _spawnPos):F1} fuel={Vehicle.fuelL:F1} chunks={Streamer.LoadedChunkCount}");
+                Debug.Log($"[Drive] t={Time.time:F1} pos=({pos.x:F1},{pos.y:F2},{pos.z:F1}) kmh={Vehicle.SpeedKmh:F1} dist={Vector3.Distance(pos, _spawnPos):F1} ground={floor:F2} fuel={Vehicle.fuelL:F1} chunks={Streamer.LoadedChunkCount}");
             }
         }
 

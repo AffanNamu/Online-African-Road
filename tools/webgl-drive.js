@@ -46,8 +46,8 @@ function serve() {
   await page.waitForTimeout(14000); await page.screenshot({ path: `${prefix}-2-driving.png` });
   await page.keyboard.up('w');
 
-  const samples = logs.map(l => /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+)/.exec(l)).filter(Boolean)
-    .map(m => ({ t: +m[1], x: +m[2], y: +m[3], z: +m[4], kmh: +m[5], dist: +m[6] }));
+  const samples = logs.map(l => /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+)(?: ground=([-\d.]+))?/.exec(l)).filter(Boolean)
+    .map(m => ({ t: +m[1], x: +m[2], y: +m[3], z: +m[4], kmh: +m[5], dist: +m[6], ground: m[7] === undefined ? null : +m[7] }));
   console.log(`drive samples: ${samples.length}`);
   samples.filter((_, i) => i % 3 === 0).forEach(s => console.log(`  t=${s.t} pos=(${s.x}, ${s.y}, ${s.z}) kmh=${s.kmh} dist=${s.dist}`));
   console.log('--- [Drive]/[World]/[Smoke] lines ---');
@@ -57,7 +57,15 @@ function serve() {
   else {
     const minY = Math.min(...samples.map(s => s.y)), maxKmh = Math.max(...samples.map(s => Math.abs(s.kmh))), maxDist = Math.max(...samples.map(s => s.dist));
     console.log(`min y ${minY.toFixed(2)}, max speed ${maxKmh.toFixed(1)} km/h, furthest from spawn ${maxDist.toFixed(1)} m`);
-    if (minY < samples[0].y - 3) failures.push(`the vehicle sank to y=${minY.toFixed(1)} from y=${samples[0].y.toFixed(1)} at spawn (fell through the world)`);
+    // The truck is driven with throttle only (no steering), so it may leave the raised road and roll down the embankment onto lower terrain.
+    // That is legitimate; falling THROUGH the ground is not. Compare against the ground height the game itself reports under the truck.
+    const withGround = samples.filter(s => s.ground !== null);
+    if (withGround.length < 5) failures.push('the [Drive] telemetry carries no ground height, so "stays above the ground" cannot be checked');
+    else {
+      const worst = Math.min(...withGround.map(s => s.y - s.ground));
+      console.log(`lowest clearance above the reported ground: ${worst.toFixed(2)} m`);
+      if (worst < -1.0) failures.push(`the vehicle went ${(-worst).toFixed(1)} m below the ground (fell through the world)`);
+    }
     if (maxKmh < 10) failures.push(`holding W never got the truck above 10 km/h (max ${maxKmh.toFixed(1)})`);
     if (maxDist < 100) failures.push(`the truck got only ${maxDist.toFixed(1)} m from its spawn in 24 s with W held (it should be able to drive down the road)`);
   }
