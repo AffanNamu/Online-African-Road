@@ -73,6 +73,7 @@ namespace ARO.Game
             _toast.rectTransform.sizeDelta = new Vector2(1920, 40);
             ShowSlide(_slide); _nextSlide = Time.unscaledTime + 7f;
             if (!_jobsLoaded) { _jobsLoaded = true; _ = LoadJobs(); } else FillJobs();
+            _builtAt = Time.unscaledTime;
             Debug.Log("[Dashboard] built for " + (_svc.Profile != null ? _svc.Profile.display_name : "?"));
         }
 
@@ -189,6 +190,21 @@ namespace ARO.Game
         {
             if (_slides != null && Time.unscaledTime > _nextSlide) { _slide = (_slide + 1) % _slides.Length; ShowSlide(_slide); _nextSlide = Time.unscaledTime + 7f; }
             if (_toast != null && _toast.text.Length > 0 && Time.unscaledTime > _toastUntil) _toast.text = "";
+            if (SmokeMode.WorldMap && !_targetsLogged && Time.unscaledTime > _builtAt + 1.5f) LogTargets();
+        }
+
+        // Smoke mode only: the browser test needs the dashboard's own click positions after returning from the map.
+        bool _targetsLogged; float _builtAt = float.MaxValue;
+        void LogTargets()
+        {
+            _targetsLogged = true;
+            var sb = new System.Text.StringBuilder("[WorldMap] targets (dashboard)");
+            foreach (var b in _stage.GetComponentsInChildren<Button>(false))
+            {
+                var c = new Vector3[4]; ((RectTransform)b.transform).GetWorldCorners(c);
+                sb.Append($"\n  TARGET {b.name} x={(c[0].x + c[2].x) * 0.5f / Screen.width:0.000} y={1f - (c[0].y + c[2].y) * 0.5f / Screen.height:0.000}");
+            }
+            Debug.Log(sb.ToString());
         }
 
         public void Toast(string m, float s = 3f) { if (_toast != null) { _toast.text = m; _toastUntil = Time.unscaledTime + s; } }
