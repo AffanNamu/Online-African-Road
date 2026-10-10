@@ -26,8 +26,8 @@ namespace ARO.Game
             if (t > _nextStatus && t < 40f) { _nextStatus += 6f; LogStatus(); }
             try
             {
-                if (Input.GetMouseButtonDown(0)) LogPress(Input.mousePosition);
-                if (Input.anyKeyDown)
+                if (UnityEngine.Input.GetMouseButtonDown(0)) LogPress(UnityEngine.Input.mousePosition);
+                if (UnityEngine.Input.anyKeyDown)
                 {
                     var sel = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
                     Debug.Log($"[UIDiag] key pressed; selected={(sel != null ? sel.name : "none")}");
@@ -56,7 +56,7 @@ namespace ARO.Game
             var es = EventSystem.current;
             var mod = es != null ? es.currentInputModule : null;
             string mouse;
-            try { mouse = Input.mousePresent.ToString(); } catch (InvalidOperationException) { mouse = "legacy-input-disabled"; }
+            try { mouse = UnityEngine.Input.mousePresent.ToString(); } catch (InvalidOperationException) { mouse = "legacy-input-disabled"; }
             string backends = "";
 #if ENABLE_INPUT_SYSTEM
             backends += "InputSystem ";
