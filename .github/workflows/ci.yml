@@ -108,5 +108,6 @@ jobs:
         with:
           targetPlatform: WebGL
           buildMethod: ARO.Editor.BuildScript.BuildWebGL
+          versioning: None   # semantic versioning refuses a dirty tree, and Unity just generated untracked .meta files (run 28)
       - uses: actions/upload-artifact@v4
         with: { name: webgl-build, path: build/WebGL }
