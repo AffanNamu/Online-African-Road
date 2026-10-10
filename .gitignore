@@ -27,3 +27,13 @@ supabase/.branches/
 
 # Keep hand-written test projects (Unity-generated csproj stay ignored)
 !tests/**/*.csproj
+
+# Never commit: licences, keys, third-party paid assets (the repository is public; see docs/ASSET_PIPELINE.md)
+*.ulf
+*.pem
+*.p12
+*.pfx
+*.keystore
+*.jks
+/Assets/ThirdParty/
+/Assets/AssetStore/

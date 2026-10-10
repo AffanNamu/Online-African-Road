@@ -3,6 +3,7 @@
 // game's own [Drive] telemetry that the truck stays on the road, accelerates and moves. Screenshots go to <prefix>-N-*.png.
 const http = require('http'), fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
+const { renderAndPerfChecks } = require('./webgl-checks');
 
 const dir = path.resolve(process.argv[2] || 'Builds/WebGL');
 const prefix = process.argv[3] || 'webgl-drive';
@@ -56,10 +57,11 @@ function serve() {
   else {
     const minY = Math.min(...samples.map(s => s.y)), maxKmh = Math.max(...samples.map(s => Math.abs(s.kmh))), maxDist = Math.max(...samples.map(s => s.dist));
     console.log(`min y ${minY.toFixed(2)}, max speed ${maxKmh.toFixed(1)} km/h, furthest from spawn ${maxDist.toFixed(1)} m`);
-    if (minY < -2) failures.push(`the vehicle sank to y=${minY.toFixed(1)} (fell through the world)`);
+    if (minY < samples[0].y - 3) failures.push(`the vehicle sank to y=${minY.toFixed(1)} from y=${samples[0].y.toFixed(1)} at spawn (fell through the world)`);
     if (maxKmh < 10) failures.push(`holding W never got the truck above 10 km/h (max ${maxKmh.toFixed(1)})`);
-    if (maxDist < 8) failures.push(`the truck moved only ${maxDist.toFixed(1)} m from its spawn`);
+    if (maxDist < 100) failures.push(`the truck got only ${maxDist.toFixed(1)} m from its spawn in 24 s with W held (it should be able to drive down the road)`);
   }
+  renderAndPerfChecks(logs, failures, 'drive');
   if (has(/left the world/)) failures.push('the vehicle left the world and had to be recovered');
   if (errors.length) failures.push(`${errors.length} page error(s): ${errors[0].slice(0, 200)}`);
   const exc = logs.filter(l => /exception|NullReference|IndexOutOfRange/i.test(l) && !/GLib|swiftshader/i.test(l));

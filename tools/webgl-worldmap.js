@@ -4,6 +4,7 @@
 // then Back / nav / Escape. The game logs every state it reaches ([WorldMap] ...); this script reads those lines.
 const http = require('http'), fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
+const { renderAndPerfChecks } = require('./webgl-checks');
 
 const dir = path.resolve(process.argv[2] || 'Builds/WebGL');
 const prefix = process.argv[3] || 'webgl-worldmap';
@@ -107,6 +108,20 @@ const ASPECT = 1672 / 941;
   check(entered && !!reopened, 'the dashboard Map item opens the world map');
   await sleep(2500); m = mark(); await page.keyboard.press('Escape'); const esc = await waitLog(/\[WorldMap\] closed/, m, 20);
   check(!!esc, 'the Escape key closes the world map');
+
+  // ---- 7. the route opens into driving: map -> Lagos -> Lagos to Ibadan -> free drive -> the generated world is under the truck
+  console.log('ARTWORK: ' + (opened || '').slice(0, 300));
+  await sleep(3000); m = mark(); await click('Nav_Map'); await waitLog(/\[WorldMap\] opened/, m, 40); await sleep(3000);
+  m = mark(); await click('City_lagos'); await waitLog(/selected city=lagos/, m, 20); await sleep(1500);
+  m = mark(); await click('Route_lagos-ibadan'); await waitLog(/selected route=lagos-ibadan state=Prototype/, m, 25); await sleep(2000);
+  m = mark(); const driveClicked = await click('Btn_FreeDrive');
+  const ground = await waitLog(/\[Drive\] ground ready/, m, 120);
+  check(driveClicked && !!ground, 'free drive from the Lagos -> Ibadan route panel loads the world and puts the truck on its ground (' + (ground || 'no [Drive] ground ready').slice(0, 90) + ')');
+  await sleep(12000); await page.screenshot({ path: `${prefix}-7-driving.png` });
+  await sleep(8000);
+  const pf = [];
+  renderAndPerfChecks(logs, pf, 'worldmap->drive'); pf.forEach(f => check(false, f));
+  if (!pf.length) check(true, 'rendering foundation, route data, world generation and performance budgets are reported clean');
 
   await finish();
   async function finish() {
