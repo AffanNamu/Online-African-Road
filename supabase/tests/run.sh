@@ -13,4 +13,5 @@ for f in "$MIG"/*.sql; do run "$f"; done
 run seed.sql
 run tests/01_testkit.sql
 run tests/20_security_matrix.sql
+run tests/25_bus_and_shop.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

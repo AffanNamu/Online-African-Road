@@ -71,3 +71,24 @@ begin
     if r not like '%"accepted": true%' then raise exception 'legit drive sample rejected: %', r; end if;
   end loop;
 end $$;
+
+-- Bus helpers. Shift a run's server-side timestamps back to simulate time passing.
+create function testkit.age_bus(p_run uuid, p_seconds numeric) returns void language sql as $$
+  update bus_runs set last_at = last_at - make_interval(secs => p_seconds),
+         last_stop_at = last_stop_at - make_interval(secs => p_seconds),
+         started_at = started_at - make_interval(secs => p_seconds) where id = p_run $$;
+
+-- Drive a bus legitimately in a straight line at p_kmh, a sample every 5 simulated seconds.
+create function testkit.drive_bus(p_uid uuid, p_run uuid, x0 double precision, z0 double precision,
+                                  x1 double precision, z1 double precision, p_kmh numeric default 60) returns void
+language plpgsql as $$
+declare len double precision := sqrt(power(x1-x0,2) + power(z1-z0,2)); step double precision := p_kmh / 3.6 * 5;
+        n int := ceil(len / step); i int; f double precision; r text;
+begin
+  for i in 1..n loop
+    perform testkit.age_bus(p_run, 5);
+    f := least(i * step / len, 1);
+    r := testkit.as_user(p_uid, format('select submit_bus_telemetry(%L,%s,%s)::text', p_run, x0 + (x1-x0)*f, z0 + (z1-z0)*f));
+    if r not like '%"accepted": true%' then raise exception 'legit bus sample rejected: %', r; end if;
+  end loop;
+end $$;

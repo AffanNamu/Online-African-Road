@@ -56,7 +56,8 @@ do $$ declare extra text; begin
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job',
                            'buy_fuel','repair_vehicle','create_convoy','join_convoy','leave_convoy',
-                           'get_convoy_session_code','set_convoy_session_code');
+                           'get_convoy_session_code','set_convoy_session_code',
+                           'buy_vehicle','start_bus_run','submit_bus_telemetry','serve_stop','abandon_bus_run');
   if extra is not null then raise exception 'unexpected client-executable functions: %', extra; end if;
 end $$;
 do $$ declare bad text; begin

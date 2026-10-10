@@ -45,6 +45,22 @@ Migration `20261009000004`: the Unity join code column is hidden from clients (c
 bad format, duplicate, column and `select *` denied. Mutation run: 56 of 57 caught (survivor = intended defence in depth).
 GitHub CI (Postgres 15) passes the same suite and mutation run.
 
+## Bus system and vehicle shop (2026-10-10) — VERIFIED locally on PostgreSQL 16 (CI run pending at time of writing)
+Migration `20261009000005`: `buy_vehicle`, `start_bus_run`, `submit_bus_telemetry`, `serve_stop`, `abandon_bus_run`; tables `bus_routes`,
+`bus_route_stops`, `bus_runs`, `bus_run_stops` (read-only for clients, own-rows RLS on runs).
+Authority model: the client sends only a run id. Passenger counts come from a server-side hash of (run, stop) and the stop's demand,
+capped by seat capacity; fares are `alighted x route fare`; a stop is served only if the server-verified position is within 60 m of it,
+telemetry is fresh (30 s), the run is not flagged, and at least (inter-stop distance / top speed x 1.25) of server time has passed since the previous stop.
+Tests (`supabase/tests/25_bus_and_shop.sql`): shop (unknown, not-for-sale, one coin short vs exact funds, ledger row, full tank, no change on failure),
+start rejections (wrong category, not owner, 0,0 and 121 m from stop, out of fuel, destroyed, freight job active, double start, anon),
+teleport rejection, rate limit, flag after 10, stale telemetry, other player cannot submit/serve/abandon, replay at same stop,
+too-soon, radius edge (31 m ok, 80 m refused), capacity never exceeded (fixture route with demand 80), revenue = fares = wallet delta,
+xp once, post-completion rejection, a legitimately driven run (verified km 3.6-3.8, fuel burn = km x 0.28), abandon, direct writes denied, RLS isolation,
+ledger invariant. Races 5 and 6: concurrent terminus serve pays once; concurrent purchases with money for one bus buy one.
+Mutation run (all files): **99 of 103 caught**; the 4 survivors are labelled defence in depth: wallet CHECK alone, fare idempotency key alone,
+bus-run row lock alone, row lock + fare key together (each is backed by another independent layer: wallet CHECK / stop-log primary key / status guard).
+Removing the row lock and the stop-log primary key together IS caught by race 5.
+
 ### What is still forgeable (honest residual risk)
 - A cheater who runs a modified client that sends *legal-looking* positions at legal speeds along any path still earns the reward - but only after spending the real driving time. There is no check that samples follow the road, so a bot cutting straight across terrain is not detected.
 - Position samples are not signed; a stolen JWT can submit samples from another machine.
@@ -53,3 +69,4 @@ GitHub CI (Postgres 15) passes the same suite and mutation run.
 
 ### Caveats (what this does NOT prove)
 - Tests run on plain Postgres with a **stub `auth` schema** and role switching, not on real Supabase (GoTrue/PostgREST). RLS and GRANT behaviour is standard Postgres, but PostgREST/JWT plumbing is unverified. Run the same SQL against a Supabase branch before launch.
+- Bus fares: a bot that drives the real route at legal speeds earns the fare after spending real time, same as freight. Passenger counts are deterministic per run, so they cannot be farmed by re-serving a stop (PK + status guard), but repeated full runs are bounded only by driving time. Route adherence is not checked.

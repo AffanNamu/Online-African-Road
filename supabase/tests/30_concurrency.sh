@@ -68,5 +68,38 @@ FUEL=$(q -c "select fuel_l from vehicle_ownership where player_id='$WINNER'")
 SPENT=$((5000-$(q -c "select balance from player_wallets where player_id='$WINNER'")))
 [ "${FUEL%.*}" = "120" ] && [ "$SPENT" -eq 240 ] || { echo "RACE 4 FAILED fuel=$FUEL spent=$SPENT"; cat "$g1" "$g2"; exit 1; }
 echo "race 4 (double refuel): tank 120 L, charged exactly once (-240)"
+
+# --- RACE 5: the terminus stop is served twice at once: fares paid exactly once
+q -c "update player_wallets set balance=5000 where player_id='$WINNER';
+  insert into vehicle_ownership(player_id, definition_id, fuel_l) values ('$WINNER','bus_city_01',180);
+  insert into bus_runs(route_id, player_id, vehicle_id, next_seq, aboard, last_stop_at, last_x, last_z)
+  select r.id, '$WINNER', (select id from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'), 3, 20, now() - interval '200 seconds', l.world_x, l.world_z
+  from bus_routes r, locations l where r.code='LAG-R1' and l.slug='lagos-ikeja-bus-park';" >/dev/null
+RUN=$(q -c "select id from bus_runs where player_id='$WINNER' and status='active'")
+s1=$(mktemp); s2=$(mktemp)
+serve() {
+  psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$WINNER',false);
+    begin; select pg_sleep(0.2); select serve_stop('$RUN')::text; select pg_sleep(0.5); commit;" >"$1" 2>&1 || true
+}
+serve "$s1" & serve "$s2" & wait
+AFTER=$(q -c "select balance from player_wallets where player_id='$WINNER'")
+ROWS=$(q -c "select count(*) from bus_run_stops where run_id='$RUN'")
+[ $((AFTER-5000)) -eq 300 ] && [ "$ROWS" = "1" ] || { echo "RACE 5 FAILED delta=$((AFTER-5000)) stop rows=$ROWS"; cat "$s1" "$s2"; exit 1; }
+echo "race 5 (double terminus serve): fares paid exactly once (+300)"
+
+# --- RACE 6: two simultaneous purchases with money for only one bus: exactly one succeeds
+q -c "update player_wallets set balance=45000 where player_id='$WINNER';" >/dev/null
+BUSES0=$(q -c "select count(*) from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'")
+b1=$(mktemp); b2=$(mktemp)
+buy() {
+  psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$WINNER',false);
+    begin; select pg_sleep(0.2); select buy_vehicle('bus_city_01')::text; select pg_sleep(0.5); commit;" >"$1" 2>&1 || true
+}
+buy "$b1" & buy "$b2" & wait
+BUSES1=$(q -c "select count(*) from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'")
+BAL=$(q -c "select balance from player_wallets where player_id='$WINNER'")
+[ $((BUSES1-BUSES0)) -eq 1 ] && [ "$BAL" = "0" ] || { echo "RACE 6 FAILED new buses=$((BUSES1-BUSES0)) balance=$BAL"; cat "$b1" "$b2"; exit 1; }
+grep -q "insufficient_funds" "$b1" "$b2" || { echo "RACE 6: loser did not get insufficient_funds"; cat "$b1" "$b2"; exit 1; }
+echo "race 6 (double purchase): one bus bought, wallet 0"
 q -c "drop table public._race" >/dev/null
 echo "CONCURRENCY TESTS PASSED"

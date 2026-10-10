@@ -14,7 +14,9 @@ select c.id, v.slug, v.name, v.kind, v.x, v.z from (values
   ('Lagos',  'lagos-mile12-market',  'Mile 12 Market',          'market',    2600,  -900),
   ('Ibadan', 'ibadan-bodija-market', 'Bodija Market',           'market',   38000,  21000),
   ('Ibadan', 'ibadan-ojoo-depot',    'Ojoo Freight Depot',      'depot',    36500,  19500),
-  ('Ibadan', 'ibadan-challenge',     'Challenge Warehouse',     'warehouse',39500,  22800)
+  ('Ibadan', 'ibadan-challenge',     'Challenge Warehouse',     'warehouse',39500,  22800),
+  ('Lagos',  'lagos-oshodi-terminal','Oshodi Terminal',         'station',   3400,    800),
+  ('Lagos',  'lagos-ikeja-bus-park', 'Ikeja Bus Park',          'station',   4150,   2450)
 ) as v(city, slug, name, kind, x, z) join cities c on c.name = v.city
 on conflict (slug) do nothing;
 
@@ -27,3 +29,15 @@ insert into vehicle_definitions(id, category, name, price, cargo_capacity_kg, pa
  ('bus_city_01',     'bus',   'Danfo City Bus', 45000, 0, 40, 180, 90,
    '{"massKg":9500,"torqueNm":1100,"gears":[4.2,2.5,1.6,1.0,0.8],"reverseRatio":3.8,"finalDrive":4.4,"brakeTorqueNm":6500,"maxSteerDeg":30,"fuelBurnLPerKm":0.28}')
 on conflict (id) do nothing;
+
+-- Bus route LAG-R1 follows the same corridor nodes as the truck route (Mile 12 -> Oshodi -> Ikeja).
+insert into bus_routes(code, name, city_id, fare, xp_reward)
+select 'LAG-R1', 'Mile 12 - Oshodi - Ikeja', c.id, 15, 150 from cities c where c.name = 'Lagos'
+on conflict (code) do nothing;
+
+insert into bus_route_stops(route_id, seq, location_id, demand, alight_pct)
+select r.id, v.seq, l.id, v.demand, v.alight from bus_routes r
+join (values (1,'lagos-mile12-market',30,0), (2,'lagos-oshodi-terminal',40,50), (3,'lagos-ikeja-bus-park',0,100)) as v(seq, slug, demand, alight) on true
+join locations l on l.slug = v.slug
+where r.code = 'LAG-R1'
+on conflict do nothing;

@@ -4,7 +4,7 @@ A mutant that survives (tests still pass) means a protection is not actually cov
 import os, re, shutil, subprocess, sys, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MIG = os.path.join(ROOT, "migrations")
-NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql"}
+NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
 
 def sub(txt, old, new, count=1):
@@ -77,6 +77,53 @@ MUTANTS = {
  "convoy: code format constraint removed":    (4, lambda t: sub(t, "alter table convoys add constraint convoy_code_fmt check (session_code is null or session_code ~ '^[A-Za-z0-9]{4,16}$');", "")),
  "convoy: code fns left at default EXECUTE":  (4, lambda t: resub(t, r"revoke execute on function get_convoy_session_code.*?from public, anon, authenticated;", "")),
  "RLS disabled on job_telemetry":              (3, lambda t: sub(t, "alter table job_telemetry enable row level security;", "")),
+ # ---- shop + bus system (file 5)
+ "shop: not_for_sale check removed":          (5, lambda t: sub(t, "if v_def.price <= 0 then raise exception 'not_for_sale'; end if;", "")),
+ "shop: price debited as zero":               (5, lambda t: sub(t, "'VEHICLE_PURCHASE', -v_def.price,", "'VEHICLE_PURCHASE', -1,")),
+ "shop: vehicle granted without payment":     (5, lambda t: sub(t, "perform _apply_transaction(v_uid, 'VEHICLE_PURCHASE', -v_def.price, 'buy:' || gen_random_uuid(), 'vehicle_definition', null);", "null;")),
+ "shop: starts with empty tank":              (5, lambda t: sub(t, "values (v_uid, v_def.id, v_def.fuel_capacity_l)", "values (v_uid, v_def.id, 0)")),
+ "shop: buy_vehicle to anon":                 (5, lambda t: t + "\ngrant execute on function buy_vehicle(text) to anon;\n"),
+ "bus start: category check removed":         (5, lambda t: sub(t, "if v_cat <> 'bus' then raise exception 'wrong_vehicle_category'; end if;", "")),
+ "bus start: ownership check removed":        (5, lambda t: sub(t, "where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select category", "where id = p_vehicle for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select category")),
+ "bus start: stop radius removed":            (5, lambda t: sub(t, "> 120 then raise exception 'not_at_stop'", "> 1e9 then raise exception 'not_at_stop'")),
+ "bus start: out_of_fuel check removed":      (5, lambda t: sub(t, "if v_veh.fuel_l <= 0 then raise exception 'out_of_fuel'; end if;", "")),
+ "bus start: destroyed check removed":        (5, lambda t: sub(t, "if v_veh.damage_pct >= 100 then raise exception 'vehicle_destroyed'; end if;", "")),
+ "bus start: job_active check removed":       (5, lambda t: sub(t, "if exists (select 1 from job_assignments where player_id = v_uid and status in ('accepted','in_progress')) then\n    raise exception 'job_active';\n  end if;", "")),
+ "bus start: one-active-run index dropped":   (5, lambda t: sub(t, "create unique index one_active_bus_run on bus_runs(player_id) where status = 'active';", "")),
+ "bus telemetry: speed limit removed":        (5, lambda t: sub(t, "if dist > allowed then\n    update bus_runs", "if false then\n    update bus_runs")),
+ "bus telemetry: rate limit removed":         (5, lambda t: sub(t, "if dt < 0.5 then return jsonb_build_object('accepted', false, 'reason', 'rate_limited'", "if false then return jsonb_build_object('accepted', false, 'reason', 'rate_limited'")),
+ "bus telemetry: flag threshold disabled":    (5, lambda t: sub(t, "flagged = (rejected + 1 >= 10)", "flagged = false")),
+ "bus telemetry: flagged still accepted":     (5, lambda t: sub(t, "if r.flagged then return", "if false then return")),
+ "bus telemetry: owner check removed":        (5, lambda t: sub(t, "select * into r from bus_runs where id = p_run and player_id = auth.uid() for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then return", "select * into r from bus_runs where id = p_run for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then return")),
+ "bus telemetry: status guard removed":       (5, lambda t: sub(t, "if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then return", "if r.flagged then return")),
+ "serve: owner check removed":                (5, lambda t: sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise")),
+ "serve: status guard removed":               (5, lambda t: sub(t, "if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "if r.flagged then raise")),
+ "serve: flagged check removed":              (5, lambda t: sub(t, "if r.flagged then raise exception 'telemetry_flagged'; end if;", "")),
+ "serve: stale-telemetry check removed":      (5, lambda t: sub(t, "if extract(epoch from (now() - r.last_at)) > 30 then raise exception 'telemetry_stale'; end if;", "")),
+ "serve: stop radius removed":                (5, lambda t: sub(t, "> 60 then raise exception 'not_at_stop'", "> 1e9 then raise exception 'not_at_stop'")),
+ "serve: too-soon check removed":             (5, lambda t: sub(t, "if v_since < v_min then raise exception 'stop_too_soon'; end if;", "")),
+ "serve: seat capacity ignored":              (5, lambda t: sub(t, "least(v_wait, v_def.passenger_capacity - (r.aboard - v_alight))", "v_wait")),
+ "serve: fare multiplied":                    (5, lambda t: sub(t, "v_fare := v_alight::bigint * v_route.fare;", "v_fare := v_alight::bigint * v_route.fare * 10;")),
+ "serve: fare paid on boarding too":          (5, lambda t: sub(t, "v_fare := v_alight::bigint * v_route.fare;", "v_fare := (v_alight + v_board)::bigint * v_route.fare;")),
+ "serve: terminus leaves passengers aboard":  (5, lambda t: sub(t, "v_alight := case when v_last then r.aboard else", "v_alight := case when v_last then 0 else")),
+ "serve: fuel burn not applied":              (5, lambda t: sub(t, "fuel_l = greatest(0, fuel_l - r.verified_km * v_burn)", "fuel_l = fuel_l")),
+ "serve: distance not credited":              (5, lambda t: sub(t, "odometer_km = odometer_km + r.verified_km where id = v_veh.id;", "odometer_km = odometer_km where id = v_veh.id;")),
+ "serve: xp not awarded":                     (5, lambda t: sub(t, "set experience = experience + v_route.xp_reward,", "set experience = experience + 0,")),
+ "serve: fare replay key unstable (defence in depth: expected to SURVIVE)":         (5, lambda t: sub(t, "'busstop:' || p_run || ':' || r.next_seq", "'busstop:' || gen_random_uuid()")),
+ "serve: row lock removed (PK on bus_run_stops still serialises: expected to SURVIVE)":                 (5, lambda t: sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise")),
+ "serve: row lock AND stop-log PK removed (race 5 must catch)": (5, lambda t: sub(sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise"), "  primary key (run_id, seq)\n);\n\nalter table bus_routes", ");\n\nalter table bus_routes")),
+ "serve: row lock AND fare key removed (PK still holds: expected to SURVIVE)": (5, lambda t: sub(sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise"), "'busstop:' || p_run || ':' || r.next_seq", "'busstop:' || gen_random_uuid()")),
+ "abandon: owner check removed":              (5, lambda t: sub(t, "where id = p_run and player_id = auth.uid() and status = 'active';", "where id = p_run and status = 'active';")),
+ "bus tables: runs UPDATE re-granted":        (5, lambda t: t + "\ngrant update on bus_runs to authenticated;\n"),
+ "bus tables: route INSERT re-granted":       (5, lambda t: t + "\ngrant insert on bus_routes to authenticated;\n"),
+ "bus tables: stops UPDATE re-granted":       (5, lambda t: t + "\ngrant update on bus_route_stops to authenticated;\n"),
+ "bus tables: anon can read runs":            (5, lambda t: t + "\ngrant select on bus_runs to anon;\n"),
+ "bus RLS: runs visible to everyone":         (5, lambda t: sub(t, 'for select to authenticated using (player_id = auth.uid());\ncreate policy "own bus run stops"', 'for select to authenticated using (true);\ncreate policy "own bus run stops"')),
+ "bus RLS: run stops visible to everyone":    (5, lambda t: sub(t, "using (exists (select 1 from bus_runs r where r.id = run_id and r.player_id = auth.uid()));", "using (true);")),
+ "bus RLS disabled on bus_runs":              (5, lambda t: sub(t, "alter table bus_runs        enable row level security;", "")),
+ "bus fns left at default EXECUTE":           (5, lambda t: resub(t, r"revoke execute on function\s+buy_vehicle.*?from public, anon, authenticated;", "")),
+ "bus: serve_stop to anon":                   (5, lambda t: t + "\ngrant execute on function serve_stop(uuid) to anon;\n"),
+ "bus: search_path unpinned on serve_stop":   (5, lambda t: sub(t, "create function serve_stop(p_run uuid) returns jsonb\nlanguage plpgsql security definer set search_path = public as $$", "create function serve_stop(p_run uuid) returns jsonb\nlanguage plpgsql security definer as $$")),
 }
 
 only = sys.argv[1:]
