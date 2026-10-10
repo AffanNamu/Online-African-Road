@@ -188,6 +188,19 @@ namespace ARO.NetCore
         /// <summary>Position on the road centre line at s (x, elevation, z).</summary>
         public V3 PositionAt(float s) => Main.Spline.PositionAt(s);
 
+        /// <summary>Height a vehicle or marker stands on at (x, z): the road surface (camber included, no wear) inside any road formation, otherwise the terrain.</summary>
+        public float GroundHeight(float x, float z)
+        {
+            foreach (var c in AllCorridors)
+            {
+                if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
+                int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s);
+                if (Math.Abs(lat) <= c.Runs[ri].Section.FormationHalfWidth * k)
+                    return c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k);
+            }
+            return Terrain.HeightAt(x, z);
+        }
+
         public float DistanceAlong(float x, float z, out float lateral)
         {
             if (Main.Spline.Nearest(x, z, 10000f, out float s, out lateral, out _)) return s;

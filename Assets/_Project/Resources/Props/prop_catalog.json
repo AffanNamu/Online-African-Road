@@ -209,7 +209,7 @@
    "source": "dev:utility_pole",
    "collider": "none",
    "heightM": 9,
-   "widthM": 0.4,
+   "widthM": 2.2,
    "depthM": 0.4,
    "cullDistance": 260,
    "lodTriangles": [

@@ -125,3 +125,22 @@ public class RoadSplineTests
         for (int i = 0; i < 1000; i++) { float h = Mathx.Hash01(1, i, -i); Assert.InRange(h, 0f, 0.99999994f); }
     }
 }
+
+public class GroundHeightTests
+{
+    [Fact] public void OnTheRoadItIsTheSurfaceOffTheRoadItIsTheTerrain()
+    {
+        var m = Fx.Shipped; var c = m.Main;
+        var p = c.Spline.PositionAt(5000f); var sec = c.SectionAt(5000f);
+        Assert.Equal(p.Y + sec.HeightAt(0f), m.GroundHeight(p.X, p.Z), 2);
+        float far = 400f;
+        Assert.Equal(m.Terrain.HeightAt(p.X + far, p.Z + far), m.GroundHeight(p.X + far, p.Z + far), 3);
+        Assert.True(m.GroundHeight(p.X, p.Z) > m.Terrain.HeightAt(p.X, p.Z), "the road surface sits above the sunk terrain under it");
+    }
+
+    [Fact] public void SideRoadsCountAsRoad()
+    {
+        var m = Fx.Shipped; var side = m.Sides[1]; var p = side.Spline.PositionAt(100f);
+        Assert.Equal(p.Y + side.SectionAt(100f).HeightAt(0f), m.GroundHeight(p.X, p.Z), 1);
+    }
+}

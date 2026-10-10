@@ -297,3 +297,128 @@ public class RouteIntegrationTests
         { var p = m.PositionAt(s); Assert.Equal(s, m.DistanceAlong(p.X, p.Z, out float lat), 0); Assert.Equal(0f, lat, 1); }
     }
 }
+
+public class DevPropGeometryTests
+{
+    static PropDef[] All => Fx.LoadCatalog().props;
+
+    [Fact] public void EveryCataloguedPropGeneratesValidGeometryAtEveryLod()
+    {
+        foreach (var def in All)
+            for (int lod = 0; lod < def.lodTriangles.Length; lod++)
+            {
+                var mb = DevPropGeometry.Build(def, lod);
+                Assert.True(mb.Validate(out var err), $"{def.id} lod{lod}: {err}");
+                Assert.True(mb.TriangleCount > 0, $"{def.id} lod{lod} is empty");
+            }
+    }
+
+    [Fact] public void TriangleCountsStayInsideTheCatalogBudgetAndFallWithEveryLod()
+    {
+        foreach (var def in All)
+        {
+            int prev = int.MaxValue;
+            for (int lod = 0; lod < def.lodTriangles.Length; lod++)
+            {
+                int tris = DevPropGeometry.Build(def, lod).TriangleCount;
+                Assert.True(tris <= def.lodTriangles[lod], $"{def.id} lod{lod}: {tris} triangles exceeds the catalog budget {def.lodTriangles[lod]}");
+                Assert.True(tris < prev, $"{def.id} lod{lod} ({tris}) is not cheaper than the previous level ({prev})");
+                prev = tris;
+            }
+        }
+    }
+
+    [Fact] public void PropsMatchTheirRealWorldSizeAndStandOnTheGround()
+    {
+        foreach (var def in All)
+        {
+            var mb = DevPropGeometry.Build(def, 0); mb.MinMax(out var lo, out var hi);
+            Assert.InRange(lo.Y, -0.25f, 0.2f);                                             // pivot at the base
+            Assert.InRange(hi.Y - lo.Y, def.heightM * 0.55f, def.heightM * 1.25f);         // height matches the catalog
+            Assert.True(hi.X - lo.X <= def.widthM * 1.35f + 0.5f, $"{def.id} is {hi.X - lo.X:0.0} m wide, catalog says {def.widthM}");
+            Assert.True(hi.Z - lo.Z <= def.depthM * 1.5f + 3f, $"{def.id} is {hi.Z - lo.Z:0.0} m deep, catalog says {def.depthM}");
+        }
+    }
+
+    [Fact] public void LodClampingAndUnknownPropsAreSafe()
+    {
+        var def = All.First(p => p.id == "bush");
+        Assert.Equal(DevPropGeometry.Build(def, 0).TriangleCount, DevPropGeometry.Build(def, -5).TriangleCount);
+        Assert.Equal(DevPropGeometry.Build(def, def.lodTriangles.Length - 1).TriangleCount, DevPropGeometry.Build(def, 99).TriangleCount);
+        var unknown = new PropDef { id = "mystery", heightM = 2, widthM = 2, depthM = 2, lodTriangles = new[] { 100 } };
+        Assert.True(DevPropGeometry.Build(unknown, 0).TriangleCount > 0);               // falls back to a plain box rather than failing
+    }
+
+    [Fact] public void FoliageIsTwoSidedAndWallsFaceOutwards()
+    {
+        var palm = DevPropGeometry.Build(All.First(p => p.id == "palm_tree"), 0);
+        var tris = Fx.Tris(palm, PropSub.Foliage).ToList();
+        Assert.Contains(tris, t => t.n.Y > 0); Assert.Contains(tris, t => t.n.Y < 0);
+        var house = DevPropGeometry.Build(All.First(p => p.id == "concrete_house"), 0);
+        var centre = new V3(0, 3f, 0);
+        foreach (var (n, c) in Fx.Tris(house, PropSub.Wall)) Assert.True(MeshBuffers.Dot(n, c - centre) > 0f, "a wall faces inwards");
+    }
+
+    [Fact] public void SignsCarryAPanelSlotForText()
+    {
+        foreach (var id in new[] { "road_sign", "billboard", "fuel_station", "shop_row" })
+            Assert.True(DevPropGeometry.Build(All.First(p => p.id == id), 0).Triangles[PropSub.SignPanel].Count > 0, id);
+    }
+}
+
+public class PropBatcherTests
+{
+    static MeshBuffers Geo(string id, int lod) => DevPropGeometry.Build(Fx.LoadCatalog().props.First(p => p.id == id), lod);
+
+    [Fact] public void MergingKeepsEveryTriangleAndVertex()
+    {
+        var one = Geo("concrete_house", 0);
+        var list = Enumerable.Range(0, 5).Select(i => new PropInstance { Prop = "concrete_house", Pos = new V3(i * 20, 3, 0), Scale = 1f }).ToList();
+        var merged = PropBatcher.Merge(list, Geo, 0, new V3(0, 0, 0));
+        Assert.Equal(one.TriangleCount * 5, merged.TriangleCount); Assert.Equal(one.VertexCount * 5, merged.VertexCount);
+        Assert.True(merged.Validate(out var err), err);
+        for (int s = 0; s < PropSub.Count; s++) Assert.Equal(one.Triangles[s].Count * 5, merged.Triangles[s].Count);
+    }
+
+    [Fact] public void YawScaleAndPositionAreApplied()
+    {
+        var p = PropBatcher.Place(new V3(0, 1, 2), new V3(10, 5, 20), 0f, 1f); Assert.Equal(10f, p.X, 4); Assert.Equal(6f, p.Y, 4); Assert.Equal(22f, p.Z, 4);
+        var east = PropBatcher.Place(new V3(0, 0, 2), new V3(0, 0, 0), 90f, 1f); Assert.Equal(2f, east.X, 3); Assert.Equal(0f, east.Z, 3);          // front (+z) turns to face east
+        var right = PropBatcher.Place(new V3(1, 0, 0), new V3(0, 0, 0), 90f, 1f); Assert.Equal(-1f, right.Z, 3);                                   // clockwise from above
+        var big = PropBatcher.Place(new V3(1, 1, 1), new V3(0, 0, 0), 0f, 3f); Assert.Equal(3f, big.Y, 4);
+    }
+
+    [Fact] public void OriginMakesVerticesChunkLocal()
+    {
+        var list = new List<PropInstance> { new PropInstance { Prop = "bush", Pos = new V3(1005, 7, 2003), Scale = 1f } };
+        var m = PropBatcher.Merge(list, Geo, 0, new V3(1000, 5, 2000)); m.MinMax(out var lo, out var hi);
+        Assert.InRange(lo.X, 0f, 10f); Assert.InRange(lo.Z, -1f, 10f); Assert.InRange(lo.Y, 1.5f, 2.5f);
+    }
+
+    [Fact] public void IncludeFilterAndEmptyInputAndMissingGeometryAreSafe()
+    {
+        var list = new List<PropInstance> { new PropInstance { Prop = "bush", Scale = 1f }, new PropInstance { Prop = "palm_tree", Scale = 1f }, new PropInstance { Prop = "ghost", Scale = 1f } };
+        var onlyPalm = PropBatcher.Merge(list, (id, lod) => id == "ghost" ? null : Geo(id, lod), 0, new V3(0, 0, 0), i => i.Prop != "bush");
+        Assert.Equal(Geo("palm_tree", 0).TriangleCount, onlyPalm.TriangleCount);
+        Assert.True(PropBatcher.Merge(new List<PropInstance>(), Geo, 0, new V3(0, 0, 0)).IsEmpty);
+    }
+
+    [Fact] public void LowerLodsMakeSmallerBatches()
+    {
+        var list = Enumerable.Range(0, 20).Select(i => new PropInstance { Prop = i % 2 == 0 ? "palm_tree" : "concrete_house", Pos = new V3(i * 15, 0, 0), Scale = 1f }).ToList();
+        int t0 = PropBatcher.Merge(list, Geo, 0, new V3(0, 0, 0)).TriangleCount, t1 = PropBatcher.Merge(list, Geo, 1, new V3(0, 0, 0)).TriangleCount;
+        Assert.True(t1 < t0);
+    }
+
+    [Fact] public void BoxCollidersOnlyForBoxProps()
+    {
+        var cat = Fx.LoadCatalog().props.ToDictionary(p => p.id);
+        var list = new List<PropInstance>
+        {
+            new PropInstance { Prop = "concrete_house", Pos = new V3(0, 2, 0), Scale = 1.5f, YawDeg = 30f }, new PropInstance { Prop = "palm_tree", Pos = new V3(5, 0, 5), Scale = 1f }, new PropInstance { Prop = "ghost", Scale = 1f }
+        };
+        var boxes = PropBatcher.BoxColliders(list, id => cat.TryGetValue(id, out var d) ? d : null);
+        Assert.Single(boxes);
+        Assert.Equal(cat["concrete_house"].heightM * 1.5f, boxes[0].Size.Y, 3); Assert.Equal(2f + cat["concrete_house"].heightM * 0.75f, boxes[0].Centre.Y, 3); Assert.Equal(30f, boxes[0].YawDeg);
+    }
+}
