@@ -2,7 +2,6 @@ using ARO.NetCore;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 
 namespace ARO.Tests
 {
@@ -40,10 +39,14 @@ namespace ARO.Tests
             var and = imp.GetPlatformTextureSettings("Android"); Assert.IsTrue(and.overridden); Assert.AreEqual(TextureImporterFormat.ASTC_6x6, and.format);
         }
 
-        [Test] public void ArtworkIsBlockCompressedInTheEditorToo()
+        // The editor in headless batch mode imports this texture uncompressed (CI saw R8G8B8_UNorm), so this does NOT prove the WebGL/mobile build is block-compressed
+        // (that is configured by the platform overrides asserted above). It guards the memory budget even in the uncompressed worst case.
+        [Test] public void ArtworkStaysInsideItsMemoryBudgetEvenUncompressed()
         {
             var tex = Resources.Load<Texture2D>("WorldMap/west_africa_world_map");
-            Assert.IsTrue(GraphicsFormatUtility.IsCompressedFormat(tex.graphicsFormat), "format was " + tex.graphicsFormat);
+            long bytes = UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(tex);
+            Debug.Log($"[WorldMapAssetTests] artwork format in this editor = {tex.graphicsFormat}, runtime size = {bytes / 1048576f:0.0} MB");
+            Assert.Less(bytes, 12L * 1048576L, "artwork uses " + bytes + " bytes");
         }
     }
 }
