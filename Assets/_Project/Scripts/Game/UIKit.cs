@@ -29,6 +29,7 @@ namespace ARO.Game
                 var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
                 // A module added from code has NO actions assigned (only the editor menu does that); without this, clicks and typing never reach the UI.
                 es.GetComponent<InputSystemUIInputModule>().AssignDefaultActions();
+                es.AddComponent<UIDiagnostics>();
             }
             return c;
         }

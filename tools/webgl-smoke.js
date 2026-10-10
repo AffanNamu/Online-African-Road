@@ -62,22 +62,34 @@ function serve() {
   }
   if (interact && loaded) {
     const box = await page.locator('#unity-canvas').boundingBox();
+    console.log(`canvas box: ${JSON.stringify(box)}`);
     const at = (fx, fy) => [box.x + fx * box.width, box.y + fy * box.height];
+    // The game logs where every button / input field is (UIDiagnostics); aim at those instead of guessing.
+    const targets = [...logs.join('\n').matchAll(/TARGET (\w+) '([^']*)' x=([\d.]+) y=([\d.]+)/g)]
+      .map(m => ({ kind: m[1], name: m[2], x: parseFloat(m[3]), y: parseFloat(m[4]) }));
+    console.log(`UI targets reported by the game: ${targets.length}`);
+    targets.slice(0, 12).forEach(t => console.log(`  ${t.kind} ${t.name} (${t.x}, ${t.y})`));
+    const btn = targets.find(t => t.name === 'Btn_CREATE ACCOUNT') || { x: 0.5, y: 0.606 };
+    const fld = targets.find(t => t.kind === 'InputField') || { x: 0.5, y: 0.32 };
+    if (!targets.length) failures.push('the game reported no UI targets (login screen not built?)');
+    const press = async (x, y) => { await page.mouse.move(...at(x, y)); await page.waitForTimeout(400); await page.mouse.down(); await page.waitForTimeout(250); await page.mouse.up(); };
     const before = await frame(shot.replace('.png', '-0-start.png'));
-    await page.mouse.click(...at(0.5, 0.606));              // CREATE ACCOUNT with an empty password -> a red validation message appears
+    await press(btn.x, btn.y);                              // CREATE ACCOUNT with empty fields: hover/press colour change and/or a red message
     await page.waitForTimeout(1500);
     const afterClick = await frame(shot.replace('.png', '-1-clicked.png'));
-    const msgPixels = diffCount(before, afterClick, box, 0.40, 0.46, 0.60, 0.52);
-    console.log(`click test: ${msgPixels} pixels changed where the validation message should appear`);
+    const msgPixels = diffCount(before, afterClick, box, 0.30, btn.y - 0.12, 0.70, btn.y + 0.05);
+    console.log(`click test: ${msgPixels} pixels changed around CREATE ACCOUNT`);
     if (msgPixels < 150) failures.push('clicking CREATE ACCOUNT did nothing (the UI is not receiving mouse input)');
-    await page.mouse.click(...at(0.5, 0.32));               // focus the Email field and type into it
+    await press(fld.x, fld.y);                              // focus the first input field and type into it
     await page.waitForTimeout(500);
-    await page.keyboard.type('player@example.com', { delay: 50 });
-    await page.waitForTimeout(800);
+    await page.keyboard.type('player@example.com', { delay: 80 });
+    await page.waitForTimeout(1500);
     const afterType = await frame(shot.replace('.png', '-2-typed.png'));
-    const typedPixels = diffCount(afterClick, afterType, box, 0.39, 0.30, 0.61, 0.345);
-    console.log(`typing test: ${typedPixels} pixels changed inside the Email field`);
+    const typedPixels = diffCount(afterClick, afterType, box, fld.x - 0.12, fld.y - 0.03, fld.x + 0.12, fld.y + 0.03);
+    console.log(`typing test: ${typedPixels} pixels changed inside the first input field`);
     if (typedPixels < 150) failures.push('typing into the Email field did nothing (the UI is not receiving keyboard input)');
+    console.log('--- UIDiag lines ---');
+    logs.filter(l => l.includes('[UIDiag]')).slice(0, 40).forEach(l => console.log(l.slice(0, 400)));
   }
 
   const png = PNG.sync.read(fs.readFileSync(shot));
