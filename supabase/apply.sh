@@ -11,6 +11,15 @@ marker=$(q -At -c "select to_regclass('public._aro_migrations') is not null")
 if [ "$marker" != "t" ]; then
   clash=""
   for t in $OURS; do [ "$(q -At -c "select to_regclass('public.$t') is not null")" = "t" ] && clash="$clash $t"; done
+  # A brand-new dedicated project has no tables in public and no players. Anything else means the project is in use by something else:
+  # stop and report (names only, never data) so a human decides.
+  others=$(q -At -c "select coalesce(string_agg(table_name, ' ' order by table_name), '') from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'")
+  users=$(q -At -c "select count(*) from auth.users")
+  if [ -n "$others" ] || [ "$users" != "0" ]; then
+    echo "REFUSING TO RUN: this Supabase project is not empty (public tables: [${others:-none}], auth users: $users)."
+    echo "African Roads Online installs a trigger on auth.users and tables in public; use a dedicated, brand-new project."
+    exit 1
+  fi
   if [ -n "$clash" ]; then
     echo "REFUSING TO RUN: these tables already exist and were not created by this project:$clash"
     echo "This looks like another application's database. Use a dedicated, empty Supabase project for African Roads Online."
