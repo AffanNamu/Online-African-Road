@@ -4,7 +4,7 @@ A mutant that survives (tests still pass) means a protection is not actually cov
 import os, re, shutil, subprocess, sys, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MIG = os.path.join(ROOT, "migrations")
-NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql"}
+NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql", 6: "20261009000006_exclusive_activity.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
 
 def sub(txt, old, new, count=1):
@@ -33,11 +33,11 @@ MUTANTS = {
  "_apply_transaction executable by clients":   (2, lambda t: t + "\ngrant execute on function _apply_transaction(uuid, transaction_kind, bigint, text, text, uuid) to authenticated;\n"),
  "generate_jobs executable by clients":        (2, lambda t: t + "\ngrant execute on function generate_jobs(int) to authenticated;\n"),
  "search_path unpinned on buy_fuel":           (2, lambda t: sub(t, "create or replace function buy_fuel(p_vehicle uuid, p_liters numeric) returns jsonb\nlanguage plpgsql security definer set search_path = public as $$", "create or replace function buy_fuel(p_vehicle uuid, p_liters numeric) returns jsonb\nlanguage plpgsql security definer as $$")),
- "ownership check removed in accept_job":      (2, lambda t: sub(t, "select * into v_veh from vehicle_ownership where id = p_vehicle and player_id = v_uid;", "select * into v_veh from vehicle_ownership where id = p_vehicle;")),
+ "ownership check removed in accept_job":      (6, lambda t: sub(t, "select * into v_veh from vehicle_ownership where id = p_vehicle and player_id = v_uid;", "select * into v_veh from vehicle_ownership where id = p_vehicle;")),
  "idempotency lookup removed":                 (2, lambda t: sub(sub(t, "if exists (select 1 from transactions where idempotency_key = p_key) then\n    return false;\n  end if;", ""), "exception when unique_violation then\n  return false;", "exception when no_data_found then\n  return false;")),
- "job_full check removed":                     (2, lambda t: sub(t, ">= v_job.max_participants then", ">= 999 then")),
- "expiry check removed":                       (2, lambda t: sub(t, "or v_job.expires_at <= now() then", "then")),
- "category check removed":                     (2, lambda t: sub(t, "if v_cat <> v_job.required_category then raise exception 'wrong_vehicle_category'; end if;", "")),
+ "job_full check removed":                     (6, lambda t: sub(t, ">= v_job.max_participants then", ">= 999 then")),
+ "expiry check removed":                       (6, lambda t: sub(t, "or v_job.expires_at <= now() then", "then")),
+ "category check removed":                     (6, lambda t: sub(t, "if v_cat <> v_job.required_category then raise exception 'wrong_vehicle_category'; end if;", "")),
  "convoy size cap raised":                     (2, lambda t: sub(t, ">= 8 then raise exception 'convoy_full'", ">= 80 then raise exception 'convoy_full'")),
  "disbanded convoy joinable":                  (2, lambda t: sub(t, "where id = p_convoy and disbanded_at is null", "where id = p_convoy")),
  "fuel ownership check removed":               (2, lambda t: sub(t, "select * into v_veh from vehicle_ownership where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l", "select * into v_veh from vehicle_ownership where id = p_vehicle for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l")),
@@ -113,6 +113,8 @@ MUTANTS = {
  "serve: row lock removed (PK on bus_run_stops still serialises: expected to SURVIVE)":                 (5, lambda t: sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise")),
  "serve: row lock AND stop-log PK removed (race 5 must catch)": (5, lambda t: sub(sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise"), "  primary key (run_id, seq)\n);\n\nalter table bus_routes", ");\n\nalter table bus_routes")),
  "serve: row lock AND fare key removed (PK still holds: expected to SURVIVE)": (5, lambda t: sub(sub(t, "where id = p_run and player_id = v_uid for update;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise", "where id = p_run and player_id = v_uid;\n  if not found then raise exception 'run_not_found'; end if;\n  if r.status <> 'active' then raise exception 'run_not_active'; end if;\n  if r.flagged then raise"), "'busstop:' || p_run || ':' || r.next_seq", "'busstop:' || gen_random_uuid()")),
+ "accept_job: bus-run exclusivity removed":     (6, lambda t: sub(t, "if exists (select 1 from bus_runs where player_id = v_uid and status = 'active') then raise exception 'bus_run_active'; end if;", "")),
+ "accept_job (6): search_path unpinned":      (6, lambda t: sub(t, "create or replace function accept_job(p_job uuid, p_vehicle uuid) returns uuid\nlanguage plpgsql security definer set search_path = public as $$", "create or replace function accept_job(p_job uuid, p_vehicle uuid) returns uuid\nlanguage plpgsql security definer as $$")),
  "abandon: owner check removed":              (5, lambda t: sub(t, "where id = p_run and player_id = auth.uid() and status = 'active';", "where id = p_run and status = 'active';")),
  "bus tables: runs UPDATE re-granted":        (5, lambda t: t + "\ngrant update on bus_runs to authenticated;\n"),
  "bus tables: route INSERT re-granted":       (5, lambda t: t + "\ngrant insert on bus_routes to authenticated;\n"),

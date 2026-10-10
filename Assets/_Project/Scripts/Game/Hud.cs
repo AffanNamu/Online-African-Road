@@ -15,6 +15,9 @@ namespace ARO.Game
         static readonly Color Glass = new Color(0.05f, 0.07f, 0.09f, 0.72f);
 
         DrivingSession _s; GameServices _svc; MinimapView _map;
+        /// <summary>Optional: when a bus run is active the job card shows the route instead.</summary>
+        public BusSession Bus;
+        Text _jobTitle;
         Text _speed, _gear, _job1, _job2, _jobReward, _eta, _wallet, _convoy, _indicators, _prompt;
         Image _arc, _fuelFill, _dmgFill, _progress; RectTransform _needle; GameObject _root, _jobCard, _convoyPanel;
         Text[] _toast = new Text[3]; Image[] _toastBg = new Image[3];
@@ -82,7 +85,7 @@ namespace ARO.Game
         {
             var card = UIGfx.Panel(t, "JobCard", Glass, new Vector2(0, 1), new Vector2(0, 1), new Vector2(28, -214), new Vector2(520, -28));
             _jobCard = card.gameObject; var c = card.transform;
-            UIKit.Label(c, "CURRENT JOB", 16, UIKit.Accent, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(22, -34), new Vector2(-22, -10));
+            _jobTitle = UIKit.Label(c, "CURRENT JOB", 16, UIKit.Accent, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(22, -34), new Vector2(-22, -10));
             _job1 = UIKit.Label(c, "", 26, UIKit.TextCol, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(22, -78), new Vector2(-22, -36));
             _job2 = UIKit.Label(c, "", 20, UIKit.Muted, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(22, -112), new Vector2(-22, -80));
             _jobReward = UIKit.Label(c, "", 22, UIKit.Accent, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(22, -146), new Vector2(-22, -114));
@@ -168,13 +171,24 @@ namespace ARO.Game
             if (_svc.Wallet != null) _wallet.text = TripFormat.Money(_svc.Wallet.balance) + " coins";
 
             Vector3? dest = null;
-            if (_s.Job == null)
+            if (Bus != null && Bus.Active)
+            {
+                _jobCard.SetActive(true); _jobTitle.text = "BUS ROUTE";
+                var stop = Bus.NextStop; float d = Bus.DistanceToNext; dest = Bus.NextStopPosition;
+                _job1.text = Bus.Route.code + "  ·  " + Bus.Route.name;
+                _job2.text = $"Stop {Bus.NextIndex + 1}/{Bus.Route.stops.Length}: {stop.location.name}  ·  {TripFormat.Distance(d)}";
+                _jobReward.text = $"Aboard {Bus.State.Aboard}/{Bus.Capacity}   Fares {TripFormat.Money(Bus.State.Revenue)}";
+                _progress.rectTransform.anchorMax = new Vector2(Mathf.Max(0.02f, Bus.Progress), 0f);
+                _eta.text = "ETA " + TripFormat.Eta(EtaEstimator.Seconds(d, v.SpeedKmh / 3.6f));
+                _prompt.text = BusRules.Prompt(stop.location.name, Bus.IsLastStop, Bus.IsFirstStop, d, v.SpeedKmh);
+            }
+            else if (_s.Job == null)
             {
                 _jobCard.SetActive(false); _eta.text = ""; _prompt.text = "";
             }
             else
             {
-                _jobCard.SetActive(true);
+                _jobCard.SetActive(true); _jobTitle.text = "CURRENT JOB";
                 bool deliver = _s.Phase == JobPhase.ToDestination;
                 var target = deliver ? _s.Job.destination : _s.Job.origin;
                 dest = new Vector3((float)target.world_x, 0f, (float)target.world_z);

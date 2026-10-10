@@ -12,19 +12,20 @@ namespace ARO.Game
     /// <summary>Menu/screen state machine: Login -> Menu -> JobBoard / Garage / Profile -> Driving.</summary>
     public class GameFlow : MonoBehaviour
     {
-        enum Screen { Login, Menu, Jobs, Garage, Profile, Convoy }
+        enum Screen { Login, Menu, Jobs, Garage, Profile, Convoy, Bus, Shop }
 
-        GameServices _svc; DrivingSession _drive; Hud _hud;
+        GameServices _svc; DrivingSession _drive; Hud _hud; BusSession _bus;
         Canvas _canvas; RectTransform _panel; Text _toast; float _toastUntil;
         bool _busy;
 
-        public void Init(GameServices svc, DrivingSession drive, Hud hud)
+        public void Init(GameServices svc, DrivingSession drive, Hud hud, BusSession bus)
         {
-            _svc = svc; _drive = drive; _hud = hud;
+            _svc = svc; _drive = drive; _hud = hud; _bus = bus;
             _canvas = UIKit.CreateCanvas("Menus", 10);
             UIKit.Box(_canvas.transform, "Backdrop", new Color(0.03f, 0.04f, 0.06f, 0.78f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
             _drive.JobCompleted += async _ => { await _svc.RefreshPlayer(); };
+            _bus.RunCompleted += async _ => { await _svc.RefreshPlayer(); };
             _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f); };
             _ = StartUp();
         }
@@ -70,6 +71,8 @@ namespace ARO.Game
                 case Screen.Garage: ShowGarage(); break;
                 case Screen.Profile: ShowProfile(); break;
                 case Screen.Convoy: _ = ShowConvoy(); break;
+                case Screen.Bus: _ = ShowBus(); break;
+                case Screen.Shop: ShowShop(); break;
             }
         }
 
@@ -121,6 +124,8 @@ namespace ARO.Game
             UIKit.Label(p, stats, 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
             if (_drive.Vehicle != null) UIKit.Btn(p, "RESUME DRIVING", Resume);
             UIKit.Btn(p, _drive.Vehicle != null ? "JOB BOARD" : "DRIVE · JOB BOARD", () => _ = ShowJobs(), _drive.Vehicle == null);
+            UIKit.Btn(p, _bus.Active ? "BUS ROUTE (in progress)" : "BUS ROUTES", () => _ = ShowBus(), false);
+            UIKit.Btn(p, "SHOP", ShowShop, false);
             UIKit.Btn(p, "GARAGE", ShowGarage, false);
             UIKit.Btn(p, "CONVOY", () => _ = ShowConvoy(), false);
             UIKit.Btn(p, "PROFILE", ShowProfile, false);
@@ -130,17 +135,17 @@ namespace ARO.Game
 
         void Resume() { _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false); }
 
-        void StartDrive(JobDto job, string assignmentId = null)
+        /// <summary>Enter the world. A job needs its own vehicle (the one the server assigned); free drive uses the first truck.</summary>
+        void StartDrive(JobDto job, string assignmentId = null, OwnedVehicleDto vehicle = null)
         {
-            if (_drive.Vehicle == null)
-            {
-                var owned = _svc.Vehicles.Length > 0 ? _svc.Vehicles[0] : null;
-                if (owned == null) { Toast("You do not own a vehicle."); return; }
-                _drive.Enter(owned);
-            }
+            var owned = vehicle ?? (_drive.Vehicle == null ? FirstTruckOrAny() : null);
+            if (owned != null && owned.id != _drive.VehicleId) _drive.Enter(owned);
+            if (_drive.Vehicle == null) { Toast("You do not own a vehicle."); return; }
             if (job != null) _drive.BeginJob(job, assignmentId);
             _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
         }
+
+        OwnedVehicleDto FirstTruckOrAny() => FindVehicleFor("truck") ?? (_svc.Vehicles.Length > 0 ? _svc.Vehicles[0] : null);
 
         // ---------------------------------------------------------------- jobs
         async Task ShowJobs()
@@ -171,7 +176,7 @@ namespace ARO.Game
             if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return; }
             _busy = true; var r = await _svc.Jobs.Accept(job.id, owned.id); _busy = false;
             if (!r.Ok) { Toast(r.UserMessage, 6f); await ShowJobs(); return; }
-            StartDrive(job, r.Value);
+            StartDrive(job, r.Value, owned);
         }
 
         OwnedVehicleDto FindVehicleFor(string category)
@@ -242,6 +247,70 @@ namespace ARO.Game
             UIKit.Btn(p, "BACK", ShowMenu, false, 48);
         }
 
+        // ---------------------------------------------------------------- bus
+        async Task ShowBus()
+        {
+            var p = NewPanel("Bus Routes", 900f);
+            if (_bus.Active)
+            {
+                UIKit.Label(p, $"{_bus.Route.code}  {_bus.Route.name}\nNext: {_bus.NextStop.location.name}   ·   aboard {_bus.State.Aboard}/{_bus.Capacity}   ·   fares {_bus.State.Revenue:N0}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 100;
+                UIKit.Btn(p, "RESUME ROUTE", Resume);
+                UIKit.Btn(p, "ABANDON ROUTE (no pay)", async () => { await _bus.Abandon(); await ShowBus(); }, false, 48);
+                UIKit.Btn(p, "BACK", ShowMenu, false, 48);
+                return;
+            }
+            UIKit.Label(p, "Loading routes...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var r = await _svc.Bus.LoadRoutes();
+            p = NewPanel("Bus Routes", 900f);
+            var bus = FindVehicleFor("bus");
+            if (!r.Ok) UIKit.Label(p, r.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            else if (bus == null) UIKit.Label(p, "You need a bus to run a route. Buy one in the shop.", 22, UIKit.Accent, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 60;
+            else if (r.Value.Length == 0) UIKit.Label(p, "No bus routes available yet.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            if (r.Ok && bus != null)
+                foreach (var rt in r.Value)
+                {
+                    var route = rt;
+                    UIKit.Btn(p, $"{route.code}  {route.name}\n{route.stops.Length} stops · {route.fare} coins per passenger · {route.xp_reward} XP",
+                        async () => await BeginBusRoute(route, bus), false, 84);
+                }
+            UIKit.Btn(p, "SHOP", ShowShop, false, 48);
+            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+        }
+
+        async Task BeginBusRoute(BusRouteDto route, OwnedVehicleDto bus)
+        {
+            if (_busy) return; _busy = true; Toast("Starting route...");
+            string err = await _bus.Begin(route, bus); _busy = false;
+            if (err != null) { Toast(err, 6f); await ShowBus(); return; }
+            _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
+        }
+
+        // ---------------------------------------------------------------- shop
+        void ShowShop()
+        {
+            var p = NewPanel("Vehicle Shop", 900f);
+            UIKit.Label(p, $"Wallet: {_svc.Wallet.balance:N0} coins", 24, UIKit.Accent, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
+            int shown = 0;
+            foreach (var d in _svc.Definitions)
+            {
+                if (d.price <= 0 || shown++ >= 6) continue;
+                var def = d; int owned = 0; foreach (var v in _svc.Vehicles) if (v.definition_id == def.id) owned++;
+                string detail = def.category == "bus" ? $"{def.passenger_capacity} seats" : $"{def.cargo_capacity_kg:N0} kg cargo";
+                UIKit.Btn(p, $"{def.name}  ·  {def.price:N0} coins\n{detail} · {def.max_speed_kmh:F0} km/h" + (owned > 0 ? $"  ·  you own {owned}" : ""),
+                    async () => await BuyVehicle(def), false, 84);
+            }
+            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+        }
+
+        async Task BuyVehicle(VehicleDefDto def)
+        {
+            if (_busy) return;
+            if (_svc.Wallet.balance < def.price) { Toast($"Not enough money: {def.name} costs {def.price:N0} coins."); return; }
+            _busy = true; var r = await _svc.Bus.BuyVehicle(def.id); _busy = false;
+            Toast(r.Ok ? $"Bought {def.name}." : r.UserMessage, 5f);
+            await _svc.RefreshPlayer(); ShowShop();
+        }
+
         // ---------------------------------------------------------------- profile
         void ShowProfile()
         {
@@ -250,6 +319,7 @@ namespace ARO.Game
             UIKit.Label(p, $"{pr.display_name}\nLevel {pr.level} · {pr.experience:N0} XP\nWallet: {_svc.Wallet.balance:N0} coins\nJobs completed: {pr.jobs_completed}\nDistance: {pr.distance_km:F1} km\nVehicles owned: {_svc.Vehicles.Length}",
                 26, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 260;
             if (_drive.Job != null) UIKit.Btn(p, "ABANDON CURRENT JOB", () => { _drive.AbandonJob(); ShowProfile(); }, false);
+            if (_bus.Active) UIKit.Btn(p, "ABANDON BUS ROUTE", async () => { await _bus.Abandon(); ShowProfile(); }, false);
             UIKit.Btn(p, "BACK", ShowMenu);
         }
     }

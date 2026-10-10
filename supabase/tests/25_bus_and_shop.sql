@@ -67,8 +67,16 @@ select testkit.mk_job('BUS-CONFLICT', 1);
 select testkit.as_user(pg_temp.u('D'), format('select accept_job(%L,%L)', (select id from jobs where code = 'BUS-CONFLICT'), pg_temp.truck('D')));
 select testkit.expect_error('authenticated', pg_temp.u('D'), format('select start_bus_run(%L,%L,2600,-900)', pg_temp.route('LAG-R1'), pg_temp.bus('D')), 'job_active');
 
--- ===== S4: telemetry, flagging, staleness, ownership
 create temp table runs(k text primary key, id uuid);
+-- one activity at a time, in both directions: an active bus run blocks accepting a freight job
+insert into runs values ('excl', pg_temp.start_run('A', 'LAG-R1'));
+select testkit.mk_job('BUS-EXCL', 1);
+select testkit.expect_error('authenticated', pg_temp.u('A'), format('select accept_job(%L,%L)', (select id from jobs where code = 'BUS-EXCL'), pg_temp.truck('A')), 'bus_run_active');
+select testkit.as_user(pg_temp.u('A'), format('select abandon_bus_run(%L)', (select id from runs where k='excl')));
+select testkit.assert_eq('job acceptable once the run is abandoned', (testkit.as_user(pg_temp.u('A'), format('select accept_job(%L,%L)', (select id from jobs where code = 'BUS-EXCL'), pg_temp.truck('A'))) is not null)::text, 'true');
+select testkit.as_user(pg_temp.u('A'), format('select abandon_job(%L)', (select id from job_assignments where player_id = pg_temp.u('A') and status = 'accepted')));
+
+-- ===== S4: telemetry, flagging, staleness, ownership
 insert into runs values ('t1', pg_temp.start_run('A', 'LAG-R1'));
 select testkit.expect_error('authenticated', pg_temp.u('A'), format('select start_bus_run(%L,%L,2600,-900)', pg_temp.route('LAG-R1'), pg_temp.bus('A')), 'run_active');
 select testkit.expect_error('authenticated', pg_temp.u('B'), format('select submit_bus_telemetry(%L,2600,-890)', (select id from runs where k='t1')), 'run_not_found');

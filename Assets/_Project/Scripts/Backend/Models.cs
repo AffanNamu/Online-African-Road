@@ -24,7 +24,7 @@ namespace ARO.Backend
     [Serializable] public class VehicleDefDto
     {
         public string id, category, name, stats; // stats is parsed separately (jsonb)
-        public int cargo_capacity_kg, passenger_capacity; public double fuel_capacity_l, max_speed_kmh;
+        public int cargo_capacity_kg, passenger_capacity; public double fuel_capacity_l, max_speed_kmh; public long price;
     }
     [Serializable] public class OwnedVehicleDto
     {
@@ -34,5 +34,19 @@ namespace ARO.Backend
 
     [Serializable] public class TelemetryResult { public bool accepted; public string reason; public double verified_km; }
     [Serializable] public class CompleteJobResult { public long reward, bonus, xp, balance; public int level; }
+    // ---- bus system (supabase migration 5)
+    [Serializable] public class BusStopDto { public int seq, demand, alight_pct; public LocationDto location; }
+    [Serializable] public class BusRouteDto
+    {
+        public string id, code, name; public int fare, xp_reward;
+        public BusStopDto[] stops = new BusStopDto[0];   // embedded bus_route_stops, sorted by seq client-side
+    }
+    /// <summary>serve_stop reply. Mid-route replies carry boarded/aboard/next_seq; the final reply carries completed=true plus totals.</summary>
+    [Serializable] public class ServeStopResult
+    {
+        public bool completed; public int alighted, boarded, aboard, next_seq, passengers_carried, xp, level;
+        public long fare, revenue, balance;
+    }
+
     [Serializable] public class ListWrapper<T> { public T[] items; }
 }

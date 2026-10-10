@@ -57,7 +57,8 @@ teleport rejection, rate limit, flag after 10, stale telemetry, other player can
 too-soon, radius edge (31 m ok, 80 m refused), capacity never exceeded (fixture route with demand 80), revenue = fares = wallet delta,
 xp once, post-completion rejection, a legitimately driven run (verified km 3.6-3.8, fuel burn = km x 0.28), abandon, direct writes denied, RLS isolation,
 ledger invariant. Races 5 and 6: concurrent terminus serve pays once; concurrent purchases with money for one bus buy one.
-Mutation run (all files): **99 of 103 caught**; the 4 survivors are labelled defence in depth: wallet CHECK alone, fare idempotency key alone,
+Migration `20261009000006` closes a double-dipping hole found while writing the bus client: `accept_job` now refuses while a bus run is active (`start_bus_run` already refused while a job was active), so one physical drive cannot be reported as a truck delivery and a bus route at once. Tested both ways; mutant "bus-run exclusivity removed" is killed.
+Mutation run (all files): **101 of 105 caught**; the 4 survivors are labelled defence in depth: wallet CHECK alone, fare idempotency key alone,
 bus-run row lock alone, row lock + fare key together (each is backed by another independent layer: wallet CHECK / stop-log primary key / status guard).
 Removing the row lock and the stop-log primary key together IS caught by race 5.
 

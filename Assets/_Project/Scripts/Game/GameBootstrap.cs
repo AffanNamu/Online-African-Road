@@ -37,7 +37,8 @@ namespace ARO.Game
             NetVisualContext.LocalName = () => svc.Profile != null ? svc.Profile.display_name : "Driver";
             NetVisualContext.LocalVehicleDefinitionId = () => drive.Vehicle != null && drive.Vehicle.definition != null ? drive.Vehicle.definition.id : "truck_light_01";
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
-            new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud);
+            var bus = new GameObject("BusSession").AddComponent<BusSession>(); bus.Init(svc, drive); hud.Bus = bus;
+            new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud, bus);
 
             // Ambient traffic (pooled, quality-scaled); follows the player's vehicle once spawned.
             var traffic = new GameObject("Traffic").AddComponent<TrafficManager>();

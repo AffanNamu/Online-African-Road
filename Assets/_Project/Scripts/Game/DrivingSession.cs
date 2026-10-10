@@ -44,13 +44,14 @@ namespace ARO.Game
             Cam = cam;
         }
 
-        public void Enter(OwnedVehicleDto owned)
+        /// <summary>Spawn the player's vehicle. Default: start of the corridor; pass a position to start elsewhere (e.g. a bus stop).</summary>
+        public void Enter(OwnedVehicleDto owned, Vector3? at = null, Quaternion? facing = null)
         {
             if (Vehicle != null) Destroy(Vehicle.gameObject);
-            var def = _defs[owned.definition_id];
+            if (!_defs.TryGetValue(owned.definition_id, out var def)) { Say("Unknown vehicle model: " + owned.definition_id, 8f, ARO.NetCore.Severity.Error); return; }
             var n0 = _route.nodes[0].position;
             var dir = (_route.nodes[1].position - n0).normalized;
-            Vehicle = TruckFactory.Create(def, n0 + Vector3.up * 1.5f, Quaternion.LookRotation(dir), _body, _wheel);
+            Vehicle = TruckFactory.Create(def, (at ?? n0) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             _vehicleId = owned.id;
@@ -155,6 +156,10 @@ namespace ARO.Game
             _markerGo.transform.position = new Vector3(p.x, 40f, p.z); _markerGo.transform.localScale = new Vector3(8f, 40f, 8f);
             if (_marker != null) _markerGo.GetComponent<Renderer>().sharedMaterial = _marker;
         }
+
+        /// <summary>Beacon over a target (job point or bus stop). Rotates in Update while a job is active; static otherwise.</summary>
+        public void SetMarker(Vector3 p) => PlaceMarker(p);
+        public void ClearMarker() { if (_markerGo) Destroy(_markerGo); }
 
         public void Say(string m, float seconds = 4f, ARO.NetCore.Severity level = ARO.NetCore.Severity.Info) => Notifications.Push(m, level, seconds);
     }
