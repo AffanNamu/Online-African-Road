@@ -222,6 +222,25 @@ def _(im, d):
 def _(im, d): poly(d, [(.58, .06), (.22, .54), (.46, .54), (.38, .94), (.78, .40), (.52, .40)])
 @ic("ic_check_circle")
 def _(im, d): circle(d, (.5, .5), .40); cut(im, lambda c: c.line([P(.30, .52), P(.45, .66), P(.72, .36)], fill=255, width=int(.09 * M)))
+@ic("ic_fuel")
+def _(im, d):
+    rrect(d, (.18, .12), (.58, .90), .05); cut(im, lambda c: c.rounded_rectangle([P(.26, .20), P(.50, .44)], radius=.03 * M, fill=255))
+    line(d, [(.58, .34), (.74, .34), (.78, .46), (.78, .72)], .06); circle(d, (.78, .78), .07)
+@ic("ic_clock")
+def _(im, d):
+    circle(d, (.5, .5), .40, (0, 0, 0, 0), WHITE, .07); line(d, [(.5, .26), (.5, .52), (.68, .62)], .07)
+@ic("ic_lock")
+def _(im, d):
+    d.arc([P(.30, .10), P(.70, .56)], 180, 360, fill=WHITE, width=int(.08 * M)); rrect(d, (.20, .42), (.80, .90), .07); cut(im, lambda c: c.ellipse([P(.44, .56), P(.56, .68)], fill=255))
+@ic("ic_gauge")
+def _(im, d):
+    d.arc([P(.12, .20), P(.88, .96)], 180, 360, fill=WHITE, width=int(.08 * M)); line(d, [(.5, .62), (.70, .38)], .08); circle(d, (.5, .62), .07)
+@ic("ic_weight")
+def _(im, d):
+    poly(d, [(.28, .26), (.72, .26), (.88, .88), (.12, .88)]); circle(d, (.5, .20), .10, (0, 0, 0, 0), WHITE, .06); cut(im, lambda c: c.line([P(.34, .60), P(.66, .60)], fill=255, width=int(.06 * M)))
+@ic("ic_user_circle")
+def _(im, d):
+    circle(d, (.5, .5), .42); cut(im, lambda c: [c.ellipse([P(.38, .26), P(.62, .50)], fill=255), c.pieslice([P(.24, .52), P(.76, 1.02)], 180, 360, fill=255)])
 for g in GLYPHS: g()
 sheet2 = Image.new("RGBA", (9 * 144, 3 * 144), (30, 30, 36, 255))
 for i, g in enumerate(GLYPHS):

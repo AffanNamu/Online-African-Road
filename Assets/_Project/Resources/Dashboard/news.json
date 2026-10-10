@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "corridor-open", "title": "The Lagos–Ibadan corridor is open", "body": "Take jobs, run bus routes and drive in a convoy. More cities and roads are on the way.", "date": "2026-10-10", "art": "highway", "kind": "update" },
+    { "id": "world-map", "title": "The West Africa map is here", "body": "Explore 23 cities and 12 planned routes. Lagos to Ibadan is the only road you can drive so far.", "date": "2026-10-10", "art": "map", "kind": "update" },
+    { "id": "fuel-tip", "title": "Watch your fuel", "body": "A truck under 10% fuel is flagged on your dashboard. Fill up before a long haul.", "date": "2026-10-09", "art": "fuel", "kind": "tip" },
+    { "id": "convoys", "title": "Drive together in a convoy", "body": "Create or join a convoy from the Multiplayer tab and see your friends on the same road.", "date": "2026-10-08", "art": "convoy", "kind": "event" }
+  ]
+}
