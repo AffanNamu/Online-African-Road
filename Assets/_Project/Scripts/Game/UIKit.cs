@@ -25,7 +25,11 @@ namespace ARO.Game
             var s = go.GetComponent<CanvasScaler>();
             s.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; s.referenceResolution = new Vector2(1920, 1080); s.matchWidthOrHeight = 0.5f;
             if (Object.FindFirstObjectByType<EventSystem>() == null)
-                new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+            {
+                var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+                // A module added from code has NO actions assigned (only the editor menu does that); without this, clicks and typing never reach the UI.
+                es.GetComponent<InputSystemUIInputModule>().AssignDefaultActions();
+            }
             return c;
         }
 
