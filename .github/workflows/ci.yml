@@ -43,9 +43,32 @@ jobs:
     runs-on: ubuntu-latest
     # Needs repository secrets UNITY_LICENSE (the .ulf contents), UNITY_EMAIL and UNITY_PASSWORD (a Unity ID WITH a password, no 2FA). Run 'Unity license check' first: it tells you if the secrets look right.
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
+    # One Unity activation at a time (a Personal serial has a small seat limit).
+    concurrency: { group: unity-license, cancel-in-progress: false }
     steps:
       - uses: actions/checkout@v4
         with: { lfs: true }
+      # Unity 6 does not accept the Hub .ulf by itself in CI (run 26: 'com.unity.editor.headless was not found'; license debug run:
+      # .ulf-only and -manualLicenseFile fail, serial + account login succeeds). The .ulf carries the Personal serial in its
+      # DeveloperData field, so recover it here (masked) and let GameCI activate with serial + email + password.
+      - name: Derive Unity serial from the license file (masked)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          python3 - <<'PY'
+          import os, re, base64
+          lic = os.environ["UNITY_LICENSE"]
+          m = re.search(r'DeveloperData Value="([^"]+)"', lic)
+          serial = ""
+          if m:
+              s = re.search(rb"[A-Za-z0-9]{2}(?:-[A-Za-z0-9]{4}){5}", base64.b64decode(m.group(1)))
+              if s: serial = s.group(0).decode()
+          if not serial:
+              raise SystemExit("UNITY_LICENSE has no serial-backed DeveloperData; see docs/BUILD.md")
+          print("::add-mask::" + serial)
+          with open(os.environ["GITHUB_ENV"], "a") as f: f.write("UNITY_SERIAL=" + serial + "\n")
+          print("serial recovered (masked)")
+          PY
       # Optional: set repo secrets DOCKERHUB_USERNAME / DOCKERHUB_TOKEN to avoid Docker Hub anonymous pull limits
       # when pulling the (large) unityci/editor image. Skipped when absent.
       - name: Docker Hub login (optional)
@@ -70,13 +93,13 @@ jobs:
           key: Library-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
       - uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with: { testMode: editmode }
       - uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:

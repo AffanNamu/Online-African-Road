@@ -20,6 +20,12 @@ activation for Personal accounts. Current GameCI instructions for Personal licen
 The project is **not build-ready** until that job is green. Before the first build, `Assets/_Project/Scenes/Bootstrap.unity`
 must exist: `BuildScript` runs `SceneBuilder.Build()` first (generates scene, materials, URP asset), so no manual editor step is needed.
 
+### How the license actually works in CI (verified by the "Unity license debug" workflow, run 1)
+In the CI editor image (6000.0.58f2): the Hub `.ulf` alone is NOT accepted (`com.unity.editor.headless was not found`, 0 entitlements),
+`-manualLicenseFile` is not accepted either; **activating with the Personal serial + the Unity account email/password succeeds**
+(`Successfully activated the entitlement license`). The `.ulf` contains that serial in its `DeveloperData` field, so `ci.yml` recovers it
+(masked) and passes `UNITY_SERIAL` + `UNITY_EMAIL` + `UNITY_PASSWORD` to GameCI. Secrets still required: `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`.
+
 ## Unity Cloud project link
 Unity project name: **African Online Roads**, Cloud project ID `1844ea76-e24a-45de-bcb2-2ec2426f8ff6` (stored in
 `ProjectSettings/ARO_UnityProject.json`; identifiers, not secrets). `ARO.Editor.ProjectLinker` writes the ID into PlayerSettings
