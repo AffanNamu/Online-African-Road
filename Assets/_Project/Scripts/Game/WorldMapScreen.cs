@@ -72,7 +72,7 @@ namespace ARO.Game
             BuildViewport(); BuildMarkers(); BuildPanel();
             _jobs = JobsOverride; if (_jobs == null) LoadJobs();
             ShowOverview();
-            Debug.Log($"[WorldMap] opened. artwork={_tex.width}x{_tex.height} content={CW}x{CH} cities={_m.Cities.Count} routes={_m.Routes.Count} level={Level}");
+            Debug.Log($"[WorldMap] opened. artwork={_tex.width}x{_tex.height} content={CW}x{CH} cities={_m.Cities.Count} routes={_m.Routes.Count} level={Level} texFormat={_tex.graphicsFormat} texMB={UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(_tex) / 1048576f:0.0}");
         }
 
         static Texture2D MakeTex(int w, int h, Func<int, int, Color> f, TextureWrapMode wrap)

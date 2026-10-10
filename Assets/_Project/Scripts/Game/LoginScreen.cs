@@ -95,7 +95,7 @@ namespace ARO.Game
 
             var bgGo = new GameObject("Backdrop", typeof(RectTransform), typeof(RawImage)); bgGo.transform.SetParent(_root, false);
             var brt = (RectTransform)bgGo.transform; brt.anchorMin = Vector2.zero; brt.anchorMax = Vector2.one; brt.offsetMin = brt.offsetMax = Vector2.zero;
-            _bg = bgGo.GetComponent<RawImage>(); _bg.texture = Brand.Texture("login_bg"); _bg.color = _bg.texture != null ? Color.white : new Color(0.08f, 0.09f, 0.12f); _bg.raycastTarget = false;
+            _bg = bgGo.GetComponent<RawImage>(); _bg.texture = Brand.Scene(); _bg.color = _bg.texture != null ? Color.white : new Color(0.08f, 0.09f, 0.12f); _bg.raycastTarget = false;
 
             BuildBrandColumn(); BuildLanguagePill();
             _card = Rounded(_root, "CardBorder", new Color(1f, 1f, 1f, 0.16f), 127f, 0f, CardW, CardH, 30f, Anchor.CenterRight).rectTransform;

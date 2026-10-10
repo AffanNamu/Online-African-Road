@@ -155,6 +155,8 @@ namespace ARO.Editor
             RouteNode N(float x, float z, float w, ZoneType zn, RoadSurface s) =>
                 new RouteNode { position = new Vector3(x, 0, z), width = w, zone = zn, surface = s };
             r.routeId = "ng-lagos-ibadan";
+            // Route DATA is the source of truth at runtime (RouteDefinition.Prepare); the nodes below are the legacy fallback if it is missing or invalid.
+            r.specJson = AssetDatabase.LoadAssetAtPath<TextAsset>($"{Root}/Resources/Routes/ng-lagos-ibadan.route.json");
             r.nodes = new[]
             {
                 N(0, 0, 14, ZoneType.Industrial, RoadSurface.Good),         // Apapa Port Depot

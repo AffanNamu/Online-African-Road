@@ -54,7 +54,8 @@ namespace ARO.Game
             if (!_defs.TryGetValue(owned.definition_id, out var def)) { Say("Unknown vehicle model: " + owned.definition_id, 8f, ARO.NetCore.Severity.Error); return; }
             var n0 = _route.nodes[0].position;
             var dir = (_route.nodes[1].position - n0).normalized;
-            Vehicle = TruckFactory.Create(def, (at ?? n0) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
+            var start = n0 + Vector3.Cross(Vector3.up, new Vector3(dir.x, 0f, dir.z).normalized) * _route.LaneOffset(0f, 0);   // in the right-hand lane, not on the centre line
+            Vehicle = TruckFactory.Create(def, (at ?? start) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             // Freeze the vehicle until the streamer has built the ground under it; otherwise it drops through the world.
@@ -129,7 +130,8 @@ namespace ARO.Game
         void WatchVehicle()
         {
             var t = Vehicle.transform; var pos = t.position;
-            if (pos.y < KillY || float.IsNaN(pos.y))
+            float floor = (_route != null ? _route.GroundY(pos.x, pos.z) : 0f);
+            if (pos.y < floor + KillY || float.IsNaN(pos.y))
             {
                 var rb = Vehicle.GetComponent<Rigidbody>();
                 rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
@@ -138,7 +140,7 @@ namespace ARO.Game
                 Say("Vehicle recovered to the road.", 4f, ARO.NetCore.Severity.Error);
                 return;
             }
-            if (Time.time >= _nextSafe && Vehicle.SpeedKmh < 250f && pos.y > -2f) { _nextSafe = Time.time + 1f; _lastSafe = pos; _lastSafeRot = Quaternion.Euler(0f, t.eulerAngles.y, 0f); }
+            if (Time.time >= _nextSafe && Vehicle.SpeedKmh < 250f && pos.y > floor - 2f) { _nextSafe = Time.time + 1f; _lastSafe = pos; _lastSafeRot = Quaternion.Euler(0f, t.eulerAngles.y, 0f); }
             if (SmokeMode.Drive && Time.unscaledTime >= _nextLog)
             {
                 _nextLog = Time.unscaledTime + 1f;
@@ -198,7 +200,8 @@ namespace ARO.Game
             if (_markerGo) Destroy(_markerGo);
             _markerGo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             Destroy(_markerGo.GetComponent<Collider>());
-            _markerGo.transform.position = new Vector3(p.x, 40f, p.z); _markerGo.transform.localScale = new Vector3(8f, 40f, 8f);
+            float gy = _route != null ? _route.GroundY(p.x, p.z) : 0f;   // the world has elevation now; the beam stands on the ground
+            _markerGo.transform.position = new Vector3(p.x, gy + 40f, p.z); _markerGo.transform.localScale = new Vector3(8f, 40f, 8f);
             if (_marker != null) _markerGo.GetComponent<Renderer>().sharedMaterial = _marker;
         }
 

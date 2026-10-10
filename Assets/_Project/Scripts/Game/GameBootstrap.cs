@@ -23,9 +23,17 @@ namespace ARO.Game
             Debug.Log($"[Boot] African Roads Online starting, backend {(cfg.IsConfigured ? "configured" : "NOT configured")}.");
             var svc = new GameServices(cfg);
 
+            // Route data first (the streamer, traffic and the vehicle spawn all depend on it), then the rendering foundation.
+            bool haveModel = route.Prepare();
+            Light sun = null;
+            foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }
+            var rig = new GameObject("RenderingRig").AddComponent<RenderingRig>(); rig.Init(Camera.main, sun);
+            var tier = rig.Tier;
+            var worldMats = haveModel ? WorldMaterials.Create(roadGood) : null;
+
             var streamer = new GameObject("ChunkStreamer").AddComponent<ChunkStreamer>();
             streamer.route = route; streamer.roadGood = roadGood; streamer.roadWorn = roadWorn; streamer.roadDamaged = roadDamaged;
-            streamer.groundMat = ground; streamer.buildingMats = buildingMats;
+            streamer.groundMat = ground; streamer.buildingMats = buildingMats; streamer.materials = worldMats; streamer.tier = tier;
 
             var defs = new Dictionary<string, VehicleDefinition>();
             foreach (var d in vehicleDefinitions) defs[d.id] = d;
@@ -43,15 +51,15 @@ namespace ARO.Game
 
             // Ambient traffic (pooled, quality-scaled); follows the player's vehicle once spawned.
             var traffic = new GameObject("Traffic").AddComponent<TrafficManager>();
-            traffic.route = route; traffic.bodyTemplate = truckBody;
+            traffic.route = route; traffic.bodyTemplate = truckBody; traffic.tier = tier;
             drive.VehicleSpawned += v => traffic.player = v.transform;
 
             // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
-            Light sun = null;
-            foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
-            weather.timeOfDay = tod; weather.roadMaterials = new[] { roadGood, roadWorn, roadDamaged };
+            weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };
+            rig.timeOfDay = tod; rig.weather = weather;
+            var probe = new GameObject("PerfProbe").AddComponent<PerfProbe>(); probe.streamer = streamer; probe.tier = tier;
             drive.VehicleSpawned += v => { weather.vehicle = v.transform; v.SetLights(tod.IsNight); };
             tod.NightChanged += night => { if (drive.Vehicle != null) drive.Vehicle.SetLights(night); };
 

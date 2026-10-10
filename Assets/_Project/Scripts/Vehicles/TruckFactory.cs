@@ -12,8 +12,10 @@ namespace ARO.Vehicles
     {
         public static VehicleController Create(VehicleDefinition def, Vector3 pos, Quaternion rot, Material bodyMat, Material wheelMat, bool localPlayer = true)
         {
-            if (def.visualPrefab != null) return FromPrefab(def, pos, rot, localPlayer);
-            Debug.LogWarning($"[Vehicles] '{def.id}' has no visualPrefab - building a PLACEHOLDER. Assign a production model with a VehicleRig.");
+            // Production model slot: the definition's prefab, or Resources/Vehicles/{id}.prefab (e.g. aro_titan_480) with a VehicleRig. Gameplay code never depends on which one is used.
+            var prefab = def.visualPrefab != null ? def.visualPrefab : Resources.Load<GameObject>("Vehicles/" + def.id);
+            if (prefab != null) return FromPrefab(def, prefab, pos, rot, localPlayer);
+            Debug.LogWarning($"[Vehicles] '{def.id}' has no production model (visualPrefab or Resources/Vehicles/{def.id}) - building a PLACEHOLDER with a VehicleRig-compatible layout.");
             var root = new GameObject(def.displayName) { layer = 0 };
             root.transform.SetPositionAndRotation(pos, rot);
             var rb = root.AddComponent<Rigidbody>(); rb.mass = def.stats.massKg;
@@ -37,9 +39,9 @@ namespace ARO.Vehicles
             return v;
         }
 
-        static VehicleController FromPrefab(VehicleDefinition def, Vector3 pos, Quaternion rot, bool localPlayer)
+        static VehicleController FromPrefab(VehicleDefinition def, GameObject prefab, Vector3 pos, Quaternion rot, bool localPlayer)
         {
-            var root = Object.Instantiate(def.visualPrefab, pos, rot);
+            var root = Object.Instantiate(prefab, pos, rot);
             var rig = root.GetComponent<VehicleRig>();
             if (rig == null) { Debug.LogError($"[Vehicles] Prefab for '{def.id}' lacks a VehicleRig."); Object.Destroy(root); return null; }
             if (!root.TryGetComponent(out Rigidbody rb)) rb = root.AddComponent<Rigidbody>();
