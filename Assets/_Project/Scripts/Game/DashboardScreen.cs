@@ -12,7 +12,7 @@ namespace ARO.Game
     /// <summary>Callbacks the dashboard raises; GameFlow owns what they do.</summary>
     public sealed class DashboardActions
     {
-        public Action Jobs, Garage, Shop, Convoy, Bus, Profile, FreeDrive, Resume, SignOut;
+        public Action Jobs, Garage, Shop, Convoy, Bus, Profile, FreeDrive, Resume, SignOut, WorldMap;
         public Action<JobDto> AcceptJob;
         public Action QuickJob;
     }
@@ -89,7 +89,7 @@ namespace ARO.Game
             var items = new (string icon, string label, Action go, string soon)[]
             {
                 ("ic_home", "Home", null, null), ("ic_jobs", "Jobs", _act.Jobs, null), ("ic_people", "Multiplayer", _act.Convoy, null),
-                ("ic_bus", "Trucks & Buses", _act.Shop, null), ("ic_wrench", "Garage", _act.Garage, null), ("ic_map", "Map", _act.FreeDrive, null),
+                ("ic_bus", "Trucks & Buses", _act.Shop, null), ("ic_wrench", "Garage", _act.Garage, null), ("ic_map", "Map", _act.WorldMap, null),
                 ("ic_people", "Friends", null, "Friends are coming soon."), ("ic_trophy", "Leaderboards", null, "Leaderboards are coming soon."),
                 ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", _act.Profile, null),
             };
@@ -241,7 +241,7 @@ namespace ARO.Game
             {
                 ("Quick Job", "Find and start a job\nimmediately", "ic_bus", new Color(0.95f, 0.62f, 0.10f), Ui.Top(0.55f, 0.52f, 0.40f, 0.245f), _act.QuickJob),
                 ("Multiplayer\nConvoy", "Drive with friends\nacross Africa", "ic_people", new Color(0.25f, 0.55f, 1f), Ui.Top(0.28f, 0.58f, 0.36f, 0.22f), _act.Convoy),
-                ("Explore Map", "Discover cities, roads and\nlocations", "ic_map", new Color(0.20f, 0.80f, 0.55f), Ui.Top(0.05f, 0.40f, 0.40f, 0.245f), _act.FreeDrive),
+                ("Explore Map", "Discover cities, roads and\nlocations", "ic_map", new Color(0.20f, 0.80f, 0.55f), Ui.Top(0.05f, 0.40f, 0.40f, 0.245f), _act.WorldMap),
                 ("Garage", "Customize and upgrade\nyour vehicles", "ic_wrench", new Color(0.65f, 0.40f, 1f), Ui.Top(0.70f, 0.55f, 0.30f, 0.184f), _act.Garage),
             };
             float w = 382, gap = 18, x = 316;
@@ -318,48 +318,41 @@ namespace ARO.Game
             var job = j; Ui.Click(host, "Btn_Accept_" + j.code, x + 8, y + 194, w - 16, 30, () => _act.AcceptJob(job));
         }
 
-        // ------------------------------------------------------------------ popular routes
-        static readonly (string name, float lon, float lat, int dx, int dy)[] Cities =
-        {
-            ("Lagos", 3.39f, 6.52f, -62, -8), ("Ibadan", 3.90f, 7.38f, 10, -22), ("Abuja", 7.49f, 9.06f, -44, -26), ("Kaduna", 7.44f, 10.52f, 10, -12),
-            ("Kano", 8.52f, 12.00f, 10, -22), ("Maiduguri", 13.15f, 11.85f, -90, -22), ("Port Harcourt", 7.01f, 4.82f, -26, 8), ("Enugu", 7.50f, 6.46f, 10, -8), ("Accra", -0.19f, 5.60f, -22, 10),
-        };
-        static readonly (string a, string b, bool live)[] Routes =
-        {
-            ("Lagos", "Ibadan", true), ("Ibadan", "Abuja", false), ("Abuja", "Kaduna", false), ("Kaduna", "Kano", false), ("Kano", "Maiduguri", false),
-            ("Port Harcourt", "Enugu", false), ("Enugu", "Abuja", false), ("Lagos", "Accra", false),
-        };
-
+        // ------------------------------------------------------------------ routes: the real artwork + the validated route data (same source as the world map)
         void BuildRoutes()
         {
             Panel(1397, 622, 502, 292);
             Ui.Label(_stage, "Popular Routes", "Bold", 26, White, 1418, 636, 300, 34);
-            SmallPill(1808, 640, 70, 26, "Map", _act.FreeDrive);
+            SmallPill(1808, 640, 70, 26, "Map", _act.WorldMap);
             const float bx = 1417, by = 678, bw = 462, bh = 218;
-            float cropH = (bw / bh) * (620f / 960f); float y0 = 0.072f;   // map texture is 960x620; show the band that holds the cities
-            Ui.Photo(_stage, "MapPhoto", Brand.Texture("map_west_africa"), new Rect(0, 1f - y0 - cropH, 1, cropH), bx, by, bw, bh, 12);
+            var model = WorldMapScreen.Model(); var tex = WorldMapScreen.Artwork(model);
+            if (model == null || tex == null) { Ui.Label(_stage, "The map is unavailable.", "Regular", 18, Muted, bx + 16, by + 90, 400, 26); return; }
+            // a crop of the artwork around the Gulf of Guinea coast, in artwork pixels (origin top-left)
+            const float cx0 = 880f, cy0 = 440f, cw = 760f; float ch = cw * bh / bw;
+            float tw = model.Data.image.textureWidth, th = model.Data.image.textureHeight;
+            Ui.Photo(_stage, "MapPhoto", tex, new Rect(cx0 / tw, (th - (cy0 + ch)) / th, cw / tw, ch / th), bx, by, bw, bh, 12);
             var host = Ui.Box(_stage, "MapHost", bx, by, bw, bh);
-            Func<float, float, Vector2> proj = (lon, lat) =>
+            Func<MapCity, Vector2> at = c => new Vector2((c.mapX - cx0) / cw * bw, (c.mapY - cy0) / ch * bh);
+            Func<MapCity, bool> inside = c => c.mapX > cx0 && c.mapX < cx0 + cw && c.mapY > cy0 && c.mapY < cy0 + ch;
+            int level = _svc.Profile != null ? Math.Max(_svc.Profile.level, LevelMath.LevelFor(_svc.Profile.experience)) : 1;
+            foreach (var r in model.Routes)
             {
-                float px = (lon - (-4.5f)) / (16.5f - (-4.5f)) * 960f, py = (15f - lat) / (15f - 2f) * 620f;
-                return new Vector2(px / 960f * bw, (py / 620f - y0) / cropH * bh);
-            };
-            var pos = Cities.ToDictionary(c => c.name, c => proj(c.lon, c.lat));
-            foreach (var r in Routes)
-            {
-                var a = pos[r.a]; var b = pos[r.b];
-                if (r.live) { Ui.Segment(host, a, b, 6f, new Color(Gold.r, Gold.g, Gold.b, 0.25f)); Ui.Segment(host, a, b, 3f, Gold); }
-                else { var d = b - a; int n = Mathf.Max(2, (int)(d.magnitude / 9f)); for (int i = 0; i < n; i += 2) Ui.Segment(host, a + d * (i / (float)n), a + d * ((i + 1) / (float)n), 2f, new Color(Gold.r, Gold.g, Gold.b, 0.55f)); }
+                var st = model.StateFor(r, level); bool open = WorldMapModel.IsDrivable(st);
+                for (int i = 1; i < r.via.Length; i++)
+                {
+                    var a = model.City(r.via[i - 1]); var b = model.City(r.via[i]); if (!inside(a) || !inside(b)) continue;
+                    if (open) { Ui.Segment(host, at(a), at(b), 7f, new Color(Gold.r, Gold.g, Gold.b, 0.25f)); Ui.Segment(host, at(a), at(b), 3.5f, Gold); }
+                    else Ui.Segment(host, at(a), at(b), 2f, new Color(1f, 1f, 1f, st == RouteState.PlannedLocked ? 0.22f : 0.45f));
+                }
             }
-            foreach (var c in Cities)
+            foreach (var c in model.Cities)
             {
-                var p = pos[c.name]; bool live = c.name == "Lagos" || c.name == "Ibadan";
-                Ui.Disc(host, "CityGlow", new Color(Gold.r, Gold.g, Gold.b, live ? 0.35f : 0.18f), p.x - 9, p.y - 9, 18);
-                Ui.Disc(host, "City", live ? Gold : new Color(0.95f, 0.8f, 0.4f), p.x - 4.5f, p.y - 4.5f, 9);
-                var l = Ui.Label(host, c.name, "SemiBold", 15, White, p.x + c.dx, p.y + c.dy, 130, 20); Ui.Drop(l, 0.8f);
+                if (!inside(c)) continue; var p = at(c); bool open = model.StateFor(c, level) == CityState.Open;
+                if (open) { Ui.Disc(host, "CityGlow", new Color(Gold.r, Gold.g, Gold.b, 0.3f), p.x - 11, p.y - 11, 22); Ui.Disc(host, "City", Gold, p.x - 5, p.y - 5, 10); var l = Ui.Label(host, c.name, "Bold", 15, White, p.x + 10, p.y - 24, 110, 20); Ui.Drop(l, 0.9f); }
             }
-            Ui.Disc(_stage, "LegendLive", Gold, bx + 10, by + bh - 24, 9); Ui.Label(_stage, "Open now", "SemiBold", 14, White, bx + 26, by + bh - 29, 90, 20);
-            Ui.Disc(_stage, "LegendSoon", new Color(Gold.r, Gold.g, Gold.b, 0.5f), bx + 108, by + bh - 24, 9); Ui.Label(_stage, "Coming soon", "SemiBold", 14, new Color(0.9f, 0.9f, 0.9f), bx + 124, by + bh - 29, 110, 20);
+            Ui.Disc(_stage, "LegendLive", Gold, bx + 10, by + bh - 24, 9); Ui.Label(_stage, "Open now (prototype)", "SemiBold", 14, White, bx + 26, by + bh - 29, 150, 20);
+            Ui.Disc(_stage, "LegendSoon", new Color(1, 1, 1, 0.55f), bx + 190, by + bh - 24, 9); Ui.Label(_stage, "Planned", "SemiBold", 14, new Color(0.9f, 0.9f, 0.9f), bx + 206, by + bh - 29, 110, 20);
+            Ui.Click(_stage, "Btn_RoutesMap", bx, by, bw, bh, _act.WorldMap);
         }
 
         // ------------------------------------------------------------------ bottom row

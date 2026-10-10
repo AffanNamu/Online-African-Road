@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "name": "West Africa",
+  "notes": "Authoritative geography = lat/lon of cities (Lagos and Ibadan match supabase/seed.sql). mapX/mapY are pixel anchors on the ILLUSTRATIVE artwork (the artwork is stylised and not to scale); never derive distances from pixels. status: live = production 3D world exists; prototype = placeholder 3D environment only; planned = not built. unlockLevel values are design placeholders. Route geometry is the ordered list of city ids in 'via' (great-circle legs); roadKm is only given where it is known.",
+  "image": {
+    "file": "west_africa_world_map",
+    "contentWidth": 1672,
+    "contentHeight": 941,
+    "textureWidth": 1672,
+    "textureHeight": 944
+  },
+  "countries": [
+    {
+      "code": "CV",
+      "name": "Cape Verde"
+    },
+    {
+      "code": "MR",
+      "name": "Mauritania"
+    },
+    {
+      "code": "SN",
+      "name": "Senegal"
+    },
+    {
+      "code": "GM",
+      "name": "The Gambia"
+    },
+    {
+      "code": "GW",
+      "name": "Guinea-Bissau"
+    },
+    {
+      "code": "GN",
+      "name": "Guinea"
+    },
+    {
+      "code": "SL",
+      "name": "Sierra Leone"
+    },
+    {
+      "code": "LR",
+      "name": "Liberia"
+    },
+    {
+      "code": "CI",
+      "name": "Côte d'Ivoire"
+    },
+    {
+      "code": "GH",
+      "name": "Ghana"
+    },
+    {
+      "code": "TG",
+      "name": "Togo"
+    },
+    {
+      "code": "BJ",
+      "name": "Benin"
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria"
+    },
+    {
+      "code": "NE",
+      "name": "Niger"
+    },
+    {
+      "code": "BF",
+      "name": "Burkina Faso"
+    },
+    {
+      "code": "ML",
+      "name": "Mali"
+    }
+  ],
+  "cities": [
+    {
+      "id": "praia",
+      "name": "Praia",
+      "country": "CV",
+      "lat": 14.9331,
+      "lon": -23.5133,
+      "mapX": 118.3,
+      "mapY": 240.9
+    },
+    {
+      "id": "nouakchott",
+      "name": "Nouakchott",
+      "country": "MR",
+      "lat": 18.0735,
+      "lon": -15.9582,
+      "mapX": 347.0,
+      "mapY": 215.3
+    },
+    {
+      "id": "dakar",
+      "name": "Dakar",
+      "country": "SN",
+      "lat": 14.7167,
+      "lon": -17.4677,
+      "mapX": 268.2,
+      "mapY": 318.0
+    },
+    {
+      "id": "banjul",
+      "name": "Banjul",
+      "country": "GM",
+      "lat": 13.4549,
+      "lon": -16.579,
+      "mapX": 283.6,
+      "mapY": 346.7
+    },
+    {
+      "id": "bissau",
+      "name": "Bissau",
+      "country": "GW",
+      "lat": 11.8636,
+      "lon": -15.5977,
+      "mapX": 300.1,
+      "mapY": 432.9
+    },
+    {
+      "id": "conakry",
+      "name": "Conakry",
+      "country": "GN",
+      "lat": 9.6412,
+      "lon": -13.5784,
+      "mapX": 370.6,
+      "mapY": 509.0
+    },
+    {
+      "id": "freetown",
+      "name": "Freetown",
+      "country": "SL",
+      "lat": 8.4657,
+      "lon": -13.2317,
+      "mapX": 386.3,
+      "mapY": 576.8
+    },
+    {
+      "id": "monrovia",
+      "name": "Monrovia",
+      "country": "LR",
+      "lat": 6.3005,
+      "lon": -10.7969,
+      "mapX": 496.1,
+      "mapY": 648.8
+    },
+    {
+      "id": "abidjan",
+      "name": "Abidjan",
+      "country": "CI",
+      "lat": 5.36,
+      "lon": -4.0083,
+      "mapX": 765.1,
+      "mapY": 692.5
+    },
+    {
+      "id": "kumasi",
+      "name": "Kumasi",
+      "country": "GH",
+      "lat": 6.6885,
+      "lon": -1.6244,
+      "mapX": 891.5,
+      "mapY": 615.8
+    },
+    {
+      "id": "accra",
+      "name": "Accra",
+      "country": "GH",
+      "lat": 5.6037,
+      "lon": -0.187,
+      "mapX": 938.8,
+      "mapY": 683.2
+    },
+    {
+      "id": "lome",
+      "name": "Lomé",
+      "country": "TG",
+      "lat": 6.1725,
+      "lon": 1.2314,
+      "mapX": 1046.5,
+      "mapY": 679.7
+    },
+    {
+      "id": "cotonou",
+      "name": "Cotonou",
+      "country": "BJ",
+      "lat": 6.3703,
+      "lon": 2.3912,
+      "mapX": 1123.5,
+      "mapY": 678.2
+    },
+    {
+      "id": "lagos",
+      "name": "Lagos",
+      "country": "NG",
+      "lat": 6.5244,
+      "lon": 3.3792,
+      "mapX": 1220.0,
+      "mapY": 676.5,
+      "locationSlugPrefix": "lagos-"
+    },
+    {
+      "id": "ibadan",
+      "name": "Ibadan",
+      "country": "NG",
+      "lat": 7.3775,
+      "lon": 3.947,
+      "mapX": 1246.0,
+      "mapY": 629.5,
+      "locationSlugPrefix": "ibadan-"
+    },
+    {
+      "id": "benin-city",
+      "name": "Benin City",
+      "country": "NG",
+      "lat": 6.335,
+      "lon": 5.6037,
+      "mapX": 1323.8,
+      "mapY": 673.3
+    },
+    {
+      "id": "port-harcourt",
+      "name": "Port Harcourt",
+      "country": "NG",
+      "lat": 4.8156,
+      "lon": 7.0498,
+      "mapX": 1393.2,
+      "mapY": 738.6
+    },
+    {
+      "id": "abuja",
+      "name": "Abuja",
+      "country": "NG",
+      "lat": 9.0765,
+      "lon": 7.3986,
+      "mapX": 1358.0,
+      "mapY": 570.5
+    },
+    {
+      "id": "kaduna",
+      "name": "Kaduna",
+      "country": "NG",
+      "lat": 10.5105,
+      "lon": 7.4165,
+      "mapX": 1361.3,
+      "mapY": 517.1
+    },
+    {
+      "id": "kano",
+      "name": "Kano",
+      "country": "NG",
+      "lat": 12.0022,
+      "lon": 8.592,
+      "mapX": 1419.3,
+      "mapY": 458.3
+    },
+    {
+      "id": "niamey",
+      "name": "Niamey",
+      "country": "NE",
+      "lat": 13.5116,
+      "lon": 2.1254,
+      "mapX": 989.1,
+      "mapY": 350.5
+    },
+    {
+      "id": "ouagadougou",
+      "name": "Ouagadougou",
+      "country": "BF",
+      "lat": 12.3714,
+      "lon": -1.5197,
+      "mapX": 819.1,
+      "mapY": 441.7
+    },
+    {
+      "id": "bamako",
+      "name": "Bamako",
+      "country": "ML",
+      "lat": 12.6392,
+      "lon": -8.0029,
+      "mapX": 595.2,
+      "mapY": 371.0
+    }
+  ],
+  "routes": [
+    {
+      "id": "lagos-ibadan",
+      "name": "Lagos → Ibadan",
+      "via": [
+        "lagos",
+        "ibadan"
+      ],
+      "status": "prototype",
+      "unlockLevel": 1,
+      "roadKm": 128,
+      "gameRouteId": "ng-lagos-ibadan",
+      "region": "South-West Nigeria",
+      "description": "The first corridor of African Roads Online. The 3D environment currently running here is a prototype used to test jobs, bus routes and convoys. It is not the production world."
+    },
+    {
+      "id": "lagos-benin-city",
+      "name": "Lagos → Benin City",
+      "via": [
+        "lagos",
+        "benin-city"
+      ],
+      "status": "planned",
+      "unlockLevel": 3
+    },
+    {
+      "id": "benin-city-port-harcourt",
+      "name": "Benin City → Port Harcourt",
+      "via": [
+        "benin-city",
+        "port-harcourt"
+      ],
+      "status": "planned",
+      "unlockLevel": 6
+    },
+    {
+      "id": "lagos-abuja",
+      "name": "Lagos → Abuja",
+      "via": [
+        "lagos",
+        "ibadan",
+        "abuja"
+      ],
+      "status": "planned",
+      "unlockLevel": 5
+    },
+    {
+      "id": "abuja-kaduna",
+      "name": "Abuja → Kaduna",
+      "via": [
+        "abuja",
+        "kaduna"
+      ],
+      "status": "planned",
+      "unlockLevel": 7
+    },
+    {
+      "id": "kaduna-kano",
+      "name": "Kaduna → Kano",
+      "via": [
+        "kaduna",
+        "kano"
+      ],
+      "status": "planned",
+      "unlockLevel": 9
+    },
+    {
+      "id": "lagos-accra",
+      "name": "Lagos → Accra",
+      "via": [
+        "lagos",
+        "cotonou",
+        "lome",
+        "accra"
+      ],
+      "status": "planned",
+      "unlockLevel": 10
+    },
+    {
+      "id": "accra-kumasi",
+      "name": "Accra → Kumasi",
+      "via": [
+        "accra",
+        "kumasi"
+      ],
+      "status": "planned",
+      "unlockLevel": 11
+    },
+    {
+      "id": "accra-abidjan",
+      "name": "Accra → Abidjan",
+      "via": [
+        "accra",
+        "abidjan"
+      ],
+      "status": "planned",
+      "unlockLevel": 12
+    },
+    {
+      "id": "kano-niamey",
+      "name": "Kano → Niamey",
+      "via": [
+        "kano",
+        "niamey"
+      ],
+      "status": "planned",
+      "unlockLevel": 14
+    },
+    {
+      "id": "niamey-ouagadougou",
+      "name": "Niamey → Ouagadougou",
+      "via": [
+        "niamey",
+        "ouagadougou"
+      ],
+      "status": "planned",
+      "unlockLevel": 15
+    },
+    {
+      "id": "ouagadougou-bamako",
+      "name": "Ouagadougou → Bamako",
+      "via": [
+        "ouagadougou",
+        "bamako"
+      ],
+      "status": "planned",
+      "unlockLevel": 16
+    }
+  ]
+}

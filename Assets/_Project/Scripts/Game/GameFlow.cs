@@ -32,23 +32,11 @@ namespace ARO.Game
 
         async Task StartUp()
         {
-            if (SmokeMode.Dashboard)
-            {   // CI preview only: fixture data so the layout can be screenshotted without an account
-                await Task.Yield();
-                _svc.Profile = new ProfileDto { id = "fixture", display_name = "Demo Driver", level = 5, experience = 2050, jobs_completed = 12, distance_km = 140 };
-                _svc.Wallet = new WalletDto { player_id = "fixture", balance = 48750 };
-                _svc.Definitions = new[] { new VehicleDefDto { id = "truck_light_01", category = "truck", name = "Savanna 4x2 Light Truck", fuel_capacity_l = 120, max_speed_kmh = 110 } };
-                _svc.Vehicles = new[] { new OwnedVehicleDto { id = "fixture-truck", definition_id = "truck_light_01", fuel_l = 90, damage_pct = 4 } };
-                LocationDto L(string n) => new LocationDto { slug = n, name = n };
-                _fixtureJobs = new[]
-                {
-                    new JobDto { id = "1", code = "AFR-000101", cargo_type = "Electronics", required_category = "truck", difficulty = 3, distance_km = 3.0, reward = 266, origin = L("Apapa Port Depot"), destination = L("Mile 12 Market") },
-                    new JobDto { id = "2", code = "AFR-000102", cargo_type = "Fuel Drums", required_category = "truck", difficulty = 2, distance_km = 4.4, reward = 410, origin = L("Mile 12 Market"), destination = L("Ikeja Industrial Estate") },
-                    new JobDto { id = "3", code = "AFR-000103", cargo_type = "Building Materials", required_category = "truck", difficulty = 4, distance_km = 6.1, reward = 780, origin = L("Ikeja Industrial Estate"), destination = L("Ojoo Freight Depot") },
-                    new JobDto { id = "4", code = "AFR-000104", cargo_type = "Food & Produce", required_category = "truck", difficulty = 5, distance_km = 9.8, reward = 1260, origin = L("Ojoo Freight Depot"), destination = L("Bodija Market") },
-                };
-                Debug.Log("[Smoke] dashboard scenario: fixture data, no sign-in");
-                ShowMenu();
+            if (SmokeMode.Dashboard || SmokeMode.WorldMap)
+            {   // CI preview only: fixture data so these screens can be exercised without an account
+                await Task.Yield(); LoadFixture();
+                if (SmokeMode.WorldMap) { Debug.Log("[Smoke] worldmap scenario: fixture data, no sign-in"); OpenWorldMap(); }
+                else { Debug.Log("[Smoke] dashboard scenario: fixture data, no sign-in"); ShowMenu(); }
                 return;
             }
             if (SmokeMode.Drive)
@@ -75,14 +63,14 @@ namespace ARO.Game
         void Update()
         {
             if (_toast != null && Time.unscaledTime > _toastUntil) _toast.text = "";
-            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && _svc.Api.IsSignedIn)
+            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && _svc.Api.IsSignedIn && _map == null)
             {
                 if (_drive.Active) { _drive.Pause(true); _hud.SetVisible(false); _canvas.gameObject.SetActive(true); Show(Screen.Menu); }
                 else if (_drive.Vehicle != null) Resume();
             }
         }
 
-        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); }
+        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); if (_map != null) _map.Notify(m, s); }
 
         // ---------------------------------------------------------------- panels
         RectTransform NewPanel(string title, float h = 760f)
@@ -119,6 +107,7 @@ namespace ARO.Game
             if (_panel != null) Destroy(_panel.gameObject);
             if (_login != null) Destroy(_login.gameObject);
             if (_dash != null) Destroy(_dash.gameObject);
+            CloseMap();
             _canvas.gameObject.SetActive(false);   // the login screen is a full-screen canvas of its own
             _login = LoginScreen.Create(_svc, async () =>
             {
@@ -139,16 +128,52 @@ namespace ARO.Game
         // ---------------------------------------------------------------- menu = the dashboard
         DashboardScreen _dash; JobDto[] _fixtureJobs;
 
+        void LoadFixture()
+        {
+            _svc.Profile = new ProfileDto { id = "fixture", display_name = "Demo Driver", level = 5, experience = 2050, jobs_completed = 12, distance_km = 140 };
+            _svc.Wallet = new WalletDto { player_id = "fixture", balance = 48750 };
+            _svc.Definitions = new[] { new VehicleDefDto { id = "truck_light_01", category = "truck", name = "Savanna 4x2 Light Truck", fuel_capacity_l = 120, max_speed_kmh = 110 } };
+            _svc.Vehicles = new[] { new OwnedVehicleDto { id = "fixture-truck", definition_id = "truck_light_01", fuel_l = 90, damage_pct = 4 } };
+            LocationDto L(string slug, string n) => new LocationDto { slug = slug, name = n };
+            _fixtureJobs = new[]
+            {
+                new JobDto { id = "1", code = "AFR-000101", cargo_type = "Electronics", required_category = "truck", difficulty = 3, distance_km = 3.0, reward = 266, origin = L("lagos-apapa-port", "Apapa Port Depot"), destination = L("lagos-mile12-market", "Mile 12 Market") },
+                new JobDto { id = "2", code = "AFR-000102", cargo_type = "Fuel Drums", required_category = "truck", difficulty = 2, distance_km = 4.4, reward = 410, origin = L("lagos-mile12-market", "Mile 12 Market"), destination = L("lagos-ikeja-industrial", "Ikeja Industrial Estate") },
+                new JobDto { id = "3", code = "AFR-000103", cargo_type = "Building Materials", required_category = "truck", difficulty = 4, distance_km = 6.1, reward = 780, origin = L("lagos-ikeja-industrial", "Ikeja Industrial Estate"), destination = L("ibadan-ojoo-depot", "Ojoo Freight Depot") },
+                new JobDto { id = "4", code = "AFR-000104", cargo_type = "Food & Produce", required_category = "truck", difficulty = 5, distance_km = 9.8, reward = 1260, origin = L("ibadan-ojoo-depot", "Ojoo Freight Depot"), destination = L("ibadan-bodija-market", "Bodija Market") },
+            };
+        }
+
         void ShowMenu()
         {
             if (_panel != null) { Destroy(_panel.gameObject); _panel = null; }
             _canvas.gameObject.SetActive(false);
             if (_dash != null) Destroy(_dash.gameObject);
+            if (_map != null) { Destroy(_map.gameObject); _map = null; }
             _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions(), _fixtureJobs);
         }
 
         void OpenPanel(System.Action show) { if (_dash != null) _dash.gameObject.SetActive(false); _canvas.gameObject.SetActive(true); show(); }
-        void HideMenus() { _canvas.gameObject.SetActive(false); if (_dash != null) _dash.gameObject.SetActive(false); }
+        void HideMenus() { _canvas.gameObject.SetActive(false); if (_dash != null) _dash.gameObject.SetActive(false); if (_map != null) { Destroy(_map.gameObject); _map = null; } }
+
+        // ---------------------------------------------------------------- world map (strategic UI only; the 3D world is a separate system)
+        WorldMapScreen _map;
+
+        void OpenWorldMap()
+        {
+            if (_panel != null) { Destroy(_panel.gameObject); _panel = null; }
+            _canvas.gameObject.SetActive(false); if (_dash != null) _dash.gameObject.SetActive(false);
+            if (_map != null) Destroy(_map.gameObject);
+            _map = WorldMapScreen.Create(_svc, _drive, new WorldMapActions
+            {
+                Back = ShowMenu,
+                Jobs = () => { CloseMap(); OpenPanel(() => _ = ShowJobs()); },
+                Bus = () => { CloseMap(); OpenPanel(() => _ = ShowBus()); },
+                FreeDrive = () => { CloseMap(); if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
+                AcceptJob = job => _ = AcceptJob(job, false),
+            }, _fixtureJobs);
+        }
+        void CloseMap() { if (_map != null) { Destroy(_map.gameObject); _map = null; } }
 
         DashboardActions DashActions() => new DashboardActions
         {
@@ -159,6 +184,7 @@ namespace ARO.Game
             SignOut = () => { _svc.Api.SignOut(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
             AcceptJob = job => _ = AcceptJob(job),
             QuickJob = () => _ = QuickJob(),
+            WorldMap = OpenWorldMap,
         };
 
         /// <summary>One tap: take the best-paying open job the player has a vehicle for.</summary>
@@ -210,14 +236,14 @@ namespace ARO.Game
         }
         static string Stars(int d) => new string('★', d) + new string('☆', 5 - d);
 
-        async Task AcceptJob(JobDto job)
+        async Task<bool> AcceptJob(JobDto job, bool showBoardOnError = true)
         {
-            if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
+            if (_busy) return false; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return false; }
             var owned = FindVehicleFor(job.required_category);
-            if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return; }
+            if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return false; }
             _busy = true; var r = await _svc.Jobs.Accept(job.id, owned.id); _busy = false;
-            if (!r.Ok) { Toast(r.UserMessage, 6f); await ShowJobs(); return; }
-            StartDrive(job, r.Value, owned);
+            if (!r.Ok) { Toast(r.UserMessage, 6f); if (showBoardOnError) await ShowJobs(); return false; }
+            StartDrive(job, r.Value, owned); return true;
         }
 
         OwnedVehicleDto FindVehicleFor(string category)

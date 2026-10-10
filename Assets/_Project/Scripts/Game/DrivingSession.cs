@@ -20,6 +20,7 @@ namespace ARO.Game
 
         GameServices _svc; RouteDefinition _route; Material _body, _wheel, _marker;
         Dictionary<string, VehicleDefinition> _defs;
+        public RouteDefinition Route => _route;
         public VehicleController Vehicle { get; private set; }
         public FollowCamera Cam { get; private set; }
         public ChunkStreamer Streamer { get; private set; }

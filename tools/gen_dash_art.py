@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the dashboard's placeholder pictures -> Assets/_Project/Resources/UI/: map_west_africa.jpg, job_*.jpg, truck_thumb.png, avatar_default.png.
+"""Generates the dashboard's placeholder pictures -> Assets/_Project/Resources/UI/: job_*.jpg, truck_thumb.png, avatar_default.png.
 Deterministic, no third-party imagery. Replace any file with real art of the same name to override."""
 import math, os, sys
 import numpy as np
@@ -19,39 +19,6 @@ def fbm(w, h, cell, octaves, seed):
         a = g[y0, x0] * (1 - fx) + g[y0, x0 + 1] * fx; b = g[y0 + 1, x0] * (1 - fx) + g[y0 + 1, x0 + 1] * fx
         out += (a * (1 - fy) + b * fy) * amp; tot += amp; amp *= 0.5
     return out / tot
-
-# ------------------------------------------------------------------ map
-W, H = 960, 620
-LON0, LON1, LAT0, LAT1 = -4.5, 16.5, 2.0, 15.0
-def proj(lon, lat): return ((lon - LON0) / (LON1 - LON0) * W, (LAT1 - lat) / (LAT1 - LAT0) * H)
-COAST = [(-4.5, 5.0), (-3.0, 5.1), (-2.0, 4.75), (-1.0, 5.0), (-0.2, 5.55), (0.6, 5.85), (1.2, 6.1), (1.8, 6.28), (2.5, 6.35), (3.4, 6.45), (4.3, 6.3), (5.0, 6.0), (5.6, 5.4), (5.9, 4.6), (6.4, 4.3), (7.0, 4.4), (7.6, 4.35), (8.3, 4.6), (8.7, 4.55), (9.0, 4.0), (9.5, 3.9), (9.9, 3.3), (9.8, 2.5), (10.2, 2.0)]
-land = Image.new("L", (W * 2, H * 2), 0); ld = ImageDraw.Draw(land)
-pts = [proj(*p) for p in COAST]; pts = [(x * 2, y * 2) for x, y in pts]
-# land is everything above the coastline (north); close the shape along the top
-poly = [(-10, -10), (W * 2 + 10, -10), (W * 2 + 10, pts[-1][1])] + pts[::-1] + [(-10, pts[0][1])]
-ld.polygon(poly, fill=255)
-land = land.resize((W, H), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.2)); L = np.array(land, np.float32) / 255
-yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-lat = LAT1 - yy / H * (LAT1 - LAT0)
-terr = fbm(W, H, 120, 6, 5); detail = fbm(W, H, 14, 3, 9)
-green = np.array([46, 112, 60], np.float32); sahel = np.array([176, 140, 78], np.float32)
-t = np.clip((lat - 6.0) / 8.0, 0, 1)[..., None]
-ground = (green * (1 - t) + sahel * t) * (0.55 + terr[..., None] * 0.95) * (0.9 + detail[..., None] * 0.2)
-shade = np.clip(np.gradient(terr, axis=1) * 140 + 0.5, 0, 1)[..., None]
-ground = ground * (0.7 + shade * 0.7)
-ocean = np.array([14, 36, 56], np.float32) * (0.8 + fbm(W, H, 60, 3, 2)[..., None] * 0.5)
-shore = np.clip(1 - np.array(land.filter(ImageFilter.GaussianBlur(18)), np.float32) / 255, 0, 1)[..., None]
-ocean = ocean + np.array([20, 60, 70], np.float32) * (1 - L[..., None]) * np.clip(1.0 - shore * 1.6, 0, 1) * 0.9
-rim = np.clip(np.abs(L - np.array(land.filter(ImageFilter.GaussianBlur(5)), np.float32) / 255) * 5, 0, 1)[..., None]
-img = ground * L[..., None] + ocean * (1 - L[..., None]) + rim * np.array([110, 190, 190], np.float32) * 0.9
-# faint lat/lon grid
-for lo in range(-4, 17, 2): img[:, int(proj(lo, 5)[0]):int(proj(lo, 5)[0]) + 1] *= 1.25
-for la in range(2, 15, 2): img[int(proj(0, la)[1]):int(proj(0, la)[1]) + 1, :] *= 1.25
-img *= (1 - 0.45 * np.clip(np.hypot((xx - W / 2) / (W * .7), (yy - H / 2) / (H * .7)), 0, 1) ** 2)[..., None]
-mp = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)); md = ImageDraw.Draw(mp, "RGBA")
-NG = [(2.7, 6.4), (2.75, 7.6), (3.6, 10.0), (3.6, 11.7), (4.3, 13.1), (5.5, 13.8), (7.5, 13.0), (9.5, 13.9), (11.5, 13.4), (13.6, 13.7), (14.2, 13.1), (14.6, 12.2), (13.8, 11.3), (12.9, 9.8), (11.5, 7.4), (10.5, 6.6), (9.3, 6.0), (8.9, 4.7), (8.3, 4.6), (7.6, 4.35), (7.0, 4.4), (6.4, 4.3), (5.9, 4.6), (5.6, 5.4), (5.0, 6.0), (4.3, 6.3), (3.4, 6.45), (2.7, 6.4)]
-md.line([proj(*p) for p in NG], fill=(249, 181, 33, 150), width=2, joint="curve")
-mp.save(f"{OUT}/map_west_africa.jpg", quality=86)
 
 # ------------------------------------------------------------------ cargo scenes (480x200)
 CW, CH = 480, 200
@@ -129,4 +96,4 @@ names = ["job_containers", "job_tanker", "job_pipes", "job_food", "job_general"]
 sheet = Image.new("RGB", (CW * 3, CH * 2 + 20), (20, 20, 24))
 for i, n in enumerate(names): sheet.paste(Image.open(f"{OUT}/{n}.jpg"), ((i % 3) * CW, (i // 3) * CH))
 t = Image.open(f"{OUT}/truck_thumb.png"); sheet.paste(t, (CW * 2 + 20, CH + 10), t)
-sheet.save("/tmp/art_sheet.png"); Image.open(f"{OUT}/map_west_africa.jpg").save("/tmp/map_try.png"); print("art ->", OUT)
+sheet.save("/tmp/art_sheet.png"); print("art ->", OUT)

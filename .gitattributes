@@ -16,3 +16,4 @@
 # Small generated UI art + fonts are plain git blobs (no LFS): keeps them pushable from environments where LFS uploads are blocked.
 # Big production art (models, textures, audio) should still go through LFS from a normal dev machine.
 Assets/_Project/Resources/UI/** -filter binary
+Assets/_Project/Resources/WorldMap/** -filter binary

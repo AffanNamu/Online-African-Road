@@ -10,6 +10,11 @@
     <Compile Include="../../Assets/_Project/Scripts/NetCore/**/*.cs" Link="NetCore/%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Real data files the tests validate (no copies). -->
+    <None Include="../../Assets/_Project/Resources/WorldMap/world_map.json" Link="world_map.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../supabase/seed.sql" Link="seed.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />

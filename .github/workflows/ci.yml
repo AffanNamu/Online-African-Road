@@ -140,6 +140,9 @@ jobs:
       - name: Dashboard scenario (?smoke=dashboard) - fixture data, layout screenshot, sidebar click
         if: always()
         run: node tools/webgl-shot.js Builds/WebGL "smoke=dashboard" '\[Dashboard\] built' webgl-dashboard
+      - name: World map scenario (?smoke=worldmap) - artwork, aspect ratio, zoom, pan, cities, routes, Back/Escape
+        if: always()
+        run: node tools/webgl-worldmap.js Builds/WebGL webgl-worldmap
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: webgl-smoke-screenshot, path: "webgl-*.png", if-no-files-found: ignore }
