@@ -128,16 +128,19 @@ namespace ARO.Tests
 
         [Test] public void ProceduralTexturesTileSeamlesslyAndStayInsideTheMemoryBudget()
         {
-            var t = ProcTex.Grain(64, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), 3, 5, 0f);   // no speckle: pure periodic noise
+            var t = ProcTex.Grain(64, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), 3, 5, 0f, keepReadable: true);   // no speckle: pure periodic noise
+            var lean = ProcTex.Grain(64, new Color(0.1f, 0.1f, 0.1f), new Color(0.3f, 0.3f, 0.3f), 3, 5, 0f);                       // the form the game uses
             try
             {
                 var px = t.GetPixels32(); float seam = 0f, interior = 0f;
                 for (int y = 0; y < 64; y++) { seam += Mathf.Abs(px[y * 64].r - px[y * 64 + 63].r); interior += Mathf.Abs(px[y * 64 + 31].r - px[y * 64 + 32].r); }
                 Assert.LessOrEqual(seam, interior * 2f + 64f, "left and right edges must continue into each other");
                 Assert.AreEqual(TextureWrapMode.Repeat, t.wrapMode);
-                long bytes = UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t); Assert.Less(bytes, 64 * 64 * 4 * 2);
+                Assert.IsTrue(t.isReadable); Assert.IsFalse(lean.isReadable, "game textures drop their CPU copy after upload");
+                long readable = UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t), gpuOnly = UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(lean);
+                Assert.LessOrEqual(gpuOnly, readable, "dropping the CPU copy never costs memory"); Assert.Less(gpuOnly, 64 * 64 * 4 * 3 / 2, "RGBA32 + mip chain only");
             }
-            finally { Object.DestroyImmediate(t); }
+            finally { Object.DestroyImmediate(t); Object.DestroyImmediate(lean); }
         }
 
         [Test] public void ProductionPrefabsOverrideThePlaceholderForThatPropOnly()

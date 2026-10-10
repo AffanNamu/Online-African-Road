@@ -52,10 +52,13 @@ namespace ARO.World
 
         public void DestroyAll()
         {
-            foreach (var m in Road) if (m != null) Object.Destroy(m);
-            foreach (var m in Prop) if (m != null) Object.Destroy(m);
-            if (TerrainLush != null) Object.Destroy(TerrainLush); if (TerrainDry != null) Object.Destroy(TerrainDry);
+            foreach (var m in Road) Kill(m);
+            foreach (var m in Prop) Kill(m);
+            Kill(TerrainLush); Kill(TerrainDry);
         }
+
+        // Destroy() is play-mode only (it logs an error in edit mode, where the tests run); DestroyImmediate is the edit-mode equivalent.
+        static void Kill(Object o) { if (o == null) return; if (Application.isPlaying) Object.Destroy(o); else Object.DestroyImmediate(o); }
     }
 
     /// <summary>Small seamless procedural textures (periodic value noise). Development art only.</summary>
@@ -83,14 +86,15 @@ namespace ARO.World
             return sum / norm;
         }
 
-        static Texture2D Finish(Color32[] px, int size, string name)
+        static Texture2D Finish(Color32[] px, int size, string name, bool keepReadable)
         {
             var t = new Texture2D(size, size, TextureFormat.RGBA32, true, false) { name = name, wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Trilinear, anisoLevel = 4 };
-            t.SetPixels32(px); t.Apply(true, false); return t;
+            t.SetPixels32(px); t.Apply(true, !keepReadable);       // after upload the CPU copy is dropped (halves the memory) unless a test needs to read the pixels
+            return t;
         }
 
         /// <summary>Fine grain between two colours (asphalt, dust, concrete).</summary>
-        public static Texture2D Grain(int size, Color a, Color b, int baseCells, int seed, float speckle)
+        public static Texture2D Grain(int size, Color a, Color b, int baseCells, int seed, float speckle, bool keepReadable = false)
         {
             var px = new Color32[size * size];
             for (int y = 0; y < size; y++)
@@ -102,11 +106,11 @@ namespace ARO.World
                     var c = Color.Lerp(a, b, n); float s = (g - 0.5f) * speckle * 2f;
                     px[y * size + x] = new Color32(Cb(c.r + s), Cb(c.g + s), Cb(c.b + s), 255);
                 }
-            return Finish(px, size, "ProcGrain" + seed);
+            return Finish(px, size, "ProcGrain" + seed, keepReadable);
         }
 
         /// <summary>Large soft patches of a second colour over a two-colour base (grass and soil).</summary>
-        public static Texture2D Patchy(int size, Color a, Color b, Color patch, int seed)
+        public static Texture2D Patchy(int size, Color a, Color b, Color patch, int seed, bool keepReadable = false)
         {
             var px = new Color32[size * size];
             for (int y = 0; y < size; y++)
@@ -118,7 +122,7 @@ namespace ARO.World
                     float g = (Hash(seed + 7, x, y) - 0.5f) * 0.08f;
                     px[y * size + x] = new Color32(Cb(c.r + g), Cb(c.g + g), Cb(c.b + g), 255);
                 }
-            return Finish(px, size, "ProcPatchy" + seed);
+            return Finish(px, size, "ProcPatchy" + seed, keepReadable);
         }
 
         static byte Cb(float v) => (byte)Mathf.Clamp(Mathf.RoundToInt(v * 255f), 0, 255);

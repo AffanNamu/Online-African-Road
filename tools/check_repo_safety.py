@@ -32,7 +32,7 @@ for f in files:
     if not TEXT_EXT.search(f): continue
     try: text = open(f, encoding="utf-8", errors="ignore").read()
     except OSError: continue
-    if f.startswith("tools/check_repo_safety.py"): continue
+    if f in ("tools/check_repo_safety.py", "tools/test_repo_safety.py"): continue   # they contain the patterns on purpose
     for rx, what in PATTERNS:
         if rx.search(text): problems.append(f"{f}: contains a {what}")
     for m in JWT.finditer(text):
