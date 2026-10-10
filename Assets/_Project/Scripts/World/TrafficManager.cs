@@ -15,7 +15,8 @@ namespace ARO.World
         public RouteDefinition route;
         public Transform player;
         public Material bodyTemplate;
-        public float laneOffset = 3.2f;
+        public float laneOffset = 3.2f;             // legacy fixed offset, used only when the route has no cross-section data
+        public QualityTier tier;                    // when set, density and agent cap come from the tier (scaled by the route's traffic spec)
         [Range(0, 2)] public int quality = 1;          // 0 low, 1 medium, 2 high (set from QualitySettings by ApplyQuality)
 
         public int ActiveCount => _views.Count;
@@ -38,6 +39,7 @@ namespace ARO.World
             int q = QualitySettings.GetQualityLevel(), n = QualitySettings.names.Length;
             quality = n <= 1 ? 1 : Mathf.Clamp(Mathf.RoundToInt(2f * q / (n - 1)), 0, 2);
             if (_sim == null) return;
+            if (tier != null) { _sim.Cfg.DensityPerKmPerDir = tier.TrafficDensity * (route.Spec?.traffic?.densityScale ?? 1f); _sim.Cfg.MaxAgents = tier.MaxTrafficAgents; return; }
             _sim.Cfg.DensityPerKmPerDir = quality == 0 ? 3f : quality == 1 ? 5f : 8f;
             _sim.Cfg.MaxAgents = quality == 0 ? 20 : quality == 1 ? 40 : 80;
         }
@@ -97,7 +99,8 @@ namespace ARO.World
                 float centre = a.S - a.Dir * a.P.Length * 0.5f;                  // agent S is the front bumper
                 Vector3 tan = route.TangentAt(centre) * a.Dir;
                 Vector3 right = Vector3.Cross(Vector3.up, tan);
-                Vector3 pos = route.PositionAt(centre) + right * laneOffset;     // drive on the right of own direction of travel
+                float off = route.Model != null ? route.LaneOffset(centre, a.Id) : laneOffset;   // centre of a real lane (multi-lane roads spread by agent id)
+                Vector3 pos = route.PositionAt(centre) + right * off;            // drive on the right of own direction of travel
                 pos.y += v.go.transform.localScale.y * 0.5f + 0.35f;
                 v.rb.MovePosition(pos); v.rb.MoveRotation(Quaternion.LookRotation(tan, Vector3.up));
             }

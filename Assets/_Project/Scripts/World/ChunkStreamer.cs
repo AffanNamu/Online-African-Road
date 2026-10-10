@@ -1,37 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
+using ARO.NetCore;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 namespace ARO.World
 {
     /// <summary>
-    /// Streams the world in square chunks around a tracked target. Chunks load across frames under a
-    /// time budget, far chunks unload, and roadside props come from a pool. Content is generated from
-    /// the RouteDefinition, so a scene never holds the whole world.
-    /// Hierarchy mapping: World > Region > Country > Zone > Sector > Chunk (this class owns Chunk level;
-    /// higher levels are data in the backend `countries/cities/locations` tables).
+    /// Streams the world in square chunks around a tracked target. Work is split into small stages (collision, road, terrain, props) that run
+    /// under a per-frame time budget, nearest chunk first; far chunks unload, and chunks refresh their level of detail as the player moves.
+    ///
+    /// With route data (RouteDefinition.Model) every chunk gets conforming terrain, the generated road, roadside props merged into one mesh and,
+    /// near the player only, physics colliders. Without route data the old flat-ground/ribbon/cube behaviour is used (LEGACY fallback).
+    /// Hierarchy mapping: World > Region > Country > Zone > Sector > Chunk (this class owns the Chunk level; higher levels are backend data).
     /// </summary>
     public class ChunkStreamer : MonoBehaviour
     {
         public RouteDefinition route;
         public Transform target;
         public float chunkSize = 200f;
-        public int loadRadius = 3;        // chunks
+        public int loadRadius = 3;        // chunks (legacy path; the model path uses the quality tier)
         public int unloadRadius = 5;
         public float frameBudgetMs = 3f;
-        public Material roadGood, roadWorn, roadDamaged, groundMat;
+        public Material roadGood, roadWorn, roadDamaged, groundMat;   // legacy materials
         public Material[] buildingMats;
+        public WorldMaterials materials;
+        public QualityTier tier = QualityTiers.Medium;
 
         public int LoadedChunkCount => _chunks.Count;
         public int PooledProps => _pool.Count;
+        public int PendingWork => _work.Count + _loadQueue.Count;
+        public bool UsesRouteModel => route != null && route.Model != null && materials != null;
+
+        public struct StreamStats { public int ChunksBuilt, StagesRun, Hitches; public float BuildMsTotal, WorstStageMs; }
+        public StreamStats Stats;
+        public int TerrainTriangles { get { int n = 0; foreach (var c in _chunks.Values) n += c.terrainTris; return n; } }
+        public int RoadTriangles { get { int n = 0; foreach (var c in _chunks.Values) n += c.roadTris; return n; } }
+        public int PropTriangles { get { int n = 0; foreach (var c in _chunks.Values) n += c.propTris; return n; } }
+        public int PropCount { get { int n = 0; foreach (var c in _chunks.Values) n += c.instances != null ? c.instances.Count : 0; return n; } }
+
+        enum Stage { Collision, Road, Terrain, Props }
+        struct Work : System.IEquatable<Work>
+        {
+            public Vector2Int c; public Stage s;
+            public bool Equals(Work o) => c == o.c && s == o.s;
+            public override bool Equals(object o) => o is Work w && Equals(w);
+            public override int GetHashCode() => c.GetHashCode() * 31 + (int)s;
+        }
+
+        class Chunk
+        {
+            public GameObject root; public Vector2Int id;
+            public GameObject terrain, terrainCollision, props, propColliders, labels;
+            public readonly List<GameObject> roads = new List<GameObject>();
+            public readonly List<GameObject> productionProps = new List<GameObject>();
+            public readonly List<Object> owned = new List<Object>();
+            public List<PropInstance> instances;
+            public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
+            public bool hasCollision;
+            public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
+        }
 
         readonly Dictionary<Vector2Int, Chunk> _chunks = new Dictionary<Vector2Int, Chunk>();
+        readonly Queue<Work> _work = new Queue<Work>();
+        readonly HashSet<Work> _pending = new HashSet<Work>();
+        // legacy path
         readonly HashSet<Vector2Int> _queued = new HashSet<Vector2Int>();
         readonly Queue<Vector2Int> _loadQueue = new Queue<Vector2Int>();
         readonly Stack<GameObject> _pool = new Stack<GameObject>();
         Vector2Int _lastCentre = new Vector2Int(int.MinValue, 0);
-
-        class Chunk { public GameObject root; public List<GameObject> props = new List<GameObject>(); }
 
         void Start() { StartCoroutine(Pump()); }
 
@@ -48,6 +86,8 @@ namespace ARO.World
         }
 
         Vector2Int ToChunk(Vector3 p) => new Vector2Int(Mathf.FloorToInt(p.x / chunkSize), Mathf.FloorToInt(p.z / chunkSize));
+        Vector3 Origin(Vector2Int c) => new Vector3(c.x * chunkSize, 0, c.y * chunkSize);
+        int RingOf(Vector2Int c) => LodPolicy.Ring(c.x, c.y, _lastCentre.x, _lastCentre.y);
 
         void Update()
         {
@@ -55,6 +95,281 @@ namespace ARO.World
             var centre = ToChunk(target.position);
             if (centre == _lastCentre) return;
             _lastCentre = centre;
+            if (UsesRouteModel) UpdateModel(centre); else UpdateLegacy(centre);
+        }
+
+        // ============================================================================================= route-model path
+        void UpdateModel(Vector2Int centre)
+        {
+            int load = Mathf.Max(1, tier.LoadRadiusChunks), unload = Mathf.Max(load + 1, tier.UnloadRadiusChunks);
+            var wanted = new List<Vector2Int>();
+            for (int x = -load; x <= load; x++)
+                for (int z = -load; z <= load; z++) { var c = centre + new Vector2Int(x, z); if (!_chunks.ContainsKey(c)) wanted.Add(c); }
+            wanted.Sort((a, b) => (a - centre).sqrMagnitude.CompareTo((b - centre).sqrMagnitude));
+            foreach (var c in wanted) CreateChunk(c);
+
+            var existing = new List<KeyValuePair<Vector2Int, Chunk>>(_chunks);
+            var toUnload = new List<Vector2Int>();
+            foreach (var kv in existing)
+            {
+                int ring = LodPolicy.Ring(kv.Key.x, kv.Key.y, centre.x, centre.y);
+                if (ring > unload) { toUnload.Add(kv.Key); continue; }
+                RefreshLod(kv.Value, ring);
+            }
+            foreach (var c in toUnload) Unload(c);
+        }
+
+        void CreateChunk(Vector2Int c)
+        {
+            var root = new GameObject($"Chunk_{c.x}_{c.y}"); root.transform.SetParent(transform, false); root.transform.position = Origin(c);
+            var ch = new Chunk { root = root, id = c }; _chunks[c] = ch;
+            int ring = RingOf(c);
+            if (ring <= 2) Enqueue(c, Stage.Collision);      // ground first: the vehicle waits for it
+            if (ChunkHasRoad(c)) Enqueue(c, Stage.Road);
+            Enqueue(c, Stage.Terrain);
+            Enqueue(c, Stage.Props);
+            Stats.ChunksBuilt++;
+        }
+
+        void Enqueue(Vector2Int c, Stage s) { var w = new Work { c = c, s = s }; if (_pending.Add(w)) _work.Enqueue(w); }
+
+        /// <summary>Does any road (main or side) pass within 20 m of the chunk? Uses the global ring tables, so it is cheap and exact enough.</summary>
+        bool ChunkHasRoad(Vector2Int c)
+        {
+            float x0 = c.x * chunkSize - 20f, x1 = (c.x + 1) * chunkSize + 20f, z0 = c.y * chunkSize - 20f, z1 = (c.y + 1) * chunkSize + 20f;
+            foreach (var cor in route.Model.AllCorridors)
+                for (int i = 0; i < cor.RingX.Length; i++)
+                    if (cor.RingX[i] >= x0 && cor.RingX[i] < x1 && cor.RingZ[i] >= z0 && cor.RingZ[i] < z1) return true;
+            return false;
+        }
+
+        void RefreshLod(Chunk ch, int ring)
+        {
+            if (ch.terrain != null)
+            {
+                int cells = LodPolicy.TerrainCells(ring, tier);
+                if (ch.terrainCells != cells) Enqueue(ch.id, Stage.Terrain);
+                ch.terrain.GetComponent<MeshRenderer>().shadowCastingMode = LodPolicy.ShadowsEnabled(ring, tier) ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            }
+            if (ring <= 2 && !ch.hasCollision) Enqueue(ch.id, Stage.Collision);
+            else if (ring >= 4 && ch.hasCollision) DropCollision(ch);
+            foreach (var r in ch.roads) { if (r == null) continue; var mc = r.GetComponent<MeshCollider>(); if (mc != null) mc.enabled = ring <= 3; r.GetComponent<MeshRenderer>().shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off; }
+            if (ch.instances != null)
+            {
+                int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
+                if (ch.propLod != lod) Enqueue(ch.id, Stage.Props);
+            }
+        }
+
+        void DropCollision(Chunk ch)
+        {
+            if (ch.terrainCollision != null) { var mc = ch.terrainCollision.GetComponent<MeshCollider>(); if (mc != null && mc.sharedMesh != null) { ch.owned.Remove(mc.sharedMesh); Destroy(mc.sharedMesh); } Destroy(ch.terrainCollision); ch.terrainCollision = null; }
+            ch.hasCollision = false;
+        }
+
+        IEnumerator Pump()
+        {
+            var sw = new System.Diagnostics.Stopwatch();
+            while (true)
+            {
+                sw.Restart();
+                while ((_work.Count > 0 || _loadQueue.Count > 0) && sw.Elapsed.TotalMilliseconds < frameBudgetMs)
+                {
+                    if (_work.Count > 0)
+                    {
+                        var w = _work.Dequeue(); _pending.Remove(w);
+                        if (!_chunks.TryGetValue(w.c, out var ch)) continue;
+                        double t0 = sw.Elapsed.TotalMilliseconds;
+                        // One bad stage must never kill the pump: the world would silently stop loading (the truck then falls through nothing).
+                        try { RunStage(ch, w.s); } catch (System.Exception e) { Debug.LogError($"[World] {w.s} stage of chunk {w.c} failed: {e}"); }
+                        float ms = (float)(sw.Elapsed.TotalMilliseconds - t0);
+                        Stats.StagesRun++; Stats.BuildMsTotal += ms; if (ms > Stats.WorstStageMs) Stats.WorstStageMs = ms;
+                        if (ms > 60f) { Stats.Hitches++; if (Stats.Hitches <= 5) Debug.LogWarning($"[World] slow stage: {w.s} of chunk {w.c} took {ms:0} ms"); }
+                    }
+                    else
+                    {
+                        var c = _loadQueue.Dequeue(); _queued.Remove(c);
+                        if (!_chunks.ContainsKey(c)) { try { BuildLegacy(c); } catch (System.Exception e) { Debug.LogError($"[World] chunk {c} failed to build: {e}"); } }
+                    }
+                }
+                yield return null;
+            }
+        }
+
+        void RunStage(Chunk ch, Stage s)
+        {
+            switch (s)
+            {
+                case Stage.Collision: StageCollision(ch); break;
+                case Stage.Road: StageRoad(ch); break;
+                case Stage.Terrain: StageTerrain(ch); break;
+                case Stage.Props: StageProps(ch); break;
+            }
+        }
+
+        void StageCollision(Chunk ch)
+        {
+            if (ch.hasCollision || RingOf(ch.id) > 3) return;
+            var m = route.Model; var o = Origin(ch.id);
+            var mb = TerrainGeometry.BuildCollision(m.Terrain, o.x, o.z, chunkSize, LodPolicy.CollisionCells, new V3(o.x, 0, o.z));
+            var mesh = MeshUtil.ToCollisionMesh(mb, "TerrainCollision", TerrainSub.Ground);
+            var go = new GameObject("TerrainCollision"); go.transform.SetParent(ch.root.transform, false);
+            go.AddComponent<MeshCollider>().sharedMesh = mesh;
+            ch.owned.Add(mesh); ch.terrainCollision = go; ch.hasCollision = true;
+        }
+
+        void StageRoad(Chunk ch)
+        {
+            if (ch.roads.Count > 0) return;
+            var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
+            foreach (var cor in m.AllCorridors)
+            {
+                var mb = RoadGeometry.BuildChunk(cor, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org, (x, z) => m.Terrain.HeightAt(x, z));
+                if (mb.IsEmpty) continue;
+                var mesh = MeshUtil.ToMesh(mb, "Road_" + cor.Id, out var used);
+                var go = new GameObject("Road_" + cor.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
+                go.GetComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
+                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                var cm = MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
+                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
+                go.isStatic = true;
+                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+            }
+        }
+
+        Material TerrainMaterial(Chunk ch)
+        {
+            var o = Origin(ch.id); float cx = o.x + chunkSize * 0.5f, cz = o.z + chunkSize * 0.5f;
+            if (route.Model.Main.Spline.Nearest(cx, cz, 4000f, out float s, out _, out _))
+            {
+                var z = route.Model.Main.ZoneAt(s);
+                if (z == Zone.Urban || z == Zone.Commercial || z == Zone.Industrial) return materials.TerrainDry;
+            }
+            return materials.TerrainLush;
+        }
+
+        void StageTerrain(Chunk ch)
+        {
+            var m = route.Model; var o = Origin(ch.id); int ring = RingOf(ch.id); int cells = LodPolicy.TerrainCells(ring, tier);
+            if (ch.terrain != null && ch.terrainCells == cells) return;
+            var mb = TerrainGeometry.BuildTile(m.Terrain, o.x, o.z, chunkSize, cells, new V3(o.x, 0, o.z), true, true);
+            var mesh = MeshUtil.ToMesh(mb, "Terrain", out _);
+            if (ch.terrain == null)
+            {
+                ch.terrain = new GameObject("Terrain", typeof(MeshFilter), typeof(MeshRenderer)); ch.terrain.transform.SetParent(ch.root.transform, false);
+                ch.terrain.GetComponent<MeshRenderer>().sharedMaterial = TerrainMaterial(ch); ch.terrain.isStatic = true;
+            }
+            var mf = ch.terrain.GetComponent<MeshFilter>();
+            if (mf.sharedMesh != null) { ch.owned.Remove(mf.sharedMesh); Destroy(mf.sharedMesh); }
+            mf.sharedMesh = mesh; ch.owned.Add(mesh);
+            ch.terrain.GetComponent<MeshRenderer>().shadowCastingMode = LodPolicy.ShadowsEnabled(ring, tier) ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            ch.terrainCells = cells; ch.terrainTris = MeshUtil.Triangles(mesh);
+        }
+
+        void StageProps(Chunk ch)
+        {
+            var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
+            if (ch.instances == null) ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity);
+            int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
+            if (ch.propLod == lod) return;
+            ClearProps(ch);
+
+            float minDist = Mathf.Max(0, ring - 1) * chunkSize;
+            var dev = new List<PropInstance>(); var prod = new List<PropInstance>();
+            foreach (var inst in ch.instances) { if (PropLibrary.ProductionPrefab(inst.Prop) != null) prod.Add(inst); else dev.Add(inst); }
+            System.Func<PropInstance, bool> inRange = inst => { var d = PropLibrary.Def(inst.Prop); return d != null && LodPolicy.PropCullDistance(d, tier) >= minDist; };
+
+            var mb = PropBatcher.Merge(dev, PropLibrary.Geometry, lod, org, inRange);
+            if (!mb.IsEmpty)
+            {
+                var mesh = MeshUtil.ToMesh(mb, "Props", out var used);
+                ch.props = new GameObject("Props", typeof(MeshFilter), typeof(MeshRenderer)); ch.props.transform.SetParent(ch.root.transform, false);
+                ch.props.GetComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = ch.props.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Prop, used);
+                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                ch.props.isStatic = true; ch.owned.Add(mesh); ch.propTris = MeshUtil.Triangles(mesh);
+            }
+            else ch.propTris = 0;
+
+            if (ring <= 1)
+            {
+                var boxes = PropBatcher.BoxColliders(dev, PropLibrary.Def, inRange);
+                if (boxes.Count > 0)
+                {
+                    ch.propColliders = new GameObject("PropColliders"); ch.propColliders.transform.SetParent(ch.root.transform, false);
+                    foreach (var b in boxes)
+                    {
+                        var g = new GameObject("Box_" + b.Prop); g.transform.SetParent(ch.propColliders.transform, false);
+                        g.transform.localPosition = new Vector3(b.Centre.X - o.x, b.Centre.Y, b.Centre.Z - o.z); g.transform.localRotation = Quaternion.Euler(0f, b.YawDeg, 0f);
+                        g.AddComponent<BoxCollider>().size = new Vector3(b.Size.X, b.Size.Y, b.Size.Z);
+                    }
+                }
+            }
+            if (ring <= 2)
+            {
+                foreach (var inst in dev) if (!string.IsNullOrEmpty(inst.Text) && inRange(inst)) MakeLabel(ch, inst, o);
+                foreach (var inst in prod)
+                {
+                    var go = Instantiate(PropLibrary.ProductionPrefab(inst.Prop), ch.root.transform);
+                    go.transform.localPosition = new Vector3(inst.Pos.X - o.x, inst.Pos.Y, inst.Pos.Z - o.z); go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg, 0f); go.transform.localScale *= inst.Scale;
+                    ch.productionProps.Add(go);
+                }
+            }
+            ch.propLod = lod;
+        }
+
+        void ClearProps(Chunk ch)
+        {
+            if (ch.props != null) { var mf = ch.props.GetComponent<MeshFilter>(); if (mf.sharedMesh != null) { ch.owned.Remove(mf.sharedMesh); Destroy(mf.sharedMesh); } Destroy(ch.props); ch.props = null; }
+            if (ch.propColliders != null) { Destroy(ch.propColliders); ch.propColliders = null; }
+            if (ch.labels != null) { Destroy(ch.labels); ch.labels = null; }
+            foreach (var g in ch.productionProps) if (g != null) Destroy(g);
+            ch.productionProps.Clear();
+        }
+
+        /// <summary>Text on a sign face (a world-space UI canvas, only for the few hand-placed signs, billboards and fuel stations).</summary>
+        void MakeLabel(Chunk ch, PropInstance inst, Vector3 o)
+        {
+            var d = PropLibrary.Def(inst.Prop); if (d == null) return;
+            V3 local; float w, h;
+            switch (inst.Prop)
+            {
+                case "road_sign": local = new V3(0f, d.heightM - 0.6f, 0.08f + d.depthM * 0.5f + 0.02f); w = d.widthM * 0.92f; h = 1.25f; break;
+                case "billboard": local = new V3(0f, d.heightM - 2.1f, d.depthM * 0.5f + 0.03f); w = d.widthM * 0.9f; h = 3.6f; break;
+                case "fuel_station": local = new V3(d.widthM * 0.1f, 5.5f, d.depthM * 0.375f + 0.03f); w = d.widthM * 0.55f; h = 0.5f; break;
+                case "bus_stop": local = new V3(0f, d.heightM + 0.08f, d.depthM * 0.5f + 0.02f); w = d.widthM; h = 0.14f; break;
+                default: return;
+            }
+            if (ch.labels == null) { ch.labels = new GameObject("Labels"); ch.labels.transform.SetParent(ch.root.transform, false); }
+            var wp = PropBatcher.Place(local, inst.Pos, inst.YawDeg, inst.Scale);
+            var go = new GameObject("Label_" + inst.Prop, typeof(RectTransform), typeof(Canvas)); go.transform.SetParent(ch.labels.transform, false);
+            go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            var rt = (RectTransform)go.transform; rt.sizeDelta = new Vector2(w * 100f, h * 100f); rt.localScale = Vector3.one * 0.01f * inst.Scale;
+            go.transform.localPosition = new Vector3(wp.X - o.x, wp.Y, wp.Z - o.z);
+            go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg + 180f, 0f);        // a world canvas reads from its -z side; the sign face looks along +z
+            var tgo = new GameObject("Text", typeof(RectTransform), typeof(Text)); tgo.transform.SetParent(go.transform, false);
+            var trt = (RectTransform)tgo.transform; trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one; trt.offsetMin = trt.offsetMax = Vector2.zero;
+            var t = tgo.GetComponent<Text>(); t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); t.text = inst.Text; t.color = Color.white; t.raycastTarget = false;
+            t.alignment = TextAnchor.MiddleCenter; t.resizeTextForBestFit = true; t.resizeTextMinSize = 8; t.resizeTextMaxSize = Mathf.Max(10, (int)(h * 100f * 0.5f)); t.fontStyle = FontStyle.Bold;
+        }
+
+        void Unload(Vector2Int c)
+        {
+            if (!_chunks.TryGetValue(c, out var ch)) return;
+            _chunks.Remove(c);
+            if (UsesRouteModel)
+            {
+                foreach (var o in ch.owned) if (o != null) Destroy(o);
+                foreach (var g in ch.productionProps) if (g != null) Destroy(g);
+                Destroy(ch.root); return;
+            }
+            UnloadLegacy(ch);
+        }
+
+        // ============================================================================================= LEGACY (no route data)
+        void UpdateLegacy(Vector2Int centre)
+        {
             // Queue nearest-first so the road under the player appears first.
             var wanted = new List<Vector2Int>();
             for (int x = -loadRadius; x <= loadRadius; x++)
@@ -70,22 +385,6 @@ namespace ARO.World
             foreach (var kv in _chunks)
                 if (Mathf.Max(Mathf.Abs(kv.Key.x - centre.x), Mathf.Abs(kv.Key.y - centre.y)) > unloadRadius) toUnload.Add(kv.Key);
             foreach (var c in toUnload) Unload(c);
-        }
-
-        IEnumerator Pump()
-        {
-            var sw = new System.Diagnostics.Stopwatch();
-            while (true)
-            {
-                sw.Restart();
-                while (_loadQueue.Count > 0 && sw.Elapsed.TotalMilliseconds < frameBudgetMs)
-                {
-                    var c = _loadQueue.Dequeue(); _queued.Remove(c);
-                    // One bad chunk must never kill the pump: the world would silently stop loading (the truck then falls through nothing).
-                    if (!_chunks.ContainsKey(c)) { try { Build(c); } catch (System.Exception e) { Debug.LogError($"[World] chunk {c} failed to build: {e}"); } }
-                }
-                yield return null;
-            }
         }
 
         bool ChunkTouchesRoute(Vector2Int c)
@@ -112,14 +411,13 @@ namespace ARO.World
             return t0 <= t1;
         }
 
-        void Build(Vector2Int c)
+        void BuildLegacy(Vector2Int c)
         {
             var origin = new Vector3(c.x * chunkSize, 0, c.y * chunkSize);
             var root = new GameObject($"Chunk_{c.x}_{c.y}");
             root.transform.SetParent(transform, false); root.transform.position = origin;
-            var chunk = new Chunk { root = root };
+            var chunk = new Chunk { root = root, id = c };
 
-            // Ground tile
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.transform.SetParent(root.transform, false);
             ground.transform.localPosition = new Vector3(chunkSize / 2f, -0.05f, chunkSize / 2f);
@@ -144,10 +442,10 @@ namespace ARO.World
                 go.GetComponent<MeshRenderer>().sharedMaterial =
                     a.surface == RoadSurface.Good ? roadGood : a.surface == RoadSurface.Worn ? roadWorn : roadDamaged;
                 go.isStatic = true;
-                chunk.props.Add(go);   // road meshes are not pooled (unique geometry); destroyed on unload
+                chunk.props_legacy.Add(go);   // road meshes are not pooled (unique geometry); destroyed on unload
                 PlaceRoadside(chunk, a, b, origin, rng);
             }
-            _chunks[c] = chunk;
+            _chunks[c] = chunk; Stats.ChunksBuilt++;
         }
 
         void PlaceRoadside(Chunk chunk, RouteNode a, RouteNode b, Vector3 origin, System.Random rng)
@@ -167,12 +465,12 @@ namespace ARO.World
                     go.transform.localPosition = new Vector3(local.x, 0f, local.z);
                     go.transform.localRotation = Quaternion.LookRotation(-right * side);
                     ShapeProp(go, a.zone, rng);
-                    chunk.props.Add(go);
+                    chunk.props_legacy.Add(go);
                 }
             }
         }
 
-        // Props are pooled cubes reshaped per zone (placeholder art; replace by prefab variants via Addressables).
+        // LEGACY props are pooled cubes reshaped per zone. Replaced by catalog props when route data is present.
         void ShapeProp(GameObject go, ZoneType zone, System.Random rng)
         {
             float h, w, dpt;
@@ -197,10 +495,9 @@ namespace ARO.World
             return go;
         }
 
-        void Unload(Vector2Int c)
+        void UnloadLegacy(Chunk chunk)
         {
-            var chunk = _chunks[c]; _chunks.Remove(c);
-            foreach (var p in chunk.props)
+            foreach (var p in chunk.props_legacy)
             {
                 if (p == null) continue;
                 if (p.name == "Prop") { p.SetActive(false); p.transform.SetParent(transform, false); _pool.Push(p); }

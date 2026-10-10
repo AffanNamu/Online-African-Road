@@ -1,1 +1,1 @@
-{ "name": "ARO.World", "rootNamespace": "ARO.World", "references": ["ARO.Core","ARO.NetCore","ARO.Vehicles","Unity.InputSystem","Unity.RenderPipelines.Universal.Runtime","Unity.RenderPipelines.Core.Runtime"], "autoReferenced": true }
+{ "name": "ARO.World", "rootNamespace": "ARO.World", "references": ["ARO.Core","ARO.NetCore","ARO.Vehicles","Unity.InputSystem","UnityEngine.UI","Unity.RenderPipelines.Universal.Runtime","Unity.RenderPipelines.Core.Runtime"], "autoReferenced": true }

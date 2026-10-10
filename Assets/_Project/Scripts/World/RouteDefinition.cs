@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using ARO.NetCore;
 using UnityEngine;
 
 namespace ARO.World
@@ -25,6 +27,64 @@ namespace ARO.World
         public string routeId = "ng-lagos-ibadan";
         public int seed = 1180;
         public RouteNode[] nodes = new RouteNode[0];
+        [Tooltip("Route data (RouteSpec JSON). When present it is the source of truth: Prepare() validates it, builds the spline/terrain model and regenerates `nodes` from it. The hand-written `nodes` are only the fallback.")]
+        public TextAsset specJson;
+
+        public RouteSpec Spec { get; private set; }
+        public RouteModel Model { get; private set; }
+        public string PrepareError { get; private set; }
+        bool _prepared;
+        const float NodeSpacing = 25f;
+
+        /// <summary>Loads and validates the route data and derives the polyline `nodes` used by traffic, the minimap and projection. Idempotent. Returns false (and keeps the legacy nodes) when the data is missing or invalid.</summary>
+        public bool Prepare()
+        {
+            if (_prepared) return Model != null;
+            _prepared = true;
+            var ta = specJson != null ? specJson : Resources.Load<TextAsset>("Routes/" + routeId + ".route");
+            if (ta == null) { PrepareError = "no route data for '" + routeId + "'"; Debug.LogWarning("[Route] " + PrepareError + "; using the legacy polyline"); return false; }
+            try
+            {
+                var spec = JsonUtility.FromJson<RouteSpec>(ta.text);
+                var errors = RouteSpecValidator.Validate(spec, PropLibrary.KnownIds());
+                if (errors.Count > 0) { PrepareError = string.Join("; ", errors); Debug.LogError("[Route] invalid route data for '" + routeId + "': " + PrepareError); return false; }
+                var model = RouteModel.Build(spec);
+                Spec = spec; Model = model; routeId = spec.routeId; seed = spec.seed;
+                nodes = ResampleNodes(model); _cum = null;
+                Debug.Log($"[Route] {spec.routeId}: {spec.controlPoints.Length} control points, {model.Length / 1000f:0.0} km (real road {spec.meta.realRoadKm:0} km), {model.Main.Runs.Length} profile runs, {model.Main.Bridges.Length} bridges, {model.Sides.Count} junctions, {nodes.Length} polyline nodes");
+                return true;
+            }
+            catch (Exception e) { PrepareError = e.Message; Debug.LogError("[Route] could not build '" + routeId + "': " + e); Model = null; return false; }
+        }
+
+        static RouteNode[] ResampleNodes(RouteModel m)
+        {
+            var main = m.Main; var list = new List<RouteNode>(); float L = main.Length;
+            for (float s = 0f; ; s += NodeSpacing)
+            {
+                float at = Mathf.Min(s, L); var p = main.Spline.PositionAt(at); var run = main.RunAt(Mathf.Min(at + 0.01f, L));
+                list.Add(new RouteNode
+                {
+                    position = new Vector3(p.X, p.Y, p.Z), width = run.Section.CarriagewayHalfWidth * 2f,
+                    zone = (ZoneType)Enum.Parse(typeof(ZoneType), run.Zone.ToString()), surface = (RoadSurface)Enum.Parse(typeof(RoadSurface), run.Surface.ToString())
+                });
+                if (at >= L) break;
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>Height a vehicle or marker stands on at (x, z): road surface on the road, terrain elsewhere (0 without route data).</summary>
+        public float GroundY(float x, float z) => Model != null ? Model.GroundHeight(x, z) : 0f;
+
+        /// <summary>Lateral offset of the centre of a driving lane on the right of the direction of travel at polyline distance s. laneHash picks the lane on multi-lane roads.</summary>
+        public float LaneOffset(float s, int laneHash)
+        {
+            if (Model == null) return 3.2f;
+            float ms = Mathf.Clamp(s * Model.Length / Mathf.Max(1f, TotalLength), 0f, Model.Length);
+            var run = Model.Main.RunAt(ms); var sec = run.Section; float k = Model.Main.ScaleAt(ms);
+            int lanes = sec.Spec.lanesPerDirection; float first = sec.CarriagewayHalfWidth - lanes * sec.Spec.laneWidth;
+            return (first + (Mathf.Abs(laneHash) % lanes + 0.5f) * sec.Spec.laneWidth) * k;
+        }
 
         float[] _cum;   // cumulative length at each node (built lazily; invalidated by Rebuild)
         public void Rebuild()
