@@ -20,6 +20,7 @@ namespace ARO.Game
             Application.targetFrameRate = 60;
             var cfg = Resources.Load<BackendConfig>("BackendConfig");
             if (cfg == null) { cfg = ScriptableObject.CreateInstance<BackendConfig>(); Debug.LogWarning("[Boot] No Resources/BackendConfig asset - running unconfigured."); }
+            Debug.Log($"[Boot] African Roads Online starting, backend {(cfg.IsConfigured ? "configured" : "NOT configured")}.");
             var svc = new GameServices(cfg);
 
             var streamer = new GameObject("ChunkStreamer").AddComponent<ChunkStreamer>();
