@@ -36,7 +36,7 @@ namespace ARO.Game
         bool _jobsLoaded;
         JobDto[] _jobs;
 
-        struct Slide { public string tag, t1, t2, desc, button; public Action go; public Rect uv; }
+        struct Slide { public string tag, t1, t2, desc, button; public Action go; public Rect uv; public bool sky; }
         Slide[] _slides;
 
         public static DashboardScreen Create(GameServices svc, DrivingSession drive, BusSession bus, DashboardActions act, JobDto[] jobsOverride = null)
@@ -55,11 +55,11 @@ namespace ARO.Game
             _slides = new[]
             {
                 new Slide { tag = "EXPLORE", t1 = "DRIVE ACROSS", t2 = "AFRICA", desc = "Take real jobs, deliver cargo, explore cities\nand build your trucking career.",
-                            button = _drive.Vehicle != null ? "Resume Driving" : "Find a Job", go = () => { if (_drive.Vehicle != null) _act.Resume(); else _act.Jobs(); }, uv = Ui.Top(0.25f, 0.40f, 0.70f, 0.34f) },
+                            button = _drive.Vehicle != null ? "Resume Driving" : "Find a Job", go = () => { if (_drive.Vehicle != null) _act.Resume(); else _act.Jobs(); }, uv = Ui.Top(0f, 0.30f, 1f, 0.49f) },
                 new Slide { tag = "TOGETHER", t1 = "DRIVE IN", t2 = "CONVOY", desc = "Team up with friends on the same route.\nShared roads, shared rewards.",
-                            button = "Join a Convoy", go = () => _act.Convoy(), uv = Ui.Top(0.05f, 0.44f, 0.70f, 0.34f) },
+                            button = "Join a Convoy", go = () => _act.Convoy(), uv = Ui.Top(0.30f, 0.46f, 0.70f, 0.344f) },
                 new Slide { tag = "CITY ROUTES", t1 = "KEEP THE CITY", t2 = "MOVING", desc = "Run a bus route, pick up passengers at every\nstop and earn a fare for each one.",
-                            button = _bus != null && _bus.Active ? "Continue Route" : "Bus Routes", go = () => _act.Bus(), uv = Ui.Top(0.30f, 0.34f, 0.70f, 0.34f) },
+                            button = _bus != null && _bus.Active ? "Continue Route" : "Bus Routes", go = () => _act.Bus(), uv = Ui.Top(0f, 0.38f, 0.72f, 0.353f), sky = true },
             };
             var canvas = UIKit.CreateCanvas("DashboardCanvas", 20);
             canvas.transform.SetParent(transform, false);
@@ -109,7 +109,7 @@ namespace ARO.Game
         // ------------------------------------------------------------------ header
         void BuildHeader()
         {
-            var photo = Ui.Photo(_stage, "HeaderSky", Brand.Texture("login_bg"), Ui.Top(0.0f, 0.44f, 1f, 0.15f), 300, 0, 1620, 124, 0);
+            var photo = Ui.Photo(_stage, "HeaderSky", Brand.Texture("login_bg"), Ui.Top(0f, 0.40f, 1f, 0.1356f), 300, 0, 1620, 124, 0);
             Ui.Gradient(_stage, "HeaderShade", new Color(0.03f, 0.035f, 0.05f, 0.92f), new Color(0.03f, 0.035f, 0.05f, 0.25f), true, 300, 0, 1620, 124);
             Ui.Gradient(_stage, "HeaderFloor", new Color(0.028f, 0.033f, 0.048f, 0f), new Color(0.028f, 0.033f, 0.048f, 1f), false, 300, 70, 1620, 54);
 
@@ -149,7 +149,7 @@ namespace ARO.Game
         {
             const float X = 331, Y = 142, W = 1146, H = 318;
             Ui.Outlined(_stage, "HeroFrame", new Color(0, 0, 0, 1), new Color(Gold.r, Gold.g, Gold.b, 0.85f), X - 2, Y - 2, W + 4, H + 4, 22, 2f);
-            var ph = Ui.Photo(_stage, "HeroPhoto", Brand.Texture("login_bg"), _slides[_slide].uv, X, Y, W, H, 20);
+            var ph = Ui.Photo(_stage, "HeroPhoto", Brand.Scene(), _slides[_slide].uv, X, Y, W, H, 20);
             _heroPhoto = ph;
             Ui.Gradient(_stage, "HeroShade", new Color(0.02f, 0.025f, 0.04f, 0.92f), new Color(0.02f, 0.025f, 0.04f, 0f), true, X, Y, 760, H);
             Ui.Gradient(_stage, "HeroFloor", new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.45f), false, X, Y + H - 90, W, 90);
@@ -181,7 +181,7 @@ namespace ARO.Game
         {
             if (_heroT1 == null) return; var s = _slides[i];
             _heroTag.text = s.tag; _heroT1.text = s.t1; _heroT2.text = s.t2; _heroDesc.text = s.desc; _heroBtnText.text = s.button;
-            if (_heroPhoto != null) _heroPhoto.uvRect = s.uv;
+            if (_heroPhoto != null) { _heroPhoto.texture = s.sky ? Brand.Texture("login_bg") ?? Brand.Scene() : Brand.Scene(); _heroPhoto.uvRect = s.uv; }
             for (int k = 0; k < _dots.Length; k++) _dots[k].color = k == i ? Gold : new Color(1, 1, 1, 0.4f);
         }
 
@@ -239,16 +239,16 @@ namespace ARO.Game
         {
             var cards = new (string title, string desc, string icon, Color tint, Rect uv, Action go)[]
             {
-                ("Quick Job", "Find and start a job\nimmediately", "ic_bus", new Color(0.95f, 0.62f, 0.10f), Ui.Top(0.28f, 0.52f, 0.40f, 0.26f), _act.QuickJob),
-                ("Multiplayer\nConvoy", "Drive with friends\nacross Africa", "ic_people", new Color(0.25f, 0.55f, 1f), Ui.Top(0.50f, 0.50f, 0.40f, 0.26f), _act.Convoy),
-                ("Explore Map", "Discover cities, roads and\nlocations", "ic_map", new Color(0.20f, 0.80f, 0.55f), Ui.Top(0.04f, 0.56f, 0.40f, 0.26f), _act.FreeDrive),
-                ("Garage", "Customize and upgrade\nyour vehicles", "ic_wrench", new Color(0.65f, 0.40f, 1f), Ui.Top(0.58f, 0.62f, 0.40f, 0.26f), _act.Garage),
+                ("Quick Job", "Find and start a job\nimmediately", "ic_bus", new Color(0.95f, 0.62f, 0.10f), Ui.Top(0.55f, 0.52f, 0.40f, 0.245f), _act.QuickJob),
+                ("Multiplayer\nConvoy", "Drive with friends\nacross Africa", "ic_people", new Color(0.25f, 0.55f, 1f), Ui.Top(0.28f, 0.58f, 0.36f, 0.22f), _act.Convoy),
+                ("Explore Map", "Discover cities, roads and\nlocations", "ic_map", new Color(0.20f, 0.80f, 0.55f), Ui.Top(0.05f, 0.40f, 0.40f, 0.245f), _act.FreeDrive),
+                ("Garage", "Customize and upgrade\nyour vehicles", "ic_wrench", new Color(0.65f, 0.40f, 1f), Ui.Top(0.70f, 0.55f, 0.30f, 0.184f), _act.Garage),
             };
             float w = 382, gap = 18, x = 316;
             foreach (var c in cards)
             {
                 Ui.Outlined(_stage, "QCardFrame", new Color(0, 0, 0, 1), new Color(1, 1, 1, 0.14f), x, 474, w, 132, 18);
-                Ui.Photo(_stage, "QCardPhoto", Brand.Texture("login_bg"), c.uv, x + 1.5f, 475.5f, w - 3, 129, 17, new Color(0.62f, 0.62f, 0.66f));
+                Ui.Photo(_stage, "QCardPhoto", c.uv.x < 0.1f ? (Brand.Texture("login_bg") ?? Brand.Scene()) : Brand.Scene(), c.uv, x + 1.5f, 475.5f, w - 3, 129, 17, new Color(0.62f, 0.62f, 0.66f));
                 Ui.Flat(_stage, "QTint", new Color(c.tint.r * 0.3f, c.tint.g * 0.3f, c.tint.b * 0.3f, 0.45f), x + 2, 476, w - 4, 128);
                 Ui.Gradient(_stage, "QShade", new Color(0.02f, 0.025f, 0.04f, 0.88f), new Color(0.02f, 0.025f, 0.04f, 0.1f), true, x + 2, 476, w - 4, 128);
                 Ui.Rounded(_stage, "QTile", new Color(c.tint.r * 0.28f, c.tint.g * 0.28f, c.tint.b * 0.28f, 0.95f), x + 20, 506, 68, 68, 16);
@@ -376,7 +376,7 @@ namespace ARO.Game
         {
             Panel(800, 924, 581, 142);
             Ui.Label(_stage, "Latest News", "Bold", 24, White, 822, 938, 300, 32);
-            Ui.Photo(_stage, "NewsPhoto", Brand.Texture("login_bg"), Ui.Top(0.45f, 0.52f, 0.30f, 0.20f), 822, 978, 150, 76, 8);
+            Ui.Photo(_stage, "NewsPhoto", Brand.Texture("login_bg"), Ui.Top(0.18f, 0.40f, 0.30f, 0.27f), 822, 978, 150, 76, 8);
             Ui.Label(_stage, "The Lagos–Ibadan corridor is open", "SemiBold", 19, White, 990, 980, 380, 26);
             Ui.Paragraph(_stage, "Take jobs, run bus routes and drive in a convoy. More cities and roads are on the way.", "Regular", 16, new Color(0.84f, 0.86f, 0.9f), 990, 1008, 380, 44);
             Ui.Label(_stage, DateTime.Now.ToString("MMM d, yyyy"), "Regular", 15, Muted, 990, 1042, 200, 20);
@@ -385,7 +385,7 @@ namespace ARO.Game
         void BuildConvoyCard()
         {
             Ui.Outlined(_stage, "ConvoyFrame", new Color(0, 0, 0, 1), new Color(1, 1, 1, 0.14f), 1397, 924, 502, 142, 18);
-            Ui.Photo(_stage, "ConvoyPhoto", Brand.Texture("login_bg"), Ui.Top(0.46f, 0.58f, 0.5f, 0.26f), 1398.5f, 925.5f, 499, 139, 17, new Color(0.7f, 0.7f, 0.74f));
+            Ui.Photo(_stage, "ConvoyPhoto", Brand.Scene(), Ui.Top(0.30f, 0.58f, 0.50f, 0.258f), 1398.5f, 925.5f, 499, 139, 17, new Color(0.7f, 0.7f, 0.74f));
             Ui.Gradient(_stage, "ConvoyShade", new Color(0.02f, 0.025f, 0.04f, 0.9f), new Color(0.02f, 0.025f, 0.04f, 0.1f), true, 1399, 926, 498, 138);
             Ui.Rounded(_stage, "ConvoyTile", new Color(0.1f, 0.2f, 0.4f, 0.95f), 1420, 944, 60, 60, 14); Ui.Icon(_stage, "ic_people", new Color(0.35f, 0.65f, 1f), 1432, 956, 36);
             var t = Ui.Label(_stage, "Join a Convoy", "ExtraBold", 30, White, 1420, 1010, 360, 38); Ui.Drop(t);

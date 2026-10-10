@@ -35,5 +35,7 @@ namespace ARO.Game
         }
 
         public static Texture2D Texture(string name) => Resources.Load<Texture2D>("UI/" + name);
+        /// <summary>The busy-highway key art (UI/scene_highway); falls back to the login backdrop when it has not been added.</summary>
+        public static Texture2D Scene() => Texture("scene_highway") ?? Texture("login_bg");
     }
 }

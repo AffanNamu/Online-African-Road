@@ -16,6 +16,8 @@ namespace ARO.Game
     public sealed class LoginScreen : MonoBehaviour
     {
         enum Anchor { TopLeft, TopRight, BottomLeft, CenterRight }
+        /// <summary>The key art has its truck on the right, where the card sits; mirror it so the truck is on the left (as in the design). Set false to show it as shot.</summary>
+        const bool MirrorBackdrop = true;
         const float CardW = 724f, CardH = 824f, Pad = 44f, FieldW = CardW - Pad * 2f;
         static readonly Color CardBg = new Color(0.075f, 0.082f, 0.10f, 0.90f);
         static readonly Color Line = new Color(1f, 1f, 1f, 0.14f);
@@ -275,7 +277,9 @@ namespace ARO.Game
             if (_bg != null && _bg.texture != null && Screen.height > 0)
             {
                 float texA = _bg.texture.width / (float)_bg.texture.height, scrA = Screen.width / (float)Screen.height;
-                _bg.uvRect = scrA > texA ? new Rect(0f, (1f - texA / scrA) * 0.5f, 1f, texA / scrA) : new Rect((1f - scrA / texA) * 0.5f, 0f, scrA / texA, 1f);
+                var uv = scrA > texA ? new Rect(0f, (1f - texA / scrA) * 0.5f, 1f, texA / scrA) : new Rect((1f - scrA / texA) * 0.5f, 0f, scrA / texA, 1f);
+                if (MirrorBackdrop) uv = new Rect(uv.x + uv.width, uv.y, -uv.width, uv.height);   // negative width flips horizontally
+                _bg.uvRect = uv;
             }
             var sel = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
             foreach (var kv in _fields)
