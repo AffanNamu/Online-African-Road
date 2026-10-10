@@ -22,11 +22,11 @@ const refused = r => r.status === 401 || r.status === 403 || r.status === 404 ||
 
 (async () => {
   // ---- sign up (what GameFlow does)
-  const email = `aro-ci-${Date.now()}-${Math.floor(Math.random() * 1e6)}@example.com`, password = 'Ci-' + Math.random().toString(36).slice(2) + 'Aa1!';
+  const email = `aro.ci.${Date.now()}.${Math.floor(Math.random() * 1e6)}@${process.env.SMOKE_EMAIL_DOMAIN || 'gmail.com'}`   /* Supabase rejects example.com as invalid; with Confirm email OFF nothing is ever sent */, password = 'Ci-' + Math.random().toString(36).slice(2) + 'Aa1!';
   let r = await http('POST', '/auth/v1/signup', { email, password, data: { display_name: 'CI Driver' } }, { auth: false });
   if (r.status >= 400 || !r.json.access_token) {
     console.log(`Sign-up did not return a session (status ${r.status}): ${msg(r)}`);
-    console.log('If email confirmation is enabled: Supabase > Authentication > Providers > Email > turn OFF "Confirm email" (the game signs players in immediately).');
+    console.log('If the message above says the address is invalid, set SMOKE_EMAIL_DOMAIN to a domain with a mail server. If email confirmation is enabled: Supabase > Authentication > Providers > Email > turn OFF "Confirm email" (the game signs players in immediately).');
     process.exit(1);
   }
   token = r.json.access_token; const uid = r.json.user.id;
