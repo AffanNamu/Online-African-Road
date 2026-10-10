@@ -12,6 +12,7 @@ Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles
 | Unity EditMode tests (25, incl. 12 bus DTO/error-message tests) | **VERIFIED**: 25/25 pass in CI |
 | **WebGL build boots** | **VERIFIED** (run 31): headless Chromium (software WebGL2) loads it, no page errors, `GameBootstrap` runs, canvas renders. A screenshot from the owner's own browser shows the Sign-in screen over the dusk sky and terrain |
 | Login screen (rendered in a real browser) | **VERIFIED visually** by owner screenshot |
+| **UI input (mouse + keyboard) in the WebGL build** | **VERIFIED in CI** (run 57): headless Chromium clicks CREATE ACCOUNT (the validation message appears, 700 px changed) and types into the Email field (491 px changed). Root cause of the earlier dead input: no `activeInputHandler` was set, so the player had no Input System devices; now `Both` (committed `ProjectSettings/ProjectSettings.asset`) and the UI uses the legacy `StandaloneInputModule`. Driving input uses the new Input System and should work again, but has **not been exercised yet** |
 | Driving, jobs flow, garage, bus routes, shop, streaming, weather, audio, camera | COMPILES and the app boots to the login screen; **gameplay beyond login never exercised** (needs a configured Supabase backend + a driven session) |
 | Multiplayer (Netcode avatars, Relay sessions, convoy UI) | COMPILES; never run; 2-4 player play NOT TESTED |
 | Traffic (pooled, IDM) | model VERIFIED; Unity layer COMPILES, never run. No intersections/lights |
