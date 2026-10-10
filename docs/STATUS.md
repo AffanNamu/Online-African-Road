@@ -1,4 +1,4 @@
-# Status (updated 2026-10-10)
+# Status (updated 2026-10-10, after CI run 25)
 
 Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles it in CI (Tundra build success) but it has never run;
 **WRITTEN** = code exists, no automated evidence beyond review; **INCOMPLETE** = not built.
@@ -7,7 +7,7 @@ Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles
 |---|---|
 | Supabase schema, RLS, ledger, job state machine, server telemetry, convoy session privacy | **VERIFIED** (Postgres 16 local + 15 in CI): security matrix, 6 concurrency races, 105 mutants -> 101 caught (4 survivors, each a labelled defence-in-depth layer). Includes the bus/passenger system and vehicle shop (server side). `docs/SECURITY.md` |
 | Pure-C# logic: session lifecycle/reconnect, vehicle state codec, roster, traffic model (IDM), HUD math, notification queue | **VERIFIED**: ~110 .NET tests green in CI |
-| Whole Unity project (gameplay, networking, traffic, HUD, editor tools) | **COMPILES** on Unity 6000.0.58f2 (all packages resolve) |
+| Whole Unity project (gameplay, networking, traffic, HUD, editor tools) | **COMPILES** on Unity 6000.0.58f2 (all packages resolve); run 25 (bus client included): Tundra build success, no CS errors, then the license failure |
 | Unity EditMode tests (14) | **NOT RUN** - blocked by license |
 | **Unity build -> WebGL artifact** | **NOT DONE. Blocked: `No valid Unity Editor license found` (exit 198)** - see `docs/BUILD.md`. Project is NOT build-ready |
 | Driving, jobs flow, garage, auth UI, streaming, weather, audio, camera | COMPILES; never run |
