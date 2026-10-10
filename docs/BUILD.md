@@ -5,10 +5,17 @@
 
 ## Unity build (cloud-only; nothing installed on your PC)
 Status: **NOT YET BUILT.** The pipeline exists but has never produced an artifact.
-Blocker: a Unity license must be provided once (GameCI cannot build without one):
-1. Actions > "Unity license activation" > Run workflow; download the `.alf` artifact.
-2. Upload it at https://license.unity3d.com/manual (Unity Personal), download the `.ulf`.
-3. Repo Settings > Secrets: `UNITY_LICENSE` (full contents of the `.ulf` file); Variables: `UNITY_CI_ENABLED=true`. (Email/password are not used.)
+Blocker: a Unity license must be provided once (GameCI cannot build without one). The old "request an .alf, upload it at
+license.unity3d.com/manual" route is dead: `game-ci/unity-request-activation-file` is discontinued and Unity no longer offers manual
+activation for Personal accounts. Current GameCI instructions for Personal licenses (game-ci/documentation, `activation`):
+1. Install Unity Hub on any computer, sign in with the Unity ID that CI will use, then Preferences > Licenses > Add > free personal license.
+   (GameCI notes that a license can show in Hub without a `.ulf` file having been written.)
+2. Find `Unity_lic.ulf` on that computer (normally `C:\ProgramData\Unity\Unity_lic.ulf`, macOS `/Library/Application Support/Unity/Unity_lic.ulf`,
+   Linux `~/.local/share/unity3d/Unity/Unity_lic.ulf`).
+3. Repo Settings > Secrets: `UNITY_LICENSE` = full contents of that file, `UNITY_EMAIL`, `UNITY_PASSWORD` (a Unity ID that has a password
+   and no two-factor sign-in; a "Continue with Google" account has no password). Variables: `UNITY_CI_ENABLED=true`.
+   Run Actions > "Unity license check" first: it prints the shape of each secret (never the values) and says what is wrong.
+   Professional/Plus: `UNITY_SERIAL` + email + password instead of the `.ulf`.
 4. Push: CI runs EditMode tests, then `ARO.Editor.BuildScript.BuildWebGL`, then uploads `webgl-build`.
 The project is **not build-ready** until that job is green. Before the first build, `Assets/_Project/Scenes/Bootstrap.unity`
 must exist: `BuildScript` runs `SceneBuilder.Build()` first (generates scene, materials, URP asset), so no manual editor step is needed.
@@ -31,8 +38,6 @@ against the real SDK at first compile. Until then multiplayer is expected to wor
   (exit code 198), so no EditMode test has executed yet and the WebGL build has not been attempted. Run 21 passed only the `.ulf`
   (`UNITY_LICENSE`), no email/password, and failed the same way - so the `.ulf` in the secret is not accepted by the 6000.0.58f2
   editor in CI. This is an account/licensing problem, not a code problem.
-  Fix options (need the repo owner): (a) regenerate: run the "Unity license activation" workflow, upload the `.alf` at
-  license.unity3d.com/manual (Unity Personal), paste the **entire** `.ulf` as `UNITY_LICENSE`; (b) use a Unity Plus/Pro serial
-  (`UNITY_SERIAL` + email/password); (c) a cloud build service such as Unity Build Automation. If manual activation is no longer
-  offered for your account type, (b) or (c) is required - I could not verify which applies.
+  Fix options (need the repo owner): see the numbered steps above (Hub-activated `.ulf` + a Unity ID with a password), or a Unity
+  Plus/Pro serial, or a cloud build service such as Unity Build Automation.
 - Verified so far in CI: SQL suite + mutation run, .NET unit tests, full C# compile of the Unity project.
