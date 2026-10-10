@@ -130,6 +130,8 @@ jobs:
           npm install --no-save playwright@1.49.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
       - name: Load the build in headless Chromium (software WebGL2) and check it renders
+        env:
+          EXPECT_BACKEND: ${{ secrets.SUPABASE_ANON_KEY != '' && '1' || '' }}   # when the anon key exists the build must have been configured with it
         run: node tools/webgl-smoke.js Builds/WebGL webgl-smoke.png
       - uses: actions/upload-artifact@v4
         if: always()

@@ -67,7 +67,10 @@ function serve() {
   if (errors.length) failures.push(`${errors.length} page error(s)`);
   const exceptions = logs.filter(l => /exception|NullReference|IndexOutOfRange|error CS/i.test(l) && !/GLib|swiftshader/i.test(l));
   if (exceptions.length) failures.push(`${exceptions.length} exception line(s) in the Unity console`);
-  if (!logs.some(l => l.includes('[Boot]'))) failures.push('the game never logged its [Boot] startup line (GameBootstrap.Start did not run)');
+  const boot = logs.filter(l => l.includes('[Boot]'));
+  boot.forEach(l => console.log('BOOT LINE: ' + l.slice(0, 200)));
+  if (!boot.length) failures.push('the game never logged its [Boot] startup line (GameBootstrap.Start did not run)');
+  if (process.env.EXPECT_BACKEND === '1' && !boot.some(l => /backend configured/.test(l))) failures.push('the build was expected to have the backend baked in, but it reports NOT configured');
 
   await browser.close(); server.close();
   if (failures.length) { console.log('\nSMOKE TEST FAILED:\n - ' + failures.join('\n - ')); process.exit(1); }
