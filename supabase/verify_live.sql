@@ -1,3 +1,5 @@
+\set api `grep -v '^#' api_surface.txt | tr '\n' ' '`
+select set_config('aro.api', :'api', false);
 -- Run against the LIVE database after applying. Raises on any violation; prints a summary otherwise.
 do $$ declare bad text; n int; begin
   select string_agg(c.relname, ',') into bad from pg_class c join pg_namespace s on s.oid = c.relnamespace
@@ -14,10 +16,7 @@ do $$ declare bad text; n int; begin
 
   select string_agg(p.oid::regprocedure::text, ', ') into bad from pg_proc p join pg_namespace s on s.oid = p.pronamespace
    where s.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
-     and p.proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job',
-                           'buy_fuel','repair_vehicle','create_convoy','join_convoy','leave_convoy',
-                           'get_convoy_session_code','set_convoy_session_code',
-                           'buy_vehicle','start_bus_run','submit_bus_telemetry','serve_stop','abandon_bus_run');
+     and p.proname <> all (string_to_array(trim(current_setting('aro.api')), ' '));
   if bad is not null then raise exception 'unexpected client-executable functions: %', bad; end if;
 
   select string_agg(p.proname, ',') into bad from pg_proc p join pg_namespace s on s.oid = p.pronamespace

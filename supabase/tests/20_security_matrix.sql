@@ -1,4 +1,6 @@
 \set ON_ERROR_STOP on
+\set api `grep -v '^#' api_surface.txt | tr '\n' ' '`
+select set_config('aro.api', :'api', false);
 -- Security matrix (phases 1 and 4). Maps to docs/SECURITY.md.
 
 create temp table fx(k text primary key, v text);
@@ -54,10 +56,7 @@ select testkit.expect_error('anon', null, 'select complete_job(gen_random_uuid()
 do $$ declare extra text; begin
   select string_agg(p.oid::regprocedure::text, ', ') into extra from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
-     and p.proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job',
-                           'buy_fuel','repair_vehicle','create_convoy','join_convoy','leave_convoy',
-                           'get_convoy_session_code','set_convoy_session_code',
-                           'buy_vehicle','start_bus_run','submit_bus_telemetry','serve_stop','abandon_bus_run');
+     and p.proname <> all (string_to_array(trim(current_setting('aro.api')), ' '));
   if extra is not null then raise exception 'unexpected client-executable functions: %', extra; end if;
 end $$;
 do $$ declare bad text; begin
