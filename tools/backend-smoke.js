@@ -21,16 +21,25 @@ function check(name, ok, detail = '') { if (ok) { passed++; console.log('PASS  '
 const refused = r => r.status === 401 || r.status === 403 || r.status === 404 || r.status === 400;   // anything but success
 
 (async () => {
-  // ---- sign up (what GameFlow does)
-  const email = `aro.ci.${Date.now()}.${Math.floor(Math.random() * 1e6)}@${process.env.SMOKE_EMAIL_DOMAIN || 'gmail.com'}`   /* Supabase rejects example.com as invalid; with Confirm email OFF nothing is ever sent */, password = 'Ci-' + Math.random().toString(36).slice(2) + 'Aa1!';
-  let r = await http('POST', '/auth/v1/signup', { email, password, data: { display_name: 'CI Driver' } }, { auth: false });
-  if (r.status >= 400 || !r.json.access_token) {
-    console.log(`Sign-up did not return a session (status ${r.status}): ${msg(r)}`);
-    console.log('If the message above says the address is invalid, set SMOKE_EMAIL_DOMAIN to a domain with a mail server. If email confirmation is enabled: Supabase > Authentication > Providers > Email > turn OFF "Confirm email" (the game signs players in immediately).');
-    process.exit(1);
+  // ---- authenticate. With SMOKE_EMAIL/SMOKE_PASSWORD (a pre-created, confirmed test player: the workflow makes one by SQL) we sign in,
+  // which works with "Confirm email" ON (the recommended production setting). Without them we try a real sign-up, which needs it OFF.
+  let r, uid;
+  if (process.env.SMOKE_EMAIL && process.env.SMOKE_PASSWORD) {
+    r = await http('POST', '/auth/v1/token?grant_type=password', { email: process.env.SMOKE_EMAIL, password: process.env.SMOKE_PASSWORD }, { auth: false });
+    if (r.status !== 200 || !r.json.access_token) { console.log(`Sign-in failed (status ${r.status}): ${msg(r)}`); process.exit(1); }
+    token = r.json.access_token; uid = r.json.user.id;
+    check('password sign-in returns a session', true);
+  } else {
+    const email = `aro.ci.${Date.now()}.${Math.floor(Math.random() * 1e6)}@${process.env.SMOKE_EMAIL_DOMAIN || 'gmail.com'}`, password = 'Ci-' + Math.random().toString(36).slice(2) + 'Aa1!';
+    r = await http('POST', '/auth/v1/signup', { email, password, data: { display_name: 'CI Driver' } }, { auth: false });
+    if (r.status >= 400 || !r.json.access_token) {
+      console.log(`Sign-up did not return a session (status ${r.status}): ${msg(r)}`);
+      console.log('Either the address was refused, or Supabase > Authentication > Providers > Email has "Confirm email" ON (then use the workflow, which pre-creates a confirmed player).');
+      process.exit(1);
+    }
+    token = r.json.access_token; uid = r.json.user.id;
+    check('sign up returns a session', true);
   }
-  token = r.json.access_token; const uid = r.json.user.id;
-  check('sign up returns a session', true);
 
   // ---- the exact reads Unity does after login
   r = await http('GET', `/rest/v1/profiles?id=eq.${uid}`); check('profile created by the signup trigger', r.status === 200 && r.json.length === 1, msg(r));

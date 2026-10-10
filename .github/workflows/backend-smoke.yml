@@ -1,5 +1,6 @@
 # Runs the end-to-end backend smoke test against the LIVE Supabase project (after "Supabase apply schema").
-# Needs repository variable SUPABASE_URL and secret SUPABASE_ANON_KEY (the PUBLIC anon key). Creates one throwaway test player per run.
+# Needs secrets SUPABASE_ANON_KEY (the PUBLIC anon key) and SUPABASE_DB_URL; the project URL comes from the SUPABASE_URL variable/secret or the default below.
+# It creates one confirmed throwaway test player per run by SQL (so "Confirm email" can stay ON, the safe setting for real players) and signs in as them.
 name: Backend smoke test
 on: workflow_dispatch
 jobs:
@@ -10,6 +11,31 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
+      - name: Create a confirmed throwaway test player (direct SQL; password is random and masked)
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          EMAIL="aro.ci.$(date +%s).$RANDOM@aro-ci.test"
+          PW="$(openssl rand -hex 16)Aa1"
+          echo "::add-mask::$PW"
+          psql "$DATABASE_URL" -X -q -v ON_ERROR_STOP=1 -v email="$EMAIL" -v pw="$PW" <<'SQL'
+          with u as (
+            insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+                                    raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+                                    confirmation_token, recovery_token, email_change_token_new, email_change,
+                                    email_change_token_current, phone_change, phone_change_token, reauthentication_token)
+            values ('00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', :'email',
+                    extensions.crypt(:'pw', extensions.gen_salt('bf')), now(),
+                    '{"provider":"email","providers":["email"]}', '{"display_name":"CI Driver"}', now(), now(),
+                    '', '', '', '', '', '', '', '')
+            returning id)
+          insert into auth.identities (id, provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+          select gen_random_uuid(), u.id::text, u.id, jsonb_build_object('sub', u.id::text, 'email', :'email', 'email_verified', true),
+                 'email', now(), now(), now() from u;
+          SQL
+          echo "SMOKE_EMAIL=$EMAIL" >> "$GITHUB_ENV"
+          echo "SMOKE_PASSWORD=$PW" >> "$GITHUB_ENV"
+          echo "test player created"
       - name: Live backend end-to-end test
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co' }}
