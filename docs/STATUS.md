@@ -1,4 +1,4 @@
-# Status (updated 2026-10-10, after CI run 31)
+# Status (updated 2026-10-10, after live backend smoke run 4)
 
 Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles it in CI (Tundra build success) but it has never run;
 **WRITTEN** = code exists, no automated evidence beyond review; **INCOMPLETE** = not built.
@@ -6,6 +6,7 @@ Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles
 | Area | State |
 |---|---|
 | Supabase schema, RLS, ledger, job state machine, server telemetry, convoy session privacy | **VERIFIED** (Postgres 16 local + 15 in CI): security matrix, 6 concurrency races, 105 mutants -> 101 caught (4 survivors, each a labelled defence-in-depth layer). Includes the bus/passenger system and vehicle shop (server side). `docs/SECURITY.md` |
+| **Live Supabase backend** (project echmdzqxlbiszyeawbcd, dedicated) | **VERIFIED live**: schema applied + live RLS/grant check passed; end-to-end smoke 30/30 (real sign-in, Unity's queries, cheat attempts refused, real-time job delivery paid once). Bus-run path not exercised live. `docs/SECURITY.md` |
 | Pure-C# logic: session lifecycle/reconnect, vehicle state codec, roster, traffic model (IDM), HUD math, notification queue | **VERIFIED**: ~110 .NET tests green in CI |
 | Whole Unity project (gameplay, networking, traffic, HUD, editor tools) | **VERIFIED to compile and build**: Unity 6000.0.58f2 in CI (Personal serial + account login), 25/25 EditMode tests pass, WebGL build succeeds (18.5 MB), artifact `webgl-build` uploaded |
 | Unity EditMode tests (25, incl. 12 bus DTO/error-message tests) | **VERIFIED**: 25/25 pass in CI |
