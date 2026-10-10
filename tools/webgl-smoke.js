@@ -77,8 +77,12 @@ function serve() {
     await press(btn.x, btn.y);                              // CREATE ACCOUNT with empty fields: hover/press colour change and/or a red message
     await page.waitForTimeout(1500);
     const afterClick = await frame(shot.replace('.png', '-1-clicked.png'));
-    const msgPixels = diffCount(before, afterClick, box, 0.30, btn.y - 0.12, 0.70, btn.y + 0.05);
-    console.log(`click test: ${msgPixels} pixels changed around CREATE ACCOUNT`);
+    // the red validation message is the status label between the last input field and the SIGN IN button
+    const inputs = targets.filter(t => t.kind === 'InputField').sort((a, b) => a.y - b.y);
+    const lastInput = inputs[inputs.length - 1] || { y: 0.47 };
+    const signIn = targets.find(t => t.name === 'Btn_SIGN IN') || { y: 0.583 };
+    const msgPixels = diffCount(before, afterClick, box, 0.30, lastInput.y + 0.03, 0.70, signIn.y - 0.025);
+    console.log(`click test: ${msgPixels} pixels changed where the validation message appears`);
     if (msgPixels < 150) failures.push('clicking CREATE ACCOUNT did nothing (the UI is not receiving mouse input)');
     await press(fld.x, fld.y);                              // focus the first input field and type into it
     await page.waitForTimeout(500);
