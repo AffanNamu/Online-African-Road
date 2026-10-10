@@ -45,7 +45,7 @@ Migration `20261009000004`: the Unity join code column is hidden from clients (c
 bad format, duplicate, column and `select *` denied. Mutation run: 56 of 57 caught (survivor = intended defence in depth).
 GitHub CI (Postgres 15) passes the same suite and mutation run.
 
-## Bus system and vehicle shop (2026-10-10) — VERIFIED locally on PostgreSQL 16 (CI run pending at time of writing)
+## Bus system and vehicle shop (2026-10-10) — VERIFIED on PostgreSQL 16 (local) and 15 (GitHub CI run 24: matrix, 6 races, 103-mutant run all green)
 Migration `20261009000005`: `buy_vehicle`, `start_bus_run`, `submit_bus_telemetry`, `serve_stop`, `abandon_bus_run`; tables `bus_routes`,
 `bus_route_stops`, `bus_runs`, `bus_run_stops` (read-only for clients, own-rows RLS on runs).
 Authority model: the client sends only a run id. Passenger counts come from a server-side hash of (run, stop) and the stop's demand,
