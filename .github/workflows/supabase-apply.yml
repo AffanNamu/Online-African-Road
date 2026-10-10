@@ -18,6 +18,34 @@ jobs:
       - name: Check secret
         env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
         run: '[ -n "$DATABASE_URL" ] || { echo "Add the repository secret SUPABASE_DB_URL first."; exit 1; }'
+      - name: Check the connection string shape (nothing secret is printed)
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from urllib.parse import urlparse, unquote
+          raw = os.environ["DATABASE_URL"].strip()
+          ref = (re.match(r"https://([a-z0-9]+)\.supabase\.co", os.environ.get("SUPABASE_URL", "")) or [None, None])[1]
+          problems = []
+          if "[" in raw or "]" in raw: problems.append("the value still contains [ ] brackets: remove the brackets around the password ([YOUR-PASSWORD] is a placeholder)")
+          if raw != os.environ["DATABASE_URL"]: problems.append("leading/trailing whitespace or newline in the secret")
+          try:
+              u = urlparse(raw); host, port, user = u.hostname or "", u.port, unquote(u.username or "")
+              print(f"scheme={u.scheme} host={host} port={port} user_shape={'postgres.<ref>' if user.startswith('postgres.') else repr(user)} has_password={bool(u.password)} db={u.path}")
+              if u.scheme not in ("postgresql", "postgres"): problems.append("must start with postgresql://")
+              if host.endswith(".pooler.supabase.com"):
+                  if not user.startswith("postgres."): problems.append("pooler hosts need the user postgres.<project-ref> (not plain 'postgres')")
+                  elif ref and user != "postgres." + ref: problems.append("the project ref in the user does not match the SUPABASE_URL variable")
+              if host.startswith("db.") and host.endswith(".supabase.co"): problems.append("the direct db.<ref>.supabase.co host is IPv6-only and GitHub runners are IPv4-only: use the 'Session pooler' connection string instead")
+              if not u.password: problems.append("no password in the string")
+              if u.password and re.search(r"[@:/?#]", unquote(u.password)) and u.password == unquote(u.password): problems.append("the password contains characters like @ : / ? # that must be percent-encoded in a URI (or reset the DB password to letters and digits)")
+          except Exception as e:
+              problems.append(f"could not parse the value as a URI ({type(e).__name__})")
+          for p in problems: print("PROBLEM:", p)
+          if not problems: print("shape looks right")
+          PY
       - name: Apply migrations + seed + verify
         env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
         run: ./supabase/apply.sh
