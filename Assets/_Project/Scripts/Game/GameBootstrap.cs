@@ -20,7 +20,13 @@ namespace ARO.Game
             Application.targetFrameRate = 60;
             var cfg = Resources.Load<BackendConfig>("BackendConfig");
             if (cfg == null) { cfg = ScriptableObject.CreateInstance<BackendConfig>(); Debug.LogWarning("[Boot] No Resources/BackendConfig asset - running unconfigured."); }
+            if (ARO.NetCore.BackendOverride.TryParse(Application.absoluteURL, out string overrideUrl, out string overrideKey))
+            {   // CI only: the page is on loopback and points at a throw-away backend. Never honoured on a public page (see BackendOverride).
+                cfg = Instantiate(cfg); cfg.supabaseUrl = overrideUrl; cfg.anonKey = overrideKey; Debug.Log("[Boot] backend overridden by a loopback test page: " + overrideUrl);
+            }
             Debug.Log($"[Boot] African Roads Online starting, backend {(cfg.IsConfigured ? "configured" : "NOT configured")}.");
+            var worldModel = WorldMapScreen.Model();   // the server's route/city state decides what is open; until it answers the model fails closed (the offline map preview is the only exception)
+            if (worldModel != null) worldModel.RequireServerState = !SmokeMode.WorldMap;
             var svc = new GameServices(cfg);
 
             // Route data first (the streamer, traffic and the vehicle spawn all depend on it), then the rendering foundation.

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "hero-explore", "eyebrow": "EXPLORE|DELIVER|CONNECT", "headline": "DRIVE ACROSS", "accent": "AFRICA", "title": "Drive across Africa", "body": "Take real jobs, deliver cargo, explore cities\nand build your trucking career.", "art": "highway", "action": "jobs", "button": "Find a Job", "date": "2026-10-10" },
+    { "id": "hero-convoy", "eyebrow": "CONVOY|SHARE|EARN", "headline": "DRIVE IN", "accent": "CONVOY", "title": "Drive in convoy", "body": "Team up with friends on the same route.\nShared roads, shared rewards.", "art": "convoy", "action": "convoy", "button": "Join a Convoy", "date": "2026-10-09" },
+    { "id": "hero-bus", "eyebrow": "CITIES|PASSENGERS|FARES", "headline": "KEEP THE CITY", "accent": "MOVING", "title": "Keep the city moving", "body": "Run a bus route, pick up passengers at every\nstop and earn a fare for each one.", "art": "bus", "action": "bus", "button": "Bus Routes", "date": "2026-10-08" }
+  ]
+}

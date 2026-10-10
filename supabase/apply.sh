@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 q() { psql "$DATABASE_URL" -X -q -v ON_ERROR_STOP=1 "$@"; }
 
-OURS="countries cities locations vehicle_definitions profiles player_wallets transactions vehicle_ownership jobs job_assignments convoys convoy_members job_telemetry bus_routes bus_route_stops bus_runs bus_run_stops"
+OURS="countries cities locations vehicle_definitions profiles player_wallets transactions vehicle_ownership jobs job_assignments convoys convoy_members job_telemetry bus_routes bus_route_stops bus_runs bus_run_stops world_routes notifications friendships game_sessions content_items"
 marker=$(q -At -c "select to_regclass('public._aro_migrations') is not null")
 if [ "$marker" != "t" ]; then
   clash=""
@@ -38,8 +38,10 @@ for f in migrations/*.sql; do
   q -c "insert into public._aro_migrations(name) values ('$n')"
 done
 
-echo "seed   seed.sql (idempotent)"
+echo "seed   seed.sql, seed_world.sql, seed_content.sql (idempotent)"
 q -f seed.sql
+q -f seed_world.sql
+q -f seed_content.sql
 
 open=$(q -At -c "select count(*) from jobs where status = 'open' and expires_at > now()")
 if [ "$open" -lt 10 ]; then echo "jobs   generating (only $open open)"; q -c "select generate_jobs(20)" >/dev/null; fi

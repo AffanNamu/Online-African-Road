@@ -144,6 +144,12 @@ create function _achievement_value(p profiles, p_metric text) returns numeric
 language sql immutable as $$
   select case p_metric when 'jobs_completed' then p.jobs_completed::numeric when 'distance_km' then p.distance_km when 'level' then p.level::numeric end $$;
 
+-- Existing players keep what they already earned: unlock silently (no notifications, no analytics) so the upgrade neither
+-- hides past progress nor spams everyone with a wall of "achievement unlocked" messages.
+insert into player_achievements(player_id, achievement_id)
+select p.id, d.id from profiles p join achievement_definitions d on _achievement_value(p, d.metric) >= d.threshold
+on conflict do nothing;
+
 -- Unlocks every definition the player now satisfies. Idempotent (primary key); each unlock notifies once. Returns how many unlocked now.
 create function _check_achievements(p_player uuid) returns integer
 language plpgsql security definer set search_path = public as $$
@@ -347,6 +353,12 @@ create table content_items (
   publish_at timestamptz not null default now(),
   expires_at timestamptz,
   source     text not null default 'authored' check (source = 'authored'),   -- in-house content; never presented as external news
+  -- hero banners only (null for news): the copy and the action the button performs
+  eyebrow         text check (eyebrow is null or char_length(eyebrow) <= 80),
+  headline        text check (headline is null or char_length(headline) <= 40),
+  headline_accent text check (headline_accent is null or char_length(headline_accent) <= 40),
+  action          text check (action is null or action in ('jobs','convoy','bus','map','garage')),
+  button          text check (button is null or char_length(button) <= 30),
   created_at timestamptz not null default now()
 );
 create index content_items_feed_idx on content_items(kind, priority desc, publish_at desc) where published;
@@ -360,7 +372,8 @@ begin
   perform _rate_limit('content_read', 60, 60);
   return jsonb_build_object('items', coalesce((
     select jsonb_agg(jsonb_build_object('id', c.id, 'kind', c.kind, 'category', c.category, 'title', c.title, 'body', c.body,
-             'image_key', c.image_key, 'priority', c.priority, 'publish_at', c.publish_at, 'expires_at', c.expires_at, 'source', c.source)
+             'image_key', c.image_key, 'priority', c.priority, 'publish_at', c.publish_at, 'expires_at', c.expires_at, 'source', c.source,
+             'eyebrow', c.eyebrow, 'headline', c.headline, 'headline_accent', c.headline_accent, 'action', c.action, 'button', c.button)
              order by c.priority desc, c.publish_at desc, c.id)
       from (select * from content_items where kind = p_kind and published and publish_at <= now() and (expires_at is null or expires_at > now())
              order by priority desc, publish_at desc, id limit least(greatest(coalesce(p_limit, 10), 1), 50)) c), '[]'::jsonb),

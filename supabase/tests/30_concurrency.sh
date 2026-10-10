@@ -101,5 +101,41 @@ BAL=$(q -c "select balance from player_wallets where player_id='$WINNER'")
 [ $((BUSES1-BUSES0)) -eq 1 ] && [ "$BAL" = "0" ] || { echo "RACE 6 FAILED new buses=$((BUSES1-BUSES0)) balance=$BAL"; cat "$b1" "$b2"; exit 1; }
 grep -q "insufficient_funds" "$b1" "$b2" || { echo "RACE 6: loser did not get insufficient_funds"; cat "$b1" "$b2"; exit 1; }
 echo "race 6 (double purchase): one bus bought, wallet 0"
+
+# --- RACE 7: six players join a convoy with 3 free seats at the same moment: never more than the capacity
+CV=$(q -c "select testkit.make_user('RaceLeader')")
+CID=$(q -c "select testkit.as_user('$CV', \$\$select create_convoy('Race Convoy')\$\$)")
+q -c "update convoys set capacity = 4 where id = '$CID'" >/dev/null
+JOINERS=""
+for i in 1 2 3 4 5 6; do JOINERS="$JOINERS $(q -c "select testkit.make_user('RaceJoin$i')")"; done
+pids=""
+for u in $JOINERS; do
+  ( psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$u',false);
+      begin; select pg_sleep(0.3); select join_convoy('$CID')::text; select pg_sleep(0.3); commit;" >/dev/null 2>&1 || true ) &
+  pids="$pids $!"
+done
+wait $pids
+MEMBERS=$(q -c "select count(*) from convoy_members where convoy_id = '$CID'")
+[ "$MEMBERS" = "4" ] || { echo "RACE 7 FAILED: $MEMBERS members in a convoy of capacity 4"; exit 1; }
+echo "race 7 (convoy capacity): exactly 4 of 7 reached the 4 seats"
+
+# --- RACE 8: a completed challenge is claimed twice at once: paid exactly once
+CP=$(q -c "select testkit.make_user('RaceClaimer')")
+q -c "insert into challenge_definitions(id, title, description, metric, target, reward_coins, reward_xp, active) values ('race_chal', 'Race', 'Race', 'jobs_completed', 1, 250, 20, true)" >/dev/null
+q -c "select testkit.as_user('$CP', 'select get_my_daily_challenges()::text'); update profiles set jobs_completed = jobs_completed + 1 where id = '$CP';" >/dev/null
+CH=$(q -c "select id from player_challenges where player_id = '$CP' and challenge_id = 'race_chal'")
+BEFORE=$(q -c "select balance from player_wallets where player_id='$CP'")
+c1=$(mktemp); c2=$(mktemp)
+claim() {
+  psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$CP',false);
+    begin; select pg_sleep(0.2); select claim_challenge_reward('$CH')::text; select pg_sleep(0.4); commit;" >"$1" 2>&1 || true
+}
+claim "$c1" & claim "$c2" & wait
+AFTER=$(q -c "select balance from player_wallets where player_id='$CP'")
+ROWS=$(q -c "select count(*) from transactions where kind='CHALLENGE_REWARD' and player_id='$CP'")
+[ "$ROWS" = "1" ] && [ $((AFTER-BEFORE)) -eq 250 ] || { echo "RACE 8 FAILED rows=$ROWS delta=$((AFTER-BEFORE))"; cat "$c1" "$c2"; exit 1; }
+grep -q "already_claimed" "$c1" "$c2" || { echo "RACE 8: second claim did not get already_claimed"; cat "$c1" "$c2"; exit 1; }
+echo "race 8 (double challenge claim): reward paid exactly once (+250)"
+q -c "delete from player_challenges; delete from challenge_definitions;" >/dev/null
 q -c "drop table public._race" >/dev/null
 echo "CONCURRENCY TESTS PASSED"

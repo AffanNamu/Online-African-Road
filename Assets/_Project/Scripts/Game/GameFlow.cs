@@ -18,7 +18,7 @@ namespace ARO.Game
         GameServices _svc; DrivingSession _drive; Hud _hud; BusSession _bus;
         Canvas _canvas; RectTransform _panel; Text _toast; float _toastUntil;
         bool _busy;
-        readonly NoticeLog _notices = new NoticeLog(20);   // what the bell on the dashboard lists: payouts, server messages, errors
+        bool _sessionLost;                                 // set by SupabaseClient.SessionExpired; handled on the main loop
 
         public void Init(GameServices svc, DrivingSession drive, Hud hud, BusSession bus)
         {
@@ -26,19 +26,20 @@ namespace ARO.Game
             _canvas = UIKit.CreateCanvas("Menus", 10);
             UIKit.Box(_canvas.transform, "Backdrop", new Color(0.03f, 0.04f, 0.06f, 0.78f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
-            _drive.JobCompleted += async r => { if (r != null) _notices.Add($"Job complete: +{r.reward:N0} coins, +{r.xp:N0} XP", NoticeLevel.Good, Time.unscaledTime); await _svc.RefreshPlayer(); };
-            _bus.RunCompleted += async _ => { await _svc.RefreshPlayer(); };
-            _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f, NoticeLevel.Info); };
+            // The server writes the payout / level-up / achievement notifications itself; we only refresh what we show.
+            _drive.JobCompleted += async r => { if (r != null) Toast($"Job complete: +{r.reward:N0} coins, +{r.xp:N0} XP", 5f); await _svc.RefreshPlayer(); _ = _svc.Notifications.RefreshUnread(); };
+            _bus.RunCompleted += async _ => { await _svc.RefreshPlayer(); _ = _svc.Notifications.RefreshUnread(); };
+            _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f); };
+            _svc.Api.SessionExpired += () => _sessionLost = true;
             _ = StartUp();
         }
 
         async Task StartUp()
         {
-            if (SmokeMode.Dashboard || SmokeMode.WorldMap)
-            {   // CI preview only: fixture data so these screens can be exercised without an account
+            if (SmokeMode.WorldMap)
+            {   // CI preview only: fixture data so the map can be exercised without an account or a backend (never reachable from the UI)
                 await Task.Yield(); LoadFixture();
-                if (SmokeMode.WorldMap) { Debug.Log("[Smoke] worldmap scenario: fixture data, no sign-in"); OpenWorldMap(); }
-                else { Debug.Log("[Smoke] dashboard scenario: fixture data, no sign-in"); ShowMenu(); }
+                Debug.Log("[Smoke] worldmap scenario: fixture data, no sign-in"); OpenWorldMap();
                 return;
             }
             if (SmokeMode.Drive)
@@ -58,6 +59,13 @@ namespace ARO.Game
                 if (i >= 0) { string d = url.Substring(i + 18); int amp = d.IndexOf('&'); if (amp >= 0) d = d.Substring(0, amp); msg = UnityEngine.Networking.UnityWebRequest.UnEscapeURL(d).Replace('+', ' '); }
                 ARO.Backend.WebBridge.ClearUrlHash(); ShowLogin(msg); return;
             }
+            if (SmokeMode.AutoLogin(out string email, out string password))
+            {   // CI only (loopback pages): sign in with throw-away test credentials so the browser test can reach the dashboard on a real backend
+                Toast("Signing in...");
+                var si = await _svc.Api.SignIn(email, password);
+                if (si.Ok) { await EnterMenu(); return; }
+                ShowLogin(si.UserMessage); return;
+            }
             Toast("Checking saved session...");
             if (await _svc.Api.TryCompleteOAuthRedirect(url) || await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);
         }
@@ -65,6 +73,12 @@ namespace ARO.Game
         void Update()
         {
             if (_toast != null && Time.unscaledTime > _toastUntil) _toast.text = "";
+            if (_sessionLost) { _sessionLost = false; LoseSession(); }
+            if (_svc.Api.IsSignedIn && _svc.Profile != null)
+            {   // presence: the server marks us online while heartbeats arrive; notifications: the bell badge follows the server's unread count
+                _svc.Presence.Tick(Activity(), CurrentRouteCode(), null);
+                _svc.Notifications.PollUnread();
+            }
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && _svc.Api.IsSignedIn && _map == null)
             {
                 if (_drive.Active) { _drive.Pause(true); _hud.SetVisible(false); _canvas.gameObject.SetActive(true); Show(Screen.Menu); }
@@ -72,7 +86,20 @@ namespace ARO.Game
             }
         }
 
-        void Toast(string m, float s = 4f, NoticeLevel? log = null) { if (log.HasValue) _notices.Add(m, log.Value, Time.unscaledTime); _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); if (_map != null) _map.Notify(m, s); }
+        /// <summary>What the player is doing right now, as the presence service reports it to the server.</summary>
+        string Activity() => _bus.Active && _drive.Active ? "bus" : _drive.Active ? "driving" : _svc.Session.State == ARO.NetCore.SessionState.InSession ? "convoy" : "menu";
+        string CurrentRouteCode() => _drive.Active && _drive.Route != null && _drive.Route.Spec != null && _drive.Route.Spec.meta != null ? _drive.Route.Spec.meta.worldMapRouteId : null;
+
+        /// <summary>The server rejected our session and it could not be refreshed: back to sign-in, with the reason.</summary>
+        void LoseSession()
+        {
+            _svc.Presence.Clock.Reset(); _svc.ClearPlayerCaches();
+            if (_drive.Active) { _drive.Pause(true); _hud.SetVisible(false); }
+            _canvas.gameObject.SetActive(false);
+            ShowLogin("Your session expired. Please sign in again.");
+        }
+
+        void Toast(string m, float s = 4f, NoticeLevel? log = null) { _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); if (_map != null) _map.Notify(m, s); }
 
         // ---------------------------------------------------------------- panels
         RectTransform NewPanel(string title, float h = 760f)
@@ -123,8 +150,18 @@ namespace ARO.Game
         {
             Toast("Loading your profile...");
             string err = await _svc.RefreshPlayer();
-            if (err != null) { _svc.Api.SignOut(); ShowLogin(err); return; }
+            if (err != null) { _svc.Api.SignOut(); _svc.ClearPlayerCaches(); ShowLogin(err); return; }
+            _svc.Presence.Clock.Reset();
+            _ = LoadWorldState();
             ShowMenu();
+        }
+
+        /// <summary>The server's route/city state decides what the map and the dashboard show as open; until it answers they fail closed.</summary>
+        async Task LoadWorldState()
+        {
+            var m = WorldMapScreen.Model(); if (m == null) return;
+            await _svc.World.Load(m);
+            if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.OnWorldChanged();
         }
 
         // ---------------------------------------------------------------- menu = the dashboard
@@ -132,7 +169,6 @@ namespace ARO.Game
 
         void LoadFixture()
         {
-            _notices.Add("Preview mode: the dashboard is showing demo data", NoticeLevel.Info, Time.unscaledTime);   // dev fixture so the notice list is not empty in CI screenshots
             _svc.Profile = new ProfileDto { id = "fixture", display_name = "Demo Driver", level = 5, experience = 2050, jobs_completed = 12, distance_km = 140 };
             _svc.Wallet = new WalletDto { player_id = "fixture", balance = 48750 };
             _svc.Definitions = new[] { new VehicleDefDto { id = "truck_light_01", category = "truck", name = "Savanna 4x2 Light Truck", fuel_capacity_l = 120, max_speed_kmh = 110 } };
@@ -153,7 +189,7 @@ namespace ARO.Game
             _canvas.gameObject.SetActive(false);
             if (_dash != null) Destroy(_dash.gameObject);
             if (_map != null) { Destroy(_map.gameObject); _map = null; }
-            _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions(), _fixtureJobs, _notices);
+            _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions());
         }
 
         void OpenPanel(System.Action show) { if (_dash != null) _dash.gameObject.SetActive(false); _canvas.gameObject.SetActive(true); show(); }
@@ -184,7 +220,7 @@ namespace ARO.Game
             Convoy = () => OpenPanel(() => _ = ShowConvoy()), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
-            SignOut = () => { _svc.Api.SignOut(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
+            SignOut = () => { _ = _svc.Presence.EndSession(); _svc.Api.SignOut(); _svc.ClearPlayerCaches(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
             AcceptJob = job => _ = AcceptJob(job),
             QuickJob = () => _ = QuickJob(),
             WorldMap = OpenWorldMap,
@@ -196,10 +232,10 @@ namespace ARO.Game
             if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
             Toast("Finding a job...");
             var r = await _svc.Jobs.LoadBoard();
-            if (!r.Ok) { Toast(r.UserMessage, 5f, NoticeLevel.Bad); return; }
+            if (!r.Ok) { Toast(r.UserMessage, 5f); return; }
             JobDto best = null;
-            foreach (var j in r.Value) if (FindVehicleFor(j.required_category) != null && (best == null || j.reward > best.reward)) best = j;
-            if (best == null) { Toast("No open job matches a vehicle you own."); return; }
+            foreach (var j in r.Value) if (j.eligible && FindVehicleFor(j.required_category) != null && (best == null || j.reward > best.reward)) best = j;
+            if (best == null) { Toast("No open job you can take right now."); return; }
             await AcceptJob(best);
         }
 
@@ -295,23 +331,34 @@ namespace ARO.Game
                 return;
             }
             UIKit.Label(p, "Loading convoys...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var mine = await _svc.Convoys.LoadMine();
             var list = await _svc.Convoys.ListOpen();
             p = NewPanel("Convoy", 900f);
+            if (mine.Ok && mine.Value.convoy != null && mine.Value.convoy.Exists)
+            {   // server truth: I am in a convoy (possibly with no live session on this device yet)
+                var c = mine.Value.convoy; var sb = new System.Text.StringBuilder();
+                foreach (var m in c.members) sb.AppendLine((m.is_leader ? "★ " : "● ") + m.display_name + (m.presence != null && m.presence.online ? "  (online)" : ""));
+                UIKit.Label(p, $"{c.name}  ·  {c.member_count}/{c.capacity}{(c.is_private ? "  ·  invite only" : "")}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 44;
+                UIKit.Label(p, sb.ToString(), 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 200;
+                UIKit.Btn(p, "LEAVE CONVOY", async () => { await _svc.Convoys.Leave(); Toast("You left the convoy."); await ShowConvoy(); }, false, 48);
+                UIKit.Btn(p, "BACK", ShowMenu, true, 48);
+                return;
+            }
             if (!list.Ok) UIKit.Label(p, list.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            else if (list.Value.Length == 0) UIKit.Label(p, "No open convoys. Create one below.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            else if (list.Value.items.Length == 0) UIKit.Label(p, "No open convoys. Create one below.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             int shown = 0;
-            if (list.Ok) foreach (var c in list.Value)
+            if (list.Ok) foreach (var c in list.Value.items)
             {
                 if (shown++ >= 4) break; var convoy = c;
-                UIKit.Btn(p, $"{convoy.name}  ·  led by {(convoy.leader != null ? convoy.leader.display_name : "?")}  ·  {convoy.Members}/{SessionService.MaxPlayers}",
-                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad); await ShowConvoy(); }, false, 60);
+                UIKit.Btn(p, $"{convoy.name}  ·  led by {convoy.leader ?? "?"}  ·  {convoy.member_count}/{convoy.capacity}",
+                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy.id, convoy.name); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f); await ShowConvoy(); }, false, 60);
             }
             var nameField = UIKit.Input(p, "New convoy name");
             UIKit.Btn(p, "CREATE CONVOY", async () =>
             {
                 if (_busy) return; _busy = true; Toast("Creating convoy session...");
                 var r = await _svc.Convoys.Create(nameField.text); _busy = false;
-                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad); await ShowConvoy();
+                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f); await ShowConvoy();
             });
             UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
             UIKit.Btn(p, "BACK", ShowMenu, false, 48);

@@ -16,8 +16,12 @@ namespace ARO.NetCore
 
     public enum RouteStatus { Planned, Prototype, Live }
     /// <summary>What a route means for THIS player: Live/Prototype = something can be driven; Planned* = not built (never playable).</summary>
-    public enum RouteState { Live, Prototype, PlannedAvailable, PlannedLocked }
-    public enum CityState { Open, Planned, Locked }
+    public enum RouteState { Live, Prototype, PlannedAvailable, PlannedLocked, Unavailable }
+    /// <summary>Unavailable = the server's world state has not been (or could not be) loaded, so nothing may be treated as open.</summary>
+    public enum CityState { Open, Planned, Locked, Unavailable }
+
+    /// <summary>The server's verdict on one route (backend `get_world_state`): effectiveStatus is OPEN | PLANNED | LOCKED for the asking player.</summary>
+    public struct ServerRouteState { public string code, effectiveStatus; public int unlockLevel; }
 
     public static class Geo
     {
@@ -52,8 +56,24 @@ namespace ARO.NetCore
             string.Equals(r.status, "live", StringComparison.OrdinalIgnoreCase) ? RouteStatus.Live
             : string.Equals(r.status, "prototype", StringComparison.OrdinalIgnoreCase) ? RouteStatus.Prototype : RouteStatus.Planned;
 
+        // The server decides what is playable and what each route requires; the JSON only says what stands behind an open route
+        // (a live world or a prototype) and where things are drawn. RequireServerState makes the model fail CLOSED until the server has answered.
+        Dictionary<string, ServerRouteState> _server;
+        public bool RequireServerState { get; set; }
+        public bool HasServerState => _server != null;
+        public void ApplyServerState(IEnumerable<ServerRouteState> routes) { _server = routes == null ? null : routes.ToDictionary(r => r.code); }
+        public void ClearServerState() { _server = null; }
+
         public RouteState StateFor(MapRoute r, int playerLevel)
         {
+            if (_server != null)
+            {
+                if (!_server.TryGetValue(r.id, out var o)) return RouteState.PlannedLocked;      // the server does not offer a route it does not know
+                if (o.effectiveStatus == "OPEN") return StatusOf(r) == RouteStatus.Live ? RouteState.Live : RouteState.Prototype;
+                if (o.effectiveStatus == "LOCKED") return RouteState.PlannedLocked;
+                return playerLevel >= o.unlockLevel ? RouteState.PlannedAvailable : RouteState.PlannedLocked;
+            }
+            if (RequireServerState) return RouteState.Unavailable;
             var s = StatusOf(r);
             if (s == RouteStatus.Live) return RouteState.Live;
             if (s == RouteStatus.Prototype) return RouteState.Prototype;
@@ -68,6 +88,7 @@ namespace ARO.NetCore
         public CityState StateFor(MapCity c, int playerLevel)
         {
             var touching = RoutesAt(c.id).ToList();
+            if (RequireServerState && _server == null) return CityState.Unavailable;
             if (touching.Any(r => IsDrivable(StateFor(r, playerLevel)))) return CityState.Open;
             if (touching.Count > 0 && touching.All(r => StateFor(r, playerLevel) == RouteState.PlannedLocked)) return CityState.Locked;
             return CityState.Planned;

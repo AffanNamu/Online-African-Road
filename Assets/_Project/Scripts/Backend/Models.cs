@@ -13,13 +13,15 @@ namespace ARO.Backend
     }
     [Serializable] public class WalletDto { public string player_id; public long balance; }
 
-    [Serializable] public class LocationDto { public string slug, name; public double world_x, world_z; }
+    [Serializable] public class LocationDto { public string slug, name, city; public double world_x, world_z; }
     [Serializable] public class JobDto
     {
         public string id, code, cargo_type, required_category, status, expires_at;
         public int cargo_weight_kg, difficulty, xp_reward, max_participants;
         public double distance_km; public long reward;
-        public LocationDto origin, destination;   // embedded via PostgREST select
+        public LocationDto origin, destination;   // embedded via PostgREST select / filled from the job board reply
+        // from the server's job board (list_available_jobs): the server's own estimate and whether THIS player can take the job right now
+        public int est_minutes, min_level, slots_taken; public bool eligible = true; public string blocked_reason;
     }
     [Serializable] public class VehicleDefDto
     {
@@ -28,7 +30,7 @@ namespace ARO.Backend
     }
     [Serializable] public class OwnedVehicleDto
     {
-        public string id, definition_id; public double fuel_l, damage_pct, odometer_km;
+        public string id, definition_id, name, status; public double fuel_l, damage_pct, odometer_km; public bool selected;
     }
     [Serializable] public class AssignmentDto { public string id, job_id, vehicle_id, status; }
 

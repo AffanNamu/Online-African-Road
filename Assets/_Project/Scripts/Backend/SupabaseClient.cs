@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using ARO.Core;
+using ARO.NetCore;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -21,7 +22,14 @@ namespace ARO.Backend
         /// <summary>False = "Remember me" is off: the session lives only until the page is closed (no refresh token is stored).</summary>
         public bool RememberSession = true;
 
-        public SupabaseClient(BackendConfig cfg) { _cfg = cfg; }
+        public SupabaseClient(BackendConfig cfg) { _cfg = cfg; Faults = FaultPlan.Parse(Application.absoluteURL); }
+
+        /// <summary>Raised once when the session can no longer be refreshed (expired or revoked): the game must send the player back to sign-in.</summary>
+        public event Action SessionExpired;
+        /// <summary>CI-only failure injection (loopback pages only); see FaultPlan. Injects failures, never data.</summary>
+        public FaultPlan Faults { get; set; }
+        /// <summary>False after a request that never reached the server; true again after any answer. Feeds the "offline" indicators.</summary>
+        public bool Reachable { get; private set; } = true;
         public bool IsSignedIn => _session != null;
         public string UserId => _session?.user?.id;
         public string AccessToken => _session?.access_token;
@@ -99,30 +107,101 @@ namespace ARO.Backend
         async Task EnsureFreshToken()
         {
             if (_session == null || DateTime.UtcNow < _expiresAt) return;
-            await AuthCall("/auth/v1/token?grant_type=refresh_token", JsonUtility.ToJson(new RefreshBody { refresh_token = _session.refresh_token }));
+            await RefreshSession();
+        }
+
+        /// <summary>Exchanges the refresh token for a new access token. On failure the session is dropped and SessionExpired is raised once.</summary>
+        async Task<bool> RefreshSession()
+        {
+            if (_session == null) return false;
+            var r = await AuthCall("/auth/v1/token?grant_type=refresh_token", JsonUtility.ToJson(new RefreshBody { refresh_token = _session.refresh_token }));
+            if (r.Ok) return true;
+            if (r.ErrorCode == "offline" || r.ErrorCode == "timeout" || r.ErrorCode == "server_error") return false;   // cannot tell: keep the session, the next call tries again
+            _session = null; PlayerPrefs.DeleteKey(RefreshKey); SessionExpired?.Invoke();
+            return false;
         }
 
         // ------------------------------------------------------------ data
-        /// <summary>PostgREST select. `query` e.g. "jobs?status=eq.open&select=*,origin:locations!origin_id(*)".</summary>
+        /// <summary>PostgREST select (a read: retried on transient failures). `query` e.g. "jobs?status=eq.open&select=*,origin:locations!origin_id(*)".</summary>
         public async Task<Result<T[]>> Select<T>(string query)
         {
-            var r = await Send("GET", "/rest/v1/" + query, null, authed: true);
+            var r = await Send("GET", "/rest/v1/" + query, null, authed: true, idempotent: true);
             if (!r.Ok) return Result<T[]>.Fail(r.ErrorCode, r.UserMessage);
             var w = JsonUtility.FromJson<ListWrapper<T>>("{\"items\":" + r.Value + "}");
             return Result<T[]>.Success(w?.items ?? new T[0]);
         }
 
-        /// <summary>Call a SECURITY DEFINER function. Returns raw JSON body.</summary>
-        public Task<Result<string>> Rpc(string fn, string argsJson = "{}") =>
-            Send("POST", "/rest/v1/rpc/" + fn, argsJson, authed: true);
+        /// <summary>
+        /// Call a SECURITY DEFINER function. Returns the raw JSON body. Pass idempotent: true ONLY for reads: those are retried on
+        /// network / timeout / 5xx. Writes are sent exactly once, because a lost reply may still have been applied.
+        /// </summary>
+        public Task<Result<string>> Rpc(string fn, string argsJson = "{}", bool idempotent = false) =>
+            Send("POST", "/rest/v1/rpc/" + fn, argsJson, authed: true, idempotent: idempotent);
+
+        /// <summary>Calls an RPC and parses its JSON object into a DTO (defaults to a retried read).</summary>
+        public async Task<Result<T>> Call<T>(string fn, string argsJson = "{}", bool idempotent = true) where T : class
+        {
+            var r = await Rpc(fn, argsJson, idempotent);
+            if (!r.Ok) return Result<T>.Fail(r.ErrorCode, r.UserMessage);
+            try
+            {
+                var v = JsonUtility.FromJson<T>(r.Value);
+                if (v == null) return Result<T>.Fail("bad_response", "The server sent an answer the game does not understand.");
+                return Result<T>.Success(v);
+            }
+            catch (Exception e) { Debug.LogWarning($"[Backend] {fn}: could not parse the reply ({e.Message})"); return Result<T>.Fail("bad_response", "The server sent an answer the game does not understand."); }
+        }
+
+        /// <summary>Calls an RPC that returns a bare number (e.g. get_online_count).</summary>
+        public async Task<Result<long>> CallNumber(string fn, string argsJson = "{}", bool idempotent = true)
+        {
+            var r = await Rpc(fn, argsJson, idempotent);
+            if (!r.Ok) return Result<long>.Fail(r.ErrorCode, r.UserMessage);
+            return long.TryParse((r.Value ?? "").Trim(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)
+                ? Result<long>.Success(n) : Result<long>.Fail("bad_response", "The server sent an answer the game does not understand.");
+        }
+
+        /// <summary>Calls an RPC that returns a bare string (e.g. respond_friend_request -> "accepted").</summary>
+        public async Task<Result<string>> CallText(string fn, string argsJson = "{}", bool idempotent = false)
+        {
+            var r = await Rpc(fn, argsJson, idempotent);
+            return r.Ok ? Result<string>.Success((r.Value ?? "").Trim().Trim('"')) : r;
+        }
 
         // ------------------------------------------------------------ transport
-        async Task<Result<string>> Send(string method, string path, string body, bool authed)
+        struct Outcome { public Result<string> Result; public FailureKind Kind; public bool Ok; }
+
+        async Task<Result<string>> Send(string method, string path, string body, bool authed, bool idempotent = false)
         {
             if (!_cfg.IsConfigured)
                 return Result<string>.Fail("not_configured", "Backend is not configured. See docs/DEVELOPMENT.md.");
-            if (authed) await EnsureFreshToken();
-            if (authed && _session == null) return Result<string>.Fail("not_authenticated", "Please sign in.");
+            int attempt = 0; bool refreshed = false;
+            while (true)
+            {
+                attempt++;
+                if (authed) await EnsureFreshToken();
+                if (authed && _session == null) return Result<string>.Fail("session_expired", ApiFailure.Describe(FailureKind.SessionExpired));
+                var o = await SendOnce(method, path, body, authed);
+                Reachable = o.Kind != FailureKind.Offline && o.Kind != FailureKind.Timeout;
+                if (o.Ok) return o.Result;
+                if (o.Kind == FailureKind.SessionExpired && authed && !refreshed)
+                {   // the access token was rejected: refresh once and replay, otherwise the player must sign in again
+                    refreshed = true;
+                    if (await RefreshSession()) { attempt--; continue; }
+                    if (_session == null) return Result<string>.Fail("session_expired", ApiFailure.Describe(FailureKind.SessionExpired));
+                }
+                if (!RetryPolicy.Reads.ShouldRetry(attempt, o.Kind, idempotent)) return o.Result;
+                Debug.LogWarning($"[Backend] {method} {path} failed ({o.Kind}); retry {attempt}/{RetryPolicy.Reads.MaxAttempts - 1}");
+                await Wait.Seconds((float)RetryPolicy.Reads.DelayBefore(attempt + 1));
+            }
+        }
+
+        async Task<Outcome> SendOnce(string method, string path, string body, bool authed)
+        {
+            var fault = Faults != null ? Faults.Next(path) : new Fault();
+            if (fault.Kind == FaultKind.Slow) await Wait.Seconds((float)fault.Seconds);
+            if (fault.Kind == FaultKind.Error) return Fail(FailureKind.Server, 503, "injected");
+            if (fault.Kind == FaultKind.Offline) return Fail(FailureKind.Offline, 0, "injected");
 
             using var req = new UnityWebRequest(_cfg.supabaseUrl.TrimEnd('/') + path, method);
             if (body != null) req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(body));
@@ -137,13 +216,32 @@ namespace ARO.Backend
             await tcs.Task;
 
             string text = req.downloadHandler.text;
-            if (req.result == UnityWebRequest.Result.Success) return Result<string>.Success(text);
-            if (req.result == UnityWebRequest.Result.ConnectionError)
-                return Result<string>.Fail("network", "Connection lost. Check your internet and try again.");
+            if (req.result == UnityWebRequest.Result.Success)
+                return new Outcome { Ok = true, Kind = FailureKind.None, Result = Result<string>.Success(text) };
 
-            string code = ExtractErrorCode(text);
-            Debug.LogWarning($"[Backend] {method} {path} -> {req.responseCode} {text}");
-            return Result<string>.Fail(code, ErrorMessages.ToUser(code, req.responseCode));
+            bool timedOut = req.error != null && req.error.IndexOf("timeout", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool noAnswer = req.result == UnityWebRequest.Result.ConnectionError;
+            string code = noAnswer ? null : ExtractErrorCode(text);
+            var kind = ApiFailure.Classify(req.responseCode, noAnswer, timedOut, code);
+            if (!noAnswer) Debug.LogWarning($"[Backend] {method} {path} -> {req.responseCode} {text}");
+            return Fail(kind, req.responseCode, code);
+        }
+
+        /// <summary>Business errors keep the server's code (job_full ...); everything else gets a canonical code so callers can tell "down" from "refused".</summary>
+        static Outcome Fail(FailureKind kind, long http, string serverCode)
+        {
+            string code; string msg;
+            switch (kind)
+            {
+                case FailureKind.Offline: code = "offline"; msg = ApiFailure.Describe(kind); break;
+                case FailureKind.Timeout: code = "timeout"; msg = ApiFailure.Describe(kind); break;
+                case FailureKind.SessionExpired: code = "session_expired"; msg = ApiFailure.Describe(kind); break;
+                case FailureKind.RateLimited: code = "rate_limited"; msg = ApiFailure.Describe(kind); break;
+                case FailureKind.Server: code = "server_error"; msg = ApiFailure.Describe(kind); break;
+                case FailureKind.Forbidden: code = "forbidden"; msg = ApiFailure.Describe(kind); break;
+                default: code = serverCode ?? "unknown"; msg = ErrorMessages.ToUser(code, http); break;
+            }
+            return new Outcome { Ok = false, Kind = kind, Result = Result<string>.Fail(code, msg) };
         }
 
         static string ExtractErrorCode(string json)

@@ -15,6 +15,7 @@
     <None Include="../../Assets/_Project/Resources/Routes/ng-lagos-ibadan.route.json" Link="ng-lagos-ibadan.route.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../Assets/_Project/Resources/Props/prop_catalog.json" Link="prop_catalog.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../supabase/seed.sql" Link="seed.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../supabase/seed_world.sql" Link="seed_world.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />

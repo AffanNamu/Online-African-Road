@@ -165,7 +165,10 @@ select testkit.assert_eq('nickname shows in the API', pg_temp.j(pg_temp.u('A'), 
 select testkit.expect_error('authenticated', pg_temp.u('A'), format('select rename_vehicle(%L, ''<script>'')', pg_temp.veh('A')), 'invalid_vehicle_name');
 select testkit.assert_eq('customise own', testkit.as_user(pg_temp.u('A'), format($$select set_vehicle_customization(%L, '{"color":"#c8a24a","livery":"sunset","plate":"ARO 1"}')::text$$, pg_temp.veh('A'))), '');
 select testkit.assert_eq('customisation persisted', pg_temp.j(pg_temp.u('A'), 'select list_my_vehicles()::text')->'items'->0->'customization'->>'color', '#c8a24a');
+select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_vehicle_customization(%L, '{"fuel_l":"9999"}')$$, pg_temp.veh('A')), 'invalid_customization');
 select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_vehicle_customization(%L, '{"fuel_l":9999}')$$, pg_temp.veh('A')), 'invalid_customization');
+select testkit.expect_error('authenticated', pg_temp.u('A'), 'update vehicle_ownership set nickname = ''Hacked''', 'permission denied');
+select testkit.expect_error('authenticated', pg_temp.u('A'), $$update vehicle_ownership set customization = '{"color":"#000000"}'$$, 'permission denied');
 select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_vehicle_customization(%L, '{"color":"red"}')$$, pg_temp.veh('A')), 'invalid_customization');
 select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_vehicle_customization(%L, '{"color":5}')$$, pg_temp.veh('A')), 'invalid_customization');
 select testkit.expect_error('authenticated', pg_temp.u('A'), format($$select set_vehicle_customization(%L, '[]')$$, pg_temp.veh('A')), 'invalid_customization');
@@ -298,9 +301,24 @@ select testkit.assert_eq('new definition assigned', jsonb_array_length(pg_temp.j
 update player_challenges set expires_at = now() - interval '1 minute' where player_id = pg_temp.u('A') and challenge_id = 'drive_far';
 update profiles set distance_km = distance_km + 6 where id = pg_temp.u('A');
 select testkit.assert_eq('expired challenges do not progress', (select (completed_at is null)::text from player_challenges where player_id = pg_temp.u('A') and challenge_id = 'drive_far'), 'true');
+-- a completed but expired challenge can no longer be claimed
+insert into challenge_definitions(id, title, description, metric, target, reward_coins, reward_xp, active)
+  values ('quick_one', 'Quick one', 'Complete 1 job today.', 'jobs_completed', 1, 50, 0, true);
+select pg_temp.j(pg_temp.u('A'), 'select get_my_daily_challenges()::text');
+update profiles set jobs_completed = jobs_completed + 1 where id = pg_temp.u('A');
+select testkit.assert_eq('quick_one completed', (select (completed_at is not null)::text from player_challenges where player_id = pg_temp.u('A') and challenge_id = 'quick_one'), 'true');
+update player_challenges set expires_at = now() - interval '1 minute' where player_id = pg_temp.u('A') and challenge_id = 'quick_one';
+select testkit.expect_error('authenticated', pg_temp.u('A'), format('select claim_challenge_reward(%L)', (select id from player_challenges where player_id = pg_temp.u('A') and challenge_id = 'quick_one')), 'challenge_expired');
+-- inactive definitions are never assigned
+insert into challenge_definitions(id, title, description, metric, target, reward_coins, reward_xp, active)
+  values ('sleeping_one', 'Sleeping', 'Not live yet.', 'jobs_completed', 1, 999, 0, false);
+update game_config set value = 10 where key = 'daily_challenge_count';      -- room for every definition, so an inactive one would show up if it were assignable
+select testkit.assert_eq('only active definitions are assigned', (select count(*)::text from jsonb_array_elements(testkit.as_user(pg_temp.u('B'), 'select get_my_daily_challenges()::text')::jsonb->'items') e where e->>'challenge_id' = 'sleeping_one'), '0');
+select testkit.assert_eq('while active ones are', (select count(*)::text from jsonb_array_elements(testkit.as_user(pg_temp.u('B'), 'select get_my_daily_challenges()::text')::jsonb->'items') e where e->>'challenge_id' in ('drive_far','quick_one')), '2');
 select testkit.expect_error('authenticated', pg_temp.u('A'), 'select * from player_challenges', 'permission denied');
 select testkit.expect_error('authenticated', pg_temp.u('A'), $$update challenge_definitions set reward_coins = 99999999$$, 'permission denied');
 select testkit.expect_error('authenticated', pg_temp.u('A'), $$insert into player_challenges(player_id, challenge_id, day, expires_at) values (auth.uid(), 'deliver_one', current_date, now())$$, 'permission denied');
 delete from player_challenges; delete from challenge_definitions;
+update game_config set value = 3 where key = 'daily_challenge_count';
 
 select 'WORLD + JOBS + ECONOMY + PROGRESSION TESTS PASSED' as result;

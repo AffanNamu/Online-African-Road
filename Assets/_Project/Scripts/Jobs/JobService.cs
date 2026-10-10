@@ -1,22 +1,56 @@
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using ARO.Backend;
 using ARO.Core;
+using ARO.NetCore;
 using UnityEngine;
 
 namespace ARO.Jobs
 {
-    /// <summary>Job board + assignment lifecycle. Thin client over server RPCs; the server decides outcomes.</summary>
+    /// <summary>
+    /// Job board + assignment lifecycle. Thin client over server RPCs; the server decides outcomes and every number shown here
+    /// (reward, XP, distance, estimated minutes, requirements, eligibility) is the server's. The client never computes a reward.
+    /// </summary>
     public class JobService
     {
         readonly SupabaseClient _api;
+        public readonly Loadable<JobDto[]> Board = new Loadable<JobDto[]>();
         public JobService(SupabaseClient api) { _api = api; }
 
-        const string BoardQuery =
-            "jobs?status=eq.open&expires_at=gt.now()&order=created_at.desc&limit=50" +
-            "&select=*,origin:locations!origin_id(slug,name,world_x,world_z),destination:locations!destination_id(slug,name,world_x,world_z)";
+        /// <summary>Open jobs this player has not taken yet, newest first, each with the server's eligibility verdict.</summary>
+        public async Task<Result<JobDto[]>> LoadBoard(int limit = 50)
+        {
+            Board.Begin();
+            var r = await _api.Call<JobBoardPage>("list_available_jobs", JsonArgs.Obj(("p_limit", limit), ("p_offset", 0)));
+            if (!r.Ok) { Board.Fail(ServiceKind(r.ErrorCode), r.UserMessage, Time.unscaledTime); return Result<JobDto[]>.Fail(r.ErrorCode, r.UserMessage); }
+            var jobs = (r.Value.items ?? new BoardJob[0]).Select(ToJobDto).ToArray();
+            Board.Succeed(jobs, jobs.Length == 0, Time.unscaledTime);
+            return Result<JobDto[]>.Success(jobs);
+        }
 
-        public Task<Result<JobDto[]>> LoadBoard() => _api.Select<JobDto>(BoardQuery);
+        static FailureKind ServiceKind(string code) => ServiceBase.KindOf(code);
+
+        public static JobDto ToJobDto(BoardJob b)
+        {
+            var o = b.origin ?? new BoardPlace(); var d = b.destination ?? new BoardPlace(); var c = b.cargo ?? new BoardCargo(); var q = b.requirements ?? new BoardRequirements();
+            return new JobDto
+            {
+                id = b.id, code = b.code, status = b.status, expires_at = b.expires_at,
+                cargo_type = c.type, cargo_weight_kg = c.weight_kg, required_category = q.category, max_participants = q.max_participants, min_level = q.min_level,
+                difficulty = b.difficulty, xp_reward = b.xp_reward, distance_km = b.distance_km, reward = b.reward,
+                est_minutes = b.est_minutes, slots_taken = b.slots_taken, eligible = b.eligible, blocked_reason = b.blocked_reason,
+                origin = new LocationDto { slug = o.slug, name = o.name, city = o.city, world_x = o.world_x, world_z = o.world_z },
+                destination = new LocationDto { slug = d.slug, name = d.name, city = d.city, world_x = d.world_x, world_z = d.world_z },
+            };
+        }
+
+        public Task<Result<ActiveJobReply>> Active() => _api.Call<ActiveJobReply>("get_my_active_job");
+        public async Task<Result<JobDto>> Details(string jobId)
+        {
+            var r = await _api.Call<BoardJob>("get_job_details", JsonArgs.Obj(("p_job", jobId)));
+            return r.Ok ? Result<JobDto>.Success(ToJobDto(r.Value)) : Result<JobDto>.Fail(r.ErrorCode, r.UserMessage);
+        }
 
         public async Task<Result<string>> Accept(string jobId, string vehicleId)
         {

@@ -9,6 +9,7 @@ insert into fx select k, testkit.make_user(n)::text from (values ('A','LbA'),('B
 create function pg_temp.u(k text) returns uuid language sql as $$ select v::uuid from fx where fx.k = $1 $$;
 
 -- ===== CONTENT
+select testkit.assert_eq('three hero banners are seeded', (select count(*)::text from content_items where source = 'authored' and kind = 'hero'), '3');
 select testkit.assert_eq('the four authored news items are seeded', (select count(*)::text from content_items where source = 'authored' and kind = 'news'), '4');
 select testkit.assert_eq('served newest/highest priority first', pg_temp.j(pg_temp.u('A'), 'select get_content()::text')->'items'->0->>'id', 'corridor-open');
 select testkit.assert_eq('served list', jsonb_array_length(pg_temp.j(pg_temp.u('A'), 'select get_content()::text')->'items')::text, '4');
@@ -21,7 +22,11 @@ insert into content_items(id, title, body, published, publish_at, expires_at) va
 insert into content_items(id, title, body, published, priority) values ('pinned-item', 'Pinned', 'Highest priority', true, 99);
 select testkit.assert_eq('drafts, future and expired items are not served', (select count(*)::text from jsonb_array_elements(testkit.as_user(pg_temp.u('A'), 'select get_content(''news'', 50)::text')::jsonb->'items') e where e->>'id' in ('draft-item','future-item','expired-item')), '0');
 select testkit.assert_eq('priority orders the feed', pg_temp.j(pg_temp.u('A'), 'select get_content()::text')->'items'->0->>'id', 'pinned-item');
-select testkit.assert_eq('hero kind is separate', jsonb_array_length(pg_temp.j(pg_temp.u('A'), 'select get_content(''hero'')::text')->'items')::text, '0');
+select testkit.assert_eq('hero banners are a separate feed', jsonb_array_length(pg_temp.j(pg_temp.u('A'), 'select get_content(''hero'')::text')->'items')::text, '3');
+select testkit.assert_eq('hero carries its copy and action', pg_temp.j(pg_temp.u('A'), 'select get_content(''hero'')::text')->'items'->0->>'action', 'jobs');
+select testkit.assert_eq('hero headline', pg_temp.j(pg_temp.u('A'), 'select get_content(''hero'')::text')->'items'->0->>'headline_accent', 'AFRICA');
+select testkit.assert_eq('news is not mixed with hero banners', (select count(*)::text from jsonb_array_elements(testkit.as_user(pg_temp.u('A'), 'select get_content(''news'', 50)::text')::jsonb->'items') e where e->>'kind' <> 'news'), '0');
+select testkit.expect_error('postgres', null, $$insert into content_items(id, kind, title, body, action) values ('x-act', 'hero', 't', 'b', 'format_disk')$$, 'violates check constraint');
 select testkit.expect_error('postgres', null, $$insert into content_items(id, title, body, source) values ('x-ext', 't', 'b', 'external')$$, 'violates check constraint');
 select testkit.expect_error('postgres', null, $$insert into content_items(id, title, body) values ('x-long', 't', repeat('x', 221))$$, 'violates check constraint');
 select testkit.expect_error('authenticated', pg_temp.u('A'), 'select * from content_items', 'permission denied');

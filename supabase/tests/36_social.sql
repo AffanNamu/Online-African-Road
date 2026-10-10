@@ -33,6 +33,9 @@ select testkit.assert_eq('requester notified of acceptance', pg_temp.count_of(pg
 select testkit.assert_eq('A lists B', jsonb_array_length(pg_temp.j(pg_temp.u('A'), 'select list_friends()::text')->'items')::text, '1');
 select testkit.assert_eq('B lists A', jsonb_array_length(pg_temp.j(pg_temp.u('B'), 'select list_friends()::text')->'items')::text, '1');
 select testkit.assert_eq('C sees no friends (not every player is a friend)', jsonb_array_length(pg_temp.j(pg_temp.u('C'), 'select list_friends()::text')->'items')::text, '0');
+select testkit.expect_error('authenticated', pg_temp.u('C'), format('select remove_friend(%L)', pg_temp.u('A')), 'not_friends');
+select testkit.expect_error('authenticated', pg_temp.u('C'), format('select remove_friend(%L)', pg_temp.u('B')), 'not_friends');
+select testkit.assert_eq('a stranger cannot dissolve a friendship', (select status from friendships where least(requester_id, addressee_id) = least(pg_temp.u('A'), pg_temp.u('B')) and greatest(requester_id, addressee_id) = greatest(pg_temp.u('A'), pg_temp.u('B'))), 'accepted');
 select testkit.assert_eq('status: friends', testkit.as_user(pg_temp.u('A'), format('select get_friend_status(%L)', pg_temp.u('B'))), 'friends');
 select testkit.expect_error('authenticated', pg_temp.u('A'), format('select send_friend_request(%L)', pg_temp.u('B')), 'already_friends');
 select testkit.expect_error('authenticated', pg_temp.u('B'), format('select respond_friend_request(%L, true)', (select v from fx where k = 'req1')), 'request_not_found');

@@ -37,7 +37,7 @@ namespace ARO.Game
         }
         public static Texture2D Artwork(WorldMapModel m) => m == null ? null : Resources.Load<Texture2D>("WorldMap/" + m.Data.image.file);
 
-        GameServices _svc; DrivingSession _drive; WorldMapActions _act; WorldMapModel _m; Texture2D _tex; JobDto[] _jobs; public JobDto[] JobsOverride;
+        GameServices _svc; DrivingSession _drive; WorldMapActions _act; WorldMapModel _m; Texture2D _tex; JobDto[] _jobs; bool _jobsFailed; public JobDto[] JobsOverride;
         int Level => _svc.Profile == null ? 1 : Math.Max(_svc.Profile.level, LevelMath.LevelFor(_svc.Profile.experience));
         float CW => _m.Data.image.contentWidth; float CH => _m.Data.image.contentHeight;
 
@@ -71,6 +71,7 @@ namespace ARO.Game
             _solidTex = MakeTex(4, 4, (x, y) => Color.white, TextureWrapMode.Clamp);
             BuildViewport(); BuildMarkers(); BuildPanel();
             _jobs = JobsOverride; if (_jobs == null) LoadJobs();
+            if (_m.RequireServerState && !_m.HasServerState) ReloadWorld();
             ShowOverview();
             Debug.Log($"[WorldMap] opened. artwork={_tex.width}x{_tex.height} content={CW}x{CH} cities={_m.Cities.Count} routes={_m.Routes.Count} level={Level} texFormat={_tex.graphicsFormat} texMB={UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(_tex) / 1048576f:0.0}");
         }
@@ -377,7 +378,7 @@ namespace ARO.Game
             var a = Ui.Icon(p, "ic_chevron_right", Gold, 22, y + 2, 22); a.rectTransform.localEulerAngles = new Vector3(0, 0, 180);
             Ui.Label(p, "All routes", "SemiBold", 17, Gold, 48, y, 200, 26); Ui.Click(p, "Btn_PanelBack", 18, y - 6, 160, 38, () => ShowOverview()); return y + 36f;
         }
-        static string StateText(RouteState s, int unlock) => s == RouteState.Prototype ? "PROTOTYPE" : s == RouteState.Live ? "LIVE" : s == RouteState.PlannedAvailable ? "PLANNED" : "LOCKED · LEVEL " + unlock;
+        static string StateText(RouteState s, int unlock) => s == RouteState.Unavailable ? "STATUS UNAVAILABLE" : s == RouteState.Prototype ? "PROTOTYPE" : s == RouteState.Live ? "LIVE" : s == RouteState.PlannedAvailable ? "PLANNED" : "LOCKED · LEVEL " + unlock;
         static Color StateColor(RouteState s) => s == RouteState.Prototype ? Gold : s == RouteState.Live ? Brand.Good : s == RouteState.PlannedAvailable ? new Color(0.88f, 0.9f, 0.95f) : Grey;
         float Chip(Transform p, string text, Color c, float x, float y)
         {
@@ -432,7 +433,7 @@ namespace ARO.Game
             y = Back(p, W, y);
             Ui.Label(p, c.name, "ExtraBold", 34, White, 22, y, W, 44); y += 46;
             Ui.Label(p, _m.CountryName(c.country), "SemiBold", 18, Muted, 22, y, W, 26); y += 36;
-            float cx = 22; string stText = st == CityState.Open ? "OPEN · PROTOTYPE" : st == CityState.Locked ? "LOCKED" : "PLANNED"; Chip(p, stText, st == CityState.Open ? Gold : st == CityState.Locked ? Grey : new Color(0.88f, 0.9f, 0.95f), cx, y); y += 44;
+            float cx = 22; string stText = st == CityState.Open ? "OPEN · PROTOTYPE" : st == CityState.Locked ? "LOCKED" : st == CityState.Unavailable ? "STATUS UNAVAILABLE" : "PLANNED"; Chip(p, stText, st == CityState.Open ? Gold : st == CityState.Locked ? Grey : new Color(0.88f, 0.9f, 0.95f), cx, y); y += 44;
             y = Row(p, "Coordinates", $"{c.lat:0.0000}°, {c.lon:0.0000}°", W, y);
             y = Section(p, "ROUTES THROUGH " + c.name.ToUpperInvariant(), y + 6);
             var rs = _m.RoutesAt(c.id).ToList();
@@ -448,10 +449,10 @@ namespace ARO.Game
             {
                 var proto = rs.First(q => WorldMapModel.IsDrivable(_m.StateFor(q, level)));
                 y = Section(p, "OPEN JOBS", y + 6); int n = JobsTouching(proto, c).Count();
-                y = Para(p, _jobs == null ? "Loading jobs..." : $"{n} open job{(n == 1 ? "" : "s")} touch {c.name}.", 17, White, W, y, "SemiBold");
+                y = Para(p, _jobs == null ? (_jobsFailed ? "Jobs are unavailable right now." : "Loading jobs...") : $"{n} open job{(n == 1 ? "" : "s")} touch {c.name}.", 17, White, W, y, "SemiBold");
                 y = Btn(p, "Btn_ViewJobs", "View jobs", W, y + 4, true, true, () => _act.Jobs());
             }
-            else y = Para(p, st == CityState.Locked ? "Not discovered yet. Keep levelling up to reveal the routes here." : "Planned. The road, terrain, vehicles and traffic for this region are not built yet, so nothing here can be driven.", 16, Muted, W, y + 6);
+            else y = Para(p, st == CityState.Unavailable ? "The server has not told us what is open yet, so nothing here can be started. Check your connection." : st == CityState.Locked ? "Not discovered yet. Keep levelling up to reveal the routes here." : "Planned. The road, terrain, vehicles and traffic for this region are not built yet, so nothing here can be driven.", 16, Muted, W, y + 6);
             return y;
         }
 
@@ -480,7 +481,7 @@ namespace ARO.Game
                 var nt = Ui.Paragraph(p, "Prototype environment: placeholder 3D, not the final world.", "SemiBold", 15, Gold, 36, y + 9, W - 28, 44); y += 76;
                 y = Section(p, "OPEN JOBS ON THIS CORRIDOR", y);
                 var jobs = JobsTouching(r).OrderByDescending(x => x.reward).ToList();
-                if (_jobs == null) y = Para(p, "Loading jobs...", 16, Muted, W, y);
+                if (_jobs == null) y = Para(p, _jobsFailed ? "Jobs are unavailable right now." : "Loading jobs...", 16, Muted, W, y);
                 else if (jobs.Count == 0) y = Para(p, "No open jobs touch Lagos or Ibadan right now.", 16, Muted, W, y);
                 foreach (var j in jobs.Take(3)) y = JobRow(p, j, W, y);
                 y = Btn(p, "Btn_ViewJobs", "View all jobs", W, y + 6, true, true, () => _act.Jobs());
@@ -489,7 +490,7 @@ namespace ARO.Game
             }
             else
             {
-                y = Para(p, st == RouteState.PlannedLocked ? $"Reach level {r.unlockLevel} to discover this route." : "Discovered, but not built yet.", 17, White, W, y, "SemiBold");
+                y = Para(p, st == RouteState.Unavailable ? "Route status is unavailable right now." : st == RouteState.PlannedLocked ? $"Reach level {r.unlockLevel} to discover this route." : "Discovered, but not built yet.", 17, White, W, y, "SemiBold");
                 y = Para(p, "This route needs its production road, terrain, vehicles and traffic before it can be driven. Nothing about it is playable today.", 16, Muted, W, y);
                 y = Btn(p, "Btn_NotAvailable", "Not available yet", W, y + 6, false, false, null);
             }
@@ -507,8 +508,18 @@ namespace ARO.Game
 
         async void LoadJobs()
         {
-            try { var r = await _svc.Jobs.LoadBoard(); if (this == null) return; _jobs = r.Ok ? r.Value : new JobDto[0]; RebuildPanel(); }
-            catch (Exception e) { Debug.LogWarning("[WorldMap] could not load jobs: " + e.Message); if (this != null) _jobs = new JobDto[0]; }
+            try { var r = await _svc.Jobs.LoadBoard(); if (this == null) return; _jobsFailed = !r.Ok; _jobs = r.Ok ? r.Value : null; RebuildPanel(); }
+            catch (Exception e) { Debug.LogWarning("[WorldMap] could not load jobs: " + e.Message); if (this != null) { _jobs = null; _jobsFailed = true; } }
+        }
+
+        /// <summary>Fail-closed world state: if the server's route/city state is missing (the first load failed), ask again when the map opens.</summary>
+        async void ReloadWorld()
+        {
+            Notify("Loading route status...", 30f);
+            var r = await _svc.World.Load(_m);
+            if (this == null) return;
+            Notify(r.Ok ? "" : "Route status is unavailable: " + r.UserMessage, r.Ok ? 0.1f : 8f);
+            RebuildPanel();
         }
 
         public void Close() { Debug.Log("[WorldMap] closed"); _act.Back(); }

@@ -4,8 +4,13 @@ A mutant that survives (tests still pass) means a protection is not actually cov
 import os, re, shutil, subprocess, sys, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MIG = os.path.join(ROOT, "migrations")
-NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql", 6: "20261009000006_exclusive_activity.sql"}
+NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql", 6: "20261009000006_exclusive_activity.sql",
+         "enum": "20261010000001_ledger_kinds.sql", "foundation": "20261010000002_foundation.sql", "profile": "20261010000003_profile_presence.sql",
+         "world": "20261010000004_world_state.sql", "social": "20261010000005_social.sql", "vehjobs": "20261010000006_vehicles_jobs.sql",
+         "econ": "20261010000007_progression_content_economy.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
+# any migration added later is copied through unchanged so mutants always run against the complete schema
+EXTRA = {n: open(os.path.join(MIG, n)).read() for n in sorted(os.listdir(MIG)) if n.endswith(".sql") and n not in NAMES.values()}
 
 def sub(txt, old, new, count=1):
     assert old in txt, "mutation anchor not found: " + old[:70]
@@ -38,8 +43,8 @@ MUTANTS = {
  "job_full check removed":                     (6, lambda t: sub(t, ">= v_job.max_participants then", ">= 999 then")),
  "expiry check removed":                       (6, lambda t: sub(t, "or v_job.expires_at <= now() then", "then")),
  "category check removed":                     (6, lambda t: sub(t, "if v_cat <> v_job.required_category then raise exception 'wrong_vehicle_category'; end if;", "")),
- "convoy size cap raised":                     (2, lambda t: sub(t, ">= 8 then raise exception 'convoy_full'", ">= 80 then raise exception 'convoy_full'")),
- "disbanded convoy joinable":                  (2, lambda t: sub(t, "where id = p_convoy and disbanded_at is null", "where id = p_convoy")),
+ "convoy size cap raised (defence in depth: the membership trigger also enforces capacity: expected to SURVIVE)":                     (2, lambda t: sub(t, ">= 8 then raise exception 'convoy_full'", ">= 80 then raise exception 'convoy_full'")),
+ "disbanded convoy joinable (defence in depth: the membership trigger also refuses: expected to SURVIVE)":                  (2, lambda t: sub(t, "where id = p_convoy and disbanded_at is null", "where id = p_convoy")),
  "fuel ownership check removed":               (2, lambda t: sub(t, "select * into v_veh from vehicle_ownership where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l", "select * into v_veh from vehicle_ownership where id = p_vehicle for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l")),
  "fuel row lock removed":                      (2, lambda t: sub(t, "where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l", "where id = p_vehicle and player_id = v_uid;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select fuel_capacity_l")),
  "repair row lock removed":                    (2, lambda t: sub(t, "where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  if v_veh.damage_pct <= 0", "where id = p_vehicle and player_id = v_uid;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  if v_veh.damage_pct <= 0")),
@@ -128,16 +133,31 @@ MUTANTS = {
  "bus: search_path unpinned on serve_stop":   (5, lambda t: sub(t, "create function serve_stop(p_run uuid) returns jsonb\nlanguage plpgsql security definer set search_path = public as $$", "create function serve_stop(p_run uuid) returns jsonb\nlanguage plpgsql security definer as $$")),
 }
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from mutants_backend import make
+MUTANTS.update(make(sub, resub))
+
+def run_with(overrides):
+    d = tempfile.mkdtemp()
+    for k, fname in NAMES.items():
+        open(os.path.join(d, fname), "w").write(overrides[k](F[k]) if k in overrides else F[k])
+    for n, txt in EXTRA.items():
+        open(os.path.join(d, n), "w").write(txt)
+    try:
+        return subprocess.run([os.path.join(ROOT, "tests", "run.sh")], env=dict(os.environ, MIGRATIONS_DIR=d), capture_output=True, text=True)
+    finally:
+        shutil.rmtree(d)
+
+# The unmodified schema must pass, otherwise "every mutant was killed" would only mean "the suite is broken".
+base = run_with({})
+if base.returncode != 0:
+    print("BASELINE FAILED: the unmutated migrations do not pass the suite\n" + (base.stdout + base.stderr)[-2000:]); sys.exit(2)
+print("baseline passes", flush=True)
 only = sys.argv[1:]
 survivors, killed = [], []
 for name, (which, fn) in MUTANTS.items():
     if only and not any(o in name for o in only): continue
-    d = tempfile.mkdtemp()
-    for k, fname in NAMES.items():
-        open(os.path.join(d, fname), "w").write(fn(F[k]) if k == which else F[k])
-    env = dict(os.environ, MIGRATIONS_DIR=d)
-    r = subprocess.run([os.path.join(ROOT, "tests", "run.sh")], env=env, capture_output=True, text=True)
-    shutil.rmtree(d)
+    r = run_with({which: fn})
     ok = r.returncode != 0
     print(("KILLED   " if ok else "SURVIVED ") + name, flush=True)
     (killed if ok else survivors).append(name)
