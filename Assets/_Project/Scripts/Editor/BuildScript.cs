@@ -18,6 +18,8 @@ namespace ARO.Editor
             SceneBuilder.Build();
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0) { Console.Error.WriteLine("Scene generation produced no scenes."); EditorApplication.Exit(2); return; }
+            // Static hosts (GitHub Pages, S3, itch.io) rarely send Content-Encoding for .gz files; the fallback loader decompresses in JS instead.
+            if (target == BuildTarget.WebGL) PlayerSettings.WebGL.decompressionFallback = true;
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = scenes, locationPathName = output, target = target, options = BuildOptions.None
