@@ -1,5 +1,6 @@
 name: CI
 on:
+  workflow_dispatch:
   push:
     branches: ['**']
     paths-ignore: ['docs/**', '**/*.md']   # docs-only commits should not spend ~15 min of Unity CI
