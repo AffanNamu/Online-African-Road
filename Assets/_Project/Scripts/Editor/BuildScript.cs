@@ -53,6 +53,7 @@ namespace ARO.Editor
                 scenes = scenes, locationPathName = output, target = target, options = BuildOptions.None
             });
             Console.WriteLine($"Build {report.summary.result}: {report.summary.totalSize / 1048576} MB in {report.summary.totalTime}");
+            if (target == BuildTarget.WebGL && report.summary.result == BuildResult.Succeeded) WebBrand.Apply(output);
             EditorApplication.Exit(report.summary.result == BuildResult.Succeeded ? 0 : 1);
         }
     }

@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
   const failures = [];
   await new Promise(r => server.listen(0, '127.0.0.1', r)); const port = server.address().port;
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
   const logs = [], errors = [];
   page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
   await page.goto(`http://127.0.0.1:${port}/index.html?${query}`);

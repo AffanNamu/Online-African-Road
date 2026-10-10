@@ -25,7 +25,7 @@ function serve() {
   const failures = [];
   const server = await serve(); const port = server.address().port;
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
   const logs = [], errors = [];
   page.on('console', m => logs.push(m.text()));
   page.on('pageerror', e => errors.push(String(e)));
@@ -39,7 +39,7 @@ function serve() {
   await page.waitForTimeout(6000);
   await page.screenshot({ path: `${prefix}-0-idle.png` });
 
-  await page.mouse.click(640, 360);            // give the canvas keyboard focus
+  await page.mouse.click(512, 288);            // give the canvas keyboard focus
   await page.keyboard.down('w');
   await page.waitForTimeout(10000); await page.screenshot({ path: `${prefix}-1-driving.png` });
   await page.waitForTimeout(14000); await page.screenshot({ path: `${prefix}-2-driving.png` });
