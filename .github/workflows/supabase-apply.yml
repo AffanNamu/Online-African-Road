@@ -1,0 +1,23 @@
+# Applies the database schema to YOUR dedicated Supabase project and verifies RLS/grants on the live database.
+# Needs repository secret SUPABASE_DB_URL (Supabase > Project Settings > Database > Connection string > URI, with the DB password filled in).
+# Safe by design: refuses to run on a database that already has tables with our names that this project did not create.
+name: Supabase apply schema
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type dedicated-project to confirm this Supabase project is used ONLY by African Roads Online'
+        required: true
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirmation
+        run: '[ "${{ github.event.inputs.confirm }}" = "dedicated-project" ] || { echo "Type dedicated-project to confirm."; exit 1; }'
+      - uses: actions/checkout@v4
+      - name: Check secret
+        env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
+        run: '[ -n "$DATABASE_URL" ] || { echo "Add the repository secret SUPABASE_DB_URL first."; exit 1; }'
+      - name: Apply migrations + seed + verify
+        env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
+        run: ./supabase/apply.sh

@@ -1,6 +1,17 @@
 # Development setup
 
-## Backend
+## Backend (live Supabase, all through GitHub - nothing to install)
+Use a **dedicated** Supabase project for this game (the schema adds `profiles`, `jobs`, ... in `public` and a trigger on `auth.users`, so it must
+not share a project with another app). In the GitHub repo set:
+1. Secret `SUPABASE_DB_URL` (Project Settings > Database > Connection string > URI, password filled in). Never paste it in chat or commit it.
+2. Actions > **Supabase apply schema** > Run workflow (type `dedicated-project`): applies the migrations once each, seeds, generates jobs, and verifies RLS/grants on the live DB.
+   It refuses to run if our table names already exist and were not created by it.
+3. Supabase > Authentication > Providers > Email: turn **Confirm email** OFF (the game signs players in immediately).
+4. Variable `SUPABASE_URL` and secret `SUPABASE_ANON_KEY` (the public anon key only; never the service-role key).
+5. Actions > **Backend smoke test**: signs up a throwaway player, tries to cheat (must fail), and delivers a real job in real time (~3 min).
+6. Push (or re-run CI): the WebGL build is then baked with the backend (`-supabaseUrl/-supabaseAnonKey` from the variable/secret above).
+
+## Backend (manual alternative)
 1. Create a Supabase project. Run `supabase/migrations/*.sql` in order, then `supabase/seed.sql`.
 2. Run job generation with the service role (never from the client): `select generate_jobs(20);` — schedule it (pg_cron).
 3. Tests: `PGHOST=localhost PGUSER=postgres PGPASSWORD=... supabase/tests/run.sh` (needs Postgres; also runs in CI).

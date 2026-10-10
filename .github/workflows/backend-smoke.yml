@@ -1,0 +1,17 @@
+# Runs the end-to-end backend smoke test against the LIVE Supabase project (after "Supabase apply schema").
+# Needs repository variable SUPABASE_URL and secret SUPABASE_ANON_KEY (the PUBLIC anon key). Creates one throwaway test player per run.
+name: Backend smoke test
+on: workflow_dispatch
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Live backend end-to-end test
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node tools/backend-smoke.js
