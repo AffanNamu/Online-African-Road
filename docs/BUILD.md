@@ -26,6 +26,11 @@ In the CI editor image (6000.0.58f2): the Hub `.ulf` alone is NOT accepted (`com
 (`Successfully activated the entitlement license`). The `.ulf` contains that serial in its `DeveloperData` field, so `ci.yml` recovers it
 (masked) and passes `UNITY_SERIAL` + `UNITY_EMAIL` + `UNITY_PASSWORD` to GameCI. Secrets still required: `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`.
 
+### Playing / inspecting the WebGL build
+Download the `webgl-build` artifact from the CI run page, unzip it, and serve the folder over HTTP (browsers will not run it from `file://`):
+`python3 -m http.server 8000` in the unzipped folder, then open http://localhost:8000. The `webgl-smoke` CI job does exactly this in headless
+Chromium on every build and fails if the build does not load, throws, never reaches `GameBootstrap`, or renders a blank canvas.
+
 ## Unity Cloud project link
 Unity project name: **African Online Roads**, Cloud project ID `1844ea76-e24a-45de-bcb2-2ec2426f8ff6` (stored in
 `ProjectSettings/ARO_UnityProject.json`; identifiers, not secrets). `ARO.Editor.ProjectLinker` writes the ID into PlayerSettings

@@ -111,3 +111,24 @@ jobs:
           versioning: None   # semantic versioning refuses a dirty tree, and Unity just generated untracked .meta files (run 28)
       - uses: actions/upload-artifact@v4
         with: { name: webgl-build, path: Builds/WebGL, if-no-files-found: error }   # BuildScript writes Builds/WebGL (run 29: the old path build/WebGL was empty)
+
+  webgl-smoke:
+    name: WebGL build boots in a browser
+    needs: unity
+    runs-on: ubuntu-latest
+    if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: webgl-build, path: Builds/WebGL }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Install Playwright + Chromium
+        run: |
+          npm install --no-save playwright@1.49.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Load the build in headless Chromium (software WebGL2) and check it renders
+        run: node tools/webgl-smoke.js Builds/WebGL webgl-smoke.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: webgl-smoke-screenshot, path: webgl-smoke.png, if-no-files-found: ignore }
