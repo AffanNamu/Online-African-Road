@@ -57,6 +57,15 @@ namespace ARO.Game
             var mod = es != null ? es.currentInputModule : null;
             string mouse;
             try { mouse = Input.mousePresent.ToString(); } catch (InvalidOperationException) { mouse = "legacy-input-disabled"; }
+            string backends = "";
+#if ENABLE_INPUT_SYSTEM
+            backends += "InputSystem ";
+            backends += $"(mouse={UnityEngine.InputSystem.Mouse.current != null}, keyboard={UnityEngine.InputSystem.Keyboard.current != null}) ";
+#endif
+#if ENABLE_LEGACY_INPUT_MANAGER
+            backends += "LegacyInput";
+#endif
+            Debug.Log($"[UIDiag] backends compiled: {backends}");
             Debug.Log($"[UIDiag] status: eventSystems={FindObjectsByType<EventSystem>(FindObjectsSortMode.None).Length} " +
                       $"module={(mod != null ? mod.GetType().Name : "none")} mousePresent={mouse} " +
                       $"selected={(es != null && es.currentSelectedGameObject != null ? es.currentSelectedGameObject.name : "none")} " +
