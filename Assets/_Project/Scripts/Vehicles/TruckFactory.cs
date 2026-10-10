@@ -32,7 +32,7 @@ namespace ARO.Vehicles
             var v = root.AddComponent<VehicleController>();
             v.definition = def; v.axles = new[] { front, rear }; v.centerOfMass = com; v.fuelL = def.fuelCapacityL;
             v.Initialize();
-            AddPlaceholderLights(root, v, bodySize);
+            AddPlaceholderLights(root, v, bodySize, bodyMat);
             Finish(root, v, localPlayer);
             return v;
         }
@@ -59,7 +59,7 @@ namespace ARO.Vehicles
             root.AddComponent<EngineAudio>();
         }
 
-        static void AddPlaceholderLights(GameObject root, VehicleController v, Vector3 body)
+        static void AddPlaceholderLights(GameObject root, VehicleController v, Vector3 body, Material baseMat)
         {
             var lights = root.AddComponent<VehicleLights>();
             var heads = new System.Collections.Generic.List<Light>(); var brake = new System.Collections.Generic.List<Renderer>();
@@ -69,19 +69,23 @@ namespace ARO.Vehicles
             {
                 var h = new GameObject("Headlight").AddComponent<Light>(); h.transform.SetParent(root.transform, false);
                 h.transform.localPosition = new Vector3(side * 0.9f, 1.3f, zFront + 1.4f); h.type = LightType.Spot; h.spotAngle = 65; h.range = 60; h.intensity = 8; h.enabled = false; heads.Add(h);
-                brake.Add(Emitter(root, new Vector3(side * 0.95f, 1.5f, zRear), new Vector3(0.35f, 0.2f, 0.05f)));
-                rev.Add(Emitter(root, new Vector3(side * 0.6f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
-                (side < 0 ? left : right).Add(Emitter(root, new Vector3(side * 1.1f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
+                brake.Add(Emitter(root, baseMat, new Vector3(side * 0.95f, 1.5f, zRear), new Vector3(0.35f, 0.2f, 0.05f)));
+                rev.Add(Emitter(root, baseMat, new Vector3(side * 0.6f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
+                (side < 0 ? left : right).Add(Emitter(root, baseMat, new Vector3(side * 1.1f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
             }
             lights.headlights = heads.ToArray(); lights.brakeEmit = brake.ToArray(); lights.reverseEmit = rev.ToArray();
             lights.leftEmit = left.ToArray(); lights.rightEmit = right.ToArray(); lights.headEmit = new Renderer[0];
         }
 
-        static Renderer Emitter(GameObject root, Vector3 pos, Vector3 scale)
+        static Renderer Emitter(GameObject root, Material baseMat, Vector3 pos, Vector3 scale)
         {
             var g = GameObject.CreatePrimitive(PrimitiveType.Cube); Object.Destroy(g.GetComponent<Collider>());
             g.transform.SetParent(root.transform, false); g.transform.localPosition = pos; g.transform.localScale = scale;
-            var r = g.GetComponent<Renderer>(); r.material.EnableKeyword("_EMISSION"); return r;
+            var r = g.GetComponent<Renderer>();
+            // The primitive's default material uses the built-in Standard shader, which a URP player build does not contain (renders magenta).
+            // Derive from the (URP) body material instead.
+            if (baseMat != null) { var m = new Material(baseMat); m.color = new Color(0.25f, 0.03f, 0.03f); if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", m.color); r.sharedMaterial = m; }
+            r.material.EnableKeyword("_EMISSION"); return r;
         }
 
         static WheelAxle MakeAxle(GameObject root, float z, float track, float spring, Material mat, bool steer, bool drive)

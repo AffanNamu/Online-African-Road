@@ -32,6 +32,25 @@ namespace ARO.Game
 
         async Task StartUp()
         {
+            if (SmokeMode.Dashboard)
+            {   // CI preview only: fixture data so the layout can be screenshotted without an account
+                await Task.Yield();
+                _svc.Profile = new ProfileDto { id = "fixture", display_name = "Demo Driver", level = 5, experience = 2050, jobs_completed = 12, distance_km = 140 };
+                _svc.Wallet = new WalletDto { player_id = "fixture", balance = 48750 };
+                _svc.Definitions = new[] { new VehicleDefDto { id = "truck_light_01", category = "truck", name = "Savanna 4x2 Light Truck", fuel_capacity_l = 120, max_speed_kmh = 110 } };
+                _svc.Vehicles = new[] { new OwnedVehicleDto { id = "fixture-truck", definition_id = "truck_light_01", fuel_l = 90, damage_pct = 4 } };
+                LocationDto L(string n) => new LocationDto { slug = n, name = n };
+                _fixtureJobs = new[]
+                {
+                    new JobDto { id = "1", code = "AFR-000101", cargo_type = "Electronics", required_category = "truck", difficulty = 3, distance_km = 3.0, reward = 266, origin = L("Apapa Port Depot"), destination = L("Mile 12 Market") },
+                    new JobDto { id = "2", code = "AFR-000102", cargo_type = "Fuel Drums", required_category = "truck", difficulty = 2, distance_km = 4.4, reward = 410, origin = L("Mile 12 Market"), destination = L("Ikeja Industrial Estate") },
+                    new JobDto { id = "3", code = "AFR-000103", cargo_type = "Building Materials", required_category = "truck", difficulty = 4, distance_km = 6.1, reward = 780, origin = L("Ikeja Industrial Estate"), destination = L("Ojoo Freight Depot") },
+                    new JobDto { id = "4", code = "AFR-000104", cargo_type = "Food & Produce", required_category = "truck", difficulty = 5, distance_km = 9.8, reward = 1260, origin = L("Ojoo Freight Depot"), destination = L("Bodija Market") },
+                };
+                Debug.Log("[Smoke] dashboard scenario: fixture data, no sign-in");
+                ShowMenu();
+                return;
+            }
             if (SmokeMode.Drive)
             {
                 await Task.Yield();
@@ -63,7 +82,7 @@ namespace ARO.Game
             }
         }
 
-        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; }
+        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); }
 
         // ---------------------------------------------------------------- panels
         RectTransform NewPanel(string title, float h = 760f)
@@ -99,6 +118,7 @@ namespace ARO.Game
         {
             if (_panel != null) Destroy(_panel.gameObject);
             if (_login != null) Destroy(_login.gameObject);
+            if (_dash != null) Destroy(_dash.gameObject);
             _canvas.gameObject.SetActive(false);   // the login screen is a full-screen canvas of its own
             _login = LoginScreen.Create(_svc, async () =>
             {
@@ -116,24 +136,45 @@ namespace ARO.Game
             ShowMenu();
         }
 
-        // ---------------------------------------------------------------- menu
+        // ---------------------------------------------------------------- menu = the dashboard
+        DashboardScreen _dash; JobDto[] _fixtureJobs;
+
         void ShowMenu()
         {
-            var p = NewPanel("Welcome, " + _svc.Profile.display_name);
-            string stats = $"Level {_svc.Profile.level}  ·  {_svc.Wallet.balance:N0} coins  ·  {_svc.Profile.jobs_completed} jobs  ·  {_svc.Profile.distance_km:F1} km";
-            UIKit.Label(p, stats, 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
-            if (_drive.Vehicle != null) UIKit.Btn(p, "RESUME DRIVING", Resume);
-            UIKit.Btn(p, _drive.Vehicle != null ? "JOB BOARD" : "DRIVE · JOB BOARD", () => _ = ShowJobs(), _drive.Vehicle == null);
-            UIKit.Btn(p, _bus.Active ? "BUS ROUTE (in progress)" : "BUS ROUTES", () => _ = ShowBus(), false);
-            UIKit.Btn(p, "SHOP", ShowShop, false);
-            UIKit.Btn(p, "GARAGE", ShowGarage, false);
-            UIKit.Btn(p, "CONVOY", () => _ = ShowConvoy(), false);
-            UIKit.Btn(p, "PROFILE", ShowProfile, false);
-            if (_drive.Vehicle == null) UIKit.Btn(p, "FREE DRIVE", () => StartDrive(null), false);
-            UIKit.Btn(p, "SIGN OUT", () => { _svc.Api.SignOut(); ShowLogin(null); }, false, 44);
+            if (_panel != null) { Destroy(_panel.gameObject); _panel = null; }
+            _canvas.gameObject.SetActive(false);
+            if (_dash != null) Destroy(_dash.gameObject);
+            _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions(), _fixtureJobs);
         }
 
-        void Resume() { _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false); }
+        void OpenPanel(System.Action show) { if (_dash != null) _dash.gameObject.SetActive(false); _canvas.gameObject.SetActive(true); show(); }
+        void HideMenus() { _canvas.gameObject.SetActive(false); if (_dash != null) _dash.gameObject.SetActive(false); }
+
+        DashboardActions DashActions() => new DashboardActions
+        {
+            Jobs = () => OpenPanel(() => _ = ShowJobs()), Garage = () => OpenPanel(ShowGarage), Shop = () => OpenPanel(ShowShop),
+            Convoy = () => OpenPanel(() => _ = ShowConvoy()), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
+            FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
+            Resume = Resume,
+            SignOut = () => { _svc.Api.SignOut(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
+            AcceptJob = job => _ = AcceptJob(job),
+            QuickJob = () => _ = QuickJob(),
+        };
+
+        /// <summary>One tap: take the best-paying open job the player has a vehicle for.</summary>
+        async Task QuickJob()
+        {
+            if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
+            Toast("Finding a job...");
+            var r = await _svc.Jobs.LoadBoard();
+            if (!r.Ok) { Toast(r.UserMessage, 5f); return; }
+            JobDto best = null;
+            foreach (var j in r.Value) if (FindVehicleFor(j.required_category) != null && (best == null || j.reward > best.reward)) best = j;
+            if (best == null) { Toast("No open job matches a vehicle you own."); return; }
+            await AcceptJob(best);
+        }
+
+        void Resume() { HideMenus(); _hud.SetVisible(true); _drive.Pause(false); }
 
         /// <summary>Enter the world. A job needs its own vehicle (the one the server assigned); free drive uses the first truck.</summary>
         void StartDrive(JobDto job, string assignmentId = null, OwnedVehicleDto vehicle = null)
@@ -142,7 +183,7 @@ namespace ARO.Game
             if (owned != null && owned.id != _drive.VehicleId) _drive.Enter(owned);
             if (_drive.Vehicle == null) { Toast("You do not own a vehicle."); return; }
             if (job != null) _drive.BeginJob(job, assignmentId);
-            _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
+            HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
         }
 
         OwnedVehicleDto FirstTruckOrAny() => FindVehicleFor("truck") ?? (_svc.Vehicles.Length > 0 ? _svc.Vehicles[0] : null);
@@ -282,7 +323,7 @@ namespace ARO.Game
             if (_busy) return; _busy = true; Toast("Starting route...");
             string err = await _bus.Begin(route, bus); _busy = false;
             if (err != null) { Toast(err, 6f); await ShowBus(); return; }
-            _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
+            HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
         }
 
         // ---------------------------------------------------------------- shop

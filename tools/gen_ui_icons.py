@@ -138,3 +138,92 @@ sheet = Image.new("RGBA", (9 * 144, 2 * 144), (30, 30, 36, 255))
 for i, n in enumerate(names):
     ic = Image.open(f"{OUT}/{n}.png").convert("RGBA").resize((128, 128)); sheet.alpha_composite(ic, ((i % 9) * 144 + 8, (i // 9) * 144 + 8))
 sheet.save("/tmp/icon_sheet.png"); print("icons ->", OUT)
+
+# ---------------------------------------------------------------- dashboard glyph set (white, tinted in code)
+def ic(name):
+    def deco(fn):
+        def run():
+            im, d = canvas(); fn(im, d); save(im, name)
+        run.__name__ = name; GLYPHS.append(run); return run
+    return deco
+GLYPHS = []
+def poly(d, pts, col=WHITE): d.polygon([P(*p) for p in pts], fill=col)
+def rrect(d, a, b, r, col=WHITE, outline=None, w=0): d.rounded_rectangle([P(*a), P(*b)], radius=r * M, fill=col, outline=outline, width=int(w * M))
+def circle(d, c, r, col=WHITE, outline=None, w=0): d.ellipse([P(c[0] - r, c[1] - r), P(c[0] + r, c[1] + r)], fill=col, outline=outline, width=int(w * M))
+def cut(im, fn):
+    m = Image.new("L", (M, M), 0); fn(ImageDraw.Draw(m)); a = Image.composite(Image.new("L", (M, M), 0), im.split()[3], m); im.putalpha(a)
+
+@ic("ic_home")
+def _(im, d):
+    poly(d, [(.5, .12), (.92, .50), (.82, .50), (.82, .86), (.18, .86), (.18, .50), (.08, .50)]); cut(im, lambda c: c.rectangle([P(.42, .56), P(.58, .86)], fill=255))
+@ic("ic_jobs")
+def _(im, d):
+    rrect(d, (.38, .18), (.62, .34), .03, (0, 0, 0, 0), WHITE, .06); rrect(d, (.10, .30), (.90, .82), .07); cut(im, lambda c: (c.rectangle([P(.10, .52), P(.90, .55)], fill=255), c.rounded_rectangle([P(.44, .47), P(.56, .62)], radius=.02 * M, fill=255)))
+@ic("ic_people")
+def _(im, d):
+    for cx, cy, r, bw in [(.5, .30, .13, .26), (.2, .40, .09, .17), (.8, .40, .09, .17)]:
+        circle(d, (cx, cy), r); rrect(d, (cx - bw, cy + r + .03), (cx + bw, cy + r + .03 + bw * 1.8), bw * .8)
+@ic("ic_bus")
+def _(im, d):
+    rrect(d, (.14, .14), (.86, .80), .10); cut(im, lambda c: (c.rounded_rectangle([P(.22, .22), P(.78, .50)], radius=.04 * M, fill=255), c.ellipse([P(.24, .60), P(.34, .70)], fill=255), c.ellipse([P(.66, .60), P(.76, .70)], fill=255)))
+    rrect(d, (.20, .76), (.34, .92), .03); rrect(d, (.66, .76), (.80, .92), .03)
+@ic("ic_wrench")
+def _(im, d):
+    line(d, [(.30, .72), (.62, .40)], .15); circle(d, (.66, .34), .20); cut(im, lambda c: (c.ellipse([P(.60, .22), P(.82, .44)], fill=255), c.polygon([P(.72, .30), P(.96, .06), P(.96, .36), P(.72, .36)], fill=255)))
+    circle(d, (.24, .78), .08)
+@ic("ic_map")
+def _(im, d):
+    poly(d, [(.10, .22), (.36, .12), (.64, .22), (.90, .12), (.90, .78), (.64, .88), (.36, .78), (.10, .88)]); cut(im, lambda c: (c.line([P(.36, .16), P(.36, .78)], fill=255, width=int(.05 * M)), c.line([P(.64, .24), P(.64, .86)], fill=255, width=int(.05 * M))))
+@ic("ic_trophy")
+def _(im, d):
+    poly(d, [(.26, .12), (.74, .12), (.70, .46), (.5, .62), (.30, .46)]); d.arc([P(.06, .16), P(.34, .44)], 90, 270, fill=WHITE, width=int(.055 * M)); d.arc([P(.66, .16), P(.94, .44)], 270, 90, fill=WHITE, width=int(.055 * M))
+    rrect(d, (.44, .58), (.56, .76), .02); rrect(d, (.30, .76), (.70, .88), .03)
+@ic("ic_cart")
+def _(im, d):
+    line(d, [(.08, .16), (.22, .16), (.32, .62), (.78, .62), (.88, .28), (.26, .28)], .07); circle(d, (.38, .80), .07); circle(d, (.72, .80), .07)
+@ic("ic_gear")
+def _(im, d):
+    for a in range(0, 360, 45):
+        ax, ay = math.cos(math.radians(a)), math.sin(math.radians(a)); line(d, [(.5 + ax * .26, .5 + ay * .26), (.5 + ax * .40, .5 + ay * .40)], .13)
+    circle(d, (.5, .5), .30); cut(im, lambda c: c.ellipse([P(.36, .36), P(.64, .64)], fill=255))
+@ic("ic_bell")
+def _(im, d):
+    poly(d, [(.20, .72), (.28, .68), (.28, .44)]); d.pieslice([P(.24, .12), P(.76, .64)], 180, 360, fill=WHITE); rrect(d, (.24, .38), (.76, .72), .02); rrect(d, (.14, .68), (.86, .78), .04); circle(d, (.5, .86), .08); circle(d, (.5, .12), .05)
+@ic("ic_coin")
+def _(im, d):
+    circle(d, (.5, .5), .42); cut(im, lambda c: c.ellipse([P(.18, .18), P(.82, .82)], fill=255)); circle(d, (.5, .5), .34)
+    cut(im, lambda c: (c.rectangle([P(.46, .22), P(.54, .78)], fill=255), c.arc([P(.32, .28), P(.68, .52)], 90, 360, fill=255, width=int(.07 * M)), c.arc([P(.32, .48), P(.68, .74)], 270, 180, fill=255, width=int(.07 * M))))
+@ic("ic_crown")
+def _(im, d):
+    poly(d, [(.10, .72), (.14, .30), (.34, .52), (.5, .22), (.66, .52), (.86, .30), (.90, .72)]); rrect(d, (.10, .76), (.90, .88), .03)
+@ic("ic_pin")
+def _(im, d):
+    d.pieslice([P(.22, .10), P(.78, .66)], 180, 360, fill=WHITE); d.ellipse([P(.22, .10), P(.78, .66)], fill=WHITE); poly(d, [(.26, .52), (.74, .52), (.5, .92)]); cut(im, lambda c: c.ellipse([P(.40, .24), P(.60, .44)], fill=255))
+@ic("ic_chevron_right")
+def _(im, d): line(d, [(.36, .20), (.66, .50), (.36, .80)], .11)
+@ic("ic_bars")
+def _(im, d):
+    for i, h in enumerate((.30, .50, .70)): rrect(d, (.16 + i * .26, .84 - h), (.34 + i * .26, .84), .03)
+@ic("ic_box")
+def _(im, d):
+    d.polygon([P(.50, .10), P(.88, .28), P(.50, .46), P(.12, .28)], outline=WHITE, width=int(.06 * M)); line(d, [(.12, .28), (.12, .70), (.50, .90), (.88, .70), (.88, .28)], .06); line(d, [(.5, .46), (.5, .90)], .06)
+@ic("ic_road")
+def _(im, d):
+    poly(d, [(.38, .10), (.62, .10), (.90, .90), (.10, .90)]); cut(im, lambda c: [c.rectangle([P(.47, .18 + k * .24), P(.53, .30 + k * .24)], fill=255) for k in range(3)])
+@ic("ic_arrow_up")
+def _(im, d): line(d, [(.5, .86), (.5, .18)], .12); line(d, [(.22, .46), (.5, .16), (.78, .46)], .12)
+@ic("ic_dollar")
+def _(im, d):
+    line(d, [(.5, .08), (.5, .92)], .08); d.arc([P(.26, .18), P(.74, .50)], 90, 360, fill=WHITE, width=int(.10 * M)); d.arc([P(.26, .50), P(.74, .82)], 270, 180, fill=WHITE, width=int(.10 * M))
+@ic("ic_news")
+def _(im, d):
+    rrect(d, (.14, .16), (.86, .84), .05, (0, 0, 0, 0), WHITE, .06); line(d, [(.26, .34), (.74, .34)], .06); line(d, [(.26, .50), (.74, .50)], .05); line(d, [(.26, .66), (.56, .66)], .05)
+@ic("ic_lightning")
+def _(im, d): poly(d, [(.58, .06), (.22, .54), (.46, .54), (.38, .94), (.78, .40), (.52, .40)])
+@ic("ic_check_circle")
+def _(im, d): circle(d, (.5, .5), .40); cut(im, lambda c: c.line([P(.30, .52), P(.45, .66), P(.72, .36)], fill=255, width=int(.09 * M)))
+for g in GLYPHS: g()
+sheet2 = Image.new("RGBA", (9 * 144, 3 * 144), (30, 30, 36, 255))
+for i, g in enumerate(GLYPHS):
+    icon = Image.open(f"{OUT}/{g.__name__}.png").convert("RGBA").resize((128, 128)); sheet2.alpha_composite(icon, ((i % 9) * 144 + 8, (i // 9) * 144 + 8))
+sheet2.save("/tmp/icon_sheet2.png"); print("dashboard glyphs:", len(GLYPHS))

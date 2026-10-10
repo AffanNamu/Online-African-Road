@@ -8,6 +8,7 @@ namespace ARO.Game
     /// </summary>
     public static class SmokeMode
     {
+        public static bool Dashboard => Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=dashboard");
         public static bool Drive => Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=drive");
     }
 }

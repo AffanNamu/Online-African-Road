@@ -137,6 +137,9 @@ jobs:
       - name: Drive scenario (?smoke=drive) - the truck must land on real ground, accelerate and move
         if: always()
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive
+      - name: Dashboard scenario (?smoke=dashboard) - fixture data, layout screenshot, sidebar click
+        if: always()
+        run: node tools/webgl-shot.js Builds/WebGL "smoke=dashboard" '\[Dashboard\] built' webgl-dashboard
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: webgl-smoke-screenshot, path: "webgl-*.png", if-no-files-found: ignore }
