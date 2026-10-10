@@ -48,6 +48,38 @@ function serve() {
   await page.waitForTimeout(15000);   // let the bootstrap scene run: GameBootstrap.Start, streamer, menus
   await page.screenshot({ path: shot });
 
+  // ---- UI interaction: the login screen must react to a mouse click and to typing (positions are fractions of the Unity canvas).
+  const interact = process.env.INTERACT !== '0';
+  async function frame(file) { await page.screenshot({ path: file }); return PNG.sync.read(fs.readFileSync(file)); }
+  function diffCount(a, b, box, fx0, fy0, fx1, fy1) {
+    let n = 0;
+    for (let y = Math.floor(box.y + fy0 * box.height); y < Math.floor(box.y + fy1 * box.height); y++)
+      for (let x = Math.floor(box.x + fx0 * box.width); x < Math.floor(box.x + fx1 * box.width); x++) {
+        const i = (y * a.width + x) * 4;
+        if (Math.abs(a.data[i] - b.data[i]) + Math.abs(a.data[i + 1] - b.data[i + 1]) + Math.abs(a.data[i + 2] - b.data[i + 2]) > 60) n++;
+      }
+    return n;
+  }
+  if (interact && loaded) {
+    const box = await page.locator('#unity-canvas').boundingBox();
+    const at = (fx, fy) => [box.x + fx * box.width, box.y + fy * box.height];
+    const before = await frame(shot.replace('.png', '-0-start.png'));
+    await page.mouse.click(...at(0.5, 0.606));              // CREATE ACCOUNT with an empty password -> a red validation message appears
+    await page.waitForTimeout(1500);
+    const afterClick = await frame(shot.replace('.png', '-1-clicked.png'));
+    const msgPixels = diffCount(before, afterClick, box, 0.40, 0.46, 0.60, 0.52);
+    console.log(`click test: ${msgPixels} pixels changed where the validation message should appear`);
+    if (msgPixels < 150) failures.push('clicking CREATE ACCOUNT did nothing (the UI is not receiving mouse input)');
+    await page.mouse.click(...at(0.5, 0.32));               // focus the Email field and type into it
+    await page.waitForTimeout(500);
+    await page.keyboard.type('player@example.com', { delay: 50 });
+    await page.waitForTimeout(800);
+    const afterType = await frame(shot.replace('.png', '-2-typed.png'));
+    const typedPixels = diffCount(afterClick, afterType, box, 0.39, 0.30, 0.61, 0.345);
+    console.log(`typing test: ${typedPixels} pixels changed inside the Email field`);
+    if (typedPixels < 150) failures.push('typing into the Email field did nothing (the UI is not receiving keyboard input)');
+  }
+
   const png = PNG.sync.read(fs.readFileSync(shot));
   const buckets = new Map(); let n = 0;
   for (let i = 0; i < png.data.length; i += 4 * 7) {   // sample every 7th pixel
