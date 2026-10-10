@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 namespace ARO.Game
@@ -26,9 +25,9 @@ namespace ARO.Game
             s.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; s.referenceResolution = new Vector2(1920, 1080); s.matchWidthOrHeight = 0.5f;
             if (Object.FindFirstObjectByType<EventSystem>() == null)
             {
-                var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-                // A module added from code has NO actions assigned (only the editor menu does that); without this, clicks and typing never reach the UI.
-                es.GetComponent<InputSystemUIInputModule>().AssignDefaultActions();
+                // Legacy module on purpose: the project uses the old Input Manager (the new Input System package has no devices in the player,
+                // proven by CI diagnostics: mouse/keyboard/pointer all null), and the legacy uGUI InputField needs it for typing anyway.
+                var es = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
                 es.AddComponent<UIDiagnostics>();
             }
             return c;
