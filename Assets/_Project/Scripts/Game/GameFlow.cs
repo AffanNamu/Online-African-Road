@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ARO.Backend;
 using ARO.Core;
 using ARO.Multiplayer;
+using ARO.NetCore;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ namespace ARO.Game
         GameServices _svc; DrivingSession _drive; Hud _hud; BusSession _bus;
         Canvas _canvas; RectTransform _panel; Text _toast; float _toastUntil;
         bool _busy;
+        readonly NoticeLog _notices = new NoticeLog(20);   // what the bell on the dashboard lists: payouts, server messages, errors
 
         public void Init(GameServices svc, DrivingSession drive, Hud hud, BusSession bus)
         {
@@ -24,9 +26,9 @@ namespace ARO.Game
             _canvas = UIKit.CreateCanvas("Menus", 10);
             UIKit.Box(_canvas.transform, "Backdrop", new Color(0.03f, 0.04f, 0.06f, 0.78f), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
-            _drive.JobCompleted += async _ => { await _svc.RefreshPlayer(); };
+            _drive.JobCompleted += async r => { if (r != null) _notices.Add($"Job complete: +{r.reward:N0} coins, +{r.xp:N0} XP", NoticeLevel.Good, Time.unscaledTime); await _svc.RefreshPlayer(); };
             _bus.RunCompleted += async _ => { await _svc.RefreshPlayer(); };
-            _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f); };
+            _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f, NoticeLevel.Info); };
             _ = StartUp();
         }
 
@@ -70,7 +72,7 @@ namespace ARO.Game
             }
         }
 
-        void Toast(string m, float s = 4f) { _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); if (_map != null) _map.Notify(m, s); }
+        void Toast(string m, float s = 4f, NoticeLevel? log = null) { if (log.HasValue) _notices.Add(m, log.Value, Time.unscaledTime); _toast.text = m; _toastUntil = Time.unscaledTime + s; if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.Toast(m, s); if (_map != null) _map.Notify(m, s); }
 
         // ---------------------------------------------------------------- panels
         RectTransform NewPanel(string title, float h = 760f)
@@ -130,6 +132,7 @@ namespace ARO.Game
 
         void LoadFixture()
         {
+            _notices.Add("Preview mode: the dashboard is showing demo data", NoticeLevel.Info, Time.unscaledTime);   // dev fixture so the notice list is not empty in CI screenshots
             _svc.Profile = new ProfileDto { id = "fixture", display_name = "Demo Driver", level = 5, experience = 2050, jobs_completed = 12, distance_km = 140 };
             _svc.Wallet = new WalletDto { player_id = "fixture", balance = 48750 };
             _svc.Definitions = new[] { new VehicleDefDto { id = "truck_light_01", category = "truck", name = "Savanna 4x2 Light Truck", fuel_capacity_l = 120, max_speed_kmh = 110 } };
@@ -150,7 +153,7 @@ namespace ARO.Game
             _canvas.gameObject.SetActive(false);
             if (_dash != null) Destroy(_dash.gameObject);
             if (_map != null) { Destroy(_map.gameObject); _map = null; }
-            _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions(), _fixtureJobs);
+            _dash = DashboardScreen.Create(_svc, _drive, _bus, DashActions(), _fixtureJobs, _notices);
         }
 
         void OpenPanel(System.Action show) { if (_dash != null) _dash.gameObject.SetActive(false); _canvas.gameObject.SetActive(true); show(); }
@@ -193,7 +196,7 @@ namespace ARO.Game
             if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
             Toast("Finding a job...");
             var r = await _svc.Jobs.LoadBoard();
-            if (!r.Ok) { Toast(r.UserMessage, 5f); return; }
+            if (!r.Ok) { Toast(r.UserMessage, 5f, NoticeLevel.Bad); return; }
             JobDto best = null;
             foreach (var j in r.Value) if (FindVehicleFor(j.required_category) != null && (best == null || j.reward > best.reward)) best = j;
             if (best == null) { Toast("No open job matches a vehicle you own."); return; }
@@ -242,7 +245,7 @@ namespace ARO.Game
             var owned = FindVehicleFor(job.required_category);
             if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return false; }
             _busy = true; var r = await _svc.Jobs.Accept(job.id, owned.id); _busy = false;
-            if (!r.Ok) { Toast(r.UserMessage, 6f); if (showBoardOnError) await ShowJobs(); return false; }
+            if (!r.Ok) { Toast(r.UserMessage, 6f, NoticeLevel.Bad); if (showBoardOnError) await ShowJobs(); return false; }
             StartDrive(job, r.Value, owned); return true;
         }
 
@@ -272,7 +275,7 @@ namespace ARO.Game
         async Task Service(System.Func<Task<Result<string>>> call, string ok)
         {
             if (_busy) return; _busy = true; var r = await call(); _busy = false;
-            Toast(r.Ok ? ok : r.UserMessage, 5f);
+            Toast(r.Ok ? ok : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad);
             await _svc.RefreshPlayer(); ShowGarage();
         }
 
@@ -301,14 +304,14 @@ namespace ARO.Game
             {
                 if (shown++ >= 4) break; var convoy = c;
                 UIKit.Btn(p, $"{convoy.name}  ·  led by {(convoy.leader != null ? convoy.leader.display_name : "?")}  ·  {convoy.Members}/{SessionService.MaxPlayers}",
-                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f); await ShowConvoy(); }, false, 60);
+                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad); await ShowConvoy(); }, false, 60);
             }
             var nameField = UIKit.Input(p, "New convoy name");
             UIKit.Btn(p, "CREATE CONVOY", async () =>
             {
                 if (_busy) return; _busy = true; Toast("Creating convoy session...");
                 var r = await _svc.Convoys.Create(nameField.text); _busy = false;
-                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f); await ShowConvoy();
+                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad); await ShowConvoy();
             });
             UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
             UIKit.Btn(p, "BACK", ShowMenu, false, 48);
@@ -348,7 +351,7 @@ namespace ARO.Game
         {
             if (_busy) return; _busy = true; Toast("Starting route...");
             string err = await _bus.Begin(route, bus); _busy = false;
-            if (err != null) { Toast(err, 6f); await ShowBus(); return; }
+            if (err != null) { Toast(err, 6f, NoticeLevel.Bad); await ShowBus(); return; }
             HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
         }
 
@@ -374,7 +377,7 @@ namespace ARO.Game
             if (_busy) return;
             if (_svc.Wallet.balance < def.price) { Toast($"Not enough money: {def.name} costs {def.price:N0} coins."); return; }
             _busy = true; var r = await _svc.Bus.BuyVehicle(def.id); _busy = false;
-            Toast(r.Ok ? $"Bought {def.name}." : r.UserMessage, 5f);
+            Toast(r.Ok ? $"Bought {def.name}." : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad);
             await _svc.RefreshPlayer(); ShowShop();
         }
 

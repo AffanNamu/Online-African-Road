@@ -17,6 +17,17 @@ namespace ARO.Game
         /// <summary>UV rect from top-left coordinates (RawImage UVs start at the bottom-left).</summary>
         public static Rect Top(float x, float yTop, float w, float h) => new Rect(x, 1f - yTop - h, w, h);
 
+        /// <summary>
+        /// UV rect for a crop of `t`: x and yTop (fractions from the top-left), width as a fraction of the texture, and the aspect ratio (w/h) of the frame it will fill,
+        /// so the crop is never stretched. The crop is kept inside the texture.
+        /// </summary>
+        public static Rect Cover(Texture t, float x, float yTop, float w, float frameAspect)
+        {
+            if (t == null || t.height <= 0 || frameAspect <= 0f) return new Rect(0, 0, 1, 1);
+            w = Mathf.Clamp(w, 0.05f, 1f); float h = Mathf.Min(1f, w * t.width / frameAspect / t.height);
+            return Top(Mathf.Clamp(x, 0f, 1f - w), Mathf.Clamp(yTop, 0f, 1f - h), w, h);
+        }
+
         public static RectTransform Place(GameObject go, Transform parent, Anchor a, float x, float y, float w, float h)
         {
             go.transform.SetParent(parent, false);
@@ -137,17 +148,20 @@ namespace ARO.Game
     }
 
     /// <summary>Subtle hover feedback for click areas: brightens the sibling-visible card by raising its parent's CanvasGroup-free tint.</summary>
-    public sealed class HoverGlow : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler
+    public sealed class HoverGlow : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler, UnityEngine.EventSystems.IPointerDownHandler, UnityEngine.EventSystems.IPointerUpHandler
     {
-        Image _glow;
+        Image _glow; bool _over;
         void Awake()
         {
             var go = new GameObject("Glow", typeof(RectTransform), typeof(Image)); go.transform.SetParent(transform, false);
             var rt = (RectTransform)go.transform; rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
             _glow = go.GetComponent<Image>(); _glow.sprite = UIGfx.Glass; _glow.type = Image.Type.Sliced; _glow.pixelsPerUnitMultiplier = 1.2f; _glow.color = new Color(1, 1, 1, 0f); _glow.raycastTarget = false;
         }
-        public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData e) { if (_glow != null) _glow.color = new Color(1f, 0.85f, 0.4f, 0.10f); }
-        public void OnPointerExit(UnityEngine.EventSystems.PointerEventData e) { if (_glow != null) _glow.color = new Color(1, 1, 1, 0f); }
+        public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData e) { _over = true; if (_glow != null) _glow.color = new Color(1f, 0.85f, 0.4f, 0.10f); }
+        public void OnPointerExit(UnityEngine.EventSystems.PointerEventData e) { _over = false; if (_glow != null) _glow.color = new Color(1, 1, 1, 0f); }
+        // press feedback: a stronger flash that settles back to the hover state
+        public void OnPointerDown(UnityEngine.EventSystems.PointerEventData e) { if (_glow != null) _glow.color = new Color(1f, 0.85f, 0.4f, 0.26f); }
+        public void OnPointerUp(UnityEngine.EventSystems.PointerEventData e) { if (_glow != null) _glow.color = _over ? new Color(1f, 0.85f, 0.4f, 0.10f) : new Color(1, 1, 1, 0f); }
         void OnDisable() { if (_glow != null) _glow.color = new Color(1, 1, 1, 0f); }
     }
 
