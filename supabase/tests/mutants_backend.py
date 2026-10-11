@@ -71,9 +71,9 @@ def make(sub, resub):
     # ------------------------------------------------------------------ vehicles + jobs
     M["vehicle: rename ownership removed"] = ("vehjobs", lambda t: sub(t, "set nickname = nullif(trim(p_name), '') where id = p_vehicle and player_id = auth.uid();", "set nickname = nullif(trim(p_name), '') where id = p_vehicle;"))
     M["vehicle: set_active ownership removed"] = ("vehjobs", lambda t: sub(t, "if not exists (select 1 from vehicle_ownership where id = p_vehicle and player_id = auth.uid()) then raise exception 'vehicle_not_owned'; end if;", ""))
-    M["vehicle: customization ownership removed"] = ("vehjobs", lambda t: sub(t, "update vehicle_ownership set customization = p_data where id = p_vehicle and player_id = auth.uid();", "update vehicle_ownership set customization = p_data where id = p_vehicle;"))
-    M["vehicle: customization accepts any key"] = ("vehjobs", lambda t: sub(t, "if k not in ('color','livery','plate') then raise exception 'invalid_customization'; end if;", ""))
-    M["vehicle: customization colour not validated"] = ("vehjobs", lambda t: sub(t, "if k = 'color'  and (v #>> '{}') !~ '^#[0-9a-fA-F]{6}$' then raise exception 'invalid_customization'; end if;", ""))
+    M["vehicle: customization ownership removed"] = ("garage", lambda t: sub(t, "|| p_data where id = p_vehicle and player_id = auth.uid();", "|| p_data where id = p_vehicle;"))
+    M["vehicle: customization accepts any key"] = ("garage", lambda t: sub(t, "if k not in ('color','livery','plate') then raise exception 'invalid_customization'; end if;", ""))
+    M["vehicle: customization colour not validated"] = ("garage", lambda t: sub(t, "if k = 'color'  and (v #>> '{}') !~ '^#[0-9a-fA-F]{6}$' then raise exception 'invalid_customization'; end if;", ""))
     M["vehicle: damaged vehicle reported ready"] = ("vehjobs", lambda t: sub(t, "if v.damage_pct >= 70 then return 'needs_repair'; end if;", ""))
     M["vehicle: low fuel not reported"] = ("vehjobs", lambda t: sub(t, "if v_fuel_pct < 10 then return 'low_fuel'; end if;", ""))
     M["job: level requirement ignored"] = ("vehjobs", lambda t: sub(t, "if v_level < j.min_level then raise exception 'level_too_low'; end if;", ""))
