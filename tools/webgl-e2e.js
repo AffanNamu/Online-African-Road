@@ -614,15 +614,15 @@ const allErrors = [], allExc = [];
     await c.click('Btn_FriTab_Find'); await c.settle(); await c.page.screenshot({ path: `${prefix}-67-friends-find.png` });
     m = c.logs.length; await c.click('Fri_Search_Input'); await sleep(500); await c.page.keyboard.type('nobody_here', { delay: 100 }); await sleep(600); await c.click('Btn_FriFindGo');
     check(!!(await c.waitLog(/\[Friends\] find "nobody_here" result=not_found/, m, 60)), 'a username that does not exist is reported as not found'); await c.settle(); await c.page.screenshot({ path: `${prefix}-68-friends-notfound.png` });
-    for (let i = 0; i < 11; i++) await c.page.keyboard.press('Backspace');
+    await c.click('Fri_Search_Input'); await sleep(500); await wipe(c);                              // the box lost focus when the search ran: focus it again and empty it
     m = c.logs.length; await c.page.keyboard.type('browserfx', { delay: 100 }); await sleep(600); await c.click('Btn_FriFindGo');
     check(!!(await c.waitLog(/\[Friends\] find "browserfx" result=found status=none/, m, 60)), 'an exact username is found by the server');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-69-friends-found.png` }); m = c.logs.length; await c.click('Btn_FriAddFriend_browserfx');
     check(!!(await c.waitLog(/\[Friends\] add id=browserfx ok=True status=pending/, m, 60)), 'Add Friend on a search result: the server accepted');
     check(db(`select status from friendships where requester_id = '${fin.id}' and addressee_id = '${fx.id}'`) === 'pending', 'the request is pending in the database');
 
-    // profiles, from the server
-    await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriProfile_browserfg');
+    // profiles, from the server (the list is shown again with an empty search box)
+    await c.click('Fri_Search_Input'); await sleep(500); await wipe(c); await sleep(800); await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriProfile_browserfg');
     const pv = await c.waitLog(/\[Friends\] profile id=browserfg ok=True level=(\d+) jobs=(\d+) status=friends/, m, 60); check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-70-friends-profile.png` }); tg = c.targets(); check(!!tg['Btn_FriProfileInvite'] && !!tg['Btn_FriProfileRemove'], 'the profile of a friend offers Invite to Convoy and Remove Friend');
     await c.click('Btn_CloseDialog'); await c.settle(); m = c.logs.length; await c.click('Btn_FriMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserfin ok=True .*status=self/, m, 60)), 'View Profile on your own card shows your public profile');
