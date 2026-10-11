@@ -169,6 +169,8 @@ def main():
             ("get_content(news)", A, "select get_content('news')::text", "ContentList"),
             ("get_content(hero)", A, "select get_content('hero')::text", "ContentList"),
             ("get_leaderboard", A, "select get_leaderboard('xp')::text", "LeaderboardPage"),
+            ("get_friends_leaderboard", A, "select get_friends_leaderboard('xp')::text", "LeaderboardPage"),
+            ("search_leaderboard", A, "select search_leaderboard('xp', 'all', 'cta')::text", "LeaderboardPage"),
         ]
         # an active job for the get_my_active_job shape, accepted by user E
         as_user(E, "select accept_job((select id from jobs where code = 'CT-2'), (select id from vehicle_ownership where player_id = auth.uid()))")

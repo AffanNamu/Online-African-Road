@@ -261,3 +261,24 @@ Nothing on the page is hard-coded: every count, name, level, online state, activ
 
 **Tests.** SQL `45_person_vehicle.sql` (a friend and yourself see the vehicle, strangers and people met in passing never do, the selected vehicle is the one shown, no coins or e-mail) + 3 mutants; xunit `FriendsModelTests` (85); API contract and EditMode parse tests for the new fields; browser E2E section 2f: the page opens, the lists equal the database, presence, Message and Invite states, the real invite and its refusal, search, tabs, sort, Accept, Decline, Cancel, Add from Recent, find (found / not found) and add, profiles, Remove with confirmation, Block, an error with retry, the empty state, six window sizes, no errors.
 
+# Leaderboards page
+
+`DashboardLeaderboards.cs` (page, podium, table, pager, search results, side panels), pure rules in `ARO.NetCore` `LeaderboardModel.cs` (metric and period keys, which period a metric supports, number and rank text, medals, page window, podium order; unit tested).
+The sidebar item opens it; "Coming Soon" is gone. Every number is a server value: the client sends only the metric, the period, the page and the search text.
+
+| Part | Source |
+|---|---|
+| Category tabs: XP, Earnings, Distance, Jobs | `get_leaderboard(metric, period, limit, offset)`; one board per metric. Only the four metrics the backend ranks are offered |
+| Period menu: All Time / This Week | the same RPC's `period` (`weekly` is computed from the server ledgers: transactions for earnings, completed jobs for jobs and distance). XP has no weekly record: choosing This Week there shows All Time and says so |
+| Podium (top 3) | the first rows of page 1 of the global board, in 2nd-1st-3rd order. Real photographs behind the medals, initials avatars, never invented players |
+| Table, 12 rows per page, pager | the board page for the offset; Previous / numbers / Next. The total comes from the server, so the pager is exact at any size |
+| Your Rank (always visible) | the `me` block of the board reply: rank and value, even when you are not on the page. A player with no score is shown as **Unranked**, never given a rank |
+| Everyone / My Friends | `get_friends_leaderboard(metric, period)` (new): you and your accepted friends, ranked among themselves from the same server numbers. Also the Friends Leaderboard panel |
+| Top Drivers This Week | the weekly jobs board, top 3 |
+| Search | `search_leaderboard(metric, period, query, limit)` (new): matches name or username (plain text, `%` and `_` are ordinary characters), only players the board lists, with their **global** rank; 2+ characters, 10 results, rate limited. Debounced; a miss says so |
+| Profile | any row, podium card, friend row or Your Rank opens the same public-profile dialog as Friends (Add Friend / Invite there) |
+
+**States.** Loading placeholders, an error with a working Retry per region (board, Your Rank, friends, weekly, search), a friends empty state with Find Friends, a no-match search state. Refreshes by itself every 30 s while open; a reply for a board the player has already left is discarded.
+**Security.** Scores are never sent by the client; the new functions are SECURITY DEFINER with a pinned search path, rate limited, and expose nothing a board does not already list (value > 0 only, public fields only).
+**Not responsive** like every page (P-72); not built: region/season boards, rank movement, vehicles on rows (P-73, P-74).
+**Tests.** SQL `46_leaderboard_social.sql` (friends board membership and order per metric, pending requests excluded, weekly window, search matching and global ranks, validation, rate limits, privileges) + 12 mutants; xunit `LeaderboardModelTests` (49); API contract + EditMode parse tests for the two new replies; browser E2E section 2g (opens from the sidebar; boards equal the database; page 2; podium and row profiles; Your Rank off the page; four categories; weekly and the XP fallback; friends scope; search short/none/found; error + Retry; unranked; six window sizes; no errors).

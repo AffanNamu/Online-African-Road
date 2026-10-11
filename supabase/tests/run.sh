@@ -26,4 +26,5 @@ run tests/42_convoy_spec.sql
 run tests/43_vehicle_catalog.sql
 run tests/44_garage.sql
 run tests/45_person_vehicle.sql
+run tests/46_leaderboard_social.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

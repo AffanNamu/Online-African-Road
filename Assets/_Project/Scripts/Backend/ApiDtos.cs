@@ -188,5 +188,10 @@ namespace ARO.Backend
     // ---------------------------------------------------------------- leaderboards
     [Serializable] public class LeaderboardRow { public string player_id, display_name, username, avatar_id, country_code; public int rank, level; public double value; }
     [Serializable] public class LeaderboardMe { public int rank; public double value; }
-    [Serializable] public class LeaderboardPage { public string metric, period, server_time; public int total, limit, offset; public LeaderboardRow[] items; public LeaderboardMe me; }
+    [Serializable] public class LeaderboardPage
+    {
+        public string metric, period, server_time; public int total, limit, offset; public LeaderboardRow[] items;
+        // optional: scope is only on the friends board and the search ("friends" / "search"); me is absent from a search
+        public string scope; public LeaderboardMe me;
+    }
 }

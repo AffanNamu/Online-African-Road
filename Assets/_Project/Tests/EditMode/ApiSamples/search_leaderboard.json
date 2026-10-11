@@ -1,0 +1,21 @@
+{
+ "items": [
+  {
+   "avatar_id": "sunset",
+   "country_code": "NG",
+   "display_name": "CtA",
+   "level": 2,
+   "player_id": "56b66008-e6b2-43dc-9cee-4554c6d58755",
+   "rank": 1,
+   "username": "cta",
+   "value": 300
+  }
+ ],
+ "limit": 10,
+ "metric": "xp",
+ "offset": 0,
+ "period": "all",
+ "scope": "search",
+ "server_time": "2026-10-11T14:55:29.998673+00:00",
+ "total": 1
+}

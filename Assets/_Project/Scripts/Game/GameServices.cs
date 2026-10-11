@@ -74,7 +74,7 @@ namespace ARO.Game
         public void ClearPlayerCaches()
         {
             Profile = null; Wallet = null; Vehicles = new OwnedVehicleDto[0];
-            Player.Summary.Reset(); Notifications.Reset(); Friends.Friends.Reset(); Friends.Recent.Reset(); Friends.Requests.Reset();
+            Player.Summary.Reset(); Notifications.Reset(); Friends.Friends.Reset(); Friends.Recent.Reset(); Friends.Requests.Reset(); Boards.Board.Reset(); Boards.Friends.Reset(); Boards.Weekly.Reset();
             Garage.Garage.Reset(); World.State.Reset(); Content.News.Reset(); Content.Hero.Reset(); Convoys.Mine.Reset(); Jobs.Board.Reset(); Progress.Progress.Reset();
         }
     }

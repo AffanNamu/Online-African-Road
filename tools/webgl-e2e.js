@@ -655,6 +655,105 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_FriEmptyFind'); check(!!(await c.waitLog(/\[Friends\] tab=find/, m, 40)), 'the empty state leads to Find Players');
   });
 
+  // =========================================================================================== 2g. Leaderboards: boards, podium, Your Rank, friends, search, pagination, profile, failure states
+  const lbNames = 'ABCDEFGHIJKLMNO'.split('').map(l => 'BrowserLb' + l); const lbu = [];
+  for (const n of lbNames) lbu.push(await signup(n));
+  const lbv = lbu[13];                                                                           // the viewer: rank 14 of the group on the XP board, so Your Rank is NOT on the first page
+  lbu.forEach((u, i) => db(`update profiles set experience = ${5000000 - i * 1000}, distance_km = ${900000 - i * 100}, jobs_completed = ${700000 - i * 10}, lifetime_earnings = ${9000000 + i * 1000} where id = '${u.id}'`));      // server records, set the way the server would; earnings run the other way round
+  db(`select _apply_transaction('${lbu[0].id}', 'BONUS', 5000, 'e2e-lb:' || gen_random_uuid())`);        // this week's earnings come from the ledger
+  const befriendLb = (a, b) => { asUser(a, `select send_friend_request('${b.id}')::text`); const id = db(`select id from friendships where requester_id = '${a.id}' and addressee_id = '${b.id}'`); asUser(b, `select respond_friend_request('${id}', true)`); };
+  befriendLb(lbv, lbu[0]); befriendLb(lbv, lbu[2]); befriendLb(lbv, lbu[14]);                      // friends ranked 1st, 3rd and 15th overall: 4th..1st among friends, the viewer is third
+  const rankOf = (col, id) => +db(`select count(*) + 1 from profiles where ${col} > (select ${col} from profiles where id = '${id}')`);
+  const ranked = col => +db(`select count(*) from profiles where ${col} > 0`);
+  await open(lbv, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserLbN/, 0, 150)), 'Leaderboards: the dashboard opens for the viewer');
+    await c.settle(); let m = c.logs.length; await c.click('Nav_Leaderboards');
+    check(!!(await c.waitLog(/\[Leaderboards\] opened/, m, 60)), 'Leaderboards opens from the sidebar (it is no longer "coming soon")');
+    const xpTotal = ranked('experience'), xpRank = rankOf('experience', lbv.id);
+    const b1 = await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 90);
+    check(!!b1 && b1.includes(`shown=12 total=${xpTotal} me=${xpRank}`), `the XP board is the database board: 12 rows on the page, ${xpTotal} ranked players, and I am rank ${xpRank}`, b1);
+    const fb1 = await c.waitLog(/\[Leaderboards\] friends metric=xp period=all state=ready/, m, 90);
+    check(!!fb1 && /players=4 me=3/.test(fb1), 'the friends board is the database friends board: me and 3 friends, I am third', fb1);
+    check(!!(await c.waitLog(/\[Leaderboards\] weekly state=(ready|empty)/, m, 90)), 'Top Drivers This Week is read from the server');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-80-leaderboards.png` });
+    let tg = c.targets();
+    for (const k of ['Lb_Search_Input', 'Btn_LbTab_Xp', 'Btn_LbTab_Earnings', 'Btn_LbTab_Distance', 'Btn_LbTab_Jobs', 'Btn_LbPeriod', 'Btn_LbScope_Global', 'Btn_LbScope_Friends', 'Btn_LbPodium_1', 'Btn_LbPodium_2', 'Btn_LbPodium_3', 'Btn_LbRow_browserlbd', 'Btn_LbNext', 'Btn_LbMeProfile', 'Btn_LbFriend_browserlba', 'Btn_LbSideViewFriends']) check(!!tg[k], `${k} is a clickable target on the Leaderboards page`);
+    check(!tg['Btn_LbPrev'] && !tg['Btn_LbRow_browserlbn'], 'page 1 has no Previous, and the viewer (rank 14) is not on it; Your Rank still shows them');
+
+    // pagination: the next page is the next 12 from the server
+    m = c.logs.length; await c.click('Btn_LbNext');
+    const b2 = await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=2 state=ready/, m, 60);
+    check(!!b2 && b2.includes(`shown=${Math.min(12, xpTotal - 12)} total=${xpTotal} me=${xpRank}`), 'the next page asks the server for offset 12 and shows the rest', b2);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-81-leaderboards-page2.png` }); tg = c.targets();
+    check(!!tg['Btn_LbRow_browserlbn'] && !!tg['Btn_LbPrev'], 'the viewer\'s own row is on page 2 and Previous is offered');
+    m = c.logs.length; await c.click('Btn_LbPrev'); check(!!(await c.waitLog(/\[Leaderboards\] page=1/, m, 30)), 'Previous goes back to page 1');
+
+    // the podium and rows open the real public profile
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbPodium_1');
+    check(!!(await c.waitLog(/\[Friends\] profile id=browserlba ok=True level=\d+ jobs=\d+ status=friends/, m, 60)), 'the first place opens that player\'s public profile from the server (status friends)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-82-leaderboards-profile.png` }); await c.click('Btn_CloseDialog'); await c.settle();
+    m = c.logs.length; await c.click('Btn_LbRow_browserlbd'); check(!!(await c.waitLog(/\[Leaderboards\] profile browserlbd/, m, 30)) && !!(await c.waitLog(/\[Friends\] profile id=browserlbd ok=True/, m, 60)), 'a table row opens its player\'s profile'); await c.click('Btn_CloseDialog');
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserlbn ok=True .*status=self/, m, 60)), 'Your Rank opens your own public profile'); await c.click('Btn_CloseDialog');
+
+    // categories: each is a real server board with its own order
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbTab_Earnings');
+    const be = await c.waitLog(/\[Leaderboards\] board metric=earnings period=all page=1 state=ready/, m, 60); const erank = rankOf('lifetime_earnings', lbv.id), etotal = ranked('lifetime_earnings');
+    check(!!be && be.includes(`total=${etotal} me=${erank}`), `the Earnings board is ordered by earnings: I am rank ${erank}, not ${xpRank}`, be);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-83-leaderboards-earnings.png` });
+    m = c.logs.length; await c.click('Btn_LbTab_Distance'); const bd = await c.waitLog(/\[Leaderboards\] board metric=distance period=all page=1 state=ready/, m, 60); check(!!bd && bd.includes(`me=${rankOf('distance_km', lbv.id)}`), 'the Distance board is the database distance board', bd);
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbTab_Jobs'); const bj = await c.waitLog(/\[Leaderboards\] board metric=jobs period=all page=1 state=ready/, m, 60); check(!!bj && bj.includes(`me=${rankOf('jobs_completed', lbv.id)}`), 'the Jobs board is the database jobs board', bj);
+
+    // period: weekly exists for earnings, distance and jobs (server ledger); XP has no weekly record and says so
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbTab_Earnings'); await c.waitLog(/\[Leaderboards\] board metric=earnings period=all/, m, 60); await c.settle();
+    m = c.logs.length; await c.click('Btn_LbPeriod'); await c.settle(); check(!!c.targets()['Btn_LbPeriodOpt_Week'] && !!c.targets()['Btn_LbPeriodOpt_AllTime'], 'the period menu lists All Time and This Week only');
+    await c.page.screenshot({ path: `${prefix}-84-leaderboards-period.png` }); await c.click('Btn_LbPeriodOpt_Week');
+    const bw = await c.waitLog(/\[Leaderboards\] board metric=earnings period=weekly page=1 state=ready/, m, 60);
+    check(!!bw, 'This Week asks the server for this week\'s earnings board (from the transaction ledger)', bw);
+    const weekTop = db(`select coalesce(sum(amount),0) from transactions where player_id = '${lbu[0].id}' and kind in ('JOB_REWARD','BONUS') and amount > 0 and created_at >= date_trunc('week', now())`); check(+weekTop >= 5000, 'the ledger the weekly board is computed from holds the bonus given in this test');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-85-leaderboards-weekly.png` });
+    m = c.logs.length; await c.click('Btn_LbTab_Xp'); check(!!(await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 60)), 'XP has no weekly record: the board falls back to All Time instead of inventing weekly XP');
+
+    // friends scope
+    await c.settle(); m = c.logs.length; await c.click('Btn_LbScope_Friends'); check(!!(await c.waitLog(/\[Leaderboards\] scope=friends/, m, 30)), 'the My Friends scope opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-86-leaderboards-friends.png` });
+    tg = c.targets(); check(!!tg['Btn_LbRow_browserlba'] && !!tg['Btn_LbRow_browserlbc'] && !!tg['Btn_LbRow_browserlbo'] && !!tg['Btn_LbRow_browserlbn'] && !tg['Btn_LbRow_browserlbb'], 'the friends board lists me and my 3 friends, and nobody else');
+    await c.click('Btn_LbScope_Global'); await c.settle();
+
+    // search: the server finds ranked players by name, with their global rank
+    m = c.logs.length; await c.click('Lb_Search_Input'); await sleep(500); await c.page.keyboard.type('x', { delay: 100 }); await sleep(1500);
+    check(!c.logs.slice(m).some(l => /\[Leaderboards\] search/.test(l)), 'one character does not search (the server needs two)');
+    await c.page.keyboard.type('browserlbm', { delay: 90 }); const sf = await c.waitLog(/\[Leaderboards\] search "xbrowserlbm"/, m, 60);
+    check(!!sf && /state=empty found=0/.test(sf), 'a search with no match is reported as no match (server-side)', sf);
+    for (let i = 0; i < 11; i++) await c.page.keyboard.press('Backspace');
+    m = c.logs.length; await c.page.keyboard.type('rowserlbm', { delay: 90 }); await c.settle();
+    check(!!(await c.waitLog(/\[Leaderboards\] search "browserlbm" state=ready found=1 total=1/, m, 60)), 'searching a name finds exactly that player from the server');
+    await c.page.screenshot({ path: `${prefix}-87-leaderboards-search.png` }); check(!!c.targets()['Btn_LbRow_browserlbm'] && !!c.targets()['Btn_LbSearchClear'], 'the result is a row that opens a profile, and the search can be cleared');
+    m = c.logs.length; await c.click('Btn_LbSearchClear'); await c.settle(); check(!!c.targets()['Btn_LbNext'], 'clearing the search returns to the board');
+
+    // the same page at other window sizes
+    for (const [w, h] of [[1920, 1080], [1440, 900], [1280, 720], [1024, 768], [768, 1024], [390, 844]]) {
+      await c.page.setViewportSize({ width: w, height: h }); await sleep(2500); await c.page.screenshot({ path: `${prefix}-8-leaderboards-${w}x${h}.png` });
+    }
+    await c.page.setViewportSize({ width: 1024, height: 576 }); await sleep(1500);
+    check(c.errors.length === 0, 'Leaderboards at six window sizes cause no page errors', c.errors[0]);
+  });
+  // a service that fails shows an error with a working retry; a player with no score sees "unranked", and a player with no friends sees the empty friends panel
+  const lbk = await signup('BrowserLbQ');
+  await open(lbk, '&fault=get_leaderboard:error:6,search_leaderboard:error:3', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserLbQ/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_Leaderboards');
+    check(!!(await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=unavailable/, m, 120)), 'a board that cannot load says "unavailable" instead of showing an empty table');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-88-leaderboards-error.png` });
+    check(!!c.targets()['Btn_LbRetry'], 'a Retry button is offered');
+    m = c.logs.length; await c.click('Btn_LbRetry'); const rr = await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 90);
+    check(!!rr && /me=none/.test(rr), 'Retry reaches the server; a player with no XP is unranked (no invented rank)', rr);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-89-leaderboards-unranked.png` });
+    const fe2 = await c.waitLog(/\[Leaderboards\] friends metric=xp period=all state=ready/, 0, 30); check(!!fe2 && /players=1/.test(fe2), 'a player with no friends has a friends board of one (themselves)', fe2);
+    check(!!c.targets()['Btn_LbSideFindFriends'], 'the friends panel offers Find Friends');
+    m = c.logs.length; await c.click('Lb_Search_Input'); await sleep(500); await c.page.keyboard.type('browserlb', { delay: 90 });
+    check(!!(await c.waitLog(/\[Leaderboards\] search "browserlb" state=unavailable/, m, 90)), 'a search that fails says so'); await c.settle(); await c.page.screenshot({ path: `${prefix}-90-leaderboards-search-error.png` });
+    m = c.logs.length; await c.click('Btn_LbSearchRetry'); check(!!(await c.waitLog(/\[Leaderboards\] search "browserlb" state=ready found=10/, m, 90)), 'search Retry reaches the server and shows its first 10 matches');
+    m = c.logs.length; await c.click('Btn_LbSideFindFriends'); check(!!(await c.waitLog(/\[Friends\] opened/, m, 60)), 'Find Friends leads to the Friends screen');
+  });
+
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)
   const uma = await signup('BrowserUma');
   await open(uma, '&fault=list_vehicle_catalog:error:3', async c => {

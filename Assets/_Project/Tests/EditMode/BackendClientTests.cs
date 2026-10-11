@@ -62,6 +62,13 @@ namespace ARO.Tests
             var found = Parse<PersonDto>("find_player"); Assert.IsTrue(found.Exists); Assert.IsFalse(string.IsNullOrEmpty(found.username));
         }
 
+        [Test] public void SocialLeaderboardRepliesParse()
+        {
+            var f = Parse<LeaderboardPage>("get_friends_leaderboard"); Assert.AreEqual("friends", f.scope); Assert.AreEqual("xp", f.metric); Assert.AreEqual(f.total, f.items.Length); Assert.AreEqual(1, f.items[0].rank); Assert.Greater(f.items[0].value, 0.0);
+            Assert.AreEqual(1, f.me.rank); Assert.AreEqual(f.items[0].value, f.me.value, 0.001);
+            var s = Parse<LeaderboardPage>("search_leaderboard"); Assert.AreEqual("search", s.scope); Assert.AreEqual(1, s.items.Length); Assert.IsFalse(string.IsNullOrEmpty(s.items[0].username)); Assert.AreEqual(0, s.me == null ? 0 : s.me.rank, "a search carries no me block");
+        }
+
         [Test] public void ConvoyRepliesParse()
         {
             var m = Parse<MyConvoy>("get_my_convoy"); Assert.IsTrue(m.convoy.Exists); Assert.AreEqual(2, m.convoy.members.Length); Assert.IsTrue(m.convoy.members[0].is_leader); Assert.IsTrue(m.convoy.is_private); Assert.AreEqual(4, m.convoy.capacity);

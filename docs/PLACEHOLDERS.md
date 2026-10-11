@@ -87,7 +87,7 @@ How to use this file
 | P-53 | **Several game servers / regions**: one server row; region and capacity appear only if an operator sets them | More rows, region routing, ping per server | C |
 | P-54 | **Nearby players have no distance** (positions are never stored server-side) and **only your own ping** is measurable | A decision on position telemetry or a relay-side measure | C |
 | P-55 | **Daily challenges**: schema, progress and claim are built; no definitions, no screen | Authored challenges and a screen | B |
-| P-56 | **Leaderboards** and **Store** screens: the leaderboard backend exists; the sidebar says "coming soon". (Friends is built, see below)  | The screens built to the mockups | B |
+| P-56 | **Store** screen: the sidebar says "coming soon". (Friends, Settings and Leaderboards are built, see below)  | The screens built to the mockups | B |
 | P-57 | The **bus routes**, **profile** (the old text panel is no longer reachable) and **pause menu** are the old plain text panels (`UIKit`), not designed pages. (Settings is now a designed page, see P-64) | Designed pages to the same standard as Jobs, Multiplayer, Trucks & Buses, Garage | B |
 | P-58 | **Tolls** (shown in the Jobs mockup) do not exist in the economy; the cell shows XP instead | A toll mechanic charged through the ledger | C |
 | P-59 | **Companies**, **touch HUD**, the **Flutter shell**: not started | As designed | C |
@@ -104,6 +104,12 @@ How to use this file
 | P-70 | **Player avatars are initials on a colour** (the same colour for the same player). No player photographs or avatar artwork exist, `avatar_id` is stored but unused | Avatar art (or an editor) and a real picture per player; thumbnails served small | B |
 | P-71 | **Friends: no mutual-friends count on requests, no "convoys joined" stat, no list/grid toggle, no search-by-name on the server** (the server answers an exact username on purpose, so players cannot be enumerated) | Backend fields or a deliberate decision on discovery: a mutual count, a convoys-joined counter, a privacy-safe name search | C |
 | P-72 | **Friends and every other page are not responsive** (see P-17): the stage scales, there is no tablet or phone layout | A narrow-screen shell (bottom bar / drawer) and per-page reflow | A |
+| P-73 | **Leaderboards: only the boards the backend can rank**: XP, Earnings, Distance, Jobs, All Time and This Week (This Week not for XP: no weekly XP record exists, the page says so and shows All Time). **No Country / Region / City boards, no months, no seasons, no multiplayer or vehicle-class boards** | Backend ledgers and fields for each; then a tab each |
+| P-74 | **Leaderboards: no rank movement arrows** (no rank history is stored), **no vehicle on the podium or rows**, **no "points to next rank"** | A daily rank snapshot table; show the vehicle only where privacy allows (as Friends does) |
+| P-75 | **Leaderboards: This Week is computed from the ledgers on each request** (transactions, completed jobs); fine for the current player count, to be materialised at scale (see P-61). The friends board and search read at most 101 friends / 25 results | Materialised weekly boards |
+| P-76 | **Leaderboards: search matches names and usernames of players who already have a score**, 2+ characters, 10 results (server-limited), no pagination of results | Search paging if needed |
+| P-77 | **Leaderboards page was written without a Unity editor** and is verified by the CI browser E2E and its screenshots only; the empty-global-board state is not reachable in the E2E (other players always exist) | Seeing it rendered; an isolated-database E2E |
+| P-78 | **Keyboard focus and screen-reader support are not built on any page** (the UI is drawn with its own click targets; Enter and Escape work only where noted) | A focus model for the stage UI |
 
 ## 7. Authored data that is a stand-in
 

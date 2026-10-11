@@ -261,10 +261,20 @@ namespace ARO.Backend
     // ---------------------------------------------------------------------------------------------------------------- LeaderboardService
     public sealed class LeaderboardService : ServiceBase
     {
+        public readonly Loadable<LeaderboardPage> Board = new Loadable<LeaderboardPage>(), Friends = new Loadable<LeaderboardPage>(), Weekly = new Loadable<LeaderboardPage>();
         public LeaderboardService(SupabaseClient api) : base(api) { }
         /// <summary>metric: xp | distance | jobs | earnings; period: all | weekly (weekly has no xp board). Ranks are computed by the server from its own records.</summary>
         public Task<Result<LeaderboardPage>> Get(string metric, string period = "all", int limit = 20, int offset = 0) =>
             Api.Call<LeaderboardPage>("get_leaderboard", JsonArgs.Obj(("p_metric", metric), ("p_period", period), ("p_limit", limit), ("p_offset", offset)));
+        public Task<Result<LeaderboardPage>> LoadBoard(string metric, string period, int limit, int offset) => Track(Board, () => Get(metric, period, limit, offset), v => v.items == null || v.items.Length == 0);
+        /// <summary>The caller and their accepted friends ranked among themselves (server: get_friends_leaderboard).</summary>
+        public Task<Result<LeaderboardPage>> LoadFriends(string metric, string period) =>
+            Track(Friends, () => Api.Call<LeaderboardPage>("get_friends_leaderboard", JsonArgs.Obj(("p_metric", metric), ("p_period", period))), v => v.items == null || v.items.Length <= 1);
+        /// <summary>This week's best players by completed jobs (the "top drivers this week" panel).</summary>
+        public Task<Result<LeaderboardPage>> LoadWeekly() => Track(Weekly, () => Get("jobs", "weekly", 3, 0), v => v.items == null || v.items.Length == 0);
+        /// <summary>Ranked players whose name or username contains the text, each with the GLOBAL rank on that board (server: search_leaderboard).</summary>
+        public Task<Result<LeaderboardPage>> Search(string metric, string period, string query, int limit = 10) =>
+            Api.Call<LeaderboardPage>("search_leaderboard", JsonArgs.Obj(("p_metric", metric), ("p_period", period), ("p_query", query), ("p_limit", limit)));
     }
 
     // ---------------------------------------------------------------------------------------------------------------- ContentService
