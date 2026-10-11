@@ -153,12 +153,14 @@ namespace ARO.Game
             BuildServerStatus();
         }
 
+        static string ConvoyPicture(string id) { int h = 0; if (id != null) foreach (char ch in id) h = (h * 31 + ch) & 0x7fffffff; return "convoy_" + "abc"[h % 3]; }
+
         void BuildBanner()
         {
             const float X = 308, Y = 263, W = 1120, H = 260;
-            var tex = Brand.Scene();
+            var tex = Brand.Texture("mp_banner") ?? Brand.Scene();      // a real convoy photograph from the approved mockup
             Ui.Outlined(_stage, "BannerFrame", new Color(0, 0, 0, 1), new Color(Gold.r, Gold.g, Gold.b, 0.55f), X, Y, W, H, 20, 2f);
-            Ui.Photo(_stage, "BannerPhoto", tex, Ui.Cover(tex, 0.18f, 0.18f, 0.72f, (W - 4f) / (H - 4f)), X + 2, Y + 2, W - 4, H - 4, 18);
+            Ui.Photo(_stage, "BannerPhoto", tex, Ui.Cover(tex, 0f, 0f, 1f, (W - 4f) / (H - 4f)), X + 2, Y + 2, W - 4, H - 4, 18);
             Ui.Gradient(_stage, "BannerShade", new Color(0.02f, 0.025f, 0.04f, 0.9f), new Color(0.02f, 0.025f, 0.04f, 0.05f), true, X + 2, Y + 2, W * 0.62f, H - 4);
             var d = Ui.Label(_stage, "DRIVE", "ExtraBold", 66, White, X + 30, Y + 12, 500, 76); Ui.Drop(d, 0.6f);
             var t = Ui.Label(_stage, "TOGETHER", "ExtraBold", 66, Gold, X + 30, Y + 78, 600, 76); Ui.Drop(t, 0.6f);
@@ -203,14 +205,14 @@ namespace ARO.Game
             }
             const float rowH = 112, pitch = 118;
             var area = MakeScroll("mp_main_convoys", X + 10, ry, W - 20, H - 66, _mpConvoys.Length * pitch + 6);
-            var tex = Brand.Scene();
+            var fallback = Brand.Scene();
             for (int i = 0; i < _mpConvoys.Length; i++)
             {
                 var cv = _mpConvoys[i]; float y = 2 + i * pitch, x = 4, w = W - 40;
                 var host = area.Content;
                 Ui.Outlined(host, "ConvoyRow", CardFill, new Color(1, 1, 1, 0.10f), x, y, w, rowH, 14, 1.5f);
-                float u = (i * 0.13f) % 0.5f;
-                Ui.Photo(host, "ConvoyPhoto", tex, Ui.Cover(tex, u, 0.30f, 0.28f, 172f / (rowH - 4f)), x + 2, y + 2, 172, rowH - 4, 12);
+                var tex = Brand.Texture(ConvoyPicture(cv.id)) ?? fallback;     // stable per convoy: the same convoy always shows the same picture
+                Ui.Photo(host, "ConvoyPhoto", tex, Ui.Cover(tex, 0f, 0.02f, 1f, 172f / (rowH - 4f)), x + 2, y + 2, 172, rowH - 4, 12);
                 float tx = x + 190;
                 var nm = Ui.Label(host, cv.name, "Bold", 21, White, tx, y + 8, 300, 28); nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 14; nm.resizeTextMaxSize = 21; nm.verticalOverflow = VerticalWrapMode.Truncate;
                 bool driving = cv.phase == "driving", full = !cv.joinable;

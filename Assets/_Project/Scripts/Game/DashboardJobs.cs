@@ -227,7 +227,10 @@ namespace ARO.Game
             Ui.Click(_stage, buttonName, ListX + 150, ListY + 196, 230, 50, onClick);
         }
 
-        static Texture2D CargoPic(JobDto j) => Brand.Texture("job_" + (string.IsNullOrEmpty(j.cargo_image) ? "general" : j.cargo_image)) ?? Brand.Texture("job_general");
+        static string CargoKey(JobDto j) => string.IsNullOrEmpty(j.cargo_image) ? "general" : j.cargo_image;
+        /// <summary>Card / row picture: a real photograph cut from the approved mockups (tools/crop_ref_art.py); replace the file to change it.</summary>
+        static Texture2D CargoPic(JobDto j) => Brand.Texture("job_" + CargoKey(j)) ?? Brand.Texture("job_general");
+        static Texture2D HeroPic(JobDto j) => Brand.Texture("job_" + CargoKey(j) + "_hero") ?? CargoPic(j);
         static string Naira(long v) => "₦ " + Money.Format(v);
         static string CargoClass(string c)
         {
@@ -261,7 +264,7 @@ namespace ARO.Game
             if (sel) Ui.Rounded(host, "RowGlow", new Color(Gold.r, Gold.g, Gold.b, 0.12f), x - 4, y - 4, w + 8, RowH + 8, 20);
             var border = Ui.Outlined(host, "JobRow", CardFill, sel ? Gold : new Color(1, 1, 1, 0.09f), x, y, w, RowH, 16, sel ? 2.5f : 1.5f); _rowBorders[j.id] = border;
             var tex = CargoPic(j);
-            Ui.Photo(host, "RowPhoto", tex, Ui.Cover(tex, 0.0f, 0.12f, 0.80f, 224f / (RowH - 5f)), x + 2.5f, y + 2.5f, 224, RowH - 5, 13, j.eligible ? Color.white : new Color(0.6f, 0.6f, 0.65f));
+            Ui.Photo(host, "RowPhoto", tex, Ui.Cover(tex, 0f, 0.04f, 1f, 224f / (RowH - 5f)), x + 2.5f, y + 2.5f, 224, RowH - 5, 13, j.eligible ? Color.white : new Color(0.6f, 0.6f, 0.65f));
             Ui.Gradient(host, "RowPhotoFade", new Color(CardFill.r, CardFill.g, CardFill.b, 0f), new Color(CardFill.r, CardFill.g, CardFill.b, 1f), true, x + 190, y + 3, 36, RowH - 6);
             float tx = x + 246;
             var title = Ui.Label(host, j.cargo_type, "Bold", 28, White, tx, y + 10, w - 246 - 150, 36); title.resizeTextForBestFit = true; title.resizeTextMinSize = 18; title.resizeTextMaxSize = 28; title.horizontalOverflow = HorizontalWrapMode.Wrap; title.verticalOverflow = VerticalWrapMode.Truncate;
@@ -310,9 +313,9 @@ namespace ARO.Game
 
         void BuildHeroCard(JobDto j, float X, float Y, float W, float H)
         {
-            var tex = CargoPic(j);
+            var tex = HeroPic(j);
             Ui.Outlined(_stage, "HeroFrame", new Color(0, 0, 0, 1), new Color(1, 1, 1, 0.12f), X, Y, W, H, 20);
-            Ui.Photo(_stage, "HeroPhoto", tex, Ui.Cover(tex, 0f, 0.10f, 1f, (W - 3f) / (H - 3f)), X + 1.5f, Y + 1.5f, W - 3, H - 3, 19);
+            Ui.Photo(_stage, "HeroPhoto", tex, Ui.Cover(tex, 0f, 0f, 1f, (W - 3f) / (H - 3f)), X + 1.5f, Y + 1.5f, W - 3, H - 3, 19);
             Ui.Gradient(_stage, "HeroShadeL", new Color(0.02f, 0.025f, 0.04f, 0.88f), new Color(0.02f, 0.025f, 0.04f, 0f), true, X + 2, Y + 2, W * 0.62f, H - 4);
             Ui.Gradient(_stage, "HeroShadeB", new Color(0.02f, 0.025f, 0.04f, 0f), new Color(0.02f, 0.025f, 0.04f, 0.92f), false, X + 2, Y + H - 130, W - 4, 128);
             Ui.Label(_stage, (CargoClass(j.cargo_category) + " transport").ToUpperInvariant(), "SemiBold", 18, new Color(0.88f, 0.9f, 0.94f), X + 24, Y + 22, 520, 24);
@@ -430,7 +433,7 @@ namespace ARO.Game
             Ui.Outlined(_stage, "CargoCard", PanelFill, PanelLine, X, Y, W, H, 20, 1.5f);
             Ui.Label(_stage, "Cargo Information", "Bold", 26, White, X + 20, Y + 12, 340, 34);
             var tex = CargoPic(j);
-            Ui.Photo(_stage, "CargoPhoto", tex, Ui.Cover(tex, 0.05f, 0.12f, 0.75f, 104f / 70f), X + 20, Y + 54, 104, 70, 10);
+            Ui.Photo(_stage, "CargoPhoto", tex, Ui.Cover(tex, 0.04f, 0.05f, 0.92f, 104f / 70f), X + 20, Y + 54, 104, 70, 10);
             var nm = Ui.Label(_stage, j.cargo_type, "Bold", 22, White, X + 138, Y + 54, W - 154, 28); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 15; nm.resizeTextMaxSize = 22; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate;
             var ds = Ui.Paragraph(_stage, string.IsNullOrEmpty(j.cargo_description) ? "General cargo." : j.cargo_description, "Regular", 15, new Color(0.8f, 0.83f, 0.88f), X + 138, Y + 82, W - 154, 46); ds.verticalOverflow = VerticalWrapMode.Truncate;
             const float ly = 136;

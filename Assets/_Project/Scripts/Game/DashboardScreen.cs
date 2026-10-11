@@ -593,6 +593,14 @@ namespace ARO.Game
             Ui.Label(_stage, $"{pr.jobs_completed} jobs completed", "Regular", 14, Soft, 1540, 267, 200, 18);
         }
 
+        /// <summary>The truck picture is a real photograph cut from the approved dashboard concept (tools/crop_ref_art.py).</summary>
+        void TruckPhoto(float x, float y, float w, float h, Color tint)
+        {
+            var tex = Brand.Texture("truck_photo");
+            if (tex != null) Ui.Photo(_stage, "TruckPhoto", tex, new Rect(0, 0, 1, 1), x, y, w, h, 10, tint);
+            else Ui.Icon(_stage, "truck_thumb", tint, x, y, w);
+        }
+
         void BuildYourTruck()
         {
             Panel(1497, 306, 402, 154);
@@ -600,7 +608,7 @@ namespace ARO.Game
             SmallPill(1812, 320, 68, 26, "View All", _act.Garage);
             if (_vehicle == null)
             {   // empty state: no vehicle yet
-                Ui.Icon(_stage, "truck_thumb", new Color(1, 1, 1, 0.25f), 1512, 346, 112);
+                TruckPhoto(1508, 346, 126, 68, new Color(1, 1, 1, 0.35f));
                 Ui.Label(_stage, "No vehicle yet", "SemiBold", 22, Muted, 1650, 362, 220, 30);
                 Ui.Rounded(_stage, "TruckCta", Gold, 1650, 402, 200, 38, 10); Ui.Label(_stage, "Visit the garage", "Bold", 17, Ink, 1650, 410, 200, 24, TextAnchor.UpperCenter);
                 Ui.Click(_stage, "Btn_YourTruck", 1497, 306, 402, 154, _act.Garage); return;
@@ -608,7 +616,7 @@ namespace ARO.Game
             float fuel = FuelPercent(); double damage = _vehicle.damage_pct;
             var state = TruckStateOf(_vehicle.status, fuel, damage);
             Color sc = state == TruckState.Ready ? Brand.Good : state == TruckState.LowFuel ? Gold : state == TruckState.OnJob ? Blue : Brand.Bad;
-            Ui.Icon(_stage, "truck_thumb", White, 1510, 336, 116);
+            TruckPhoto(1508, 334, 126, 68, Color.white);
             var nm = Ui.Label(_stage, _def != null ? _def.name : _vehicle.definition_id, "SemiBold", 21, White, 1642, 352, 200, 56); nm.horizontalOverflow = HorizontalWrapMode.Wrap;
             var dot = Ui.Disc(_stage, "StatusDot", sc, 1642, 396, 14); if (state == TruckState.Ready) PulseImage.On(dot, 2.2f, 0.85f, 1.2f, 0.6f, 1f);
             Ui.Label(_stage, Vitals.Label(state), "SemiBold", 19, sc, 1664, 390, 150, 26);
@@ -815,7 +823,7 @@ namespace ARO.Game
         void JobCard(Transform host, JobDto j, float x, float y, float w)
         {
             Ui.Outlined(host, "JobCard", new Color(0.045f, 0.052f, 0.07f, 0.98f), new Color(1, 1, 1, 0.09f), x, y, w, 230, 12, 1.2f);
-            var art = Brand.Texture(CargoArt(j)) ?? Brand.Texture("job_general"); Ui.Photo(host, "JobPhoto", art, Ui.Cover(art, 0.05f, 0.12f, 0.8f, (w - 2.4f) / 70f), x + 1.2f, y + 1.2f, w - 2.4f, 70, 11);
+            var art = Brand.Texture(CargoArt(j)) ?? Brand.Texture("job_general"); Ui.Photo(host, "JobPhoto", art, Ui.Cover(art, 0f, 0.22f, 1f, (w - 2.4f) / 70f), x + 1.2f, y + 1.2f, w - 2.4f, 70, 11);
             Ui.Gradient(host, "JobPhotoShade", new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.7f), false, x + 1.2f, y + 36, w - 2.4f, 35);
             Ui.Label(host, CargoClass(j.cargo_category), "SemiBold", 13, White, x + 10, y + 50, w - 20, 18);
             // origin and destination on two lines so long depot names never collide with the rows below

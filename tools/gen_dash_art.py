@@ -111,7 +111,8 @@ def vehicles(d):
             d.polygon([(x + 22, y - 27), (x + 30, y - 37), (x + 48, y - 37), (x + 56, y - 27)], fill=(150, 190, 220, 255))
             for cx in (x + 14, x + 56): d.ellipse([cx - 8, y - 14, cx + 8, y + 2], fill=(14, 14, 16, 255))
     d.line([(40, 70), (40, 152)], fill=(60, 64, 76, 255), width=3); d.line([(400, 70), (400, 152)], fill=(60, 64, 76, 255), width=3)
-for n, f in [("job_containers", containers), ("job_tanker", tanker), ("job_pipes", pipes), ("job_food", crates), ("job_general", general), ("job_cement", cement), ("job_machinery", machinery), ("job_vehicles", vehicles)]: scene(n, f)
+if os.environ.get("ARO_STANDIN_CARGO") == "1":      # the real pictures are cut from the approved mockups by tools/crop_ref_art.py; these stand-ins are only for a checkout without them
+    for n, f in [("job_containers", containers), ("job_tanker", tanker), ("job_pipes", pipes), ("job_food", crates), ("job_general", general), ("job_cement", cement), ("job_machinery", machinery), ("job_vehicles", vehicles)]: scene(n, f)
 
 # ------------------------------------------------------------------ truck thumbnail (side view, transparent)
 S = 4; tw, th = 240 * S, 140 * S; im = Image.new("RGBA", (tw, th), (0, 0, 0, 0)); d = ImageDraw.Draw(im)

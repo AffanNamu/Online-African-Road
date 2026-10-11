@@ -27,7 +27,7 @@ States: loading skeleton, empty ("No jobs match" + Clear filters / "No open jobs
 
 | Mockup | Build | Why |
 |---|---|---|
-| Photographic cargo pictures and a photographic hero | generated stand-in illustrations (960x400, `tools/gen_dash_art.py`) | no licensed photography is in the repo (public repository). **Drop your own images in `Assets/_Project/Resources/UI/` as `job_containers|tanker|pipes|food|general|cement|machinery|vehicles.jpg` and they replace the stand-ins with no code change** |
+| Photographic cargo pictures and a photographic hero | **done**: real pictures cut from the approved mockups by `tools/crop_ref_art.py` (rows of the Jobs mockup for containers, cement, fuel tanker, steel pipes, food, machinery; the container hero from the Jobs hero; crated freight from the dashboard concept). The hero is the same photograph at full height over a blurred backdrop of itself. **No car-carrier picture exists in any mockup, so `vehicles` shows an ARO tractor-trailer until you supply one.** Resolution is that of the mockups (about 190x107 per cargo picture, upscaled 3x with Lanczos): drop higher-resolution files named `job_<key>.jpg` / `job_<key>_hero.jpg` in `Assets/_Project/Resources/UI/` and they replace these with no code change |
 | "Est. Toll Cost" (strip) and "Toll" (route card) | "XP Reward" and the fuel litres | tolls do not exist in the game economy; showing a toll would be invented data. If tolls become a real mechanic (charged at completion through the ledger) the cell is a one-line swap |
 | Requirement "Required License: Class A" | "Route Access" | no licence system exists |
 | Routes between Lagos, Abeokuta, Akure, Benin City, Abuja, Kaduna... | whatever jobs the server has | only Lagos-Ibadan is OPEN in the world state; jobs for planned routes are not generated. They appear when the server opens those routes |
@@ -43,7 +43,7 @@ States: loading skeleton, empty ("No jobs match" + Clear filters / "No open jobs
 # Multiplayer page
 
 `DashboardMultiplayer.cs` (layout, polling), `DashboardMultiplayerActions.cs` (loading, server actions, dialogs), `DashboardMultiplayerLobby.cs` (lobby tab, nearby players,
-server list, create / settings / disband / player / report dialogs). The convoy is the centre of the page. Flow, each step decided by the server
+server list, create / settings / disband / player / report dialogs). The convoy is the centre of the page. Convoy list pictures, the banner and the Your Truck card are real photographs cut from the approved mockups the same way. Flow, each step decided by the server
 (`supabase/migrations/20261011000002_convoy_lobby.sql`, `...03_discovery.sql`):
 
 ```
