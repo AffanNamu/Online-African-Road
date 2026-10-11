@@ -262,7 +262,10 @@ namespace ARO.Backend
     public sealed class ContentService : ServiceBase
     {
         public readonly Loadable<ContentList> News = new Loadable<ContentList>();
+        public readonly Loadable<ContentList> Hero = new Loadable<ContentList>();
         public ContentService(SupabaseClient api) : base(api) { }
         public Task<Result<ContentList>> LoadNews(int limit = 8) => Track(News, () => Api.Call<ContentList>("get_content", JsonArgs.Obj(("p_kind", "news"), ("p_limit", limit))), v => v.items == null || v.items.Length == 0);
+        /// <summary>The dashboard's hero banners (copy, picture key and button action), managed on the server.</summary>
+        public Task<Result<ContentList>> LoadHero(int limit = 6) => Track(Hero, () => Api.Call<ContentList>("get_content", JsonArgs.Obj(("p_kind", "hero"), ("p_limit", limit))), v => v.items == null || v.items.Length == 0);
     }
 }

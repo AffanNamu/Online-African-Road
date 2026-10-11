@@ -1,0 +1,78 @@
+{
+ "active_job": null,
+ "coins": 5000,
+ "convoy": {
+  "capacity": 4,
+  "id": "02073e21-b11a-4343-b193-66e549f03ab1",
+  "is_leader": true,
+  "member_count": 2,
+  "name": "Contract Run"
+ },
+ "friends_online": 1,
+ "jobs": {
+  "available": 2,
+  "best_reward": 900
+ },
+ "online_players": 3,
+ "pending_convoy_invites": 0,
+ "pending_friend_requests": 1,
+ "profile": {
+  "avatar_id": "default",
+  "country_code": null,
+  "display_name": "CtA",
+  "id": "b1d86a83-f2e6-48a2-80df-1df95727f229",
+  "level": 2,
+  "username": "cta"
+ },
+ "progression": {
+  "achievements": {
+   "total": 16,
+   "unlocked": 1
+  },
+  "distance_km": 12,
+  "experience": 300,
+  "jobs_completed": 2,
+  "level": 2,
+  "level_progress": 0.6667,
+  "next_milestone": {
+   "current": 12.0,
+   "fraction": 0.24,
+   "id": "distance_50",
+   "target": 50,
+   "title": "Drive 50 km"
+  },
+  "xp_into_level": 200,
+  "xp_level_start": 100,
+  "xp_next_level": 400,
+  "xp_to_next": 100
+ },
+ "server_time": "2026-10-11T04:00:22.082879+00:00",
+ "unread_notifications": 5,
+ "vehicle": {
+  "acquired_at": "2026-10-11T04:00:21.100052+00:00",
+  "cargo_capacity_kg": 4000,
+  "category": "truck",
+  "condition_pct": 100.0,
+  "customization": {},
+  "damage_pct": 0,
+  "definition_id": "truck_light_01",
+  "fuel_capacity_l": 120,
+  "fuel_l": 120,
+  "fuel_pct": 100.0,
+  "id": "be8f1849-a906-4e86-8f17-ac5f6da7f6ef",
+  "mileage_km": 0.0,
+  "model": "Savanna 4x2 Light Truck",
+  "name": "Savanna 4x2 Light Truck",
+  "nickname": null,
+  "passenger_capacity": 0,
+  "selected": true,
+  "status": "ready",
+  "top_speed_kmh": 110
+ },
+ "vehicle_count": 1,
+ "world": {
+  "cities": 23,
+  "routes": 12,
+  "routes_open": 1
+ }
+}

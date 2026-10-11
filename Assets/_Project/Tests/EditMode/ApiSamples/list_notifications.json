@@ -1,0 +1,63 @@
+{
+ "items": [
+  {
+   "created_at": "2026-10-11T04:00:21.820118+00:00",
+   "id": "c23bddb5-9d9b-4382-aa50-ecb265d7bf73",
+   "message": "CtB joined Contract Run.",
+   "metadata": {
+    "convoy_id": "02073e21-b11a-4343-b193-66e549f03ab1",
+    "player_id": "927a4782-4714-4cf3-8345-9a611898a2a8"
+   },
+   "read": false,
+   "title": "Convoy update",
+   "type": "convoy_event"
+  },
+  {
+   "created_at": "2026-10-11T04:00:21.72123+00:00",
+   "id": "8bbb8cdd-2aef-4141-a9c8-1c9c07211606",
+   "message": "CtD wants to be your friend.",
+   "metadata": {
+    "player_id": "86bf319c-6308-4f6c-b7c0-9c39e36b15e9",
+    "request_id": "3514cdef-ef6f-4832-99d3-1a129689f234"
+   },
+   "read": false,
+   "title": "Friend request",
+   "type": "friend_event"
+  },
+  {
+   "created_at": "2026-10-11T04:00:21.687237+00:00",
+   "id": "a22079bc-74b9-4240-ac44-3b97820a55d5",
+   "message": "CtB accepted your friend request.",
+   "metadata": {
+    "player_id": "927a4782-4714-4cf3-8345-9a611898a2a8"
+   },
+   "read": false,
+   "title": "New friend",
+   "type": "friend_event"
+  },
+  {
+   "created_at": "2026-10-11T04:00:21.442795+00:00",
+   "id": "fb724a2c-9c3a-4a6b-af24-3463ef795931",
+   "message": "First delivery: Complete your first job.",
+   "metadata": {
+    "achievement_id": "first_delivery"
+   },
+   "read": false,
+   "title": "Achievement unlocked",
+   "type": "achievement"
+  },
+  {
+   "created_at": "2026-10-11T04:00:21.439929+00:00",
+   "id": "9d7b5ed8-c209-403c-85db-50e3b5a65f9e",
+   "message": "You reached level 2.",
+   "metadata": {
+    "level": 2
+   },
+   "read": false,
+   "title": "Level up!",
+   "type": "level_up"
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.724442+00:00",
+ "unread": 5
+}

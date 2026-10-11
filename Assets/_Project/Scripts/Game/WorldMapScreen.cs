@@ -73,7 +73,7 @@ namespace ARO.Game
             _jobs = JobsOverride; if (_jobs == null) LoadJobs();
             if (_m.RequireServerState && !_m.HasServerState) ReloadWorld();
             ShowOverview();
-            Debug.Log($"[WorldMap] opened. artwork={_tex.width}x{_tex.height} content={CW}x{CH} cities={_m.Cities.Count} routes={_m.Routes.Count} level={Level} texFormat={_tex.graphicsFormat} texMB={UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(_tex) / 1048576f:0.0}");
+            Debug.Log($"[WorldMap] opened. server={_m.HasServerState} artwork={_tex.width}x{_tex.height} content={CW}x{CH} cities={_m.Cities.Count} routes={_m.Routes.Count} level={Level} texFormat={_tex.graphicsFormat} texMB={UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(_tex) / 1048576f:0.0}");
         }
 
         static Texture2D MakeTex(int w, int h, Func<int, int, Color> f, TextureWrapMode wrap)
@@ -527,7 +527,7 @@ namespace ARO.Game
         // ================================================================== test hooks (smoke mode only)
         void LogState()
         {
-            if (!SmokeMode.WorldMap) return;
+            if (!SmokeMode.WorldMap && !SmokeMode.E2E) return;
             var corners = new Vector3[4]; _contentRt.GetWorldCorners(corners); float w = corners[2].x - corners[0].x, h = corners[2].y - corners[0].y;
             Debug.Log($"[WorldMap] state screen={Screen.width}x{Screen.height} layout={(_landscape ? "landscape" : "portrait")} viewport={_vp.rect.width * _canvas.scaleFactor:0}x{_vp.rect.height * _canvas.scaleFactor:0} artworkOnScreen={w:0.#}x{h:0.#} aspect={(h > 0 ? w / h : 0):0.0000} zoom={_zoomT:0.00} pan={_panT.x:0.#},{_panT.y:0.#}");
             var sb = new System.Text.StringBuilder("[WorldMap] targets");

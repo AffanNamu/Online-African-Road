@@ -1,0 +1,53 @@
+{
+ "items": [
+  {
+   "can_afford": true,
+   "cargo_capacity_kg": 4000,
+   "category": "truck",
+   "definition_id": "truck_light_01",
+   "description": null,
+   "fuel_capacity_l": 120,
+   "name": "Savanna 4x2 Light Truck",
+   "owned": 1,
+   "passenger_capacity": 0,
+   "price": 0,
+   "purchasable": false,
+   "top_speed_kmh": 110,
+   "unlock_level": 1,
+   "unlocked": true
+  },
+  {
+   "can_afford": false,
+   "cargo_capacity_kg": 0,
+   "category": "bus",
+   "definition_id": "bus_city_01",
+   "description": null,
+   "fuel_capacity_l": 180,
+   "name": "Danfo City Bus",
+   "owned": 0,
+   "passenger_capacity": 40,
+   "price": 45000,
+   "purchasable": true,
+   "top_speed_kmh": 90,
+   "unlock_level": 1,
+   "unlocked": true
+  },
+  {
+   "can_afford": false,
+   "cargo_capacity_kg": 9000,
+   "category": "truck",
+   "definition_id": "truck_medium_01",
+   "description": null,
+   "fuel_capacity_l": 250,
+   "name": "Harmattan 6x2 Medium Truck",
+   "owned": 0,
+   "passenger_capacity": 0,
+   "price": 60000,
+   "purchasable": true,
+   "top_speed_kmh": 100,
+   "unlock_level": 1,
+   "unlocked": true
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.791442+00:00"
+}

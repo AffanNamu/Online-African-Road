@@ -1,0 +1,27 @@
+{
+ "items": [
+  {
+   "acquired_at": "2026-10-11T04:00:21.248168+00:00",
+   "cargo_capacity_kg": 4000,
+   "category": "truck",
+   "condition_pct": 88.0,
+   "customization": {},
+   "damage_pct": 12,
+   "definition_id": "truck_light_01",
+   "fuel_capacity_l": 120,
+   "fuel_l": 60,
+   "fuel_pct": 50.0,
+   "id": "60dcfac4-95f9-4f9a-847f-c13120b8a84d",
+   "mileage_km": 0.0,
+   "model": "Savanna 4x2 Light Truck",
+   "name": "Savanna 4x2 Light Truck",
+   "nickname": null,
+   "passenger_capacity": 0,
+   "selected": true,
+   "status": "on_job",
+   "top_speed_kmh": 110
+  }
+ ],
+ "selected_id": "60dcfac4-95f9-4f9a-847f-c13120b8a84d",
+ "server_time": "2026-10-11T04:00:22.758735+00:00"
+}

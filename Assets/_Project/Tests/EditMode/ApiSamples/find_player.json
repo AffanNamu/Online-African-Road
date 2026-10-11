@@ -1,0 +1,17 @@
+{
+ "avatar_id": "default",
+ "country_code": null,
+ "display_name": "CtB",
+ "friend_status": "friends",
+ "level": 1,
+ "player_id": "927a4782-4714-4cf3-8345-9a611898a2a8",
+ "presence": {
+  "activity": "menu",
+  "city_slug": null,
+  "last_seen_at": "2026-10-11T04:00:21.580427+00:00",
+  "online": true,
+  "route_code": null,
+  "session_id": "5edb215b-5d34-4794-a57b-4a9e61d6cc25"
+ },
+ "username": "ctb"
+}

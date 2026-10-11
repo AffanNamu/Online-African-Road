@@ -1,0 +1,20 @@
+{
+ "avatar_id": "default",
+ "coins": 5000,
+ "country_code": null,
+ "created_at": "2026-10-11T04:00:21.100052+00:00",
+ "display_name": "CtA",
+ "distance_km": 12,
+ "experience": 300,
+ "id": "b1d86a83-f2e6-48a2-80df-1df95727f229",
+ "jobs_completed": 2,
+ "jobs_total": 0,
+ "last_seen_at": "2026-10-11T04:00:21.546298+00:00",
+ "level": 2,
+ "lifetime_earnings": 900,
+ "server_time": "2026-10-11T04:00:22.122312+00:00",
+ "updated_at": "2026-10-11T04:00:21.100052+00:00",
+ "username": "cta",
+ "xp_level_start": 100,
+ "xp_next_level": 400
+}

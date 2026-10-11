@@ -1,0 +1,149 @@
+{
+ "items": [
+  {
+   "current": 1,
+   "description": "Complete your first job.",
+   "id": "first_delivery",
+   "metric": "jobs_completed",
+   "threshold": 1,
+   "title": "First delivery",
+   "unlocked_at": "2026-10-11T04:00:21.437781+00:00"
+  },
+  {
+   "current": 2,
+   "description": "Complete 10 jobs.",
+   "id": "deliveries_10",
+   "metric": "jobs_completed",
+   "threshold": 10,
+   "title": "Regular driver",
+   "unlocked_at": null
+  },
+  {
+   "current": 2,
+   "description": "Complete 50 jobs.",
+   "id": "deliveries_50",
+   "metric": "jobs_completed",
+   "threshold": 50,
+   "title": "Road veteran",
+   "unlocked_at": null
+  },
+  {
+   "current": 2,
+   "description": "Complete 100 jobs.",
+   "id": "deliveries_100",
+   "metric": "jobs_completed",
+   "threshold": 100,
+   "title": "Century hauler",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 50 km in total.",
+   "id": "distance_50",
+   "metric": "distance_km",
+   "threshold": 50,
+   "title": "Drive 50 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 100 km in total.",
+   "id": "distance_100",
+   "metric": "distance_km",
+   "threshold": 100,
+   "title": "Drive 100 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 250 km in total.",
+   "id": "distance_250",
+   "metric": "distance_km",
+   "threshold": 250,
+   "title": "Drive 250 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 500 km in total.",
+   "id": "distance_500",
+   "metric": "distance_km",
+   "threshold": 500,
+   "title": "Drive 500 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 1,000 km in total.",
+   "id": "distance_1000",
+   "metric": "distance_km",
+   "threshold": 1000,
+   "title": "Drive 1,000 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 2,500 km in total.",
+   "id": "distance_2500",
+   "metric": "distance_km",
+   "threshold": 2500,
+   "title": "Drive 2,500 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 5,000 km in total.",
+   "id": "distance_5000",
+   "metric": "distance_km",
+   "threshold": 5000,
+   "title": "Drive 5,000 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 10,000 km in total.",
+   "id": "distance_10000",
+   "metric": "distance_km",
+   "threshold": 10000,
+   "title": "Drive 10,000 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 12,
+   "description": "Drive 25,000 km in total.",
+   "id": "distance_25000",
+   "metric": "distance_km",
+   "threshold": 25000,
+   "title": "Drive 25,000 km",
+   "unlocked_at": null
+  },
+  {
+   "current": 2,
+   "description": "Reach level 5.",
+   "id": "level_5",
+   "metric": "level",
+   "threshold": 5,
+   "title": "Level 5",
+   "unlocked_at": null
+  },
+  {
+   "current": 2,
+   "description": "Reach level 10.",
+   "id": "level_10",
+   "metric": "level",
+   "threshold": 10,
+   "title": "Level 10",
+   "unlocked_at": null
+  },
+  {
+   "current": 2,
+   "description": "Reach level 25.",
+   "id": "level_25",
+   "metric": "level",
+   "threshold": 25,
+   "title": "Level 25",
+   "unlocked_at": null
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.324669+00:00"
+}

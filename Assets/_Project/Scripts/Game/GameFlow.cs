@@ -28,7 +28,7 @@ namespace ARO.Game
             _toast = UIKit.Label(_canvas.transform, "", 26, UIKit.Accent, TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
             // The server writes the payout / level-up / achievement notifications itself; we only refresh what we show.
             _drive.JobCompleted += async r => { if (r != null) Toast($"Job complete: +{r.reward:N0} coins, +{r.xp:N0} XP", 5f); await _svc.RefreshPlayer(); _ = _svc.Notifications.RefreshUnread(); };
-            _bus.RunCompleted += async _ => { await _svc.RefreshPlayer(); _ = _svc.Notifications.RefreshUnread(); };
+            _bus.RunCompleted += async result => { await _svc.RefreshPlayer(); _ = _svc.Notifications.RefreshUnread(); };
             _svc.Session.StateChanged += (st, msg) => { if (!string.IsNullOrEmpty(msg)) Toast(msg, 6f); };
             _svc.Api.SessionExpired += () => _sessionLost = true;
             _ = StartUp();
@@ -93,6 +93,7 @@ namespace ARO.Game
         /// <summary>The server rejected our session and it could not be refreshed: back to sign-in, with the reason.</summary>
         void LoseSession()
         {
+            Debug.Log("[Session] expired: back to sign-in");
             _svc.Presence.Clock.Reset(); _svc.ClearPlayerCaches();
             if (_drive.Active) { _drive.Pause(true); _hud.SetVisible(false); }
             _canvas.gameObject.SetActive(false);
@@ -161,6 +162,7 @@ namespace ARO.Game
         {
             var m = WorldMapScreen.Model(); if (m == null) return;
             await _svc.World.Load(m);
+            Debug.Log("[World] state=" + _svc.World.State.State.ToString().ToLowerInvariant() + (_svc.World.State.Error != null ? " error=" + _svc.World.State.Error : ""));
             if (_dash != null && _dash.gameObject.activeInHierarchy) _dash.OnWorldChanged();
         }
 

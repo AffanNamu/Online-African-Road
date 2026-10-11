@@ -1,0 +1,73 @@
+{
+ "items": [
+  {
+   "action": null,
+   "body": "Take jobs, run bus routes and drive in a convoy. More cities and roads are on the way.",
+   "button": null,
+   "category": "update",
+   "expires_at": null,
+   "eyebrow": null,
+   "headline": null,
+   "headline_accent": null,
+   "id": "corridor-open",
+   "image_key": "highway",
+   "kind": "news",
+   "priority": 4,
+   "publish_at": "2026-10-10T00:00:00+00:00",
+   "source": "authored",
+   "title": "The Lagos\u2013Ibadan corridor is open"
+  },
+  {
+   "action": null,
+   "body": "Explore 23 cities and 12 planned routes. Lagos to Ibadan is the only road you can drive so far.",
+   "button": null,
+   "category": "update",
+   "expires_at": null,
+   "eyebrow": null,
+   "headline": null,
+   "headline_accent": null,
+   "id": "world-map",
+   "image_key": "map",
+   "kind": "news",
+   "priority": 3,
+   "publish_at": "2026-10-10T00:00:00+00:00",
+   "source": "authored",
+   "title": "The West Africa map is here"
+  },
+  {
+   "action": null,
+   "body": "A truck under 10% fuel is flagged on your dashboard. Fill up before a long haul.",
+   "button": null,
+   "category": "tip",
+   "expires_at": null,
+   "eyebrow": null,
+   "headline": null,
+   "headline_accent": null,
+   "id": "fuel-tip",
+   "image_key": "fuel",
+   "kind": "news",
+   "priority": 2,
+   "publish_at": "2026-10-09T00:00:00+00:00",
+   "source": "authored",
+   "title": "Watch your fuel"
+  },
+  {
+   "action": null,
+   "body": "Create or join a convoy from the Multiplayer tab and see your friends on the same road.",
+   "button": null,
+   "category": "event",
+   "expires_at": null,
+   "eyebrow": null,
+   "headline": null,
+   "headline_accent": null,
+   "id": "convoys",
+   "image_key": "convoy",
+   "kind": "news",
+   "priority": 1,
+   "publish_at": "2026-10-08T00:00:00+00:00",
+   "source": "authored",
+   "title": "Drive together in a convoy"
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.923355+00:00"
+}

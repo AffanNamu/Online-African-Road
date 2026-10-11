@@ -23,8 +23,41 @@ jobs:
       - uses: actions/checkout@v4
       - name: Rule, security-matrix and concurrency tests
         run: ./supabase/tests/run.sh
+      - name: Generated seeds are up to date with the authored data (world map, news, hero)
+        run: python3 tools/gen_game_seed.py --check
+      - name: Upgrade test (a database with players, money and a convoy is migrated by the real apply.sh; nothing is lost)
+        run: bash supabase/tests/40_upgrade.sh
+      - name: API contract (every C# DTO the client parses versus the real output of the real RPCs)
+        run: python3 tools/check_api_contract.py
       - name: Mutation test (every protection must be caught by a test)
         run: python3 supabase/tests/mutation.py
+
+  api-e2e:
+    name: Backend over HTTP (PostgREST + auth + security tests)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:15
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Install PostgREST
+        run: tools/e2e/install_postgrest.sh
+      - name: Start the backend (fresh database, every migration, PostgREST, auth shim)
+        run: tools/e2e/up.sh
+      - name: HTTP end-to-end and security tests
+        run: |
+          source /tmp/aro-e2e.env
+          node tools/e2e/api_e2e.js
+      - name: Backend logs
+        if: failure()
+        run: tail -n 80 /tmp/aro-e2e-postgrest.log /tmp/aro-e2e-shim.log || true
 
   safety:
     name: Repository safety gate (secrets, licences, third-party assets)
@@ -130,6 +163,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
     permissions: { contents: write }   # only to publish screenshots to the ci-screenshots branch
+    services:
+      postgres:     # the browser end-to-end test runs the real game against a real (throw-away) backend
+        image: public.ecr.aws/docker/library/postgres:15
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -153,12 +194,18 @@ jobs:
       - name: Drive scenario (?smoke=drive) - the truck must land on real ground, accelerate and move
         if: always()
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive
-      - name: Dashboard scenario (?smoke=dashboard) - fixture data, layout screenshot, sidebar click
+      - name: Install PostgREST
         if: always()
-        run: node tools/webgl-shot.js Builds/WebGL "smoke=dashboard" '\[Dashboard\] built' webgl-dashboard
-      - name: Dashboard states (?smoke=dashboard&jobs=slow|error|empty) - skeleton, error + retry, empty, bell, hero, news
+        run: tools/e2e/install_postgrest.sh
+      - name: Browser end-to-end on a real backend - sign-in, dashboard data from the database, notifications, presence, job accept, failure + retry states, session expiry
         if: always()
-        run: node tools/webgl-dashboard-states.js Builds/WebGL webgl-dstate
+        run: |
+          E2E_BUILD_DIR="$PWD/Builds/WebGL" tools/e2e/up.sh
+          source /tmp/aro-e2e.env
+          node tools/webgl-e2e.js webgl-e2e
+      - name: Backend logs
+        if: failure()
+        run: tail -n 60 /tmp/aro-e2e-postgrest.log /tmp/aro-e2e-shim.log || true
       - name: World map scenario (?smoke=worldmap) - artwork, aspect ratio, zoom, pan, cities, routes, Back/Escape
         if: always()
         run: node tools/webgl-worldmap.js Builds/WebGL webgl-worldmap

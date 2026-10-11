@@ -1,0 +1,23 @@
+{
+ "achievements": {
+  "total": 16,
+  "unlocked": 1
+ },
+ "distance_km": 12,
+ "experience": 300,
+ "jobs_completed": 2,
+ "level": 2,
+ "level_progress": 0.6667,
+ "next_milestone": {
+  "current": 12.0,
+  "fraction": 0.24,
+  "id": "distance_50",
+  "target": 50,
+  "title": "Drive 50 km"
+ },
+ "server_time": "2026-10-11T04:00:22.291484+00:00",
+ "xp_into_level": 200,
+ "xp_level_start": 100,
+ "xp_next_level": 400,
+ "xp_to_next": 100
+}

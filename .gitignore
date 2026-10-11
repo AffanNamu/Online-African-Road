@@ -37,3 +37,8 @@ supabase/.branches/
 *.jks
 /Assets/ThirdParty/
 /Assets/AssetStore/
+
+# semcheck (type-check harness) is a hand-written project; keep it, ignore its build output
+!tools/**/*.csproj
+tools/semcheck/obj/
+tools/semcheck/bin/

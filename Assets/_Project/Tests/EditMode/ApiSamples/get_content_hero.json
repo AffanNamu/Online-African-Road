@@ -1,0 +1,56 @@
+{
+ "items": [
+  {
+   "action": "jobs",
+   "body": "Take real jobs, deliver cargo, explore cities\nand build your trucking career.",
+   "button": "Find a Job",
+   "category": "update",
+   "expires_at": null,
+   "eyebrow": "EXPLORE|DELIVER|CONNECT",
+   "headline": "DRIVE ACROSS",
+   "headline_accent": "AFRICA",
+   "id": "hero-explore",
+   "image_key": "highway",
+   "kind": "hero",
+   "priority": 3,
+   "publish_at": "2026-10-10T00:00:00+00:00",
+   "source": "authored",
+   "title": "Drive across Africa"
+  },
+  {
+   "action": "convoy",
+   "body": "Team up with friends on the same route.\nShared roads, shared rewards.",
+   "button": "Join a Convoy",
+   "category": "update",
+   "expires_at": null,
+   "eyebrow": "CONVOY|SHARE|EARN",
+   "headline": "DRIVE IN",
+   "headline_accent": "CONVOY",
+   "id": "hero-convoy",
+   "image_key": "convoy",
+   "kind": "hero",
+   "priority": 2,
+   "publish_at": "2026-10-09T00:00:00+00:00",
+   "source": "authored",
+   "title": "Drive in convoy"
+  },
+  {
+   "action": "bus",
+   "body": "Run a bus route, pick up passengers at every\nstop and earn a fare for each one.",
+   "button": "Bus Routes",
+   "category": "update",
+   "expires_at": null,
+   "eyebrow": "CITIES|PASSENGERS|FARES",
+   "headline": "KEEP THE CITY",
+   "headline_accent": "MOVING",
+   "id": "hero-bus",
+   "image_key": "bus",
+   "kind": "hero",
+   "priority": 1,
+   "publish_at": "2026-10-08T00:00:00+00:00",
+   "source": "authored",
+   "title": "Keep the city moving"
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.954231+00:00"
+}

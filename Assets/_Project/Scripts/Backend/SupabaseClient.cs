@@ -115,7 +115,7 @@ namespace ARO.Backend
         {
             if (_session == null) return false;
             var r = await AuthCall("/auth/v1/token?grant_type=refresh_token", JsonUtility.ToJson(new RefreshBody { refresh_token = _session.refresh_token }));
-            if (r.Ok) return true;
+            if (r.Ok) { Debug.Log("[Backend] session refreshed"); return true; }
             if (r.ErrorCode == "offline" || r.ErrorCode == "timeout" || r.ErrorCode == "server_error") return false;   // cannot tell: keep the session, the next call tries again
             _session = null; PlayerPrefs.DeleteKey(RefreshKey); SessionExpired?.Invoke();
             return false;

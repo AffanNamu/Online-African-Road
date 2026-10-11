@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework><LangVersion>9.0</LangVersion><Nullable>disable</Nullable><OutputType>Library</OutputType><EnableDefaultCompileItems>false</EnableDefaultCompileItems><NoWarn>CS0649;CS0169;CS0414;CS8981;CS0168;CS0219;CS0618;CS1701;CS1702</NoWarn><DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Core/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/NetCore/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Backend/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Jobs/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Multiplayer/**/*.cs" Exclude="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Multiplayer/NetVehicleState.cs;$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Multiplayer/NetworkVehicle.cs;$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Multiplayer/OwnerNetworkTransform.cs;$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Multiplayer/SessionService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Game/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Vehicles/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/World/**/*.cs" Exclude="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/World/RenderingRig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Scripts/Input/**/*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Stubs.cs" /><Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Tests/EditMode/BackendClientTests.cs" /><Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Tests/EditMode/BusDtoTests.cs" /><Compile Include="$(MSBuildThisFileDirectory)../../Assets/_Project/Tests/EditMode/UnityLogicTests.cs" />
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" />
+  </ItemGroup>
+<ItemGroup><PackageReference Include="NUnit" Version="3.14.0" /></ItemGroup></Project>

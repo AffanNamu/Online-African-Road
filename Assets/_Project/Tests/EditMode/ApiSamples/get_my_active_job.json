@@ -1,0 +1,52 @@
+{
+ "active": {
+  "accepted_at": "2026-10-11T04:00:22.047173+00:00",
+  "assignment_id": "af597aa6-0d29-4fbf-bb46-4e4be7e1b5fa",
+  "job": {
+   "blocked_reason": "activity_in_progress",
+   "cargo": {
+    "type": "Test",
+    "weight_kg": 1000
+   },
+   "code": "CT-2",
+   "created_at": "2026-10-11T04:00:21.957114+00:00",
+   "destination": {
+    "city": "Lagos",
+    "city_slug": "lagos",
+    "name": "Mile 12 Market",
+    "slug": "lagos-mile12-market",
+    "world_x": 2600,
+    "world_z": -900
+   },
+   "difficulty": 2,
+   "distance_km": 3.0,
+   "eligible": false,
+   "est_minutes": 4,
+   "expires_at": "2026-10-12T04:00:21.957114+00:00",
+   "id": "2e69682f-108a-41df-8518-30c03d2b26a1",
+   "origin": {
+    "city": "Lagos",
+    "city_slug": "lagos",
+    "name": "Apapa Port Depot",
+    "slug": "lagos-apapa-port",
+    "world_x": 0,
+    "world_z": 0
+   },
+   "requirements": {
+    "category": "truck",
+    "max_participants": 1,
+    "min_level": 1
+   },
+   "reward": 900,
+   "slots_taken": 1,
+   "status": "open",
+   "xp_reward": 40
+  },
+  "progress_pct": 0.0,
+  "started_at": null,
+  "status": "accepted",
+  "vehicle_id": "60dcfac4-95f9-4f9a-847f-c13120b8a84d",
+  "verified_km": 0
+ },
+ "server_time": "2026-10-11T04:00:23.017438+00:00"
+}

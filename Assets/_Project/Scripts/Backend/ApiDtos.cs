@@ -14,8 +14,9 @@ namespace ARO.Backend
     /// <summary>A public player card (friends, recent players, convoy members, search results). Never contains coins or e-mail.</summary>
     [Serializable] public class PersonDto
     {
-        public string player_id, display_name, username, avatar_id, country_code, friend_status, since, last_played_at;
-        public int level, times; public PresenceLite presence;
+        public string player_id, display_name, username, avatar_id, country_code, friend_status; public int level; public PresenceLite presence;
+        // optional: only some lists carry these (friends: since; recent players: last_played_at, times)
+        public string since, last_played_at; public int times;
         public bool Exists => !string.IsNullOrEmpty(player_id);
     }
 
@@ -30,13 +31,16 @@ namespace ARO.Backend
     [Serializable] public class ProgressionDto
     {
         public int level, jobs_completed; public long experience, xp_level_start, xp_next_level, xp_into_level, xp_to_next; public double level_progress, distance_km;
-        public AchievementCounts achievements; public MilestoneDto next_milestone; public string server_time;
+        public AchievementCounts achievements; public MilestoneDto next_milestone;
+        // optional: only the standalone get_my_progression reply carries the server clock
+        public string server_time;
     }
     [Serializable] public class AchievementItem { public string id, title, description, metric, unlocked_at; public double threshold, current; public bool Unlocked => !string.IsNullOrEmpty(unlocked_at); }
     [Serializable] public class AchievementList { public AchievementItem[] items; }
     [Serializable] public class WalletInfo { public long balance, lifetime_earnings; public string server_time; }
 
-    [Serializable] public class VehicleCustomization { public string color, livery, plate; }
+    [Serializable] public class VehicleCustomization { // optional:
+    public string color, livery, plate; }
     [Serializable] public class VehicleInfo
     {
         public string id, definition_id, name, model, nickname, category, status, acquired_at;
@@ -131,7 +135,7 @@ namespace ARO.Backend
     [Serializable] public class ActiveJobReply { public ActiveJobInfo active; public string server_time; }
 
     // ---------------------------------------------------------------- content
-    [Serializable] public class ContentItem { public string id, kind, category, title, body, image_key, publish_at, expires_at, source; public int priority; }
+    [Serializable] public class ContentItem { public string id, kind, category, title, body, image_key, publish_at, expires_at, source, eyebrow, headline, headline_accent, action, button; public int priority; }
     [Serializable] public class ContentList { public ContentItem[] items; }
 
     // ---------------------------------------------------------------- leaderboards

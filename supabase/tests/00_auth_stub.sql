@@ -5,8 +5,10 @@ do $$ begin
 end $$;
 create schema if not exists auth;
 create table if not exists auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb default '{}'::jsonb);
+-- Same lookup order as Supabase's own auth.uid(): the per-claim setting (used by the SQL tests) or the JSON claims PostgREST sets per request.
 create or replace function auth.uid() returns uuid language sql stable as
-  $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
+  $$ select coalesce(nullif(current_setting('request.jwt.claim.sub', true), ''),
+                     (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub'))::uuid $$;
 grant usage on schema public, auth to anon, authenticated;
 
 -- Reproduce Supabase's default privileges: the platform grants these on everything created in `public`,

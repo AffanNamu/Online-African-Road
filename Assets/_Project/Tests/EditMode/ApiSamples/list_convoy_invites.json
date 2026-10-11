@@ -1,0 +1,22 @@
+{
+ "items": [
+  {
+   "convoy_id": "02073e21-b11a-4343-b193-66e549f03ab1",
+   "convoy_name": "Contract Run",
+   "created_at": "2026-10-11T04:00:21.887564+00:00",
+   "expires_at": "2026-10-12T04:00:21.887564+00:00",
+   "from": {
+    "avatar_id": "sunset",
+    "country_code": "NG",
+    "display_name": "CtA",
+    "friend_status": "none",
+    "level": 2,
+    "player_id": "b1d86a83-f2e6-48a2-80df-1df95727f229",
+    "presence": null,
+    "username": "cta"
+   },
+   "invite_id": "dc0d2b45-7080-4868-b6f1-f677eb26845a"
+  }
+ ],
+ "server_time": "2026-10-11T04:00:22.658726+00:00"
+}
