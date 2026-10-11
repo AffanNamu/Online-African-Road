@@ -45,7 +45,7 @@ let TTL = 3600;                                   // seconds a new access token 
 const hashPw = (pw, salt) => crypto.scryptSync(pw, salt, 32).toString('hex');
 function session(userId, email) {
   const now = Math.floor(Date.now() / 1000);
-  const access = sign({ aud: 'authenticated', role: 'authenticated', sub: userId, email, iss: 'aro-e2e', iat: now, exp: now + TTL });
+  const access = sign({ aud: 'authenticated', role: 'authenticated', sub: userId, email, iss: 'aro-e2e', iat: now, exp: now + TTL, session_id: crypto.randomUUID() }); // like GoTrue: every session's token is distinct, even within one second
   const refresh = crypto.randomBytes(24).toString('hex');
   return psql('insert into e2e.refresh_tokens(token, user_id) values (:\'t\', :\'u\')', { t: refresh, u: userId })
     .then(() => ({ access_token: access, token_type: 'bearer', expires_in: TTL, refresh_token: refresh, user: { id: userId, email } }));

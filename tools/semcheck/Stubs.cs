@@ -54,7 +54,7 @@ namespace UnityEngine.UI
 namespace UnityEngine.InputSystem
 {
     public class ButtonControl { public bool wasPressedThisFrame, wasReleasedThisFrame, isPressed; }
-    public class Keyboard { public static Keyboard current; public ButtonControl escapeKey, spaceKey, enterKey, tabKey; public ButtonControl this[Key k] => null; }
+    public class Keyboard { public static Keyboard current; public ButtonControl escapeKey, spaceKey, enterKey, numpadEnterKey, tabKey; public ButtonControl this[Key k] => null; }
     public enum Key { A, W, S, D }
     public class Mouse { public static Mouse current; public ButtonControl leftButton; public Vector2Control position; public Vector2Control scroll; }
     public class Vector2Control { public Vector2 ReadValue() => default; }

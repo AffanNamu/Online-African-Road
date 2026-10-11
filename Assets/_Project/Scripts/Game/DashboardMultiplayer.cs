@@ -516,8 +516,17 @@ namespace ARO.Game
             var f = areaGo.AddComponent<InputField>(); f.targetGraphic = hit; f.textComponent = txt; f.placeholder = ph; f.lineType = InputField.LineType.SingleLine; f.characterLimit = 200; f.transition = Selectable.Transition.None;
             f.customCaretColor = true; f.caretColor = Gold; f.interactable = can; f.selectionColor = new Color(Gold.r, Gold.g, Gold.b, 0.35f);
             _chatField = f;
+            f.onEndEdit.AddListener(_ => { if (EnterKey()) SendChat(); });          // Enter sends (focus loss alone does not)
             Ui.Rounded(_stage, "SendBg", can ? Gold : new Color(0.2f, 0.22f, 0.27f), X + W - 52, Y + iy, 40, 40, 11); Ui.Icon(_stage, "icon_arrow", can ? Ink : Muted, X + W - 45, Y + iy + 7, 26);
             Ui.Click(_stage, "Btn_SendChat", X + W - 52, Y + iy, 40, 40, () => SendChat());
+        }
+
+        static bool EnterKey()
+        {
+            // the InputField ends editing inside the key event itself, so that event is the reliable witness (polling can miss a key that went down and up within one frame)
+            var ev = Event.current; if (ev != null && ev.isKey && (ev.keyCode == KeyCode.Return || ev.keyCode == KeyCode.KeypadEnter)) return true;
+            try { var k = UnityEngine.InputSystem.Keyboard.current; if (k != null && (k.enterKey.wasPressedThisFrame || k.numpadEnterKey.wasPressedThisFrame)) return true; } catch (InvalidOperationException) { }
+            try { return UnityEngine.Input.GetKeyDown(KeyCode.Return) || UnityEngine.Input.GetKeyDown(KeyCode.KeypadEnter); } catch (InvalidOperationException) { return false; }
         }
 
         void SendChat()

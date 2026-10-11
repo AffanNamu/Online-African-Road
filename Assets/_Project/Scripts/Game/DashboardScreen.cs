@@ -916,39 +916,39 @@ namespace ARO.Game
         // ================================================================================================================ bottom row
         void BuildPlayers()
         {
-            Panel(21, 924, 760, 142);
-            Ui.Label(_stage, "Recent Players", "Bold", 24, White, 42, 938, 300, 32);
-            SmallPill(690, 942, 70, 26, "View All", _act.Convoy);
+            Panel(316, 924, 468, 142);
+            Ui.Label(_stage, "Recent Players", "Bold", 24, White, 338, 938, 300, 32);
+            SmallPill(696, 942, 70, 26, "View All", _act.Convoy);
             var rec = _svc.Friends.Recent;
             if (rec.State == LoadState.Idle || rec.State == LoadState.Loading)
-            { Ui.Label(_stage, "Loading players...", "SemiBold", 21, Muted, 44, 990, 620, 28); return; }
+            { Ui.Label(_stage, "Loading players...", "SemiBold", 21, Muted, 338, 990, 420, 28); return; }
             if (rec.State == LoadState.Unavailable)
             {
-                Ui.Icon(_stage, "ic_people", new Color(1, 1, 1, 0.22f), 44, 984, 52);
-                Ui.Label(_stage, "Recent players are unavailable right now.", "SemiBold", 21, Brand.Bad, 112, 986, 620, 28);
-                Ui.Label(_stage, "Tap to try again.", "Regular", 17, new Color(0.55f, 0.58f, 0.64f), 112, 1018, 620, 24);
-                Ui.Click(_stage, "Btn_RetryPlayers", 21, 924, 760, 142, () => { _svc.Friends.Recent.Reset(); _ = LoadRecentPlayers(); }); return;
+                Ui.Icon(_stage, "ic_people", new Color(1, 1, 1, 0.22f), 338, 984, 52);
+                Ui.Label(_stage, "Recent players are unavailable right now.", "SemiBold", 21, Brand.Bad, 402, 986, 370, 28);
+                Ui.Label(_stage, "Tap to try again.", "Regular", 17, new Color(0.55f, 0.58f, 0.64f), 402, 1018, 370, 24);
+                Ui.Click(_stage, "Btn_RetryPlayers", 316, 924, 468, 142, () => { _svc.Friends.Recent.Reset(); _ = LoadRecentPlayers(); }); return;
             }
             var people = rec.Value != null && rec.Value.items != null ? rec.Value.items : new PersonDto[0];
             if (people.Length == 0)
             {
-                Ui.Icon(_stage, "ic_people", new Color(1, 1, 1, 0.22f), 44, 984, 52);
-                Ui.Label(_stage, "Players you drive with will appear here.", "SemiBold", 21, Muted, 112, 986, 620, 28);
-                Ui.Label(_stage, "Join a convoy and your crew is remembered on your account.", "Regular", 17, new Color(0.55f, 0.58f, 0.64f), 112, 1018, 620, 24);
-                Ui.Click(_stage, "Btn_PlayersEmpty", 21, 924, 760, 142, _act.Convoy); return;
+                Ui.Icon(_stage, "ic_people", new Color(1, 1, 1, 0.22f), 338, 984, 52);
+                Ui.Label(_stage, "Players you drive with appear here.", "SemiBold", 21, Muted, 402, 986, 370, 28);
+                Ui.Label(_stage, "Your convoy crew is remembered.", "Regular", 17, new Color(0.55f, 0.58f, 0.64f), 402, 1018, 370, 24);
+                Ui.Click(_stage, "Btn_PlayersEmpty", 316, 924, 468, 142, _act.Convoy); return;
             }
             string serverNow = rec.Value.server_time;
-            for (int i = 0; i < Math.Min(4, people.Length); i++)
+            for (int i = 0; i < Math.Min(2, people.Length); i++)
             {
-                var e = people[i]; float x = 42 + i * 180; bool online = e.presence != null && e.presence.online;
+                var e = people[i]; float x = 338 + i * 220; bool online = e.presence != null && e.presence.online;
                 People.AvatarRgb(e.display_name, out float r, out float g, out float b);
                 Ui.Disc(_stage, "AvRing", online ? Brand.Good : new Color(1, 1, 1, 0.25f), x, 984, 64);
                 Ui.Disc(_stage, "Av", new Color(r, g, b), x + 3, 987, 58);
                 Ui.Label(_stage, People.Initials(e.display_name), "Bold", 22, White, x + 3, 1004, 58, 28, TextAnchor.UpperCenter);
-                var n = Ui.Label(_stage, e.display_name, "Bold", 18, White, x + 74, 988, 100, 24); n.resizeTextForBestFit = true; n.resizeTextMinSize = 12; n.resizeTextMaxSize = 18; n.horizontalOverflow = HorizontalWrapMode.Wrap;
+                var n = Ui.Label(_stage, e.display_name, "Bold", 18, White, x + 74, 988, 124, 24); n.resizeTextForBestFit = true; n.resizeTextMinSize = 12; n.resizeTextMaxSize = 18; n.horizontalOverflow = HorizontalWrapMode.Wrap;
                 string status = online ? "Online" : (e.presence != null && !string.IsNullOrEmpty(e.presence.last_seen_at) ? TimeText.AgoFrom(e.presence.last_seen_at, serverNow) : "Offline");
                 Ui.Disc(_stage, "St", online ? Brand.Good : Muted, x + 74, 1020, 9);
-                Ui.Label(_stage, status, "Regular", 14, online ? Brand.Good : Muted, x + 88, 1015, 90, 18);
+                Ui.Label(_stage, status, "Regular", 14, online ? Brand.Good : Muted, x + 88, 1015, 110, 18);
             }
         }
 
