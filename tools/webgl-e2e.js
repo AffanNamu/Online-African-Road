@@ -865,6 +865,59 @@ const allErrors = [], allExc = [];
     check(!!c.targets()['Btn_ObCountry_NG'], 'the real countries are listed after the retry');
   });
 
+  // =========================================================================================== 2i. Bus Routes: no bus, error + retry, the list and detail, a wrecked bus, a real start, a run in progress, abandon
+  const nRoutes = +db(`select count(*) from bus_routes`), routeCode = db(`select code from bus_routes order by code limit 1`);
+  const nobus = await signup('BrowserNoBus');
+  await open(nobus, '&fault=bus_routes:error:3', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserNoBus/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses'); await c.waitLog(/\[Dashboard\] page=vehicles/, m, 60); await c.settle();
+    check(!!c.targets()['Btn_VehBusRoutes'], 'Trucks & Buses has a Bus Routes button'); m = c.logs.length; await c.click('Btn_VehBusRoutes');
+    check(!!(await c.waitLog(/\[BusRoutes\] opened/, m, 60)), 'Bus Routes opens from Trucks & Buses');
+    check(!!(await c.waitLog(/\[BusRoutes\] routes state=unavailable/, m, 90)), 'routes that cannot load say "unavailable" instead of showing an empty list');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-110-busroutes-error.png` }); check(!!c.targets()['Btn_BrRetry'], 'a Try again button is offered');
+    m = c.logs.length; await c.click('Btn_BrRetry'); const ok = await c.waitLog(/\[BusRoutes\] routes state=ready/, m, 90); check(!!ok && ok.includes(`count=${nRoutes} buses=0 bus=none`), `Try again reaches the server: ${nRoutes} route(s) from the database and no bus owned`, ok);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-111-busroutes-nobus.png` }); check(!!c.targets()['Btn_BrBrowse'] && !c.targets()['Btn_BrStart'], 'without a bus the page says so and leads to the shop (no Start button)');
+    m = c.logs.length; await c.click('Btn_BrBrowse'); check(!!(await c.waitLog(/\[Dashboard\] page=vehicles/, m, 40)), 'Browse buses opens Trucks & Buses');
+  });
+  const busman = await signup('BrowserBusMan');
+  db(`update player_wallets set balance = 300000 where player_id = '${busman.id}'`); asUser(busman, `select buy_vehicle('bus_city_01')::text`);
+  const busId = db(`select id from vehicle_ownership where player_id = '${busman.id}' and definition_id = 'bus_city_01'`);
+  db(`update vehicle_ownership set damage_pct = 100 where id = '${busId}'`);                          // a wrecked bus first: the server would refuse, the page says why and does not even ask
+  await open(busman, '', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserBusMan/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses'); await c.waitLog(/\[Dashboard\] page=vehicles/, m, 60); await c.settle();
+    m = c.logs.length; await c.click('Btn_VehBusRoutes'); const rl = await c.waitLog(/\[BusRoutes\] routes state=ready/, m, 90); check(!!rl && rl.includes(`count=${nRoutes} buses=1 bus=bus_city_01`), 'the list is the database list and the bus the player owns is found', rl);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-112-busroutes-list.png` }); let tg = c.targets();
+    for (const k of ['Btn_BrBack', `Btn_BrView_${routeCode}`, 'Btn_BrStart']) check(!!tg[k], `${k} is a clickable target on the Bus Routes page`);
+    m = c.logs.length; await c.click('Btn_BrStart'); check(!!(await c.waitLog(/\[BusRoutes\] start blocked: Your bus is too damaged/, m, 30)), 'a wrecked bus cannot start a route: the page says why and does not ask the server');
+    check(db(`select count(*) from bus_runs where player_id = '${busman.id}'`) === '0', 'no run was created');
+    m = c.logs.length; await c.click(`Btn_BrView_${routeCode}`); check(!!(await c.waitLog(new RegExp(`\\[BusRoutes\\] selected ${routeCode}`), m, 30)), 'a route can be selected');
+    await c.click('Btn_BrBack'); check(!!(await c.waitLog(/\[Dashboard\] page=vehicles/, m, 40)), 'the back link returns to Trucks & Buses');
+  });
+  db(`update vehicle_ownership set damage_pct = 5 where id = '${busId}'`);
+  await open(busman, '', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserBusMan/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses'); await c.waitLog(/\[Dashboard\] page=vehicles/, m, 60); await c.settle();
+    m = c.logs.length; await c.click('Btn_VehBusRoutes'); await c.waitLog(/\[BusRoutes\] routes state=ready/, m, 90); await c.settle(); await c.page.screenshot({ path: `${prefix}-113-busroutes-ready.png` });
+    const bal0 = db(`select balance from player_wallets where player_id = '${busman.id}'`);
+    m = c.logs.length; await c.click('Btn_BrStart'); const st = await c.waitLog(new RegExp(`\\[BusRoutes\\] start route=${routeCode} ok=`), m, 120);
+    check(!!st && /ok=True/.test(st), 'Start route: the server accepted and the player is in the bus', st);
+    check(db(`select count(*) from bus_runs where player_id = '${busman.id}' and status = 'active'`) === '1', 'the run exists in the database');
+    await sleep(8000); await c.page.screenshot({ path: `${prefix}-114-busroutes-driving.png` });
+    // leave the driving view: the menu shows the run in progress
+    m = c.logs.length; await c.page.keyboard.press('Escape'); await c.waitLog(/\[Dashboard\] built for BrowserBusMan/, m, 60); await c.settle();
+    m = c.logs.length; await c.click('Nav_TrucksAndBuses'); await c.waitLog(/\[Dashboard\] page=vehicles/, m, 60); await c.settle(); m = c.logs.length; await c.click('Btn_VehBusRoutes');
+    const ra = await c.waitLog(new RegExp(`\\[BusRoutes\\] run active route=${routeCode} next=0 aboard=0 fares=0`), m, 60); check(!!ra, 'the page shows the run in progress (first stop next, nobody aboard, no fares yet)', ra);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-115-busroutes-run.png` }); tg = c.targets(); check(!!tg['Btn_BrResume'] && !!tg['Btn_BrAbandon'] && !tg['Btn_BrStart'], 'a run in progress offers Resume and Abandon, not Start');
+    m = c.logs.length; await c.click('Btn_BrAbandon'); await c.settle(); await c.page.screenshot({ path: `${prefix}-116-busroutes-abandon-confirm.png` });
+    check(db(`select count(*) from bus_runs where player_id = '${busman.id}' and status = 'active'`) === '1', 'nothing is abandoned before the player confirms');
+    m = c.logs.length; await c.click('Btn_BrAbandonYes'); check(!!(await c.waitLog(/\[BusRoutes\] abandoned active=false/, m, 60)), 'Abandon: the run is closed');
+    check(db(`select count(*) from bus_runs where player_id = '${busman.id}' and status = 'abandoned'`) === '1', 'the run is abandoned in the database (and nothing was paid)');
+    check(db(`select balance from player_wallets where player_id = '${busman.id}'`) === bal0, 'abandoning paid nothing (the balance is unchanged)');
+    check(!!(await c.waitLog(/\[BusRoutes\] routes state=ready/, m, 60)), 'the list is shown again after abandoning');
+    await c.settle(); check(!!c.targets()['Btn_BrStart'], 'Start route is available again');
+    for (const [w, h] of [[1920, 1080], [1440, 900], [1280, 720], [1024, 768], [768, 1024], [390, 844]]) { await c.page.setViewportSize({ width: w, height: h }); await sleep(2500); await c.page.screenshot({ path: `${prefix}-8-busroutes-${w}x${h}.png` }); }
+    await c.page.setViewportSize({ width: 1024, height: 576 }); await sleep(1500);
+    check(c.errors.length === 0, 'Bus Routes at six window sizes cause no page errors', c.errors[0]);
+  });
+
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)
   const uma = await signup('BrowserUma');
   await open(uma, '&fault=list_vehicle_catalog:error:3', async c => {

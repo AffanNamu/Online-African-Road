@@ -157,6 +157,10 @@ namespace ARO.Game
             Ui.Outlined(_stage, "CompareBg", new Color(0.05f, 0.055f, 0.075f, 0.92f), new Color(1, 1, 1, 0.2f), bx, by, bw, bh, 14);
             Ui.Icon(_stage, "ic_gauge", White, bx + 18, by + 11, 28); Ui.Label(_stage, "Compare Vehicles", "SemiBold", 20, White, bx + 58, by + 11, bw - 66, 30);
             Ui.Click(_stage, "Btn_VehCompare", bx, by, bw, bh, OpenCompare);
+            const float rx = 1290, rw = 280;
+            Ui.Outlined(_stage, "RoutesBg", new Color(0.05f, 0.055f, 0.075f, 0.92f), new Color(Gold.r, Gold.g, Gold.b, 0.55f), rx, by, rw, bh, 14);
+            Ui.Icon(_stage, "ic_bus", Gold, rx + 18, by + 11, 28); Ui.Label(_stage, "Bus Routes", "SemiBold", 20, White, rx + 58, by + 11, rw - 66, 30);
+            Ui.Click(_stage, "Btn_VehBusRoutes", rx, by, rw, bh, OpenBusRoutes);
         }
 
         void BuildVehTabs()

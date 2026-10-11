@@ -43,8 +43,10 @@ namespace ARO.Backend
     [Serializable] public class BusRouteDto
     {
         public string id, code, name; public int fare, xp_reward;
+        public CityRef city = new CityRef();             // the city the route runs in (embedded)
         public BusStopDto[] stops = new BusStopDto[0];   // embedded bus_route_stops, sorted by seq client-side
     }
+    [Serializable] public class CityRef { public string name; }
     /// <summary>serve_stop reply. Mid-route replies carry boarded/aboard/next_seq; the final reply carries completed=true plus totals.</summary>
     [Serializable] public class ServeStopResult
     {

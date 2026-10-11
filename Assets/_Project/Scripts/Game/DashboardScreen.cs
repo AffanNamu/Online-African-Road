@@ -14,6 +14,8 @@ namespace ARO.Game
     public sealed class DashboardActions
     {
         public Action Jobs, Garage, Shop, Convoy, Bus, Profile, FreeDrive, Resume, SignOut, WorldMap;
+        /// <summary>Starts a bus run with the given bus (GameFlow loads the vehicle and hides the menus). Returns an error message, or null when the route has started.</summary>
+        public Func<ARO.Backend.BusRouteDto, ARO.Backend.OwnedVehicleDto, Task<string>> StartBus;
         public Action<ARO.Backend.ConvoyInfo> ConvoyDrive;
         public Action<JobDto> AcceptJob;
         public Action QuickJob;
@@ -34,7 +36,7 @@ namespace ARO.Game
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
         RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot, _garRoot, _setRoot, _friRoot, _lbRoot;
-        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage = 4, Friends = 6, Leaderboards = 7, Settings = 9, Onboarding = 30, Profile = 31 }       // the value is the sidebar row: Home, Jobs, Multiplayer, Trucks & Buses, Garage ... Settings is the tenth
+        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage = 4, Friends = 6, Leaderboards = 7, Settings = 9, Onboarding = 30, Profile = 31, BusRoutes = 32 }       // the value is the sidebar row: Home, Jobs, Multiplayer, Trucks & Buses, Garage ... Settings is the tenth
         Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
@@ -113,6 +115,7 @@ namespace ARO.Game
             _lbRoot = Ui.Box(_root, "LeaderboardsPage", 0, 0, 1920, 1080); _regionParent = _lbRoot; BuildLeaderboardsPage();
             _obRoot = Ui.Box(_root, "OnboardingPage", 0, 0, 1920, 1080); _regionParent = _obRoot; BuildOnboardingPage();
             _prRoot = Ui.Box(_root, "ProfilePage", 0, 0, 1920, 1080); _regionParent = _prRoot; BuildProfilePage();
+            _brRoot = Ui.Box(_root, "BusRoutesPage", 0, 0, 1920, 1080); _regionParent = _brRoot; BuildBusRoutesPage();
             _regionParent = null;
             if (_svc.Me != null && !_svc.Me.onboarded && !_obDone) _page = Page.Onboarding;                // a new player starts here, above everything
             ApplyPage(); if (_page == Page.Onboarding) ObOpened();
@@ -236,7 +239,7 @@ namespace ARO.Game
             };
             for (int i = 0; i < items.Length; i++)
             {
-                float y = 138 + i * 66f; bool active = i == (int)_page;   // Home = 0, Jobs = 1
+                float y = 138 + i * 66f; bool active = i == (int)_page || (i == 3 && _page == Page.BusRoutes);   // Home = 0, Jobs = 1
                 if (active) Ui.Rounded(_stage, "NavActive", Gold, 18, y, 264, 60, 14);
                 Ui.Icon(_stage, items[i].icon, active ? Ink : new Color(0.82f, 0.84f, 0.88f), 44, y + 13, 34);
                 Ui.Label(_stage, items[i].label, active ? "Bold" : "SemiBold", 24, active ? Ink : new Color(0.88f, 0.9f, 0.93f), 104, y + 14, 180, 32);
@@ -558,7 +561,7 @@ namespace ARO.Game
             if (_newsItems.Length > 1 && now > _nextNews) { _nextNews = now + 10f; NextNews(); }
             if (now > _nextPoll) { _nextPoll = now + 45f; _ = RefreshSnapshot(); }                // counts, coins, fuel, online players stay current while the dashboard is open
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
-            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now); else if (_page == Page.Friends) FriUpdate(now); else if (_page == Page.Leaderboards) LbUpdate(now); else if (_page == Page.Profile) PrUpdate(now); else if (_page == Page.Onboarding) ObUpdate(now);
+            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now); else if (_page == Page.Friends) FriUpdate(now); else if (_page == Page.Leaderboards) LbUpdate(now); else if (_page == Page.Profile) PrUpdate(now); else if (_page == Page.BusRoutes) BrUpdate(now); else if (_page == Page.Onboarding) ObUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
         }
 

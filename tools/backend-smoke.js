@@ -48,8 +48,8 @@ const refused = r => r.status === 401 || r.status === 403 || r.status === 404 ||
   check('starter truck owned (and only own rows visible)', r.status === 200 && vehicles.length === 1 && vehicles[0].definition_id === 'truck_light_01', msg(r));
   r = await http('GET', '/rest/v1/vehicle_definitions?select=id,category,name,cargo_capacity_kg,passenger_capacity,fuel_capacity_l,max_speed_kmh,price');
   check('vehicle catalogue (with price) readable', r.status === 200 && r.json.some(d => d.id === 'bus_city_01' && d.price === 45000), msg(r));
-  r = await http('GET', '/rest/v1/bus_routes?order=code&select=id,code,name,fare,xp_reward,stops:bus_route_stops(seq,demand,alight_pct,location:locations(slug,name,world_x,world_z))');
-  check('bus routes with embedded stops (BusService query)', r.status === 200 && r.json[0] && r.json[0].stops.length === 3 && r.json[0].stops[0].location.name, msg(r));
+  r = await http('GET', '/rest/v1/bus_routes?order=code&select=id,code,name,fare,xp_reward,city:cities(name),stops:bus_route_stops(seq,demand,alight_pct,location:locations(slug,name,world_x,world_z))');
+  check('bus routes with embedded stops (BusService query)', r.status === 200 && r.json[0] && r.json[0].stops.length === 3 && r.json[0].stops[0].location.name && r.json[0].city && r.json[0].city.name === 'Lagos', msg(r));
   r = await http('GET', '/rest/v1/convoys?disbanded_at=is.null&order=created_at.desc&limit=20&select=id,name,leader_id,leader:profiles!leader_id(display_name),convoy_members(count)');
   check('convoy list (ConvoyService query)', r.status === 200, msg(r));
   r = await http('GET', '/rest/v1/convoys?select=session_code'); check('convoy session codes are not readable', refused(r), `status ${r.status}`);

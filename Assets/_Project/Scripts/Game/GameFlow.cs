@@ -125,7 +125,7 @@ namespace ARO.Game
                 case Screen.Garage: ShowMenu(); if (_dash != null) _dash.OpenGarage(); break;
                 case Screen.Profile: ShowMenu(); if (_dash != null) _dash.OpenProfile(); break;
                 case Screen.Convoy: ShowMenu(); if (_dash != null) _dash.OpenMultiplayer(); break;
-                case Screen.Bus: _ = ShowBus(); break;
+                case Screen.Bus: ShowMenu(); if (_dash != null) _dash.OpenBusRoutes(); break;
                 case Screen.Shop: ShowMenu(); if (_dash != null) _dash.OpenVehicles(); break;
             }
         }
@@ -210,7 +210,7 @@ namespace ARO.Game
             {
                 Back = ShowMenu,
                 Jobs = () => { CloseMap(); ShowMenu(); if (_dash != null) _dash.OpenJobs(); },
-                Bus = () => { CloseMap(); OpenPanel(() => _ = ShowBus()); },
+                Bus = () => { CloseMap(); ShowMenu(); if (_dash != null) _dash.OpenBusRoutes(); },
                 FreeDrive = () => { CloseMap(); if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
                 AcceptJob = job => _ = AcceptJob(job, false),
             }, _fixtureJobs);
@@ -220,7 +220,7 @@ namespace ARO.Game
         DashboardActions DashActions() => new DashboardActions
         {
             Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => { ShowMenu(); if (_dash != null) _dash.OpenGarage(); }, Shop = () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); },
-            Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => { if (_dash != null) _dash.OpenProfile(); },
+            Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => { if (_dash != null) _dash.OpenBusRoutes(); }, StartBus = StartBusRoute, Profile = () => { if (_dash != null) _dash.OpenProfile(); },
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
             SignOut = () => { _ = _svc.Presence.EndSession(); _svc.Api.SignOut(); _svc.ClearPlayerCaches(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
@@ -312,42 +312,16 @@ namespace ARO.Game
             finally { _busy = false; if (_dash != null) _dash.SetStarting(false); }
         }
 
-        // ---------------------------------------------------------------- bus
-        async Task ShowBus()
+        // ---------------------------------------------------------------- bus (the routes page is part of the dashboard: DashboardBusRoutes)
+        /// <summary>Asks the server to start a run and puts the player in the bus. Returns an error message, or null once the route has started.</summary>
+        async Task<string> StartBusRoute(BusRouteDto route, OwnedVehicleDto bus)
         {
-            var p = NewPanel("Bus Routes", 900f);
-            if (_bus.Active)
-            {
-                UIKit.Label(p, $"{_bus.Route.code}  {_bus.Route.name}\nNext: {_bus.NextStop.location.name}   ·   aboard {_bus.State.Aboard}/{_bus.Capacity}   ·   fares {_bus.State.Revenue:N0}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 100;
-                UIKit.Btn(p, "RESUME ROUTE", Resume);
-                UIKit.Btn(p, "ABANDON ROUTE (no pay)", async () => { await _bus.Abandon(); await ShowBus(); }, false, 48);
-                UIKit.Btn(p, "BACK", ShowMenu, false, 48);
-                return;
-            }
-            UIKit.Label(p, "Loading routes...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            var r = await _svc.Bus.LoadRoutes();
-            p = NewPanel("Bus Routes", 900f);
-            var bus = FindVehicleFor("bus");
-            if (!r.Ok) UIKit.Label(p, r.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            else if (bus == null) UIKit.Label(p, "You need a bus to run a route. Buy one in the shop.", 22, UIKit.Accent, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 60;
-            else if (r.Value.Length == 0) UIKit.Label(p, "No bus routes available yet.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            if (r.Ok && bus != null)
-                foreach (var rt in r.Value)
-                {
-                    var route = rt;
-                    UIKit.Btn(p, $"{route.code}  {route.name}\n{route.stops.Length} stops · {route.fare} coins per passenger · {route.xp_reward} XP",
-                        async () => await BeginBusRoute(route, bus), false, 84);
-                }
-            UIKit.Btn(p, "TRUCKS & BUSES", () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); }, false, 48);
-            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
-        }
-
-        async Task BeginBusRoute(BusRouteDto route, OwnedVehicleDto bus)
-        {
-            if (_busy) return; _busy = true; Toast("Starting route...");
+            if (_busy) return "One moment...";
+            _busy = true; Toast("Starting route...");
             string err = await _bus.Begin(route, bus); _busy = false;
-            if (err != null) { Toast(err, 6f, NoticeLevel.Bad); await ShowBus(); return; }
+            if (err != null) return err;
             HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
+            return null;
         }
     }
 }

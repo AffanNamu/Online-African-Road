@@ -37,8 +37,8 @@ namespace ARO.Game
         void ShowPage(Page p)
         {
             if (_page == Page.Onboarding && p != Page.Onboarding && !_obDone) return;                     // the first-run page is finished before anything else opens
-            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer) && _vehRoot.gameObject.activeSelf == (p == Page.Vehicles) && _garRoot.gameObject.activeSelf == (p == Page.Garage) && _setRoot.gameObject.activeSelf == (p == Page.Settings) && _friRoot.gameObject.activeSelf == (p == Page.Friends) && _lbRoot.gameObject.activeSelf == (p == Page.Leaderboards) && _obRoot.gameObject.activeSelf == (p == Page.Onboarding) && _prRoot.gameObject.activeSelf == (p == Page.Profile)) return;
-            var was = _page; _page = p; ApplyPage(); if (was == Page.Garage && p != Page.Garage) GarClosed(); if (was == Page.Settings && p != Page.Settings) SetClosed(); if (was == Page.Friends && p != Page.Friends) FriClosed(); if (was == Page.Leaderboards && p != Page.Leaderboards) LbClosed(); if (was == Page.Profile && p != Page.Profile) PrClosed(); Refill("Sidebar", BuildSidebar); MarkTargetsDirty();
+            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer) && _vehRoot.gameObject.activeSelf == (p == Page.Vehicles) && _garRoot.gameObject.activeSelf == (p == Page.Garage) && _setRoot.gameObject.activeSelf == (p == Page.Settings) && _friRoot.gameObject.activeSelf == (p == Page.Friends) && _lbRoot.gameObject.activeSelf == (p == Page.Leaderboards) && _obRoot.gameObject.activeSelf == (p == Page.Onboarding) && _prRoot.gameObject.activeSelf == (p == Page.Profile) && _brRoot.gameObject.activeSelf == (p == Page.BusRoutes)) return;
+            var was = _page; _page = p; ApplyPage(); if (was == Page.Garage && p != Page.Garage) GarClosed(); if (was == Page.Settings && p != Page.Settings) SetClosed(); if (was == Page.Friends && p != Page.Friends) FriClosed(); if (was == Page.Leaderboards && p != Page.Leaderboards) LbClosed(); if (was == Page.Profile && p != Page.Profile) PrClosed(); if (was == Page.BusRoutes && p != Page.BusRoutes) BrClosed(); Refill("Sidebar", BuildSidebar); MarkTargetsDirty();
             Debug.Log("[Dashboard] page=" + p.ToString().ToLowerInvariant());
             if (p == Page.Jobs && (!_boardLoaded || Time.unscaledTime - _boardAt > 60f)) _ = LoadBoard(true);
             if (p == Page.Multiplayer) MpOpened(); else if (_modal != null) CloseModal();
@@ -48,6 +48,7 @@ namespace ARO.Game
             if (p == Page.Friends) FriOpened();
             if (p == Page.Leaderboards) LbOpened();
             if (p == Page.Profile) PrOpened();
+            if (p == Page.BusRoutes) BrOpened();
         }
 
         void ApplyPage()
@@ -62,6 +63,7 @@ namespace ARO.Game
             if (_lbRoot != null) _lbRoot.gameObject.SetActive(_page == Page.Leaderboards);
             if (_obRoot != null) _obRoot.gameObject.SetActive(_page == Page.Onboarding);
             if (_prRoot != null) _prRoot.gameObject.SetActive(_page == Page.Profile);
+            if (_brRoot != null) _brRoot.gameObject.SetActive(_page == Page.BusRoutes);
         }
 
         /// <summary>GameFlow calls this after a refused accept (someone took the job, route closed...): the board is re-read so the page tells the truth.</summary>

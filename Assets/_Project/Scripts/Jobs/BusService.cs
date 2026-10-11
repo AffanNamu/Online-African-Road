@@ -14,7 +14,7 @@ namespace ARO.Jobs
         public BusService(SupabaseClient api) { _api = api; }
 
         const string RoutesQuery =
-            "bus_routes?order=code&select=id,code,name,fare,xp_reward,stops:bus_route_stops(seq,demand,alight_pct,location:locations(slug,name,world_x,world_z))";
+            "bus_routes?order=code&select=id,code,name,fare,xp_reward,city:cities(name),stops:bus_route_stops(seq,demand,alight_pct,location:locations(slug,name,world_x,world_z))";
 
         public async Task<Result<BusRouteDto[]>> LoadRoutes()
         {

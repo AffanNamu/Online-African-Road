@@ -23,13 +23,13 @@ namespace ARO.Tests
 
         [Test] public void RouteWithEmbeddedStopsParses()
         {
-            const string json = "{\"items\":[{\"id\":\"r1\",\"code\":\"LAG-R1\",\"name\":\"Mile 12 - Oshodi - Ikeja\",\"fare\":15,\"xp_reward\":150," +
+            const string json = "{\"items\":[{\"id\":\"r1\",\"code\":\"LAG-R1\",\"name\":\"Mile 12 - Oshodi - Ikeja\",\"fare\":15,\"xp_reward\":150,\"city\":{\"name\":\"Lagos\"}," +
                 "\"stops\":[{\"seq\":2,\"demand\":40,\"alight_pct\":50,\"location\":{\"slug\":\"lagos-oshodi-terminal\",\"name\":\"Oshodi Terminal\",\"world_x\":3400,\"world_z\":800}}," +
                 "{\"seq\":1,\"demand\":30,\"alight_pct\":0,\"location\":{\"slug\":\"lagos-mile12-market\",\"name\":\"Mile 12 Market\",\"world_x\":2600,\"world_z\":-900}}]}]}";
             var w = JsonUtility.FromJson<ListWrapper<BusRouteDto>>(json);
             Assert.AreEqual(1, w.items.Length);
             var route = w.items[0];
-            Assert.AreEqual("LAG-R1", route.code); Assert.AreEqual(15, route.fare); Assert.AreEqual(2, route.stops.Length);
+            Assert.AreEqual("Lagos", route.city.name); Assert.AreEqual("LAG-R1", route.code); Assert.AreEqual(15, route.fare); Assert.AreEqual(2, route.stops.Length);
             Assert.AreEqual("Oshodi Terminal", route.stops[0].location.name);   // unsorted as delivered: BusService sorts by seq
             Assert.AreEqual(-900.0, route.stops[1].location.world_z, 0.001);
         }

@@ -88,7 +88,7 @@ How to use this file
 | P-54 | **Nearby players have no distance** (positions are never stored server-side) and **only your own ping** is measurable | A decision on position telemetry or a relay-side measure | C |
 | P-55 | **Daily challenges**: schema, progress and claim are built; no definitions, no screen | Authored challenges and a screen | B |
 | P-56 | **Store** screen: the sidebar says "coming soon". (Friends, Settings and Leaderboards are built, see below)  | The screens built to the mockups | B |
-| P-57 | The **bus routes**, **profile** (the old text panel is no longer reachable) and **pause menu** are the old plain text panels (`UIKit`), not designed pages. (Settings is now a designed page, see P-64) | Designed pages to the same standard as Jobs, Multiplayer, Trucks & Buses, Garage | B |
+| P-57 | The **pause menu** is still the old plain text panel (`UIKit`), not a designed page. (Settings, Friends, Leaderboards, Profile, Onboarding and Bus Routes are designed pages now) | A designed pause menu | B |
 | P-58 | **Tolls** (shown in the Jobs mockup) do not exist in the economy; the cell shows XP instead | A toll mechanic charged through the ledger | C |
 | P-59 | **Companies**, **touch HUD**, the **Flutter shell**: not started | As designed | C |
 | P-60 | **Push notifications** (the bell polls every 30 seconds); **player search** beyond the exact handle | Push, search | C |
@@ -115,6 +115,11 @@ How to use this file
 | P-81 | **The country and language suggested at onboarding come from the browser's language setting** (`navigator.language`), nothing else: no IP lookup, so a VPN or an English browser in another country gives a different suggestion (or none). It is only a starting point | An optional, consented geolocation hint |
 | P-82 | **Profile: no avatar upload or avatar art, no banner, no bio, no title or badges** other than the real achievements; "How others see me" is the public card Friends shows. Achievements are listed from the server with progress; there are no achievement icons | Avatar and badge art; profile fields the backend would have to add |
 | P-83 | **Onboarding and Profile pages were written without a Unity editor** and are verified by the CI browser E2E and its screenshots only (the same as P-68 and P-77) | Seeing them rendered |
+| P-84 | **Bus Routes shows only the routes the server has**: the database seeds ONE route (LAG-R1, three stops in Lagos). The design mockups showed four routes including intercity ones (Lagos to Ibadan, Abuja to Kaduna...); those do not exist and no route type (city / intercity / regional) exists in the data, so the page shows the route's city instead | More routes and route types in the database (a content task), then the page lists them with no code change |
+| P-85 | **Bus Routes: one stock bus photograph for every route** (no per-route photography); the player's own bus picture is the catalogue picture. No route distance, duration or "started 1 h ago" is shown because the server does not store them | Route art; run start time and distance in the backend |
+| P-86 | **Demand level (Low / Medium / High) is a plain reading of the server's per-stop numbers** (average of the stops where people board: 40 or more High, 20 or more Medium); the thresholds are in `BusRouteRules` and are not a server value | A server-side demand rating if one is wanted |
+| P-87 | **A bus run in progress is remembered by the running game only**: after a reload the server still has the run active but the client does not pick it up (the page offers Start and the server answers "run active"). Same limitation as before this page | A "my active bus run" read on the server and restoring the run on sign-in |
+| P-88 | **Bus Routes page was written without a Unity editor** and is verified by the CI browser E2E and its screenshots only (same as P-68, P-77, P-83) | Seeing it rendered |
 
 ## 7. Authored data that is a stand-in
 

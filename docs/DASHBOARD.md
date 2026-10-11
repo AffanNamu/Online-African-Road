@@ -302,3 +302,19 @@ Nothing is stored before the last step: one call, `complete_onboarding`, validat
 **Not built:** avatar art/upload, bio, translated game text (P-79), a driving tutorial (P-80), responsive layouts (P-72); see P-79 to P-83.
 **Tests.** SQL `47_onboarding.sql` (validation of every field, nothing stored on a refusal, replay-safe, later changes, privacy of the preferences, the profile's counts, rate limit); mutation test of the migration (19 mutants); xunit `OnboardingModelTests` (steps, name and username rules, country filtering with accents, language order and notes, locale suggestions, play styles, server error sentences) and `ProfileRulesTests`; API contract + EditMode parse tests for the new replies; browser E2E section 2h (new player lands on onboarding, lists equal the database, locale suggestion, sidebar blocked, bad name blocked, search, language note, style/speed/nearby, **name taken refused by the server and answers kept**, database row equals the choices, landing page, never asked again after a reload, profile numbers/ranking equal the database, edit with a taken username refused, country/language/style saved, public card, six window sizes, error with retry for achievements and for the lists).
 
+# Bus Routes page
+
+`DashboardBusRoutes.cs` (page under Trucks & Buses, reached from the Bus Routes button there, the Home "bus" quick action, the Map and the pause flow; the sidebar keeps Trucks & Buses highlighted), pure rules in `ARO.NetCore` `BusRoutesModel.cs`. It replaces the old plain text panel (`ShowBus`), which is gone.
+
+| Part | Source |
+|---|---|
+| Route cards | `bus_routes` with `city:cities(name)` and the embedded `bus_route_stops` (code, name, fare per passenger, XP reward, stops with waiting passengers 0..80 and the share that get off). Stops are drawn as a line; stops, fare, XP and demand as facts |
+| Demand level | a reading of the server's per-stop numbers (P-86) |
+| Detail (right) | the selected route: photo, chips, facts, a scrollable stop list (waiting bar, "N% get off here"), **Your bus** (the owned bus the server would use: the selected one if it can run, else the best one: picture, seats, condition, fuel) |
+| Start route | `_bus.Begin` (server `start_bus_run`); the button is off, with the reason under it, when the bus is wrecked or empty, a freight job is active, or no bus is owned: the same cases the server refuses. The server still decides and its reason is shown |
+| Run in progress | `BusSession` state: stops completed / current / upcoming, next stop, passengers aboard of the bus capacity, fares so far (paid by the server at the end of the route); **Resume driving**, **Abandon route (no pay)** behind a confirmation |
+| States | loading, error with Try again, no routes, no bus (leads to Trucks & Buses, Buses tab) |
+
+**Honest gaps:** one seeded route, no route types or per-route art (P-84, P-85), demand level thresholds (P-86), a run is not restored after a reload (P-87), page not seen rendered (P-88).
+**Tests.** xunit `BusRoutesModelTests` (demand, texts, stop states, progress, bus choice, why Start is blocked), EditMode `BusDtoTests` (the route's city), backend smoke (the routes query with the city embed), browser E2E section 2i (opens from Trucks & Buses, routes from the database, error with retry, no bus, a wrecked bus is refused by the page, a real start, the run in progress, Abandon with confirmation and nothing paid, six window sizes, no errors).
+
