@@ -42,3 +42,4 @@ supabase/.branches/
 !tools/**/*.csproj
 tools/semcheck/obj/
 tools/semcheck/bin/
+__pycache__/
