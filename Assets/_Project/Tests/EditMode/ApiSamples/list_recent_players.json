@@ -5,20 +5,20 @@
    "country_code": null,
    "display_name": "CtB",
    "friend_status": "friends",
-   "last_played_at": "2026-10-11T04:00:21.816487+00:00",
+   "last_played_at": "2026-10-11T04:42:09.89672+00:00",
    "level": 1,
-   "player_id": "927a4782-4714-4cf3-8345-9a611898a2a8",
+   "player_id": "f886df20-de55-496e-905e-a902f1d6ff6e",
    "presence": {
     "activity": "menu",
     "city_slug": null,
-    "last_seen_at": "2026-10-11T04:00:21.580427+00:00",
+    "last_seen_at": "2026-10-11T04:42:09.662779+00:00",
     "online": true,
     "route_code": null,
-    "session_id": "5edb215b-5d34-4794-a57b-4a9e61d6cc25"
+    "session_id": "f2f72715-eb9a-4fd7-adc8-7b5909d6b4e6"
    },
    "times": 1,
    "username": "ctb"
   }
  ],
- "server_time": "2026-10-11T04:00:22.491584+00:00"
+ "server_time": "2026-10-11T04:42:10.639825+00:00"
 }

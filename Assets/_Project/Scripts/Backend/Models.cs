@@ -22,6 +22,8 @@ namespace ARO.Backend
         public LocationDto origin, destination;   // embedded via PostgREST select / filled from the job board reply
         // from the server's job board (list_available_jobs): the server's own estimate and whether THIS player can take the job right now
         public int est_minutes, min_level, slots_taken; public bool eligible = true; public string blocked_reason;
+        // cargo details and this player's estimate, all from the server (the Jobs screen shows them; the client computes none of it)
+        public string cargo_category, cargo_description, cargo_image; public bool fragile, special_handling, has_vehicle; public double est_fuel_l; public long est_fuel_cost, est_profit;
     }
     [Serializable] public class VehicleDefDto
     {

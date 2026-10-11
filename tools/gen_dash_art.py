@@ -20,20 +20,33 @@ def fbm(w, h, cell, octaves, seed):
         out += (a * (1 - fy) + b * fy) * amp; tot += amp; amp *= 0.5
     return out / tot
 
-# ------------------------------------------------------------------ cargo scenes (480x200)
-CW, CH = 480, 200
+# ------------------------------------------------------------------ cargo scenes: painted on a 480x200 logical canvas, rendered at 2x (960x400) for the Jobs screen
+K = 2; CW, CH = 480 * K, 200 * K; LW, LH = 480, 200
+class Pen:
+    """ImageDraw wrapper: painters keep using the 480x200 coordinates; everything is scaled by K."""
+    def __init__(self, d): self.d = d
+    def _s(self, v):
+        if isinstance(v, (int, float)): return v * K
+        if isinstance(v, tuple) and len(v) == 2 and all(isinstance(t, (int, float)) for t in v): return (v[0] * K, v[1] * K)
+        return [self._s(t) for t in v]
+    def rectangle(self, xy, **kw): self.d.rectangle(self._s(xy), **kw)
+    def ellipse(self, xy, **kw): self.d.ellipse(self._s(xy), **kw)
+    def polygon(self, xy, **kw): self.d.polygon(self._s(xy), **kw)
+    def line(self, xy, fill=None, width=1, **kw): self.d.line(self._s(xy), fill=fill, width=max(1, int(width * K)), **kw)
+    def arc(self, xy, a0, a1, fill=None, width=1): self.d.arc(self._s(xy), a0, a1, fill=fill, width=max(1, int(width * K)))
+    def rounded_rectangle(self, xy, radius=0, **kw): self.d.rounded_rectangle(self._s(xy), radius=radius * K, **kw)
 def scene(name, painter):
     ys = np.linspace(0, 1, CH, dtype=np.float32)[:, None, None]
     top = np.array([40, 70, 110], np.float32); hor = np.array([250, 170, 90], np.float32)
     sky = top * (1 - ys) + hor * ys; sky = np.broadcast_to(sky, (CH, CW, 3)).copy()
-    xx = np.arange(CW)[None, :, None]
+    xx = np.arange(CW)[None, :, None] / K
     sky += np.exp(-np.abs(xx - 330) / 120.0) * np.exp(-np.abs(ys - 0.65) / 0.25) * np.array([90, 50, 10], np.float32)
-    im = Image.fromarray(np.clip(sky, 0, 255).astype(np.uint8)); d = ImageDraw.Draw(im, "RGBA")
-    d.rectangle([0, 150, CW, CH], fill=(58, 52, 48, 255)); d.rectangle([0, 148, CW, 152], fill=(80, 70, 60, 255))
+    im = Image.fromarray(np.clip(sky, 0, 255).astype(np.uint8)); d = Pen(ImageDraw.Draw(im, "RGBA"))
+    d.rectangle([0, 150, LW, LH], fill=(58, 52, 48, 255)); d.rectangle([0, 148, LW, 152], fill=(80, 70, 60, 255))
     painter(d); a = np.array(im, np.float32)
     a *= (1 - 0.35 * np.clip(np.hypot((np.arange(CW)[None, :] - CW / 2) / (CW * .8), (np.arange(CH)[:, None] - CH / 2) / (CH * .9)), 0, 1) ** 2)[..., None]
     a += rng.normal(0, 2.5, a.shape)
-    Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.5)).save(f"{OUT}/{name}.jpg", quality=84)
+    Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6 * K / 2)).save(f"{OUT}/{name}.jpg", quality=86)
 def lit(c, f): return tuple(int(min(255, v * f)) for v in c) + (255,)
 def container(d, x, y, w, h, c):
     d.rectangle([x, y, x + w, y + h], fill=lit(c, 0.85)); d.rectangle([x, y, x + 4, y + h], fill=lit(c, 1.25))
@@ -73,7 +86,32 @@ def general(d):
     for k in range(9):
         w = int(r.integers(40, 70)); h = int(r.integers(30, 60)); x = 14 + k * 50
         c = [(176, 130, 80), (120, 140, 160), (190, 160, 90), (130, 90, 70)][k % 4]; d.rectangle([x, 148 - h, x + w, 148], fill=lit(c, 0.9)); d.rectangle([x, 148 - h, x + w, 152 - h], fill=lit(c, 1.2))
-for n, f in [("job_containers", containers), ("job_tanker", tanker), ("job_pipes", pipes), ("job_food", crates), ("job_general", general)]: scene(n, f)
+def cement(d):
+    for row in range(3):
+        for k in range(6 - row):
+            x = 22 + k * 64 + row * 32; y = 148 - (row + 1) * 40
+            d.rectangle([x, y, x + 60, y + 38], fill=(176, 176, 172, 255)); d.rectangle([x, y, x + 60, y + 5], fill=(214, 214, 208, 255))
+            d.rectangle([x + 6, y + 14, x + 54, y + 24], fill=(60, 96, 150, 255)); d.line([(x + 30, y + 5), (x + 30, y + 38)], fill=(140, 140, 136, 255), width=1)
+    d.rectangle([20, 146, 440, 152], fill=(120, 84, 48, 255))
+def machinery(d):
+    d.rounded_rectangle([86, 120, 230, 148], radius=12, fill=(30, 30, 34, 255))
+    for cx in range(100, 220, 24): d.ellipse([cx - 8, 128, cx + 8, 144], fill=(70, 70, 76, 255))
+    d.rounded_rectangle([110, 86, 214, 124], radius=6, fill=(244, 178, 24, 255)); d.rectangle([110, 86, 214, 92], fill=(255, 214, 90, 255))
+    d.rectangle([166, 56, 208, 90], fill=(244, 178, 24, 255)); d.rectangle([172, 62, 202, 82], fill=(120, 160, 200, 255))
+    d.line([(112, 98), (70, 52)], fill=(244, 178, 24, 255), width=9); d.line([(70, 52), (28, 96)], fill=(220, 154, 14, 255), width=7)
+    d.polygon([(28, 96), (14, 118), (40, 126), (46, 104)], fill=(60, 60, 66, 255))
+    d.rectangle([20, 146, 420, 152], fill=(28, 28, 32, 255)); d.rectangle([240, 134, 400, 146], fill=(70, 74, 86, 255))
+def vehicles(d):
+    d.rectangle([40, 70, 400, 74], fill=(60, 64, 76, 255)); d.rectangle([40, 112, 400, 116], fill=(60, 64, 76, 255)); d.rectangle([40, 146, 400, 152], fill=(40, 40, 46, 255))
+    cols = [(200, 60, 56), (220, 220, 224), (50, 90, 160), (230, 180, 50), (40, 40, 46), (90, 140, 90)]
+    for lvl, y in enumerate((112, 148)):
+        for k in range(4):
+            x = 56 + k * 84; c = cols[(lvl * 3 + k) % len(cols)]
+            d.rounded_rectangle([x, y - 26, x + 70, y - 8], radius=6, fill=lit(c, 0.95)); d.polygon([(x + 16, y - 26), (x + 28, y - 40), (x + 52, y - 40), (x + 62, y - 26)], fill=lit(c, 0.8))
+            d.polygon([(x + 22, y - 27), (x + 30, y - 37), (x + 48, y - 37), (x + 56, y - 27)], fill=(150, 190, 220, 255))
+            for cx in (x + 14, x + 56): d.ellipse([cx - 8, y - 14, cx + 8, y + 2], fill=(14, 14, 16, 255))
+    d.line([(40, 70), (40, 152)], fill=(60, 64, 76, 255), width=3); d.line([(400, 70), (400, 152)], fill=(60, 64, 76, 255), width=3)
+for n, f in [("job_containers", containers), ("job_tanker", tanker), ("job_pipes", pipes), ("job_food", crates), ("job_general", general), ("job_cement", cement), ("job_machinery", machinery), ("job_vehicles", vehicles)]: scene(n, f)
 
 # ------------------------------------------------------------------ truck thumbnail (side view, transparent)
 S = 4; tw, th = 240 * S, 140 * S; im = Image.new("RGBA", (tw, th), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
@@ -92,8 +130,7 @@ m = Image.new("L", (N * 2, N * 2), 0); ImageDraw.Draw(m).ellipse([0, 0, N * 2, N
 av.resize((N, N), Image.LANCZOS).save(f"{OUT}/avatar_default.png")
 
 # contact sheet for review
-names = ["job_containers", "job_tanker", "job_pipes", "job_food", "job_general"]
-sheet = Image.new("RGB", (CW * 3, CH * 2 + 20), (20, 20, 24))
-for i, n in enumerate(names): sheet.paste(Image.open(f"{OUT}/{n}.jpg"), ((i % 3) * CW, (i // 3) * CH))
-t = Image.open(f"{OUT}/truck_thumb.png"); sheet.paste(t, (CW * 2 + 20, CH + 10), t)
+names = ["job_containers", "job_tanker", "job_pipes", "job_food", "job_general", "job_cement", "job_machinery", "job_vehicles"]
+sheet = Image.new("RGB", (CW * 3 // 2, CH * 3 // 2 + 20), (20, 20, 24))
+for i, n in enumerate(names): sheet.paste(Image.open(f"{OUT}/{n}.jpg").resize((CW // 2, CH // 2)), ((i % 3) * CW // 2, (i // 3) * CH // 2))
 sheet.save("/tmp/art_sheet.png"); print("art ->", OUT)

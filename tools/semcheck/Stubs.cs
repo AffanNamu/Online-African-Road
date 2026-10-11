@@ -36,7 +36,7 @@ namespace UnityEngine.UI
     public class InputField : Selectable
     {
         public string text; public Text textComponent; public Graphic placeholder; public int characterLimit; public enum ContentType { Standard, Password, EmailAddress } public ContentType contentType; public UnityEvent<string> onValueChanged; public UnityEvent<string> onEndEdit;
-        public bool isFocused; public void ActivateInputField() { } public void DeactivateInputField() { } public int caretPosition; public Color caretColor, selectionColor; public bool customCaretColor;
+        public enum LineType { SingleLine, MultiLineSubmit, MultiLineNewline } public LineType lineType; public void ForceLabelUpdate() { } public bool isFocused; public void ActivateInputField() { } public void DeactivateInputField() { } public int caretPosition; public Color caretColor, selectionColor; public bool customCaretColor;
     }
     public class ScrollRect : MonoBehaviour { public RectTransform content, viewport; public bool horizontal, vertical; public float scrollSensitivity; public Vector2 normalizedPosition; public enum MovementType { Clamped } public MovementType movementType; }
     public class LayoutElement : MonoBehaviour { public float preferredHeight, preferredWidth, minHeight, minWidth, flexibleHeight, flexibleWidth; }

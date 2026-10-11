@@ -52,6 +52,8 @@ const allErrors = [], allExc = [];
   db(`update profiles set experience = 2050, level = 5, distance_km = 120, jobs_completed = 12 where id = '${bob.id}'`);       // real level-up, route-unlock and achievement notifications are created by the server
   db(`select testkit.mk_job('BR-1', 1, 266)`); db(`select testkit.mk_job('BR-2', 1, 410)`); db(`select testkit.mk_job('BR-3', 1, 780)`);
   db(`update jobs set difficulty = 4 where code = 'BR-3'`);
+  db(`update jobs set cargo_type = 'Containers' where code = 'BR-1'`); db(`update jobs set cargo_type = 'Cement Bags' where code = 'BR-2'`); db(`update jobs set cargo_type = 'Fuel (Diesel)' where code = 'BR-3'`);
+  const catDb = cat => +db(`select count(*) from jobs j left join cargo_types c on c.name = j.cargo_type where j.status = 'open' and j.expires_at > now() and coalesce(c.category, 'freight') = '${cat}'`);
   asUser(carl, `select start_session('webgl')::text`);
   const rid = JSON.parse(asUser(bob, `select send_friend_request('${carl.id}')::text`)).request_id; asUser(carl, `select respond_friend_request('${rid}', true)`);
   asUser(bob, `select create_convoy('Browser Run')`); asUser(carl, `select join_convoy((select convoy_id from convoy_members where player_id = '${bob.id}'))`); asUser(carl, `select leave_convoy()`);
@@ -103,10 +105,38 @@ const allErrors = [], allExc = [];
     await c.settle(); await c.page.screenshot({ path: `${prefix}-3-worldmap.png` });
     m = c.logs.length; await c.click('Btn_Back'); await c.waitLog(/\[Dashboard\] built/, m, 60); await c.settle();
 
+    // ---- the Jobs page: every row, filter, search result and number comes from the server
+    m = c.logs.length; await c.click('Nav_Jobs');
+    const board = await c.waitLog(/\[Jobs\] page state=ready total=(\d+) shown=(\d+) cat=all/, m, 90);
+    check(!!board && +/total=(\d+)/.exec(board)[1] === openJobsDb, `the Jobs page lists the ${openJobsDb} open jobs held by the server`, board);
+    check(!!board && /selected=/.test(board) && !/selected=none/.test(board), 'a job is selected and its details are shown', board);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-3b-jobs.png` });
+    let tj = c.targets();
+    for (const k of ['Btn_Cat_all', 'Btn_Cat_freight', 'Btn_Cat_construction', 'Btn_Cat_fuel_chemicals', 'Btn_Cat_agriculture', 'Btn_Cat_manufacturing', 'Btn_Cat_vehicles', 'Search_Input', 'Btn_JobRow_BR-1', 'Btn_JobRow_BR-2', 'Btn_JobRow_BR-3', 'Btn_AcceptJob']) check(!!tj[k], `${k} is a clickable target on the Jobs page`);
+    m = c.logs.length; await c.click('Btn_Cat_construction');
+    const cons = await c.waitLog(/\[Jobs\] page state=ready total=(\d+) .*cat=construction/, m, 90);
+    check(!!cons && +/total=(\d+)/.exec(cons)[1] === catDb('construction') && catDb('construction') >= 1, `the Construction filter is applied by the server (${catDb('construction')} job)`, cons);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-3c-jobs-filtered.png` });
+    m = c.logs.length; await c.click('Btn_Cat_vehicles');
+    const none = await c.waitLog(/\[Jobs\] page state=empty total=0 .*cat=vehicles/, m, 90);
+    check(!!none, 'a category with no jobs shows the empty state, not stale rows', none);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-3d-jobs-empty-category.png` });
+    m = c.logs.length; await c.click('Btn_Cat_all'); await c.waitLog(/\[Jobs\] page state=ready .*cat=all/, m, 90); await c.settle();
+    m = c.logs.length; await c.click('Search_Input'); await sleep(500); await c.page.keyboard.type('diesel', { delay: 120 });
+    const srch = await c.waitLog(/\[Jobs\] page state=ready total=1 .*search="diesel" selected=BR-3/, m, 90);
+    check(!!srch, 'typing in the search box filters on the server (cargo name) and selects the match', srch);
+    await c.page.screenshot({ path: `${prefix}-3e-jobs-search.png` });
+    m = c.logs.length; for (let i = 0; i < 6; i++) await c.page.keyboard.press('Backspace');
+    check(!!(await c.waitLog(/\[Jobs\] page state=ready total=\d+ .*search=""/, m, 90)), 'clearing the search restores the full board');
+    await c.settle();
+    m = c.logs.length; await c.click('Btn_JobRow_BR-2'); check(!!(await c.waitLog(/\[Jobs\] selected=BR-2/, m, 30)), 'clicking a row selects that job');
+    await sleep(1500); await c.page.screenshot({ path: `${prefix}-3f-jobs-selected.png` });
+    m = c.logs.length; await c.click('Btn_JobRow_BR-3'); await c.waitLog(/\[Jobs\] selected=BR-3/, m, 30); await c.settle();
+
     // accepting a job: the SERVER takes the job, the reward is the server's number
-    m = c.logs.length; await c.click('Btn_Accept_BR-3'); await sleep(10000);
+    m = c.logs.length; await c.click('Btn_AcceptJob'); await sleep(10000);
     const asg = db(`select a.status || '/' || j.reward from job_assignments a join jobs j on j.id = a.job_id where a.player_id = '${bob.id}' and j.code = 'BR-3'`);
-    check(asg === 'accepted/780', 'Accept created the assignment on the server with the server-side reward', asg);
+    check(asg === 'accepted/780', 'Accept Job on the Jobs page created the assignment on the server with the server-side reward', asg);
     check(db(`select count(*) from analytics_events where player_id = '${bob.id}' and name = 'job_accepted'`) === '1', 'job_accepted was recorded');
     await c.page.screenshot({ path: `${prefix}-4-driving.png` });
   });

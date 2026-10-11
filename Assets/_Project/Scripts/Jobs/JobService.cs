@@ -22,24 +22,35 @@ namespace ARO.Jobs
         public async Task<Result<JobDto[]>> LoadBoard(int limit = 50)
         {
             Board.Begin();
-            var r = await _api.Call<JobBoardPage>("list_available_jobs", JsonArgs.Obj(("p_limit", limit), ("p_offset", 0)));
+            var r = await Page(limit, 0, null, null);
             if (!r.Ok) { Board.Fail(ServiceKind(r.ErrorCode), r.UserMessage, Time.unscaledTime); return Result<JobDto[]>.Fail(r.ErrorCode, r.UserMessage); }
-            var jobs = (r.Value.items ?? new BoardJob[0]).Select(ToJobDto).ToArray();
-            Board.Succeed(jobs, jobs.Length == 0, Time.unscaledTime);
-            return Result<JobDto[]>.Success(jobs);
+            Board.Succeed(r.Value.Jobs, r.Value.Jobs.Length == 0, Time.unscaledTime);
+            return Result<JobDto[]>.Success(r.Value.Jobs);
+        }
+
+        /// <summary>One page of the board with the server's own filter (cargo category) and search (cargo, place or city). Total is the server's count for that filter.</summary>
+        public sealed class BoardPageResult { public JobDto[] Jobs; public int Total; }
+        public async Task<Result<BoardPageResult>> Page(int limit, int offset, string category, string search)
+        {
+            string args = JsonArgs.Obj(("p_limit", limit), ("p_offset", offset), ("p_category", string.IsNullOrEmpty(category) ? null : category), ("p_search", string.IsNullOrWhiteSpace(search) ? null : search.Trim()));
+            var r = await _api.Call<JobBoardPage>("list_available_jobs", args);
+            if (!r.Ok) return Result<BoardPageResult>.Fail(r.ErrorCode, r.UserMessage);
+            return Result<BoardPageResult>.Success(new BoardPageResult { Jobs = (r.Value.items ?? new BoardJob[0]).Select(ToJobDto).ToArray(), Total = r.Value.total });
         }
 
         static FailureKind ServiceKind(string code) => ServiceBase.KindOf(code);
 
         public static JobDto ToJobDto(BoardJob b)
         {
-            var o = b.origin ?? new BoardPlace(); var d = b.destination ?? new BoardPlace(); var c = b.cargo ?? new BoardCargo(); var q = b.requirements ?? new BoardRequirements();
+            var o = b.origin ?? new BoardPlace(); var d = b.destination ?? new BoardPlace(); var c = b.cargo ?? new BoardCargo(); var q = b.requirements ?? new BoardRequirements(); var e = b.estimate ?? new BoardEstimate();
             return new JobDto
             {
                 id = b.id, code = b.code, status = b.status, expires_at = b.expires_at,
                 cargo_type = c.type, cargo_weight_kg = c.weight_kg, required_category = q.category, max_participants = q.max_participants, min_level = q.min_level,
                 difficulty = b.difficulty, xp_reward = b.xp_reward, distance_km = b.distance_km, reward = b.reward,
                 est_minutes = b.est_minutes, slots_taken = b.slots_taken, eligible = b.eligible, blocked_reason = b.blocked_reason,
+                cargo_category = c.category, cargo_description = c.description, cargo_image = c.image_key, fragile = c.fragile, special_handling = c.special_handling,
+                has_vehicle = q.has_vehicle, est_fuel_l = e.fuel_l, est_fuel_cost = e.fuel_cost, est_profit = e.profit,
                 origin = new LocationDto { slug = o.slug, name = o.name, city = o.city, world_x = o.world_x, world_z = o.world_z },
                 destination = new LocationDto { slug = d.slug, name = d.name, city = d.city, world_x = d.world_x, world_z = d.world_z },
             };

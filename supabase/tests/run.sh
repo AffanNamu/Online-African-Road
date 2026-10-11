@@ -20,4 +20,5 @@ run tests/35_profile_presence.sql
 run tests/36_social.sql
 run tests/37_world_jobs_economy.sql
 run tests/38_content_boards_security.sql
+run tests/39_job_catalog.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

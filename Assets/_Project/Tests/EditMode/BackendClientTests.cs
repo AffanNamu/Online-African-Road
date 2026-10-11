@@ -89,6 +89,10 @@ namespace ARO.Tests
             Assert.AreEqual(0.0, j.origin.world_x, 0.001); Assert.AreEqual(2600.0, j.destination.world_x, 0.001);
             var a = Parse<ActiveJobReply>("get_my_active_job"); Assert.IsTrue(a.active.Exists); Assert.AreEqual("accepted", a.active.status); Assert.AreEqual("CT-2", a.active.job.code); Assert.AreEqual(0.0, a.active.verified_km, 0.001);
             Assert.AreEqual("CT-1", JobService.ToJobDto(Parse<BoardJob>("get_job_details")).code);
+            // cargo details, requirements and the viewer's estimate arrive from the server and survive the conversion
+            var d = JobService.ToJobDto(Parse<BoardJob>("get_job_details"));
+            Assert.AreEqual("freight", d.cargo_category); Assert.AreEqual("general", d.cargo_image); Assert.IsFalse(d.fragile); Assert.IsFalse(d.special_handling); Assert.IsTrue(d.has_vehicle);
+            Assert.Greater(d.est_fuel_l, 0.0); Assert.Greater(d.est_fuel_cost, 0L); Assert.AreEqual(d.reward - d.est_fuel_cost, d.est_profit);
         }
 
         [Test] public void WorldStateDrivesTheMapModel()

@@ -119,12 +119,13 @@ namespace ARO.Backend
 
     // ---------------------------------------------------------------- job board (list_available_jobs / get_my_active_job)
     [Serializable] public class BoardPlace { public string slug, name, city, city_slug; public double world_x, world_z; }
-    [Serializable] public class BoardCargo { public string type; public int weight_kg; }
-    [Serializable] public class BoardRequirements { public string category; public int min_level, max_participants; }
+    [Serializable] public class BoardCargo { public string type, category, description, image_key; public int weight_kg; public bool fragile, special_handling; }
+    [Serializable] public class BoardRequirements { public string category; public int min_level, max_participants; public bool has_vehicle; }
+    [Serializable] public class BoardEstimate { public double fuel_l; public long fuel_cost, profit; }
     [Serializable] public class BoardJob
     {
         public string id, code, status, created_at, expires_at, blocked_reason; public BoardPlace origin, destination; public double distance_km; public int est_minutes;
-        public BoardCargo cargo; public long reward; public int xp_reward, difficulty, slots_taken; public BoardRequirements requirements; public bool eligible;
+        public BoardCargo cargo; public long reward; public int xp_reward, difficulty, slots_taken; public BoardRequirements requirements; public BoardEstimate estimate; public bool eligible;
     }
     [Serializable] public class JobBoardPage { public int total; public BoardJob[] items; public string server_time; }
     [Serializable] public class ActiveJobInfo

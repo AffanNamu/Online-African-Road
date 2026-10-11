@@ -24,7 +24,7 @@ namespace ARO.Game
     /// recent players, notifications, presence). Each block shows Loading, Empty or Unavailable according to what the server actually said; nothing is
     /// invented when a call fails. Laid out on a 1920x1080 stage that letterboxes to any window shape.
     /// </summary>
-    public sealed class DashboardScreen : MonoBehaviour
+    public sealed partial class DashboardScreen : MonoBehaviour
     {
         static readonly Color Gold = Brand.Gold, Ink = Brand.Ink, Muted = Brand.Muted;
         static readonly Color PanelFill = new Color(0.062f, 0.070f, 0.092f, 0.94f), PanelLine = new Color(1f, 1f, 1f, 0.10f);
@@ -32,7 +32,9 @@ namespace ARO.Game
         const float HeroX = 331, HeroY = 142, HeroW = 1146, HeroH = 318, HeroAspect = HeroW / HeroH;
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
-        RectTransform _root, _stage, _jobsHost, _popover, _sidebar;
+        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot;
+        enum Page { Home, Jobs }
+        Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
         readonly Dictionary<string, RectTransform> _regions = new Dictionary<string, RectTransform>(); readonly Dictionary<string, string> _keys = new Dictionary<string, string>();
@@ -91,6 +93,7 @@ namespace ARO.Game
 
             Region("Header", 0f); BuildHeader();
             _sidebar = Region("Sidebar", 0.04f); BuildSidebar();
+            _homeRoot = Ui.Box(_root, "HomePage", 0, 0, 1920, 1080); _regionParent = _homeRoot;
             Region("Hero", 0.10f); BuildHero();
             Region("Milestone", 0.16f); BuildMilestone();
             Region("Truck", 0.22f); BuildYourTruck();
@@ -100,6 +103,8 @@ namespace ARO.Game
             Region("Players", 0.46f); BuildPlayers();
             Region("News", 0.50f); BuildNews();
             Region("Convoy", 0.54f); BuildConvoyCard();
+            _jobsRoot = Ui.Box(_root, "JobsPage", 0, 0, 1920, 1080); _regionParent = _jobsRoot; BuildJobsPage();
+            _regionParent = null; ApplyPage();
 
             _stage = _root;                                         // toast and the notice popover sit above everything
             _toast = Ui.Label(_root, "", "SemiBold", 24, Gold, 0, 1010, 1920, 40, TextAnchor.MiddleCenter);
@@ -118,7 +123,7 @@ namespace ARO.Game
         /// <summary>A full-stage container for one region; it fades and rises in (staggered) when the dashboard opens. Everything built after this call lands inside it.</summary>
         RectTransform Region(string name, float delay)
         {
-            var r = Ui.Box(_root, name, 0, 0, 1920, 1080); _stage = r; _regions[name] = r; Entrance.On(r, delay); return r;
+            var r = Ui.Box(_regionParent != null ? _regionParent : _root, name, 0, 0, 1920, 1080); _stage = r; _regions[name] = r; Entrance.On(r, delay); return r;
         }
 
         /// <summary>Rebuilds one region in place (its data changed). The region container itself stays, so nothing re-animates except what is rebuilt.</summary>
@@ -213,14 +218,14 @@ namespace ARO.Game
 
             var items = new (string icon, string label, Action go, string soon)[]
             {
-                ("ic_home", "Home", null, null), ("ic_jobs", "Jobs", _act.Jobs, null), ("ic_people", "Multiplayer", _act.Convoy, null),
+                ("ic_home", "Home", () => ShowPage(Page.Home), null), ("ic_jobs", "Jobs", OpenJobs, null), ("ic_people", "Multiplayer", _act.Convoy, null),
                 ("ic_bus", "Trucks & Buses", _act.Shop, null), ("ic_wrench", "Garage", _act.Garage, null), ("ic_map", "Map", _act.WorldMap, null),
                 ("ic_people", "Friends", null, "Friends are coming soon."), ("ic_trophy", "Leaderboards", null, "Leaderboards are coming soon."),
                 ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", _act.Profile, null),
             };
             for (int i = 0; i < items.Length; i++)
             {
-                float y = 138 + i * 66f; bool active = i == 0;
+                float y = 138 + i * 66f; bool active = i == (int)_page;   // Home = 0, Jobs = 1
                 if (active) Ui.Rounded(_stage, "NavActive", Gold, 18, y, 264, 60, 14);
                 Ui.Icon(_stage, items[i].icon, active ? Ink : new Color(0.82f, 0.84f, 0.88f), 44, y + 13, 34);
                 Ui.Label(_stage, items[i].label, active ? "Bold" : "SemiBold", 24, active ? Ink : new Color(0.88f, 0.9f, 0.93f), 104, y + 14, 180, 32);
@@ -238,11 +243,13 @@ namespace ARO.Game
 
             var so = Ui.Label(_stage, "Sign out", "SemiBold", 20, new Color(0.62f, 0.65f, 0.7f), 44, 1018, 200, 28);
             Ui.Click(_stage, "Nav_SignOut", 30, 1008, 240, 48, () => _act.SignOut());
+            SetJobsBadge(_badgeCount);
         }
 
         /// <summary>The red count on the Jobs item: how many open jobs the server returned.</summary>
         void SetJobsBadge(int n)
         {
+            _badgeCount = n;
             if (_jobsBadge != null) Destroy(_jobsBadge);
             if (n <= 0 || _sidebar == null) return;
             var holder = new GameObject("JobsBadge", typeof(RectTransform)); holder.transform.SetParent(_sidebar, false); _jobsBadge = holder;
@@ -287,7 +294,7 @@ namespace ARO.Game
             long balance = _svc.Wallet != null ? _svc.Wallet.balance : 0;
             Pill(1352, 24, 200, 56, null, () => Toast("Your balance is paid out by the server when a job or route completes."), "Btn_Balance");
             Ui.Icon(_stage, "ic_coin", Gold, 1370, 33, 38);
-            var bal = Ui.Label(_stage, "", "Bold", 26, White, 1420, 34, 120, 36); CountText.Run(bal, 0, balance, "", "", 0.3f, 1.1f);
+            var bal = Ui.Label(_stage, "", "Bold", 26, White, 1420, 34, 120, 36); CountText.Run(bal, 0, balance, "\u20A6 ", "", 0.3f, 1.1f);
 
             Pill(1572, 24, 150, 56, null, () => Toast(PresenceToast()), "Btn_Presence");
             _presenceDot = Ui.Disc(_stage, "OnlineDot", Muted, 1594, 45, 14);
@@ -443,7 +450,7 @@ namespace ARO.Game
                     }
                     switch (it.action)
                     {
-                        case "jobs": if (_drive.Vehicle != null) { sl.button = "Resume Driving"; sl.go = () => _act.Resume(); } else sl.go = () => _act.Jobs(); break;
+                        case "jobs": if (_drive.Vehicle != null) { sl.button = "Resume Driving"; sl.go = () => _act.Resume(); } else sl.go = OpenJobs; break;
                         case "convoy": sl.go = () => _act.Convoy(); break;
                         case "bus": if (_bus != null && _bus.Active) sl.button = "Continue Route"; sl.go = () => _act.Bus(); break;
                         case "map": sl.go = () => _act.WorldMap(); break;
@@ -539,6 +546,7 @@ namespace ARO.Game
             if (_newsItems.Length > 1 && now > _nextNews) { _nextNews = now + 10f; NextNews(); }
             if (now > _nextPoll) { _nextPoll = now + 45f; _ = RefreshSnapshot(); }                // counts, coins, fuel, online players stay current while the dashboard is open
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
+            if (_page == Page.Jobs) JobsUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
         }
 
@@ -548,7 +556,7 @@ namespace ARO.Game
         {
             _targetsLogged = true;
             var sb = new System.Text.StringBuilder("[WorldMap] targets (dashboard)");
-            foreach (var b in _root.GetComponentsInChildren<Button>(false))
+            foreach (var b in _root.GetComponentsInChildren<Selectable>(false).Where(x => x is Button || x is InputField))
             {
                 var c = new Vector3[4]; ((RectTransform)b.transform).GetWorldCorners(c);
                 sb.Append($"\n  TARGET {b.name} x={(c[0].x + c[2].x) * 0.5f / Screen.width:0.000} y={1f - (c[0].y + c[2].y) * 0.5f / Screen.height:0.000}");
@@ -702,7 +710,7 @@ namespace ARO.Game
         {
             Panel(316, 622, 1065, 292);
             Ui.Label(_stage, "Featured Jobs", "Bold", 26, White, 338, 636, 300, 34);
-            SmallPill(1290, 640, 70, 26, "View All", _act.Jobs);
+            SmallPill(1290, 640, 70, 26, "View All", OpenJobs);
             _jobsHost = Ui.Box(_stage, "JobsHost", 316, 622, 1065, 292);
         }
 
@@ -734,7 +742,7 @@ namespace ARO.Game
             {
                 case JobState.Loading: BuildSkeleton(); return;
                 case JobState.Error: BuildJobsMessage("ic_road", "We could not load the job board", _jobError ?? "Please try again.", Brand.Bad, "Try again", "Btn_RetryJobs", () => _ = LoadJobs()); return;
-                case JobState.Empty: BuildJobsMessage("ic_box", "No open jobs right now", "The server posts new ones regularly. Check back soon, or run a bus route meanwhile.", Muted, "Open the job board", "Btn_OpenBoard", _act.Jobs); return;
+                case JobState.Empty: BuildJobsMessage("ic_box", "No open jobs right now", "The server posts new ones regularly. Check back soon, or run a bus route meanwhile.", Muted, "Open the job board", "Btn_OpenBoard", OpenJobs); return;
             }
             var owned = new HashSet<string>((_svc.Vehicles ?? new OwnedVehicleDto[0]).Select(v => CategoryOf(v.definition_id)));
             var pick = _jobs.OrderByDescending(j => j.eligible).ThenByDescending(j => owned.Contains(j.required_category)).ThenByDescending(j => j.reward).Take(4).ToArray();
@@ -772,23 +780,8 @@ namespace ARO.Game
 
         string CategoryOf(string defId) { var d = _svc.Definitions?.FirstOrDefault(x => x.id == defId); return d != null ? d.category : (defId != null && defId.StartsWith("bus") ? "bus" : "truck"); }
 
-        static string CargoArt(string cargo)
-        {
-            switch (cargo)
-            {
-                case "Electronics": return "job_containers"; case "Food & Produce": case "Agricultural Goods": return "job_food";
-                case "Building Materials": return "job_pipes"; case "Fuel Drums": return "job_tanker"; default: return "job_general";
-            }
-        }
-
-        static string CargoChip(string cargo)
-        {
-            switch (cargo)
-            {
-                case "Electronics": return "Containers"; case "Food & Produce": case "Agricultural Goods": return "Food supplies";
-                case "Building Materials": return "Construction"; case "Fuel Drums": return "Fuel"; default: return "General cargo";
-            }
-        }
+        /// <summary>The picture key and label come from the server's cargo catalogue (job.cargo_image / cargo_type); a missing picture falls back to the generic one.</summary>
+        static string CargoArt(JobDto j) => "job_" + (string.IsNullOrEmpty(j.cargo_image) ? "general" : j.cargo_image);
 
         static string BlockedText(JobDto j)
         {
@@ -820,9 +813,9 @@ namespace ARO.Game
         void JobCard(Transform host, JobDto j, float x, float y, float w)
         {
             Ui.Outlined(host, "JobCard", new Color(0.045f, 0.052f, 0.07f, 0.98f), new Color(1, 1, 1, 0.09f), x, y, w, 230, 12, 1.2f);
-            Ui.Photo(host, "JobPhoto", Brand.Texture(CargoArt(j.cargo_type)), new Rect(0, 0, 1, 1), x + 1.2f, y + 1.2f, w - 2.4f, 70, 11);
+            var art = Brand.Texture(CargoArt(j)) ?? Brand.Texture("job_general"); Ui.Photo(host, "JobPhoto", art, Ui.Cover(art, 0.05f, 0.12f, 0.8f, (w - 2.4f) / 70f), x + 1.2f, y + 1.2f, w - 2.4f, 70, 11);
             Ui.Gradient(host, "JobPhotoShade", new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.7f), false, x + 1.2f, y + 36, w - 2.4f, 35);
-            Ui.Label(host, CargoChip(j.cargo_type), "SemiBold", 13, White, x + 10, y + 50, w - 20, 18);
+            Ui.Label(host, CargoClass(j.cargo_category), "SemiBold", 13, White, x + 10, y + 50, w - 20, 18);
             // origin and destination on two lines so long depot names never collide with the rows below
             string from = j.origin != null ? j.origin.name : "?", to = j.destination != null ? j.destination.name : "?";
             var t1 = Ui.Label(host, from, "Bold", 17, White, x + 10, y + 76, w - 16, 22); t1.horizontalOverflow = HorizontalWrapMode.Wrap; t1.resizeTextForBestFit = true; t1.resizeTextMinSize = 12; t1.resizeTextMaxSize = 17;

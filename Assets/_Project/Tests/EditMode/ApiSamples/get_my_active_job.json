@@ -1,15 +1,20 @@
 {
  "active": {
-  "accepted_at": "2026-10-11T04:00:22.047173+00:00",
-  "assignment_id": "af597aa6-0d29-4fbf-bb46-4e4be7e1b5fa",
+  "accepted_at": "2026-10-11T04:42:10.150144+00:00",
+  "assignment_id": "299f3179-c7cb-4f92-b418-5e5e7160e5bf",
   "job": {
    "blocked_reason": "activity_in_progress",
    "cargo": {
+    "category": "freight",
+    "description": "General cargo.",
+    "fragile": false,
+    "image_key": "general",
+    "special_handling": false,
     "type": "Test",
     "weight_kg": 1000
    },
    "code": "CT-2",
-   "created_at": "2026-10-11T04:00:21.957114+00:00",
+   "created_at": "2026-10-11T04:42:10.038436+00:00",
    "destination": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -22,8 +27,13 @@
    "distance_km": 3.0,
    "eligible": false,
    "est_minutes": 4,
-   "expires_at": "2026-10-12T04:00:21.957114+00:00",
-   "id": "2e69682f-108a-41df-8518-30c03d2b26a1",
+   "estimate": {
+    "fuel_cost": 2,
+    "fuel_l": 0.7,
+    "profit": 898
+   },
+   "expires_at": "2026-10-12T04:42:10.038436+00:00",
+   "id": "e82d8879-2d07-40b3-9fcb-002bcfb8e4e9",
    "origin": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -34,6 +44,7 @@
    },
    "requirements": {
     "category": "truck",
+    "has_vehicle": true,
     "max_participants": 1,
     "min_level": 1
    },
@@ -45,8 +56,8 @@
   "progress_pct": 0.0,
   "started_at": null,
   "status": "accepted",
-  "vehicle_id": "60dcfac4-95f9-4f9a-847f-c13120b8a84d",
+  "vehicle_id": "a555f9a4-85f4-4b45-b61e-16b5d6fc5e5e",
   "verified_km": 0
  },
- "server_time": "2026-10-11T04:00:23.017438+00:00"
+ "server_time": "2026-10-11T04:42:11.159817+00:00"
 }

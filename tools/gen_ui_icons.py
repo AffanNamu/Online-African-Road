@@ -241,6 +241,16 @@ def _(im, d):
 @ic("ic_user_circle")
 def _(im, d):
     circle(d, (.5, .5), .42); cut(im, lambda c: [c.ellipse([P(.38, .26), P(.62, .50)], fill=255), c.pieslice([P(.24, .52), P(.76, 1.02)], 180, 360, fill=255)])
+@ic("ic_leaf")
+def _(im, d):
+    poly(d, [(.10, .90), (.14, .52), (.30, .26), (.56, .12), (.90, .10), (.88, .44), (.74, .70), (.50, .84), (.30, .88)])
+    cut(im, lambda c: c.line([P(.16, .86), P(.64, .38)], fill=255, width=int(.05 * M)))
+@ic("ic_car")
+def _(im, d):
+    rrect(d, (.06, .46), (.94, .76), .07); poly(d, [(.22, .48), (.32, .24), (.68, .24), (.80, .48)])
+    cut(im, lambda c: (c.polygon([P(.30, .45), P(.37, .30), P(.48, .30), P(.48, .45)], fill=255), c.polygon([P(.53, .45), P(.53, .30), P(.64, .30), P(.72, .45)], fill=255)))
+    circle(d, (.28, .78), .12); circle(d, (.72, .78), .12); cut(im, lambda c: (c.ellipse([P(.22, .72), P(.34, .84)], fill=255), c.ellipse([P(.66, .72), P(.78, .84)], fill=255)))
+    circle(d, (.28, .78), .05); circle(d, (.72, .78), .05)
 for g in GLYPHS: g()
 sheet2 = Image.new("RGBA", (9 * 144, 3 * 144), (30, 30, 36, 255))
 for i, g in enumerate(GLYPHS):
