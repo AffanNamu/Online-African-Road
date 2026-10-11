@@ -441,7 +441,7 @@ const allErrors = [], allExc = [];
     check(!!(await c.waitLog(/\[Garage\] skin id=sunset_gold ok=True/, m, 90)), 'Equip: the server accepted');
     check(db(`select customization->>'skin' from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === 'sunset_gold', 'the equipped skin is stored on the vehicle in the database');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-34-garage-skin-equipped.png` });
-    m = c.logs.length; await c.click('Btn_GarCat_wheels'); check(!!(await c.waitLog(/\[Garage\] category=wheels/, m, 60)), 'a category the game has no system for opens its explanation, not fake content'); await c.settle(); await c.page.screenshot({ path: `${prefix}-35-garage-wheels.png` });
+    check(!!(await c.clickUntil('Btn_GarCat_wheels', /\[Garage\] category=wheels/, 30, 3)), 'a category the game has no system for opens its explanation, not fake content');   // software WebGL can drop a click while the 3D preview renders (run 129): retry the click, never the assertion await c.settle(); await c.page.screenshot({ path: `${prefix}-35-garage-wheels.png` });
     await c.click('Btn_GarTab_Upgrades'); await c.settle(); await c.page.screenshot({ path: `${prefix}-36-garage-upgrades.png` });
 
     // maintenance: prices from the server, the actions change the database
