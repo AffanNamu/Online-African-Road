@@ -126,6 +126,8 @@ def main():
             ("get_dashboard_summary", A, "select get_dashboard_summary()::text", "DashboardSummary"),
             ("get_my_profile", A, "select get_my_profile()::text", "ProfileFull"),
             ("update_my_profile", A, "select update_my_profile(null, null, 'sunset', 'NG')::text", "ProfileFull"),
+            ("complete_onboarding", A, "select complete_onboarding('NG', 'ha', 'convoy')::text", "ProfileFull"),
+            ("set_my_preferences", A, "select set_my_preferences('en', 'jobs')::text", "ProfileFull"),
             ("get_public_profile", A, f"select get_public_profile('{B}')::text", "PublicProfile"),
             ("find_player", A, "select find_player('ctb')::text", "PersonDto"),
             ("get_my_wallet", A, "select get_my_wallet()::text", "WalletInfo"),

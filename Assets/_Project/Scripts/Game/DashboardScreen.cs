@@ -34,7 +34,7 @@ namespace ARO.Game
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
         RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot, _garRoot, _setRoot, _friRoot, _lbRoot;
-        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage = 4, Friends = 6, Leaderboards = 7, Settings = 9 }       // the value is the sidebar row: Home, Jobs, Multiplayer, Trucks & Buses, Garage ... Settings is the tenth
+        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage = 4, Friends = 6, Leaderboards = 7, Settings = 9, Onboarding = 30, Profile = 31 }       // the value is the sidebar row: Home, Jobs, Multiplayer, Trucks & Buses, Garage ... Settings is the tenth
         Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
@@ -111,7 +111,11 @@ namespace ARO.Game
             _setRoot = Ui.Box(_root, "SettingsPage", 0, 0, 1920, 1080); _regionParent = _setRoot; BuildSettingsPage();
             _friRoot = Ui.Box(_root, "FriendsPage", 0, 0, 1920, 1080); _regionParent = _friRoot; BuildFriendsPage();
             _lbRoot = Ui.Box(_root, "LeaderboardsPage", 0, 0, 1920, 1080); _regionParent = _lbRoot; BuildLeaderboardsPage();
-            _regionParent = null; ApplyPage();
+            _obRoot = Ui.Box(_root, "OnboardingPage", 0, 0, 1920, 1080); _regionParent = _obRoot; BuildOnboardingPage();
+            _prRoot = Ui.Box(_root, "ProfilePage", 0, 0, 1920, 1080); _regionParent = _prRoot; BuildProfilePage();
+            _regionParent = null;
+            if (_svc.Me != null && !_svc.Me.onboarded && !_obDone) _page = Page.Onboarding;                // a new player starts here, above everything
+            ApplyPage(); if (_page == Page.Onboarding) ObOpened();
 
             _stage = _root;                                         // toast and the notice popover sit above everything
             _toast = Ui.Label(_root, "", "SemiBold", 24, Gold, 0, 1010, 1920, 40, TextAnchor.MiddleCenter);
@@ -295,6 +299,7 @@ namespace ARO.Game
             var fill = Ui.Bar(_stage, 556, 104, 190, 11, frac, Gold); BarGrow.Run(fill, 11, Mathf.Max(11f, 190f * frac), 0.35f, 1.0f);
             var xpText = Ui.Label(_stage, "", "Regular", 18, new Color(0.88f, 0.9f, 0.94f), 762, 98, 220, 26);
             CountText.Run(xpText, 0, into, "", $" / {span:N0} XP", 0.35f, 1.0f);
+            Ui.Click(_stage, "Btn_Profile", 326, 10, 680, 108, OpenProfile);                          // the avatar, name and level open your profile
 
             // right cluster: fuel of the truck you drive, coins, presence, notifications, settings
             BuildFuelChip();
@@ -553,7 +558,7 @@ namespace ARO.Game
             if (_newsItems.Length > 1 && now > _nextNews) { _nextNews = now + 10f; NextNews(); }
             if (now > _nextPoll) { _nextPoll = now + 45f; _ = RefreshSnapshot(); }                // counts, coins, fuel, online players stay current while the dashboard is open
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
-            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now); else if (_page == Page.Friends) FriUpdate(now); else if (_page == Page.Leaderboards) LbUpdate(now);
+            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now); else if (_page == Page.Friends) FriUpdate(now); else if (_page == Page.Leaderboards) LbUpdate(now); else if (_page == Page.Profile) PrUpdate(now); else if (_page == Page.Onboarding) ObUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
         }
 

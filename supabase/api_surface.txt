@@ -101,3 +101,5 @@ apply_vehicle_skin
 get_vehicle_service_quote
 get_friends_leaderboard
 search_leaderboard
+complete_onboarding
+set_my_preferences

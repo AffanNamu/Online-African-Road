@@ -123,7 +123,7 @@ namespace ARO.Game
                 case Screen.Menu: ShowMenu(); break;
                 case Screen.Jobs: ShowMenu(); if (_dash != null) _dash.OpenJobs(); break;
                 case Screen.Garage: ShowMenu(); if (_dash != null) _dash.OpenGarage(); break;
-                case Screen.Profile: ShowProfile(); break;
+                case Screen.Profile: ShowMenu(); if (_dash != null) _dash.OpenProfile(); break;
                 case Screen.Convoy: ShowMenu(); if (_dash != null) _dash.OpenMultiplayer(); break;
                 case Screen.Bus: _ = ShowBus(); break;
                 case Screen.Shop: ShowMenu(); if (_dash != null) _dash.OpenVehicles(); break;
@@ -220,7 +220,7 @@ namespace ARO.Game
         DashboardActions DashActions() => new DashboardActions
         {
             Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => { ShowMenu(); if (_dash != null) _dash.OpenGarage(); }, Shop = () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); },
-            Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
+            Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => { if (_dash != null) _dash.OpenProfile(); },
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
             SignOut = () => { _ = _svc.Presence.EndSession(); _svc.Api.SignOut(); _svc.ClearPlayerCaches(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
@@ -348,18 +348,6 @@ namespace ARO.Game
             string err = await _bus.Begin(route, bus); _busy = false;
             if (err != null) { Toast(err, 6f, NoticeLevel.Bad); await ShowBus(); return; }
             HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
-        }
-
-        // ---------------------------------------------------------------- profile
-        void ShowProfile()
-        {
-            var p = NewPanel("Profile");
-            var pr = _svc.Profile;
-            UIKit.Label(p, $"{pr.display_name}\nLevel {pr.level} · {pr.experience:N0} XP\nWallet: {_svc.Wallet.balance:N0} coins\nJobs completed: {pr.jobs_completed}\nDistance: {pr.distance_km:F1} km\nVehicles owned: {_svc.Vehicles.Length}",
-                26, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 260;
-            if (_drive.Job != null) UIKit.Btn(p, "ABANDON CURRENT JOB", () => { _drive.AbandonJob(); ShowProfile(); }, false);
-            if (_bus.Active) UIKit.Btn(p, "ABANDON BUS ROUTE", async () => { await _bus.Abandon(); ShowProfile(); }, false);
-            UIKit.Btn(p, "BACK", ShowMenu);
         }
     }
 }

@@ -69,6 +69,13 @@ namespace ARO.Tests
             var s = Parse<LeaderboardPage>("search_leaderboard"); Assert.AreEqual("search", s.scope); Assert.AreEqual(1, s.items.Length); Assert.IsFalse(string.IsNullOrEmpty(s.items[0].username)); Assert.AreEqual(0, s.me == null ? 0 : s.me.rank, "a search carries no me block");
         }
 
+        [Test] public void OnboardingAndPreferenceRepliesParse()
+        {
+            var fresh = Parse<ProfileFull>("get_my_profile"); Assert.IsFalse(fresh.onboarded, "a new account has not been onboarded"); Assert.IsTrue(string.IsNullOrEmpty(fresh.language_code)); Assert.IsTrue(string.IsNullOrEmpty(fresh.play_style)); Assert.AreEqual(1, fresh.vehicle_count); Assert.AreEqual(1, fresh.friend_count);
+            var done = Parse<ProfileFull>("complete_onboarding"); Assert.IsTrue(done.onboarded); Assert.AreEqual("NG", done.country_code); Assert.AreEqual("Nigeria", done.country_name); Assert.AreEqual("ha", done.language_code); Assert.AreEqual("Hausa", done.language_name); Assert.AreEqual("convoy", done.play_style); Assert.IsFalse(string.IsNullOrEmpty(done.onboarded_at));
+            var pref = Parse<ProfileFull>("set_my_preferences"); Assert.AreEqual("en", pref.language_code); Assert.AreEqual("jobs", pref.play_style);
+        }
+
         [Test] public void ConvoyRepliesParse()
         {
             var m = Parse<MyConvoy>("get_my_convoy"); Assert.IsTrue(m.convoy.Exists); Assert.AreEqual(2, m.convoy.members.Length); Assert.IsTrue(m.convoy.members[0].is_leader); Assert.IsTrue(m.convoy.is_private); Assert.AreEqual(4, m.convoy.capacity);

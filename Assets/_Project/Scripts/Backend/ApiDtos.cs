@@ -25,7 +25,11 @@ namespace ARO.Backend
     {
         public string id, display_name, username, avatar_id, country_code, created_at, updated_at, last_seen_at, server_time;
         public int level, jobs_completed, jobs_total; public long experience, xp_level_start, xp_next_level, coins, lifetime_earnings; public double distance_km;
+        // preferences and counts added with onboarding
+        public string country_name, language_code, language_name, play_style, onboarded_at; public bool onboarded; public int vehicle_count, friend_count;
     }
+    [Serializable] public class CountryRow { public string code, name; }
+    [Serializable] public class LanguageRow { public string code, name, native_name; public bool ui_ready; }
     [Serializable] public class AchievementCounts { public int unlocked, total; }
     [Serializable] public class MilestoneDto { public string id, title; public double target, current, fraction; }
     [Serializable] public class ProgressionDto

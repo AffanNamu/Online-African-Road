@@ -16,11 +16,13 @@ const check = (ok, what, detail) => {
 };
 const db = sql => execFileSync('psql', [DB_URL, '-X', '-q', '-At', '-v', 'ON_ERROR_STOP=1', '-c', sql], { encoding: 'utf8' }).trim();
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wipe = async c => { await c.page.keyboard.press('End'); for (let i = 0; i < 30; i++) await c.page.keyboard.press('Backspace'); };      // empties a focused text field (the game's fields take key presses, not select-all)
 
-async function signup(name) {
+async function signup(name, onboard = true) {
   const email = name.toLowerCase() + '@e2e.test', password = 'pw-' + name + '-123';
   const r = await fetch(BASE + '/auth/v1/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, password, data: { display_name: name } }) });
   const j = await r.json(); if (r.status !== 200) throw new Error('signup ' + name + ': ' + JSON.stringify(j));
+  if (onboard) db(`update profiles set onboarded_at = now() where id = '${j.user.id}'`);          // every test player except the onboarding ones has already been through first-run
   return { name, email, password, id: j.user.id };
 }
 const asUser = (u, sql) => db(`select testkit.as_user('${u.id}', $q$${sql}$q$)`);
@@ -29,9 +31,9 @@ function url(user, extra = '') {
   return `${BASE}/index.html?backend=${encodeURIComponent(BASE)}&anon=${encodeURIComponent(ANON)}&autologin=${encodeURIComponent(user.email + '|' + user.password)}${extra}`;
 }
 
-async function open(user, extra, body) {
+async function open(user, extra, body, opts = {}) {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
-  const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
+  const page = await browser.newPage({ viewport: { width: 1024, height: 576 }, ...(opts.locale ? { locale: opts.locale } : {}) });
   const logs = [], errors = []; currentLogs = logs;
   page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
   const waitLog = async (re, from = 0, seconds = 60) => { for (let i = 0; i < seconds * 2; i++) { const hit = logs.slice(from).find(l => re.test(l)); if (hit) return hit; await sleep(500); } return null; };
@@ -752,6 +754,115 @@ const allErrors = [], allExc = [];
     check(!!(await c.waitLog(/\[Leaderboards\] search "browserlb" state=unavailable/, m, 90)), 'a search that fails says so'); await c.settle(); await c.page.screenshot({ path: `${prefix}-90-leaderboards-search-error.png` });
     m = c.logs.length; await c.click('Btn_LbSearchRetry'); check(!!(await c.waitLog(/\[Leaderboards\] search "browserlb" state=ready found=10/, m, 90)), 'search Retry reaches the server and shows its first 10 matches');
     m = c.logs.length; await c.click('Btn_LbSideFindFriends'); check(!!(await c.waitLog(/\[Friends\] opened/, m, 60)), 'Find Friends leads to the Friends screen');
+  });
+
+  // =========================================================================================== 2h. Onboarding (first run) and the player's own profile
+  const taken = await signup('BrowserTaken');                                                      // an existing driver: their name and username are not available
+  const newbie = await signup('BrowserNew', false);                                                // an account that has never been through first-run
+  const ctry = db(`select code || '|' || name from countries where code <> 'NG' and name ~ '^[A-Za-z]+$' order by name limit 1`).split('|'); const [otherCode, otherName] = ctry;
+  const nCountries = +db(`select count(*) from countries`), nLanguages = +db(`select count(*) from languages`);
+  await open(newbie, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserNew/, 0, 150)), 'Onboarding: the dashboard is built for the brand-new player');
+    check(!!(await c.waitLog(/\[Onboarding\] opened/, 0, 60)), 'a player the server says is not onboarded lands on the onboarding page, not on Home');
+    const ls = await c.waitLog(/\[Onboarding\] lists countries=(\d+) languages=(\d+)/, 0, 90);
+    check(!!ls && ls.includes(`countries=${nCountries} languages=${nLanguages}`), `the country and language lists are the server's (${nCountries} countries, ${nLanguages} languages)`, ls);
+    const sg = await c.waitLog(/\[Onboarding\] suggested locale=/, 0, 60);
+    check(!!sg && /locale="en-NG" country=NG language=en/.test(sg), 'the browser locale en-NG suggests Nigeria and English (and nothing the server does not offer)', sg);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-92-onboarding-name.png` });
+    let tg = c.targets(); for (const k of ['Ob_Name_Input', 'Btn_ObContinue', 'Btn_ObSignOut', 'Btn_ObBlocker']) check(!!tg[k], `${k} is a clickable target on the onboarding page`);
+    let m = c.logs.length; await c.click('Nav_Jobs'); await sleep(3000);
+    check(!c.logs.slice(m).some(l => /\[Dashboard\] page=jobs/.test(l)), 'nothing under the onboarding page can be opened before it is finished (the sidebar is covered)');
+    // step 1: a name that is too short cannot continue; the page says why
+    await c.click('Ob_Name_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('ab', { delay: 80 }); await c.settle(); await c.page.screenshot({ path: `${prefix}-93-onboarding-badname.png` });
+    m = c.logs.length; await c.click('Btn_ObContinue'); await sleep(2500); check(!c.logs.slice(m).some(l => /\[Onboarding\] step=where/.test(l)), 'a 2-character driver name cannot continue');
+    await c.click('Ob_Name_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('BrowserTaken', { delay: 60 }); await c.settle();
+    m = c.logs.length; await c.click('Btn_ObContinue'); check(!!(await c.waitLog(/\[Onboarding\] step=where/, m, 40)), 'a valid name continues to the next step (availability is the server\'s call, made at the end)');
+    // step 2: country and language
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-94-onboarding-where.png` }); tg = c.targets();
+    for (const k of ['Ob_Country_Search', 'Btn_ObCountry_NG', 'Btn_ObLang_en', 'Btn_ObLang_fr', 'Btn_ObBack', 'Btn_ObContinue']) check(!!tg[k], `${k} is a clickable target on the country step`);
+    m = c.logs.length; await c.click('Ob_Country_Search'); await sleep(500); const q = otherName.slice(0, 4).toLowerCase(); await c.page.keyboard.type(q, { delay: 90 });
+    const exp = +db(`select count(*) from countries where translate(lower(name), 'âäàáãåçéèêëíìîïñóòôöõúùûüýÿ', 'aaaaaaceeeeiiiinooooouuuuyy') like '%${q}%'`);
+    const cs = await c.waitLog(new RegExp(`\\[Onboarding\\] country search="${q}" shown=(\\d+)`), m, 40); check(!!cs && cs.endsWith(`shown=${exp}`), `searching "${q}" narrows the real list to the ${exp} matching countries`, cs);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-95-onboarding-search.png` });
+    m = c.logs.length; await c.click(`Btn_ObCountry_${otherCode}`); check(!!(await c.waitLog(new RegExp(`\\[Onboarding\\] country=${otherCode}`), m, 40)), `${otherName} can be chosen (replacing the suggestion)`);
+    m = c.logs.length; await c.click('Btn_ObLang_fr'); check(!!(await c.waitLog(/\[Onboarding\] language=fr/, m, 40)), 'French can be chosen; the page says the game is still English'); await c.settle(); await c.page.screenshot({ path: `${prefix}-96-onboarding-language.png` });
+    m = c.logs.length; await c.click('Btn_ObContinue'); check(!!(await c.waitLog(/\[Onboarding\] step=style/, m, 40)), 'country and language continue to the last step');
+    // step 3: play style, speed unit, nearby
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-97-onboarding-style.png`}); tg = c.targets();
+    for (const k of ['Btn_ObStyle_jobs', 'Btn_ObStyle_bus', 'Btn_ObStyle_convoy', 'Btn_ObStyle_explore', 'Btn_ObSpeed_kmh', 'Btn_ObSpeed_mph', 'Btn_ObNearby', 'Btn_ObFinish']) check(!!tg[k], `${k} is a clickable target on the last step`);
+    m = c.logs.length; await c.click('Btn_ObFinish'); await sleep(2000); check(!c.logs.slice(m).some(l => /\[Onboarding\] complete/.test(l)), 'Start driving does nothing until a play style is chosen');
+    m = c.logs.length; await c.click('Btn_ObStyle_convoy'); check(!!(await c.waitLog(/\[Onboarding\] style=convoy/, m, 40)), 'a play style can be chosen');
+    m = c.logs.length; await c.click('Btn_ObSpeed_mph'); check(!!(await c.waitLog(/\[Onboarding\] speed=mph/, m, 40)), 'the speed unit can be chosen');
+    m = c.logs.length; await c.click('Btn_ObNearby'); check(!!(await c.waitLog(/\[Onboarding\] nearby=false/, m, 40)), 'appearing in Players Nearby can be turned off');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-98-onboarding-style-chosen.png` });
+    // the server refuses a name that is taken: the player is sent back to the name with the reason, and nothing is stored
+    m = c.logs.length; await c.click('Btn_ObFinish'); const bad = await c.waitLog(/\[Onboarding\] complete ok=False/, m, 60);
+    check(!!bad && /error=display_name_taken/.test(bad), 'the server refuses a driver name that is already taken', bad);
+    check(db(`select coalesce(onboarded_at::text, 'no') from profiles where id = '${newbie.id}'`) === 'no', 'a refused onboarding stores nothing (still not onboarded in the database)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-99-onboarding-taken.png` }); check(!!c.targets()['Ob_Name_Input'], 'the player is back on the name step');
+    await c.click('Ob_Name_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('Chidi Eze', { delay: 70 }); await c.settle();
+    m = c.logs.length; await c.click('Btn_ObContinue'); await c.waitLog(/\[Onboarding\] step=where/, m, 40); await c.settle();
+    check(!!c.targets()['Btn_ObLang_fr'], 'the earlier answers were kept (country and language are still chosen)'); m = c.logs.length; await c.click('Btn_ObContinue'); await c.waitLog(/\[Onboarding\] step=style/, m, 40); await c.settle();
+    m = c.logs.length; await c.click('Btn_ObFinish'); const ok = await c.waitLog(/\[Onboarding\] complete ok=True/, m, 60);
+    check(!!ok && ok.includes(`country=${otherCode} language=fr style=convoy renamed=True`), 'with a free name the server accepts the onboarding', ok);
+    const row = db(`select country_code || '|' || language_code || '|' || play_style || '|' || display_name || '|' || (onboarded_at is not null) || '|' || appear_nearby from profiles where id = '${newbie.id}'`);
+    check(row === `${otherCode}|fr|convoy|Chidi Eze|true|false`, 'the database holds exactly what was chosen (country, language, style, name, onboarded, hidden from Nearby)', row);
+    check(!!(await c.waitLog(/\[Onboarding\] finished name=Chidi Eze onboarded=true landing=multiplayer/, m, 60)) && !!(await c.waitLog(/\[Dashboard\] page=multiplayer/, m, 60)), 'a player who wants to drive with friends lands on Multiplayer');
+    check(!!(await c.waitLog(/\[Settings\] applied .*speed=mph/, m, 30)), 'the speed unit chosen in onboarding is applied (mph)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-100-onboarding-landed.png` });
+
+    // ---- the profile page (same player: level, XP and the other numbers are set the way the server would)
+    db(`update profiles set experience = 250, level = 2, jobs_completed = 3, distance_km = 42.5 where id = '${newbie.id}'`);
+    m = c.logs.length; await c.click('Btn_Profile'); check(!!(await c.waitLog(/\[Profile\] opened/, m, 60)), 'the avatar in the header opens the profile');
+    const ld = await c.waitLog(/\[Profile\] loaded profile=ok ranks=ready xp_rank=(\d+) achievements=ready unlocked=(\d+)\/(\d+)/, m, 90); const myRank = +db(`select count(*) + 1 from profiles where experience > 250`);
+    check(!!ld && ld.includes(`xp_rank=${myRank}`), `the profile loads the real ranking (XP rank ${myRank}), achievements and numbers from the server`, ld);
+    const nAch = +db(`select count(*) from achievement_definitions`); check(!!ld && ld.endsWith(`/${nAch}`), `all ${nAch} achievements are listed`, ld);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-101-profile.png` }); tg = c.targets();
+    for (const k of ['Btn_PrEdit', 'Btn_PrPublic', 'Btn_PrCountry', 'Btn_PrLanguage', 'Btn_PrStyle_jobs', 'Btn_PrStyle_bus', 'Btn_PrStyle_convoy', 'Btn_PrStyle_explore', 'Btn_PrRank_xp', 'Btn_PrRank_earnings', 'Btn_PrOpenBoards']) check(!!tg[k], `${k} is a clickable target on the profile page`);
+    // edit: the server refuses a taken username, accepts a free one
+    await c.click('Btn_PrEdit'); await c.settle(); check(!!c.targets()['Pr_Username_Input'], 'Edit profile opens a dialog with the name and username');
+    await c.click('Pr_Username_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('browsertaken', { delay: 60 }); await sleep(500);
+    m = c.logs.length; await c.click('Btn_PrEditSave'); const ue = await c.waitLog(/\[Profile\] edit name=False username=True ok=False/, m, 60); check(!!ue && /error=username_taken/.test(ue), 'the server refuses a username that is taken', ue);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-102-profile-edit-taken.png` });
+    await c.click('Pr_Username_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('chidi_eze', { delay: 60 }); await sleep(500);
+    m = c.logs.length; await c.click('Btn_PrEditSave'); check(!!(await c.waitLog(/\[Profile\] edit name=False username=True ok=True/, m, 60)), 'a free username is saved');
+    check(db(`select username from profiles where id = '${newbie.id}'`) === 'chidi_eze', 'the new username is in the database'); await c.settle();
+    // country: search the real list, pick one
+    m = c.logs.length; await c.click('Btn_PrCountry'); await c.settle(); check(!!c.targets()['Pr_Country_Search'], 'Change country opens a searchable list');
+    await c.click('Pr_Country_Search'); await sleep(500); await c.page.keyboard.type('nigeria', { delay: 80 }); await c.waitLog(/\[Profile\] country search="nigeria"/, m, 40); await c.settle(); await c.page.screenshot({ path: `${prefix}-103-profile-country.png` });
+    m = c.logs.length; await c.click('Btn_PrCountry_NG'); check(!!(await c.waitLog(/\[Profile\] country=NG ok=True/, m, 60)), 'a new country is saved');
+    check(db(`select country_code from profiles where id = '${newbie.id}'`) === 'NG', 'the new country is in the database'); await c.settle();
+    // language and play style
+    await c.click('Btn_PrLanguage'); await c.settle(); await c.page.screenshot({ path: `${prefix}-104-profile-language.png` }); m = c.logs.length; await c.click('Btn_PrLang_en'); check(!!(await c.waitLog(/\[Profile\] language=en ok=True/, m, 60)), 'a new language is saved');
+    check(db(`select language_code from profiles where id = '${newbie.id}'`) === 'en', 'the new language is in the database'); await c.settle();
+    m = c.logs.length; await c.click('Btn_PrStyle_jobs'); check(!!(await c.waitLog(/\[Profile\] play style=jobs ok=True/, m, 60)), 'a new play style is saved'); check(db(`select play_style from profiles where id = '${newbie.id}'`) === 'jobs', 'the new play style is in the database');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-105-profile-after.png` });
+    m = c.logs.length; await c.click('Btn_PrPublic'); check(!!(await c.waitLog(/\[Friends\] profile id=chidi_eze ok=True .*status=self/, m, 60)), 'How others see me opens the public card from the server'); await c.click('Btn_CloseDialog'); await c.settle();
+    m = c.logs.length; await c.click('Btn_PrRank_earnings'); check(!!(await c.waitLog(/\[Dashboard\] page=leaderboards/, m, 40)), 'a ranking opens the Leaderboards');
+    // the same page at other window sizes
+    await c.click('Btn_Profile'); await c.waitLog(/\[Profile\] opened/, m, 40); await c.settle();
+    for (const [w, h] of [[1920, 1080], [1440, 900], [1280, 720], [1024, 768], [768, 1024], [390, 844]]) { await c.page.setViewportSize({ width: w, height: h }); await sleep(2500); await c.page.screenshot({ path: `${prefix}-8-profile-${w}x${h}.png` }); }
+    await c.page.setViewportSize({ width: 1024, height: 576 }); await sleep(1500);
+    check(c.errors.length === 0, 'onboarding and the profile at six window sizes cause no page errors', c.errors[0]);
+  }, { locale: 'en-NG' });
+  // after onboarding the player is not asked again, and a failing service shows an error with a working retry
+  await open(newbie, '&fault=list_my_achievements:error:3', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for Chidi Eze/, 0, 150)), 'signing in again shows the new driver name'); await sleep(6000);
+    check(!c.logs.some(l => /\[Onboarding\] opened/.test(l)), 'a player who has been onboarded is never asked again (the server remembers)');
+    await c.settle(); let m = c.logs.length; await c.click('Btn_Profile');
+    check(!!(await c.waitLog(/\[Profile\] loaded profile=ok ranks=ready .* achievements=unavailable/, m, 90)), 'achievements that cannot load say "unavailable" instead of showing an empty list');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-106-profile-error.png` }); check(!!c.targets()['Btn_PrRetryAch'], 'a Try again button is offered');
+    m = c.logs.length; await c.click('Btn_PrRetryAch'); check(!!(await c.waitLog(/\[Profile\] loaded profile=ok ranks=ready .* achievements=ready/, m, 90)), 'Try again reaches the server');
+  });
+  // lists that cannot load stop the country step with a working retry
+  const nl = await signup('BrowserNl', false);
+  await open(nl, '&fault=countries:error:3', async c => {
+    await c.waitLog(/\[Onboarding\] opened/, 0, 150); const lf = await c.waitLog(/\[Onboarding\] lists countries=unavailable/, 0, 90); check(!!lf, 'countries that cannot load are reported as unavailable');
+    await c.settle(); await c.click('Ob_Name_Input'); await sleep(300); await wipe(c); await c.page.keyboard.type('Nina Okoro', { delay: 60 }); await c.settle();
+    let m = c.logs.length; await c.click('Btn_ObContinue'); await c.waitLog(/\[Onboarding\] step=where/, m, 40); await c.settle(); await c.page.screenshot({ path: `${prefix}-107-onboarding-lists-error.png` });
+    check(!!c.targets()['Btn_ObRetryLists'], 'the country step offers Try again instead of an empty list');
+    m = c.logs.length; await c.click('Btn_ObRetryLists'); check(!!(await c.waitLog(new RegExp(`\\[Onboarding\\] lists countries=${nCountries} languages=${nLanguages}`), m, 90)), 'Try again reaches the server and the lists load'); await c.settle();
+    check(!!c.targets()['Btn_ObCountry_NG'], 'the real countries are listed after the retry');
   });
 
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)

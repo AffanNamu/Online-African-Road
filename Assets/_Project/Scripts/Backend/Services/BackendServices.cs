@@ -59,6 +59,16 @@ namespace ARO.Backend
         public Task<Result<ProfileFull>> UpdateProfile(string displayName = null, string username = null, string avatarId = null, string countryCode = null) =>
             Api.Call<ProfileFull>("update_my_profile", JsonArgs.Obj(("p_display_name", displayName), ("p_username", username), ("p_avatar_id", avatarId), ("p_country_code", countryCode)), idempotent: false);
 
+        // first-run onboarding and the player's preferences: the lists are the server's reference data, the answers are validated and stored by the server
+        public readonly Loadable<CountryRow[]> Countries = new Loadable<CountryRow[]>(); public readonly Loadable<LanguageRow[]> Languages = new Loadable<LanguageRow[]>();
+        public Task<Result<CountryRow[]>> LoadCountries() => Track(Countries, () => Api.Select<CountryRow>("countries?select=code,name&order=name"), v => v == null || v.Length == 0);
+        public Task<Result<LanguageRow[]>> LoadLanguages() => Track(Languages, () => Api.Select<LanguageRow>("languages?select=code,name,native_name,ui_ready&order=name"), v => v == null || v.Length == 0);
+        public Task<Result<ProfileFull>> CompleteOnboarding(string countryCode, string languageCode, string playStyle, string displayName = null) =>
+            Api.Call<ProfileFull>("complete_onboarding", JsonArgs.Obj(("p_country_code", countryCode), ("p_language_code", languageCode), ("p_play_style", playStyle), ("p_display_name", displayName)));
+        /// <summary>Null leaves a value alone. Language and play style only; the country is changed with UpdateProfile.</summary>
+        public Task<Result<ProfileFull>> SetPreferences(string languageCode = null, string playStyle = null) =>
+            Api.Call<ProfileFull>("set_my_preferences", JsonArgs.Obj(("p_language_code", languageCode), ("p_play_style", playStyle)), idempotent: false);
+
         public Task<Result<PublicProfile>> GetPublic(string playerId) => Api.Call<PublicProfile>("get_public_profile", JsonArgs.Obj(("p_player", playerId)));
         public Task<Result<PersonDto>> FindByUsername(string username) => Api.Call<PersonDto>("find_player", JsonArgs.Obj(("p_username", username)));
         public Task<Result<WalletInfo>> GetWallet() => Api.Call<WalletInfo>("get_my_wallet");

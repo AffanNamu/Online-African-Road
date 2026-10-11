@@ -9,13 +9,16 @@ namespace ARO.Backend
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")] static extern void ARO_Redirect(string url);
         [DllImport("__Internal")] static extern void ARO_ClearUrlHash();
+        [DllImport("__Internal")] static extern string ARO_BrowserLocale();
         public const bool IsWeb = true;
         public static void Redirect(string url) => ARO_Redirect(url);
         public static void ClearUrlHash() => ARO_ClearUrlHash();
+        public static string BrowserLocale() { try { return ARO_BrowserLocale() ?? ""; } catch (System.Exception) { return ""; } }
 #else
         public const bool IsWeb = false;
         public static void Redirect(string url) => Application.OpenURL(url);
         public static void ClearUrlHash() { }
+        public static string BrowserLocale() => "";
 #endif
         /// <summary>The page address without query or fragment: where OAuth providers should send the player back to.</summary>
         public static string PageBase

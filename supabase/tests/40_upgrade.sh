@@ -90,6 +90,7 @@ same "collision resolved (driver_one + a suffixed twin)" "2" "$(q -c "select cou
 same "unicode name gets a safe handle" "1" "$(q -c "select count(*) from profiles where display_name = 'Zoë Ünï' and username ~ '^[a-z0-9_]{3,24}\$'")"
 same "lifetime earnings backfilled from the ledger" "$LARRY_EARN" "$(q -c "select lifetime_earnings from profiles where id='$LARRY'")"
 same "players without earnings stay at 0" "0" "$(q -c "select sum(lifetime_earnings) from profiles where id <> '$LARRY'")"
+same "players from before onboarding are not asked to onboard again" "0" "$(q -c "select count(*) from profiles where onboarded_at is null")"
 same "every city has a slug" "0" "$(q -c "select count(*) from cities where slug is null")"
 same "legacy cities are OPEN" "2" "$(q -c "select count(*) from cities where slug in ('lagos','ibadan') and status = 'OPEN'")"
 same "the playable route exists exactly once" "1" "$(q -c "select count(*) from world_routes where code = 'lagos-ibadan'")"

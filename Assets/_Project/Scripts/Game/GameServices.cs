@@ -33,6 +33,8 @@ namespace ARO.Game
 
         // what the older panels read; always filled from the server (RefreshPlayer), never invented
         public ProfileDto Profile;
+        /// <summary>The player's own full profile as the server last said it (preferences, onboarding, counts). Null until loaded.</summary>
+        public ProfileFull Me;
         public WalletDto Wallet;
         public OwnedVehicleDto[] Vehicles = new OwnedVehicleDto[0];
         public VehicleDefDto[] Definitions = new VehicleDefDto[0];
@@ -60,6 +62,9 @@ namespace ARO.Game
             if (!s.Ok) return s.UserMessage;
             var g = await Garage.LoadGarage();
             if (!g.Ok) return g.UserMessage;
+            var me = await Player.GetProfile();
+            if (!me.Ok) return me.UserMessage;
+            Me = me.Value;
             var d = await Api.Select<VehicleDefDto>("vehicle_definitions?select=id,category,name,cargo_capacity_kg,passenger_capacity,fuel_capacity_l,max_speed_kmh,price");
             if (!d.Ok) return d.UserMessage;
             var sum = s.Value; var pr = sum.progression ?? new ProgressionDto();
@@ -73,8 +78,8 @@ namespace ARO.Game
         /// <summary>Forget everything cached for the signed-in player (sign-out, expired session).</summary>
         public void ClearPlayerCaches()
         {
-            Profile = null; Wallet = null; Vehicles = new OwnedVehicleDto[0];
-            Player.Summary.Reset(); Notifications.Reset(); Friends.Friends.Reset(); Friends.Recent.Reset(); Friends.Requests.Reset(); Boards.Board.Reset(); Boards.Friends.Reset(); Boards.Weekly.Reset();
+            Profile = null; Me = null; Wallet = null; Vehicles = new OwnedVehicleDto[0];
+            Player.Summary.Reset(); Player.Countries.Reset(); Player.Languages.Reset(); Notifications.Reset(); Friends.Friends.Reset(); Friends.Recent.Reset(); Friends.Requests.Reset(); Boards.Board.Reset(); Boards.Friends.Reset(); Boards.Weekly.Reset();
             Garage.Garage.Reset(); World.State.Reset(); Content.News.Reset(); Content.Hero.Reset(); Convoys.Mine.Reset(); Jobs.Board.Reset(); Progress.Progress.Reset();
         }
     }
