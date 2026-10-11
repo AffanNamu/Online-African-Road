@@ -1,0 +1,31 @@
+# READ-ONLY preflight of the live Supabase database. It cannot change anything: every statement is a SELECT that passes an allow-list
+# guard (see `tools/preflight_live.py --selftest`), runs inside BEGIN TRANSACTION READ ONLY, and the session is also opened with
+# default_transaction_read_only=on. It never runs migrations or seeds. This is NOT the apply workflow.
+# Output is aggregates only (counts, hashes): this repository is public, so these logs are public. The connection string, user, host
+# and password are never printed. The target is confirmed first (project ref of the connection == project ref of SUPABASE_URL).
+name: Supabase preflight (read-only)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type read-only to confirm you want the read-only check (it changes nothing)'
+        required: true
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Confirmation
+        run: '[ "${{ github.event.inputs.confirm }}" = "read-only" ] || { echo "Type read-only to confirm."; exit 1; }'
+      - uses: actions/checkout@v4
+      - name: Prove the guard refuses every write (no database is contacted)
+        run: python3 tools/preflight_live.py --selftest
+      - name: Read-only checks against the live database
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co' }}
+          SUPABASE_URL_SOURCE: ${{ (vars.SUPABASE_URL && 'repository variable SUPABASE_URL') || (secrets.SUPABASE_URL && 'repository secret SUPABASE_URL') || 'default in the workflow (the project the game ships with)' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: python3 tools/preflight_live.py
