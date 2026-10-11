@@ -1,5 +1,7 @@
 # Dashboard and Jobs page
 
+> Placeholders, stand-ins and unbuilt parts of every page are tracked in [`PLACEHOLDERS.md`](PLACEHOLDERS.md).
+
 Both pages live in one screen (`DashboardScreen`, partial class: `DashboardScreen.cs` = shell + Home, `DashboardJobs.cs` = Jobs) on a 1920x1080 stage that
 letterboxes to any window. The sidebar and header are shared; the sidebar's Jobs item (or Home's "View All", a hero button, the world map's "Jobs"
 button) switches page without rebuilding the header. Escape on the Jobs page returns Home.

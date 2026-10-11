@@ -1,5 +1,7 @@
 # Status (updated 2026-10-11: backend foundation written and verified on local Postgres; its CI run (api-e2e, Unity compile, WebGL E2E) is pending, rows marked LOCAL below)
 
+**Everything that is a placeholder, a stand-in, authored-for-now or unbuilt is listed in [`docs/PLACEHOLDERS.md`](PLACEHOLDERS.md) (ids `P-xx`, what "real" means, where the real thing plugs in, what it is blocked on). It is the to-do list for making the game real.**
+
 Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles it in CI (Tundra build success) but it has never run;
 **WRITTEN** = code exists, no automated evidence beyond review; **INCOMPLETE** = not built.
 
