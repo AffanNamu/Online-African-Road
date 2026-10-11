@@ -71,6 +71,9 @@ def make(sub, resub):
     # ------------------------------------------------------------------ vehicles + jobs
     M["vehicle: rename ownership removed"] = ("vehjobs", lambda t: sub(t, "set nickname = nullif(trim(p_name), '') where id = p_vehicle and player_id = auth.uid();", "set nickname = nullif(trim(p_name), '') where id = p_vehicle;"))
     M["vehicle: set_active ownership removed"] = ("vehjobs", lambda t: sub(t, "if not exists (select 1 from vehicle_ownership where id = p_vehicle and player_id = auth.uid()) then raise exception 'vehicle_not_owned'; end if;", ""))
+    M["person card: vehicle shown to strangers"] = ("pcard", lambda t: sub(t, "if v_vis = 'full' then\n    select jsonb_build_object('vehicle'", "if true then\n    select jsonb_build_object('vehicle'"))
+    M["person card: selected vehicle ignored"] = ("pcard", lambda t: sub(t, "order by (vo.id = p.selected_vehicle_id) desc, vo.acquired_at limit 1;", "order by vo.acquired_at limit 1;"))
+    M["person card: vehicle shown to people met in passing"] = ("pcard", lambda t: sub(t, "if v_vis = 'full' then\n    select jsonb_build_object('vehicle'", "if v_vis in ('full', 'basic') then\n    select jsonb_build_object('vehicle'"))
     M["vehicle: customization ownership removed"] = ("garage", lambda t: sub(t, "|| p_data where id = p_vehicle and player_id = auth.uid();", "|| p_data where id = p_vehicle;"))
     M["vehicle: customization accepts any key"] = ("garage", lambda t: sub(t, "if k not in ('color','livery','plate') then raise exception 'invalid_customization'; end if;", ""))
     M["vehicle: customization colour not validated"] = ("garage", lambda t: sub(t, "if k = 'color'  and (v #>> '{}') !~ '^#[0-9a-fA-F]{6}$' then raise exception 'invalid_customization'; end if;", ""))

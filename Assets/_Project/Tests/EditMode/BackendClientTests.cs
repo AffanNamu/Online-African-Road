@@ -55,6 +55,13 @@ namespace ARO.Tests
             Assert.AreEqual("ctb", Parse<PersonDto>("find_player").username);
         }
 
+        [Test] public void FriendCardsCarryTheVehicleOnlyWhereTheServerSendsIt()
+        {
+            var f = Parse<PeopleList>("list_friends"); Assert.AreEqual("truck_light_01", f.items[0].vehicle_id); Assert.IsFalse(string.IsNullOrEmpty(f.items[0].vehicle)); Assert.AreEqual("friends", f.items[0].friend_status);
+            var pr = Parse<PublicProfile>("get_public_profile"); Assert.AreEqual("truck_light_01", pr.vehicle_id); Assert.Greater(pr.level, 0);
+            var found = Parse<PersonDto>("find_player"); Assert.IsTrue(found.Exists); Assert.IsFalse(string.IsNullOrEmpty(found.username));
+        }
+
         [Test] public void ConvoyRepliesParse()
         {
             var m = Parse<MyConvoy>("get_my_convoy"); Assert.IsTrue(m.convoy.Exists); Assert.AreEqual(2, m.convoy.members.Length); Assert.IsTrue(m.convoy.members[0].is_leader); Assert.IsTrue(m.convoy.is_private); Assert.AreEqual(4, m.convoy.capacity);

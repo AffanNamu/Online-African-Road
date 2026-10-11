@@ -87,7 +87,7 @@ How to use this file
 | P-53 | **Several game servers / regions**: one server row; region and capacity appear only if an operator sets them | More rows, region routing, ping per server | C |
 | P-54 | **Nearby players have no distance** (positions are never stored server-side) and **only your own ping** is measurable | A decision on position telemetry or a relay-side measure | C |
 | P-55 | **Daily challenges**: schema, progress and claim are built; no definitions, no screen | Authored challenges and a screen | B |
-| P-56 | **Friends, Leaderboards, Store** screens: the backends exist; the sidebar says "coming soon" | The screens built to the mockups | B |
+| P-56 | **Leaderboards** and **Store** screens: the leaderboard backend exists; the sidebar says "coming soon". (Friends is built, see below)  | The screens built to the mockups | B |
 | P-57 | The **bus routes**, **profile** (the old text panel is no longer reachable) and **pause menu** are the old plain text panels (`UIKit`), not designed pages. (Settings is now a designed page, see P-64) | Designed pages to the same standard as Jobs, Multiplayer, Trucks & Buses, Garage | B |
 | P-58 | **Tolls** (shown in the Jobs mockup) do not exist in the economy; the cell shows XP instead | A toll mechanic charged through the ledger | C |
 | P-59 | **Companies**, **touch HUD**, the **Flutter shell**: not started | As designed | C |
@@ -100,6 +100,10 @@ How to use this file
 | P-66 | **Settings live per device only** (browser storage): graphics, sound and controls do not follow the player to another device. Only the two privacy items are on the account | A `player_settings` table and sync, with the device value as the fallback | C |
 | P-67 | **Graphics Quality and Traffic Density apply on the next load** (the world is built once); there are no per-effect graphics controls (shadow quality, texture quality, view distance, reflections) | A world that can rebuild or re-tier live; individual levers in `QualityTier` exposed | C |
 | P-68 | The **Settings page has never been seen rendered** (written without a Unity editor); the browser E2E screenshots are its first look. **Display Mode** (full screen) is untested in a real browser window | A look at the screenshots and a real-browser pass | A |
+| P-69 | **Messaging between friends**: the Message button on Friends is shown disabled with the reason; the game has convoy chat only | A direct-message system (table, RPCs with rate limit, moderation, report/block, notifications) and a conversation UI | B |
+| P-70 | **Player avatars are initials on a colour** (the same colour for the same player). No player photographs or avatar artwork exist, `avatar_id` is stored but unused | Avatar art (or an editor) and a real picture per player; thumbnails served small | B |
+| P-71 | **Friends: no mutual-friends count on requests, no "convoys joined" stat, no list/grid toggle, no search-by-name on the server** (the server answers an exact username on purpose, so players cannot be enumerated) | Backend fields or a deliberate decision on discovery: a mutual count, a convoys-joined counter, a privacy-safe name search | C |
+| P-72 | **Friends and every other page are not responsive** (see P-17): the stage scales, there is no tablet or phone layout | A narrow-screen shell (bottom bar / drawer) and per-page reflow | A |
 
 ## 7. Authored data that is a stand-in
 

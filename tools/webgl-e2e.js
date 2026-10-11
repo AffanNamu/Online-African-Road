@@ -544,6 +544,117 @@ const allErrors = [], allExc = [];
     check(!!(await c.waitLog(/\[Render\] tier=high /, m, 240)), 'Graphics Quality = High: the world is built with the High tier');
   });
 
+  // =========================================================================================== 2f. Friends: every list, request and action against the real backend and database
+  const fin = await signup('BrowserFin'), fg = await signup('BrowserFg'), fh = await signup('BrowserFh'), fr = await signup('BrowserFr'), fd = await signup('BrowserFd'), fo = await signup('BrowserFo'), fe = await signup('BrowserFe'), fx = await signup('BrowserFx');
+  const befriend = (a, b) => { asUser(a, `select send_friend_request('${b.id}')::text`); const id = db(`select id from friendships where requester_id = '${a.id}' and addressee_id = '${b.id}'`); asUser(b, `select respond_friend_request('${id}', true)`); };
+  befriend(fin, fg); befriend(fin, fh);                                                          // two friends
+  asUser(fr, `select send_friend_request('${fin.id}')::text`); asUser(fd, `select send_friend_request('${fin.id}')::text`);       // two incoming requests
+  asUser(fin, `select send_friend_request('${fo.id}')::text`);                                    // one request sent
+  db(`insert into player_encounters(player_id, other_id, last_at, times) values ('${fin.id}', '${fe.id}', now() - interval '2 hours', 3), ('${fe.id}', '${fin.id}', now() - interval '2 hours', 3)`);   // someone met in a convoy
+  asUser(fg, `select start_session('webgl')::text`);
+  asUser(fg, `select heartbeat('${db(`select id from game_sessions where player_id = '${fg.id}' and ended_at is null limit 1`)}', 'driving', 'lagos-ibadan', 'lagos')::text`);      // fg is online and driving
+  const friendsInDb = () => +db(`select count(*) from friendships where status = 'accepted' and '${fin.id}' in (requester_id, addressee_id)`);
+  await open(fin, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserFin/, 0, 150)), 'Friends: the dashboard opens for the new player');
+    await c.settle(); let m = c.logs.length; await c.click('Nav_Friends');
+    check(!!(await c.waitLog(/\[Friends\] opened/, m, 60)), 'Friends opens from the sidebar (it is no longer "coming soon")');
+    const fl = await c.waitLog(/\[Friends\] friends state=ready count=(\d+) online=(\d+)/, m, 90);
+    check(!!fl && /count=2 online=1/.test(fl), 'the friend list is the database list: 2 friends, 1 of them online', fl);
+    const rq = await c.waitLog(/\[Friends\] requests state=ready incoming=(\d+) outgoing=(\d+)/, m, 90);
+    check(!!rq && /incoming=2 outgoing=1/.test(rq), 'requests: 2 incoming, 1 sent (as in the database)', rq);
+    check(!!(await c.waitLog(/\[Friends\] recent state=ready count=1/, m, 90)), 'recent players: the one player met in a convoy');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-60-friends.png` });
+    let tg = c.targets();
+    for (const k of ['Btn_FriTab_All', 'Btn_FriTab_Online', 'Btn_FriTab_Requests', 'Btn_FriTab_Recent', 'Btn_FriTab_Find', 'Fri_Search_Input', 'Btn_FriAdd', 'Btn_FriSort', 'Btn_FriProfile_browserfg', 'Btn_FriInvite_browserfg', 'Btn_FriMessage_browserfg', 'Btn_FriMore_browserfg', 'Btn_FriSideAccept_browserfr', 'Btn_FriSideDecline_browserfr', 'Btn_FriSideAdd_browserfe', 'Btn_FriMeProfile', 'Btn_FriSideViewRequests', 'Btn_FriSideViewRecent']) check(!!tg[k], `${k} is a clickable target on the Friends page`);
+
+    // presence from the server: the online friend shows what they are doing; Message does not pretend
+    m = c.logs.length; await c.click('Btn_FriMessage_browserfg'); check(!!(await c.waitLog(/\[Friends\] note: Messages are not available yet/, m, 30)), 'Message says it is not available yet instead of pretending');
+    m = c.logs.length; await c.click('Btn_FriInvite_browserfg'); check(!!(await c.waitLog(/\[Friends\] note: Join or create a convoy first/, m, 30)), 'Invite Convoy explains that the player has to be in a convoy first');
+    asUser(fin, `select create_convoy('Fin Run')`);                                               // now the player is in a convoy: the page notices at its next refresh
+    m = c.logs.length; check(!!(await c.waitLog(/\[Friends\] convoy member=true/, m, 60)), 'the page refreshes by itself (every 15 s) and learns the player is in a convoy'); await c.settle();
+    m = c.logs.length; await c.click('Btn_FriInvite_browserfg'); check(!!(await c.waitLog(/\[Friends\] invite id=browserfg ok=True/, m, 60)), 'Invite Convoy: the server accepted');
+    check(db(`select count(*) from convoy_invites where invitee_id = '${fg.id}' and inviter_id = '${fin.id}' and status = 'pending'`) === '1', 'the invitation exists in the database');
+    m = c.logs.length; await c.settle(); await c.click('Btn_FriInvite_browserfg'); check(!!(await c.waitLog(/\[Friends\] invite id=browserfg ok=False error=already_invited/, m, 60)), 'a second invitation is refused by the server and reported (already invited)');
+
+    // search filters the loaded list (name or username); a miss says so
+    m = c.logs.length; await c.click('Fri_Search_Input'); await sleep(500); await c.page.keyboard.type('fg', { delay: 120 });
+    check(!!(await c.waitLog(/\[Friends\] search="fg" tab=all shown=1/, m, 60)), 'searching "fg" narrows the list to the one matching friend'); await c.settle(); await c.page.screenshot({ path: `${prefix}-61-friends-search.png` });
+    for (let i = 0; i < 2; i++) await c.page.keyboard.press('Backspace');
+    m = c.logs.length; await c.page.keyboard.type('zzzz', { delay: 100 });
+    check(!!(await c.waitLog(/\[Friends\] search="zzzz" tab=all shown=0/, m, 60)), 'a search with no match shows nothing (and the screen says so)'); await c.settle(); await c.page.screenshot({ path: `${prefix}-62-friends-nomatch.png` });
+    for (let i = 0; i < 4; i++) await c.page.keyboard.press('Backspace');
+    await c.waitLog(/\[Friends\] search="" tab=all/, m, 60);
+
+    // tabs and sort
+    m = c.logs.length; await c.click('Btn_FriTab_Online'); check(!!(await c.waitLog(/\[Friends\] tab=online/, m, 40)), 'the Online tab opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-63-friends-online.png` });
+    await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriSort'); await c.settle(); check(!!c.targets()['Btn_FriSortOpt_Name'], 'the sort menu lists its options');
+    await c.page.screenshot({ path: `${prefix}-64-friends-sort.png` }); m = c.logs.length; await c.click('Btn_FriSortOpt_Name'); check(!!(await c.waitLog(/\[Friends\] sort=Name/, m, 40)), 'sorting by name is applied');
+
+    // requests: accept one from the side panel, decline one in the Requests tab, cancel the one that was sent
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriSideAccept_browserfr');
+    check(!!(await c.waitLog(/\[Friends\] respond id=browserfr accept=True ok=True result=accepted/, m, 60)), 'Accept: the server accepted');
+    check(db(`select status from friendships where requester_id = '${fr.id}' and addressee_id = '${fin.id}'`) === 'accepted', 'the friendship is accepted in the database');
+    check(!!(await c.waitLog(/\[Friends\] friends state=ready count=3 /, m, 60)), 'the friend list is read again and now has 3 friends');
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriTab_Requests'); check(!!(await c.waitLog(/\[Friends\] tab=requests/, m, 40)), 'the Requests tab opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-65-friends-requests.png` });
+    tg = c.targets(); check(!!tg['Btn_FriDecline_browserfd'] && !!tg['Btn_FriAccept_browserfd'] && !!tg['Btn_FriCancel_browserfo'], 'the Requests tab offers Accept and Decline for incoming and Cancel for sent requests');
+    m = c.logs.length; await c.click('Btn_FriDecline_browserfd'); check(!!(await c.waitLog(/\[Friends\] respond id=browserfd accept=False ok=True result=rejected/, m, 60)), 'Decline: the server accepted');
+    check(db(`select status from friendships where requester_id = '${fd.id}' and addressee_id = '${fin.id}'`) === 'rejected', 'the request is rejected in the database');
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriCancel_browserfo'); check(!!(await c.waitLog(/\[Friends\] cancel id=browserfo ok=True/, m, 60)), 'Cancel Request: the server accepted');
+    check(db(`select count(*) from friendships where requester_id = '${fin.id}' and addressee_id = '${fo.id}'`) === '0', 'the sent request is gone from the database');
+
+    // recent players: add one
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriTab_Recent'); check(!!(await c.waitLog(/\[Friends\] tab=recent/, m, 40)), 'the Recent Players tab opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-66-friends-recent.png` });
+    m = c.logs.length; await c.click('Btn_FriAddFriend_browserfe'); check(!!(await c.waitLog(/\[Friends\] add id=browserfe ok=True status=pending/, m, 60)), 'Add Friend from Recent Players: the server accepted');
+    check(db(`select status from friendships where requester_id = '${fin.id}' and addressee_id = '${fe.id}'`) === 'pending', 'the request is pending in the database');
+    await c.settle(); check(!!c.targets()['Btn_FriSent_browserfe'] && !c.targets()['Btn_FriAddFriend_browserfe'], 'the card now says "Request Sent" and cannot be added again');
+
+    // find players: exact username, from the backend
+    await c.click('Btn_FriTab_Find'); await c.settle(); await c.page.screenshot({ path: `${prefix}-67-friends-find.png` });
+    m = c.logs.length; await c.click('Fri_Search_Input'); await sleep(500); await c.page.keyboard.type('nobody_here', { delay: 100 }); await sleep(600); await c.click('Btn_FriFindGo');
+    check(!!(await c.waitLog(/\[Friends\] find "nobody_here" result=not_found/, m, 60)), 'a username that does not exist is reported as not found'); await c.settle(); await c.page.screenshot({ path: `${prefix}-68-friends-notfound.png` });
+    for (let i = 0; i < 11; i++) await c.page.keyboard.press('Backspace');
+    m = c.logs.length; await c.page.keyboard.type('browserfx', { delay: 100 }); await sleep(600); await c.click('Btn_FriFindGo');
+    check(!!(await c.waitLog(/\[Friends\] find "browserfx" result=found status=none/, m, 60)), 'an exact username is found by the server');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-69-friends-found.png` }); m = c.logs.length; await c.click('Btn_FriAddFriend_browserfx');
+    check(!!(await c.waitLog(/\[Friends\] add id=browserfx ok=True status=pending/, m, 60)), 'Add Friend on a search result: the server accepted');
+    check(db(`select status from friendships where requester_id = '${fin.id}' and addressee_id = '${fx.id}'`) === 'pending', 'the request is pending in the database');
+
+    // profiles, from the server
+    await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriProfile_browserfg');
+    const pv = await c.waitLog(/\[Friends\] profile id=browserfg ok=True level=(\d+) jobs=(\d+) status=friends/, m, 60); check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-70-friends-profile.png` }); tg = c.targets(); check(!!tg['Btn_FriProfileInvite'] && !!tg['Btn_FriProfileRemove'], 'the profile of a friend offers Invite to Convoy and Remove Friend');
+    await c.click('Btn_CloseDialog'); await c.settle(); m = c.logs.length; await c.click('Btn_FriMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserfin ok=True .*status=self/, m, 60)), 'View Profile on your own card shows your public profile');
+    await c.click('Btn_CloseDialog');
+
+    // remove a friend (with a confirmation) and block another
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriMore_browserfh'); await c.settle(); tg = c.targets(); check(!!tg['Btn_FriMenu_RemoveFriend'] && !!tg['Btn_FriMenu_ViewProfile'] && !!tg['Btn_FriMenu_BlockPlayer'], 'the more menu offers View Profile, Remove Friend and Block Player');
+    await c.page.screenshot({ path: `${prefix}-71-friends-menu.png` }); await c.click('Btn_FriMenu_RemoveFriend'); await c.settle();
+    check(friendsInDb() === 3, 'nothing is removed before the player confirms'); await c.page.screenshot({ path: `${prefix}-72-friends-confirm.png` });
+    m = c.logs.length; await c.click('Btn_FriConfirm'); check(!!(await c.waitLog(/\[Friends\] remove id=browserfh ok=True/, m, 60)), 'Remove Friend: the server accepted');
+    check(db(`select count(*) from friendships where status = 'accepted' and '${fh.id}' in (requester_id, addressee_id)`) === '0', 'the friendship is gone from the database');
+    await c.settle(); m = c.logs.length; await c.click('Btn_FriMore_browserfg'); await c.settle(); await c.click('Btn_FriMenu_BlockPlayer'); await c.settle(); m = c.logs.length; await c.click('Btn_FriConfirm');
+    check(!!(await c.waitLog(/\[Friends\] block id=browserfg ok=True/, m, 60)), 'Block Player: the server accepted');
+    check(db(`select count(*) from player_blocks where blocker_id = '${fin.id}' and blocked_id = '${fg.id}'`) === '1', 'the block is stored in the database');
+
+    // the same page at other window sizes (the stage scales; nothing may break or throw)
+    for (const [w, h] of [[1920, 1080], [1440, 900], [1280, 720], [1024, 768], [768, 1024], [390, 844]]) {
+      await c.page.setViewportSize({ width: w, height: h }); await sleep(2500); await c.page.screenshot({ path: `${prefix}-8-friends-${w}x${h}.png` });
+    }
+    await c.page.setViewportSize({ width: 1024, height: 576 }); await sleep(1500);
+    check(c.errors.length === 0, 'resizing the window through six sizes causes no page errors', c.errors[0]);
+  });
+  // a service that fails shows an error with a working retry; a player with no friends sees an empty state, not a blank panel
+  const fka = await signup('BrowserFk');
+  await open(fka, '&fault=list_friends:error:3', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserFk/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_Friends');
+    check(!!(await c.waitLog(/\[Friends\] friends state=unavailable/, m, 120)), 'friends that cannot load say "unavailable" instead of showing an empty list');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-73-friends-error.png` });
+    check(!!c.targets()['Btn_FriRetryFriends'], 'a Try again button is offered');
+    m = c.logs.length; await c.click('Btn_FriRetryFriends'); check(!!(await c.waitLog(/\[Friends\] friends state=empty count=0/, m, 90)), 'Try again reaches the server and the empty state is shown for a player with no friends');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-74-friends-empty.png` }); check(!!c.targets()['Btn_FriEmptyFind'], 'the empty state offers Find Players');
+    m = c.logs.length; await c.click('Btn_FriEmptyFind'); check(!!(await c.waitLog(/\[Friends\] tab=find/, m, 40)), 'the empty state leads to Find Players');
+  });
+
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)
   const uma = await signup('BrowserUma');
   await open(uma, '&fault=list_vehicle_catalog:error:3', async c => {

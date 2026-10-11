@@ -229,3 +229,35 @@ Change Password, Delete Account. The mockup's Resolution and VSync are shown as 
 controls shown must equal the keys the input code reads); EditMode and semcheck compile the page; browser E2E section 2e (tabs, dropdown, toggles, a real mouse drag on a slider, Reset, Save, apply, other tabs, the privacy toggle and
 Unblock against the database, discard on leaving, and a reload that proves the saved quality is built as the High tier).
 
+
+# Friends page
+
+`DashboardFriends.cs` (page, rows, side panels, dialogs, actions), pure rules in `ARO.NetCore` `FriendsModel.cs` (filter, sort, activity text, which actions a card offers, which rows to build; unit tested),
+backend `supabase/migrations/20261012000004_person_vehicle.sql` (the vehicle on a player card), `FriendService` (+ `Find`, `PublicProfile`) in `BackendServices.cs`. Reached from the sidebar.
+
+Nothing on the page is hard-coded: every count, name, level, online state, activity, vehicle and request state is what the server sent, and every action is a backend call followed by a fresh read.
+
+| On screen | Source / rule |
+|---|---|
+| All Friends / Online | `list_friends` (a friend card: level, country, presence: online, activity, route, last seen; and, new, the **vehicle** the friend drives). Online keeps the online ones. Sorted Online First (or Name, Level, Recently Active) |
+| activity line | presence `activity` (menu, driving, bus, convoy, idle) with the route name from the world map; an offline friend shows "Last seen 2 h ago" (server time, so a wrong device clock does not matter) |
+| vehicle picture | the friend's `vehicle_id` looked up in the catalogue's `picture_key` (a real photograph); no vehicle id, no picture |
+| Requests | `list_friend_requests`: incoming (Accept / Decline / View Profile) and sent (Cancel Request) |
+| Recent Players | `list_recent_players` (met in convoys); Add Friend, or a chip: Friends, Request sent |
+| Find Players | `find_player`: an **exact username** (the server does not list or prefix-search players, so nobody can be enumerated). Found, not found and error are three different states |
+| search box | filters the loaded list by name or username as you type; Enter looks up that exact username |
+| Add / Accept / Decline / Remove / Cancel | `send_friend_request` (a request from someone who already asked you becomes a friendship), `respond_friend_request`, `remove_friend` (also cancels your own pending request). Remove and Block ask for confirmation |
+| Invite Convoy | `invite_friend_to_convoy`; enabled for an **online** friend while **you** are in a convoy, otherwise tapping says why. The server's refusals (already invited, convoy full, level too low...) are shown in words |
+| View Profile | `get_public_profile` (experience, jobs, distance, achievements, member since, vehicle) in a dialog; your own card opens yours |
+| side panels | your card (friends, online, jobs done, distance driven), the first three requests with Accept / Decline, the first recent players |
+| refresh | the lists are read again when the page opens, every 15 s, and after every action |
+
+**States.** Loading, empty (a different message for no friends, none online, no recent players, no match, no requests), error with *Try again* (one per list), pending ("Request Sent"), already friends (chip), success and failure toasts that carry the server's reason. A failed or in-flight action never shows as a success.
+**Long lists.** Only the rows near the scroll window are built (`FriendsRules.VisibleRange`); pictures are only loaded for those rows. The backend caps a player at 100 friends, so there is no server paging to use.
+
+**Deliberate differences from the mockup (and why).** *Message* is shown disabled with the reason: the game has no messaging system (convoy chat only). The profile card shows Friends / Online / Jobs done / Distance instead of "Convoys joined", which the backend does not report. Avatars are initials on a colour per player (no player photographs exist). "Mutual friends" on a request is not shown: the backend does not provide it. The list/grid toggle is not built. Search by player *name* is done on your own lists only; the server lookup is the exact username.
+
+**Not responsive.** Like every page, Friends is laid out on a 1920x1080 stage that scales to the window. At 1440x900 and 1280x720 that is fine; at 1024x768 it is letterboxed; at 768x1024 and 390x844 it is a small picture of the desktop page, not a mobile layout (see P-17: the shell, sidebar and header need a narrow-screen design first). The browser E2E takes a screenshot at all six sizes so this is visible, not hidden.
+
+**Tests.** SQL `45_person_vehicle.sql` (a friend and yourself see the vehicle, strangers and people met in passing never do, the selected vehicle is the one shown, no coins or e-mail) + 3 mutants; xunit `FriendsModelTests` (85); API contract and EditMode parse tests for the new fields; browser E2E section 2f: the page opens, the lists equal the database, presence, Message and Invite states, the real invite and its refusal, search, tabs, sort, Accept, Decline, Cancel, Add from Recent, find (found / not found) and add, profiles, Remove with confirmation, Block, an error with retry, the empty state, six window sizes, no errors.
+

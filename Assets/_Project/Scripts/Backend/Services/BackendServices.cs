@@ -140,6 +140,9 @@ namespace ARO.Backend
         public Task<Result<FriendSendResult>> Send(string playerId) => Api.Call<FriendSendResult>("send_friend_request", JsonArgs.Obj(("p_player", playerId)), idempotent: false);
         public Task<Result<string>> Respond(string requestId, bool accept) => Api.CallText("respond_friend_request", JsonArgs.Obj(("p_request", requestId), ("p_accept", accept)));
         public Task<Result<string>> Remove(string playerId) => Api.Rpc("remove_friend", JsonArgs.Obj(("p_player", playerId)));
+        /// <summary>Exact username lookup (the server does not list or prefix-search players, so nobody can be enumerated).</summary>
+        public Task<Result<PersonDto>> Find(string username) => Api.Call<PersonDto>("find_player", JsonArgs.Obj(("p_username", username)), idempotent: true);
+        public Task<Result<PublicProfile>> PublicProfile(string playerId) => Api.Call<PublicProfile>("get_public_profile", JsonArgs.Obj(("p_player", playerId)), idempotent: true);
     }
 
     // ---------------------------------------------------------------------------------------------------------------- NotificationService

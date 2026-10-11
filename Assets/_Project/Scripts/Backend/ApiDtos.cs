@@ -15,8 +15,8 @@ namespace ARO.Backend
     [Serializable] public class PersonDto
     {
         public string player_id, display_name, username, avatar_id, country_code, friend_status; public int level; public PresenceLite presence;
-        // optional: only some lists carry these (friends: since; recent players: last_played_at, times)
-        public string since, last_played_at; public int times;
+        // optional: only some lists carry these (friends: since; recent players: last_played_at, times; vehicle and vehicle_id only for friends, convoy mates and yourself)
+        public string since, last_played_at, vehicle, vehicle_id; public int times;
         public bool Exists => !string.IsNullOrEmpty(player_id);
     }
 
@@ -104,6 +104,8 @@ namespace ARO.Backend
     {
         public string player_id, display_name, username, avatar_id, country_code, friend_status, member_since; public int level, jobs_completed, achievements;
         public long experience; public double distance_km; public PresenceLite presence;
+        // optional: only for friends, convoy mates and yourself
+        public string vehicle, vehicle_id;
     }
 
     // ---------------------------------------------------------------- convoys (lobby, route, ready check, chat)

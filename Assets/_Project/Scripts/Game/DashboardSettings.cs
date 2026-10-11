@@ -315,7 +315,7 @@ namespace ARO.Game
         void BuildSetPop()
         {
             if (_sDrop == null || !_sCtl.TryGetValue(_sDrop, out var r)) return; var d = SettingsCatalog.Find(_sDrop); if (d == null) return;
-            Ui.Click(_stage, "Btn_SetDropClose", 0, 0, 1920, 1080, () => { _sDrop = null; Refill("SetMain", BuildSetMain); Refill("SetPop", BuildSetPop); });
+            Ui.Click(_stage, "Btn_SetDropClose", 0, 0, 1920, 1080, () => { _sDrop = null; Refill("SetMain", BuildSetMain); Refill("SetPop", BuildSetPop); }).GetComponent<HoverGlow>().enabled = false;
             const float ih = 34; float h = d.Options.Length * ih + 8, y = r.yMax + 4; if (y + h > 1070) y = r.y - h - 4;
             Ui.Outlined(_stage, "DropList", new Color(0.07f, 0.078f, 0.10f, 1f), new Color(Gold.r, Gold.g, Gold.b, 0.6f), r.x, y, r.width, h, 10, 1.5f);
             string cur = _sDraft.Get(d.Id);

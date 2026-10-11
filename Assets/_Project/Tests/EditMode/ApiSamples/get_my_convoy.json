@@ -2,22 +2,22 @@
  "convoy": {
   "all_ready": true,
   "capacity": 4,
-  "created_at": "2026-10-11T11:08:42.213605+00:00",
+  "created_at": "2026-10-11T14:27:08.597788+00:00",
   "driving_mode": "relaxed",
   "has_password": false,
-  "id": "7cf92b4f-b777-40a0-b3fb-42541a8d1d1a",
+  "id": "caa0cb6d-1aad-4ed4-bfcf-6689cbf77c3e",
   "invited": [
    {
-    "created_at": "2026-10-11T11:08:42.342486+00:00",
+    "created_at": "2026-10-11T14:27:08.714554+00:00",
     "display_name": "CtC",
     "level": 1,
-    "player_id": "261ef663-1123-461e-9680-b361386c77a5"
+    "player_id": "796e3893-7ccf-48aa-a19f-9f359e81b985"
    }
   ],
   "is_leader": true,
   "is_private": true,
   "language": "fr",
-  "leader_id": "c987a198-32ca-425d-a03c-5590ec185e6b",
+  "leader_id": "0293c992-7fbf-48d2-9014-3c80979bc470",
   "member_count": 2,
   "members": [
    {
@@ -26,20 +26,21 @@
     "country_code": "NG",
     "display_name": "CtA",
     "is_leader": true,
-    "joined_at": "2026-10-11T11:08:42.213605+00:00",
+    "joined_at": "2026-10-11T14:27:08.597788+00:00",
     "level": 2,
-    "player_id": "c987a198-32ca-425d-a03c-5590ec185e6b",
+    "player_id": "0293c992-7fbf-48d2-9014-3c80979bc470",
     "presence": {
      "activity": "driving",
      "city_slug": "lagos",
-     "last_seen_at": "2026-10-11T11:08:43.525722+00:00",
+     "last_seen_at": "2026-10-11T14:27:09.89071+00:00",
      "online": true,
      "route_code": "lagos-ibadan",
-     "session_id": "58306b70-eb7b-465d-b42f-12c73f6e02fa"
+     "session_id": "c471ab6e-0b15-4297-aea7-590b5e94b276"
     },
     "ready": true,
     "username": "cta",
-    "vehicle": "Savanna 4x2 Light Truck"
+    "vehicle": "Savanna 4x2 Light Truck",
+    "vehicle_id": "truck_light_01"
    },
    {
     "avatar_id": "default",
@@ -47,20 +48,21 @@
     "country_code": null,
     "display_name": "CtB",
     "is_leader": false,
-    "joined_at": "2026-10-11T11:08:42.257169+00:00",
+    "joined_at": "2026-10-11T14:27:08.633088+00:00",
     "level": 1,
-    "player_id": "e544aedb-bcc0-422d-a5f6-02dbcffe48bf",
+    "player_id": "c513a1c5-fc43-4eb6-aa6a-761871a12dc3",
     "presence": {
      "activity": "driving",
      "city_slug": "lagos",
-     "last_seen_at": "2026-10-11T11:08:42.808474+00:00",
+     "last_seen_at": "2026-10-11T14:27:09.202871+00:00",
      "online": true,
      "route_code": "lagos-ibadan",
-     "session_id": "5d8b43fd-f993-4efd-9cd4-2dface4b4cfe"
+     "session_id": "aa140eee-58e8-4e16-9cc9-a4f7b15e83d0"
     },
     "ready": true,
     "username": "ctb",
-    "vehicle": "Savanna 4x2 Light Truck"
+    "vehicle": "Savanna 4x2 Light Truck",
+    "vehicle_id": "truck_light_01"
    }
   ],
   "min_level": 1,
@@ -83,5 +85,5 @@
    "freight"
   ]
  },
- "server_time": "2026-10-11T11:08:43.731579+00:00"
+ "server_time": "2026-10-11T14:27:10.097884+00:00"
 }
