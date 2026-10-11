@@ -69,10 +69,10 @@ namespace ARO.Game
             string since = ProfileRules.MemberSince(me.created_at); if (since.Length > 0) PrChip(cx, cy, "ic_clock", since, true);
             // level and XP window (the server's)
             float lx = PrX + 900; int lvl = Math.Max(1, me.level); float frac = ProfileRules.LevelProgress(me.experience, me.xp_level_start, me.xp_next_level);
-            Ui.Label(_stage, "Level " + lvl, "ExtraBold", 36, Gold, lx, 158, 300, 46); Ui.Icon(_stage, "ic_crown", Gold, lx + 150, 164, 30);
-            var fill = Ui.Bar(_stage, lx, 214, 360, 14, frac, Gold); BarGrow.Run(fill, 14, Mathf.Max(14f, 360f * frac), 0.35f, 0.6f);
+            Ui.Label(_stage, "Level " + lvl, "ExtraBold", 36, Gold, lx, 158, 300, 46); Ui.Icon(_stage, "ic_crown", Gold, lx + 196, 164, 30);
+            var fill = Ui.Bar(_stage, lx, 214, 330, 14, frac, Gold); BarGrow.Run(fill, 14, Mathf.Max(14f, 330f * frac), 0.35f, 0.6f);
             Ui.Label(_stage, ProfileRules.Count(me.experience) + " XP", "Bold", 19, White, lx, 238, 200, 26);
-            Ui.Label(_stage, ProfileRules.Count(ProfileRules.XpToNext(me.experience, me.xp_next_level)) + " XP to Level " + (lvl + 1), "Regular", 17, Muted, lx, 266, 360, 24);
+            Ui.Label(_stage, ProfileRules.Count(ProfileRules.XpToNext(me.experience, me.xp_next_level)) + " XP to Level " + (lvl + 1), "Regular", 17, Muted, lx, 266, 330, 24);
             FriButton(_stage, "Btn_PrEdit", PrX + PrW - 290, 162, 260, 54, "Edit profile", Gold, Ink, OpenEditProfile, true, null, 20);
             FriButton(_stage, "Btn_PrPublic", PrX + PrW - 290, 228, 260, 54, "How others see me", Color.clear, White, () => FriOpenProfile(new PersonCard { Id = me.id, Name = me.display_name, Username = me.username, Level = me.level, Country = me.country_code, Status = "self" }), true, null, 18);
         }
