@@ -205,7 +205,7 @@ namespace ARO.Game
             if (_lbScope == BoardScope.Friends) { rows = all; total = all.Count; offset = 0; }
             else { rows = all; total = page.total; offset = page.offset; }
             if (_lbScope == BoardScope.Global && _lbPage > 1 && offset == 0 && total > 0 && rows.Count > 0 && ld.State == LoadState.Loading) { }
-            string note = LeaderboardRules.PeriodNote(_lbMetric, _lbPeriod); if (note != null) { Ui.Label(_stage, note, "SemiBold", 15, Gold, LbLX + 24, LbTableY + LbTableH - 28, 700, 22); }
+            string note = LeaderboardRules.PeriodNote(_lbMetric, _lbPeriod); if (note != null) { Ui.Label(_stage, note, "SemiBold", 15, Gold, LbLX + 1090 - 24 - 560, LbTableY + 10, 560, 22, TextAnchor.UpperRight); }
             if (rows.Count == 0 || (_lbScope == BoardScope.Friends && all.Count <= 1 && all.All(r => r.Value <= 0)))
             {
                 if (_lbScope == BoardScope.Friends) LbEmpty("ic_people", "You don't have any ranked friends yet.", "Add friends, then complete jobs: you will see how you compare.", "Find friends", () => OpenFriends(), "Btn_LbFindFriends");
@@ -219,8 +219,8 @@ namespace ARO.Game
 
         void LbTableHeader(string title, string valueTitle, string clearName)
         {
-            Ui.Label(_stage, title, "ExtraBold", 24, White, LbLX + 24, LbTableY + 12, 560, 32);
-            float y = LbTableY + 48; Color hc = new Color(0.62f, 0.66f, 0.74f);
+            Ui.Label(_stage, title, "ExtraBold", 22, White, LbLX + 24, LbTableY + 4, 560, 30);
+            float y = LbTableY + 52; Color hc = new Color(0.62f, 0.66f, 0.74f);
             Ui.Label(_stage, "#", "SemiBold", 15, hc, LbLX + 28, y - 18, 60, 20); Ui.Label(_stage, "Player", "SemiBold", 15, hc, LbLX + 92, y - 18, 200, 20); Ui.Label(_stage, "Level", "SemiBold", 15, hc, LbLX + 470, y - 18, 100, 20); Ui.Label(_stage, "Country", "SemiBold", 15, hc, LbLX + 600, y - 18, 140, 20);
             Ui.Label(_stage, valueTitle + " >", "Bold", 15, Gold, LbLX + 1090 - 70 - 260, y - 18, 260, 20, TextAnchor.UpperRight);
         }
@@ -318,8 +318,8 @@ namespace ARO.Game
             var prog = Sum != null ? Sum.progression : null;
             if (prog != null && prog.xp_next_level > prog.xp_level_start)
             {
-                long span = Math.Max(1, prog.xp_next_level - prog.xp_level_start); Ui.Bar(_stage, LbRX + 22, y + 176, LbRW - 150, 10, Mathf.Clamp01((float)prog.level_progress), Gold);
-                Ui.Label(_stage, prog.xp_into_level.ToString("N0") + " / " + span.ToString("N0") + " XP", "SemiBold", 15, White, LbRX + LbRW - 120, y + 170, 100, 22, TextAnchor.UpperRight);
+                long span = Math.Max(1, prog.xp_next_level - prog.xp_level_start); Ui.Bar(_stage, LbRX + 22, y + 176, LbRW - 44 - 210, 10, Mathf.Clamp01((float)prog.level_progress), Gold);
+                Ui.Label(_stage, prog.xp_into_level.ToString("N0") + " / " + span.ToString("N0") + " XP", "SemiBold", 15, White, LbRX + LbRW - 20 - 200, y + 170, 200, 22, TextAnchor.UpperRight);
             }
             int? friendRank = fr.Value != null && fr.Value.me != null && fr.Value.items != null && fr.Value.items.Length > 1 ? (int?)fr.Value.me.rank : null;
             var stats = new[] { (ranked ? me.rank.ToString("N0") : "-", "Global rank", "ic_trophy"), (friendRank.HasValue ? "#" + friendRank.Value : "-", "Among friends", "ic_people"), (pr.jobs_completed.ToString("N0"), "Jobs done", "ic_jobs"), (pr.distance_km.ToString("N0") + " km", "Driven", "ic_road") };

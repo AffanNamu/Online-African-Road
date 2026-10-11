@@ -259,9 +259,8 @@ namespace ARO.Game
                 Ui.Label(host, c.Name, on ? "Bold" : "Regular", 19, on ? Gold : White, 20, y + 8, 540, 28); Ui.Label(host, c.Code, "SemiBold", 14, Muted, 600, y + 12, 40, 22, TextAnchor.UpperRight); if (on) Ui.Icon(host, "icon_check", Gold, 650, y + 10, 22);
                 var cc = c; Ui.Click(host, "Btn_PrCountry_" + c.Code, 2, y, 690, pitch - 4, () => _ = PrSetCountry(cc));
             }
-            RestoreScroll(area);
+            RestoreScroll(area); MarkTargetsDirty();
         }
-
 
         async Task PrSetCountry(CountryOption c)
         {

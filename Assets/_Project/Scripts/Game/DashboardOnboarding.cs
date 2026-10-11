@@ -109,7 +109,7 @@ namespace ARO.Game
             _obNameField = ObInput(_stage, "Ob_Name_Input", ObX + 60, ObCY + 38, 700, 72, "Your driver name", _obName, 24, 28, v => { _obName = v; _obError = null; Refill("ObPreview", BuildObPreview); Refill("ObFooter", BuildObFooter); });
             Ui.Paragraph(_stage, "3 to 24 letters, numbers, spaces, - and _. Pick something other drivers will remember.", "Regular", 17, Muted, ObX + 60, ObCY + 122, 700, 48);
             string handle = _svc.Me != null && !string.IsNullOrEmpty(_svc.Me.username) ? "@" + _svc.Me.username : "";
-            if (handle.Length > 0) { Ui.Icon(_stage, "ic_info", Muted, ObX + 60, ObCY + 190, 22); Ui.Label(_stage, "Your handle is " + handle + ". Friends find you by it. You can change both later on your profile.", "Regular", 17, Soft, ObX + 90, ObCY + 189, 680, 26); }
+            if (handle.Length > 0) { Ui.Icon(_stage, "ic_info", Muted, ObX + 60, ObCY + 190, 22); Ui.Paragraph(_stage, "Your handle is " + handle + ". Friends find you by it. You can change both later on your profile.", "Regular", 17, Soft, ObX + 90, ObCY + 189, 660, 52); }
         }
 
         void BuildObPreview()
@@ -168,6 +168,7 @@ namespace ARO.Game
             if (list.Count == 0) { Ui.Label(_stage, "No country matches \"" + _obCountryQuery + "\".", "SemiBold", 18, Muted, lx, ObCY + 130, lw, 28, TextAnchor.UpperCenter); }
             else
             {
+                if (!_scrollPos.ContainsKey("ob_countries") && !string.IsNullOrEmpty(_obCountry)) { int at = list.FindIndex(x => x.Code == _obCountry); if (at > 1) _scrollPos["ob_countries"] = (at - 1) * pitch; }      // open on the chosen (or suggested) country
                 var area = MakeScroll("ob_countries", lx, ObCY + 98, lw, vh, list.Count * pitch + 4); var host = area.Content;
                 for (int i = 0; i < list.Count; i++)
                 {

@@ -122,7 +122,8 @@ namespace ARO.Game
             for (int i = 0; i < n; i++)
             {
                 float cx = n == 1 ? lx : lx + lw * i / (n - 1f); Ui.Disc(host, "Dot", Gold, cx - 8, ly - 2, 16); Ui.Disc(host, "DotIn", new Color(0.062f, 0.070f, 0.092f), cx - 4, ly + 2, 8);
-                var l = Ui.Label(host, stops[i].location != null ? stops[i].location.name : "", "SemiBold", 14, Soft, cx - 70, ly + 18, 140, 22, TextAnchor.UpperCenter); l.resizeTextForBestFit = true; l.resizeTextMinSize = 10; l.resizeTextMaxSize = 14;
+                float lw0 = 130, lx0 = Mathf.Clamp(cx - lw0 / 2f, x - 10, w - 14 - lw0);         // the first and last names stay inside the card
+                var l = Ui.Label(host, stops[i].location != null ? stops[i].location.name : "", "SemiBold", 14, Soft, lx0, ly + 18, lw0, 22, i == 0 ? TextAnchor.UpperLeft : i == n - 1 ? TextAnchor.UpperRight : TextAnchor.UpperCenter); l.resizeTextForBestFit = true; l.resizeTextMinSize = 10; l.resizeTextMaxSize = 14; l.horizontalOverflow = HorizontalWrapMode.Wrap;
             }
             BrStats(host, x, y + h - 38, r, w - x - 20, false);
         }
@@ -179,13 +180,13 @@ namespace ARO.Game
                 Ui.Label(_stage, BusRouteRules.StopStateText(s), "Regular", 15, s == StopProgress.Upcoming ? Muted : Gold, cx - 100, ly + 66, 200, 22, TextAnchor.UpperCenter);
             }
             // live numbers
-            int cap = bus.HasValue ? bus.Value.d.passenger_capacity : 0; float ty = y + 300, tw = (w - 44 - 24) / 3f, th = 104;
+            int cap = bus.HasValue ? bus.Value.d.passenger_capacity : 0; float ty = y + 286, tw = (w - 44 - 24) / 3f, th = 100;
             string nextName = next < n && stops[next].location != null ? stops[next].location.name : "-";
             BrTile(x + 22, ty, tw, th, "ic_bus", "Next stop", nextName, city, null, White);
             BrTile(x + 22 + tw + 12, ty, tw, th, "ic_people", "Aboard", BusRouteRules.AboardText(st.Aboard, cap), null, cap > 0 ? (float?)BusRouteRules.AboardFraction(st.Aboard, cap) : null, White);
             BrTile(x + 22 + (tw + 12) * 2, ty, tw, th, "ic_coin", "Fares so far", BusRouteRules.Money(st.Revenue), "paid when the route is finished", null, Brand.Good);
-            FriButton(_stage, "Btn_BrResume", x + 22, y + h - 82, (w - 56) / 2f, 60, "Resume driving", Gold, Ink, () => { Debug.Log("[BusRoutes] resume"); _act.Resume(); }, true, "ic_steering", 21);
-            FriButton(_stage, "Btn_BrAbandon", x + 22 + (w - 56) / 2f + 12, y + h - 82, (w - 56) / 2f, 60, "Abandon route (no pay)", Color.clear, Brand.Bad, OpenBrAbandon, true, null, 20);
+            FriButton(_stage, "Btn_BrResume", x + 22, y + h - 78, (w - 56) / 2f, 60, "Resume driving", Gold, Ink, () => { Debug.Log("[BusRoutes] resume"); _act.Resume(); }, true, "ic_steering", 21);
+            FriButton(_stage, "Btn_BrAbandon", x + 22 + (w - 56) / 2f + 12, y + h - 78, (w - 56) / 2f, 60, "Abandon route (no pay)", Color.clear, Brand.Bad, OpenBrAbandon, true, null, 20);
             // what is possible meanwhile
             const float iy = y + h + 16; BrPanel(x, iy, w, 1050 - iy);
             Ui.Icon(_stage, "ic_info", Soft, x + 28, iy + 30, 30); Ui.Label(_stage, "Other routes are available after you finish or abandon this one.", "SemiBold", 19, White, x + 76, iy + 26, w - 100, 26);
@@ -196,7 +197,7 @@ namespace ARO.Game
         {
             Ui.Outlined(_stage, "RunTile", new Color(0.075f, 0.085f, 0.11f, 1f), new Color(1, 1, 1, 0.10f), x, y, w, h, 14, 1.2f);
             Ui.Icon(_stage, icon, Gold, x + 16, y + 18, 34); Ui.Label(_stage, label, "SemiBold", 16, Soft, x + 62, y + 12, w - 72, 22);
-            var v = Ui.Label(_stage, value, "ExtraBold", 30, valueColor, x + 62, y + 36, w - 72, 40); v.resizeTextForBestFit = true; v.resizeTextMinSize = 16; v.resizeTextMaxSize = 30;
+            var v = Ui.Label(_stage, value, "ExtraBold", 30, valueColor, x + 62, y + 36, w - 72, 40); v.resizeTextForBestFit = true; v.resizeTextMinSize = 14; v.resizeTextMaxSize = 30; v.horizontalOverflow = HorizontalWrapMode.Wrap;
             if (bar.HasValue) Ui.Bar(_stage, x + 62, y + 82, w - 84, 8, bar.Value, Gold); else if (!string.IsNullOrEmpty(sub)) Ui.Label(_stage, sub, "Regular", 14, Muted, x + 62, y + 76, w - 72, 20);
         }
 

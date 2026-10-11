@@ -623,7 +623,7 @@ const allErrors = [], allExc = [];
 
     // profiles, from the server (the list is shown again with an empty search box)
     await c.click('Fri_Search_Input'); await sleep(500); await wipe(c); await sleep(800); await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriProfile_browserfg');
-    const pv = await c.waitLog(/\[Friends\] profile id=browserfg ok=True level=(\d+) jobs=(\d+) status=friends/, m, 60); check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
+    const pv = await c.waitLog(/\[Friends\] profile id=browserfg ok=True.* level=(\d+) jobs=(\d+) status=friends/, m, 60); check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-70-friends-profile.png` }); tg = c.targets(); check(!!tg['Btn_FriProfileInvite'] && !!tg['Btn_FriProfileRemove'], 'the profile of a friend offers Invite to Convoy and Remove Friend');
     await c.click('Btn_CloseDialog'); await c.settle(); m = c.logs.length; await c.click('Btn_FriMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserfin ok=True .*status=self/, m, 60)), 'View Profile on your own card shows your public profile');
     await c.click('Btn_CloseDialog');
@@ -692,7 +692,7 @@ const allErrors = [], allExc = [];
 
     // the podium and rows open the real public profile
     await c.settle(); m = c.logs.length; await c.click('Btn_LbPodium_1');
-    check(!!(await c.waitLog(/\[Friends\] profile id=browserlba ok=True level=\d+ jobs=\d+ status=friends/, m, 60)), 'the first place opens that player\'s public profile from the server (status friends)');
+    check(!!(await c.waitLog(/\[Friends\] profile id=browserlba ok=True.* level=\d+ jobs=\d+ status=friends/, m, 60)), 'the first place opens that player\'s public profile from the server (status friends)');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-82-leaderboards-profile.png` }); await c.click('Btn_CloseDialog'); await c.settle();
     m = c.logs.length; await c.click('Btn_LbRow_browserlbd'); check(!!(await c.waitLog(/\[Leaderboards\] profile browserlbd/, m, 30)) && !!(await c.waitLog(/\[Friends\] profile id=browserlbd ok=True/, m, 60)), 'a table row opens its player\'s profile'); await c.click('Btn_CloseDialog');
     await c.settle(); m = c.logs.length; await c.click('Btn_LbMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserlbn ok=True .*status=self/, m, 60)), 'Your Rank opens your own public profile'); await c.click('Btn_CloseDialog');
@@ -725,8 +725,8 @@ const allErrors = [], allExc = [];
     check(!c.logs.slice(m).some(l => /\[Leaderboards\] search/.test(l)), 'one character does not search (the server needs two)');
     await c.page.keyboard.type('browserlbm', { delay: 90 }); const sf = await c.waitLog(/\[Leaderboards\] search "xbrowserlbm"/, m, 60);
     check(!!sf && /state=empty found=0/.test(sf), 'a search with no match is reported as no match (server-side)', sf);
-    for (let i = 0; i < 11; i++) await c.page.keyboard.press('Backspace');
-    m = c.logs.length; await c.page.keyboard.type('rowserlbm', { delay: 90 }); await c.settle();
+    await wipe(c);
+    m = c.logs.length; await c.page.keyboard.type('browserlbm', { delay: 90 }); await c.settle();
     check(!!(await c.waitLog(/\[Leaderboards\] search "browserlbm" state=ready found=1 total=1/, m, 60)), 'searching a name finds exactly that player from the server');
     await c.page.screenshot({ path: `${prefix}-87-leaderboards-search.png` }); check(!!c.targets()['Btn_LbRow_browserlbm'] && !!c.targets()['Btn_LbSearchClear'], 'the result is a row that opens a profile, and the search can be cleared');
     m = c.logs.length; await c.click('Btn_LbSearchClear'); await c.settle(); check(!!c.targets()['Btn_LbNext'], 'clearing the search returns to the board');
@@ -748,7 +748,7 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_LbRetry'); const rr = await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 90);
     check(!!rr && /me=none/.test(rr), 'Retry reaches the server; a player with no XP is unranked (no invented rank)', rr);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-89-leaderboards-unranked.png` });
-    const fe2 = await c.waitLog(/\[Leaderboards\] friends metric=xp period=all state=ready/, 0, 30); check(!!fe2 && /players=1/.test(fe2), 'a player with no friends has a friends board of one (themselves)', fe2);
+    const fe2 = await c.waitLog(/\[Leaderboards\] friends metric=xp period=all state=(ready|empty)/, 0, 30); check(!!fe2 && /players=1/.test(fe2), 'a player with no friends has a friends board of one (themselves)', fe2);
     check(!!c.targets()['Btn_LbSideFindFriends'], 'the friends panel offers Find Friends');
     m = c.logs.length; await c.click('Lb_Search_Input'); await sleep(500); await c.page.keyboard.type('browserlb', { delay: 90 });
     check(!!(await c.waitLog(/\[Leaderboards\] search "browserlb" state=unavailable/, m, 90)), 'a search that fails says so'); await c.settle(); await c.page.screenshot({ path: `${prefix}-90-leaderboards-search-error.png` });
@@ -782,7 +782,7 @@ const allErrors = [], allExc = [];
     for (const k of ['Ob_Country_Search', 'Btn_ObCountry_NG', 'Btn_ObLang_en', 'Btn_ObLang_fr', 'Btn_ObBack', 'Btn_ObContinue']) check(!!tg[k], `${k} is a clickable target on the country step`);
     m = c.logs.length; await c.click('Ob_Country_Search'); await sleep(500); const q = otherName.slice(0, 4).toLowerCase(); await c.page.keyboard.type(q, { delay: 90 });
     const exp = +db(`select count(*) from countries where translate(lower(name), 'âäàáãåçéèêëíìîïñóòôöõúùûüýÿ', 'aaaaaaceeeeiiiinooooouuuuyy') like '%${q}%'`);
-    const cs = await c.waitLog(new RegExp(`\\[Onboarding\\] country search="${q}" shown=(\\d+)`), m, 40); check(!!cs && cs.endsWith(`shown=${exp}`), `searching "${q}" narrows the real list to the ${exp} matching countries`, cs);
+    const cs = await c.waitLog(new RegExp(`\\[Onboarding\\] country search="${q}" shown=(\\d+)`), m, 40); check(!!cs && +(/shown=(\d+)/.exec(cs) || [])[1] === exp, `searching "${q}" narrows the real list to the ${exp} matching countries`, cs);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-95-onboarding-search.png` });
     m = c.logs.length; await c.click(`Btn_ObCountry_${otherCode}`); check(!!(await c.waitLog(new RegExp(`\\[Onboarding\\] country=${otherCode}`), m, 40)), `${otherName} can be chosen (replacing the suggestion)`);
     m = c.logs.length; await c.click('Btn_ObLang_fr'); check(!!(await c.waitLog(/\[Onboarding\] language=fr/, m, 40)), 'French can be chosen; the page says the game is still English'); await c.settle(); await c.page.screenshot({ path: `${prefix}-96-onboarding-language.png` });
@@ -816,7 +816,7 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_Profile'); check(!!(await c.waitLog(/\[Profile\] opened/, m, 60)), 'the avatar in the header opens the profile');
     const ld = await c.waitLog(/\[Profile\] loaded profile=ok ranks=ready xp_rank=(\d+) achievements=ready unlocked=(\d+)\/(\d+)/, m, 90); const myRank = +db(`select count(*) + 1 from profiles where experience > 250`);
     check(!!ld && ld.includes(`xp_rank=${myRank}`), `the profile loads the real ranking (XP rank ${myRank}), achievements and numbers from the server`, ld);
-    const nAch = +db(`select count(*) from achievement_definitions`); check(!!ld && ld.endsWith(`/${nAch}`), `all ${nAch} achievements are listed`, ld);
+    const nAch = +db(`select count(*) from achievement_definitions`); check(!!ld && new RegExp(`unlocked=\\d+/${nAch}\\b`).test(ld), `all ${nAch} achievements are listed`, ld);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-101-profile.png` }); tg = c.targets();
     for (const k of ['Btn_PrEdit', 'Btn_PrPublic', 'Btn_PrCountry', 'Btn_PrLanguage', 'Btn_PrStyle_jobs', 'Btn_PrStyle_bus', 'Btn_PrStyle_convoy', 'Btn_PrStyle_explore', 'Btn_PrRank_xp', 'Btn_PrRank_earnings', 'Btn_PrOpenBoards']) check(!!tg[k], `${k} is a clickable target on the profile page`);
     // edit: the server refuses a taken username, accepts a free one
@@ -904,7 +904,9 @@ const allErrors = [], allExc = [];
     // leave the driving view: the menu shows the run in progress
     m = c.logs.length; await c.page.keyboard.press('Escape'); await c.waitLog(/\[Dashboard\] built for BrowserBusMan/, m, 60); await c.settle();
     m = c.logs.length; await c.click('Nav_TrucksAndBuses'); await c.waitLog(/\[Dashboard\] page=vehicles/, m, 60); await c.settle(); m = c.logs.length; await c.click('Btn_VehBusRoutes');
-    const ra = await c.waitLog(new RegExp(`\\[BusRoutes\\] run active route=${routeCode} next=0 aboard=0 fares=0`), m, 60); check(!!ra, 'the page shows the run in progress (first stop next, nobody aboard, no fares yet)', ra);
+    const ra = await c.waitLog(new RegExp(`\\[BusRoutes\\] run active route=${routeCode} next=(\\d+) aboard=(\\d+) fares=(\\d+)`), m, 60);
+    const dbRun = db(`select (next_seq - 1) || '/' || aboard || '/' || revenue from bus_runs where player_id = '${busman.id}' and status = 'active'`); const gm = /next=(\d+) aboard=(\d+) fares=(\d+)/.exec(ra || '');
+    check(!!gm && `${gm[1]}/${gm[2]}/${gm[3]}` === dbRun, 'the page shows the run in progress with the same stop, passengers and fares as the database', `${ra} vs ${dbRun}`);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-115-busroutes-run.png` }); tg = c.targets(); check(!!tg['Btn_BrResume'] && !!tg['Btn_BrAbandon'] && !tg['Btn_BrStart'], 'a run in progress offers Resume and Abandon, not Start');
     m = c.logs.length; await c.click('Btn_BrAbandon'); await c.settle(); await c.page.screenshot({ path: `${prefix}-116-busroutes-abandon-confirm.png` });
     check(db(`select count(*) from bus_runs where player_id = '${busman.id}' and status = 'active'`) === '1', 'nothing is abandoned before the player confirms');

@@ -302,7 +302,7 @@ namespace ARO.Game
             var fill = Ui.Bar(_stage, 556, 104, 190, 11, frac, Gold); BarGrow.Run(fill, 11, Mathf.Max(11f, 190f * frac), 0.35f, 1.0f);
             var xpText = Ui.Label(_stage, "", "Regular", 18, new Color(0.88f, 0.9f, 0.94f), 762, 98, 220, 26);
             CountText.Run(xpText, 0, into, "", $" / {span:N0} XP", 0.35f, 1.0f);
-            Ui.Click(_stage, "Btn_Profile", 326, 10, 680, 108, OpenProfile);                          // the avatar, name and level open your profile
+            Ui.Click(_stage, "Btn_Profile", 326, 10, 520, 108, OpenProfile);                          // the avatar, name and level open your profile
 
             // right cluster: fuel of the truck you drive, coins, presence, notifications, settings
             BuildFuelChip();

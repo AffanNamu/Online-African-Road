@@ -53,6 +53,8 @@ namespace ARO.Game
         public static Image Outlined(Transform parent, string name, Color fill, Color border, float x, float y, float w, float h, float radius, float bw = 1.5f)
         {
             var outer = Rounded(parent, name, border, x, y, w, h, radius);
+            // the fill sits ON the border-coloured box: a translucent fill would show the border colour through (a gold-tinted row became solid gold), so it is blended over the panel colour first
+            if (fill.a < 0.9f) { var back = new Color(0.058f, 0.066f, 0.088f); fill = new Color(Mathf.Lerp(back.r, fill.r, fill.a), Mathf.Lerp(back.g, fill.g, fill.a), Mathf.Lerp(back.b, fill.b, fill.a), 1f); }
             Rounded(outer.transform, "Fill", fill, bw, bw, w - bw * 2f, h - bw * 2f, Mathf.Max(radius - bw, 1f));
             return outer;
         }
