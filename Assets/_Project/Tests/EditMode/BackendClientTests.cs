@@ -58,7 +58,7 @@ namespace ARO.Tests
         [Test] public void ConvoyRepliesParse()
         {
             var m = Parse<MyConvoy>("get_my_convoy"); Assert.IsTrue(m.convoy.Exists); Assert.AreEqual(2, m.convoy.members.Length); Assert.IsTrue(m.convoy.members[0].is_leader); Assert.IsTrue(m.convoy.is_private); Assert.AreEqual(4, m.convoy.capacity);
-            var open = Parse<OpenConvoyList>("list_open_convoys"); Assert.AreEqual("Open Convoy", open.items[0].name); Assert.AreEqual(8, open.items[0].capacity);
+            var open = Parse<OpenConvoyList>("list_open_convoys"); var oc = open.items.First(x => x.name == "Open Convoy"); Assert.AreEqual(8, oc.capacity); Assert.IsTrue(open.items.Any(x => x.name == "Pw Convoy"));
             var inv = Parse<ConvoyInviteList>("list_convoy_invites"); Assert.AreEqual("Contract Run", inv.items[0].convoy_name); Assert.AreEqual("CtA", inv.items[0].from.display_name);
             Assert.AreEqual(5, Parse<ConvoyInfo>("set_convoy_options").capacity);
         }
@@ -77,7 +77,7 @@ namespace ARO.Tests
             Assert.AreEqual("Savanna 4x2 Light Truck", v.model); Assert.AreEqual(110.0, v.top_speed_kmh, 0.001); Assert.AreEqual(4000, v.cargo_capacity_kg); Assert.IsTrue(v.selected);
             Assert.AreEqual(88.0, v.condition_pct, 0.001); Assert.AreEqual(50.0, v.fuel_pct, 0.001); Assert.AreEqual("on_job", v.status); Assert.AreEqual(g.selected_id, v.id);
             var o = VehicleService.ToOwned(v); Assert.AreEqual(v.id, o.id); Assert.AreEqual(12.0, o.damage_pct, 0.001); Assert.AreEqual(60.0, o.fuel_l, 0.001); Assert.IsTrue(o.selected);
-            var c = Parse<CatalogList>("list_vehicle_catalog"); Assert.AreEqual(3, c.items.Length); var med = c.items.First(x => x.definition_id == "truck_medium_01"); Assert.AreEqual(60000L, med.price); Assert.IsFalse(med.can_afford); Assert.IsTrue(med.purchasable);
+            var c = Parse<CatalogList>("list_vehicle_catalog"); Assert.AreEqual(14, c.items.Length); var med = c.items.First(x => x.definition_id == "truck_medium_01"); Assert.AreEqual(60000L, med.price); Assert.IsFalse(med.can_afford); Assert.IsTrue(med.purchasable);
         }
 
         [Test] public void ConvoyLobbyRepliesParseWithTheRealJsonUtility()
@@ -86,7 +86,7 @@ namespace ARO.Tests
             Assert.AreEqual("lobby", m.phase); Assert.IsFalse(m.Driving); Assert.IsTrue(m.route.Exists); Assert.AreEqual("lagos-ibadan", m.route.code); Assert.AreEqual("Lagos", m.route.from); Assert.AreEqual("Ibadan", m.route.to);
             Assert.AreEqual(128.0, m.route.distance_km, 0.001); Assert.AreEqual(154, m.route.est_minutes); CollectionAssert.AreEqual(new[] { "freight" }, m.tags); Assert.AreEqual("fr", m.language);
             Assert.IsTrue(m.members.All(x => x.ready)); Assert.IsFalse(string.IsNullOrEmpty(m.members[1].vehicle)); Assert.IsTrue(m.all_ready);
-            var open = Parse<OpenConvoyList>("list_open_convoys"); Assert.AreEqual(1, open.total); Assert.AreEqual("Lagos \u2192 Ibadan", open.items[0].route.name); CollectionAssert.AreEqual(new[] { "chill_drive", "jobs" }, open.items[0].tags); Assert.IsTrue(open.items[0].joinable); Assert.AreEqual("lobby", open.items[0].phase);
+            var open = Parse<OpenConvoyList>("list_open_convoys"); Assert.AreEqual(2, open.total); var oc = open.items.First(x => x.name == "Open Convoy"); Assert.AreEqual("Lagos \u2192 Ibadan", oc.route.name); CollectionAssert.AreEqual(new[] { "chill_drive", "jobs" }, oc.tags); Assert.IsTrue(oc.joinable); Assert.AreEqual("lobby", oc.phase);
             var chat = Parse<ChatPage>("list_convoy_messages"); Assert.IsTrue(chat.items.Any(l => l.System)); var line = chat.items.First(l => !l.System); Assert.AreEqual("Ready when you are", line.body); Assert.AreEqual("CtA", line.sender.display_name); Assert.Greater(line.id, 0L);
             Assert.Greater(Parse<ChatPosted>("post_convoy_message").id, 0L);
             var pl = Parse<ActivePlayerList>("list_active_players"); Assert.GreaterOrEqual(pl.total, 1); Assert.IsFalse(string.IsNullOrEmpty(pl.items[0].display_name)); Assert.Greater(pl.items[0].level, 0);
