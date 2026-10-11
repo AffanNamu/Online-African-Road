@@ -1,11 +1,11 @@
 {
  "activity": "driving",
  "city_slug": "lagos",
- "convoy_id": "66c93fa5-46f7-4d65-827f-ed7820cb2af2",
+ "convoy_id": "697bf8ef-4a42-4d7e-88a3-b9282280a0a0",
  "convoy_name": "Contract Run",
- "last_seen_at": "2026-10-11T05:03:47.912853+00:00",
+ "last_seen_at": "2026-10-11T05:26:59.59314+00:00",
  "online": true,
  "route_code": "lagos-ibadan",
- "server_time": "2026-10-11T05:03:47.953059+00:00",
- "session_id": "ef01f5c0-df89-4664-b184-f2fcfc1cf208"
+ "server_time": "2026-10-11T05:26:59.636748+00:00",
+ "session_id": "20ea0bde-5a7f-4b30-9123-072e424d9d2b"
 }

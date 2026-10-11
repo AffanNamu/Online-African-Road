@@ -7,7 +7,7 @@
    "metric": "jobs_completed",
    "threshold": 1,
    "title": "First delivery",
-   "unlocked_at": "2026-10-11T05:03:46.615273+00:00"
+   "unlocked_at": "2026-10-11T05:26:57.956658+00:00"
   },
   {
    "current": 2,
@@ -145,5 +145,5 @@
    "unlocked_at": null
   }
  ],
- "server_time": "2026-10-11T05:03:47.843474+00:00"
+ "server_time": "2026-10-11T05:26:59.524863+00:00"
 }

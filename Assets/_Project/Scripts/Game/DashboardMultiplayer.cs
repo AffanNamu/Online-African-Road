@@ -18,12 +18,15 @@ namespace ARO.Game
     /// </summary>
     public sealed partial class DashboardScreen
     {
-        enum MpTab { Convoys, Players, Friends, Voice, Servers }
-        static readonly (MpTab tab, string label, string icon)[] MpTabs =
+        enum MpTab { Convoys, Lobby, Players, Friends, Voice, Servers }
+        /// <summary>The Lobby tab exists only while the player is in a convoy.</summary>
+        List<(MpTab tab, string label, string icon)> MpTabList()
         {
-            (MpTab.Convoys, "Find Convoys", "ic_box"), (MpTab.Players, "Active Players", "ic_people"), (MpTab.Friends, "Friends", "ic_user_circle"),
-            (MpTab.Voice, "Voice Chat", "ic_bell"), (MpTab.Servers, "Server List", "ic_gauge"),
-        };
+            var l = new List<(MpTab, string, string)> { (MpTab.Convoys, "Find Convoys", "ic_box") };
+            if (_mpMine != null) l.Add((MpTab.Lobby, "Convoy Lobby", "ic_bus"));
+            l.Add((MpTab.Players, "Active Players", "ic_people")); l.Add((MpTab.Friends, "Friends", "ic_user_circle")); l.Add((MpTab.Voice, "Voice Chat", "ic_bell")); l.Add((MpTab.Servers, "Server List", "ic_gauge"));
+            return l;
+        }
         static readonly (string key, string label)[] ConvoyTags =
         {
             ("jobs", "Jobs"), ("freight", "Freight"), ("chill_drive", "Chill Drive"), ("realistic_driving", "Realistic Driving"), ("training", "Training"),
@@ -36,7 +39,11 @@ namespace ARO.Game
         OpenConvoy[] _mpConvoys = new OpenConvoy[0]; int _mpConvoyTotal; LoadState _mpConvoyState = LoadState.Idle; string _mpConvoyErr;
         ActivePlayer[] _mpPlayers = new ActivePlayer[0]; int _mpPlayerTotal; LoadState _mpPlayerState = LoadState.Idle; string _mpPlayerErr;
         LoadState _mpFriendState = LoadState.Idle; string _mpFriendErr;
-        ServerStatus _mpStatus; double _mpPing = -1;
+        ServerStatus _mpStatus; double _mpPing = -1; bool _mpStatusFailed;
+        NearbyList _mpNearby; LoadState _mpNearbyState = LoadState.Idle; string _mpNearbyErr;
+        ServerInfo[] _mpServers = new ServerInfo[0]; LoadState _mpServerState = LoadState.Idle; string _mpServerErr;
+        readonly IVoiceProvider _voice = new NullVoiceProvider();
+        bool _wasInConvoy, _leftOnPurpose; PendingOp _pending = PendingOp.None; string _mpServerTime;
         ConvoyInfo _mpMine; LoadState _mpMineState = LoadState.Idle; string _mpMineErr;
         ConvoyInviteItem[] _mpInvites = new ConvoyInviteItem[0];
         readonly List<ChatLine> _chat = new List<ChatLine>(); long _chatLast; string _chatTab = "convoy"; bool _chatStick = true; string _chatConvoy;
@@ -92,13 +99,13 @@ namespace ARO.Game
         void BuildMpTabs()
         {
             float x = 308;
-            foreach (var t in MpTabs)
+            foreach (var t in MpTabList())
             {
                 bool on = t.tab == _mpTab;
                 var probe = Ui.Label(_stage, t.label, on ? "Bold" : "SemiBold", 19, White, 0, 0, 10, 10); float tw = probe.preferredWidth; Destroy(probe.gameObject);
                 float w = 22 + 26 + 10 + tw + 22, y = 207, h = 46;
                 if (on) Ui.Rounded(_stage, "TabOn", Gold, x, y, w, h, 12); else Ui.Outlined(_stage, "Tab", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.14f), x, y, w, h, 12);
-                bool soon = t.tab == MpTab.Voice || t.tab == MpTab.Servers;
+                bool soon = t.tab == MpTab.Voice;
                 Ui.Icon(_stage, t.icon, on ? Ink : soon ? new Color(0.6f, 0.62f, 0.68f) : new Color(0.86f, 0.88f, 0.92f), x + 18, y + 10, 26);
                 Ui.Label(_stage, t.label, on ? "Bold" : "SemiBold", 19, on ? Ink : soon ? new Color(0.7f, 0.72f, 0.78f) : White, x + 54, y + 10, tw + 6, 28);
                 var tab = t.tab; Ui.Click(_stage, "Btn_MpTab_" + tab, x, y, w, h, () => SetMpTab(tab));
@@ -111,7 +118,7 @@ namespace ARO.Game
             if (_mpTab == tab) return;
             _mpTab = tab; _mpSearch = ""; _mpSearchPending = ""; if (_mpSearchField != null) _mpSearchField.text = "";
             Refill("MpTabs", BuildMpTabs); Refill("MpMain", BuildMpMain);
-            if (tab == MpTab.Players) _ = LoadPlayers(); else if (tab == MpTab.Friends) _ = LoadFriendsList(); else if (tab == MpTab.Convoys) _ = LoadConvoys();
+            if (tab == MpTab.Players) _ = LoadPlayers(); else if (tab == MpTab.Friends) _ = LoadFriendsList(); else if (tab == MpTab.Convoys) { _ = LoadConvoys(); _ = LoadNearby(); } else if (tab == MpTab.Servers) _ = LoadServers(); else if (tab == MpTab.Lobby) _ = LoadChat(true);
             Debug.Log("[Multiplayer] tab=" + tab.ToString().ToLowerInvariant());
         }
 
@@ -123,8 +130,9 @@ namespace ARO.Game
                 case MpTab.Convoys: BuildFindConvoys(); break;
                 case MpTab.Players: BuildPlayersTab(); break;
                 case MpTab.Friends: BuildFriendsTab(); break;
-                case MpTab.Voice: BuildSoon("Voice chat is not available yet", "Talking to your convoy by voice needs a voice service that is not connected to the game yet. Use the convoy chat in the meantime.", "ic_bell"); break;
-                case MpTab.Servers: BuildSoon("Server selection is not available yet", "There is one game server for everyone right now; you can see how many players and convoys it holds in Server Status on the Find Convoys tab.", "ic_gauge"); break;
+                case MpTab.Lobby: BuildLobby(); break;
+                case MpTab.Voice: BuildVoiceTab(); break;
+                case MpTab.Servers: BuildServersTab(); break;
             }
         }
 
@@ -141,7 +149,7 @@ namespace ARO.Game
         {
             BuildBanner();
             BuildAvailableConvoys();
-            BuildLivePlayers();
+            BuildNearby();
             BuildServerStatus();
         }
 
@@ -220,7 +228,7 @@ namespace ARO.Game
                 bool can = cv.joinable && _mpMine == null;
                 Ui.Rounded(host, "JoinBg", can ? Gold : new Color(0.2f, 0.22f, 0.27f), x + w - 118, y + 36, 100, 42, 11);
                 Ui.Label(host, "Join", "Bold", 20, can ? Ink : Muted, x + w - 118, y + 44, 100, 28, TextAnchor.UpperCenter);
-                var jc = cv; Ui.Click(host, "Btn_JoinConvoy_" + SafeName(cv.name), x + w - 118, y + 36, 100, 42, () => { if (_mpMine != null) Toast("Leave your current convoy first."); else if (!jc.joinable) Toast("That convoy is full."); else _ = JoinConvoy(jc); });
+                var jc = cv; Ui.Click(host, "Btn_JoinConvoy_" + SafeName(cv.name), x + w - 118, y + 36, 100, 42, () => { if (_mpMine != null) Toast("Leave your current convoy first."); else if (!jc.joinable) Toast(jc.member_count >= jc.capacity ? "That convoy is full." : "Your level is too low for that convoy."); else JoinConvoyFlow(jc); });
             }
             RestoreScroll(area);
         }
@@ -243,31 +251,6 @@ namespace ARO.Game
             Ui.Paragraph(_stage, body, "Regular", 17, Soft, x + 96, y + 70, w - 110, 50);
             Ui.Rounded(_stage, "MsgBtn", Gold, x + 96, y + 130, 190, 44, 11); Ui.Label(_stage, button, "Bold", 18, Ink, x + 96, y + 139, 190, 28, TextAnchor.UpperCenter);
             Ui.Click(_stage, buttonName, x + 96, y + 130, 190, 44, onClick);
-        }
-
-        void BuildLivePlayers()
-        {
-            const float X = 984, Y = 536, W = 444, H = 380;
-            Ui.Outlined(_stage, "LivePanel", PanelFill, PanelLine, X, Y, W, H, 20);
-            Ui.Label(_stage, "Live Players", "Bold", 26, White, X + 20, Y + 12, 240, 34);
-            string count = _mpPlayerState == LoadState.Ready || _mpPlayerState == LoadState.Empty ? _mpPlayerTotal.ToString() : "-";
-            Ui.Rounded(_stage, "LiveCount", new Color(1, 1, 1, 0.12f), X + 176, Y + 15, 40, 28, 14); Ui.Label(_stage, count, "SemiBold", 17, White, X + 176, Y + 18, 40, 24, TextAnchor.UpperCenter);
-            SmallPillIn(_stage, "View All", X + W - 112, Y + 14, 92, 30, () => SetMpTab(MpTab.Players));
-            Ui.Label(_stage, "Player", "Regular", 14, Muted, X + 56, Y + 58, 120, 18); Ui.Label(_stage, "Level", "Regular", 14, Muted, X + 214, Y + 58, 60, 18);
-            Ui.Label(_stage, "Truck", "Regular", 14, Muted, X + 262, Y + 58, 90, 18); Ui.Label(_stage, "Status", "Regular", 14, Muted, X + 372, Y + 58, 60, 18);
-            if (_mpPlayerState == LoadState.Idle || _mpPlayerState == LoadState.Loading) { Ui.Label(_stage, "Loading players...", "Regular", 17, Muted, X + 22, Y + 100, 300, 24); return; }
-            if (_mpPlayerState == LoadState.Unavailable) { Ui.Label(_stage, "Players are unavailable right now.", "SemiBold", 17, Brand.Bad, X + 22, Y + 100, 400, 24); Ui.Rounded(_stage, "RetryBg", Gold, X + 22, Y + 136, 150, 38, 10); Ui.Label(_stage, "Try again", "Bold", 17, Ink, X + 22, Y + 143, 150, 24, TextAnchor.UpperCenter); Ui.Click(_stage, "Btn_RetryPlayers2", X + 22, Y + 136, 150, 38, () => _ = LoadPlayers()); return; }
-            if (_mpPlayers.Length == 0) { Ui.Label(_stage, "No other players are online right now.", "SemiBold", 17, Muted, X + 22, Y + 100, 400, 24); return; }
-            for (int i = 0; i < Mathf.Min(8, _mpPlayers.Length); i++)
-            {
-                var p = _mpPlayers[i]; float y = Y + 82 + i * 36;
-                if (i > 0) Ui.Flat(_stage, "RowLine", new Color(1, 1, 1, 0.05f), X + 16, y - 3, W - 32, 1);
-                Ui.Disc(_stage, "PDot", Brand.Good, X + 20, y + 11, 10); Ui.Disc(_stage, "PAv", new Color(0.16f, 0.18f, 0.24f), X + 36, y + 2, 26); Ui.Icon(_stage, "avatar_default", White, X + 36, y + 2, 26);
-                var n = Ui.Label(_stage, p.display_name, "Regular", 15, White, X + 70, y + 6, 142, 22); n.horizontalOverflow = HorizontalWrapMode.Wrap; n.verticalOverflow = VerticalWrapMode.Truncate; n.resizeTextForBestFit = true; n.resizeTextMinSize = 11; n.resizeTextMaxSize = 15;
-                Ui.Label(_stage, p.level.ToString(), "Regular", 15, White, X + 216, y + 6, 40, 22);
-                var v = Ui.Label(_stage, p.vehicle ?? "-", "Regular", 14, Soft, X + 262, y + 7, 106, 22); v.horizontalOverflow = HorizontalWrapMode.Wrap; v.verticalOverflow = VerticalWrapMode.Truncate; v.resizeTextForBestFit = true; v.resizeTextMinSize = 10; v.resizeTextMaxSize = 14;
-                Ui.Label(_stage, StatusOf(p), "Regular", 14, p.in_convoy ? Blue : Brand.Good, X + 372, y + 7, 70, 22);
-            }
         }
 
         static string StatusOf(ActivePlayer p) => p.in_convoy ? "Convoy" : string.IsNullOrEmpty(p.activity) ? "Online" : char.ToUpperInvariant(p.activity[0]) + p.activity.Substring(1);
@@ -363,6 +346,45 @@ namespace ARO.Game
         }
 
         // ================================================================================================================ your convoy
+        // ---- the states the screens show are DERIVED (ARO.NetCore.ConvoyStates) from what the server and the live session reported
+        ConvoyUiState MpState()
+        {
+            var f = new ConvoyFacts
+            {
+                InConvoy = _mpMine != null, WasInConvoy = _wasInConvoy && _mpMine == null && !_leftOnPurpose, Phase = _mpMine != null ? _mpMine.phase : null,
+                AnyMemberReady = _mpMine != null && _mpMine.members.Any(m => !m.is_leader && m.ready), Pending = _pending, Session = _svc.Session.State,
+            };
+            return ConvoyStates.Derive(f);
+        }
+
+        static Color StateColor(ConvoyUiState s)
+        {
+            switch (s)
+            {
+                case ConvoyUiState.InSession: return GoGreen; case ConvoyUiState.ReadyCheck: return Gold; case ConvoyUiState.Starting: case ConvoyUiState.Creating: case ConvoyUiState.Joining: case ConvoyUiState.Searching: return Gold;
+                case ConvoyUiState.Reconnecting: case ConvoyUiState.Disbanded: return Brand.Bad; case ConvoyUiState.NoConvoy: return Muted; default: return Blue;
+            }
+        }
+
+        MemberUiState MpMemberState(ConvoyMemberDto m)
+        {
+            double since = -1;
+            if (TimeText.TryParse(m.joined_at, out var j) && TimeText.TryParse(_mpServerTime, out var now)) since = (now - j).TotalSeconds;
+            return ConvoyStates.Member(new ConvoyStates.MemberFacts { Ready = m.ready, IsLeader = m.is_leader, Connected = m.connected, SecondsSinceJoin = since }, _mpMine.phase);
+        }
+
+        static Color MemberColor(MemberUiState s)
+        {
+            switch (s) { case MemberUiState.Ready: case MemberUiState.Driving: return Brand.Good; case MemberUiState.Invited: return Blue; case MemberUiState.Disconnected: return Brand.Bad; case MemberUiState.Joined: return White; default: return Muted; }
+        }
+
+        ConvoyStates.StartCheck MpStartCheck()
+        {
+            var c = _mpMine; if (c == null) return new ConvoyStates.StartCheck { Allowed = false, Reason = "You are not in a convoy." };
+            int notReady = c.members.Count(m => !m.is_leader && !m.ready), offline = c.members.Count(m => !m.connected);
+            return ConvoyStates.CanStart(c.is_leader, c.Driving, c.route != null && c.route.Exists, notReady, offline);
+        }
+
         void BuildMpConvoy()
         {
             const float X = 1442, Y = 263, W = 455, H = 481;
@@ -373,21 +395,19 @@ namespace ARO.Game
             if (_mpMineState == LoadState.Unavailable) { Ui.Label(_stage, "Your convoy is unavailable.", "SemiBold", 19, Brand.Bad, X + 22, Y + 70, 400, 26); Ui.Paragraph(_stage, _mpMineErr ?? "Please try again.", "Regular", 16, Soft, X + 22, Y + 100, 400, 44); Ui.Rounded(_stage, "RetryBg", Gold, X + 22, Y + 160, 150, 40, 10); Ui.Label(_stage, "Try again", "Bold", 17, Ink, X + 22, Y + 168, 150, 24, TextAnchor.UpperCenter); Ui.Click(_stage, "Btn_RetryMine", X + 22, Y + 160, 150, 40, () => _ = LoadMine()); return; }
             if (_mpMine == null) { BuildNoConvoy(X, Y, W, H); return; }
             var c = _mpMine; bool leader = c.is_leader, driving = c.Driving;
-            Color sc = driving ? GoGreen : Blue; string st = driving ? "On the Road" : "In Lobby";
-            Ui.Disc(_stage, "PhaseDot", sc, X + 190, Y + 22, 12); Ui.Label(_stage, st, "SemiBold", 17, sc, X + 208, Y + 17, 120, 24);
+            var ui = MpState(); Color sc = StateColor(ui);
+            Ui.Disc(_stage, "PhaseDot", sc, X + 190, Y + 22, 12); Ui.Label(_stage, ConvoyStates.Label(ui), "SemiBold", 17, sc, X + 208, Y + 17, 150, 24);
             Ui.Label(_stage, c.member_count + "/" + c.capacity, "SemiBold", 18, White, X + W - 112, Y + 17, 60, 24, TextAnchor.UpperRight);
             Ui.Rounded(_stage, "GearBg", new Color(1, 1, 1, 0.10f), X + W - 46, Y + 12, 32, 32, 9); Ui.Icon(_stage, "ic_gear", White, X + W - 42, Y + 16, 24);
             Ui.Click(_stage, "Btn_ConvoyManage", X + W - 46, Y + 12, 32, 32, OpenManageDialog);
-            // the one big action
-            int waiting = c.members.Count(m => !m.is_leader && !m.ready); bool hasRoute = c.route != null && c.route.Exists;
+            // the one big action; its availability is the lobby's real requirements
+            bool hasRoute = c.route != null && c.route.Exists; var gate = MpStartCheck();
             string label; Color bg; Action act; string btnName;
             if (driving) { label = leader ? "Rejoin the Road" : "Join the Road"; bg = GoGreen; btnName = "Btn_JoinRoad"; act = () => _act.ConvoyDrive(c); }
             else if (leader)
             {
-                bool can = hasRoute && waiting == 0;
-                label = !hasRoute ? "Choose a route to start" : waiting > 0 ? $"Waiting for {waiting} player{(waiting == 1 ? "" : "s")}..." : "Start Driving";
-                bg = can ? GoGreen : new Color(0.20f, 0.22f, 0.27f); btnName = can ? "Btn_StartDriving" : "Btn_StartBlocked";
-                act = () => { if (!hasRoute) { Toast("Choose a route first."); OpenRouteDialog(); } else if (waiting > 0) Toast("Everyone must be ready before you can start."); else _act.ConvoyDrive(c); };
+                label = gate.Reason; bg = gate.Allowed ? GoGreen : new Color(0.20f, 0.22f, 0.27f); btnName = gate.Allowed ? "Btn_StartDriving" : "Btn_StartBlocked";
+                act = () => { if (!gate.Allowed) { Toast(gate.Reason); if (!hasRoute) OpenRouteDialog(); } else _act.ConvoyDrive(c); };
             }
             else
             {
@@ -400,33 +420,46 @@ namespace ARO.Game
             Ui.Click(_stage, btnName, X + 16, Y + 56, W - 32, 46, act);
             // route
             Ui.Label(_stage, "Route:", "Regular", 17, Soft, X + 20, Y + 116, 60, 24);
-            string rn = hasRoute ? c.route.from + "  →  " + c.route.to : "Not chosen yet";
-            var rl = Ui.Label(_stage, rn, "Bold", 17, hasRoute ? White : Muted, X + 76, Y + 115, 250, 24);
-            Ui.Label(_stage, hasRoute && c.route.distance_km > 0 ? $"Distance: {c.route.distance_km:0.#} km  ·  {JobMath.FormatDuration(c.route.est_minutes)}" : "Distance: -", "Regular", 16, Soft, X + 20, Y + 142, 330, 22);
+            string rn = hasRoute ? c.route.from + "  \u2192  " + c.route.to : "Not chosen yet";
+            Ui.Label(_stage, rn, "Bold", 17, hasRoute ? White : Muted, X + 76, Y + 115, 250, 24);
+            Ui.Label(_stage, hasRoute && c.route.distance_km > 0 ? $"Distance: {c.route.distance_km:0.#} km  \u00B7  {JobMath.FormatDuration(c.route.est_minutes)}" : "Distance: -", "Regular", 16, Soft, X + 20, Y + 142, 330, 22);
             if (leader && !driving) { SmallPillIn(_stage, hasRoute ? "Change" : "Choose", X + 330, Y + 114, 100, 28, OpenRouteDialog); }
-            Pill2(X + W - 118, Y + 140, c.is_private ? "Invite only" : "Public", Gold, 15, 98);
-            float tagX = X + 20; foreach (var tg in (c.tags ?? new string[0])) tagX += MiniChip(_stage, tagX, Y + 172, TagLabel(tg), new Color(0.85f, 0.88f, 0.92f)) + 6;
-            // members
+            Pill2(X + W - 118, Y + 140, c.is_private ? "Invite only" : c.has_password ? "Password" : "Public", Gold, 15, 98);
+            float tagX = X + 20;
+            tagX += MiniChip(_stage, tagX, Y + 172, c.driving_mode == "realistic" ? "Realistic" : "Relaxed", Blue) + 6;
+            if (c.min_level > 1) tagX += MiniChip(_stage, tagX, Y + 172, "Lv " + c.min_level + "+", Gold) + 6;
+            foreach (var tg in (c.tags ?? new string[0]).Take(2)) tagX += MiniChip(_stage, tagX, Y + 172, TagLabel(tg), new Color(0.85f, 0.88f, 0.92f)) + 6;
+            // members (server list + the players who were invited and have not answered)
             Ui.Label(_stage, $"Members ({c.member_count}/{c.capacity})", "Bold", 20, White, X + 20, Y + 202, 250, 28);
             const float my = 234, mh = 240, rowH = 46;
-            int slots = leader && !driving ? Mathf.Min(2, c.capacity - c.member_count) : 0;
-            var area = MakeScroll("mp_members", X + 10, Y + my, W - 20, mh, c.members.Length * rowH + slots * 36 + 4);
+            var invited = c.invited ?? new InvitedDto[0];
+            int slots = !driving ? Mathf.Min(2, Mathf.Max(0, c.capacity - c.member_count - invited.Length)) : 0;
+            var area = MakeScroll("mp_members", X + 10, Y + my, W - 20, mh, (c.members.Length + invited.Length) * rowH + slots * 36 + 4);
             for (int i = 0; i < c.members.Length; i++)
             {
                 var m = c.members[i]; float y = 2 + i * rowH; var host = area.Content;
                 if (i > 0) Ui.Flat(host, "MLine", new Color(1, 1, 1, 0.06f), 6, y - 1, W - 52, 1);
                 Ui.Disc(host, "MAv", new Color(0.16f, 0.18f, 0.24f), 8, y + 3, 40); Ui.Icon(host, "avatar_default", White, 8, y + 3, 40);
+                Ui.Disc(host, "MConn", m.connected ? Brand.Good : Brand.Bad, 38, y + 31, 11);
                 var nm = Ui.Label(host, m.display_name, "Bold", 17, White, 58, y + 2, 170, 22); if (m.is_leader) { Ui.Icon(host, "ic_crown", Gold, 58 + Mathf.Min(nm.preferredWidth, 150f) + 6, y + 3, 18); }
                 Ui.Label(host, "Level " + m.level, "Regular", 14, Muted, 58, y + 24, 100, 18);
                 Ui.Icon(host, "ic_bus", Soft, 190, y + 11, 22); var vl = Ui.Label(host, m.vehicle ?? "-", "Regular", 14, Soft, 216, y + 6, 120, 34); vl.horizontalOverflow = HorizontalWrapMode.Wrap; vl.verticalOverflow = VerticalWrapMode.Truncate;
-                string ms = m.is_leader ? "Leader" : driving ? "Driving" : m.ready ? "Ready" : "Not ready"; Color mc = m.is_leader ? White : (driving || m.ready) ? Brand.Good : Muted;
-                Ui.Label(host, ms, "SemiBold", 15, mc, W - 120, y + 11, 90, 22, TextAnchor.UpperRight);
+                var ms = MpMemberState(m);
+                Ui.Label(host, m.is_leader && ms == MemberUiState.Ready ? "Leader" : ConvoyStates.Label(ms), "SemiBold", 15, m.is_leader && ms == MemberUiState.Ready ? White : MemberColor(ms), W - 128, y + 11, 98, 22, TextAnchor.UpperRight);
+            }
+            for (int k = 0; k < invited.Length; k++)
+            {
+                float y = 2 + (c.members.Length + k) * rowH; var host = area.Content;
+                Ui.Flat(host, "MLine", new Color(1, 1, 1, 0.06f), 6, y - 1, W - 52, 1);
+                Ui.Disc(host, "MAv", new Color(0.16f, 0.18f, 0.24f, 0.6f), 8, y + 3, 40); Ui.Icon(host, "avatar_default", new Color(1, 1, 1, 0.5f), 8, y + 3, 40);
+                Ui.Label(host, invited[k].display_name, "Bold", 17, new Color(1, 1, 1, 0.7f), 58, y + 2, 200, 22); Ui.Label(host, "Level " + invited[k].level, "Regular", 14, Muted, 58, y + 24, 100, 18);
+                Ui.Label(host, ConvoyStates.Label(MemberUiState.Invited), "SemiBold", 15, MemberColor(MemberUiState.Invited), W - 128, y + 11, 98, 22, TextAnchor.UpperRight);
             }
             for (int k = 0; k < slots; k++)
             {
-                float y = 2 + c.members.Length * rowH + k * 36; var host = area.Content;
+                float y = 2 + (c.members.Length + invited.Length) * rowH + k * 36; var host = area.Content;
                 Ui.Outlined(host, "InviteSlot", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.12f), 6, y + 2, W - 52, 30, 8, 1.2f);
-                Ui.Label(host, "+", "Bold", 22, White, 18, y + 1, 24, 30); Ui.Label(host, "Invite Player", "Regular", 16, Soft, 52, y + 6, 200, 22);
+                Ui.Label(host, "+", "Bold", 22, White, 18, y + 1, 24, 30); Ui.Label(host, leader ? "Invite Player" : "Invite Friend", "Regular", 16, Soft, 52, y + 6, 200, 22);
                 Ui.Click(host, "Btn_InviteSlot" + k, 6, y + 2, W - 52, 30, OpenInviteDialog);
             }
             RestoreScroll(area);
@@ -505,7 +538,7 @@ namespace ARO.Game
             var heights = new List<float>(); float total = 4f;
             foreach (var l in lines)
             {
-                var probe = Ui.Paragraph(_stage, l.body, "Regular", 15, White, 0, 0, W - 94, 20); float ph = probe.preferredHeight; Destroy(probe.gameObject);
+                var probe = Ui.Paragraph(_stage, ChatText.Display(l.body, l.moderation), "Regular", 15, White, 0, 0, W - 94, 20); float ph = probe.preferredHeight; Destroy(probe.gameObject);
                 float h = l.System ? Mathf.Max(24f, ph + 6f) : Mathf.Max(48f, 24f + ph + 8f); heights.Add(h); total += h;
             }
             const float vh = 198;
@@ -514,14 +547,16 @@ namespace ARO.Game
             for (int i = 0; i < lines.Count; i++)
             {
                 var l = lines[i];
-                if (l.System) { Ui.Paragraph(host, l.body, "Regular", 15, new Color(0.62f, 0.66f, 0.72f), 50, y + 2, W - 94, heights[i]); }
+                if (l.System) { Ui.Paragraph(host, ChatText.Clean(l.body), "Regular", 15, new Color(0.62f, 0.66f, 0.72f), 50, y + 2, W - 94, heights[i]); }
                 else
                 {
                     Ui.Disc(host, "CAv", new Color(0.16f, 0.18f, 0.24f), 6, y + 4, 34); Ui.Icon(host, "avatar_default", White, 6, y + 4, 34);
                     string name = l.sender != null ? l.sender.display_name : "?"; var nl = Ui.Label(host, name, "Bold", 15, White, 50, y + 2, 220, 20);
                     string when = TimeText.TryParse(l.created_at, out var t) ? t.LocalDateTime.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture) : "";
                     Ui.Label(host, when, "Regular", 12, Muted, 50 + Mathf.Min(nl.preferredWidth, 200f) + 8, y + 5, 60, 16);
-                    var body = Ui.Paragraph(host, l.body, "Regular", 15, new Color(0.9f, 0.92f, 0.95f), 50, y + 22, W - 94, heights[i] - 22); body.supportRichText = false;
+                    bool moderated = l.moderation != null && l.moderation != "ok";
+                    var body = Ui.Paragraph(host, ChatText.Display(l.body, l.moderation), moderated ? "SemiBold" : "Regular", 15, moderated ? new Color(0.62f, 0.66f, 0.72f) : new Color(0.9f, 0.92f, 0.95f), 50, y + 22, W - 94, heights[i] - 22); body.supportRichText = false;
+                    if (l.sender != null && l.sender.player_id != _svc.Profile.id) { var line = l; Ui.Click(host, "Btn_ChatLine_" + l.id, 0, y, W - 40, heights[i], () => OpenChatLineDialog(line)); }
                 }
                 y += heights[i];
             }
@@ -564,7 +599,7 @@ namespace ARO.Game
             }
             if (now > _nextMine) { _nextMine = now + 3f; _ = LoadMine(true); }
             if (now > _nextChat) { _nextChat = now + 2.5f; if (_mpMine != null) _ = LoadChat(false); }
-            if (now > _nextLists) { _nextLists = now + 15f; if (_mpTab == MpTab.Convoys) { _ = LoadConvoys(true); _ = LoadPlayers(true); _ = LoadStatus(); } else if (_mpTab == MpTab.Players) _ = LoadPlayers(true); }
+            if (now > _nextLists) { _nextLists = now + 15f; if (_mpTab == MpTab.Convoys) { _ = LoadConvoys(true); _ = LoadNearby(true); _ = LoadStatus(); } else if (_mpTab == MpTab.Players) _ = LoadPlayers(true); else if (_mpTab == MpTab.Servers) _ = LoadServers(true); }
             float dy = 0f; Vector2 mp = Vector2.zero;
             try { dy = UnityEngine.Input.mouseScrollDelta.y; mp = UnityEngine.Input.mousePosition; } catch (InvalidOperationException) { }
             if (dy != 0f)

@@ -94,6 +94,20 @@ namespace ARO.Tests
             Assert.AreEqual("driving", Parse<ConvoyInfo>("start_convoy_drive").phase); Assert.IsTrue(Parse<ConvoyInfo>("start_convoy_drive").Driving); Assert.AreEqual("lobby", Parse<ConvoyInfo>("end_convoy_drive").phase);
         }
 
+        [Test] public void ConvoyRulesNearbyPlayersServersAndSafetyRepliesParse()
+        {
+            var c = Parse<MyConvoy>("get_my_convoy").convoy;
+            Assert.AreEqual("relaxed", c.driving_mode); Assert.AreEqual(1, c.min_level); Assert.IsFalse(c.has_password); Assert.AreEqual(1, c.invited.Length); Assert.AreEqual("CtC", c.invited[0].display_name);
+            Assert.IsTrue(c.members.All(m => m.connected));
+            Assert.AreEqual("realistic", Parse<ConvoyInfo>("set_convoy_settings").driving_mode);
+            var n = Parse<NearbyList>("list_nearby_players"); Assert.AreEqual("route", n.scope); Assert.IsTrue(n.visible); Assert.GreaterOrEqual(n.items.Length, 3);
+            var withConvoy = n.items.First(p => p.InConvoy); Assert.AreEqual("Pw Convoy", withConvoy.convoy.name); Assert.IsTrue(withConvoy.convoy.has_password); Assert.IsTrue(withConvoy.convoy.joinable); Assert.IsFalse(n.items.First(p => !p.InConvoy).InConvoy);
+            var sv = Parse<ServerList>("list_servers"); Assert.AreEqual(1, sv.items.Length); Assert.AreEqual("ONLINE", sv.items[0].status); Assert.AreEqual(0, sv.items[0].capacity); Assert.IsTrue(string.IsNullOrEmpty(sv.items[0].region)); Assert.GreaterOrEqual(sv.items[0].population, 1);
+            var j = Parse<JoinResult>("join_convoy_with_password"); Assert.IsFalse(j.joined); Assert.AreEqual("wrong_password", j.error);
+            Assert.AreEqual("received", Parse<ReportResult>("report_chat_message").status); Assert.AreEqual("CtG", Parse<BlockedList>("list_blocked_players").items[0].display_name);
+            var chat = Parse<ChatPage>("list_convoy_messages"); Assert.IsTrue(chat.items.All(l => l.moderation == "ok"));
+        }
+
         [Test] public void JobBoardReplyConvertsToTheJobShapeTheGameUses()
         {
             var page = Parse<JobBoardPage>("list_available_jobs"); Assert.GreaterOrEqual(page.total, 1);

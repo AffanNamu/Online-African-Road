@@ -22,4 +22,5 @@ run tests/37_world_jobs_economy.sql
 run tests/38_content_boards_security.sql
 run tests/39_job_catalog.sql
 run tests/41_convoy_lobby.sql
+run tests/42_convoy_spec.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

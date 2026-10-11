@@ -79,3 +79,16 @@ post_convoy_message
 list_convoy_messages
 list_active_players
 get_server_status
+create_convoy_lobby
+join_convoy_with_password
+set_convoy_settings
+disband_convoy
+invite_friend_to_convoy
+report_chat_message
+block_player
+unblock_player
+list_blocked_players
+# --- discovery (20261011000003)
+set_nearby_visibility
+list_nearby_players
+list_servers

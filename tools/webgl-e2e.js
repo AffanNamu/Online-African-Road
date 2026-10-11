@@ -200,10 +200,11 @@ const allErrors = [], allExc = [];
     // create: name, route, tag; every choice is sent to the server and the result read back
     m = c.logs.length; await c.click('Btn_CreateConvoy2'); await c.settle(); await c.page.screenshot({ path: `${prefix}-12-create-dialog.png` });
     await c.click('Btn_CreateRoute_lagos-ibadan'); await c.settle(); await c.click('Btn_CreateTag_jobs'); await c.settle(); await c.click('Btn_CreateConfirm');
-    const made = await c.waitLog(/\[Multiplayer\] created convoy="BrowserMia's Convoy" route=lagos-ibadan private=False cap=8 tags=1 problems=0/, m, 90);
+    const made = await c.waitLog(/\[Multiplayer\] created convoy="BrowserMia's Convoy" route=lagos-ibadan private=False cap=8 mode=relaxed level=1 lang=en password=False tags=1 ok=True/, m, 90);
     check(!!made, 'Create Convoy: the convoy was created with the chosen route and tag and no errors', made);
     check(db(`select route_code || '/' || array_to_string(tags, ',') || '/' || phase from convoys where leader_id = '${mia.id}' and disbanded_at is null`) === 'lagos-ibadan/jobs/lobby', 'the server holds the new convoy as a lobby with the route and tag');
     check(!!(await c.waitLog(/\[Multiplayer\] convoy=BrowserMia's Convoy phase=lobby members=1 route=lagos-ibadan/, m, 60)), 'the page shows the new lobby from the server');
+    check(!!(await c.waitLog(/\[Multiplayer\] tab=lobby \(convoy joined\)/, m, 30)), 'creating a convoy opens the Convoy Lobby tab');
 
     // another player joins and readies up (through the database API, as that player); the page sees both within a few seconds
     const cv = db(`select id from convoys where leader_id = '${mia.id}' and disbanded_at is null`);
@@ -220,8 +221,23 @@ const allErrors = [], allExc = [];
     m = c.logs.length; asUser(noah, `select post_convoy_message('On my way')::text`);
     check(!!(await c.waitLog(/\[Multiplayer\] chat lines=\d+/, m, 30)), 'a line written by another player appears (polled)');
     await sleep(2500); await c.page.screenshot({ path: `${prefix}-14-chat.png` });
+    check(!!c.targets()['Btn_LobbyStartBlocked'] || !!c.targets()['Btn_LobbyStart'], "the lobby tab shows the leader's Start button");
+    await c.page.screenshot({ path: `${prefix}-14b-lobby-tab.png` });
+
+    // safety: report a line and block its sender (server-side), through the page
+    const lineId = db(`select id from convoy_messages where convoy_id = '${cv}' and body = 'On my way'`);
+    await c.settle(); m = c.logs.length; await c.click('Btn_ChatLine_' + lineId); await c.settle(); await c.page.screenshot({ path: `${prefix}-14c-chat-line-menu.png` });
+    await c.click('Btn_Report_abuse');
+    check(!!(await c.waitLog(/\[Multiplayer\] report line=\d+ reason=abuse ok=True moderation=ok/, m, 30)), 'Report: the server received the report');
+    check(db(`select count(*) from chat_reports where reporter_id = '${mia.id}' and reason = 'abuse'`) === '1', 'the report is stored with the reporter from the session');
+    await c.settle(); m = c.logs.length; await c.click('Btn_ChatLine_' + lineId); await c.settle(); await c.click('Btn_LineBlock');
+    check(!!(await c.waitLog(/\[Multiplayer\] block player="BrowserNoah" ok=True/, m, 30)), 'Block: the server stored the block');
+    check(db(`select count(*) from player_blocks where blocker_id = '${mia.id}' and blocked_id = '${noah.id}'`) === '1', 'the block is in the database');
+    await sleep(4000); await c.page.screenshot({ path: `${prefix}-14d-after-block.png` });
+    db(`delete from player_blocks where blocker_id = '${mia.id}'`);
 
     // start driving: the server accepts, the live-session service is not reachable from the test, so the convoy must go back to the lobby (never stuck "driving")
+    asUser(noah, `select start_session('webgl')::text`);                          // the start needs everyone online: refresh the second player's heartbeat
     m = c.logs.length; await c.click('Btn_StartDriving');
     let phase = ''; for (let i = 0; i < 90 && phase !== 'lobby'; i++) { await sleep(2000); phase = db(`select phase from convoys where id = '${cv}'`); if (db(`select count(*) from analytics_events where name = 'convoy_started' and player_id = '${mia.id}'`) === '1' && phase === 'lobby') break; }
     check(db(`select count(*) from analytics_events where name = 'convoy_started' and player_id = '${mia.id}'`) === '1', 'Start Driving reached the server (convoy_started was recorded)');
@@ -229,12 +245,34 @@ const allErrors = [], allExc = [];
     check(db(`select count(*) from convoy_messages where convoy_id = '${cv}' and kind = 'system' and body like 'The convoy is back in the lobby.'`) === '1', 'the server wrote the system line for the rollback');
     await c.page.screenshot({ path: `${prefix}-15-start-failed.png` });
 
+    // server list and nearby players come from the database
+    await c.settle(); m = c.logs.length; await c.click('Btn_MpTab_Servers');
+    const srv = await c.waitLog(/\[Multiplayer\] servers state=ready count=1 first=ONLINE population=(\d+)/, m, 60);
+    check(!!srv, 'Server List shows the registered server as ONLINE with its live population', srv);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-15b-servers.png` });
+    m = c.logs.length; await c.click('Btn_MpTab_Lobby');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-15c-lobby-after.png` });
+
     // leave: leadership passes to the remaining member
     await c.settle(); m = c.logs.length; await c.click('Btn_ConvoyManage'); await c.settle(); await c.page.screenshot({ path: `${prefix}-16-manage.png` });
     await c.click('Btn_LeaveConvoy');
     check(!!(await c.waitLog(/\[Multiplayer\] convoy=none/, m, 60)), 'Leave convoy: the page returns to "no convoy"');
     check(db(`select count(*) from convoy_members where player_id = '${mia.id}'`) === '0' && db(`select leader_id from convoys where id = '${cv}'`) === noah.id, 'the server removed the player and passed leadership on');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-17-left.png` });
+    m = c.logs.length; await c.click('Btn_MpTab_Convoys');
+    check(!!(await c.waitLog(/\[Multiplayer\] nearby state=(empty|ready) scope=none/, m, 60)) || c.logs.some(l => /\[Multiplayer\] nearby state=(empty|ready) scope=none/.test(l)), 'a player who is not driving has no nearby scope (no invented neighbours)');
+
+    // a second convoy with rules and a password, then disband it
+    m = c.logs.length; await c.click('Btn_CreateConvoy2'); await c.settle(); await c.click('Btn_CreateRealistic'); await c.settle();
+    await c.click('Create_Password_Input'); await sleep(300); await c.page.keyboard.type('abcd1234', { delay: 80 }); await c.settle(); await c.page.screenshot({ path: `${prefix}-17b-create-rules.png` });
+    await c.click('Btn_CreateConfirm');
+    check(!!(await c.waitLog(/\[Multiplayer\] created convoy="BrowserMia's Convoy" route=none private=False cap=8 mode=realistic level=1 lang=en password=True tags=0 ok=True/, m, 90)), 'Create with rules: realistic driving and a password were sent to the server');
+    check(db(`select driving_mode || '/' || (password_hash is not null)::text || '/' || min_level from convoys where leader_id = '${mia.id}' and disbanded_at is null`) === 'realistic/true/1', 'the server holds the convoy with its mode and a hashed password');
+    await c.settle(); m = c.logs.length; await c.click('Btn_LobbyDisband'); await c.settle(); await c.page.screenshot({ path: `${prefix}-17c-disband-dialog.png` });
+    await c.click('Btn_DisbandConfirm');
+    check(!!(await c.waitLog(/\[Multiplayer\] disband ok=True/, m, 60)), 'Disband: the server accepted');
+    check(db(`select count(*) from convoys where leader_id = '${mia.id}' and disbanded_at is null`) === '0', 'the convoy is disbanded in the database');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-17d-disbanded.png` });
   });
 
   // a failing convoy list shows Unavailable and a retry that works (injected failures only)

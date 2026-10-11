@@ -1,3 +1,4 @@
+using System.Linq;
 using ARO.Multiplayer;
 using ARO.NetCore;
 using UnityEngine;
@@ -205,15 +206,45 @@ namespace ARO.Game
             }
             _map.SetTarget(v.transform); _map.Tick(dest);
 
-            bool inConvoy = NetworkVehicle.Players.Count > 0;
-            _convoyPanel.SetActive(inConvoy);
-            if (inConvoy)
-            {
-                var sb = new System.Text.StringBuilder($"CONVOY  ({NetworkVehicle.Players.Count})\n");
-                var leader = NetworkVehicle.Players.Leader;
-                foreach (var m in NetworkVehicle.Players.Members) sb.Append(m == leader ? "★ " : "● ").Append(m.Name).Append('\n');
-                _convoy.text = sb.ToString();
+            DrawConvoy();
+        }
+
+        // ---- the convoy panel: the SERVER's member list joined with the avatars that are really in the live session (ARO.NetCore.LiveRoster)
+        float _nextConvoyPoll; bool _convoyPolling;
+        async void PollConvoy() { _convoyPolling = true; try { await _svc.Convoys.LoadMine(); } finally { _convoyPolling = false; } }
+
+        void DrawConvoy()
+        {
+            var info = _svc.Convoys.Mine.Value != null ? _svc.Convoys.Mine.Value.convoy : null; bool hasInfo = info != null && info.Exists && _svc.Convoys.CurrentConvoyId != null;
+            if (_svc.Convoys.CurrentConvoyId != null && !_convoyPolling && Time.unscaledTime > _nextConvoyPoll) { _nextConvoyPoll = Time.unscaledTime + 5f; PollConvoy(); }
+            bool live = NetworkVehicle.Players.Count > 0;
+            _convoyPanel.SetActive(hasInfo || live);
+            if (!hasInfo && !live) return;
+            var sb = new System.Text.StringBuilder();
+            if (!hasInfo)
+            {   // a live session without server data (e.g. the convoy call failed): show only what the session itself can say
+                sb.Append($"CONVOY  ({NetworkVehicle.Players.Count})\n"); var ldr = NetworkVehicle.Players.Leader;
+                foreach (var m in NetworkVehicle.Players.Members) sb.Append(m == ldr ? "\u2605 " : "\u25CF ").Append(m.Name).Append('\n');
+                _convoy.text = sb.ToString(); return;
             }
+            var avatars = new System.Collections.Generic.Dictionary<string, (double x, double z)>(System.StringComparer.OrdinalIgnoreCase);
+            foreach (var a in NetworkVehicle.Active) { string n = a.PlayerName.Value.ToString(); if (!string.IsNullOrEmpty(n)) avatars[n] = (a.transform.position.x, a.transform.position.z); }
+            var rows = LiveRoster.Build(info.members.Select(m => (m.display_name, m.is_leader, m.connected)), avatars, null, info.phase);
+            var ui = ConvoyStates.Derive(new ConvoyFacts { InConvoy = true, Phase = info.phase, Session = _svc.Session.State, AnyMemberReady = false });
+            string state = ConvoyStates.Label(ui); string col = ui == ConvoyUiState.Reconnecting ? "#f66" : ui == ConvoyUiState.InSession ? "#5ecb7c" : "#f9b521";
+            sb.Append($"CONVOY  <color={col}>{state}</color>\n");
+            var spline = _s != null && _s.Route != null && _s.Route.Model != null ? _s.Route.Model.Main.Spline : null; float length = spline != null ? _s.Route.Model.Main.Length : 0f;
+            foreach (var r in rows)
+            {
+                string detail = "";
+                if (r.Present)
+                {
+                    if (r.DistanceToLeaderM.HasValue) detail += "  " + (r.DistanceToLeaderM.Value >= 1000 ? (r.DistanceToLeaderM.Value / 1000.0).ToString("0.0") + " km" : Mathf.RoundToInt((float)r.DistanceToLeaderM.Value) + " m");
+                    if (spline != null && avatars.TryGetValue(r.Name, out var pos) && spline.Nearest((float)pos.x, (float)pos.z, 400f, out float sAlong, out float lat, out float dist) && length > 1f) detail += "  " + Mathf.RoundToInt(sAlong / length * 100f) + "%";
+                }
+                sb.Append(r.Present ? "<color=#5ecb7c>\u25CF</color> " : "<color=#f66>\u25CF</color> ").Append(r.IsLeader ? "\u2605 " : "").Append(r.Name).Append(r.Present ? detail : "  <color=#f66>disconnected</color>").Append('\n');
+            }
+            _convoy.text = sb.ToString();
         }
 
         void DrawToasts()

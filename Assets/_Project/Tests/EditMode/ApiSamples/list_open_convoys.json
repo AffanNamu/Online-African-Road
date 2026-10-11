@@ -1,13 +1,35 @@
 {
  "items": [
   {
+   "capacity": 6,
+   "created_at": "2026-10-11T05:26:58.785741+00:00",
+   "driving_mode": "realistic",
+   "has_password": true,
+   "id": "c9c4efd7-628b-4726-9c8f-b6ee48ac30ff",
+   "joinable": true,
+   "language": "en",
+   "leader": "CtF",
+   "member_count": 1,
+   "min_level": 1,
+   "name": "Pw Convoy",
+   "phase": "lobby",
+   "route": null,
+   "session_active": false,
+   "tags": [
+    "friendly"
+   ]
+  },
+  {
    "capacity": 8,
-   "created_at": "2026-10-11T05:03:47.139067+00:00",
-   "id": "4d53882b-26bb-43f9-99b0-aeea4b33c111",
+   "created_at": "2026-10-11T05:26:58.500452+00:00",
+   "driving_mode": "relaxed",
+   "has_password": false,
+   "id": "a5982fd8-a716-42a0-8391-15ca87d31faa",
    "joinable": true,
    "language": "en",
    "leader": "CtD",
    "member_count": 1,
+   "min_level": 1,
    "name": "Open Convoy",
    "phase": "lobby",
    "route": {
@@ -27,6 +49,6 @@
    ]
   }
  ],
- "server_time": "2026-10-11T05:03:48.170725+00:00",
- "total": 1
+ "server_time": "2026-10-11T05:26:59.859325+00:00",
+ "total": 2
 }

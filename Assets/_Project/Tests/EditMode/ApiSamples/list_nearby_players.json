@@ -1,0 +1,50 @@
+{
+ "items": [
+  {
+   "avatar_id": "default",
+   "convoy": null,
+   "display_name": "CtB",
+   "friend_status": "friends",
+   "level": 1,
+   "online": true,
+   "player_id": "d59f37a3-c738-4196-aa87-6cd5a7a99c6a",
+   "username": "ctb",
+   "vehicle": "Savanna 4x2 Light Truck"
+  },
+  {
+   "avatar_id": "default",
+   "convoy": null,
+   "display_name": "CtC",
+   "friend_status": "none",
+   "level": 1,
+   "online": true,
+   "player_id": "f6c053c7-a6a9-4bfc-a468-43336f1d51d6",
+   "username": "ctc",
+   "vehicle": "Savanna 4x2 Light Truck"
+  },
+  {
+   "avatar_id": "default",
+   "convoy": {
+    "capacity": 6,
+    "has_password": true,
+    "id": "c9c4efd7-628b-4726-9c8f-b6ee48ac30ff",
+    "joinable": true,
+    "member_count": 1,
+    "min_level": 1,
+    "name": "Pw Convoy",
+    "phase": "lobby"
+   },
+   "display_name": "CtF",
+   "friend_status": "none",
+   "level": 1,
+   "online": true,
+   "player_id": "3b1ab4d6-8330-4dc7-94cf-0b81a7ce7fa5",
+   "username": "ctf",
+   "vehicle": "Savanna 4x2 Light Truck"
+  }
+ ],
+ "scope": "route",
+ "scope_name": "lagos-ibadan",
+ "server_time": "2026-10-11T05:27:00.030196+00:00",
+ "visible": true
+}

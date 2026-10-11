@@ -7,7 +7,7 @@ MIG = os.path.join(ROOT, "migrations")
 NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql", 6: "20261009000006_exclusive_activity.sql",
          "enum": "20261010000001_ledger_kinds.sql", "foundation": "20261010000002_foundation.sql", "profile": "20261010000003_profile_presence.sql",
          "world": "20261010000004_world_state.sql", "social": "20261010000005_social.sql", "vehjobs": "20261010000006_vehicles_jobs.sql",
-         "econ": "20261010000007_progression_content_economy.sql", "catalog": "20261011000001_job_board_catalog.sql", "lobby": "20261011000002_convoy_lobby.sql"}
+         "econ": "20261010000007_progression_content_economy.sql", "catalog": "20261011000001_job_board_catalog.sql", "lobby": "20261011000002_convoy_lobby.sql", "discovery": "20261011000003_discovery.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
 # any migration added later is copied through unchanged so mutants always run against the complete schema
 EXTRA = {n: open(os.path.join(MIG, n)).read() for n in sorted(os.listdir(MIG)) if n.endswith(".sql") and n not in NAMES.values()}

@@ -305,7 +305,7 @@ namespace ARO.Game
         {
             if (_busy || c == null) return;
             if (FirstTruckOrAny() == null) { Toast("You need a vehicle to drive with the convoy.", 5f, NoticeLevel.Bad); return; }
-            _busy = true;
+            _busy = true; if (_dash != null && c.is_leader && !c.Driving) _dash.SetStarting(true);
             try
             {
                 if (c.is_leader && !c.Driving)
@@ -331,7 +331,7 @@ namespace ARO.Game
                 HideMenus();
                 if (_drive.Vehicle != null) Resume(); else StartDrive(null);
             }
-            finally { _busy = false; }
+            finally { _busy = false; if (_dash != null) _dash.SetStarting(false); }
         }
 
         // ---------------------------------------------------------------- bus

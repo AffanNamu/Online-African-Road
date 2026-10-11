@@ -22,6 +22,7 @@ create temp table planned as select code from world_routes where status = 'PLANN
 insert into fx select 'cv', testkit.as_user(pg_temp.u('L'), $$select create_convoy('Lobby Run')$$);
 select testkit.as_user(pg_temp.u('M1'), format('select join_convoy(%L)', (select v from fx where k = 'cv')));
 select testkit.as_user(pg_temp.u('M2'), format('select join_convoy(%L)', (select v from fx where k = 'cv')));
+select testkit.as_user(pg_temp.u(k), 'select start_session()::text') from (values ('L'),('M1'),('M2')) t(k);
 select testkit.assert_eq('a new convoy is a lobby', pg_temp.cv(pg_temp.u('L'))->>'phase', 'lobby');
 select testkit.assert_eq('no route yet', (pg_temp.cv(pg_temp.u('L'))->'route')::text, 'null');
 select testkit.assert_eq('no tags yet', (pg_temp.cv(pg_temp.u('L'))->'tags')::text, '[]');
@@ -89,6 +90,11 @@ select admin_set_route('lagos-ibadan', 'OPEN', 1);
 update profiles set level = 1 where id = pg_temp.u('L');
 
 -- ===== start driving
+-- a member whose heartbeat stopped blocks the start
+update game_sessions set last_seen_at = now() - interval '10 minutes' where player_id = pg_temp.u('M2');
+select testkit.expect_error('authenticated', pg_temp.u('L'), 'select start_convoy_drive()', 'members_offline');
+select testkit.assert_eq('a refused start changes nothing (offline)', pg_temp.cv(pg_temp.u('L'))->>'phase', 'lobby');
+update game_sessions set last_seen_at = now() where player_id = pg_temp.u('M2');
 select testkit.assert_eq('the leader starts the convoy', pg_temp.j(pg_temp.u('L'), 'select start_convoy_drive()::text')->>'phase', 'driving');
 select testkit.assert_eq('status reads in_progress', pg_temp.cv(pg_temp.u('M1'))->>'status', 'in_progress');
 select testkit.assert_eq('server stamped the start', ((pg_temp.cv(pg_temp.u('M1'))->>'started_at') is not null)::text, 'true');

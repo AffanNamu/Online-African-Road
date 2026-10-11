@@ -64,14 +64,27 @@ namespace ARO.Multiplayer
         }
 
         public Task<Result<ConvoyInfo>> EndDriving() => _api.Call<ConvoyInfo>("end_convoy_drive", idempotent: false);
-        /// <summary>Create the durable lobby (no live session yet: that is created when the leader starts driving).</summary>
-        public async Task<Result<string>> CreateLobby(string name)
+        public sealed class NewConvoy { public string Name, Route, DrivingMode = "relaxed", Language = "en", Password; public bool Private; public int Capacity = 8, MinRank = 1; public string[] Tags = new string[0]; }
+
+        /// <summary>Create the durable lobby in ONE server call with every setting (no live session yet: that is created when the leader starts driving).</summary>
+        public async Task<Result<string>> CreateLobby(NewConvoy c)
         {
-            if (string.IsNullOrWhiteSpace(name) || name.Trim().Length < 3) return Result<string>.Fail("invalid_name", "Convoy names need at least 3 characters.");
-            var r = await _api.Rpc("create_convoy", JsonArgs.Obj(("p_name", name.Trim())), idempotent: false);
+            if (c == null || string.IsNullOrWhiteSpace(c.Name) || c.Name.Trim().Length < 3) return Result<string>.Fail("invalid_name", "Convoy names need at least 3 characters.");
+            var r = await _api.Rpc("create_convoy_lobby", JsonArgs.Obj(("p_name", c.Name.Trim()), ("p_route", c.Route), ("p_private", c.Private), ("p_capacity", c.Capacity), ("p_driving_mode", c.DrivingMode),
+                ("p_min_rank", c.MinRank), ("p_language", c.Language), ("p_password", string.IsNullOrEmpty(c.Password) ? null : c.Password), ("p_tags", c.Tags ?? new string[0])), idempotent: false);
             if (!r.Ok) return r;
-            CurrentConvoyId = r.Value.Trim('"'); CurrentConvoyName = name.Trim();
+            CurrentConvoyId = r.Value.Trim('"'); CurrentConvoyName = c.Name.Trim();
             return Result<string>.Success(CurrentConvoyId);
+        }
+
+        /// <summary>Join a password convoy. A wrong password is an ANSWER (joined=false), not an error, so the server counts every guess.</summary>
+        public async Task<Result<string>> JoinLobbyWithPassword(string convoyId, string convoyName, string password)
+        {
+            var r = await _api.Call<JoinResult>("join_convoy_with_password", JsonArgs.Obj(("p_convoy", convoyId), ("p_password", password)), idempotent: false);
+            if (!r.Ok) return Result<string>.Fail(r.ErrorCode, r.UserMessage);
+            if (!r.Value.joined) return Result<string>.Fail(r.Value.error ?? "wrong_password", ErrorMessages.ToUser(r.Value.error ?? "wrong_password", 200));
+            CurrentConvoyId = convoyId; CurrentConvoyName = convoyName;
+            return Result<string>.Success(convoyId);
         }
         /// <summary>Join the durable lobby only (members join the live session when the convoy starts driving).</summary>
         public async Task<Result<string>> JoinLobby(string convoyId, string convoyName)
@@ -94,6 +107,19 @@ namespace ARO.Multiplayer
         }
 
         public Task<Result<ConvoyInviteList>> Invites() => _api.Call<ConvoyInviteList>("list_convoy_invites");
+        // ---- settings, safety, discovery
+        public Task<Result<ConvoyInfo>> Settings(string drivingMode = null, int? minRank = null, string language = null, string password = null, bool clearPassword = false) =>
+            _api.Call<ConvoyInfo>("set_convoy_settings", JsonArgs.Obj(("p_driving_mode", drivingMode), ("p_min_rank", minRank.HasValue ? (object)minRank.Value : null), ("p_language", language), ("p_password", password), ("p_clear_password", clearPassword)), idempotent: false);
+        public Task<Result<string>> Disband() => _api.Rpc("disband_convoy", "{}", idempotent: false);
+        public Task<Result<string>> InviteFriend(string playerId) => _api.CallText("invite_friend_to_convoy", JsonArgs.Obj(("p_player", playerId)), idempotent: false);
+        public Task<Result<ReportResult>> Report(long messageId, string reason) => _api.Call<ReportResult>("report_chat_message", JsonArgs.Obj(("p_message", messageId), ("p_reason", reason)), idempotent: false);
+        public Task<Result<string>> Block(string playerId) => _api.Rpc("block_player", JsonArgs.Obj(("p_player", playerId)), idempotent: false);
+        public Task<Result<string>> Unblock(string playerId) => _api.Rpc("unblock_player", JsonArgs.Obj(("p_player", playerId)), idempotent: false);
+        public Task<Result<BlockedList>> Blocked() => _api.Call<BlockedList>("list_blocked_players");
+        public Task<Result<NearbyList>> Nearby(int limit = 10) => _api.Call<NearbyList>("list_nearby_players", JsonArgs.Obj(("p_limit", limit)));
+        public Task<Result<string>> SetNearbyVisible(bool visible) => _api.CallText("set_nearby_visibility", JsonArgs.Obj(("p_visible", visible)), idempotent: false);
+        public Task<Result<ServerList>> Servers() => _api.Call<ServerList>("list_servers");
+
         public Task<Result<string>> Invite(string playerId) => _api.CallText("invite_to_convoy", JsonArgs.Obj(("p_player", playerId)));
         public Task<Result<string>> RespondToInvite(string inviteId, bool accept) => _api.CallText("respond_convoy_invite", JsonArgs.Obj(("p_invite", inviteId), ("p_accept", accept)));
         public Task<Result<string>> Kick(string playerId) => _api.Rpc("kick_convoy_member", JsonArgs.Obj(("p_player", playerId)));

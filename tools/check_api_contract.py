@@ -84,12 +84,12 @@ def uid(name): return psql(f"select id from profiles where display_name = '{name
 def as_user(u, sql): return psql(f"select testkit.as_user('{u}', $q${sql}$q$)")
 
 def scenario():
-    for n in ("CtA", "CtB", "CtC", "CtD", "CtE"): psql(f"select testkit.make_user('{n}')")
-    A, B, C, D, E = (uid(n) for n in ("CtA", "CtB", "CtC", "CtD", "CtE"))
+    for n in ("CtA", "CtB", "CtC", "CtD", "CtE", "CtF", "CtG"): psql(f"select testkit.make_user('{n}')")
+    A, B, C, D, E, F, G = (uid(n) for n in ("CtA", "CtB", "CtC", "CtD", "CtE", "CtF", "CtG"))
     psql(f"update profiles set experience = 300, level = 2, distance_km = 12, jobs_completed = 2, lifetime_earnings = 900 where id = '{A}'")
     psql("select testkit.mk_job('CT-1', 1, 640)")
     psql("update jobs set expires_at = now() + interval '2 days'")
-    for u in (A, B, C): as_user(u, "select start_session('webgl')::text")
+    for u in (A, B, C, F): as_user(u, "select start_session('webgl')::text")
     # A and B become friends; D asks A; A asks E
     rid = json.loads(as_user(A, f"select send_friend_request('{B}')::text"))["request_id"]
     as_user(B, f"select respond_friend_request('{rid}', true)")
@@ -103,17 +103,24 @@ def scenario():
     # A's convoy: route, tags, B ready, and a little chat (the lines B and A write plus the server's own system lines)
     as_user(A, "select set_convoy_route('lagos-ibadan')::text"); as_user(A, "select set_convoy_tags(array['freight'], 'fr')::text")
     as_user(B, "select set_my_ready(true)::text"); as_user(A, "select post_convoy_message('Ready when you are')::text"); as_user(B, "select post_convoy_message('Let us roll')::text")
+    # a password convoy, a blocked player, a nearby crowd on A's route (heartbeats carry the place), and a second heartbeat for B
+    as_user(F, "select create_convoy_lobby('Pw Convoy', null, false, 6, 'realistic', 1, 'en', 'pw1234', array['friendly'])")
+    as_user(A, f"select block_player('{G}')")
+    for u in (B, C, F):
+        sid = psql(f"select id from game_sessions where player_id = '{u}' and ended_at is null limit 1")
+        as_user(u, f"select heartbeat('{sid}', 'driving', 'lagos-ibadan', 'lagos')::text")
     # A has a job in progress; progress to the 'verified_km' path
-    return A, B, C, D, E
+    return A, B, C, D, E, F, G
 
 def main():
     dump = sys.argv[sys.argv.index("--dump") + 1] if "--dump" in sys.argv else None      # also write every real reply to <dir>/<label>.json (Unity tests parse them with the real JsonUtility)
     classes = parse_dtos()
     build_db()
     try:
-        A, B, C, D, E = scenario()
+        A, B, C, D, E, F, G = scenario()
         psql("select testkit.mk_job('CT-2', 1, 900)")
         psql("update vehicle_ownership set damage_pct = 12, fuel_l = 60 where player_id = '%s'" % E)
+        MSG = psql("select id from convoy_messages where body = 'Let us roll'"); PWC = psql("select id from convoys where name = 'Pw Convoy'")
         SESSION_A = psql("select id from game_sessions where player_id = '%s' limit 1" % A)
         calls = [  # (rpc label, user, sql, client class)
             ("get_dashboard_summary", A, "select get_dashboard_summary()::text", "DashboardSummary"),
@@ -137,6 +144,12 @@ def main():
             ("post_convoy_message", A, "select post_convoy_message('One more line')::text", "ChatPosted"),
             ("list_active_players", A, "select list_active_players()::text", "ActivePlayerList"),
             ("get_server_status", A, "select get_server_status()::text", "ServerStatus"),
+            ("list_nearby_players", A, "select list_nearby_players()::text", "NearbyList"),
+            ("list_servers", A, "select list_servers()::text", "ServerList"),
+            ("list_blocked_players", A, "select list_blocked_players()::text", "BlockedList"),
+            ("report_chat_message", A, f"select report_chat_message({MSG}, 'spam')::text", "ReportResult"),
+            ("join_convoy_with_password", G, f"select join_convoy_with_password('{PWC}', 'nope')::text", "JoinResult"),
+            ("set_convoy_settings", A, "select set_convoy_settings('realistic', null, 'fr')::text", "ConvoyInfo"),
             ("set_convoy_route", A, "select set_convoy_route('lagos-ibadan')::text", "ConvoyInfo"),
             ("set_convoy_tags", A, "select set_convoy_tags(array['freight','jobs'], 'fr')::text", "ConvoyInfo"),
             ("set_my_ready", B, "select set_my_ready(true)::text", "ConvoyInfo"),

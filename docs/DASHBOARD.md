@@ -42,41 +42,81 @@ States: loading skeleton, empty ("No jobs match" + Clear filters / "No open jobs
 
 # Multiplayer page
 
-`DashboardMultiplayer.cs` (layout, polling), `DashboardMultiplayerActions.cs` (loading, server actions, dialogs). Flow, each step decided by the server
-(`supabase/migrations/20261011000002_convoy_lobby.sql`):
+`DashboardMultiplayer.cs` (layout, polling), `DashboardMultiplayerActions.cs` (loading, server actions, dialogs), `DashboardMultiplayerLobby.cs` (lobby tab, nearby players,
+server list, create / settings / disband / player / report dialogs). The convoy is the centre of the page. Flow, each step decided by the server
+(`supabase/migrations/20261011000002_convoy_lobby.sql`, `...03_discovery.sql`):
 
 ```
-MULTIPLAYER -> Find / Create convoy -> Select route -> Invite / Join -> Convoy lobby -> Ready check -> Start driving -> Shared world -> Jobs together -> Rewards / XP
+MULTIPLAYER -> Find / Create convoy -> Select route -> Join / create lobby -> Invite players -> Ready check -> Start driving -> Shared world -> Jobs together -> Rewards / XP
 ```
+
+## States are derived, never painted
+
+`ARO.NetCore.ConvoyStates` (pure C#, unit tested) turns facts the **server** and the **live session** reported into the states the screens show.
+
+| Convoy state | Derived from |
+|---|---|
+| NO_CONVOY | the server says the player is in no convoy |
+| CREATING / JOINING / STARTING | a call of ours is in flight (Starting also: the convoy is driving but this player has not joined the live session) |
+| SEARCHING | the convoy list is loading while the player has no convoy |
+| IN_LOBBY / READY_CHECK | lobby phase; ready check once a non-leader pressed Ready |
+| IN_SESSION | convoy driving **and** the live session is `InSession` |
+| RECONNECTING | convoy driving and the live session is reconnecting |
+| DISBANDED | a convoy that existed disappeared without the player leaving (also shown as a toast) |
+
+| Member state | Derived from |
+|---|---|
+| INVITED | a pending, unexpired invite from the leader or a member |
+| JOINED | in the lobby, not ready, joined less than 15 s ago (server timestamps) |
+| NOT_READY / READY | the member's ready flag (the leader counts as ready) |
+| DRIVING | convoy driving and the member's heartbeat is live |
+| DISCONNECTED | the member's heartbeat stopped (server: live session within the TTL) |
+
+The **Start button is disabled until the lobby's real requirements are met** (leader, route chosen, every other member ready, nobody offline) and says which one is missing;
+the server checks the same rules again (`start_convoy_drive`: route, all ready, everyone online, every member's level meets the route).
+
+## What each part of the page is made of
 
 | On screen | Source / rule |
 |---|---|
-| Available Convoys (name, Open / In Progress / Full, members, route distance and time, tags, language, Join) | `list_open_convoys` (public convoys only; server search and tag filter; lobbies sort before convoys already on the road) |
-| Live Players (name, level, truck, status) and the Active Players tab | `list_active_players`: players with a live session (heartbeat inside the TTL), never yourself. Level and truck are public; **activity is shown only to friends** (strangers see "Online"/"Convoy") |
-| Server Status (players online, active convoys, your ping) | `get_server_status`; ping is the measured round trip of the convoy poll |
-| Create Convoy dialog (name, route, public / invite only, 2-8 players, up to 3 tags) | `create_convoy` then `set_convoy_route`, `set_convoy_options`, `set_convoy_tags`; the page reports which step the server refused. **No live session is created here** |
-| Your Convoy: members (level, truck, Leader / Ready / Not ready), route and distance, tags | `get_my_convoy`, polled every 3 s; the leader counts as ready |
-| Route picker | `get_world_state`: OPEN routes selectable, LOCKED show their level, PLANNED are listed but disabled; the server re-checks (leader and every member's level) |
-| I'm Ready / Start Driving | `set_my_ready` (needs a route; changing the route clears everyone's ready flag); `start_convoy_drive` (leader only; route chosen, all others ready, every member's level meets the route) |
-| Live session | created by the leader only after the server accepted the start; its code is stored with `set_convoy_session_code` and members fetch it through `get_convoy_session_code` (members only). If the live session cannot be created the convoy goes back to the lobby (`end_convoy_drive`), never stuck "driving" |
-| Invite Player, Manage (capacity, visibility, Make leader, Kick, Back to lobby, Leave) | `invite_to_convoy`, `set_convoy_options`, `transfer_convoy_leader`, `kick_convoy_member`, `end_convoy_drive`, `leave_convoy`; invites arrive in the "Your Convoy" panel of the invited player (`list_convoy_invites`, `respond_convoy_invite`) |
-| Convoy Chat / System | `list_convoy_messages` (first load = newest 50, then polling every 2.5 s), `post_convoy_message` (members only, 200 chars, 20 per 30 s, angle brackets and control characters stripped server-side, shown without rich text; the server keeps the last 200 lines per convoy). System lines (joined, ready, route, started) are written by the server |
+| Available Convoys (name, Open / In Progress / Full, members, route distance and time, tags, language, Join) | `list_open_convoys` (public convoys; server search and tag filter; lobbies sort before convoys on the road; `joinable` accounts for capacity and the viewer's level). A password convoy asks for the password; a wrong one is an *answer* (not an error) so the server counts every guess (8 per 10 minutes) |
+| **Create Convoy** (name, route, public / invite only, 2-8 players, driving mode relaxed or realistic, required level up to the creator's own, language, up to 3 tags, optional password) | `create_convoy_lobby`: ONE atomic call, so the lobby never exists without its level limit or password. The password is stored salted and hashed and is never returned (only `has_password`) |
+| Voice chat and Shared jobs options | shown **disabled** with the reason (no voice system; no job-sharing logic) |
+| Convoy Lobby tab: rules, route, distance, estimated time, member table (level, truck, state, connection, voice), leader controls | `get_my_convoy` polled every 3 s |
+| Leader: Start Convoy, Invite, Change Route, Settings, Kick, Make leader, **Disband** | `start_convoy_drive`, `invite_to_convoy`, `set_convoy_route`, `set_convoy_settings`, `kick_convoy_member`, `transfer_convoy_leader`, `disband_convoy` |
+| Member: Ready, Leave, **Invite Friend** | `set_my_ready`, `leave_convoy`, `invite_friend_to_convoy` (friends only; public convoys; blocked players refused) |
+| Connection column | the member's live-session state; for **you** it also shows your measured round trip. Other players' ping is not measurable and is not shown |
+| Voice column | `IVoiceProvider`; with no provider every state is "Not available". The UI never shows "Voice Connected" unless a provider reports it |
+| Players Nearby | `list_nearby_players`: players in the same **route** (else same **city**) in their own live presence. Positions never reach the database, so there is **no distance**; the panel names the scope instead. Players can opt out ("You appear in nearby lists" toggle) and blocked players are excluded. Click a row: View Profile / Invite / Join Convoy / Add Friend / Block |
+| Active Players, Friends | `list_active_players` (activity visible to friends only), `list_friends` |
+| Server List | `list_servers`: name, region, population (live sessions), capacity, status ONLINE / FULL / MAINTENANCE; region and capacity appear only when an operator set them; **UNAVAILABLE** is what the page shows when the server cannot be reached. Ping = your measured round trip |
+| Server Status | `get_server_status` |
+| Convoy Chat / System | `list_convoy_messages` (first load = newest 50, then polling), `post_convoy_message`. Bodies pass `ChatText.Clean` again on the client (no markup, no control characters, bounded) |
+| Chat moderation, report, block | each line carries a moderation state; `hidden` / `removed` lines show a notice, never their text. Click another player's line: **Report** (spam, abuse, harassment, other; three different reporters hide the line automatically) or **Block** (their lines disappear for you; they leave your player lists and cannot be invited by you). **Mute** is covered by Block |
+| Global Chat | still **closed**: open chat with strangers needs moderators; report/block now exist, a global channel does not |
 
-## Not in the build, and said so on screen
+## In session
 
-| Mockup | Build | Why |
-|---|---|---|
-| Voice Chat tab | opens "Voice chat is not available yet" | there is no voice service |
-| Global Chat tab | disabled, toast "needs moderation tools first" | open chat with strangers needs moderation, rate rules and reporting that do not exist |
-| Server List tab | opens "Server selection is not available yet" | one game server; its numbers are in Server Status |
-| Per-convoy latency (24 ms ...) | omitted | there is nothing real to measure per convoy |
-| Distance column in Live Players | replaced by Status | positions never touch the database (see MULTIPLAYER.md), so a "distance" would be invented |
-| Server "12 game servers" | "Active Convoys" | same reason |
-| Convoy art | the key art, cropped differently per row | no per-convoy pictures exist |
+The convoy panel in the driving HUD joins the server's member list with the avatars that are really in the live session (`LiveRoster`): connected members show distance to the leader and
+progress along the route (spline projection of the avatar's position); a member with no avatar shows **disconnected**; the header shows Reconnecting when the session is. No movement is simulated.
+Each player's job reward is still validated by the server from their own telemetry; the session is cosmetic.
+
+## Not built, and said so
+
+| Item | State |
+|---|---|
+| Voice (CONNECTED / CONNECTING / MUTED / SPEAKING states) | the states and the `IVoiceProvider` seam exist; **no voice system is installed**, so everything reads "Not available" |
+| Shared jobs option | disabled; jobs are still accepted one driver at a time (server bonus per extra participant exists, nothing coordinates it) |
+| Global chat | closed (see above) |
+| Several servers / regions | one server row is registered; more rows need no code |
+| Distance in Players Nearby | positions are not stored server-side; scope (route / city) is shown instead |
+| Per-player ping | only your own |
+| Development fixtures | none exist; there is no fake data to switch on |
 
 ## Tests
 
-* SQL `supabase/tests/41_convoy_lobby.sql` (route rules, ready check, start/stop, tags, chat incl. flooding, retention, sanitising, convoy and player search, privacy of activity, server status, leaving) and 53 mutants (all caught).
-* API contract: 9 new endpoints, C# DTOs vs the real RPC output; EditMode `ConvoyLobbyRepliesParseWithTheRealJsonUtility` parses the real replies.
-* Browser (`tools/webgl-e2e.js`, real build, real PostgREST and database): list and players from the database, create convoy with route and tag, a second player joins and readies up (seen by polling), chat both ways, Start Driving with the live-session service unreachable (the convoy must return to the lobby), Leave passes leadership on, failing list shows Unavailable and Try again works, Voice tab is honest.
-* **Not verified anywhere:** the live shared world itself (Unity Multiplayer Services / Relay, avatars, two or more real clients driving together) and completing a job together. The code path exists and is unchanged; it has never run because CI has no Multiplayer Services project.
+* SQL `41_convoy_lobby.sql`, `42_convoy_spec.sql` (atomic create and every setting, password and its guess limit, entry level, settings rules, disband, member invites, reports and blocks, connection state, nearby players, server list) and mutation testing of both migrations (every protection has a mutant; survivors found along the way exposed two real defects that are now fixed: the nearby page limit, and a wrong password that rolled back its own attempt counter).
+* xunit `ConvoyModelTests` (all convoy and member states, the start gate, voice never claiming a connection, chat sanitising and moderation display, route progress, live roster).
+* API contract: 44 endpoints, C# DTOs vs the real RPC output; EditMode tests parse the real replies.
+* Browser (`tools/webgl-e2e.js`, real build, real PostgREST and database): lists from the database, create (route, tag), lobby with a second player and ready flag seen by polling, chat both ways, report and block, Start with the live-session service unreachable (the convoy must return to the lobby), server list, Leave, create with rules and a password, Disband, failing list shows Unavailable.
+* **Not verified anywhere:** the shared world itself (Unity Multiplayer Services / Relay, avatars, two or more real clients) and everything that happens after the live session starts, including the HUD convoy panel. CI has no Multiplayer Services project.

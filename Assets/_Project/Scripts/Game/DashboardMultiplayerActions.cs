@@ -39,15 +39,23 @@ namespace ARO.Game
                 if (_mpMineState == LoadState.Ready || quiet && _mpMineState == LoadState.Empty) return;           // keep what we know; the next poll retries
                 _mpMineState = LoadState.Unavailable; _mpMineErr = r.UserMessage; Refill("MpConvoy", BuildMpConvoy); return;
             }
-            var now = r.Value.convoy != null && r.Value.convoy.Exists ? r.Value.convoy : null;
+            var now = r.Value.convoy != null && r.Value.convoy.Exists ? r.Value.convoy : null; _mpServerTime = r.Value.server_time;
             string before = ConvoyKey(_mpMine), after = ConvoyKey(now);
             string oldPhase = _phaseSeen; _phaseSeen = now != null ? now.phase : null;
             bool convoyChanged = (_mpMine == null ? null : _mpMine.id) != (now == null ? null : now.id);
+            if (now != null) { _wasInConvoy = true; _leftOnPurpose = false; } else if (_mpMine != null && !_leftOnPurpose) Toast("You are no longer in the convoy: it was disbanded or you were removed.", 6f);
             _mpMine = now; _mpMineState = now != null ? LoadState.Ready : LoadState.Empty;
             if (before != after || _mpMineState != LoadState.Ready && before == "none" && !quiet)
             {
                 Refill("MpConvoy", BuildMpConvoy);
                 if (_mpTab == MpTab.Convoys) Refill("MpMain", BuildMpMain);
+                if (convoyChanged)
+                {
+                    Refill("MpTabs", BuildMpTabs);
+                    if (now != null && _mpTab == MpTab.Convoys) { _mpTab = MpTab.Lobby; Debug.Log("[Multiplayer] tab=lobby (convoy joined)"); Refill("MpTabs", BuildMpTabs); Refill("MpMain", BuildMpMain); }
+                    else if (now == null && _mpTab == MpTab.Lobby) { _mpTab = MpTab.Convoys; Refill("MpTabs", BuildMpTabs); Refill("MpMain", BuildMpMain); }
+                }
+                if (_mpTab == MpTab.Lobby && !convoyChanged) Refill("MpMain", BuildMpMain);
                 if (convoyChanged) { _chat.Clear(); _chatLast = 0; _chatStick = true; Refill("MpChat", BuildMpChat); Refill("MpChatLines", BuildChatLines); if (now != null) _ = LoadChat(true); else _ = LoadInvites(); }
                 Debug.Log($"[Multiplayer] convoy={(now != null ? now.name : "none")} phase={(now != null ? now.phase : "-")} members={(now != null ? now.member_count : 0)} route={(now != null && now.route != null ? now.route.code : "-")} ready={(now != null ? now.members.Count(m => m.ready) : 0)} leader={(now != null && now.is_leader)}");
             }
@@ -138,8 +146,11 @@ namespace ARO.Game
 
         async Task JoinConvoy(OpenConvoy c) => await Guard(async () =>
         {
+            _pending = PendingOp.Joining; Refill("MpConvoy", BuildMpConvoy);
             var r = await _svc.Convoys.JoinLobby(c.id, c.name);
+            _pending = PendingOp.None;
             if (this == null) return;
+            if (r.Ok) _leftOnPurpose = false;
             Toast(r.Ok ? "You joined " + c.name + "." : r.UserMessage, r.Ok ? 3f : 5f);
             Debug.Log($"[Multiplayer] join convoy=\"{c.name}\" ok={r.Ok}" + (r.Ok ? "" : " error=" + r.ErrorCode));
             await LoadMine(); await LoadConvoys(true);
@@ -165,7 +176,7 @@ namespace ARO.Game
 
         async Task InvitePlayer(string id, string name) => await Guard(async () =>
         {
-            var r = await _svc.Convoys.Invite(id);
+            var r = _mpMine != null && !_mpMine.is_leader ? await _svc.Convoys.InviteFriend(id) : await _svc.Convoys.Invite(id);
             if (this == null) return;
             Toast(r.Ok ? "Invite sent to " + name + "." : r.UserMessage, r.Ok ? 3f : 5f);
             Debug.Log($"[Multiplayer] invite player=\"{name}\" ok={r.Ok}" + (r.Ok ? "" : " error=" + r.ErrorCode));
@@ -199,6 +210,7 @@ namespace ARO.Game
 
         async Task LeaveConvoy() => await Guard(async () =>
         {
+            _leftOnPurpose = true;
             await _svc.Convoys.Leave();
             if (this == null) return;
             Toast("You left the convoy."); Debug.Log("[Multiplayer] convoy=none (left)"); CloseModal(); _mpMine = null; _mpMineState = LoadState.Empty; _chat.Clear(); _chatLast = 0;
@@ -286,82 +298,12 @@ namespace ARO.Game
             }
         }
 
-        // ---- create
-        string _cName = "", _cRoute; bool _cPrivate; int _cCap = 8; readonly HashSet<string> _cTags = new HashSet<string>(); InputField _cField;
-
-        void OpenCreateDialog()
-        {
-            if (_mpMine != null) { Toast("Leave your current convoy before creating a new one."); return; }
-            _cName = (_svc.Profile != null ? _svc.Profile.display_name + "'s Convoy" : "My Convoy"); _cRoute = null; _cPrivate = false; _cCap = 8; _cTags.Clear();
-            if (_svc.World.State.State == LoadState.Idle || _svc.World.State.State == LoadState.Unavailable) _ = _svc.World.Load(WorldMapScreen.Model());
-            BuildCreateDialog();
-        }
-
-        void BuildCreateDialog()
-        {
-            if (_cField != null) _cName = _cField.text;
-            var m = OpenModal("Create Convoy", 800, 700); const float x0 = 560, y0 = 190;
-            Ui.Label(m, "Name", "SemiBold", 17, Soft, x0 + 28, y0 + 74, 200, 24);
-            Ui.Outlined(m, "NameBox", new Color(0.04f, 0.045f, 0.065f, 1f), new Color(1, 1, 1, 0.2f), x0 + 28, y0 + 100, 744, 46, 12, 1.4f);
-            var areaGo = new GameObject("NameArea", typeof(RectTransform), typeof(RectMask2D));
-            var area = Ui.Place(areaGo, m, Ui.Anchor.TopLeft, x0 + 44, y0 + 100, 712, 46);
-            var txt = Ui.Label(area, "", "Regular", 20, White, 0, 0, 712, 46, TextAnchor.MiddleLeft); var ph = Ui.Label(area, "Convoy name (3 to 32 characters)", "Regular", 20, new Color(1, 1, 1, 0.45f), 0, 0, 712, 46, TextAnchor.MiddleLeft);
-            var hit = areaGo.AddComponent<Image>(); hit.color = new Color(1, 1, 1, 0.001f); areaGo.name = "Create_Name_Input";
-            var f = areaGo.AddComponent<InputField>(); f.targetGraphic = hit; f.textComponent = txt; f.placeholder = ph; f.lineType = InputField.LineType.SingleLine; f.characterLimit = 32; f.transition = Selectable.Transition.None; f.text = _cName;
-            f.customCaretColor = true; f.caretColor = Gold; _cField = f;
-
-            Ui.Label(m, "Route", "SemiBold", 17, Soft, x0 + 28, y0 + 162, 200, 24);
-            var routes = OpenRoutes(); float cx = x0 + 28, cy = y0 + 190;
-            cx += ModalChip(m, "Btn_CreateRoute_none", cx, cy, "Decide later", _cRoute == null, () => { _cRoute = null; BuildCreateDialog(); }) + 8;
-            foreach (var r in routes.Take(4))
-            {
-                string label = $"{r.from} → {r.to}  {(r.distance_km > 0 ? r.distance_km.ToString("0") + " km" : "")}";
-                var probe = Ui.Label(m, label, "SemiBold", 16, White, 0, 0, 10, 10); float w = probe.preferredWidth + 28; Destroy(probe.gameObject);
-                if (cx + w > x0 + 772) { cx = x0 + 28; cy += 46; }
-                string code = r.code; cx += ModalChip(m, "Btn_CreateRoute_" + code, cx, cy, label, _cRoute == code, () => { _cRoute = code; BuildCreateDialog(); }) + 8;
-            }
-            if (routes.Length == 0) Ui.Label(m, _svc.World.State.State == LoadState.Loading ? "Loading routes..." : "No route is open to you yet.", "Regular", 15, Muted, cx + 4, cy + 9, 400, 22);
-
-            Ui.Label(m, "Who can join", "SemiBold", 17, Soft, x0 + 28, y0 + 296, 200, 24);
-            float vx = x0 + 28; vx += ModalChip(m, "Btn_CreatePublic", vx, y0 + 324, "Public", !_cPrivate, () => { _cPrivate = false; BuildCreateDialog(); }, 130) + 8;
-            ModalChip(m, "Btn_CreatePrivate", vx, y0 + 324, "Invite only", _cPrivate, () => { _cPrivate = true; BuildCreateDialog(); }, 150);
-            Ui.Label(m, "Players", "SemiBold", 17, Soft, x0 + 470, y0 + 296, 200, 24);
-            ModalChip(m, "Btn_CreateCapMinus", x0 + 470, y0 + 324, "-", false, () => { _cCap = Mathf.Max(2, _cCap - 1); BuildCreateDialog(); }, 46, 22);
-            Ui.Label(m, _cCap.ToString(), "Bold", 22, White, x0 + 520, y0 + 330, 50, 30, TextAnchor.UpperCenter);
-            ModalChip(m, "Btn_CreateCapPlus", x0 + 574, y0 + 324, "+", false, () => { _cCap = Mathf.Min(8, _cCap + 1); BuildCreateDialog(); }, 46, 22);
-
-            Ui.Label(m, "Tags (up to 3)", "SemiBold", 17, Soft, x0 + 28, y0 + 380, 300, 24);
-            cx = x0 + 28; cy = y0 + 408;
-            foreach (var t in ConvoyTags)
-            {
-                var probe = Ui.Label(m, t.label, "SemiBold", 16, White, 0, 0, 10, 10); float w = probe.preferredWidth + 28; Destroy(probe.gameObject);
-                if (cx + w > x0 + 772) { cx = x0 + 28; cy += 46; }
-                string key = t.key; cx += ModalChip(m, "Btn_CreateTag_" + key, cx, cy, t.label, _cTags.Contains(key), () => { if (_cTags.Contains(key)) _cTags.Remove(key); else if (_cTags.Count < 3) _cTags.Add(key); else Toast("Pick up to three tags."); BuildCreateDialog(); }) + 8;
-            }
-            ModalButton(m, "Btn_CreateCancel", x0 + 28, y0 + 624, 200, "Cancel", new Color(1, 1, 1, 0.1f), White, CloseModal);
-            ModalButton(m, "Btn_CreateConfirm", x0 + 472, y0 + 624, 300, "Create Convoy", Gold, Ink, () => _ = CreateConvoyFromDialog());
-        }
-
+        // (the create dialog lives in DashboardMultiplayerLobby.cs)
         WorldRoute[] OpenRoutes()
         {
             var w = _svc.World.State.Value; if (w == null || w.routes == null) return new WorldRoute[0];
             return w.routes.Where(r => r.effective_status == "OPEN").OrderBy(r => r.unlock_level).ThenBy(r => r.name).ToArray();
         }
-
-        async Task CreateConvoyFromDialog() => await Guard(async () =>
-        {
-            string name = _cField != null ? _cField.text : _cName;
-            var r = await _svc.Convoys.CreateLobby(name);
-            if (this == null) return;
-            if (!r.Ok) { Toast(r.UserMessage, 5f); return; }
-            var problems = new List<string>();
-            if (_cRoute != null) { var x = await _svc.Convoys.SetRoute(_cRoute); if (!x.Ok) problems.Add(x.UserMessage); }
-            if (_cCap != 8 || _cPrivate) { var x = await _svc.Convoys.SetOptions(_cCap != 8 ? (int?)_cCap : null, _cPrivate ? (bool?)true : null); if (!x.Ok) problems.Add(x.UserMessage); }
-            if (_cTags.Count > 0) { var x = await _svc.Convoys.SetTags(_cTags.ToArray()); if (!x.Ok) problems.Add(x.UserMessage); }
-            Debug.Log($"[Multiplayer] created convoy=\"{name.Trim()}\" route={_cRoute ?? "none"} private={_cPrivate} cap={_cCap} tags={_cTags.Count} problems={problems.Count}");
-            Toast(problems.Count == 0 ? "Convoy created. Invite your friends and choose a route." : "Convoy created, but: " + problems[0], 5f);
-            CloseModal(); _chat.Clear(); _chatLast = 0; await LoadMine(); await LoadConvoys(true);
-        });
 
         // ---- route
         void OpenRouteDialog()
@@ -411,7 +353,9 @@ namespace ARO.Game
         string _invTab = "friends";
         void OpenInviteDialog()
         {
-            if (_mpMine == null || !_mpMine.is_leader) { Toast("Only the leader can invite players."); return; }
+            if (_mpMine == null) { Toast("Join or create a convoy first."); return; }
+            if (!_mpMine.is_leader && _mpMine.is_private) { Toast("Only the leader can invite players to a private convoy."); return; }
+            if (!_mpMine.is_leader) _invTab = "friends";
             BuildInviteDialog();
             _ = ReloadInviteLists();
         }
@@ -426,7 +370,7 @@ namespace ARO.Game
         {
             var m = OpenModal("Invite players", 780, 640); const float x0 = 570, y0 = 220;
             float vx = x0 + 28; vx += ModalChip(m, "Btn_InvTab_friends", vx, y0 + 74, "Friends", _invTab == "friends", () => { _invTab = "friends"; BuildInviteDialog(); }, 140) + 8;
-            ModalChip(m, "Btn_InvTab_recent", vx, y0 + 74, "Recent players", _invTab == "recent", () => { _invTab = "recent"; BuildInviteDialog(); }, 190);
+            if (_mpMine != null && _mpMine.is_leader) ModalChip(m, "Btn_InvTab_recent", vx, y0 + 74, "Recent players", _invTab == "recent", () => { _invTab = "recent"; BuildInviteDialog(); }, 190);
             var src = _invTab == "friends" ? _svc.Friends.Friends : _svc.Friends.Recent;
             if (src.State == LoadState.Loading || src.State == LoadState.Idle) { Ui.Label(m, "Loading...", "Regular", 19, Muted, x0 + 28, y0 + 140, 400, 26); return; }
             if (src.State == LoadState.Unavailable) { Ui.Label(m, src.Error ?? "Unavailable.", "SemiBold", 18, Brand.Bad, x0 + 28, y0 + 140, 700, 26); return; }
@@ -489,6 +433,7 @@ namespace ARO.Game
             }
             if (leader && c.Driving) { ModalButton(m, "Btn_BackToLobby", x0 + 28, y, 330, "Back to lobby", new Color(1, 1, 1, 0.12f), White, () => _ = BackToLobby()); }
             ModalButton(m, "Btn_LeaveConvoy", x0 + (leader && c.Driving ? 380 : 28), leader ? y + (c.Driving ? 0 : 0) : y0 + 150, leader && c.Driving ? 372 : 330, "Leave convoy", new Color(0.6f, 0.15f, 0.15f), White, () => _ = LeaveConvoy());
+            if (leader && !c.Driving) ModalButton(m, "Btn_ManageDisband", x0 + 372, y, 380, "Disband convoy", new Color(0.45f, 0.1f, 0.1f), White, OpenDisbandDialog);
         }
     }
 }

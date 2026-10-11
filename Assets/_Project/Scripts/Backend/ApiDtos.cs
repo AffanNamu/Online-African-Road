@@ -90,26 +90,42 @@ namespace ARO.Backend
 
     // ---------------------------------------------------------------- convoys (lobby, route, ready check, chat)
     [Serializable] public class ConvoyRoute { public string code, name, from, to, status; public double distance_km; public int est_minutes, unlock_level; public bool Exists => !string.IsNullOrEmpty(code); }
-    [Serializable] public class ConvoyMemberDto { public string player_id, display_name, username, avatar_id, country_code, joined_at, vehicle; public int level; public bool is_leader, ready; public PresenceLite presence; }
+    [Serializable] public class ConvoyMemberDto { public string player_id, display_name, username, avatar_id, country_code, joined_at, vehicle; public int level; public bool is_leader, ready, connected; public PresenceLite presence; }
+    [Serializable] public class InvitedDto { public string player_id, display_name, created_at; public int level; }
     [Serializable] public class ConvoyInfo
     {
-        public string id, name, leader_id, status, phase, language, created_at, started_at; public bool is_leader, is_private, session_active, all_ready; public int capacity, member_count; public ConvoyMemberDto[] members;
+        public string id, name, leader_id, status, phase, language, driving_mode, created_at, started_at; public bool is_leader, is_private, session_active, all_ready, has_password; public int capacity, member_count, min_level; public ConvoyMemberDto[] members; public InvitedDto[] invited;
         public ConvoyRoute route; public string[] tags;
         public bool Exists => !string.IsNullOrEmpty(id);
         public bool Driving => phase == "driving";
     }
     [Serializable] public class MyConvoy { public ConvoyInfo convoy; public string server_time; }
-    [Serializable] public class OpenConvoy { public string id, name, leader, created_at, phase, language; public int capacity, member_count; public bool session_active, joinable; public ConvoyRoute route; public string[] tags; }
+    [Serializable] public class OpenConvoy { public string id, name, leader, created_at, phase, language, driving_mode; public int capacity, member_count, min_level; public bool session_active, joinable, has_password; public ConvoyRoute route; public string[] tags; }
     [Serializable] public class OpenConvoyList { public int total; public OpenConvoy[] items; public string server_time; }
     [Serializable] public class ConvoyInviteItem { public string invite_id, convoy_id, convoy_name, created_at, expires_at; public PersonDto from; }
     [Serializable] public class ConvoyInviteList { public ConvoyInviteItem[] items; }
     [Serializable] public class ChatSender { public string player_id, display_name, avatar_id; public int level; }
-    [Serializable] public class ChatLine { public long id; public string kind, body, created_at; public ChatSender sender; public bool System => kind == "system"; }
+    [Serializable] public class ChatLine { public long id; public string kind, body, moderation, created_at; public ChatSender sender; public bool System => kind == "system"; }
+    [Serializable] public class ReportResult { public string status, moderation; }
+    [Serializable] public class JoinResult { public bool joined; public string error; }
+    [Serializable] public class BlockedPlayer { public string player_id, display_name, since; public int level; }
+    [Serializable] public class BlockedList { public BlockedPlayer[] items; public string server_time; }
     [Serializable] public class ChatPage { public ChatLine[] items; public string server_time; }
     [Serializable] public class ChatPosted { public long id; }
     [Serializable] public class ActivePlayer { public string player_id, display_name, username, avatar_id, country_code, friend_status, vehicle, activity; public int level; public bool in_convoy; }
     [Serializable] public class ActivePlayerList { public int total; public ActivePlayer[] items; public string server_time; }
     [Serializable] public class ServerStatus { public int players_online, active_convoys, convoys_driving; public string server_time; }
+    // Nearby players: "nearby" = the same route or city in their own live presence (positions never reach the database, so there is no distance)
+    [Serializable] public class NearbyConvoy { public string id, name, phase; public int member_count, capacity, min_level; public bool has_password, joinable; }
+    [Serializable] public class NearbyPlayer
+    {
+        public string player_id, display_name, username, avatar_id, vehicle, friend_status; public int level; public bool online; public NearbyConvoy convoy;
+        public bool InConvoy => convoy != null && !string.IsNullOrEmpty(convoy.id);
+    }
+    [Serializable] public class NearbyList { public string scope, scope_name, server_time; public bool visible; public NearbyPlayer[] items; }
+    // Servers: capacity 0 / region "" mean "not configured by an operator" (JsonUtility turns a JSON null into 0 / "")
+    [Serializable] public class ServerInfo { public string id, name, region, status; public int capacity, population; }
+    [Serializable] public class ServerList { public ServerInfo[] items; public string server_time; }
 
     // ---------------------------------------------------------------- notifications
     [Serializable] public class NotificationItem { public string id, type, title, message, created_at; public bool read; }

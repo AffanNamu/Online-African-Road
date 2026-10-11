@@ -12,7 +12,7 @@
     "weight_kg": 1000
    },
    "code": "CT-2",
-   "created_at": "2026-10-11T05:03:47.447291+00:00",
+   "created_at": "2026-10-11T05:26:59.053641+00:00",
    "destination": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -30,8 +30,8 @@
     "fuel_l": 0.7,
     "profit": 898
    },
-   "expires_at": "2026-10-12T05:03:47.447291+00:00",
-   "id": "fb94a48f-bb85-4cfd-ae20-e24e267e5513",
+   "expires_at": "2026-10-12T05:26:59.053641+00:00",
+   "id": "024cdfe8-5b12-44a1-b676-d84d7daaf4da",
    "origin": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -63,7 +63,7 @@
     "weight_kg": 1000
    },
    "code": "CT-1",
-   "created_at": "2026-10-11T05:03:46.660965+00:00",
+   "created_at": "2026-10-11T05:26:57.99672+00:00",
    "destination": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -81,8 +81,8 @@
     "fuel_l": 0.7,
     "profit": 638
    },
-   "expires_at": "2026-10-13T05:03:46.695859+00:00",
-   "id": "07d5dca4-9e1b-45de-9554-3d8ab6950b08",
+   "expires_at": "2026-10-13T05:26:58.037599+00:00",
+   "id": "90ec6185-02cd-4916-9f13-64fd2f347507",
    "origin": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -103,6 +103,6 @@
    "xp_reward": 40
   }
  ],
- "server_time": "2026-10-11T05:03:48.726679+00:00",
+ "server_time": "2026-10-11T05:27:00.690313+00:00",
  "total": 2
 }
