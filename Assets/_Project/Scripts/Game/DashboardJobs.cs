@@ -36,13 +36,14 @@ namespace ARO.Game
 
         void ShowPage(Page p)
         {
-            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer) && _vehRoot.gameObject.activeSelf == (p == Page.Vehicles) && _garRoot.gameObject.activeSelf == (p == Page.Garage)) return;
-            var was = _page; _page = p; ApplyPage(); if (was == Page.Garage && p != Page.Garage) GarClosed(); Refill("Sidebar", BuildSidebar); MarkTargetsDirty();
+            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer) && _vehRoot.gameObject.activeSelf == (p == Page.Vehicles) && _garRoot.gameObject.activeSelf == (p == Page.Garage) && _setRoot.gameObject.activeSelf == (p == Page.Settings)) return;
+            var was = _page; _page = p; ApplyPage(); if (was == Page.Garage && p != Page.Garage) GarClosed(); if (was == Page.Settings && p != Page.Settings) SetClosed(); Refill("Sidebar", BuildSidebar); MarkTargetsDirty();
             Debug.Log("[Dashboard] page=" + p.ToString().ToLowerInvariant());
             if (p == Page.Jobs && (!_boardLoaded || Time.unscaledTime - _boardAt > 60f)) _ = LoadBoard(true);
             if (p == Page.Multiplayer) MpOpened(); else if (_modal != null) CloseModal();
             if (p == Page.Vehicles) VehOpened();
             if (p == Page.Garage) GarOpened();
+            if (p == Page.Settings) SetOpened();
         }
 
         void ApplyPage()
@@ -52,6 +53,7 @@ namespace ARO.Game
             if (_mpRoot != null) _mpRoot.gameObject.SetActive(_page == Page.Multiplayer);
             if (_vehRoot != null) _vehRoot.gameObject.SetActive(_page == Page.Vehicles);
             if (_garRoot != null) _garRoot.gameObject.SetActive(_page == Page.Garage);
+            if (_setRoot != null) _setRoot.gameObject.SetActive(_page == Page.Settings);
         }
 
         /// <summary>GameFlow calls this after a refused accept (someone took the job, route closed...): the board is re-read so the page tells the truth.</summary>

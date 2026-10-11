@@ -458,6 +458,88 @@ const allErrors = [], allExc = [];
     check(db(`select (p.selected_vehicle_id = o.id)::text from profiles p, vehicle_ownership o where p.id = '${gabe.id}' and o.player_id = p.id and o.definition_id = 'bus_city_01'`) === 'true', 'the active vehicle is persisted in the database');
   });
 
+  // =========================================================================================== 2e. Settings: device settings (draft, save, persisted across a reload) and the two account-side privacy items
+  const hana = await signup('BrowserHana'), ike = await signup('BrowserIke');
+  asUser(hana, `select block_player('${ike.id}')`);
+  await open(hana, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserHana/, 0, 150)), 'Settings: the dashboard opens for the new player');
+    check(!!(await c.waitLog(/\[Settings\] loaded changed=0 stored=no/, 0, 10)), 'a player with no saved settings starts from the defaults');
+    await c.settle(); let m = c.logs.length; await c.click('Nav_Settings');
+    check(!!(await c.waitLog(/\[Settings\] opened tab=game dirty=False/, m, 60)), 'Settings opens from the sidebar');
+    check(!!(await c.waitLog(/\[Settings\] privacy nearby=true blocked=1/, m, 90)), 'the privacy items are read from the account (visible, one blocked player)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-40-settings.png` });
+    let tg = c.targets();
+    for (const k of ['Btn_SetTab_Game', 'Btn_SetTab_Graphics', 'Btn_SetTab_Controls', 'Btn_SetTab_Audio', 'Btn_SetTab_Gameplay', 'Btn_SetTab_Account', 'Btn_SetTab_Language', 'Btn_SetDrop_quality', 'Btn_SetDrop_speed_unit', 'Btn_SetDrop_time_of_day', 'Btn_SetDrop_traffic',
+      'Btn_SetToggle_shadows', 'Btn_SetToggle_post', 'Btn_SetToggle_show_fps', 'Btn_SetToggle_minimap', 'Btn_SetToggle_show_names', 'Btn_SetToggle_appear_nearby', 'Slider_master_volume', 'Slider_engine_volume', 'Slider_camera_shake', 'Slider_steering', 'Btn_SetSave', 'Btn_SetReset', 'Btn_SetAdvanced']) check(!!tg[k], `${k} is a clickable target on the Settings page`);
+    check(!tg['Btn_SetDrop_game_mode'] && !tg['Btn_SetToggle_weather'] && !tg['Slider_voice_volume'] && !tg['Btn_SetToggle_profanity'] && !tg['Slider_brake_sens'], 'rows the game has no system for (game mode, weather, voice, profanity, brake sensitivity) have no working control');
+    m = c.logs.length; await c.click('Btn_SetNote_game_mode'); check(!!(await c.waitLog(/\[Settings\] note id=game_mode/, m, 30)), 'a row that is not available yet explains why when tapped');
+
+    // a dropdown: open, choose, the draft changes
+    m = c.logs.length; await c.click('Btn_SetDrop_quality'); await c.settle(); check(!!c.targets()['Btn_SetOpt_quality_high'], 'the dropdown lists its options');
+    await c.page.screenshot({ path: `${prefix}-41-settings-dropdown.png` });
+    m = c.logs.length; await c.click('Btn_SetOpt_quality_high'); check(!!(await c.waitLog(/\[Settings\] set quality=high/, m, 40)), 'choosing Graphics Quality = High changes the draft');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetDrop_speed_unit'); await c.settle(); await c.click('Btn_SetOpt_speed_unit_mph'); check(!!(await c.waitLog(/\[Settings\] set speed_unit=mph/, m, 40)), 'Speed Unit = mph');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetDrop_time_of_day'); await c.settle(); await c.click('Btn_SetOpt_time_of_day_night'); check(!!(await c.waitLog(/\[Settings\] set time_of_day=night/, m, 40)), 'Time of Day = Night');
+    // toggles
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetToggle_shadows'); check(!!(await c.waitLog(/\[Settings\] set shadows=0/, m, 40)), 'Shadows off');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetToggle_show_fps'); check(!!(await c.waitLog(/\[Settings\] set show_fps=1/, m, 40)), 'FPS counter on');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetToggle_minimap'); check(!!(await c.waitLog(/\[Settings\] set minimap=0/, m, 40)), 'Minimap off');
+    // a slider, with the real mouse
+    await c.settle(); tg = c.targets(); const box = await c.page.locator('#unity-canvas').boundingBox(), sc = box.width / 1920, sl = tg['Slider_master_volume'];
+    const trackPx = (0.55 * (511 - 16) - 6 - 62) * sc, sx = box.x + sl.x * box.width, sy = box.y + sl.y * box.height;
+    m = c.logs.length; await c.page.mouse.move(sx, sy); await c.page.mouse.down(); for (let i = 1; i <= 8; i++) { await c.page.mouse.move(sx - i * trackPx * 0.03, sy); await sleep(100); } await c.page.mouse.up();
+    const sv = await c.waitLog(/\[Settings\] set master_volume=(\d+)/, m, 40); const mv = sv ? +/master_volume=(\d+)/.exec(sv)[1] : -1;
+    check(mv >= 15 && mv <= 35, `dragging the Master Volume slider with the mouse sets about 25 % (got ${mv})`, sv);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-42-settings-edited.png` });
+
+    // Reset restores the defaults in the draft, without saving
+    m = c.logs.length; await c.click('Btn_SetReset'); check(!!(await c.waitLog(/\[Settings\] reset to defaults \(not saved yet\)/, m, 40)), 'Reset to Default Settings resets the draft (not saved yet)');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetSave'); check(!!(await c.waitLog(/\[Settings\] save nothing/, m, 40)), 'after a reset there is nothing to save: Save says so');
+
+    // choose again and Save: stored and applied
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetDrop_quality'); await c.settle(); await c.click('Btn_SetOpt_quality_high'); await c.waitLog(/\[Settings\] set quality=high/, m, 40);
+    await c.settle(); await c.click('Btn_SetToggle_shadows'); await c.waitLog(/\[Settings\] set shadows=0/, m, 40);
+    await c.settle(); await c.click('Btn_SetDrop_speed_unit'); await c.settle(); await c.click('Btn_SetOpt_speed_unit_mph'); await c.waitLog(/\[Settings\] set speed_unit=mph/, m, 40);
+    await c.settle(); tg = c.targets(); m = c.logs.length; await c.page.mouse.move(box.x + tg['Slider_master_volume'].x * box.width, box.y + tg['Slider_master_volume'].y * box.height); await c.page.mouse.down();
+    for (let i = 1; i <= 8; i++) { await c.page.mouse.move(box.x + tg['Slider_master_volume'].x * box.width - i * trackPx * 0.03, box.y + tg['Slider_master_volume'].y * box.height); await sleep(100); } await c.page.mouse.up(); await c.waitLog(/\[Settings\] set master_volume=\d+/, m, 40);
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetSave');
+    const sv2 = await c.waitLog(/\[Settings\] saved changed=(\S+) stored=true reload=true/, m, 40);
+    check(!!sv2 && /quality/.test(sv2) && /shadows/.test(sv2) && /speed_unit/.test(sv2) && /master_volume/.test(sv2), 'Save stores exactly the rows that changed and says one of them applies on the next load', sv2);
+    const ap = await c.waitLog(/\[Settings\] applied master=0\.\d+ .*shadows=False .*speed=mph quality=high .*startup=False/, m, 40);
+    check(!!ap && +/master=(0\.\d+)/.exec(ap)[1] < 0.4, 'the saved settings are applied to the running game (volume, shadows, speed unit, quality choice)', ap);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-43-settings-saved.png` });
+
+    // other tabs
+    for (const [tab, shot] of [['Graphics', '44-settings-graphics'], ['Controls', '45-settings-controls'], ['Audio', '46-settings-audio'], ['Language', '47-settings-language']]) {
+      m = c.logs.length; await c.click('Btn_SetTab_' + tab); check(!!(await c.waitLog(new RegExp('\\[Settings\\] tab=' + tab.toLowerCase()), m, 40)), `the ${tab} tab opens`); await c.settle(); await c.page.screenshot({ path: `${prefix}-${shot}.png` });
+    }
+
+    // privacy: Appear in Nearby Players is saved to the account at once; a blocked player can be unblocked
+    m = c.logs.length; await c.click('Btn_SetTab_Gameplay'); check(!!(await c.waitLog(/\[Settings\] privacy nearby=true blocked=1/, m, 90)), 'the Gameplay tab re-reads the privacy items'); await c.settle();
+    await c.page.screenshot({ path: `${prefix}-48-settings-gameplay.png` });
+    m = c.logs.length; await c.click('Btn_SetToggle_appear_nearby'); check(!!(await c.waitLog(/\[Settings\] nearby visible=false ok=True/, m, 60)), 'Appear in Nearby Players off: the server accepted');
+    check(db(`select appear_nearby::text from profiles where id = '${hana.id}'`) === 'false', 'the nearby choice is stored on the account in the database');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetUnblock_0'); check(!!(await c.waitLog(/\[Settings\] unblock ok=True/, m, 60)), 'Unblock: the server accepted');
+    check(db(`select count(*) from player_blocks where blocker_id = '${hana.id}'`) === '0', 'the block is removed in the database');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-49-settings-unblocked.png` });
+
+    // account tab
+    m = c.logs.length; await c.click('Btn_SetTab_Account'); await c.waitLog(/\[Settings\] tab=account/, m, 40); await c.settle(); await c.page.screenshot({ path: `${prefix}-50-settings-account.png` });
+    check(!!c.targets()['Btn_SetSignOut'], 'Sign Out is offered on the Account tab');
+    m = c.logs.length; await c.click('Btn_SetSoon_DeleteAccount'); check(!!(await c.waitLog(/\[Settings\] note id=DeleteAccount/, m, 30)), 'account deletion says it is not available yet instead of pretending');
+
+    // unsaved changes are discarded when the player leaves, and said so
+    await c.click('Btn_SetTab_Game'); await c.settle(); m = c.logs.length; await c.click('Btn_SetToggle_post'); await c.waitLog(/\[Settings\] set post=0/, m, 40);
+    await c.settle(); m = c.logs.length; await c.click('Nav_Home'); check(!!(await c.waitLog(/\[Settings\] closed \(unsaved changes discarded\)/, m, 40)), 'leaving with unsaved changes discards them and says so');
+
+    // the saved settings survive a reload and shape the world: Graphics Quality = High is built as the High tier
+    m = c.logs.length; await c.page.reload();
+    const ld = await c.waitLog(/\[Settings\] loaded changed=(\d+) stored=yes/, m, 120);
+    check(!!ld && +/changed=(\d+)/.exec(ld)[1] >= 4, 'after a reload the saved settings are read back from the browser', ld);
+    check(!!(await c.waitLog(/\[Settings\] applied master=0\.\d+ .*shadows=False .*speed=mph quality=high .*startup=True/, m, 60)), 'and applied before the world is built');
+    check(!!(await c.waitLog(/\[Render\] tier=high /, m, 240)), 'Graphics Quality = High: the world is built with the High tier');
+  });
+
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)
   const uma = await signup('BrowserUma');
   await open(uma, '&fault=list_vehicle_catalog:error:3', async c => {

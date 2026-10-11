@@ -88,13 +88,18 @@ How to use this file
 | P-54 | **Nearby players have no distance** (positions are never stored server-side) and **only your own ping** is measurable | A decision on position telemetry or a relay-side measure | C |
 | P-55 | **Daily challenges**: schema, progress and claim are built; no definitions, no screen | Authored challenges and a screen | B |
 | P-56 | **Friends, Leaderboards, Store** screens: the backends exist; the sidebar says "coming soon" | The screens built to the mockups | B |
-| P-57 | **Settings** and the **bus routes**, **profile** and **pause menu** are the old plain text panels (`UIKit`), not designed pages | Designed pages to the same standard as Jobs, Multiplayer, Trucks & Buses, Garage | B |
+| P-57 | The **bus routes**, **profile** (the old text panel is no longer reachable) and **pause menu** are the old plain text panels (`UIKit`), not designed pages. (Settings is now a designed page, see P-64) | Designed pages to the same standard as Jobs, Multiplayer, Trucks & Buses, Garage | B |
 | P-58 | **Tolls** (shown in the Jobs mockup) do not exist in the economy; the cell shows XP instead | A toll mechanic charged through the ledger | C |
 | P-59 | **Companies**, **touch HUD**, the **Flutter shell**: not started | As designed | C |
 | P-60 | **Push notifications** (the bell polls every 30 seconds); **player search** beyond the exact handle | Push, search | C |
 | P-61 | **No Supabase-side scheduler** (sweeping is lazy; purge needs a cron). Leaderboards are index queries, fine to tens of thousands of players | Cron jobs; materialised boards when needed | C |
 | P-62 | **Google / Apple sign-in** buttons need the providers enabled in the Supabase project | Providers configured and tested end to end | B |
 | P-63 | Client-reported distance and position can still be forged within plausible bounds (the server samples telemetry; stronger hardening is planned) | Server-side sampling from Netcode, anti-cheat tuning | B |
+| P-64 | **Settings rows with no game system behind them** (shown disabled with a SOON chip): Game Mode, Weather System, In-Game Hints, Navigation Assistance, Automatic Parking, Language (English only), Textures, Reflections, Brightness / Contrast / Saturation, Online Notifications, Chat Messages, Profanity Filter, Environment / Radio / UI / Voice volume, Brake and Acceleration Sensitivity, Invert Y-Axis, Force Feedback | Each system built, then its row switched to Live in `SettingsCatalog` (a test fails if a Soon row is already read by the game) | B |
+| P-65 | **Key rebinding** (the Controls tab lists the bindings read-only); **Change Password** and **Delete Account** on the Account tab | An input-rebinding layer; auth flows; an account deletion service with data erasure | B |
+| P-66 | **Settings live per device only** (browser storage): graphics, sound and controls do not follow the player to another device. Only the two privacy items are on the account | A `player_settings` table and sync, with the device value as the fallback | C |
+| P-67 | **Graphics Quality and Traffic Density apply on the next load** (the world is built once); there are no per-effect graphics controls (shadow quality, texture quality, view distance, reflections) | A world that can rebuild or re-tier live; individual levers in `QualityTier` exposed | C |
+| P-68 | The **Settings page has never been seen rendered** (written without a Unity editor); the browser E2E screenshots are its first look. **Display Mode** (full screen) is untested in a real browser window | A look at the screenshots and a real-browser pass | A |
 
 ## 7. Authored data that is a stand-in
 

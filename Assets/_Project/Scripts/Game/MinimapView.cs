@@ -14,13 +14,13 @@ namespace ARO.Game
         public float refreshHz = 8f;
 
         Camera _cam; RenderTexture _rt; RectTransform _marker; Image _markerImg; Transform _target; float _next;
-        bool _enabled = true;
+        bool _enabled = true; GameObject _disc;
 
         public void Build(Transform parent, Vector2 centre, float size)  // centre is relative to the parent centre
         {
             // Circular mask + render texture + player arrow + destination marker.
             var root = UIGfx.Shape(parent, "Minimap", UIGfx.Disc, new Color(0.04f, 0.05f, 0.06f, 0.92f), centre, size);
-            var mask = root.gameObject.AddComponent<Mask>(); mask.showMaskGraphic = true;
+            _disc = root.gameObject; var mask = root.gameObject.AddComponent<Mask>(); mask.showMaskGraphic = true;
 
             _rt = new RenderTexture(256, 256, 16, RenderTextureFormat.ARGB32) { name = "MinimapRT", antiAliasing = 1 };
             var raw = new GameObject("Map", typeof(RectTransform), typeof(RawImage)); raw.transform.SetParent(root.transform, false);
@@ -43,7 +43,7 @@ namespace ARO.Game
         }
 
         public void SetTarget(Transform t) => _target = t;
-        public void SetVisible(bool v) { _enabled = v; if (_cam != null) { _cam.gameObject.SetActive(v); } }
+        public void SetVisible(bool v) { _enabled = v; if (_cam != null) { _cam.gameObject.SetActive(v); } if (_disc != null) _disc.SetActive(v); }
 
         /// <summary>Update the camera at refreshHz and place the destination marker. destination==null hides the marker.</summary>
         public void Tick(Vector3? destination)

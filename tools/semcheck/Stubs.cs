@@ -3,7 +3,7 @@ using UnityEngine.Events;
 namespace UnityEngine.EventSystems
 {
     public class BaseEventData { }
-    public class PointerEventData : BaseEventData { public Vector2 position, delta; public int pointerId; public GameObject pointerPress, pointerEnter; public float scrollDelta_y; public Vector2 scrollDelta; public int clickCount; public int button_; public InputButton button; public enum InputButton { Left, Right, Middle } }
+    public class PointerEventData : BaseEventData { public Vector2 position, delta; public int pointerId; public GameObject pointerPress, pointerEnter; public float scrollDelta_y; public Vector2 scrollDelta; public int clickCount; public Camera pressEventCamera; public int button_; public InputButton button; public enum InputButton { Left, Right, Middle } }
     public interface IPointerClickHandler { void OnPointerClick(PointerEventData e); }
     public interface IPointerEnterHandler { void OnPointerEnter(PointerEventData e); }
     public interface IPointerExitHandler { void OnPointerExit(PointerEventData e); }

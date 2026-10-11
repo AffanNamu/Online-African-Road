@@ -251,8 +251,71 @@ def _(im, d):
     cut(im, lambda c: (c.polygon([P(.30, .45), P(.37, .30), P(.48, .30), P(.48, .45)], fill=255), c.polygon([P(.53, .45), P(.53, .30), P(.64, .30), P(.72, .45)], fill=255)))
     circle(d, (.28, .78), .12); circle(d, (.72, .78), .12); cut(im, lambda c: (c.ellipse([P(.22, .72), P(.34, .84)], fill=255), c.ellipse([P(.66, .72), P(.78, .84)], fill=255)))
     circle(d, (.28, .78), .05); circle(d, (.72, .78), .05)
+# ---- Settings screen glyphs
+@ic("ic_monitor")
+def _(im, d):
+    rrect(d, (.08, .14), (.92, .68), .06, (0, 0, 0, 0), WHITE, .07); line(d, [(.5, .68), (.5, .82)], .07); line(d, [(.28, .86), (.72, .86)], .07)
+@ic("ic_speaker")
+def _(im, d):
+    poly(d, [(.10, .40), (.28, .40), (.52, .20), (.52, .80), (.28, .60), (.10, .60)])
+    d.arc([P(.40, .30), P(.76, .70)], -50, 50, fill=WHITE, width=int(.07 * M)); d.arc([P(.34, .16), P(.92, .84)], -48, 48, fill=WHITE, width=int(.07 * M))
+@ic("ic_gamepad")
+def _(im, d):
+    rrect(d, (.06, .30), (.94, .76), .20)
+    cut(im, lambda c: (c.rectangle([P(.17, .47), P(.39, .55)], fill=255), c.rectangle([P(.24, .40), P(.32, .62)], fill=255), c.ellipse([P(.60, .42), P(.70, .52)], fill=255), c.ellipse([P(.72, .53), P(.82, .63)], fill=255)))
+@ic("ic_shield")
+def _(im, d):
+    poly(d, [(.5, .08), (.88, .22), (.88, .52), (.5, .92), (.12, .52), (.12, .22)]); cut(im, lambda c: c.line([P(.32, .48), P(.46, .62), P(.70, .34)], fill=255, width=int(.08 * M)))
+@ic("ic_camera")
+def _(im, d):
+    rrect(d, (.06, .30), (.94, .82), .08); rrect(d, (.32, .20), (.68, .34), .03); cut(im, lambda c: c.ellipse([P(.34, .40), P(.66, .72)], fill=255)); circle(d, (.5, .56), .10)
+@ic("ic_sun")
+def _(im, d):
+    circle(d, (.5, .5), .17)
+    for a in range(0, 360, 45): ax, ay = math.cos(math.radians(a)), math.sin(math.radians(a)); line(d, [(.5 + ax * .28, .5 + ay * .28), (.5 + ax * .40, .5 + ay * .40)], .07)
+@ic("ic_music")
+def _(im, d):
+    circle(d, (.32, .76), .12); circle(d, (.72, .68), .12); line(d, [(.42, .74), (.42, .24)], .07); line(d, [(.82, .66), (.82, .18)], .07); poly(d, [(.42, .20), (.82, .10), (.82, .28), (.42, .38)])
+@ic("ic_mic")
+def _(im, d):
+    rrect(d, (.38, .10), (.62, .56), .12); d.arc([P(.24, .30), P(.76, .78)], 0, 180, fill=WHITE, width=int(.07 * M)); line(d, [(.5, .78), (.5, .90)], .07); line(d, [(.34, .90), (.66, .90)], .07)
+@ic("ic_steering")
+def _(im, d):
+    circle(d, (.5, .5), .40, (0, 0, 0, 0), WHITE, .07); circle(d, (.5, .5), .10); line(d, [(.10, .50), (.40, .50)], .07); line(d, [(.60, .50), (.90, .50)], .07); line(d, [(.5, .60), (.5, .90)], .07)
+@ic("ic_logout")
+def _(im, d):
+    line(d, [(.50, .14), (.16, .14), (.16, .86), (.50, .86)], .07); line(d, [(.38, .50), (.86, .50)], .08); line(d, [(.64, .28), (.88, .50), (.64, .72)], .08)
+@ic("ic_keyboard")
+def _(im, d):
+    rrect(d, (.06, .26), (.94, .76), .07, (0, 0, 0, 0), WHITE, .06)
+    for r_, y in enumerate((.36, .50)):
+        for i in range(6): rrect(d, (.15 + i * .115, y), (.15 + i * .115 + .07, y + .07), .01)
+    rrect(d, (.28, .62), (.72, .69), .01)
+@ic("ic_reset")
+def _(im, d):
+    d.arc([P(.16, .16), P(.84, .84)], 40, 320, fill=WHITE, width=int(.08 * M)); poly(d, [(.66, .08), (.92, .30), (.58, .36)])
+@ic("ic_save")
+def _(im, d):
+    rrect(d, (.12, .12), (.88, .88), .06); cut(im, lambda c: (c.rectangle([P(.28, .12), P(.66, .36)], fill=255), c.rectangle([P(.24, .52), P(.76, .80)], fill=255)))
+    rrect(d, (.34, .60), (.66, .74), .02); rrect(d, (.50, .16), (.60, .32), .01)
+@ic("ic_chevron_down")
+def _(im, d):
+    line(d, [(.22, .36), (.5, .64), (.78, .36)], .10)
+@ic("ic_info")
+def _(im, d):
+    circle(d, (.5, .5), .42); cut(im, lambda c: (c.ellipse([P(.45, .24), P(.55, .34)], fill=255), c.rounded_rectangle([P(.45, .42), P(.55, .76)], radius=.02 * M, fill=255)))
+@ic("ic_cloud")
+def _(im, d):
+    circle(d, (.32, .60), .15); circle(d, (.50, .44), .20); circle(d, (.70, .58), .16); rrect(d, (.18, .58), (.86, .78), .09)
+@ic("ic_chat")
+def _(im, d):
+    rrect(d, (.08, .14), (.92, .70), .14); poly(d, [(.24, .66), (.24, .90), (.50, .66)]); cut(im, lambda c: [c.ellipse([P(x - .045, .38), P(x + .045, .47)], fill=255) for x in (.30, .50, .70)])
+@ic("ic_parking")
+def _(im, d):
+    rrect(d, (.10, .10), (.90, .90), .12); cut(im, lambda c: (c.rectangle([P(.36, .26), P(.46, .76)], fill=255), c.rounded_rectangle([P(.36, .26), P(.68, .56)], radius=.10 * M, fill=255)))
+    rrect(d, (.46, .35), (.56, .47), .03)
 for g in GLYPHS: g()
-sheet2 = Image.new("RGBA", (9 * 144, 3 * 144), (30, 30, 36, 255))
+sheet2 = Image.new("RGBA", (9 * 144, ((len(GLYPHS) + 8) // 9) * 144), (30, 30, 36, 255))
 for i, g in enumerate(GLYPHS):
     icon = Image.open(f"{OUT}/{g.__name__}.png").convert("RGBA").resize((128, 128)); sheet2.alpha_composite(icon, ((i % 9) * 144 + 8, (i // 9) * 144 + 8))
 sheet2.save("/tmp/icon_sheet2.png"); print("dashboard glyphs:", len(GLYPHS))

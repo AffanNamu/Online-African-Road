@@ -22,7 +22,7 @@ namespace ARO.World
         public string PostProcessingNote { get; private set; } = "not applied";
 
         /// <summary>?quality=low|medium|high in the page URL wins; otherwise the device decides.</summary>
-        public static QualityTier Select(string url, bool mobile, int systemMemoryMb, int graphicsMemoryMb)
+        public static QualityTier Select(string url, bool mobile, int systemMemoryMb, int graphicsMemoryMb, string preference = null)
         {
             string requested = null;
             if (!string.IsNullOrEmpty(url))
@@ -30,14 +30,16 @@ namespace ARO.World
                 int i = url.IndexOf("quality=", System.StringComparison.OrdinalIgnoreCase);
                 if (i >= 0) { string v = url.Substring(i + 8); int end = v.IndexOfAny(new[] { '&', '#' }); requested = end >= 0 ? v.Substring(0, end) : v; }
             }
+            if (requested == null && !string.IsNullOrEmpty(preference) && preference != "auto") requested = preference;   // the player's Graphics Quality setting, unless the URL asked for one
             return QualityTiers.Detect(new DeviceInfo { IsMobile = mobile, SystemMemoryMb = systemMemoryMb, GraphicsMemoryMb = graphicsMemoryMb, Requested = requested });
         }
 
         public void Init(Camera cam, Light sun)
         {
             _cam = cam; _sun = sun;
-            Tier = Select(Application.absoluteURL, Application.isMobilePlatform, SystemInfo.systemMemorySize, SystemInfo.graphicsMemorySize);
+            Tier = SettingsEffect.WithTraffic(Select(Application.absoluteURL, Application.isMobilePlatform, SystemInfo.systemMemorySize, SystemInfo.graphicsMemorySize, ARO.Core.RuntimeSettings.QualityPreference), ARO.Core.RuntimeSettings.TrafficChoice);
             Current = Tier;
+            ARO.Core.RuntimeSettings.TierName = SettingsEffect.QualityName(Tier); ARO.Core.RuntimeSettings.AntiAliasing = SettingsEffect.AntiAliasing(Tier); ARO.Core.RuntimeSettings.ViewDistance = SettingsEffect.ViewDistance(Tier); ARO.Core.RuntimeSettings.TierSummary = SettingsEffect.TierSummary(Tier);
             Apply();
             Debug.Log($"[Render] tier={Tier.Name} (url='{Application.absoluteURL}') shadows={Tier.ShadowDistance:0}m x{Tier.ShadowCascades} msaa={Tier.MsaaSamples} renderScale={Tier.RenderScale:0.0} loadRadius={Tier.LoadRadiusChunks} " +
                       $"post={(PostProcessingActive ? "on" : "off")} ({PostProcessingNote}) pipeline={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.name : "NONE")}");
@@ -71,8 +73,18 @@ namespace ARO.World
             PostProcessingActive = true; PostProcessingNote = $"tonemap={Tier.Tonemapping} grade={Tier.ColorGrading} vignette={Tier.Vignette} bloom={Tier.Bloom}";
         }
 
+        int _settingsVersion = -1;
+        /// <summary>The Shadows and Post Processing settings apply live; the rest of a tier is fixed when the world is built.</summary>
+        void ApplyLiveSettings()
+        {
+            if (_settingsVersion == ARO.Core.RuntimeSettings.Version) return; _settingsVersion = ARO.Core.RuntimeSettings.Version;
+            if (_volume != null) _volume.enabled = ARO.Core.RuntimeSettings.PostProcessing;
+            if (_sun != null) _sun.shadows = ARO.Core.RuntimeSettings.Shadows && Tier.ShadowCascades > 0 ? (Tier.SoftShadows ? LightShadows.Soft : LightShadows.Hard) : LightShadows.None;
+        }
+
         void Update()
         {
+            ApplyLiveSettings();
             // Hook: grade follows the clock (cheaper than anything per-pixel): darker, cooler exposure at night, warmer at the horizon.
             if (_grade == null || timeOfDay == null || Time.unscaledTime < _nextGrade) return;
             _nextGrade = Time.unscaledTime + 1f;

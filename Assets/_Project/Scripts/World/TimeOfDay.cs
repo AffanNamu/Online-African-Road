@@ -46,7 +46,9 @@ namespace ARO.World
         void Update()
         {
             if (Suspended) return;
-            if (followWestAfricaTime) { var wat = DateTime.UtcNow.AddHours(1); hour = wat.Hour + wat.Minute / 60f + wat.Second / 3600f; }
+            float fixedHour = ARO.Core.RuntimeSettings.FixedHour;     // the player's Time of Day setting: a fixed hour, or -1 for the real clock
+            if (fixedHour >= 0f) hour = fixedHour;
+            else if (followWestAfricaTime) { var wat = DateTime.UtcNow.AddHours(1); hour = wat.Hour + wat.Minute / 60f + wat.Second / 3600f; }
             else hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f);
             Apply();
             if (IsNight != _wasNight) { _wasNight = IsNight; NightChanged?.Invoke(IsNight); }

@@ -29,6 +29,7 @@ namespace ARO.Vehicles
         void Update()
         {
             // 6-cylinder 4-stroke: 3 firing events per revolution.
+            _src.volume = 0.5f * ARO.Core.RuntimeSettings.EngineVolume;   // the player's Engine Sound setting
             _firingHz = _v.Rpm / 60f * 3f;
             _load = Mathf.Clamp01(_v.OutOfFuel ? 0f : 0.35f + (_v.SpeedKmh < 5f ? 0f : 0.2f));
             _speed01 = Mathf.Clamp01(_v.SpeedKmh / Mathf.Max(1f, _v.definition.maxSpeedKmh));

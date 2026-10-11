@@ -189,3 +189,43 @@ but they have not been tried on a device). **Not yet seen rendered:** the showro
 **Tests.** SQL `44_garage.sql` (catalogue, states, purchase atomicity, equip, customization keeps the skin, quote equals the real charges, grants, schema guards) + concurrency race 10 + 34 mutants; xunit `GarageModelTests`
 (camera limits, presets, smoothing, reset, tags, slots, skins, colours); API contract (47 endpoints); EditMode parses the real replies; browser E2E section 2d (real mouse drag, wheel, presets, reset, turntable, part pick,
 skin preview / buy / equip, repair, refuel, vehicle selection, Set as Active, all checked in the database).
+
+
+# Settings page
+
+`DashboardSettings.cs` (page, rows, dropdown, slider, cards), `SettingsStore.cs` (device storage and applying), pure catalogue and rules in `ARO.NetCore` `SettingsModel.cs`
+(unit tested), `Core/RuntimeSettings.cs` (what the running game reads). Reached from the sidebar, the header gear and the Account tab. Laid out from the supplied mockup: seven tabs (Game, Graphics,
+Controls, Audio, Gameplay, Account, Language); the Game tab is the overview of everything in three columns, every other tab shows its own area with a side card.
+
+**Every row is one of four honest kinds** (`SettingStatus`): **Live** (applied when the player presses Save), **OnReload** (stored at once, takes effect when the game next loads: the world is built once
+per load), **Soon** (the game has no system for it: shown, disabled, with a SOON chip, and tapping the label says why) and **Fixed** (a real value that cannot change: region, distance units, currency).
+Edits are a *draft*: "Save Settings" stores and applies, "Reset to Default Settings" resets the draft, leaving the page with unsaved changes discards them and says so.
+
+| Setting | What it really does |
+|---|---|
+| Speed Unit | the speedometer shows km/h or mph (`Hud`) |
+| Time of Day | Real Time (West Africa clock) or a fixed Morning / Midday / Evening / Night (`TimeOfDay`) |
+| Traffic Density, Graphics Quality | OnReload: the traffic scale and the quality tier chosen when the world is built (`RenderingRig.Select`; a `?quality=` in the address still wins). The shared tier objects are never modified |
+| Shadows, Post Processing | live: the sun's shadows and the post-processing volume (`RenderingRig`) |
+| Show Minimap | the driving view's route map (`Hud`, `MinimapView`) |
+| Camera Shake | scales the chase camera's shake (`FollowCamera`) |
+| Display Mode | `Screen.fullScreen` when Save is pressed (the browser only allows it after a click, so it is a session choice, never replayed at start-up) |
+| Show FPS Counter | a small counter bottom-right (`FpsOverlay`) |
+| Show Player Names | the name above other players' vehicles (`NetworkVehicle`) |
+| Master Volume, Engine Sound | `AudioListener.volume` and the engine's volume (`EngineAudio`); the engine is the only sound in the game |
+| Steering Sensitivity | how quickly the steering answers keys and sticks (`KeyboardVehicleInput`); 50 % is the original feel |
+| Appear in Nearby Players | **account**: `set_nearby_visibility`, saved at once; the current value is read from `list_nearby_players` |
+| Blocked Players | **account**: `list_blocked_players` / `unblock_player` |
+| Anti-Aliasing, View Distance | read-only: what the active quality tier really uses |
+| Controls tab | the bindings `KeyboardVehicleInput` and `FollowCamera` read, shown read-only; a test fails if the list and the code disagree |
+
+Device settings are stored by `SettingsStore` in PlayerPrefs (the browser's storage in WebGL) as `id=value` lines. A damaged or older file never stops the game: unknown keys, bad numbers and options that no longer exist fall back to defaults.
+
+**Not built (shown as SOON, listed in `docs/PLACEHOLDERS.md` P-64):** Game Mode, Weather System, In-Game Hints, Navigation Assistance, Automatic Parking, Language (English only), Textures, Reflections,
+Brightness / Contrast / Saturation, Online Notifications, Chat Messages, Profanity Filter, Environment / Radio / UI / Voice volume, Brake and Acceleration Sensitivity, Invert Y-Axis, Force Feedback, key rebinding,
+Change Password, Delete Account. The mockup's Resolution and VSync are shown as facts (a web game follows its window and the browser), Day/Night Cycle is covered by Time of Day.
+
+**Tests.** xunit `SettingsModelTests` (catalogue shape, validation, step snapping, corruption, round trips, effects, plus two source-reading tests: every changeable setting must be read by game code, and the
+controls shown must equal the keys the input code reads); EditMode and semcheck compile the page; browser E2E section 2e (tabs, dropdown, toggles, a real mouse drag on a slider, Reset, Save, apply, other tabs, the privacy toggle and
+Unblock against the database, discard on leaving, and a reload that proves the saved quality is built as the High tier).
+

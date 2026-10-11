@@ -42,7 +42,7 @@ namespace ARO.Input
             }
 
             // Keyboard is digital; smooth it so steering is not a snap.
-            _steer = Mathf.MoveTowards(_steer, steerTarget, SteerSmoothing * Time.deltaTime);
+            _steer = Mathf.MoveTowards(_steer, steerTarget, SteerSmoothing * ARO.Core.RuntimeSettings.SteeringGain * Time.deltaTime);   // Steering Sensitivity: how quickly it answers
             s.Steer = _steer;
             s.Throttle = throttle;
             s.Brake = brake;

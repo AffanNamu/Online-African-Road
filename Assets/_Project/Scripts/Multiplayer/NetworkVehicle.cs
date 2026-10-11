@@ -79,6 +79,7 @@ namespace ARO.Multiplayer
             _puppet.ApplyRemoteState(VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Lights), VehicleNetCodec.IndicatorOf(s.Flags),
                 VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Brake), VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Reverse),
                 VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Horn), VehicleNetCodec.DequantizeSpeed(s.Speed), VehicleNetCodec.DequantizeDamage(s.Damage));
+            if (_nameplate != null && _nameplate.gameObject.activeSelf != ARO.Core.RuntimeSettings.ShowPlayerNames) _nameplate.gameObject.SetActive(ARO.Core.RuntimeSettings.ShowPlayerNames);   // the Show Player Names setting
             if (_nameplate != null && Camera.main != null)
                 _nameplate.transform.rotation = Quaternion.LookRotation(_nameplate.transform.position - Camera.main.transform.position);
         }

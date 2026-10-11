@@ -20,6 +20,9 @@ namespace ARO.NetCore
         public float TerrainDetail;                 // multiplies terrain cells per tile
         public int MaxTrafficAgents; public float TrafficDensity;
         public float FarClip;
+
+        /// <summary>A copy, so a player's choice never changes the shared tier objects.</summary>
+        public QualityTier Clone() => (QualityTier)MemberwiseClone();
     }
 
     public struct DeviceInfo

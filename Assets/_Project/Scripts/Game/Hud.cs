@@ -19,10 +19,10 @@ namespace ARO.Game
         /// <summary>Optional: when a bus run is active the job card shows the route instead.</summary>
         public BusSession Bus;
         Text _jobTitle;
-        Text _speed, _gear, _job1, _job2, _jobReward, _eta, _wallet, _convoy, _indicators, _prompt;
+        Text _unit, _speed, _gear, _job1, _job2, _jobReward, _eta, _wallet, _convoy, _indicators, _prompt;
         Image _arc, _fuelFill, _dmgFill, _progress; RectTransform _needle; GameObject _root, _jobCard, _convoyPanel;
         Text[] _toast = new Text[3]; Image[] _toastBg = new Image[3];
-        float _smoothSpeed;
+        float _smoothSpeed; int _mapVersion = -1;
 
         public void Init(DrivingSession s, GameServices svc)
         {
@@ -65,7 +65,7 @@ namespace ARO.Game
             UIGfx.Shape(dial, "Hub", UIGfx.Disc, new Color(0.1f, 0.12f, 0.15f, 1f), c, 26f, Vector2.zero);
 
             _speed = Lbl(dial, "0", 62, UIKit.TextCol, TextAnchor.MiddleCenter, c + new Vector2(0, -52), new Vector2(130, 70));
-            Lbl(dial, "km/h", 20, UIKit.Muted, TextAnchor.MiddleCenter, c + new Vector2(0, -92), new Vector2(100, 24));
+            _unit = Lbl(dial, "km/h", 20, UIKit.Muted, TextAnchor.MiddleCenter, c + new Vector2(0, -92), new Vector2(100, 24));
             _gear = Lbl(dial, "D1", 26, UIKit.Accent, TextAnchor.MiddleCenter, c + new Vector2(0, 38), new Vector2(80, 30));
 
             // status column
@@ -148,7 +148,7 @@ namespace ARO.Game
             fill.color = Color.Lerp(bad, good, Mathf.Clamp01(f * 2f));
         }
 
-        public void SetVisible(bool v) { if (_root) _root.SetActive(v); if (_map != null) _map.SetVisible(v); }
+        public void SetVisible(bool v) { if (_root) _root.SetActive(v); if (_map != null) _map.SetVisible(v && ARO.Core.RuntimeSettings.ShowMinimap); }
 
         // ---------------------------------------------------------------- update
         void Update()
@@ -156,12 +156,14 @@ namespace ARO.Game
             if (_s == null) return;
             _s.Notifications.Tick(Time.unscaledDeltaTime);
             DrawToasts();
+            if (_mapVersion != ARO.Core.RuntimeSettings.Version) { _mapVersion = ARO.Core.RuntimeSettings.Version; if (_map != null && _root != null && _root.activeSelf) _map.SetVisible(ARO.Core.RuntimeSettings.ShowMinimap); }   // the Show Minimap setting
             if (_s.Vehicle == null || !_s.Active) return;
 
             var v = _s.Vehicle; var def = v.definition;
             _smoothSpeed = Mathf.Lerp(_smoothSpeed, v.SpeedKmh, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             _speed.horizontalOverflow = HorizontalWrapMode.Overflow;   // 4 digits used to wrap onto a second line
-            _speed.text = Mathf.Clamp(Mathf.RoundToInt(_smoothSpeed), 0, 999).ToString();
+            _speed.text = Mathf.Clamp(Mathf.RoundToInt(SettingsEffect.SpeedFor(_smoothSpeed, ARO.Core.RuntimeSettings.SpeedMph)), 0, 999).ToString();
+            _unit.text = SettingsEffect.SpeedUnit(ARO.Core.RuntimeSettings.SpeedMph);
             _gear.text = v.CurrentGear < 0 ? "R" : "D" + v.CurrentGear;
             float frac = Gauge.Fraction(_smoothSpeed, 0f, MaxDialKmh);
             _arc.fillAmount = 0.75f * frac; _arc.color = frac > 0.85f ? UIKit.Bad : UIKit.Accent;

@@ -38,7 +38,7 @@ namespace ARO.Vehicles
             if (_cam != null) _cam.fieldOfView = Mathf.Lerp(_cam.fieldOfView, baseFov + maxFovBoost * Mathf.Clamp01(speed / 28f), 2f * Time.deltaTime);
 
             float jolt = target.TryGetComponent(out VehicleController vc) ? vc.SuspensionJolt : 0f;
-            float shakeAmp = (0.004f + 0.02f * jolt) * Mathf.Clamp01(speed / 15f);
+            float shakeAmp = (0.004f + 0.02f * jolt) * Mathf.Clamp01(speed / 15f) * ARO.Core.RuntimeSettings.CameraShake;   // the player's Camera Shake setting
             var shake = new Vector3(Mathf.PerlinNoise(Time.time * 18f, 0f) - 0.5f, Mathf.PerlinNoise(0f, Time.time * 21f) - 0.5f, 0f) * (shakeAmp * 2f);
 
             if (cockpit)

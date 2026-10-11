@@ -33,8 +33,8 @@ namespace ARO.Game
         const float HeroX = 331, HeroY = 142, HeroW = 1146, HeroH = 318, HeroAspect = HeroW / HeroH;
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
-        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot, _garRoot;
-        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage }       // the order is the sidebar's: Home, Jobs, Multiplayer, Trucks & Buses
+        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot, _garRoot, _setRoot;
+        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage, Settings = 9 }       // the value is the sidebar row: Home, Jobs, Multiplayer, Trucks & Buses, Garage ... Settings is the tenth
         Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
@@ -108,6 +108,7 @@ namespace ARO.Game
             _mpRoot = Ui.Box(_root, "MultiplayerPage", 0, 0, 1920, 1080); _regionParent = _mpRoot; BuildMultiplayerPage();
             _vehRoot = Ui.Box(_root, "VehiclesPage", 0, 0, 1920, 1080); _regionParent = _vehRoot; BuildVehiclesPage();
             _garRoot = Ui.Box(_root, "GaragePage", 0, 0, 1920, 1080); _regionParent = _garRoot; BuildGaragePage();
+            _setRoot = Ui.Box(_root, "SettingsPage", 0, 0, 1920, 1080); _regionParent = _setRoot; BuildSettingsPage();
             _regionParent = null; ApplyPage();
 
             _stage = _root;                                         // toast and the notice popover sit above everything
@@ -225,7 +226,7 @@ namespace ARO.Game
                 ("ic_home", "Home", () => ShowPage(Page.Home), null), ("ic_jobs", "Jobs", OpenJobs, null), ("ic_people", "Multiplayer", OpenMultiplayer, null),
                 ("ic_bus", "Trucks & Buses", OpenVehicles, null), ("ic_wrench", "Garage", OpenGarage, null), ("ic_map", "Map", _act.WorldMap, null),
                 ("ic_people", "Friends", null, "Friends are coming soon."), ("ic_trophy", "Leaderboards", null, "Leaderboards are coming soon."),
-                ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", _act.Profile, null),
+                ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", OpenSettings, null),
             };
             for (int i = 0; i < items.Length; i++)
             {
@@ -309,7 +310,7 @@ namespace ARO.Game
             _bellBadge = Ui.Disc(_stage, "BellBadge", new Color(0.92f, 0.22f, 0.22f), 1782, 14, 26);
             _bellCount = Ui.Label(_stage, "", "Bold", 15, White, 1782, 17, 26, 20, TextAnchor.UpperCenter);
             RefreshBell(true);
-            Pill(1824, 24, 60, 56, "ic_gear", _act.Profile, "Btn_Settings");
+            Pill(1824, 24, 60, 56, "ic_gear", OpenSettings, "Btn_Settings");
         }
 
         void BuildFuelChip()
