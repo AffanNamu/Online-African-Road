@@ -9,7 +9,11 @@ const BASE = process.env.E2E_URL, ANON = process.env.E2E_ANON_KEY, DB_URL = proc
 if (!BASE || !ANON || !DB_URL) { console.error('source /tmp/aro-e2e.env first (tools/e2e/up.sh)'); process.exit(2); }
 const prefix = process.argv[2] || 'webgl-e2e';
 const failures = [], passes = [];
-const check = (ok, what, detail) => { (ok ? passes : failures).push(what); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${!ok && detail !== undefined ? '  -> ' + String(detail).slice(0, 300) : ''}`); };
+let currentLogs = null;
+const check = (ok, what, detail) => {
+  (ok ? passes : failures).push(what); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${!ok && detail !== undefined ? '  -> ' + String(detail).slice(0, 300) : ''}`);
+  if (!ok && currentLogs) console.log('      last game log lines: ' + currentLogs.slice(-8).map(l => l.replace(/\s+/g, ' ').slice(0, 160)).join(' | '));   // what the game itself said just before
+};
 const db = sql => execFileSync('psql', [DB_URL, '-X', '-q', '-At', '-v', 'ON_ERROR_STOP=1', '-c', sql], { encoding: 'utf8' }).trim();
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -28,7 +32,7 @@ function url(user, extra = '') {
 async function open(user, extra, body) {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
   const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
-  const logs = [], errors = [];
+  const logs = [], errors = []; currentLogs = logs;
   page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
   const waitLog = async (re, from = 0, seconds = 60) => { for (let i = 0; i < seconds * 2; i++) { const hit = logs.slice(from).find(l => re.test(l)); if (hit) return hit; await sleep(500); } return null; };
   const targets = () => { const l = [...logs].reverse().find(x => x.startsWith('[WorldMap] targets')) || ''; return Object.fromEntries([...l.matchAll(/TARGET (\S+) x=([\d.]+) y=([\d.]+)/g)].map(m => [m[1], { x: +m[2], y: +m[3] }])); };
@@ -412,10 +416,10 @@ const allErrors = [], allExc = [];
     check(!!mm && +mm[1] >= +mm[2] - 0.06, 'zooming stops at the camera limit (never inside the vehicle)', cam);
     m = c.logs.length; await c.click('Btn_ShowFront');
     cam = await c.waitLog(/\[Showroom\] camera view=front yaw=(-?\d+)/, m, 60); check(!!cam && /yaw=0 /.test(cam + ' '), 'the Front preset looks at the vehicle from the front', cam);
-    m = c.logs.length; await c.click('Btn_ShowRear'); cam = await c.waitLog(/\[Showroom\] camera view=rear yaw=(-?\d+)/, m, 60); check(!!cam && /yaw=(180|-180) /.test(cam + ' '), 'the Rear preset looks from behind', cam);
-    m = c.logs.length; await c.click('Btn_ShowTop'); cam = await c.waitLog(/\[Showroom\] camera view=top yaw=-?\d+ pitch=(\d+)/, m, 60); check(!!cam && +/pitch=(\d+)/.exec(cam)[1] >= 80, 'the Top preset looks down', cam);
+    cam = await c.clickUntil('Btn_ShowRear', /\[Showroom\] camera view=rear yaw=(-?\d+)/, 25, 3); check(!!cam && /yaw=(180|-180) /.test(cam + ' '), 'the Rear preset looks from behind', cam);
+    cam = await c.clickUntil('Btn_ShowTop', /\[Showroom\] camera view=top yaw=-?\d+ pitch=(\d+)/, 25, 3); check(!!cam && +/pitch=(\d+)/.exec(cam)[1] >= 80, 'the Top preset looks down', cam);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-31-garage-top.png` });
-    m = c.logs.length; await c.click('Btn_ShowReset'); cam = await c.waitLog(/\[Showroom\] camera view=default/, m, 60); check(!!cam, 'Reset returns to the default view', cam);
+    cam = await c.clickUntil('Btn_ShowReset', /\[Showroom\] camera view=default/, 25, 3); check(!!cam, 'Reset returns to the default view', cam);
     m = c.logs.length; await c.click('Btn_Show360'); cam = await c.waitLog(/\[Showroom\] camera view=turntable/, m, 60); check(!!cam, '360 view turns the vehicle on a turntable', cam);
     await sleep(2500); await c.click('Btn_ShowExterior');
     m = c.logs.length; await c.page.mouse.click(cx, cy); check(!!(await c.waitLog(/\[Showroom\] pick part=\w+/, m, 60)), 'clicking the vehicle picks a part');
@@ -444,9 +448,9 @@ const allErrors = [], allExc = [];
     check(!!q && +/repair=(\d+)/.exec(q)[1] === 300, 'the repair price shown is the server quote (30 % damage = 300)', q);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-37-garage-maintenance.png` });
     const bal1 = +db(`select balance from player_wallets where player_id = '${gabe.id}'`);
-    m = c.logs.length; await c.click('Btn_GarRepair'); check(!!(await c.waitLog(/\[Garage\] repair ok=True/, m, 60)), 'Repair: the server accepted');
+    check(!!(await c.clickUntil('Btn_GarRepair', /\[Garage\] repair ok=True/, 25, 3)), 'Repair: the server accepted');
     check(db(`select damage_pct from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === '0' && +db(`select balance from player_wallets where player_id = '${gabe.id}'`) === bal1 - 300, 'the vehicle is repaired and exactly the quote was charged');
-    await c.settle(); m = c.logs.length; await c.click('Btn_GarRefuel'); check(!!(await c.waitLog(/\[Garage\] refuel ok=True/, m, 60)), 'Refuel: the server accepted');
+    await c.settle(); check(!!(await c.clickUntil('Btn_GarRefuel', /\[Garage\] refuel ok=True/, 25, 3)), 'Refuel: the server accepted');
     check(+db(`select fuel_l from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === +db(`select fuel_capacity_l from vehicle_definitions where id = 'truck_light_01'`), 'the tank is full in the database');
 
     // inspect another vehicle and make it the active one

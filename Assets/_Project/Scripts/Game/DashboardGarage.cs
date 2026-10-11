@@ -280,7 +280,7 @@ namespace ARO.Game
                 bool on = i == _gInfoTab; if (on) Ui.Rounded(_stage, "InfoTabOn", Gold, tx, Y + 84, tabW, 38, 10); else Ui.Outlined(_stage, "InfoTab", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.12f), tx, Y + 84, tabW, 38, 10, 1.1f);
                 Ui.Label(_stage, tabs[i], on ? "Bold" : "SemiBold", 16, on ? Ink : White, tx, Y + 92, tabW, 22, TextAnchor.UpperCenter); int idx = i; Ui.Click(_stage, "Btn_GarInfoTab_" + tabs[i], tx, Y + 84, tabW, 38, () => { _gInfoTab = idx; Refill("GarInfo", BuildGarInfo); }); tx += tabW + 6;
             }
-            float y = Y + 134;
+            float y = Y + 130;
             if (row == null) { Ui.Label(_stage, "No specification is published for this vehicle.", "Regular", 15, Muted, X + 20, y, W - 40, 40); }
             else if (_gInfoTab == 0)
             {
@@ -323,7 +323,7 @@ namespace ARO.Game
         void InfoBar(float x, ref float y, float w, string label, string value, double fraction, Color c)
         {
             Ui.Label(_stage, label, "Regular", 15, new Color(0.72f, 0.75f, 0.82f), x + 20, y, w * 0.5f, 20); Ui.Label(_stage, value, "SemiBold", 15, White, x + w * 0.45f, y, w * 0.55f - 20, 20, TextAnchor.UpperRight);
-            Ui.Bar(_stage, x + 20, y + 23, w - 40, 6, (float)fraction, c); y += 36;
+            Ui.Bar(_stage, x + 20, y + 22, w - 40, 6, (float)fraction, c); y += 28;       // five bars must end above the live Condition / Fuel block (36 each overlapped it)
         }
         void StateBar(float x, float y, float w, string label, double pct, Color c)
         {

@@ -860,6 +860,7 @@ namespace ARO.Game
             float tw = model.Data.image.textureWidth, th = model.Data.image.textureHeight;
             Ui.Photo(_stage, "MapPhoto", tex, new Rect(cx0 / tw, (th - (cy0 + ch)) / th, cw / tw, ch / th), bx, by, bw, bh, 12);
             var host = Ui.Box(_stage, "MapHost", bx, by, bw, bh);
+            Ui.Click(_stage, "Btn_RoutesMap", bx, by, bw, bh, _act.WorldMap);          // below the retry note: that tap must retry, not open the map
             Func<MapCity, Vector2> at = c => new Vector2((c.mapX - cx0) / cw * bw, (c.mapY - cy0) / ch * bh);
             Func<MapCity, bool> inside = c => c.mapX > cx0 + 8 && c.mapX < cx0 + cw - 8 && c.mapY > cy0 + 8 && c.mapY < cy0 + ch - 8;
             int level = PlayerLevel(); bool known = model.HasServerState;
@@ -905,7 +906,6 @@ namespace ARO.Game
             Ui.Disc(_stage, "LegendLive", Gold, bx + 10, by + bh - 22, 9); Ui.Label(_stage, "Open", "SemiBold", 13, White, bx + 25, by + bh - 27, 60, 18);
             Ui.Disc(_stage, "LegendPlanned", Blue, bx + 76, by + bh - 22, 9); Ui.Label(_stage, "Planned", "SemiBold", 13, new Color(0.9f, 0.9f, 0.9f), bx + 91, by + bh - 27, 80, 18);
             Ui.Disc(_stage, "LegendLocked", Brand.Bad, bx + 160, by + bh - 22, 9); Ui.Label(_stage, "Locked", "SemiBold", 13, new Color(0.9f, 0.9f, 0.9f), bx + 175, by + bh - 27, 80, 18);
-            Ui.Click(_stage, "Btn_RoutesMap", bx, by, bw, bh, _act.WorldMap);
         }
 
         async Task ReloadWorld()
