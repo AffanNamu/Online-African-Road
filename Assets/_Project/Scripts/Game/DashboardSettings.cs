@@ -225,7 +225,7 @@ namespace ARO.Game
         {
             bool soon = d.Status == SettingStatus.Soon; Color lab = soon ? SetDim : White; float ih = 22, cx = x + w * 0.45f, cw = w * 0.55f - 6;
             Ui.Icon(_stage, RowIcon(d.Id), soon ? SetDim : new Color(0.9f, 0.92f, 0.96f), x + 10, y + (pitch - ih) / 2, ih);
-            var lbl = Ui.Label(_stage, d.Label, "SemiBold", 17, lab, x + 44, y + (pitch - 24) / 2, w * 0.45f - 48, 24); lbl.resizeTextForBestFit = true; lbl.resizeTextMinSize = 12; lbl.resizeTextMaxSize = 17; lbl.horizontalOverflow = HorizontalWrapMode.Wrap;
+            var lbl = Ui.Label(_stage, d.Label, "SemiBold", 17, lab, x + 44, y + (pitch - 24) / 2, w * 0.45f - 48, 24); lbl.resizeTextForBestFit = true; lbl.resizeTextMinSize = 12; lbl.resizeTextMaxSize = 17; lbl.horizontalOverflow = HorizontalWrapMode.Wrap; lbl.verticalOverflow = VerticalWrapMode.Truncate;   // best fit shrinks the text until it is ONE line in the box (a wrapped label ran into the next row)
             Ui.Click(_stage, "Btn_SetNote_" + d.Id, x, y, cx - x - 4, pitch, () => SetNote(d));
             switch (d.Kind)
             {
@@ -282,7 +282,7 @@ namespace ARO.Game
             var img = go.GetComponent<Image>(); img.color = new Color(1, 1, 1, 0.001f); var btn = go.GetComponent<Button>(); btn.targetGraphic = img; btn.transition = Selectable.Transition.None;
             Ui.Rounded(go.transform, "Track", SetTrack, 0, h / 2 - 3, tw, 6, 3);
             var fill = Ui.Rounded(go.transform, "Fill", Gold, 0, h / 2 - 3, 6, 6, 3); var knob = Ui.Disc(go.transform, "Knob", White, 0, h / 2 - 9, 18);
-            var val = Ui.Label(_stage, v + "%", "Regular", 16, White, cx + tw + 8, y + (pitch - 22) / 2, 52, 22);
+            var val = Ui.Label(_stage, v + "%", "Regular", 16, White, cx + tw + 16, y + (pitch - 22) / 2, 46, 22);
             var s = go.GetComponent<SettingSlider>(); string id = d.Id; s.Rect = rt; s.Fill = fill; s.Knob = (RectTransform)knob.transform; s.Value = val; s.Min = d.Min; s.Max = d.Max; s.Step = d.Step;
             s.Changed = n => _sDraft.SetInt(id, n); s.Ended = () => { Debug.Log($"[Settings] set {id}={_sDraft.Get(id)}"); RefreshSettings(); }; s.Init(v);
         }

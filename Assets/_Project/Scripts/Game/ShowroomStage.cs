@@ -168,7 +168,12 @@ namespace ARO.Game
         public void OrbitBy(float dx, float dy) { if (State == ShowroomState.Ready && !_interior) { Orbit.Orbit(dx, dy); ViewName = "free"; _moved = true; } }
         public void ZoomBy(float amount) { if (State == ShowroomState.Ready && !_interior) { Orbit.Zoom(amount); ViewName = "free"; _moved = true; } }
         public void PanBy(float dx, float dy) { if (State == ShowroomState.Ready && !_interior) { Orbit.Pan(dx, dy); ViewName = "free"; _moved = true; } }
-        public void SetTurntable(bool on) { if (State == ShowroomState.Ready) { Orbit.AutoRotate = on; ViewName = on ? "turntable" : ViewName; _moved = true; } }
+        public void SetTurntable(bool on)
+        {
+            if (State != ShowroomState.Ready) return;
+            Orbit.AutoRotate = on; ViewName = on ? "turntable" : ViewName; _moved = true;
+            Debug.Log($"[Showroom] camera view={(on ? "turntable" : ViewName)} turntable={(on ? "on" : "off")} yaw={Orbit.Yaw:0}");     // the settled-camera log never fires while it rotates, so say it here
+        }
 
         /// <summary>Called every frame by the Garage while it is open.</summary>
         public void Tick(float dt)

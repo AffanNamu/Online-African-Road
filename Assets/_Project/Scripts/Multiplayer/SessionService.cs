@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ARO.Backend;
 using ARO.NetCore;
 using Unity.Netcode;
 using Unity.Services.Authentication;
@@ -43,15 +44,31 @@ namespace ARO.Multiplayer
         public async Task<string> CreateAsync(string name)
         {
             if (!_life.BeginConnect()) return null;
+            var gate = new Gate(); var work = CreateCore(name, gate);
+            var finished = await Task.WhenAny((Task)work, Wait.Seconds(ConnectTimeoutSeconds));
+            if (finished == (Task)work) return await work;
+            gate.Abandoned = true;                                         // the service never answered: the caller must not wait forever (the convoy goes back to the lobby)
+            Debug.LogWarning($"[Session] create timed out after {ConnectTimeoutSeconds:0} s");
+            _life.OnConnectFailed("The multiplayer service did not answer in time. Try again in a moment.");
+            return null;
+        }
+
+        /// <summary>Set when the caller has given up: a session that is created after that is left again, never kept.</summary>
+        sealed class Gate { public bool Abandoned; }
+        public const float ConnectTimeoutSeconds = 25f;
+
+        async Task<string> CreateCore(string name, Gate gate)
+        {
             try
             {
                 await EnsureServices();
                 var opts = new SessionOptions { MaxPlayers = MaxPlayers, Name = name, IsPrivate = true }.WithRelayNetwork();
-                _session = await MultiplayerService.Instance.CreateSessionAsync(opts);
-                Hook(_session); _life.OnConnected();
+                var s = await MultiplayerService.Instance.CreateSessionAsync(opts);
+                if (gate.Abandoned) { try { await s.LeaveAsync(); } catch (Exception e) { Debug.LogWarning("[Session] late session leave: " + e.Message); } return null; }
+                _session = s; Hook(_session); _life.OnConnected();
                 return _session.Code;
             }
-            catch (Exception e) { Debug.LogWarning("[Session] create failed: " + e); _life.OnConnectFailed(Friendly(e)); return null; }
+            catch (Exception e) { Debug.LogWarning("[Session] create failed: " + e); if (!gate.Abandoned) _life.OnConnectFailed(Friendly(e)); return null; }
         }
 
         public async Task<bool> JoinByCodeAsync(string code)

@@ -46,7 +46,7 @@ async function open(user, extra, body) {
   const settle = async () => { await sleep(4000); };      // the game re-reports its click positions about a second after anything is rebuilt
   await page.goto(url(user, extra));
   try { await body({ page, logs, errors, waitLog, targets, click, clickUntil, settle }); }
-  finally { allErrors.push(...errors); allExc.push(...logs.filter(l => /exception|NullReference|IndexOutOfRange|error CS/i.test(l) && !/GLib|swiftshader|\[Backend\].*(->|failed)|\[Session\] create failed: .*Bad Gateway/i.test(l))); await browser.close(); }
+  finally { allErrors.push(...errors); allExc.push(...logs.filter(l => /exception|NullReference|IndexOutOfRange|error CS/i.test(l) && !/GLib|swiftshader|\[Backend\].*(->|failed)|\[Session\] create failed: .*Bad Gateway|Could not do Qos region selection/i.test(l))); await browser.close(); }
 }
 const allErrors = [], allExc = [];
 
@@ -148,7 +148,7 @@ const allErrors = [], allExc = [];
 
   // =========================================================================================== 2. failure states (injected request failures, real data)
   const fay = await signup('BrowserFay'); db(`select testkit.mk_job('BR-4', 1, 500)`);
-  await open(fay, '&fault=list_available_jobs:slow:9,get_content_news:error:3,get_world_state:error:3,list_recent_players:error:3', async c => {
+  await open(fay, '&fault=list_available_jobs:slow:9,get_content:error:6,get_world_state:error:3,list_recent_players:error:3', async c => {
     check(!!(await c.waitLog(/\[Dashboard\] built for BrowserFay/, 0, 150)), 'the dashboard opens even though several services are failing');
     check(!!(await c.waitLog(/\[Dashboard\] jobs state=loading/, 0, 30)), 'slow job board: the loading state is shown first');
     await sleep(2000); await c.page.screenshot({ path: `${prefix}-5-loading.png` });
@@ -161,7 +161,7 @@ const allErrors = [], allExc = [];
     check(!!tg['Btn_RetryNews'] && !!tg['Btn_RetryPlayers'], 'retry buttons are offered for the failed blocks');
     let m = c.logs.length; await c.click('Btn_RetryNews'); check(!!(await c.waitLog(/\[Dashboard\] news state=ready count=4/, m, 90)), 'news: Try again loads the real news');
     m = c.logs.length; await c.click('Btn_RetryPlayers'); check(!!(await c.waitLog(/\[Dashboard\] players state=(ready|empty)/, m, 90)), 'players: Try again reaches the server');
-    if (c.targets()['Btn_RetryWorld']) { m = c.logs.length; await c.click('Btn_RetryWorld'); check(!!(await c.waitLog(/\[World\] state=ready/, m, 90)), 'routes: Try again loads the world state'); }
+    if (c.targets()['Btn_RetryWorld']) { m = c.logs.length; await c.click('Btn_RetryWorld'); check(!!(await c.waitLog(/\[Dashboard\] world state=ready/, m, 90)), 'routes: Try again loads the world state'); }
     else check(false, 'routes: a retry control is offered when the world state is unavailable');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-7-recovered.png` });
   });
@@ -435,7 +435,7 @@ const allErrors = [], allExc = [];
     check(!!(await c.waitLog(/\[Garage\] skin id=sunset_gold ok=True/, m, 90)), 'Equip: the server accepted');
     check(db(`select customization->>'skin' from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === 'sunset_gold', 'the equipped skin is stored on the vehicle in the database');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-34-garage-skin-equipped.png` });
-    m = c.logs.length; await c.click('Btn_GarCat_wheels'); check(!!(await c.waitLog(/\\[Garage\\] category=wheels/, m, 60)), 'a category the game has no system for opens its explanation, not fake content'); await c.settle(); await c.page.screenshot({ path: `${prefix}-35-garage-wheels.png` });
+    m = c.logs.length; await c.click('Btn_GarCat_wheels'); check(!!(await c.waitLog(/\[Garage\] category=wheels/, m, 60)), 'a category the game has no system for opens its explanation, not fake content'); await c.settle(); await c.page.screenshot({ path: `${prefix}-35-garage-wheels.png` });
     await c.click('Btn_GarTab_Upgrades'); await c.settle(); await c.page.screenshot({ path: `${prefix}-36-garage-upgrades.png` });
 
     // maintenance: prices from the server, the actions change the database

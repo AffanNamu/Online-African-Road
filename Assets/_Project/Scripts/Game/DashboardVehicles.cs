@@ -94,18 +94,19 @@ namespace ARO.Game
 
         List<VehicleRow> Shown() => VehicleRules.Filter(_vehRows, _vehTab, _vehSearch, _vehSort);
 
+        void LogPanel() { var r = SelRow(); if (r != null) { var a = VehicleRules.ActionFor(r, IsActive(r)); Debug.Log($"[Vehicles] panel id={r.Id} state={r.PurchaseState} action={a.Kind} enabled={a.Enabled} drivable={r.Drivable}"); } }
+
         void SelectVehicle(string defId)
         {
             if (_vehSel == defId) return;
-            _vehSel = defId; _vehView = 0; _vehInterior = false; AskJobFit(defId);
-            var r = SelRow(); if (r != null) { var a = VehicleRules.ActionFor(r, IsActive(r)); Debug.Log($"[Vehicles] panel id={r.Id} state={r.PurchaseState} action={a.Kind} enabled={a.Enabled} drivable={r.Drivable}"); }
+            _vehSel = defId; _vehView = 0; _vehInterior = false; AskJobFit(defId); LogPanel();
             Refill("VehShow", BuildVehShow); Refill("VehCards", BuildVehCards);
         }
 
         void SetVehTab(VehicleTab t)
         {
             if (_vehTab == t) return; _vehTab = t;
-            var shown = Shown(); if (shown.Count > 0 && !shown.Any(r => r.Id == _vehSel)) { _vehSel = shown[0].Id; _vehView = 0; _vehInterior = false; AskJobFit(_vehSel); }
+            var shown = Shown(); if (shown.Count > 0 && !shown.Any(r => r.Id == _vehSel)) { _vehSel = shown[0].Id; _vehView = 0; _vehInterior = false; AskJobFit(_vehSel); LogPanel(); }
             Debug.Log($"[Vehicles] view tab={t.ToString().ToLowerInvariant()} sort={_vehSort.ToString().ToLowerInvariant()} search=\"{_vehSearch}\" shown={shown.Count} selected={_vehSel}");
             Refill("VehTabs", BuildVehTabs); Refill("VehShow", BuildVehShow); Refill("VehCards", BuildVehCards);
         }
@@ -113,7 +114,7 @@ namespace ARO.Game
         void ApplyVehSearch()
         {
             string q = (_vehSearchPending ?? "").Trim(); if (q == _vehSearch) return; _vehSearch = q;
-            var shown = Shown(); if (shown.Count > 0 && !shown.Any(r => r.Id == _vehSel)) { _vehSel = shown[0].Id; _vehView = 0; _vehInterior = false; AskJobFit(_vehSel); }
+            var shown = Shown(); if (shown.Count > 0 && !shown.Any(r => r.Id == _vehSel)) { _vehSel = shown[0].Id; _vehView = 0; _vehInterior = false; AskJobFit(_vehSel); LogPanel(); }
             Debug.Log($"[Vehicles] view tab={_vehTab.ToString().ToLowerInvariant()} sort={_vehSort.ToString().ToLowerInvariant()} search=\"{_vehSearch}\" shown={shown.Count} selected={_vehSel}");
             Refill("VehShow", BuildVehShow); Refill("VehCards", BuildVehCards);
         }
