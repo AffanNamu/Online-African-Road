@@ -26,6 +26,8 @@ namespace ARO.Multiplayer
         VehicleController _puppet; TextMesh _nameplate; float _nextSend; string _puppetDef;
 
         public string Key => OwnerClientId.ToString();
+        /// <summary>The player's name as a plain string (callers outside this assembly do not reference Unity.Collections).</summary>
+        public string PlayerNameText => PlayerName.Value.ToString();
 
         public override void OnNetworkSpawn()
         {

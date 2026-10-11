@@ -228,7 +228,7 @@ namespace ARO.Game
                 _convoy.text = sb.ToString(); return;
             }
             var avatars = new System.Collections.Generic.Dictionary<string, (double x, double z)>(System.StringComparer.OrdinalIgnoreCase);
-            foreach (var a in NetworkVehicle.Active) { string n = a.PlayerName.Value.ToString(); if (!string.IsNullOrEmpty(n)) avatars[n] = (a.transform.position.x, a.transform.position.z); }
+            foreach (var a in NetworkVehicle.Active) { string n = a.PlayerNameText; if (!string.IsNullOrEmpty(n)) avatars[n] = (a.transform.position.x, a.transform.position.z); }
             var rows = LiveRoster.Build(info.members.Select(m => (m.display_name, m.is_leader, m.connected)), avatars, null, info.phase);
             var ui = ConvoyStates.Derive(new ConvoyFacts { InConvoy = true, Phase = info.phase, Session = _svc.Session.State, AnyMemberReady = false });
             string state = ConvoyStates.Label(ui); string col = ui == ConvoyUiState.Reconnecting ? "#f66" : ui == ConvoyUiState.InSession ? "#5ecb7c" : "#f9b521";
