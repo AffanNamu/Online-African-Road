@@ -68,11 +68,36 @@ LARRY_BAL=$(q -c "select balance from player_wallets where player_id='$LARRY'")
 LARRY_EARN=$(q -c "select coalesce(sum(amount),0) from transactions where player_id='$LARRY' and kind in ('JOB_REWARD','BONUS') and amount > 0")
 [ "$LARRY_EARN" = "700" ] || fail "legacy delivery did not pay 700 (got $LARRY_EARN)"
 
-# ---- 3. upgrade with the real tool
-DATABASE_URL="$URL" bash apply.sh > "$TMP/upgrade.log" 2>&1 || { cat "$TMP/upgrade.log"; fail "apply.sh failed on the existing database"; }
+# ---- 3. upgrade with the real tool, in the two stages a published database can be in:
+#         (a) the sixteen migrations published before the Players Nearby opt-in (a copy of the tool without 20261012000007): this is the state the privacy fix has to repair
+#         (b) the real tool, which then applies exactly the opt-in migration on top of players who already have a country
+mkdir -p "$TMP/mid/migrations"
+cp seed.sql seed_world.sql seed_content.sql verify_live.sql api_surface.txt apply.sh "$TMP/mid/"
+for f in migrations/*.sql; do case "$f" in *20261012000007_nearby_opt_in.sql) ;; *) cp "$f" "$TMP/mid/migrations/" ;; esac; done
+DATABASE_URL="$URL" bash "$TMP/mid/apply.sh" > "$TMP/upgrade.log" 2>&1 || { cat "$TMP/upgrade.log"; fail "apply.sh failed on the existing database"; }
 grep -q "skip   20261009000001_core_schema.sql" "$TMP/upgrade.log" || fail "old migrations were not skipped"
 grep -q "apply  20261010000007_progression_content_economy.sql" "$TMP/upgrade.log" || fail "new migrations were not applied"
+grep -q "apply  20261012000006_onboarding.sql" "$TMP/upgrade.log" || fail "the onboarding migration was not applied"
 grep -q "verify live schema" "$TMP/upgrade.log" && grep -q "DONE" "$TMP/upgrade.log" || fail "verify_live.sql did not pass"
+same "before the opt-in migration every existing player is visible (the old default)" "5/5" "$(q -c "select count(*) filter (where appear_nearby) || '/' || count(*) from profiles")"
+# the players' countries (a player with none keeps none: nothing is inferred)
+q -c "update profiles set country_code = 'NG' where id = '$LARRY'; update profiles set country_code = 'GH' where id = '$LENA'" >/dev/null
+PROFILE_FP() { q -c "select md5(string_agg((to_jsonb(p) - 'appear_nearby')::text, ';' order by p.id)) from profiles p"; }
+COUNTRIES() { q -c "select string_agg(display_name || ':' || coalesce(country_code, '-'), ',' order by display_name) from profiles"; }
+GEO() { q -c "select md5((select string_agg(c::text, ';' order by code) from countries c) || (select string_agg(c::text, ';' order by id) from cities c) || (select string_agg(l::text, ';' order by id) from locations l))"; }
+FP_BEFORE=$(PROFILE_FP); COUNTRIES_BEFORE=$(COUNTRIES); GEO_BEFORE=$(GEO)
+LB_BEFORE=$(q -c "select testkit.as_user('$LENA', 'select get_leaderboard(''xp'')::text')::jsonb->'items'")
+DATABASE_URL="$URL" bash apply.sh > "$TMP/upgrade2.log" 2>&1 || { cat "$TMP/upgrade2.log"; fail "apply.sh failed to add the opt-in migration"; }
+[ "$(grep -c '^apply ' "$TMP/upgrade2.log")" = "1" ] && grep -q "apply  20261012000007_nearby_opt_in.sql" "$TMP/upgrade2.log" || { cat "$TMP/upgrade2.log"; fail "exactly the opt-in migration should have been applied"; }
+grep -q "verify live schema" "$TMP/upgrade2.log" && grep -q "DONE" "$TMP/upgrade2.log" || fail "verify_live.sql did not pass after the opt-in migration"
+same "after it nobody who played before is visible in Players Nearby" "0/5" "$(q -c "select count(*) filter (where appear_nearby) || '/' || count(*) from profiles")"
+same "the default for a new account is false" "false" "$(q -c "select column_default from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'appear_nearby'")"
+same "every other profile column is byte-identical (country, name, level, XP, earnings, onboarding, language...)" "$FP_BEFORE" "$(PROFILE_FP)"
+same "every existing player kept their country; the player with none still has none" "$COUNTRIES_BEFORE" "$(COUNTRIES)"
+same "countries, cities and locations (the map) are identical" "$GEO_BEFORE" "$(GEO)"
+same "the leaderboard still carries each player's country" "$LB_BEFORE" "$(q -c "select testkit.as_user('$LENA', 'select get_leaderboard(''xp'')::text')::jsonb->'items'")"
+same "an existing player can still opt in on purpose" "true" "$(q -c "select testkit.as_user('$LARRY', 'select set_nearby_visibility(true)::text')")"
+q -c "select testkit.as_user('$LARRY', 'select set_nearby_visibility(false)::text')" >/dev/null
 NEW=$(q -c "select count(*) from public._aro_migrations")
 EXPECT=$(ls migrations/*.sql | wc -l)
 same "migrations recorded" "$EXPECT" "$NEW"

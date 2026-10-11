@@ -20,7 +20,7 @@ namespace ARO.Game
         const float ObX = 260, ObY = 90, ObW = 1400, ObH = 900, ObCY = ObY + 250, ObCB = ObY + 770;
 
         OnboardingStep _obStep = OnboardingStep.Name; string _obName, _obCountry, _obLang, _obCountryQuery = "", _obCountryPending = "", _obError, _obLocale = "";
-        PlayStyle? _obStyle; bool _obSpeedMph, _obNearby = true, _obBusy, _obDone, _obOpen, _obGuessed, _obGuess; float _obCountryDue = -1f;
+        PlayStyle? _obStyle; bool _obSpeedMph, _obNearby = OnboardingRules.NearbyDefault, _obBusy, _obDone, _obOpen, _obGuessed, _obGuess; float _obCountryDue = -1f;
         InputField _obNameField, _obSearchField; RectTransform _obRoot;
 
         List<CountryOption> ObCountries() => (_svc.Player.Countries.Value ?? new CountryRow[0]).Select(c => new CountryOption { Code = c.code, Name = c.name }).ToList();
@@ -213,7 +213,7 @@ namespace ARO.Game
             }
             float ny = ry + 84;
             Ui.Outlined(_stage, "NearRow", new Color(0.075f, 0.085f, 0.11f, 1f), new Color(1, 1, 1, 0.12f), ObX + 60, ny, ObW - 120, 72, 16, 1.3f);
-            Ui.Icon(_stage, "ic_people", Soft, ObX + 84, ny + 22, 28); Ui.Label(_stage, "Appear in Players Nearby", "Bold", 20, White, ObX + 126, ny + 10, 400, 26); Ui.Label(_stage, "Other drivers can find you in the Players Nearby list and invite you to convoys. Change it any time in Settings.", "Regular", 16, Muted, ObX + 126, ny + 38, 900, 22);
+            Ui.Icon(_stage, "ic_people", Soft, ObX + 84, ny + 22, 28); Ui.Label(_stage, "Appear in Players Nearby", "Bold", 20, White, ObX + 126, ny + 10, 400, 26); Ui.Label(_stage, OnboardingRules.NearbyDescription, "Regular", 16, Muted, ObX + 126, ny + 38, 900, 22);
             float tx = ObX + ObW - 60 - 24 - 140;
             if (_obNearby) Ui.Rounded(_stage, "NearOn", Brand.Good, tx, ny + 14, 140, 44, 12); else Ui.Outlined(_stage, "NearOff", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.2f), tx, ny + 14, 140, 44, 12, 1.3f);
             Ui.Label(_stage, _obNearby ? "Enabled" : "Disabled", "Bold", 19, _obNearby ? Ink : White, tx, ny + 24, 140, 26, TextAnchor.UpperCenter);
@@ -245,7 +245,7 @@ namespace ARO.Game
             string name = OnboardingRules.CleanName(_obName); bool renamed = _svc.Profile == null || !string.Equals(name, _svc.Profile.display_name, StringComparison.Ordinal);
             var r = await _svc.Player.CompleteOnboarding(_obCountry, _obLang, OnboardingRules.StyleKey(_obStyle.Value), renamed ? name : null); if (this == null) return;
             _obBusy = false;
-            Debug.Log($"[Onboarding] complete ok={r.Ok} country={_obCountry} language={_obLang} style={OnboardingRules.StyleKey(_obStyle.Value)} renamed={renamed}" + (r.Ok ? "" : " error=" + r.ErrorCode));
+            Debug.Log($"[Onboarding] complete ok={r.Ok} country={_obCountry} language={_obLang} style={OnboardingRules.StyleKey(_obStyle.Value)} renamed={renamed} nearby={_obNearby.ToString().ToLowerInvariant()}" + (r.Ok ? "" : " error=" + r.ErrorCode));
             if (!r.Ok)
             {
                 _obError = OnboardingRules.ErrorText(r.ErrorCode, r.UserMessage);
@@ -257,7 +257,8 @@ namespace ARO.Game
             // device choice (applied at once) and the one account choice that is not the default
             var gs = SettingsStore.Current.Clone(); string unit = _obSpeedMph ? "mph" : "kmh";
             if (gs.Get("speed_unit") != unit) { gs.TrySet("speed_unit", unit); SettingsStore.Save(gs); }
-            if (!_obNearby) { var v = await _svc.Convoys.SetNearbyVisible(false); if (this == null) return; Debug.Log("[Onboarding] nearby visibility off ok=" + v.Ok); if (!v.Ok) Toast("Could not hide you from Players Nearby. You can change it in Settings.", 5f); }
+            // the player's Players Nearby choice is always sent explicitly (off unless they turned it on); it touches nothing but that preference
+            { var v = await _svc.Convoys.SetNearbyVisible(_obNearby); if (this == null) return; Debug.Log("[Onboarding] nearby visibility " + (_obNearby ? "on" : "off") + " ok=" + v.Ok); if (!v.Ok) Toast(OnboardingRules.NearbySaveFailed(_obNearby), 5f); }
             _obDone = true; _obOpen = false; string land = OnboardingRules.LandingPage(_obStyle);
             Debug.Log($"[Onboarding] finished name={r.Value.display_name} onboarded={r.Value.onboarded.ToString().ToLowerInvariant()} landing={land}");
             Refill("Header", BuildHeader);

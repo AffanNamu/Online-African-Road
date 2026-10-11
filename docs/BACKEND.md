@@ -23,6 +23,8 @@ African Roads Online talks to Supabase (Postgres + PostgREST + GoTrue). **Every 
 | `…06_vehicles_jobs` | vehicle API (status, mileage, customisation, selection), job board API (ETA, requirements, eligibility reason), job requirement triggers (level, route unlock), analytics + notifications on accept / abandon |
 | `…07_progression_content_economy` | ledger reason + earnings trigger + payout notification, wallet API, admin tools, XP maths, achievements (silent backfill for existing players), daily-challenge foundation, content (news + hero), leaderboards, `get_dashboard_summary` |
 
+| `20261012000007_nearby_opt_in` | Players Nearby is opt-in: `profiles.appear_nearby` default `false`, existing accounts set to `false`, `set_nearby_visibility(null)` = hidden. Touches no other column (country, name, level, wallets, map data are untouched) |
+
 Existing tables and APIs are untouched; `complete_job`, `accept_job`, telemetry and the ledger function keep their definitions. `supabase/tests/40_upgrade.sh` upgrades a database that already holds players, money, a delivered job and a convoy and proves the legacy data is byte-identical afterwards.
 
 ## Endpoints (RPC, `POST /rest/v1/rpc/<name>`)

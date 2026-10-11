@@ -197,6 +197,12 @@ begin
   perform testkit.as_user(pg_temp.u(p_k), format($q$select heartbeat(%L, 'driving', %L, %L)::text$q$, v_sess, p_route, p_city));
 end $$;
 select pg_temp.hb('S', 'lagos-ibadan', 'lagos'); select pg_temp.hb('M1', 'lagos-ibadan', 'lagos'); select pg_temp.hb('F', null, 'lagos'); select pg_temp.hb('G', 'lagos-ibadan', 'ibadan'); select pg_temp.hb('H', 'abuja-kaduna', 'abuja');
+-- Players Nearby is opt-in (20261012000007): a new account is in nobody's list until it says so
+select testkit.assert_eq('a new account is hidden by default', (select string_agg(appear_nearby::text, ',') from profiles where id in (pg_temp.u('S'), pg_temp.u('M1'), pg_temp.u('F'), pg_temp.u('G'), pg_temp.u('H'), pg_temp.u('Z'))), 'false,false,false,false,false,false');
+select testkit.assert_eq('nobody who has not opted in is listed, even on the same route', pg_temp.nnames(pg_temp.u('S')), 'none');
+select testkit.assert_eq('the default is also shown to its owner', pg_temp.near(pg_temp.u('S'))->>'visible', 'false');
+select testkit.assert_eq('opting in is explicit and answers true', testkit.as_user(pg_temp.u('S'), 'select set_nearby_visibility(true)::text'), 'true');
+select testkit.as_user(pg_temp.u(k), 'select set_nearby_visibility(true)') from (values ('M1'),('F'),('G'),('H'),('Z')) t(k);
 select testkit.assert_eq('route scope', pg_temp.near(pg_temp.u('S'))->>'scope', 'route');
 select testkit.assert_eq('route scope names the route', pg_temp.near(pg_temp.u('S'))->>'scope_name', 'lagos-ibadan');
 select testkit.assert_eq('nearby = same route (not myself, not another route)', pg_temp.nnames(pg_temp.u('S')), 'SpG,SpM1');
@@ -308,6 +314,7 @@ begin
   select id into v_sess from game_sessions where player_id = pg_temp.u2(p_k) and ended_at is null order by started_at desc limit 1;
   perform testkit.as_user(pg_temp.u2(p_k), format($q$select heartbeat(%L, 'driving', %L, %L)::text$q$, v_sess, p_route, p_city));
 end $$;
+select testkit.as_user(pg_temp.u2(k), 'select set_nearby_visibility(true)') from (values ('P'),('Q'),('R'),('U')) t(k);
 select pg_temp.hb2('P', 'lagos-ibadan', 'lagos'); select pg_temp.hb2('Q', 'lagos-ibadan', 'lagos'); select pg_temp.hb2('R', 'lagos-ibadan', 'lagos'); select pg_temp.hb2('U', 'lagos-ibadan', 'lagos');
 select testkit.assert_eq('nearby: a convoy above my level is not joinable for me', (select e->'convoy'->>'joinable' from jsonb_array_elements(testkit.as_user(pg_temp.u2('R'), 'select list_nearby_players()::text')::jsonb->'items') e where e->>'display_name' = 'SpU'), 'false');
 select testkit.assert_eq('nearby: ...and joinable for someone who meets it', (select e->'convoy'->>'joinable' from jsonb_array_elements(testkit.as_user(pg_temp.u2('P'), 'select list_nearby_players()::text')::jsonb->'items') e where e->>'display_name' = 'SpU'), 'true');
@@ -315,6 +322,7 @@ do $$ declare i int; v_ids uuid[] := '{}'; v_id uuid; v_sess uuid;
 begin
   for i in 1..40 loop
     v_id := testkit.make_user('Crowd' || i);
+    update profiles set appear_nearby = true where id = v_id;      -- fixture: a crowd that opted in
     insert into game_sessions(player_id, route_code, activity) values (v_id, 'lagos-ibadan', 'driving');
   end loop;
 end $$;

@@ -86,7 +86,7 @@ namespace ARO.NetCore
 
             // ---- Gameplay Preferences
             Toggle("show_names", "Show Player Names", SettingsPanel.Gameplay, SettingStatus.Live, true, "The name above other players' vehicles."),
-            ServerToggle("appear_nearby", "Appear in Nearby Players", SettingsPanel.Gameplay, "Saved to your account at once."),
+            ServerToggle("appear_nearby", "Appear in Nearby Players", SettingsPanel.Gameplay, "Off until you turn it on. Saved to your account at once."),
             Toggle("notifications", "Online Notifications", SettingsPanel.Gameplay, SettingStatus.Soon, true, "Notification preferences are not built yet."),
             Toggle("chat_messages", "Chat Messages", SettingsPanel.Gameplay, SettingStatus.Soon, true, NoSystem),
             Toggle("profanity", "Profanity Filter", SettingsPanel.Gameplay, SettingStatus.Soon, true, NoSystem),

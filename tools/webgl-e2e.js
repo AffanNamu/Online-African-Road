@@ -472,7 +472,7 @@ const allErrors = [], allExc = [];
     check(!!(await c.waitLog(/\[Settings\] loaded changed=0 stored=no/, 0, 10)), 'a player with no saved settings starts from the defaults');
     await c.settle(); let m = c.logs.length; await c.click('Nav_Settings');
     check(!!(await c.waitLog(/\[Settings\] opened tab=game dirty=False/, m, 60)), 'Settings opens from the sidebar');
-    check(!!(await c.waitLog(/\[Settings\] privacy nearby=true blocked=1/, m, 90)), 'the privacy items are read from the account (visible, one blocked player)');
+    check(!!(await c.waitLog(/\[Settings\] privacy nearby=false blocked=1/, m, 90)), 'the privacy items are read from the account (hidden from Players Nearby by default, one blocked player)');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-40-settings.png` });
     let tg = c.targets();
     for (const k of ['Btn_SetTab_Game', 'Btn_SetTab_Graphics', 'Btn_SetTab_Controls', 'Btn_SetTab_Audio', 'Btn_SetTab_Gameplay', 'Btn_SetTab_Account', 'Btn_SetTab_Language', 'Btn_SetDrop_quality', 'Btn_SetDrop_speed_unit', 'Btn_SetDrop_time_of_day', 'Btn_SetDrop_traffic',
@@ -521,10 +521,14 @@ const allErrors = [], allExc = [];
     }
 
     // privacy: Appear in Nearby Players is saved to the account at once; a blocked player can be unblocked
-    m = c.logs.length; await c.click('Btn_SetTab_Gameplay'); check(!!(await c.waitLog(/\[Settings\] privacy nearby=true blocked=1/, m, 90)), 'the Gameplay tab re-reads the privacy items'); await c.settle();
+    m = c.logs.length; await c.click('Btn_SetTab_Gameplay'); check(!!(await c.waitLog(/\[Settings\] privacy nearby=false blocked=1/, m, 90)), 'the Gameplay tab re-reads the privacy items'); await c.settle();
     await c.page.screenshot({ path: `${prefix}-48-settings-gameplay.png` });
-    m = c.logs.length; await c.click('Btn_SetToggle_appear_nearby'); check(!!(await c.waitLog(/\[Settings\] nearby visible=false ok=True/, m, 60)), 'Appear in Nearby Players off: the server accepted');
-    check(db(`select appear_nearby::text from profiles where id = '${hana.id}'`) === 'false', 'the nearby choice is stored on the account in the database');
+    const hanaCountry = db(`select coalesce(country_code, 'none') from profiles where id = '${hana.id}'`);
+    m = c.logs.length; await c.click('Btn_SetToggle_appear_nearby'); check(!!(await c.waitLog(/\[Settings\] nearby visible=true ok=True/, m, 60)), 'Appear in Nearby Players on (an explicit choice, off by default): the server accepted');
+    check(db(`select appear_nearby::text from profiles where id = '${hana.id}'`) === 'true', 'the opt-in is stored on the account in the database');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SetToggle_appear_nearby'); check(!!(await c.waitLog(/\[Settings\] nearby visible=false ok=True/, m, 60)), 'Appear in Nearby Players off again: the server accepted');
+    check(db(`select appear_nearby::text from profiles where id = '${hana.id}'`) === 'false', 'the opt-out is stored on the account in the database');
+    check(db(`select coalesce(country_code, 'none') from profiles where id = '${hana.id}'`) === hanaCountry, `switching Players Nearby on and off never changes the player's country (${hanaCountry})`);
     await c.settle(); m = c.logs.length; await c.click('Btn_SetUnblock_0'); check(!!(await c.waitLog(/\[Settings\] unblock ok=True/, m, 60)), 'Unblock: the server accepted');
     check(db(`select count(*) from player_blocks where blocker_id = '${hana.id}'`) === '0', 'the block is removed in the database');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-49-settings-unblocked.png` });
@@ -759,6 +763,7 @@ const allErrors = [], allExc = [];
   // =========================================================================================== 2h. Onboarding (first run) and the player's own profile
   const taken = await signup('BrowserTaken');                                                      // an existing driver: their name and username are not available
   const newbie = await signup('BrowserNew', false);                                                // an account that has never been through first-run
+  check(db(`select appear_nearby::text || '|' || coalesce(country_code, 'none') from profiles where id = '${newbie.id}'`) === 'false|none', 'a brand-new account is hidden from Players Nearby by default and has no country until it chooses one (nothing is guessed)');
   const ctry = db(`select code || '|' || name from countries where code <> 'NG' and name ~ '^[A-Za-z]+$' order by name limit 1`).split('|'); const [otherCode, otherName] = ctry;
   const nCountries = +db(`select count(*) from countries`), nLanguages = +db(`select count(*) from languages`);
   await open(newbie, '', async c => {
@@ -793,20 +798,22 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_ObFinish'); await sleep(2000); check(!c.logs.slice(m).some(l => /\[Onboarding\] complete/.test(l)), 'Start driving does nothing until a play style is chosen');
     m = c.logs.length; await c.click('Btn_ObStyle_convoy'); check(!!(await c.waitLog(/\[Onboarding\] style=convoy/, m, 40)), 'a play style can be chosen');
     m = c.logs.length; await c.click('Btn_ObSpeed_mph'); check(!!(await c.waitLog(/\[Onboarding\] speed=mph/, m, 40)), 'the speed unit can be chosen');
-    m = c.logs.length; await c.click('Btn_ObNearby'); check(!!(await c.waitLog(/\[Onboarding\] nearby=false/, m, 40)), 'appearing in Players Nearby can be turned off');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-98-onboarding-style-chosen.png` });
     // the server refuses a name that is taken: the player is sent back to the name with the reason, and nothing is stored
     m = c.logs.length; await c.click('Btn_ObFinish'); const bad = await c.waitLog(/\[Onboarding\] complete ok=False/, m, 60);
     check(!!bad && /error=display_name_taken/.test(bad), 'the server refuses a driver name that is already taken', bad);
+    check(!!bad && /nearby=false/.test(bad), 'Players Nearby is offered switched OFF: the player has not chosen it', bad);
     check(db(`select coalesce(onboarded_at::text, 'no') from profiles where id = '${newbie.id}'`) === 'no', 'a refused onboarding stores nothing (still not onboarded in the database)');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-99-onboarding-taken.png` }); check(!!c.targets()['Ob_Name_Input'], 'the player is back on the name step');
     await c.click('Ob_Name_Input'); await sleep(400); await wipe(c); await c.page.keyboard.type('Chidi Eze', { delay: 70 }); await c.settle();
     m = c.logs.length; await c.click('Btn_ObContinue'); await c.waitLog(/\[Onboarding\] step=where/, m, 40); await c.settle();
     check(!!c.targets()['Btn_ObLang_fr'], 'the earlier answers were kept (country and language are still chosen)'); m = c.logs.length; await c.click('Btn_ObContinue'); await c.waitLog(/\[Onboarding\] step=style/, m, 40); await c.settle();
+    m = c.logs.length; await c.click('Btn_ObNearby'); check(!!(await c.waitLog(/\[Onboarding\] nearby=true/, m, 40)), 'the player explicitly chooses to appear in Players Nearby');
     m = c.logs.length; await c.click('Btn_ObFinish'); const ok = await c.waitLog(/\[Onboarding\] complete ok=True/, m, 60);
     check(!!ok && ok.includes(`country=${otherCode} language=fr style=convoy renamed=True`), 'with a free name the server accepts the onboarding', ok);
     const row = db(`select country_code || '|' || language_code || '|' || play_style || '|' || display_name || '|' || (onboarded_at is not null) || '|' || appear_nearby from profiles where id = '${newbie.id}'`);
-    check(row === `${otherCode}|fr|convoy|Chidi Eze|true|false`, 'the database holds exactly what was chosen (country, language, style, name, onboarded, hidden from Nearby)', row);
+    check(row === `${otherCode}|fr|convoy|Chidi Eze|true|true`, 'the database holds exactly what was chosen (country, language, style, name, onboarded, Players Nearby on because the player chose it)', row);
+    check(!!(await c.waitLog(/\[Onboarding\] nearby visibility on ok=True/, m, 60)), 'the explicit Players Nearby choice was sent to the server');
     check(!!(await c.waitLog(/\[Onboarding\] finished name=Chidi Eze onboarded=true landing=multiplayer/, m, 60)) && !!(await c.waitLog(/\[Dashboard\] page=multiplayer/, m, 60)), 'a player who wants to drive with friends lands on Multiplayer');
     check(!!(await c.waitLog(/\[Settings\] applied .*speed=mph/, m, 30)), 'the speed unit chosen in onboarding is applied (mph)');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-100-onboarding-landed.png` });

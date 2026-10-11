@@ -15,6 +15,10 @@ namespace ARO.NetCore
     public static class OnboardingRules
     {
         public const int Steps = 3;
+        /// <summary>Players Nearby is opt-in: the onboarding switch starts OFF and only the player's own tap turns it on (the database default is false too, 20261012000007).</summary>
+        public const bool NearbyDefault = false;
+        public static string NearbyDescription => "Off unless you switch it on. Drivers on your route or in your city can then find you. Change it in Settings.";
+        public static string NearbySaveFailed(bool wanted) => wanted ? "Could not turn on Players Nearby. You can turn it on in Settings." : "Could not save your Players Nearby choice. You stay hidden unless you turn it on in Settings.";
         public static readonly PlayStyle[] AllStyles = { PlayStyle.Jobs, PlayStyle.Bus, PlayStyle.Convoy, PlayStyle.Explore };
 
         // ---------------------------------------------------------------- steps

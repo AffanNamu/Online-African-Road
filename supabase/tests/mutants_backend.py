@@ -392,4 +392,16 @@ def make(sub, resub):
     M["grants: complete_onboarding to anon"] = ("onboard", A("complete_onboarding", "text, text, text, text"))
     M["grants: set_my_preferences to anon"] = ("onboard", A("set_my_preferences", "text, text"))
     M["grants: _check_preferences executable by clients"] = ("onboard", G("_check_preferences", "text, text"))
+        # ------------------------------------------------------------------ Players Nearby opt-in
+    M["nearby opt-in: default stays visible"] = ("nearby", lambda t: sub(t, "alter column appear_nearby set default false;", "alter column appear_nearby set default true;"))
+    M["nearby opt-in: existing players not hidden"] = ("nearby", lambda t: sub(t, "update profiles set appear_nearby = false where appear_nearby;", ""))
+    M["nearby opt-in: migration also clears every country"] = ("nearby", T("update profiles set country_code = null;"))
+    M["nearby opt-in: migration also clears usernames/avatars"] = ("nearby", T("update profiles set avatar_id = 'default';"))
+    M["nearby opt-in: migration bumps updated_at"] = ("nearby", lambda t: sub(t, "update profiles set appear_nearby = false where appear_nearby;", "update profiles set appear_nearby = false, updated_at = now();"))
+    M["nearby opt-in: migration also moves city coordinates"] = ("nearby", T("update cities set lat = lat + 0.001;"))
+    M["nearby opt-in: null still means visible"] = ("nearby", lambda t: sub(sub(t, "set appear_nearby = coalesce(p_visible, false)", "set appear_nearby = coalesce(p_visible, true)"), "return coalesce(p_visible, false);", "return coalesce(p_visible, true);"))
+    M["nearby opt-in: opting out is ignored"] = ("nearby", lambda t: sub(t, "set appear_nearby = coalesce(p_visible, false)", "set appear_nearby = true"))
+    M["nearby opt-in: opting in also clears the country"] = ("nearby", lambda t: sub(t, "set appear_nearby = coalesce(p_visible, false) where id = auth.uid();", "set appear_nearby = coalesce(p_visible, false), country_code = null where id = auth.uid();"))
+    M["grants: set_nearby_visibility to anon (after the replace)"] = ("nearby", A("set_nearby_visibility", "boolean"))
+    M["nearby opt-in: preference writable by clients"] = ("nearby", T("grant update (appear_nearby) on profiles to authenticated;"))
     return M

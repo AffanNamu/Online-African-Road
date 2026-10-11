@@ -87,6 +87,7 @@ def scenario():
     for n in ("CtA", "CtB", "CtC", "CtD", "CtE", "CtF", "CtG"): psql(f"select testkit.make_user('{n}')")
     A, B, C, D, E, F, G = (uid(n) for n in ("CtA", "CtB", "CtC", "CtD", "CtE", "CtF", "CtG"))
     psql(f"update profiles set experience = 300, level = 2, distance_km = 12, jobs_completed = 2, lifetime_earnings = 900 where id = '{A}'")
+    psql(f"update profiles set country_code = 'NG' where id = '{A}'"); psql(f"update profiles set country_code = 'GH' where id = '{B}'")      # countries the screens must receive
     psql("select testkit.mk_job('CT-1', 1, 640)")
     psql("update jobs set expires_at = now() + interval '2 days'")
     for u in (A, B, C, F): as_user(u, "select start_session('webgl')::text")
@@ -106,6 +107,7 @@ def scenario():
     # a password convoy, a blocked player, a nearby crowd on A's route (heartbeats carry the place), and a second heartbeat for B
     as_user(F, "select create_convoy_lobby('Pw Convoy', null, false, 6, 'realistic', 1, 'en', 'pw1234', array['friendly'])")
     as_user(A, f"select block_player('{G}')")
+    for u in (A, B, C, F): as_user(u, "select set_nearby_visibility(true)::text")        # Players Nearby is opt-in: these players chose to appear
     for u in (B, C, F):
         sid = psql(f"select id from game_sessions where player_id = '{u}' and ended_at is null limit 1")
         as_user(u, f"select heartbeat('{sid}', 'driving', 'lagos-ibadan', 'lagos')::text")

@@ -7,7 +7,7 @@ MIG="${MIGRATIONS_DIR:-migrations}"
 export DB=aro_test_$$
 psql -v ON_ERROR_STOP=1 -q -d postgres -c "create database $DB"
 trap 'psql -q -d postgres -c "drop database if exists $DB" >/dev/null 2>&1' EXIT
-run() { psql -v ON_ERROR_STOP=1 -q -d "$DB" -f "$1"; }
+run() { psql -v ON_ERROR_STOP=1 -v MIG="$MIG" -q -d "$DB" -f "$1"; }
 run tests/00_auth_stub.sql
 for f in "$MIG"/*.sql; do run "$f"; done
 run seed.sql
@@ -28,4 +28,5 @@ run tests/44_garage.sql
 run tests/45_person_vehicle.sql
 run tests/46_leaderboard_social.sql
 run tests/47_onboarding.sql
+run tests/48_nearby_opt_in.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

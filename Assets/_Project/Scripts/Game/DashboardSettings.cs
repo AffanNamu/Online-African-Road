@@ -21,7 +21,7 @@ namespace ARO.Game
     {
         SettingsTab _sTab = SettingsTab.Game; GameSettings _sDraft = new GameSettings(), _sBase = new GameSettings();
         string _sDrop; readonly Dictionary<string, Rect> _sCtl = new Dictionary<string, Rect>();     // each dropdown's rectangle, so its list opens under it
-        bool _sNearbyKnown, _sNearby = true, _sBusy; LoadState _sBlockState = LoadState.Idle; BlockedPlayer[] _sBlocked = new BlockedPlayer[0]; string _sBlockErr;
+        bool _sNearbyKnown, _sNearby = false, _sBusy; LoadState _sBlockState = LoadState.Idle; BlockedPlayer[] _sBlocked = new BlockedPlayer[0]; string _sBlockErr;
         static readonly Color SetDim = new Color(1, 1, 1, 0.42f), SetTrack = new Color(1, 1, 1, 0.20f), SetRowLine = new Color(1, 1, 1, 0.05f), SetField = new Color(0.045f, 0.05f, 0.07f, 0.96f);
 
         static readonly (SettingsTab t, string icon)[] SetTabs =

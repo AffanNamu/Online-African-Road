@@ -18,6 +18,27 @@ namespace NetCore.Tests
             new LanguageOption { Code = "fr", Name = "French", NativeName = "Français" }, new LanguageOption { Code = "ar", Name = "Arabic", NativeName = "Arabic" },
         };
 
+        // ---------------------------------------------------------------- Players Nearby is opt-in
+        [Fact] public void PlayersNearbyStartsOffAndIsNeverAPrerequisite()
+        {
+            Assert.False(OnboardingRules.NearbyDefault);                                                  // only the player's own tap turns it on
+            foreach (var s in new[] { OnboardingStep.Name, OnboardingStep.Where, OnboardingStep.Style })    // no step asks for it: it is a switch, not a required answer
+                Assert.False(OnboardingRules.BlockedReason(s, "Chidi", "NG", "en", PlayStyle.Jobs) != null);
+        }
+        [Fact] public void TheNearbyCopyIsHonestAndFitsItsRow()
+        {
+            var d = OnboardingRules.NearbyDescription; Assert.StartsWith("Off unless you switch it on", d); Assert.Contains("Settings", d);
+            Assert.True(d.Length <= 120, "the description must stay on one line of the onboarding row");
+            Assert.DoesNotContain("country", d.ToLowerInvariant());                                       // Players Nearby never hides or changes the country
+            Assert.Contains("hidden", OnboardingRules.NearbySaveFailed(false)); Assert.Contains("Could not turn on", OnboardingRules.NearbySaveFailed(true));
+        }
+        [Fact] public void ACountryIsNeverInventedForThePlayer()
+        {
+            Assert.False(OnboardingRules.CanContinue(OnboardingStep.Where, "Chidi", null, "en", null)); Assert.False(OnboardingRules.CanContinue(OnboardingStep.Where, "Chidi", "", "en", null));
+            Assert.True(OnboardingRules.CanContinue(OnboardingStep.Where, "Chidi", "GH", "en", null));
+            Assert.NotNull(OnboardingRules.BlockedReason(OnboardingStep.Where, "Chidi", null, "en", null));
+        }
+
         // ---------------------------------------------------------------- steps
         [Fact] public void ThereAreThreeStepsInOrder()
         {

@@ -69,6 +69,18 @@ namespace ARO.Tests
             var s = Parse<LeaderboardPage>("search_leaderboard"); Assert.AreEqual("search", s.scope); Assert.AreEqual(1, s.items.Length); Assert.IsFalse(string.IsNullOrEmpty(s.items[0].username)); Assert.AreEqual(0, s.me == null ? 0 : s.me.rank, "a search carries no me block");
         }
 
+        // the country code (ISO-2, the key of the server's `countries` table) is what every screen that shows a player's country receives; Players Nearby being opt-in does not remove it
+        [Test] public void EveryScreenThatShowsACountryReceivesTheRealCountryCode()
+        {
+            var me = Parse<ProfileFull>("get_my_profile"); Assert.AreEqual("NG", me.country_code); Assert.AreEqual("Nigeria", me.country_name);
+            var friend = Parse<PeopleList>("list_friends").items[0]; Assert.AreEqual("CtB", friend.display_name); Assert.AreEqual("GH", friend.country_code);
+            Assert.AreEqual("GH", Parse<PublicProfile>("get_public_profile").country_code);
+            Assert.AreEqual("GH", Parse<PersonDto>("find_player").country_code);
+            var board = Parse<LeaderboardPage>("get_leaderboard"); var top = board.items.First(x => x.display_name == "CtA"); Assert.AreEqual("NG", top.country_code);
+            var fb = Parse<LeaderboardPage>("get_friends_leaderboard"); Assert.AreEqual("GH", fb.items.First(x => x.display_name == "CtB").country_code); Assert.AreEqual("NG", fb.items.First(x => x.display_name == "CtA").country_code);
+            var nearby = Parse<NearbyList>("list_nearby_players"); Assert.IsTrue(nearby.visible, "the contract player chose to appear");
+        }
+
         [Test] public void OnboardingAndPreferenceRepliesParse()
         {
             var fresh = Parse<ProfileFull>("get_my_profile"); Assert.IsFalse(fresh.onboarded, "a new account has not been onboarded"); Assert.IsTrue(string.IsNullOrEmpty(fresh.language_code)); Assert.IsTrue(string.IsNullOrEmpty(fresh.play_style)); Assert.AreEqual(1, fresh.vehicle_count); Assert.AreEqual(1, fresh.friend_count);

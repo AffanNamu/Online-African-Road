@@ -17,6 +17,26 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MIGRATIONS = os.path.join(ROOT, "supabase", "migrations")
 EXPECTED_LIVE = ["20261009000001_core_schema.sql", "20261009000002_game_functions.sql", "20261009000003_server_telemetry.sql",
                  "20261009000004_convoy_sessions.sql", "20261009000005_bus_system.sql", "20261009000006_exclusive_activity.sql"]
+# The seventeen migrations the deployment is expected to apply, in this order (reviewed list: a new, unreviewed file makes the check FAIL instead of riding along).
+EXPECTED_PENDING = [
+    "20261010000001_ledger_kinds.sql",
+    "20261010000002_foundation.sql",
+    "20261010000003_profile_presence.sql",
+    "20261010000004_world_state.sql",
+    "20261010000005_social.sql",
+    "20261010000006_vehicles_jobs.sql",
+    "20261010000007_progression_content_economy.sql",
+    "20261011000001_job_board_catalog.sql",
+    "20261011000002_convoy_lobby.sql",
+    "20261011000003_discovery.sql",
+    "20261012000001_vehicle_catalog.sql",
+    "20261012000002_ledger_skin_kind.sql",
+    "20261012000003_garage.sql",
+    "20261012000004_person_vehicle.sql",
+    "20261012000005_leaderboard_social.sql",
+    "20261012000006_onboarding.sql",
+    "20261012000007_nearby_opt_in.sql",
+]
 NEW_CATEGORIES = ("truck", "bus", "van", "car", "motorcycle")
 
 # ------------------------------------------------------------------ the read-only guard
@@ -129,6 +149,11 @@ Q = {
  "fp_ledger": "select count(*), coalesce(sum(amount), 0), coalesce(max(id), 0), md5(coalesce(string_agg(concat_ws('|', id, player_id, kind, amount, balance_after), ';' order by id), '')) from public.transactions",
  "fp_assignments": "select count(*), md5(coalesce(string_agg(concat_ws('|', id, job_id, player_id, vehicle_id, status), ';' order by id), '')) from public.job_assignments",
  "fp_profiles": "select count(*), md5(coalesce(string_agg(concat_ws('|', id, display_name, level, experience, distance_km, jobs_completed), ';' order by id), '')) from public.profiles",
+ "has_country_col": "select count(*) from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'country_code'",
+ "country_fp": "select count(*) filter (where country_code is not null), count(distinct country_code), md5(coalesce(string_agg(id::text || ':' || coalesce(country_code, '-'), ',' order by id), '')) from public.profiles",
+ "has_nearby_col": "select count(*) from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'appear_nearby'",
+ "nearby_counts": "select count(*) filter (where appear_nearby), count(*) from public.profiles",
+ "fp_geo": "select (select count(*) from public.countries), (select count(*) from public.cities), (select count(*) from public.locations), md5((select coalesce(string_agg(c::text, ';' order by c.code), '') from public.countries c) || (select coalesce(string_agg(c::text, ';' order by c.id), '') from public.cities c) || (select coalesce(string_agg(l::text, ';' order by l.id), '') from public.locations l))",
  "foreign_tables": "select count(*) from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE' and table_name <> all (array['_aro_migrations','countries','cities','locations','vehicle_definitions','profiles','player_wallets','transactions','vehicle_ownership','jobs','job_assignments','convoys','convoy_members','job_telemetry','bus_routes','bus_route_stops','bus_runs','bus_run_stops'])",
 }
 def ALL_QUERIES_FOR_SELFTEST():
@@ -182,6 +207,11 @@ def main():
     files = sorted(os.path.basename(f) for f in glob.glob(os.path.join(MIGRATIONS, "*.sql")))
     pending = [f for f in files if f not in applied]
     record("C2b", "Migrations that apply.sh would apply (repo files not recorded)", "INFO" if applied else "INCOMPLETE", f"{len(pending)}: " + ", ".join(p.split('_')[0] for p in pending))
+    # --- C2c the migration set and its order (repo files only; no database access)
+    after_onboarding = pending.index("20261012000007_nearby_opt_in.sql") > pending.index("20261012000006_onboarding.sql") if {"20261012000007_nearby_opt_in.sql", "20261012000006_onboarding.sql"} <= set(pending) else False
+    ordered_ok = bool(applied) and pending == EXPECTED_PENDING and after_onboarding and pending == sorted(pending)
+    record("C2c", "Pending migrations are exactly the reviewed seventeen, in filename order, with 20261012000007_nearby_opt_in after 20261012000006_onboarding", "PASS" if ordered_ok else ("INCOMPLETE" if not applied else "FAIL"),
+           f"{len(pending)} pending; unexpected={sorted(set(pending) - set(EXPECTED_PENDING))}, missing={sorted(set(EXPECTED_PENDING) - set(pending))}" if not ordered_ok else "17 pending, filename order is apply order, the opt-in migration is last")
     # --- C3 the function behind the error
     ok, rows = psql(Q["summary_fn"])
     exists = (rows[0][0] == "t") if ok else None
@@ -228,6 +258,18 @@ def main():
     for cid, key_, label in (("C8a", "fp_wallets", "Wallets (rows, total coins, md5)"), ("C8b", "fp_vehicles", "Vehicles (rows, md5)"), ("C8c", "fp_ledger", "Ledger (rows, sum, max id, md5)"),
                              ("C8d", "fp_assignments", "Job assignments (rows, md5)"), ("C8e", "fp_profiles", "Profiles core columns (rows, md5)")):
         ok, rows = psql(Q[key_]); record(cid, label, "INFO" if ok else "INCOMPLETE", " | ".join(rows[0]) if ok else rows[0][0])
+    # country, Players Nearby and map data (aggregates only). The columns arrive with pending migrations, so "not present yet" is reported as such, never as a pass.
+    ok, rows = psql(Q["has_country_col"])
+    if not ok: record("C7b", "Player countries (profiles.country_code)", "INCOMPLETE", rows[0][0])
+    elif rows[0][0] == "0": record("C7b", "Player countries (profiles.country_code)", "INFO", "column not present yet: it is added by pending migration 20261010000003 (no player has a country today)")
+    else:
+        ok, rows = psql(Q["country_fp"]); record("C7b", "Player countries: players with a country | distinct countries | md5 of (player, country)", "INFO" if ok else "INCOMPLETE", " | ".join(rows[0]) if ok else rows[0][0])
+    ok, rows = psql(Q["has_nearby_col"])
+    if not ok: record("C7c", "Players Nearby preference (profiles.appear_nearby)", "INCOMPLETE", rows[0][0])
+    elif rows[0][0] == "0": record("C7c", "Players Nearby preference (profiles.appear_nearby)", "INFO", "column not present yet: it is added by pending migration 20261011000003 and made opt-in by 20261012000007")
+    else:
+        ok, rows = psql(Q["nearby_counts"]); record("C7c", "Players Nearby preference: visible | all players", "INFO" if ok else "INCOMPLETE", f"{rows[0][0]} visible of {rows[0][1]}" if ok else rows[0][0])
+    ok, rows = psql(Q["fp_geo"]); record("C8f", "Map data (countries, cities, locations, md5); the pending migrations legitimately add to it", "INFO" if ok else "INCOMPLETE", " | ".join(rows[0]) if ok else rows[0][0])
     # --- C9 what no query can show
     record("C9", "Backup / point-in-time recovery available", "NOT CHECKABLE", "backups are a Supabase platform feature, not visible from inside the database; check Dashboard > Database > Backups")
     finish()
