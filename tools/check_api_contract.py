@@ -97,8 +97,12 @@ def scenario():
     # convoy (private) with B inside, C invited
     as_user(A, "select create_convoy('Contract Run')"); as_user(B, f"select join_convoy((select convoy_id from convoy_members where player_id = '{A}'))")
     as_user(A, "select set_convoy_options(4, true)::text"); as_user(A, f"select invite_to_convoy('{C}')")
-    # a public convoy for list_open_convoys
+    # a public convoy for list_open_convoys, with a route and tags so the nested shapes are exercised
     as_user(D, "select create_convoy('Open Convoy')")
+    as_user(D, "select set_convoy_route('lagos-ibadan')::text"); as_user(D, "select set_convoy_tags(array['jobs','chill_drive'], 'en')::text")
+    # A's convoy: route, tags, B ready, and a little chat (the lines B and A write plus the server's own system lines)
+    as_user(A, "select set_convoy_route('lagos-ibadan')::text"); as_user(A, "select set_convoy_tags(array['freight'], 'fr')::text")
+    as_user(B, "select set_my_ready(true)::text"); as_user(A, "select post_convoy_message('Ready when you are')::text"); as_user(B, "select post_convoy_message('Let us roll')::text")
     # A has a job in progress; progress to the 'verified_km' path
     return A, B, C, D, E
 
@@ -129,6 +133,15 @@ def main():
             ("send_friend_request", C, f"select send_friend_request('{D}')::text", "FriendSendResult"),
             ("get_my_convoy", A, "select get_my_convoy()::text", "MyConvoy"),
             ("list_open_convoys", A, "select list_open_convoys()::text", "OpenConvoyList"),
+            ("list_convoy_messages", A, "select list_convoy_messages()::text", "ChatPage"),
+            ("post_convoy_message", A, "select post_convoy_message('One more line')::text", "ChatPosted"),
+            ("list_active_players", A, "select list_active_players()::text", "ActivePlayerList"),
+            ("get_server_status", A, "select get_server_status()::text", "ServerStatus"),
+            ("set_convoy_route", A, "select set_convoy_route('lagos-ibadan')::text", "ConvoyInfo"),
+            ("set_convoy_tags", A, "select set_convoy_tags(array['freight','jobs'], 'fr')::text", "ConvoyInfo"),
+            ("set_my_ready", B, "select set_my_ready(true)::text", "ConvoyInfo"),
+            ("start_convoy_drive", A, "select start_convoy_drive()::text", "ConvoyInfo"),
+            ("end_convoy_drive", A, "select end_convoy_drive()::text", "ConvoyInfo"),
             ("list_convoy_invites", C, "select list_convoy_invites()::text", "ConvoyInviteList"),
             ("set_convoy_options", A, "select set_convoy_options(5, true)::text", "ConvoyInfo"),
             ("list_notifications", A, "select list_notifications()::text", "NotificationList"),

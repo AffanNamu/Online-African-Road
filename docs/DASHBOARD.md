@@ -38,3 +38,45 @@ States: loading skeleton, empty ("No jobs match" + Clear filters / "No open jobs
 * SQL: `supabase/tests/39_job_catalog.sql` (cargo details, estimates vs `buy_fuel`, filter, search incl. wildcard/injection, pagination, clamp, generator) + 21 mutants in `mutants_backend.py`.
 * API contract: C# `BoardJob`/`BoardCargo`/`BoardEstimate` vs the real RPC output (`tools/check_api_contract.py`); Unity EditMode `BackendClientTests` parses the real sample replies.
 * Browser (`tools/webgl-e2e.js`, real build + real PostgREST + real database): open the Jobs page, row count equals the database, category filter, empty category, typing a search, selecting rows, Accept Job creates the assignment with the server's reward.
+
+
+# Multiplayer page
+
+`DashboardMultiplayer.cs` (layout, polling), `DashboardMultiplayerActions.cs` (loading, server actions, dialogs). Flow, each step decided by the server
+(`supabase/migrations/20261011000002_convoy_lobby.sql`):
+
+```
+MULTIPLAYER -> Find / Create convoy -> Select route -> Invite / Join -> Convoy lobby -> Ready check -> Start driving -> Shared world -> Jobs together -> Rewards / XP
+```
+
+| On screen | Source / rule |
+|---|---|
+| Available Convoys (name, Open / In Progress / Full, members, route distance and time, tags, language, Join) | `list_open_convoys` (public convoys only; server search and tag filter; lobbies sort before convoys already on the road) |
+| Live Players (name, level, truck, status) and the Active Players tab | `list_active_players`: players with a live session (heartbeat inside the TTL), never yourself. Level and truck are public; **activity is shown only to friends** (strangers see "Online"/"Convoy") |
+| Server Status (players online, active convoys, your ping) | `get_server_status`; ping is the measured round trip of the convoy poll |
+| Create Convoy dialog (name, route, public / invite only, 2-8 players, up to 3 tags) | `create_convoy` then `set_convoy_route`, `set_convoy_options`, `set_convoy_tags`; the page reports which step the server refused. **No live session is created here** |
+| Your Convoy: members (level, truck, Leader / Ready / Not ready), route and distance, tags | `get_my_convoy`, polled every 3 s; the leader counts as ready |
+| Route picker | `get_world_state`: OPEN routes selectable, LOCKED show their level, PLANNED are listed but disabled; the server re-checks (leader and every member's level) |
+| I'm Ready / Start Driving | `set_my_ready` (needs a route; changing the route clears everyone's ready flag); `start_convoy_drive` (leader only; route chosen, all others ready, every member's level meets the route) |
+| Live session | created by the leader only after the server accepted the start; its code is stored with `set_convoy_session_code` and members fetch it through `get_convoy_session_code` (members only). If the live session cannot be created the convoy goes back to the lobby (`end_convoy_drive`), never stuck "driving" |
+| Invite Player, Manage (capacity, visibility, Make leader, Kick, Back to lobby, Leave) | `invite_to_convoy`, `set_convoy_options`, `transfer_convoy_leader`, `kick_convoy_member`, `end_convoy_drive`, `leave_convoy`; invites arrive in the "Your Convoy" panel of the invited player (`list_convoy_invites`, `respond_convoy_invite`) |
+| Convoy Chat / System | `list_convoy_messages` (first load = newest 50, then polling every 2.5 s), `post_convoy_message` (members only, 200 chars, 20 per 30 s, angle brackets and control characters stripped server-side, shown without rich text; the server keeps the last 200 lines per convoy). System lines (joined, ready, route, started) are written by the server |
+
+## Not in the build, and said so on screen
+
+| Mockup | Build | Why |
+|---|---|---|
+| Voice Chat tab | opens "Voice chat is not available yet" | there is no voice service |
+| Global Chat tab | disabled, toast "needs moderation tools first" | open chat with strangers needs moderation, rate rules and reporting that do not exist |
+| Server List tab | opens "Server selection is not available yet" | one game server; its numbers are in Server Status |
+| Per-convoy latency (24 ms ...) | omitted | there is nothing real to measure per convoy |
+| Distance column in Live Players | replaced by Status | positions never touch the database (see MULTIPLAYER.md), so a "distance" would be invented |
+| Server "12 game servers" | "Active Convoys" | same reason |
+| Convoy art | the key art, cropped differently per row | no per-convoy pictures exist |
+
+## Tests
+
+* SQL `supabase/tests/41_convoy_lobby.sql` (route rules, ready check, start/stop, tags, chat incl. flooding, retention, sanitising, convoy and player search, privacy of activity, server status, leaving) and 53 mutants (all caught).
+* API contract: 9 new endpoints, C# DTOs vs the real RPC output; EditMode `ConvoyLobbyRepliesParseWithTheRealJsonUtility` parses the real replies.
+* Browser (`tools/webgl-e2e.js`, real build, real PostgREST and database): list and players from the database, create convoy with route and tag, a second player joins and readies up (seen by polling), chat both ways, Start Driving with the live-session service unreachable (the convoy must return to the lobby), Leave passes leadership on, failing list shows Unavailable and Try again works, Voice tab is honest.
+* **Not verified anywhere:** the live shared world itself (Unity Multiplayer Services / Relay, avatars, two or more real clients driving together) and completing a job together. The code path exists and is unchanged; it has never run because CI has no Multiplayer Services project.

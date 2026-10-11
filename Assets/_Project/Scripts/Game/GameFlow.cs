@@ -123,7 +123,7 @@ namespace ARO.Game
                 case Screen.Jobs: ShowMenu(); if (_dash != null) _dash.OpenJobs(); break;
                 case Screen.Garage: ShowGarage(); break;
                 case Screen.Profile: ShowProfile(); break;
-                case Screen.Convoy: _ = ShowConvoy(); break;
+                case Screen.Convoy: ShowMenu(); if (_dash != null) _dash.OpenMultiplayer(); break;
                 case Screen.Bus: _ = ShowBus(); break;
                 case Screen.Shop: ShowShop(); break;
             }
@@ -219,7 +219,7 @@ namespace ARO.Game
         DashboardActions DashActions() => new DashboardActions
         {
             Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => OpenPanel(ShowGarage), Shop = () => OpenPanel(ShowShop),
-            Convoy = () => OpenPanel(() => _ = ShowConvoy()), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
+            Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
             SignOut = () => { _ = _svc.Presence.EndSession(); _svc.Api.SignOut(); _svc.ClearPlayerCaches(); if (_dash != null) Destroy(_dash.gameObject); ShowLogin(null); },
@@ -297,52 +297,41 @@ namespace ARO.Game
         }
 
         // ---------------------------------------------------------------- convoy
-        async Task ShowConvoy()
+        /// <summary>
+        /// Start (leader) or join (member) the live drive of a convoy. The leader's start is validated by the server (route chosen, everyone ready,
+        /// levels) before the live session is created; a failure at any step leaves the convoy in the lobby with the reason on screen.
+        /// </summary>
+        async Task ConvoyDriveFlow(ConvoyInfo c)
         {
-            var p = NewPanel("Convoy", 900f);
-            if (_svc.Session.State == ARO.NetCore.SessionState.InSession)
+            if (_busy || c == null) return;
+            if (FirstTruckOrAny() == null) { Toast("You need a vehicle to drive with the convoy.", 5f, NoticeLevel.Bad); return; }
+            _busy = true;
+            try
             {
-                UIKit.Label(p, $"{_svc.Convoys.CurrentConvoyName}\nSession code: {_svc.Session.Code}   {(_svc.Session.IsHost ? "(you are hosting)" : "")}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 80;
-                var sb = new System.Text.StringBuilder(); var leader = NetworkVehicle.Players.Leader;
-                foreach (var m in NetworkVehicle.Players.Members) sb.AppendLine((m == leader ? "★ " : "● ") + m.Name);
-                UIKit.Label(p, sb.Length > 0 ? sb.ToString() : "Waiting for drivers...", 24, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 240;
-                UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
-                UIKit.Btn(p, "LEAVE CONVOY", async () => { await _svc.Convoys.Leave(); Toast("You left the convoy."); await ShowConvoy(); }, false, 48);
-                UIKit.Btn(p, "BACK", ShowMenu, true, 48);
-                return;
+                if (c.is_leader && !c.Driving)
+                {
+                    Toast("Starting the convoy...");
+                    var r = await _svc.Convoys.StartDriving();
+                    if (!r.Ok) { Toast(r.UserMessage, 7f, NoticeLevel.Bad); if (_dash != null) _dash.ReloadMultiplayer(); return; }
+                }
+                else if (c.is_leader)
+                {   // rejoining: the leader hosts the live session; if it is gone the drive cannot continue, so the convoy goes back to the lobby
+                    if (_svc.Session.State != ARO.NetCore.SessionState.InSession)
+                    {
+                        await _svc.Convoys.EndDriving();
+                        Toast("The live session ended, so the convoy is back in the lobby. Start it again when everyone is ready.", 7f, NoticeLevel.Bad); if (_dash != null) _dash.ReloadMultiplayer(); return;
+                    }
+                }
+                else if (_svc.Session.State != ARO.NetCore.SessionState.InSession)
+                {
+                    Toast("Joining the convoy...");
+                    var j = await _svc.Convoys.JoinLiveSession(c.id);
+                    if (!j.Ok) { Toast(j.UserMessage, 7f, NoticeLevel.Bad); return; }
+                }
+                HideMenus();
+                if (_drive.Vehicle != null) Resume(); else StartDrive(null);
             }
-            UIKit.Label(p, "Loading convoys...", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            var mine = await _svc.Convoys.LoadMine();
-            var list = await _svc.Convoys.ListOpen();
-            p = NewPanel("Convoy", 900f);
-            if (mine.Ok && mine.Value.convoy != null && mine.Value.convoy.Exists)
-            {   // server truth: I am in a convoy (possibly with no live session on this device yet)
-                var c = mine.Value.convoy; var sb = new System.Text.StringBuilder();
-                foreach (var m in c.members) sb.AppendLine((m.is_leader ? "★ " : "● ") + m.display_name + (m.presence != null && m.presence.online ? "  (online)" : ""));
-                UIKit.Label(p, $"{c.name}  ·  {c.member_count}/{c.capacity}{(c.is_private ? "  ·  invite only" : "")}", 24, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 44;
-                UIKit.Label(p, sb.ToString(), 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 200;
-                UIKit.Btn(p, "LEAVE CONVOY", async () => { await _svc.Convoys.Leave(); Toast("You left the convoy."); await ShowConvoy(); }, false, 48);
-                UIKit.Btn(p, "BACK", ShowMenu, true, 48);
-                return;
-            }
-            if (!list.Ok) UIKit.Label(p, list.UserMessage, 22, UIKit.Bad, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            else if (list.Value.items.Length == 0) UIKit.Label(p, "No open convoys. Create one below.", 22, UIKit.Muted, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            int shown = 0;
-            if (list.Ok) foreach (var c in list.Value.items)
-            {
-                if (shown++ >= 4) break; var convoy = c;
-                UIKit.Btn(p, $"{convoy.name}  ·  led by {convoy.leader ?? "?"}  ·  {convoy.member_count}/{convoy.capacity}",
-                    async () => { if (_busy) return; _busy = true; Toast("Joining convoy..."); var r = await _svc.Convoys.Join(convoy.id, convoy.name); _busy = false; Toast(r.Ok ? "Joined convoy." : r.UserMessage, 5f); await ShowConvoy(); }, false, 60);
-            }
-            var nameField = UIKit.Input(p, "New convoy name");
-            UIKit.Btn(p, "CREATE CONVOY", async () =>
-            {
-                if (_busy) return; _busy = true; Toast("Creating convoy session...");
-                var r = await _svc.Convoys.Create(nameField.text); _busy = false;
-                Toast(r.Ok ? "Convoy created. Share it from the list." : r.UserMessage, 6f); await ShowConvoy();
-            });
-            UIKit.Btn(p, "REFRESH", () => _ = ShowConvoy(), false, 48);
-            UIKit.Btn(p, "BACK", ShowMenu, false, 48);
+            finally { _busy = false; }
         }
 
         // ---------------------------------------------------------------- bus

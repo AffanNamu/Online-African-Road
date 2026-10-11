@@ -1,0 +1,72 @@
+{
+ "all_ready": true,
+ "capacity": 4,
+ "created_at": "2026-10-11T05:03:46.993838+00:00",
+ "id": "66c93fa5-46f7-4d65-827f-ed7820cb2af2",
+ "is_leader": true,
+ "is_private": true,
+ "language": "fr",
+ "leader_id": "bd287395-7e04-43e9-a20f-736e159baa33",
+ "member_count": 2,
+ "members": [
+  {
+   "avatar_id": "sunset",
+   "country_code": "NG",
+   "display_name": "CtA",
+   "is_leader": true,
+   "joined_at": "2026-10-11T05:03:46.993838+00:00",
+   "level": 2,
+   "player_id": "bd287395-7e04-43e9-a20f-736e159baa33",
+   "presence": {
+    "activity": "driving",
+    "city_slug": "lagos",
+    "last_seen_at": "2026-10-11T05:03:47.912853+00:00",
+    "online": true,
+    "route_code": "lagos-ibadan",
+    "session_id": "ef01f5c0-df89-4664-b184-f2fcfc1cf208"
+   },
+   "ready": true,
+   "username": "cta",
+   "vehicle": "Savanna 4x2 Light Truck"
+  },
+  {
+   "avatar_id": "default",
+   "country_code": null,
+   "display_name": "CtB",
+   "is_leader": false,
+   "joined_at": "2026-10-11T05:03:47.028886+00:00",
+   "level": 1,
+   "player_id": "f3df78c7-0cc2-46ed-9c0a-b6d31c59d13f",
+   "presence": {
+    "activity": "menu",
+    "city_slug": null,
+    "last_seen_at": "2026-10-11T05:03:46.771142+00:00",
+    "online": true,
+    "route_code": null,
+    "session_id": "08e1f3d1-5e25-49f9-a344-b56a303e2f57"
+   },
+   "ready": true,
+   "username": "ctb",
+   "vehicle": "Savanna 4x2 Light Truck"
+  }
+ ],
+ "name": "Contract Run",
+ "phase": "driving",
+ "route": {
+  "code": "lagos-ibadan",
+  "distance_km": 128.0,
+  "est_minutes": 154,
+  "from": "Lagos",
+  "name": "Lagos \u2192 Ibadan",
+  "status": "OPEN",
+  "to": "Ibadan",
+  "unlock_level": 1
+ },
+ "session_active": false,
+ "started_at": "2026-10-11T05:03:48.451845+00:00",
+ "status": "in_progress",
+ "tags": [
+  "freight",
+  "jobs"
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "items": [
+  {
+   "body": "CtA created the convoy.",
+   "created_at": "2026-10-11T05:03:46.998554+00:00",
+   "id": 1,
+   "kind": "system",
+   "sender": null
+  },
+  {
+   "body": "CtB joined the convoy.",
+   "created_at": "2026-10-11T05:03:47.034675+00:00",
+   "id": 2,
+   "kind": "system",
+   "sender": null
+  },
+  {
+   "body": "Route set: Lagos \u2192 Ibadan.",
+   "created_at": "2026-10-11T05:03:47.257588+00:00",
+   "id": 5,
+   "kind": "system",
+   "sender": null
+  },
+  {
+   "body": "CtB is ready.",
+   "created_at": "2026-10-11T05:03:47.344897+00:00",
+   "id": 6,
+   "kind": "system",
+   "sender": null
+  },
+  {
+   "body": "Ready when you are",
+   "created_at": "2026-10-11T05:03:47.381049+00:00",
+   "id": 7,
+   "kind": "chat",
+   "sender": {
+    "avatar_id": "sunset",
+    "display_name": "CtA",
+    "level": 2,
+    "player_id": "bd287395-7e04-43e9-a20f-736e159baa33"
+   }
+  },
+  {
+   "body": "Let us roll",
+   "created_at": "2026-10-11T05:03:47.412572+00:00",
+   "id": 8,
+   "kind": "chat",
+   "sender": {
+    "avatar_id": "default",
+    "display_name": "CtB",
+    "level": 1,
+    "player_id": "f3df78c7-0cc2-46ed-9c0a-b6d31c59d13f"
+   }
+  }
+ ],
+ "server_time": "2026-10-11T05:03:48.204388+00:00"
+}

@@ -14,6 +14,7 @@ namespace ARO.Game
     public sealed class DashboardActions
     {
         public Action Jobs, Garage, Shop, Convoy, Bus, Profile, FreeDrive, Resume, SignOut, WorldMap;
+        public Action<ARO.Backend.ConvoyInfo> ConvoyDrive;
         public Action<JobDto> AcceptJob;
         public Action QuickJob;
     }
@@ -32,8 +33,8 @@ namespace ARO.Game
         const float HeroX = 331, HeroY = 142, HeroW = 1146, HeroH = 318, HeroAspect = HeroW / HeroH;
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
-        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot;
-        enum Page { Home, Jobs }
+        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot;
+        enum Page { Home, Jobs, Multiplayer }
         Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
@@ -104,6 +105,7 @@ namespace ARO.Game
             Region("News", 0.50f); BuildNews();
             Region("Convoy", 0.54f); BuildConvoyCard();
             _jobsRoot = Ui.Box(_root, "JobsPage", 0, 0, 1920, 1080); _regionParent = _jobsRoot; BuildJobsPage();
+            _mpRoot = Ui.Box(_root, "MultiplayerPage", 0, 0, 1920, 1080); _regionParent = _mpRoot; BuildMultiplayerPage();
             _regionParent = null; ApplyPage();
 
             _stage = _root;                                         // toast and the notice popover sit above everything
@@ -218,7 +220,7 @@ namespace ARO.Game
 
             var items = new (string icon, string label, Action go, string soon)[]
             {
-                ("ic_home", "Home", () => ShowPage(Page.Home), null), ("ic_jobs", "Jobs", OpenJobs, null), ("ic_people", "Multiplayer", _act.Convoy, null),
+                ("ic_home", "Home", () => ShowPage(Page.Home), null), ("ic_jobs", "Jobs", OpenJobs, null), ("ic_people", "Multiplayer", OpenMultiplayer, null),
                 ("ic_bus", "Trucks & Buses", _act.Shop, null), ("ic_wrench", "Garage", _act.Garage, null), ("ic_map", "Map", _act.WorldMap, null),
                 ("ic_people", "Friends", null, "Friends are coming soon."), ("ic_trophy", "Leaderboards", null, "Leaderboards are coming soon."),
                 ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", _act.Profile, null),
@@ -546,7 +548,7 @@ namespace ARO.Game
             if (_newsItems.Length > 1 && now > _nextNews) { _nextNews = now + 10f; NextNews(); }
             if (now > _nextPoll) { _nextPoll = now + 45f; _ = RefreshSnapshot(); }                // counts, coins, fuel, online players stay current while the dashboard is open
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
-            if (_page == Page.Jobs) JobsUpdate(now);
+            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
         }
 
@@ -1008,7 +1010,7 @@ namespace ARO.Game
             var t = Ui.Label(_stage, inConvoy ? "Your Convoy" : "Join a Convoy", "ExtraBold", 30, White, 1420, 1010, 360, 38); Ui.Drop(t);
             Ui.Label(_stage, inConvoy ? "Stay together. Share the road and the rewards." : "Drive together. Earn more. Make new friends.", "Regular", 17, new Color(0.9f, 0.92f, 0.95f), 1420, 1040, 420, 24);
             Ui.Rounded(_stage, "ConvoyGo", Gold, 1832, 1004, 46, 46, 23); Ui.Icon(_stage, "ic_chevron_right", Ink, 1841, 1013, 28);
-            Ui.Click(_stage, "Btn_JoinConvoy", 1397, 924, 502, 142, _act.Convoy);
+            Ui.Click(_stage, "Btn_JoinConvoy", 1397, 924, 502, 142, OpenMultiplayer);
         }
     }
 }

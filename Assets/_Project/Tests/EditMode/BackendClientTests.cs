@@ -80,6 +80,20 @@ namespace ARO.Tests
             var c = Parse<CatalogList>("list_vehicle_catalog"); Assert.AreEqual(3, c.items.Length); var med = c.items.First(x => x.definition_id == "truck_medium_01"); Assert.AreEqual(60000L, med.price); Assert.IsFalse(med.can_afford); Assert.IsTrue(med.purchasable);
         }
 
+        [Test] public void ConvoyLobbyRepliesParseWithTheRealJsonUtility()
+        {
+            var m = Parse<MyConvoy>("get_my_convoy").convoy;
+            Assert.AreEqual("lobby", m.phase); Assert.IsFalse(m.Driving); Assert.IsTrue(m.route.Exists); Assert.AreEqual("lagos-ibadan", m.route.code); Assert.AreEqual("Lagos", m.route.from); Assert.AreEqual("Ibadan", m.route.to);
+            Assert.AreEqual(128.0, m.route.distance_km, 0.001); Assert.AreEqual(154, m.route.est_minutes); CollectionAssert.AreEqual(new[] { "freight" }, m.tags); Assert.AreEqual("fr", m.language);
+            Assert.IsTrue(m.members.All(x => x.ready)); Assert.IsFalse(string.IsNullOrEmpty(m.members[1].vehicle)); Assert.IsTrue(m.all_ready);
+            var open = Parse<OpenConvoyList>("list_open_convoys"); Assert.AreEqual(1, open.total); Assert.AreEqual("Lagos \u2192 Ibadan", open.items[0].route.name); CollectionAssert.AreEqual(new[] { "chill_drive", "jobs" }, open.items[0].tags); Assert.IsTrue(open.items[0].joinable); Assert.AreEqual("lobby", open.items[0].phase);
+            var chat = Parse<ChatPage>("list_convoy_messages"); Assert.IsTrue(chat.items.Any(l => l.System)); var line = chat.items.First(l => !l.System); Assert.AreEqual("Ready when you are", line.body); Assert.AreEqual("CtA", line.sender.display_name); Assert.Greater(line.id, 0L);
+            Assert.Greater(Parse<ChatPosted>("post_convoy_message").id, 0L);
+            var pl = Parse<ActivePlayerList>("list_active_players"); Assert.GreaterOrEqual(pl.total, 1); Assert.IsFalse(string.IsNullOrEmpty(pl.items[0].display_name)); Assert.Greater(pl.items[0].level, 0);
+            var st = Parse<ServerStatus>("get_server_status"); Assert.GreaterOrEqual(st.players_online, 1); Assert.GreaterOrEqual(st.active_convoys, 2);
+            Assert.AreEqual("driving", Parse<ConvoyInfo>("start_convoy_drive").phase); Assert.IsTrue(Parse<ConvoyInfo>("start_convoy_drive").Driving); Assert.AreEqual("lobby", Parse<ConvoyInfo>("end_convoy_drive").phase);
+        }
+
         [Test] public void JobBoardReplyConvertsToTheJobShapeTheGameUses()
         {
             var page = Parse<JobBoardPage>("list_available_jobs"); Assert.GreaterOrEqual(page.total, 1);

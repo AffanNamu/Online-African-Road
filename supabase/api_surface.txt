@@ -69,3 +69,13 @@ claim_challenge_reward
 get_content
 get_leaderboard
 get_dashboard_summary
+# --- convoy lobby, chat, finding players (20261011000002)
+set_convoy_route
+set_convoy_tags
+start_convoy_drive
+end_convoy_drive
+set_my_ready
+post_convoy_message
+list_convoy_messages
+list_active_players
+get_server_status

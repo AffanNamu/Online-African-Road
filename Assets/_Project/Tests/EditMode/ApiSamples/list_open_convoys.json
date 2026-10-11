@@ -2,13 +2,31 @@
  "items": [
   {
    "capacity": 8,
-   "created_at": "2026-10-11T04:42:10.005076+00:00",
-   "id": "3b943889-9e37-4c3e-bde4-37b80ac0d2fa",
+   "created_at": "2026-10-11T05:03:47.139067+00:00",
+   "id": "4d53882b-26bb-43f9-99b0-aeea4b33c111",
+   "joinable": true,
+   "language": "en",
    "leader": "CtD",
    "member_count": 1,
    "name": "Open Convoy",
-   "session_active": false
+   "phase": "lobby",
+   "route": {
+    "code": "lagos-ibadan",
+    "distance_km": 128.0,
+    "est_minutes": 154,
+    "from": "Lagos",
+    "name": "Lagos \u2192 Ibadan",
+    "status": "OPEN",
+    "to": "Ibadan",
+    "unlock_level": 1
+   },
+   "session_active": false,
+   "tags": [
+    "chill_drive",
+    "jobs"
+   ]
   }
  ],
- "server_time": "2026-10-11T04:42:10.769901+00:00"
+ "server_time": "2026-10-11T05:03:48.170725+00:00",
+ "total": 1
 }
