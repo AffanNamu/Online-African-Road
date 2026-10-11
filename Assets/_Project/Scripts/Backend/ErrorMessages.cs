@@ -25,6 +25,8 @@ namespace ARO.Backend
             ["vehicle_not_owned"] = "You do not own that vehicle.",
             ["unknown_vehicle"] = "That vehicle does not exist.",
             ["not_for_sale"] = "That vehicle is not for sale.",
+            ["not_available"] = "That vehicle has not been released yet.",
+            ["already_owned"] = "You already own that vehicle.",
             ["route_not_found"] = "That route no longer exists.",
             ["not_at_stop"] = "Drive to the stop and come to a halt.",
             ["stop_too_soon"] = "You reached this stop faster than the bus can drive. Drive the route normally.",

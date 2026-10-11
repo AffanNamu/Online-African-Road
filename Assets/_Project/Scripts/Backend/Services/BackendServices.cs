@@ -200,6 +200,7 @@ namespace ARO.Backend
 
         public Task<Result<VehicleList>> LoadGarage() => Track(Garage, () => Api.Call<VehicleList>("list_my_vehicles"), v => v.items == null || v.items.Length == 0);
         public Task<Result<CatalogList>> LoadCatalog() => Track(Catalog, () => Api.Call<CatalogList>("list_vehicle_catalog"), v => v.items == null || v.items.Length == 0);
+        public Task<Result<JobFitDto>> JobFit(string definitionId) => Api.Call<JobFitDto>("get_vehicle_job_fit", JsonArgs.Obj(("p_definition", definitionId)));
         public Task<Result<string>> SetActive(string vehicleId) => Api.Rpc("set_active_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId)));
         public Task<Result<string>> Rename(string vehicleId, string name) => Api.Rpc("rename_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_name", name)));
         public Task<Result<string>> Customize(string vehicleId, string colorHex, string livery, string plate)

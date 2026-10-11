@@ -1,43 +1,43 @@
 {
  "items": [
   {
-   "created_at": "2026-10-11T05:26:58.396608+00:00",
-   "id": "c2dd1241-708c-4e1f-aff6-e1229f440f51",
+   "created_at": "2026-10-11T10:35:57.088091+00:00",
+   "id": "67de9fdf-6f08-4f42-b0ac-a5824dec4a9d",
    "message": "CtB joined Contract Run.",
    "metadata": {
-    "convoy_id": "697bf8ef-4a42-4d7e-88a3-b9282280a0a0",
-    "player_id": "d59f37a3-c738-4196-aa87-6cd5a7a99c6a"
+    "convoy_id": "e82e99ae-46a7-43ad-a52d-ae2a51bef4e2",
+    "player_id": "e10f5434-f04e-4009-9bc5-36249a38f315"
    },
    "read": false,
    "title": "Convoy update",
    "type": "convoy_event"
   },
   {
-   "created_at": "2026-10-11T05:26:58.294137+00:00",
-   "id": "970b06c1-b29d-450d-801b-6a2b99660bcd",
+   "created_at": "2026-10-11T10:35:56.960868+00:00",
+   "id": "05e14628-9028-41c0-b7e4-06ae52e5262d",
    "message": "CtD wants to be your friend.",
    "metadata": {
-    "player_id": "97b27fe6-e195-4e62-85f9-e7ee10704f9c",
-    "request_id": "ed094e59-c212-4d22-a373-16649fba8cdb"
+    "player_id": "3360f084-9d11-4969-9333-2ad0e603a860",
+    "request_id": "455eea0e-745d-48b4-b72a-3f78ee1f50a0"
    },
    "read": false,
    "title": "Friend request",
    "type": "friend_event"
   },
   {
-   "created_at": "2026-10-11T05:26:58.259742+00:00",
-   "id": "4e725d45-402d-4394-9ba7-571bec272be4",
+   "created_at": "2026-10-11T10:35:56.922484+00:00",
+   "id": "ae8b6fe5-83e1-4e27-9ac1-5992437bb269",
    "message": "CtB accepted your friend request.",
    "metadata": {
-    "player_id": "d59f37a3-c738-4196-aa87-6cd5a7a99c6a"
+    "player_id": "e10f5434-f04e-4009-9bc5-36249a38f315"
    },
    "read": false,
    "title": "New friend",
    "type": "friend_event"
   },
   {
-   "created_at": "2026-10-11T05:26:57.963642+00:00",
-   "id": "31875a31-b669-450e-ae38-48267ee3f4ac",
+   "created_at": "2026-10-11T10:35:56.62839+00:00",
+   "id": "30fa730c-c1df-49d5-9029-19629b274df3",
    "message": "First delivery: Complete your first job.",
    "metadata": {
     "achievement_id": "first_delivery"
@@ -47,8 +47,8 @@
    "type": "achievement"
   },
   {
-   "created_at": "2026-10-11T05:26:57.959476+00:00",
-   "id": "a5a23ae5-9f87-477d-8143-1326c5afac43",
+   "created_at": "2026-10-11T10:35:56.625487+00:00",
+   "id": "e95c82e8-ad01-4231-9434-41ec02330728",
    "message": "You reached level 2.",
    "metadata": {
     "level": 2
@@ -58,6 +58,6 @@
    "type": "level_up"
   }
  ],
- "server_time": "2026-10-11T05:27:00.551047+00:00",
+ "server_time": "2026-10-11T10:35:59.328616+00:00",
  "unread": 5
 }

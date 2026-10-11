@@ -30,6 +30,19 @@ insert into vehicle_definitions(id, category, name, price, cargo_capacity_kg, pa
    '{"massKg":9500,"torqueNm":1100,"gears":[4.2,2.5,1.6,1.0,0.8],"reverseRatio":3.8,"finalDrive":4.4,"brakeTorqueNm":6500,"maxSteerDeg":30,"fuelBurnLPerKm":0.28}')
 on conflict (id) do nothing;
 
+-- Catalogue facts of the three drivable vehicles (migration 20261012000001 adds the columns; on a fresh database this seed runs after it, and the
+-- upgrade test seeds an older schema first, so the update only runs when the columns exist).
+do $$ begin
+  if exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'vehicle_definitions' and column_name = 'vehicle_class') then
+    update vehicle_definitions set vehicle_class = 'Light Truck',  drive = '4x2', torque_nm = (stats->>'torqueNm')::int, weight_kg = (stats->>'massKg')::int, weight_basis = 'kerb',
+           picture_key = 'aro_light_180',  sort_order = 10 where id = 'truck_light_01';
+    update vehicle_definitions set vehicle_class = 'Medium Truck', drive = '6x2', torque_nm = (stats->>'torqueNm')::int, weight_kg = (stats->>'massKg')::int, weight_basis = 'kerb',
+           picture_key = 'aro_cargo_260',  sort_order = 20 where id = 'truck_medium_01';
+    update vehicle_definitions set vehicle_class = 'City Bus',     torque_nm = (stats->>'torqueNm')::int, weight_kg = (stats->>'massKg')::int, weight_basis = 'kerb',
+           picture_key = 'aro_city_bus',   sort_order = 30 where id = 'bus_city_01';
+  end if;
+end $$;
+
 -- Bus route LAG-R1 follows the same corridor nodes as the truck route (Mile 12 -> Oshodi -> Ikeja).
 insert into bus_routes(code, name, city_id, fare, xp_reward)
 select 'LAG-R1', 'Mile 12 - Oshodi - Ikeja', c.id, 15, 150 from cities c where c.name = 'Lagos'

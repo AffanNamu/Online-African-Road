@@ -49,12 +49,16 @@ namespace ARO.Backend
         public bool Exists => !string.IsNullOrEmpty(id);
     }
     [Serializable] public class VehicleList { public VehicleInfo[] items; public string selected_id, server_time; }
+    /// <summary>One catalogue model. Numbers the brand sheet does not give arrive as null and JsonUtility makes them 0: for hp / torque / weight 0 means "not published" (the database refuses 0).</summary>
     [Serializable] public class CatalogItem
     {
-        public string definition_id, name, category, description; public long price; public int unlock_level, cargo_capacity_kg, passenger_capacity, owned;
-        public double top_speed_kmh, fuel_capacity_l; public bool unlocked, purchasable, can_afford;
+        public string definition_id, name, category, description, manufacturer, vehicle_class, drive, engine, transmission, fuel_type, weight_basis, availability, picture_key, purchase_state;
+        public long price, need_more; public int unlock_level, cargo_capacity_kg, passenger_capacity, owned, engine_hp, torque_nm, weight_kg;
+        public double top_speed_kmh, fuel_capacity_l, displacement_l; public bool unlocked, purchasable, can_afford; public string[] features;
     }
-    [Serializable] public class CatalogList { public CatalogItem[] items; }
+    [Serializable] public class CatalogList { public CatalogItem[] items; public int level; public long balance; public string server_time; }
+    [Serializable] public class OpenByCategory { public int truck, bus, van, car, motorcycle; }
+    [Serializable] public class JobFitDto { public string definition_id, category, reason; public int open_jobs, fits; public bool compatible, drivable; public OpenByCategory open_by_category; }
 
     [Serializable] public class SummaryProfile { public string id, display_name, username, avatar_id, country_code; public int level; }
     [Serializable] public class JobsSummary { public int available; public long best_reward; }

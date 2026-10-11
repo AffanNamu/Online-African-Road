@@ -88,7 +88,7 @@ ROWS=$(q -c "select count(*) from bus_run_stops where run_id='$RUN'")
 echo "race 5 (double terminus serve): fares paid exactly once (+300)"
 
 # --- RACE 6: two simultaneous purchases with money for only one bus: exactly one succeeds
-q -c "update player_wallets set balance=45000 where player_id='$WINNER';" >/dev/null
+q -c "delete from bus_run_stops where run_id in (select id from bus_runs where player_id='$WINNER'); delete from bus_runs where player_id='$WINNER'; delete from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'; update player_wallets set balance=45000 where player_id='$WINNER';" >/dev/null   # (one copy of a model per player: start from none)
 BUSES0=$(q -c "select count(*) from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'")
 b1=$(mktemp); b2=$(mktemp)
 buy() {
@@ -99,7 +99,7 @@ buy "$b1" & buy "$b2" & wait
 BUSES1=$(q -c "select count(*) from vehicle_ownership where player_id='$WINNER' and definition_id='bus_city_01'")
 BAL=$(q -c "select balance from player_wallets where player_id='$WINNER'")
 [ $((BUSES1-BUSES0)) -eq 1 ] && [ "$BAL" = "0" ] || { echo "RACE 6 FAILED new buses=$((BUSES1-BUSES0)) balance=$BAL"; cat "$b1" "$b2"; exit 1; }
-grep -q "insufficient_funds" "$b1" "$b2" || { echo "RACE 6: loser did not get insufficient_funds"; cat "$b1" "$b2"; exit 1; }
+grep -qE "insufficient_funds|already_owned" "$b1" "$b2" || { echo "RACE 6: loser was not refused"; cat "$b1" "$b2"; exit 1; }
 echo "race 6 (double purchase): one bus bought, wallet 0"
 
 # --- RACE 7: six players join a convoy with 3 free seats at the same moment: never more than the capacity
@@ -137,5 +137,22 @@ ROWS=$(q -c "select count(*) from transactions where kind='CHALLENGE_REWARD' and
 grep -q "already_claimed" "$c1" "$c2" || { echo "RACE 8: second claim did not get already_claimed"; cat "$c1" "$c2"; exit 1; }
 echo "race 8 (double challenge claim): reward paid exactly once (+250)"
 q -c "delete from player_challenges; delete from challenge_definitions;" >/dev/null
+# --- RACE 9: the same vehicle is bought twice at once (double click, two tabs): charged once, owned once
+VB=$(q -c "select testkit.make_user('RaceBuyer')")
+q -c "update player_wallets set balance = 200000 where player_id = '$VB'" >/dev/null
+BEFORE=200000
+v1=$(mktemp); v2=$(mktemp)
+buy() {
+  psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$VB',false);
+    begin; select pg_sleep(0.2); select 'BOUGHT:' || buy_vehicle('bus_city_01')::text; select pg_sleep(0.4); commit;" >"$1" 2>&1 || true
+}
+buy "$v1" & buy "$v2" & wait
+AFTER=$(q -c "select balance from player_wallets where player_id='$VB'")
+ROWS=$(q -c "select count(*) from transactions where kind='VEHICLE_PURCHASE' and player_id='$VB'")
+OWNED=$(q -c "select count(*) from vehicle_ownership where player_id='$VB' and definition_id='bus_city_01'")
+WON=$(cat "$v1" "$v2" | grep -c '^BOUGHT:' || true)
+[ "$WON" = "1" ] && [ "$ROWS" = "1" ] && [ "$OWNED" = "1" ] && [ $((BEFORE-AFTER)) -eq 45000 ] || { echo "RACE 9 FAILED won=$WON rows=$ROWS owned=$OWNED delta=$((BEFORE-AFTER))"; cat "$v1" "$v2"; exit 1; }
+grep -q "already_owned" "$v1" "$v2" || { echo "RACE 9: the second purchase did not get already_owned"; cat "$v1" "$v2"; exit 1; }
+echo "race 9 (double purchase): charged and granted exactly once (-45000)"
 q -c "drop table public._race" >/dev/null
 echo "CONCURRENCY TESTS PASSED"

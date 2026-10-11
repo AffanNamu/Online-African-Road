@@ -120,3 +120,32 @@ Each player's job reward is still validated by the server from their own telemet
 * API contract: 44 endpoints, C# DTOs vs the real RPC output; EditMode tests parse the real replies.
 * Browser (`tools/webgl-e2e.js`, real build, real PostgREST and database): lists from the database, create (route, tag), lobby with a second player and ready flag seen by polling, chat both ways, report and block, Start with the live-session service unreachable (the convoy must return to the lobby), server list, Leave, create with rules and a password, Disband, failing list shows Unavailable.
 * **Not verified anywhere:** the shared world itself (Unity Multiplayer Services / Relay, avatars, two or more real clients) and everything that happens after the live session starts, including the HUD convoy panel. CI has no Multiplayer Services project.
+
+
+# Trucks & Buses page
+
+`DashboardVehicles.cs` (page), `DashboardVehiclesActions.cs` (select, buy, compare), pure rules in `ARO.NetCore.VehicleRules` (`VehicleModel.cs`, unit tested).
+Backend: `supabase/migrations/20261012000001_vehicle_catalog.sql`.
+
+**One catalogue, many views.** `list_vehicle_catalog` returns every model once; the tabs (All, Trucks, Buses, Light Vehicles = cars, vans and motorcycles, Owned, Shop), the search and the sort are filters over that list. Nothing is duplicated per tab.
+
+| On screen | Source / rule |
+|---|---|
+| Vehicle cards and the vehicle panel (name, class, drive, description, power, torque, top speed, fuel tank, cargo or seats, weight, price, level) | the model's row in `vehicle_definitions`. A value the brand sheet does not give is NULL and shows "n/a"; it is never invented. Bars are the value against the largest value in the catalogue |
+| Buy / Select / Coming soon / Requires Level N / Need N more | `purchase_state`, computed **by the server** from the caller's own wallet and level (`owned`, `coming_soon`, `not_for_sale`, `level_required`, `insufficient_funds`, `available`) |
+| Condition and fuel of an owned vehicle | `list_my_vehicles` (server values). Bands: condition Ready >= 70 %, Maintenance recommended 30-70 %, Repair required < 30 % (server `needs_repair` at 70 % damage), Critical <= 10 %; fuel Healthy >= 25 %, Low 10-25 %, Critical < 10 % (server `low_fuel` below 10 %) |
+| "Can take N of the M open jobs" | `get_vehicle_job_fit`: the rule `accept_job` enforces (the job's required category equals the vehicle's category); a model that is not released says so |
+| Compare Vehicles | 2 to 4 distinct vehicles from the same catalogue. Fields that do not apply to a kind (cargo for a bus, seats for a truck) show "n/a"; the better value is highlighted; identical values are not "better"; acceleration, handling and licence are not part of the data, so they are not shown |
+| Open Garage | the existing garage (refuel, repair). Cosmetic customisation exists server-side (`set_vehicle_customization`) but has no screen yet, so the button is called Open Garage, not Customize |
+
+**Purchase.** Buy -> confirmation (server price, balance, balance after) -> `buy_vehicle` -> the page re-reads the catalogue, the garage and the wallet. The server refuses before any money moves (unknown model, not released, not for sale, already owned, level too low) and the debit and the ownership row are one transaction. One copy of a model per player (unique index + advisory lock): a double click, two tabs or a race charge once. A failure shows "Purchase failed. Your balance has not been changed." with the server's reason.
+
+**Selection.** Select Vehicle -> `set_active_vehicle` (ownership checked server-side) -> the garage is re-read.
+
+**The line-up.** The three drivable vehicles (Savanna light truck, Harmattan medium truck, Danfo city bus) are `available`. The ARO Motors line-up from the brand sheets (TITAN 480, HAULER 620, RUNNER 300, CITYLINER 45, URBAN 32, TRANSIT 16, ANCORA, NOMAD, CITYGO, CARGO VAN, RIDE 150) is in the catalogue with its real specification and photographs but is `coming_soon`: **no drivable model exists for them yet, so they cannot be bought**. Hp, torque, engine, transmission, seats, gross weight and features are the brand sheet's; price, top speed, fuel tank and capacities of those models are authored game-design values that may change before release. Cars and motorcycles are catalogued and ready for the racing/challenge system; no racing exists yet.
+
+**Pictures.** Real crops of the ARO Motors sheets (`tools/crop_vehicle_art.py`): the catalogue card, a showroom picture, the sheet's front / side / rear views for every line-up model, and for the TITAN 480 five views and the driver cabin (Interior toggle). The three drivable vehicles use the nearest-class card of the Trucks & Buses mockup (about 100 px, the softest pictures; no photograph of those exact models exists). Higher-resolution files named `veh_<picture_key>.jpg`, `_hero`, `_v1..v5`, `_int` in `Assets/_Project/Resources/UI/` replace them without code changes.
+
+**Not built, and said so on screen.** 3D showroom (rotate, zoom, 360 degrees: the button explains it arrives with the vehicle models; `VehicleRules.Showroom` reports what exists), licence requirements (no licence system), vehicle customisation screen, condition affecting gameplay beyond what the server already does, separate phone/portrait layouts (the page scales on the 1920x1080 stage like the other pages), vehicle racing.
+
+**Tests.** SQL `43_vehicle_catalog.sql` (catalogue shape, specs, every purchase state, purchase atomicity, one copy per model, job fit, grants, schema guards) + concurrency race 9 (double purchase) + 33 mutants; xunit `VehicleModelTests` (69 tests: tabs, search, sort, actions, condition and fuel bands, bars, capacity, comparison, job-fit sentences, showroom honesty); API contract (45 endpoints); EditMode parses the real replies; browser E2E (`tools/webgl-e2e.js` section 2c: catalogue equals the database, tabs, search, announced model disabled, cannot-afford, buy with confirmation and exact debit, select persisted, compare, garage, unavailable + retry).

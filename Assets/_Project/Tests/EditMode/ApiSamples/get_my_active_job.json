@@ -1,7 +1,7 @@
 {
  "active": {
-  "accepted_at": "2026-10-11T05:26:59.227649+00:00",
-  "assignment_id": "c0562948-09ff-41d5-83df-aad4a4b7d58c",
+  "accepted_at": "2026-10-11T10:35:57.996148+00:00",
+  "assignment_id": "4a13f510-cac8-4a95-9e2f-a69f0c62e6a6",
   "job": {
    "blocked_reason": "activity_in_progress",
    "cargo": {
@@ -14,7 +14,7 @@
     "weight_kg": 1000
    },
    "code": "CT-2",
-   "created_at": "2026-10-11T05:26:59.053641+00:00",
+   "created_at": "2026-10-11T10:35:57.823764+00:00",
    "destination": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -32,8 +32,8 @@
     "fuel_l": 0.7,
     "profit": 898
    },
-   "expires_at": "2026-10-12T05:26:59.053641+00:00",
-   "id": "024cdfe8-5b12-44a1-b676-d84d7daaf4da",
+   "expires_at": "2026-10-12T10:35:57.823764+00:00",
+   "id": "b27f413d-a92c-4fa9-a25e-a07ca2d5e6ff",
    "origin": {
     "city": "Lagos",
     "city_slug": "lagos",
@@ -56,8 +56,8 @@
   "progress_pct": 0.0,
   "started_at": null,
   "status": "accepted",
-  "vehicle_id": "c5f3590d-5eb4-44cf-ab05-ee1a556517ff",
+  "vehicle_id": "2192bb9b-7a9d-46b3-acee-f42fb3bf9939",
   "verified_km": 0
  },
- "server_time": "2026-10-11T05:27:00.8642+00:00"
+ "server_time": "2026-10-11T10:35:59.661175+00:00"
 }

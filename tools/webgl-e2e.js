@@ -291,6 +291,105 @@ const allErrors = [], allExc = [];
     check(c.logs.slice(m).some(l => /\[Multiplayer\] tab=voice/.test(l)), 'the Voice Chat tab opens an honest "not available yet" page');
   });
 
+  // =========================================================================================== 2c. Trucks & Buses: the catalogue, tabs, search, selection, purchase, compare, garage
+  const vera = await signup('BrowserVera');
+  const defsDb = +db(`select count(*) from vehicle_definitions`), busDefsDb = +db(`select count(*) from vehicle_definitions where category = 'bus'`), truckDefsDb = +db(`select count(*) from vehicle_definitions where category = 'truck'`);
+  const lightDefsDb = +db(`select count(*) from vehicle_definitions where category in ('car','van','motorcycle')`), titanDefsDb = +db(`select count(*) from vehicle_definitions where name ilike '%titan%'`);
+  await open(vera, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserVera/, 0, 150)), 'Trucks & Buses: the dashboard opens for the new player');
+    await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses');
+    const cat = await c.waitLog(/\[Vehicles\] catalog state=ready total=(\d+)/, m, 90);
+    check(!!cat && +/total=(\d+)/.exec(cat)[1] === defsDb, `the catalogue lists the ${defsDb} vehicle definitions held by the database`, cat);
+    check(!!cat && new RegExp('balance=' + db(`select balance from player_wallets where player_id = '${vera.id}'`) + ' ').test(cat + ' '), 'the wallet balance on the page is the database balance', cat);
+    check(!!cat && /owned=1 /.test(cat), 'the player owns exactly the starter truck', cat);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-20-vehicles.png` });
+    let tg = c.targets();
+    for (const k of ['Btn_VehTab_All', 'Btn_VehTab_Trucks', 'Btn_VehTab_Buses', 'Btn_VehTab_Light', 'Btn_VehTab_Owned', 'Btn_VehTab_Shop', 'Btn_VehSort', 'Veh_Search_Input', 'Btn_VehCompare', 'Btn_VehPrimary', 'Btn_VehGarage', 'Btn_Veh_aro_titan_480', 'Btn_Veh_truck_light_01', 'Btn_Veh_bus_city_01']) check(!!tg[k], `${k} is a clickable target on the Trucks & Buses page`);
+
+    // tabs filter ONE catalogue
+    m = c.logs.length; await c.click('Btn_VehTab_Buses');
+    let v = await c.waitLog(/\[Vehicles\] view tab=buses .* shown=(\d+)/, m, 60);
+    check(!!v && +/shown=(\d+)/.exec(v)[1] === busDefsDb, `Buses tab shows the ${busDefsDb} buses of the database`, v);
+    m = c.logs.length; await c.click('Btn_VehTab_Light');
+    v = await c.waitLog(/\[Vehicles\] view tab=light .* shown=(\d+)/, m, 60); check(!!v && +/shown=(\d+)/.exec(v)[1] === lightDefsDb, `Light Vehicles tab shows the ${lightDefsDb} cars, vans and motorcycles`, v);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-20b-light-vehicles.png` });
+    m = c.logs.length; await c.click('Btn_VehTab_Owned');
+    v = await c.waitLog(/\[Vehicles\] view tab=owned .* shown=(\d+)/, m, 60); check(!!v && +/shown=(\d+)/.exec(v)[1] === 1, 'Owned tab shows only the starter truck', v);
+    m = c.logs.length; await c.click('Btn_VehTab_Trucks');
+    v = await c.waitLog(/\[Vehicles\] view tab=trucks .* shown=(\d+)/, m, 60); check(!!v && +/shown=(\d+)/.exec(v)[1] === truckDefsDb, `Trucks tab shows the ${truckDefsDb} trucks`, v);
+
+    // an announced model: visible with its real data, never buyable
+    m = c.logs.length; await c.click('Btn_Veh_aro_titan_480');
+    const pan = await c.waitLog(/\[Vehicles\] panel id=aro_titan_480 state=coming_soon action=ComingSoon enabled=False/, m, 60);
+    check(!!pan, 'the flagship ARO TITAN 480 is shown as coming soon and its action is disabled', pan);
+    check(!!(await c.waitLog(/\[Vehicles\] jobfit id=aro_titan_480 compatible=\w+ fits=\d+ open=\d+ drivable=False/, m, 60)), 'the page asks the server about job compatibility and learns the model is not drivable yet');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-21-titan.png` });
+    await c.click('Btn_VehPrimary'); await sleep(1500);
+    check(db(`select count(*) from vehicle_ownership where player_id = '${vera.id}' and definition_id = 'aro_titan_480'`) === '0', 'pressing the disabled action buys nothing');
+
+    // search is real
+    m = c.logs.length; await c.click('Veh_Search_Input'); await sleep(500); await c.page.keyboard.type('TiTan', { delay: 120 });
+    v = await c.waitLog(/\[Vehicles\] view tab=trucks .*search="TiTan" shown=(\d+)/, m, 60);
+    check(!!v && +/shown=(\d+)/.exec(v)[1] === titanDefsDb, 'searching "TiTan" (any case) finds the TITAN models of the database', v);
+    for (let i = 0; i < 5; i++) await c.page.keyboard.press('Backspace');
+    await c.waitLog(/\[Vehicles\] view tab=trucks .*search="" shown=/, m, 60);
+
+    // not enough money: the server's own verdict, in words
+    m = c.logs.length; await c.click('Btn_VehTab_Buses'); await c.settle(); await c.click('Btn_Veh_bus_city_01');
+    check(!!(await c.waitLog(/\[Vehicles\] panel id=bus_city_01 state=insufficient_funds action=NeedFunds enabled=False/, m, 60)), 'a bus the player cannot afford says so (server purchase_state)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-22-cannot-afford.png` });
+    await c.click('Nav_Home');
+  });
+  db(`select _apply_transaction('${vera.id}', 'BONUS', 100000, 'fund:' || gen_random_uuid())`);
+  await open(vera, '', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserVera/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses');
+    check(!!(await c.waitLog(/\[Vehicles\] catalog state=ready/, m, 90)), 'the catalogue is read again from the server after the player got money');
+    m = c.logs.length; await c.click('Btn_VehTab_Buses'); await c.settle(); await c.click('Btn_Veh_bus_city_01');
+    check(!!(await c.waitLog(/\[Vehicles\] panel id=bus_city_01 state=available action=Buy enabled=True/, m, 60)), 'with enough money the bus can be bought');
+    const before = +db(`select balance from player_wallets where player_id = '${vera.id}'`), price = +db(`select price from vehicle_definitions where id = 'bus_city_01'`);
+    await c.click('Btn_VehPrimary'); await c.settle(); await c.page.screenshot({ path: `${prefix}-23-buy-dialog.png` });
+    check(!!c.targets()['Btn_BuyConfirm'] && !!c.targets()['Btn_BuyCancel'], 'the purchase asks for confirmation (Confirm and Cancel)');
+    check(db(`select count(*) from vehicle_ownership where player_id = '${vera.id}' and definition_id = 'bus_city_01'`) === '0', 'nothing is bought before the player confirms');
+    m = c.logs.length; await c.click('Btn_BuyConfirm');
+    check(!!(await c.waitLog(/\[Vehicles\] buy id=bus_city_01 ok=True/, m, 90)), 'Confirm purchase: the server accepted');
+    check(db(`select count(*) from vehicle_ownership where player_id = '${vera.id}' and definition_id = 'bus_city_01'`) === '1', 'the vehicle is owned in the database');
+    check(+db(`select balance from player_wallets where player_id = '${vera.id}'`) === before - price, `the wallet was debited by exactly the server price (${price})`);
+    check(db(`select count(*) from transactions where player_id = '${vera.id}' and kind = 'VEHICLE_PURCHASE'`) === '1', 'one ledger row for the purchase');
+    check(!!(await c.waitLog(/\[Vehicles\] catalog state=ready .* owned=2/, m, 90)), 'the page re-read the catalogue and now shows two owned vehicles');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-24-bought.png` });
+
+    // select it
+    m = c.logs.length; await c.click('Btn_VehPrimary');
+    check(!!(await c.waitLog(/\[Vehicles\] select id=bus_city_01 ok=True/, m, 60)), 'Select Vehicle: the server accepted');
+    check(db(`select (p.selected_vehicle_id = o.id)::text from profiles p, vehicle_ownership o where p.id = '${vera.id}' and o.player_id = p.id and o.definition_id = 'bus_city_01'`) === 'true', 'the active vehicle is persisted in the database');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-25-selected.png` });
+
+    // compare
+    m = c.logs.length; await c.click('Btn_VehCompare');
+    check(!!(await c.waitLog(/\[Vehicles\] compare open n=2 rows=\d+/, m, 60)), 'Compare Vehicles opens with two vehicles');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-26-compare.png` });
+    check(!!c.targets()['Btn_CmpPick_aro_titan_480'], 'every catalogue vehicle can be ticked in the comparison');
+    m = c.logs.length; await c.click('Btn_CmpPick_aro_titan_480');
+    check(!!(await c.waitLog(/\[Vehicles\] compare open n=3 rows=\d+/, m, 60)), 'ticking a third vehicle adds a column');
+    await c.click('Btn_CloseDialog'); await c.settle();
+
+    // garage
+    m = c.logs.length; await c.click('Btn_VehGarage');
+    check(!!(await c.waitLog(/\[Game\] panel=Garage/, m, 60)), 'Open Garage leads to the garage');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-27-garage.png` });
+  });
+  check(db(`select count(*) from vehicle_ownership where player_id = '${vera.id}'`) === '2', 'the player ended with exactly two vehicles (no duplicate from a second click)');
+
+  // a failing catalogue shows Unavailable and a retry that works (injected failures only)
+  const uma = await signup('BrowserUma');
+  await open(uma, '&fault=list_vehicle_catalog:error:3', async c => {
+    await c.waitLog(/\[Dashboard\] built for BrowserUma/, 0, 150); await c.settle(); let m = c.logs.length; await c.click('Nav_TrucksAndBuses');
+    check(!!(await c.waitLog(/\[Vehicles\] catalog state=unavailable/, m, 120)), 'vehicles that cannot load say "unavailable" instead of inventing a catalogue');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-28-vehicles-unavailable.png` });
+    check(!!c.targets()['Btn_RetryVehicles'], 'a Retry button is offered');
+    m = c.logs.length; await c.click('Btn_RetryVehicles'); check(!!(await c.waitLog(/\[Vehicles\] catalog state=ready/, m, 90)), 'Retry reaches the server');
+  });
+
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });
   const ivy = await signup('BrowserIvy');

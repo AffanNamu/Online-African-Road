@@ -106,6 +106,7 @@ namespace ARO.Game
         RectTransform NewPanel(string title, float h = 760f)
         {
             if (_panel != null) Destroy(_panel.gameObject);
+            Debug.Log("[Game] panel=" + title);
             var box = UIKit.Box(_canvas.transform, "Panel", UIKit.Panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-380, -h / 2f), new Vector2(380, h / 2f));
             _panel = box;
             UIKit.Label(box, "AFRICAN ROADS ONLINE", 20, UIKit.Accent, TextAnchor.UpperLeft, new Vector2(0, 1), new Vector2(1, 1), new Vector2(32, -48), new Vector2(-32, -20));
@@ -125,7 +126,7 @@ namespace ARO.Game
                 case Screen.Profile: ShowProfile(); break;
                 case Screen.Convoy: ShowMenu(); if (_dash != null) _dash.OpenMultiplayer(); break;
                 case Screen.Bus: _ = ShowBus(); break;
-                case Screen.Shop: ShowShop(); break;
+                case Screen.Shop: ShowMenu(); if (_dash != null) _dash.OpenVehicles(); break;
             }
         }
 
@@ -218,7 +219,7 @@ namespace ARO.Game
 
         DashboardActions DashActions() => new DashboardActions
         {
-            Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => OpenPanel(ShowGarage), Shop = () => OpenPanel(ShowShop),
+            Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => OpenPanel(ShowGarage), Shop = () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); },
             Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
@@ -360,7 +361,7 @@ namespace ARO.Game
                     UIKit.Btn(p, $"{route.code}  {route.name}\n{route.stops.Length} stops · {route.fare} coins per passenger · {route.xp_reward} XP",
                         async () => await BeginBusRoute(route, bus), false, 84);
                 }
-            UIKit.Btn(p, "SHOP", ShowShop, false, 48);
+            UIKit.Btn(p, "TRUCKS & BUSES", () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); }, false, 48);
             UIKit.Btn(p, "BACK", ShowMenu, true, 48);
         }
 
@@ -370,32 +371,6 @@ namespace ARO.Game
             string err = await _bus.Begin(route, bus); _busy = false;
             if (err != null) { Toast(err, 6f, NoticeLevel.Bad); await ShowBus(); return; }
             HideMenus(); _hud.SetVisible(true); _drive.Pause(false);
-        }
-
-        // ---------------------------------------------------------------- shop
-        void ShowShop()
-        {
-            var p = NewPanel("Vehicle Shop", 900f);
-            UIKit.Label(p, $"Wallet: {_svc.Wallet.balance:N0} coins", 24, UIKit.Accent, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
-            int shown = 0;
-            foreach (var d in _svc.Definitions)
-            {
-                if (d.price <= 0 || shown++ >= 6) continue;
-                var def = d; int owned = 0; foreach (var v in _svc.Vehicles) if (v.definition_id == def.id) owned++;
-                string detail = def.category == "bus" ? $"{def.passenger_capacity} seats" : $"{def.cargo_capacity_kg:N0} kg cargo";
-                UIKit.Btn(p, $"{def.name}  ·  {def.price:N0} coins\n{detail} · {def.max_speed_kmh:F0} km/h" + (owned > 0 ? $"  ·  you own {owned}" : ""),
-                    async () => await BuyVehicle(def), false, 84);
-            }
-            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
-        }
-
-        async Task BuyVehicle(VehicleDefDto def)
-        {
-            if (_busy) return;
-            if (_svc.Wallet.balance < def.price) { Toast($"Not enough money: {def.name} costs {def.price:N0} coins."); return; }
-            _busy = true; var r = await _svc.Bus.BuyVehicle(def.id); _busy = false;
-            Toast(r.Ok ? $"Bought {def.name}." : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad);
-            await _svc.RefreshPlayer(); ShowShop();
         }
 
         // ---------------------------------------------------------------- profile

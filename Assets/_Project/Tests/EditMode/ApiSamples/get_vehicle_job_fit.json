@@ -1,0 +1,16 @@
+{
+ "category": "truck",
+ "compatible": true,
+ "definition_id": "truck_light_01",
+ "drivable": true,
+ "fits": 2,
+ "open_by_category": {
+  "bus": 0,
+  "car": 0,
+  "motorcycle": 0,
+  "truck": 2,
+  "van": 0
+ },
+ "open_jobs": 2,
+ "reason": null
+}

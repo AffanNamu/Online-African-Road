@@ -94,6 +94,20 @@ namespace ARO.Tests
             Assert.AreEqual("driving", Parse<ConvoyInfo>("start_convoy_drive").phase); Assert.IsTrue(Parse<ConvoyInfo>("start_convoy_drive").Driving); Assert.AreEqual("lobby", Parse<ConvoyInfo>("end_convoy_drive").phase);
         }
 
+        [Test] public void VehicleCatalogueAndJobFitRepliesParse()
+        {
+            var c = Parse<CatalogList>("list_vehicle_catalog"); Assert.AreEqual(14, c.items.Length); Assert.AreEqual(2, c.level); Assert.AreEqual(5000L, c.balance);
+            var starter = c.items.First(x => x.definition_id == "truck_light_01");
+            Assert.AreEqual("owned", starter.purchase_state); Assert.AreEqual("available", starter.availability); Assert.AreEqual("4x2", starter.drive); Assert.AreEqual(900, starter.torque_nm); Assert.AreEqual(0, starter.engine_hp);      // null -> 0 = not published
+            Assert.AreEqual("aro_light_180", starter.picture_key); Assert.AreEqual("kerb", starter.weight_basis); Assert.IsNotNull(starter.features);
+            var titan = c.items.First(x => x.definition_id == "aro_titan_480");
+            Assert.AreEqual("coming_soon", titan.purchase_state); Assert.AreEqual(480, titan.engine_hp); Assert.AreEqual(2300, titan.torque_nm); Assert.AreEqual(1200.0, titan.fuel_capacity_l, 0.001); Assert.AreEqual("ARO Motors", titan.manufacturer);
+            Assert.AreEqual("6x4", titan.drive); Assert.AreEqual(12.0, titan.displacement_l, 0.001); Assert.AreEqual(5, titan.features.Length); Assert.AreEqual(60000, titan.weight_kg); Assert.IsFalse(titan.purchasable);
+            Assert.AreEqual("insufficient_funds", c.items.First(x => x.definition_id == "bus_city_01").purchase_state); Assert.Greater(c.items.First(x => x.definition_id == "bus_city_01").need_more, 0L);
+            Assert.AreEqual("motorcycle", c.items.First(x => x.definition_id == "aro_ride_150").category);
+            var fit = Parse<JobFitDto>("get_vehicle_job_fit"); Assert.IsTrue(fit.compatible); Assert.IsTrue(fit.drivable); Assert.AreEqual(2, fit.fits); Assert.AreEqual(2, fit.open_by_category.truck); Assert.AreEqual(0, fit.open_by_category.bus);
+        }
+
         [Test] public void ConvoyRulesNearbyPlayersServersAndSafetyRepliesParse()
         {
             var c = Parse<MyConvoy>("get_my_convoy").convoy;

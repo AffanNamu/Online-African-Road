@@ -92,3 +92,5 @@ list_blocked_players
 set_nearby_visibility
 list_nearby_players
 list_servers
+# --- vehicle catalogue (20261012000001)
+get_vehicle_job_fit

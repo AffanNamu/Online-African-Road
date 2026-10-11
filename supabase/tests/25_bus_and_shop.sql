@@ -45,7 +45,9 @@ select testkit.assert_eq('failed purchase: no vehicle', (select count(*)::text f
 select pg_temp.fund('B', 1);
 select testkit.as_user(pg_temp.u('B'), $q$select buy_vehicle('bus_city_01')$q$);
 select testkit.assert_eq('exact-funds purchase empties wallet', pg_temp.bal('B')::text, '0');
-select testkit.expect_error('authenticated', pg_temp.u('B'), $$select buy_vehicle('bus_city_01')$$, 'insufficient_funds');
+-- one copy of a model per player: a second purchase is refused before any money moves (was: refused only because the wallet was empty)
+select testkit.expect_error('authenticated', pg_temp.u('B'), $$select buy_vehicle('bus_city_01')$$, 'already_owned');
+select testkit.assert_eq('refused duplicate: balance unchanged', pg_temp.bal('B')::text, '0');
 -- D gets a bus too (used for the job-conflict test)
 select pg_temp.fund('D', 100000);
 select testkit.as_user(pg_temp.u('D'), $q$select buy_vehicle('bus_city_01')$q$);

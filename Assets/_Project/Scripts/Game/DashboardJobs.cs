@@ -36,11 +36,12 @@ namespace ARO.Game
 
         void ShowPage(Page p)
         {
-            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer)) return;
+            if (_page == p && _jobsRoot != null && _jobsRoot.gameObject.activeSelf == (p == Page.Jobs) && _mpRoot.gameObject.activeSelf == (p == Page.Multiplayer) && _vehRoot.gameObject.activeSelf == (p == Page.Vehicles)) return;
             _page = p; ApplyPage(); Refill("Sidebar", BuildSidebar); MarkTargetsDirty();
             Debug.Log("[Dashboard] page=" + p.ToString().ToLowerInvariant());
             if (p == Page.Jobs && (!_boardLoaded || Time.unscaledTime - _boardAt > 60f)) _ = LoadBoard(true);
             if (p == Page.Multiplayer) MpOpened(); else if (_modal != null) CloseModal();
+            if (p == Page.Vehicles) VehOpened();
         }
 
         void ApplyPage()
@@ -48,6 +49,7 @@ namespace ARO.Game
             if (_homeRoot != null) _homeRoot.gameObject.SetActive(_page == Page.Home);
             if (_jobsRoot != null) _jobsRoot.gameObject.SetActive(_page == Page.Jobs);
             if (_mpRoot != null) _mpRoot.gameObject.SetActive(_page == Page.Multiplayer);
+            if (_vehRoot != null) _vehRoot.gameObject.SetActive(_page == Page.Vehicles);
         }
 
         /// <summary>GameFlow calls this after a refused accept (someone took the job, route closed...): the board is re-read so the page tells the truth.</summary>
