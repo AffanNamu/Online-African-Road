@@ -122,7 +122,7 @@ namespace ARO.Game
             {
                 case Screen.Menu: ShowMenu(); break;
                 case Screen.Jobs: ShowMenu(); if (_dash != null) _dash.OpenJobs(); break;
-                case Screen.Garage: ShowGarage(); break;
+                case Screen.Garage: ShowMenu(); if (_dash != null) _dash.OpenGarage(); break;
                 case Screen.Profile: ShowProfile(); break;
                 case Screen.Convoy: ShowMenu(); if (_dash != null) _dash.OpenMultiplayer(); break;
                 case Screen.Bus: _ = ShowBus(); break;
@@ -219,7 +219,7 @@ namespace ARO.Game
 
         DashboardActions DashActions() => new DashboardActions
         {
-            Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => OpenPanel(ShowGarage), Shop = () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); },
+            Jobs = () => { if (_dash != null) _dash.OpenJobs(); }, Garage = () => { ShowMenu(); if (_dash != null) _dash.OpenGarage(); }, Shop = () => { ShowMenu(); if (_dash != null) _dash.OpenVehicles(); },
             Convoy = () => { if (_dash != null) _dash.OpenMultiplayer(); }, ConvoyDrive = c => _ = ConvoyDriveFlow(c), Bus = () => OpenPanel(() => _ = ShowBus()), Profile = () => OpenPanel(ShowProfile),
             FreeDrive = () => { if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
             Resume = Resume,
@@ -272,29 +272,6 @@ namespace ARO.Game
             var cat = new Dictionary<string, string>(); foreach (var d in _svc.Definitions) cat[d.id] = d.category;
             foreach (var v in _svc.Vehicles) if (cat.TryGetValue(v.definition_id, out var c) && c == category) return v;
             return null;
-        }
-
-        // ---------------------------------------------------------------- garage
-        void ShowGarage()
-        {
-            var p = NewPanel("Garage", 800f);
-            var names = new Dictionary<string, VehicleDefDto>(); foreach (var d in _svc.Definitions) names[d.id] = d;
-            foreach (var v in _svc.Vehicles)
-            {
-                var veh = v; names.TryGetValue(v.definition_id, out var def);
-                UIKit.Label(p, $"{(def != null ? def.name : v.definition_id)}\nFuel {v.fuel_l:F0}/{(def != null ? def.fuel_capacity_l : 0):F0} L · Damage {v.damage_pct:F0}% · {v.odometer_km:F1} km",
-                    22, UIKit.TextCol, TextAnchor.UpperLeft, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject.AddComponent<LayoutElement>().preferredHeight = 70;
-                UIKit.Btn(p, "REFUEL (full tank)", async () => await Service(() => _svc.Api.Rpc("buy_fuel", $"{{\"p_vehicle\":\"{veh.id}\",\"p_liters\":9999}}"), "Refuelled."), false, 48);
-                UIKit.Btn(p, "REPAIR", async () => await Service(() => _svc.Api.Rpc("repair_vehicle", $"{{\"p_vehicle\":\"{veh.id}\"}}"), "Repaired."), false, 48);
-            }
-            UIKit.Btn(p, "BACK", ShowMenu, true, 48);
-        }
-
-        async Task Service(System.Func<Task<Result<string>>> call, string ok)
-        {
-            if (_busy) return; _busy = true; var r = await call(); _busy = false;
-            Toast(r.Ok ? ok : r.UserMessage, 5f, r.Ok ? NoticeLevel.Good : NoticeLevel.Bad);
-            await _svc.RefreshPlayer(); ShowGarage();
         }
 
         // ---------------------------------------------------------------- convoy

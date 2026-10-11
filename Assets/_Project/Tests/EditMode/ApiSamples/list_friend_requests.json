@@ -1,35 +1,35 @@
 {
  "incoming": [
   {
-   "created_at": "2026-10-11T10:35:56.956755+00:00",
+   "created_at": "2026-10-11T11:08:42.12965+00:00",
    "person": {
     "avatar_id": "default",
     "country_code": null,
     "display_name": "CtD",
     "friend_status": "incoming",
     "level": 1,
-    "player_id": "3360f084-9d11-4969-9333-2ad0e603a860",
+    "player_id": "b1efffae-c689-4e8f-ac43-e1ee1293e56b",
     "presence": null,
     "username": "ctd"
    },
-   "request_id": "455eea0e-745d-48b4-b72a-3f78ee1f50a0"
+   "request_id": "5e8fda82-d126-4002-9a64-2643e1d0e9ec"
   }
  ],
  "outgoing": [
   {
-   "created_at": "2026-10-11T10:35:56.994048+00:00",
+   "created_at": "2026-10-11T11:08:42.169208+00:00",
    "person": {
     "avatar_id": "default",
     "country_code": null,
     "display_name": "CtE",
     "friend_status": "outgoing",
     "level": 1,
-    "player_id": "12f73193-bea9-4e56-be89-127251366090",
+    "player_id": "49e8b81a-de45-48f1-9a12-4829867596d9",
     "presence": null,
     "username": "cte"
    },
-   "request_id": "78c48ed6-e055-42c6-87dc-4a765dc9a43c"
+   "request_id": "b90fbf82-f181-4a8e-bbf2-9245d7e37e0d"
   }
  ],
- "server_time": "2026-10-11T10:35:58.564928+00:00"
+ "server_time": "2026-10-11T11:08:43.660134+00:00"
 }

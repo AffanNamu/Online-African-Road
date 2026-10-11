@@ -6,18 +6,18 @@
    "display_name": "CtB",
    "friend_status": "friends",
    "level": 1,
-   "player_id": "e10f5434-f04e-4009-9bc5-36249a38f315",
+   "player_id": "e544aedb-bcc0-422d-a5f6-02dbcffe48bf",
    "presence": {
     "activity": "driving",
     "city_slug": "lagos",
-    "last_seen_at": "2026-10-11T10:35:57.639946+00:00",
+    "last_seen_at": "2026-10-11T11:08:42.808474+00:00",
     "online": true,
     "route_code": "lagos-ibadan",
-    "session_id": "effbe544-4f48-4b41-97cd-a1056a7d11aa"
+    "session_id": "5d8b43fd-f993-4efd-9cd4-2dface4b4cfe"
    },
-   "since": "2026-10-11T10:35:56.919176+00:00",
+   "since": "2026-10-11T11:08:42.083389+00:00",
    "username": "ctb"
   }
  ],
- "server_time": "2026-10-11T10:35:58.483188+00:00"
+ "server_time": "2026-10-11T11:08:43.590378+00:00"
 }

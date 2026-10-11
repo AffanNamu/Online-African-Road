@@ -40,7 +40,7 @@ namespace ARO.Backend
     [Serializable] public class WalletInfo { public long balance, lifetime_earnings; public string server_time; }
 
     [Serializable] public class VehicleCustomization { // optional:
-    public string color, livery, plate; }
+    public string color, livery, plate, skin; }
     [Serializable] public class VehicleInfo
     {
         public string id, definition_id, name, model, nickname, category, status, acquired_at;
@@ -59,6 +59,20 @@ namespace ARO.Backend
     [Serializable] public class CatalogList { public CatalogItem[] items; public int level; public long balance; public string server_time; }
     [Serializable] public class OpenByCategory { public int truck, bus, van, car, motorcycle; }
     [Serializable] public class JobFitDto { public string definition_id, category, reason; public int open_jobs, fits; public bool compatible, drivable; public OpenByCategory open_by_category; }
+
+    /// <summary>One paint skin of the garage. base_color null (arrives as "") = the model's own livery.</summary>
+    [Serializable] public class SkinItem
+    {
+        public string id, name, base_color, accent_color, state; public bool official, owned, equipped;
+        public long price, need_more; public int unlock_level; public double metallic, roughness;
+    }
+    [Serializable] public class SkinList { public string vehicle_id, equipped_id, server_time; public long balance; public SkinItem[] items; }
+    [Serializable] public class ServiceQuote
+    {
+        public string vehicle_id, server_time; public double condition_pct, damage_pct, fuel_l, fuel_capacity_l, fuel_price_per_l, refuel_liters;
+        public long balance, repair_cost, refuel_cost; public bool repair_needed, can_repair, can_refuel;
+    }
+    [Serializable] public class RepairResult { public long cost; }
 
     [Serializable] public class SummaryProfile { public string id, display_name, username, avatar_id, country_code; public int level; }
     [Serializable] public class JobsSummary { public int available; public long best_reward; }

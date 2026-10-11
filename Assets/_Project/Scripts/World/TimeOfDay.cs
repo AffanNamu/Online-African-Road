@@ -40,8 +40,12 @@ namespace ARO.World
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
         }
 
+        /// <summary>While true the world's sun and ambient are left alone (the Garage showroom lights its own room and restores everything when it closes).</summary>
+        public static bool Suspended;
+
         void Update()
         {
+            if (Suspended) return;
             if (followWestAfricaTime) { var wat = DateTime.UtcNow.AddHours(1); hour = wat.Hour + wat.Minute / 60f + wat.Second / 3600f; }
             else hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f);
             Apply();

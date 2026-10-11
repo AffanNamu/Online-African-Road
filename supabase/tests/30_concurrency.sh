@@ -154,5 +154,22 @@ WON=$(cat "$v1" "$v2" | grep -c '^BOUGHT:' || true)
 [ "$WON" = "1" ] && [ "$ROWS" = "1" ] && [ "$OWNED" = "1" ] && [ $((BEFORE-AFTER)) -eq 45000 ] || { echo "RACE 9 FAILED won=$WON rows=$ROWS owned=$OWNED delta=$((BEFORE-AFTER))"; cat "$v1" "$v2"; exit 1; }
 grep -q "already_owned" "$v1" "$v2" || { echo "RACE 9: the second purchase did not get already_owned"; cat "$v1" "$v2"; exit 1; }
 echo "race 9 (double purchase): charged and granted exactly once (-45000)"
+# --- RACE 10: the same paint skin is bought twice at once: charged once, owned once
+SB=$(q -c "select testkit.make_user('RaceSkin')")
+q -c "update player_wallets set balance = 200000 where player_id = '$SB'" >/dev/null
+BEFORE=200000
+k1=$(mktemp); k2=$(mktemp)
+buyskin() {
+  psql -X -q -At -d "$DB" -c "set role authenticated; select set_config('request.jwt.claim.sub','$SB',false);
+    begin; select pg_sleep(0.2); select 'BOUGHT:' || buy_vehicle_skin('sunset_gold'); select pg_sleep(0.4); commit;" >"$1" 2>&1 || true
+}
+buyskin "$k1" & buyskin "$k2" & wait
+AFTER=$(q -c "select balance from player_wallets where player_id='$SB'")
+ROWS=$(q -c "select count(*) from transactions where kind='SKIN_PURCHASE' and player_id='$SB'")
+OWNED=$(q -c "select count(*) from player_skins where player_id='$SB' and skin_id='sunset_gold'")
+WON=$(cat "$k1" "$k2" | grep -c '^BOUGHT:' || true)
+[ "$WON" = "1" ] && [ "$ROWS" = "1" ] && [ "$OWNED" = "1" ] && [ $((BEFORE-AFTER)) -eq 15000 ] || { echo "RACE 10 FAILED won=$WON rows=$ROWS owned=$OWNED delta=$((BEFORE-AFTER))"; cat "$k1" "$k2"; exit 1; }
+grep -q "skin_owned" "$k1" "$k2" || { echo "RACE 10: the second purchase did not get skin_owned"; cat "$k1" "$k2"; exit 1; }
+echo "race 10 (double skin purchase): charged and granted exactly once (-15000)"
 q -c "drop table public._race" >/dev/null
 echo "CONCURRENCY TESTS PASSED"

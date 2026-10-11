@@ -94,3 +94,8 @@ list_nearby_players
 list_servers
 # --- vehicle catalogue (20261012000001)
 get_vehicle_job_fit
+# --- garage (20261012000003)
+list_vehicle_skins
+buy_vehicle_skin
+apply_vehicle_skin
+get_vehicle_service_quote

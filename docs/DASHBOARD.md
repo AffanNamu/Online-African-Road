@@ -149,3 +149,41 @@ Backend: `supabase/migrations/20261012000001_vehicle_catalog.sql`.
 **Not built, and said so on screen.** 3D showroom (rotate, zoom, 360 degrees: the button explains it arrives with the vehicle models; `VehicleRules.Showroom` reports what exists), licence requirements (no licence system), vehicle customisation screen, condition affecting gameplay beyond what the server already does, separate phone/portrait layouts (the page scales on the 1920x1080 stage like the other pages), vehicle racing.
 
 **Tests.** SQL `43_vehicle_catalog.sql` (catalogue shape, specs, every purchase state, purchase atomicity, one copy per model, job fit, grants, schema guards) + concurrency race 9 (double purchase) + 33 mutants; xunit `VehicleModelTests` (69 tests: tabs, search, sort, actions, condition and fuel bands, bars, capacity, comparison, job-fit sentences, showroom honesty); API contract (45 endpoints); EditMode parses the real replies; browser E2E (`tools/webgl-e2e.js` section 2c: catalogue equals the database, tabs, search, announced model disabled, cannot-afford, buy with confirmation and exact debit, select persisted, compare, garage, unavailable + retry).
+
+
+# Garage page and 3D showroom
+
+`DashboardGarage.cs` (page, My Vehicles, viewer UI, vehicle panel), `DashboardGarageWork.cs` (paint skins, maintenance, the "not available yet" panels), `ShowroomStage.cs`
+(the 3D room), `Vehicles/ShowroomFactory.cs` + `ShowroomModel.cs` (the model slot), pure rules in `ARO.NetCore` `GarageModel.cs` (camera maths and garage rules: unit tested).
+Backend: `supabase/migrations/20261012000002_ledger_skin_kind.sql`, `20261012000003_garage.sql`.
+
+**The 3D showroom is real 3D**, not a picture: a small workshop is built far below the world on its own layer, a camera renders it into a RenderTexture that the page shows, and the
+vehicle model is loaded into it. The reusable inspection camera (`OrbitCameraModel`) gives orbit (drag), zoom (wheel / pinch, limited to a distance range derived from the vehicle's size),
+pan (right-drag / two fingers, limited), predefined views (Front, Rear, Left, Right, Top, Wheels), a turntable (360 degrees), Reset, smooth frame-rate independent interpolation and pitch limits.
+It renders **on demand** (only while the camera moves or something changes), so an idle Garage costs no GPU time. While the Garage is open the world's sun and ambient are suspended and restored on exit.
+Clicking a part (cabin, wheels, headlights, taillights, mirrors, exhaust, chassis, cargo body) highlights it and names it.
+
+**The model slot.** The vehicle comes from the same slot the drivable vehicle uses: `VehicleDefinition.visualPrefab` or `Resources/Vehicles/{id}` (a prefab with a `VehicleRig`). A production prefab
+supplies its own paint renderers, light emitters, wheel visuals, interior camera anchor (enables the Interior button) and LOD groups (the showroom forces a lower LOD far away). **No production
+ARO model exists yet**, so the Garage shows a development placeholder built from primitives (marked "Placeholder model" on screen); dropping the real prefab into the slot replaces it with no Garage change.
+The ARO TITAN 480 is not drivable yet (no model, no physics definition), so it is in the catalogue (Trucks & Buses) but cannot be owned, and therefore does not appear in the Garage.
+
+| On screen | Source / rule |
+|---|---|
+| My Vehicles | `list_my_vehicles` (the player's real ownership); the chip (Active, Ready, Damaged, Maintenance, Low fuel, On a job) is derived from the server's status, selection and condition |
+| Vehicle panel (Overview bars, Stats table, Info) | the model's row in `vehicle_definitions` (via `list_vehicle_catalog`); values the definition does not have are not shown. Bars are relative to the catalogue maximum. Handling, braking and fuel efficiency are **not shown**: the game has no such values |
+| Condition and Fuel Level | the vehicle's live state (server) |
+| Set as Active | `set_active_vehicle` (ownership validated server-side), then the page re-reads the garage |
+| Paint & Skins | `vehicle_skins` (server catalogue: price, level, colours, metallic, roughness), `player_skins` (ownership), `list_vehicle_skins`, `buy_vehicle_skin` (one ledger row `SKIN_PURCHASE`, one ownership row, one transaction, a lock against double clicks), `apply_vehicle_skin` (ownership of the skin and the vehicle checked; stored in the vehicle's customization). Selecting a tile previews the colour on the 3D vehicle (not saved); Equip saves it. Free skins belong to everyone, paid ones need a purchase. The skin applies colour, metallic and smoothness through property blocks (the shared materials are never changed) |
+| Maintenance | `get_vehicle_service_quote`: repair and refuel prices from the same formulas `repair_vehicle` and `buy_fuel` charge (a test compares the quote with the real charge). Repair and Refuel call those functions and the page reads the result back. **Service** is disabled (there is no service system). Engine, tyre and brake condition are not tracked |
+| Customize categories | Paint works. Wheels, Tires, Accessories, Body Parts, Lights, Interior, Decals are listed with the reason ("arrive with the production vehicle models"): no fake items |
+| Upgrades, Performance, Accessories sections | listed, each category marked "Not available yet": there is no upgrade, price or effect in the game, so none is invented |
+| Lights button | previews the model's headlight and taillight emitters |
+
+**Not built.** Wheel / tyre / accessory / light / decal customisation, performance upgrades, engine-tyre-brake condition, a service system, custom skins ("Custom" filter is empty and says so), the driver view, component-level
+condition, and separate phone / tablet layouts (the page scales on the 1920x1080 stage like the others; the touch gestures are implemented through the pointer events: one finger orbits, two fingers pinch and pan,
+but they have not been tried on a device). **Not yet seen rendered:** the showroom's lighting and look were written without a Unity editor; the CI screenshots are the first time they are seen.
+
+**Tests.** SQL `44_garage.sql` (catalogue, states, purchase atomicity, equip, customization keeps the skin, quote equals the real charges, grants, schema guards) + concurrency race 10 + 34 mutants; xunit `GarageModelTests`
+(camera limits, presets, smoothing, reset, tags, slots, skins, colours); API contract (47 endpoints); EditMode parses the real replies; browser E2E section 2d (real mouse drag, wheel, presets, reset, turntable, part pick,
+skin preview / buy / equip, repair, refuel, vehicle selection, Set as Active, all checked in the database).

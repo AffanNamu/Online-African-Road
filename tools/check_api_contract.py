@@ -160,6 +160,8 @@ def main():
             ("list_notifications", A, "select list_notifications()::text", "NotificationList"),
             ("list_my_vehicles", E, "select list_my_vehicles()::text", "VehicleList"),
             ("list_vehicle_catalog", A, "select list_vehicle_catalog()::text", "CatalogList"),
+            ("list_vehicle_skins", E, "select list_vehicle_skins((select id from vehicle_ownership where player_id = auth.uid() limit 1))::text", "SkinList"),
+            ("get_vehicle_service_quote", E, "select get_vehicle_service_quote((select id from vehicle_ownership where player_id = auth.uid() limit 1))::text", "ServiceQuote"),
             ("get_vehicle_job_fit", A, "select get_vehicle_job_fit('truck_light_01')::text", "JobFitDto"),
             ("get_world_state", A, "select get_world_state()::text", "WorldState"),
             ("list_available_jobs", D, "select list_available_jobs()::text", "JobBoardPage"),

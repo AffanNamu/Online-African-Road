@@ -201,6 +201,12 @@ namespace ARO.Backend
         public Task<Result<VehicleList>> LoadGarage() => Track(Garage, () => Api.Call<VehicleList>("list_my_vehicles"), v => v.items == null || v.items.Length == 0);
         public Task<Result<CatalogList>> LoadCatalog() => Track(Catalog, () => Api.Call<CatalogList>("list_vehicle_catalog"), v => v.items == null || v.items.Length == 0);
         public Task<Result<JobFitDto>> JobFit(string definitionId) => Api.Call<JobFitDto>("get_vehicle_job_fit", JsonArgs.Obj(("p_definition", definitionId)));
+        public Task<Result<SkinList>> Skins(string vehicleId) => Api.Call<SkinList>("list_vehicle_skins", JsonArgs.Obj(("p_vehicle", vehicleId)));
+        public Task<Result<string>> BuySkin(string skinId) => Api.Rpc("buy_vehicle_skin", JsonArgs.Obj(("p_skin", skinId)));
+        public Task<Result<string>> ApplySkin(string vehicleId, string skinId) => Api.Rpc("apply_vehicle_skin", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_skin", skinId)));
+        public Task<Result<ServiceQuote>> Quote(string vehicleId) => Api.Call<ServiceQuote>("get_vehicle_service_quote", JsonArgs.Obj(("p_vehicle", vehicleId)));
+        public Task<Result<string>> Repair(string vehicleId) => Api.Rpc("repair_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId)));
+        public Task<Result<string>> Refuel(string vehicleId) => Api.Rpc("buy_fuel", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_liters", 9999)));
         public Task<Result<string>> SetActive(string vehicleId) => Api.Rpc("set_active_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId)));
         public Task<Result<string>> Rename(string vehicleId, string name) => Api.Rpc("rename_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_name", name)));
         public Task<Result<string>> Customize(string vehicleId, string colorHex, string livery, string plate)

@@ -169,7 +169,7 @@ select testkit.assert_eq('every write endpoint is rate limited or state-machine 
   (select coalesce(string_agg(proname, ','), 'none') from api
     where prosrc not like '%_rate_limit%'
       and proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job','buy_fuel','repair_vehicle',
-                          'create_convoy','join_convoy','leave_convoy','get_convoy_session_code','set_convoy_session_code','buy_vehicle',
+                          'create_convoy','join_convoy','leave_convoy','get_convoy_session_code','set_convoy_session_code','buy_vehicle','buy_vehicle_skin',
                           'start_bus_run','submit_bus_telemetry','serve_stop','abandon_bus_run')), 'none');
 select testkit.assert_eq('no table in public is readable by anon', (select count(*)::text from information_schema.role_table_grants where table_schema = 'public' and grantee = 'anon'), '0');
 select testkit.assert_eq('clients hold no write privilege on any table', (select count(*)::text from information_schema.role_table_grants

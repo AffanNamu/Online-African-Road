@@ -33,8 +33,8 @@ namespace ARO.Game
         const float HeroX = 331, HeroY = 142, HeroW = 1146, HeroH = 318, HeroAspect = HeroW / HeroH;
 
         GameServices _svc; DrivingSession _drive; BusSession _bus; DashboardActions _act;
-        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot;
-        enum Page { Home, Jobs, Multiplayer, Vehicles }       // the order is the sidebar's: Home, Jobs, Multiplayer, Trucks & Buses
+        RectTransform _root, _stage, _jobsHost, _popover, _sidebar, _regionParent, _homeRoot, _jobsRoot, _mpRoot, _vehRoot, _garRoot;
+        enum Page { Home, Jobs, Multiplayer, Vehicles, Garage }       // the order is the sidebar's: Home, Jobs, Multiplayer, Trucks & Buses
         Page _page = Page.Home; int _badgeCount;
         Text _toast;
         float _toastUntil, _nextSlide, _heroDip = -10f, _nextNews, _nextBell, _nextPill, _nextPoll, _nextContent; int _slide, _lastUnread = -1;
@@ -107,6 +107,7 @@ namespace ARO.Game
             _jobsRoot = Ui.Box(_root, "JobsPage", 0, 0, 1920, 1080); _regionParent = _jobsRoot; BuildJobsPage();
             _mpRoot = Ui.Box(_root, "MultiplayerPage", 0, 0, 1920, 1080); _regionParent = _mpRoot; BuildMultiplayerPage();
             _vehRoot = Ui.Box(_root, "VehiclesPage", 0, 0, 1920, 1080); _regionParent = _vehRoot; BuildVehiclesPage();
+            _garRoot = Ui.Box(_root, "GaragePage", 0, 0, 1920, 1080); _regionParent = _garRoot; BuildGaragePage();
             _regionParent = null; ApplyPage();
 
             _stage = _root;                                         // toast and the notice popover sit above everything
@@ -222,7 +223,7 @@ namespace ARO.Game
             var items = new (string icon, string label, Action go, string soon)[]
             {
                 ("ic_home", "Home", () => ShowPage(Page.Home), null), ("ic_jobs", "Jobs", OpenJobs, null), ("ic_people", "Multiplayer", OpenMultiplayer, null),
-                ("ic_bus", "Trucks & Buses", OpenVehicles, null), ("ic_wrench", "Garage", _act.Garage, null), ("ic_map", "Map", _act.WorldMap, null),
+                ("ic_bus", "Trucks & Buses", OpenVehicles, null), ("ic_wrench", "Garage", OpenGarage, null), ("ic_map", "Map", _act.WorldMap, null),
                 ("ic_people", "Friends", null, "Friends are coming soon."), ("ic_trophy", "Leaderboards", null, "Leaderboards are coming soon."),
                 ("ic_cart", "Store", null, "The store is coming soon."), ("ic_gear", "Settings", _act.Profile, null),
             };
@@ -549,7 +550,7 @@ namespace ARO.Game
             if (_newsItems.Length > 1 && now > _nextNews) { _nextNews = now + 10f; NextNews(); }
             if (now > _nextPoll) { _nextPoll = now + 45f; _ = RefreshSnapshot(); }                // counts, coins, fuel, online players stay current while the dashboard is open
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
-            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now);
+            if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
         }
 

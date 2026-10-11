@@ -108,6 +108,16 @@ namespace ARO.Tests
             var fit = Parse<JobFitDto>("get_vehicle_job_fit"); Assert.IsTrue(fit.compatible); Assert.IsTrue(fit.drivable); Assert.AreEqual(2, fit.fits); Assert.AreEqual(2, fit.open_by_category.truck); Assert.AreEqual(0, fit.open_by_category.bus);
         }
 
+        [Test] public void GarageSkinsAndServiceQuoteRepliesParse()
+        {
+            var sk = Parse<SkinList>("list_vehicle_skins"); Assert.AreEqual(8, sk.items.Length); Assert.AreEqual("aro_original", sk.equipped_id);
+            var orig = sk.items.First(x => x.id == "aro_original"); Assert.IsTrue(orig.equipped); Assert.AreEqual("equipped", orig.state); Assert.IsTrue(string.IsNullOrEmpty(orig.base_color));      // null -> "" = the model's own livery
+            var gold = sk.items.First(x => x.id == "sunset_gold"); Assert.AreEqual("#d9a21b", gold.base_color); Assert.AreEqual(15000L, gold.price); Assert.AreEqual(0.6, gold.metallic, 0.001); Assert.IsTrue(gold.official); Assert.IsFalse(gold.owned);
+            Assert.AreEqual("owned", sk.items.First(x => x.id == "midnight_black").state);
+            var q = Parse<ServiceQuote>("get_vehicle_service_quote"); Assert.IsFalse(string.IsNullOrEmpty(q.vehicle_id)); Assert.GreaterOrEqual(q.fuel_capacity_l, q.fuel_l); Assert.AreEqual(2.0, q.fuel_price_per_l, 0.001); Assert.GreaterOrEqual(q.balance, 0L);
+            Assert.AreEqual(q.repair_needed, q.repair_cost > 0);
+        }
+
         [Test] public void ConvoyRulesNearbyPlayersServersAndSafetyRepliesParse()
         {
             var c = Parse<MyConvoy>("get_my_convoy").convoy;

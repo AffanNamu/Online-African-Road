@@ -375,10 +375,88 @@ const allErrors = [], allExc = [];
 
     // garage
     m = c.logs.length; await c.click('Btn_VehGarage');
-    check(!!(await c.waitLog(/\[Game\] panel=Garage/, m, 60)), 'Open Garage leads to the garage');
+    check(!!(await c.waitLog(/\[Garage\] opened/, m, 60)), 'Open Garage leads to the Garage page');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-27-garage.png` });
   });
   check(db(`select count(*) from vehicle_ownership where player_id = '${vera.id}'`) === '2', 'the player ended with exactly two vehicles (no duplicate from a second click)');
+
+  // =========================================================================================== 2d. Garage: the 3D showroom (camera), skins, maintenance, active vehicle
+  const gabe = await signup('BrowserGabe');
+  db(`select _apply_transaction('${gabe.id}', 'BONUS', 100000, 'fund:' || gen_random_uuid())`);
+  db(`insert into vehicle_ownership(player_id, definition_id, fuel_l) values ('${gabe.id}', 'bus_city_01', 180)`);
+  db(`update vehicle_ownership set damage_pct = 30, fuel_l = 10 where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`);
+  await open(gabe, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserGabe/, 0, 150)), 'Garage: the dashboard opens for the new player');
+    await c.settle(); let m = c.logs.length; await c.click('Nav_Garage');
+    const gl = await c.waitLog(/\[Garage\] vehicles state=ready count=(\d+) selected=\S+ active=(\S+)/, m, 90);
+    check(!!gl && /count=2 /.test(gl), 'the Garage lists the 2 vehicles the player owns in the database', gl);
+    const sr = await c.waitLog(/\[Showroom\] ready vehicle=truck_light_01 model=(\w+) lod=\d+ size=\S+ parts=(\d+) interior=\w+ rt=\d+x\d+/, m, 120);
+    check(!!sr, 'the 3D showroom initialised with the selected vehicle', sr);
+    check(!!sr && /model=placeholder/.test(sr) && +/parts=(\d+)/.exec(sr)[1] >= 5, 'the model says it is a placeholder and exposes its inspectable parts', sr);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-30-garage.png` });
+    let tg = c.targets();
+    for (const k of ['Btn_GarTab_Customize', 'Btn_GarTab_Upgrades', 'Btn_GarTab_Maintenance', 'Btn_GarTab_PaintSkins', 'Btn_GarTab_Accessories', 'Btn_GarTab_Performance', 'Btn_ShowExterior', 'Btn_Show360', 'Btn_ShowReset', 'Btn_ShowFront', 'Btn_ShowRear', 'Btn_ShowLeft', 'Btn_ShowRight', 'Btn_ShowTop', 'Btn_ShowWheel', 'Btn_ShowZoomIn', 'Btn_GarSetActive', 'Btn_GarVeh_truck_light_01', 'Btn_GarVeh_bus_city_01', 'Btn_GarCat_paint']) check(!!tg[k], `${k} is a clickable target on the Garage page`);
+
+    // camera: real mouse input on the canvas drives the orbit camera
+    const box = await c.page.locator('#unity-canvas').boundingBox(); const cx = box.x + box.width * 0.5625, cy = box.y + box.height * 0.44;
+    m = c.logs.length; await c.page.mouse.move(cx, cy); await c.page.mouse.down(); for (let i = 1; i <= 10; i++) { await c.page.mouse.move(cx + i * 14, cy + i * 2); await sleep(120); } await c.page.mouse.up();
+    let cam = await c.waitLog(/\[Showroom\] camera view=free yaw=(-?\d+)/, m, 60);
+    check(!!cam, 'dragging in the viewer orbits the camera', cam);
+    const d0 = cam ? +/distance=([\d.]+)/.exec(cam)[1] : 0;
+    m = c.logs.length; await c.page.mouse.move(cx, cy); for (let i = 0; i < 6; i++) { await c.page.mouse.wheel(0, -300); await sleep(200); }
+    cam = await c.waitLog(/\[Showroom\] camera view=free yaw=-?\d+ pitch=-?\d+ distance=([\d.]+)/, m, 60);
+    check(!!cam && +/distance=([\d.]+)/.exec(cam)[1] < d0, 'the mouse wheel zooms in', cam);
+    m = c.logs.length; for (let i = 0; i < 30; i++) { await c.page.mouse.wheel(0, -600); await sleep(120); }
+    cam = await c.waitLog(/\[Showroom\] camera view=free .* distance=([\d.]+) min=([\d.]+)/, m, 60);
+    const mm = cam ? /distance=([\d.]+) min=([\d.]+)/.exec(cam) : null;
+    check(!!mm && +mm[1] >= +mm[2] - 0.06, 'zooming stops at the camera limit (never inside the vehicle)', cam);
+    m = c.logs.length; await c.click('Btn_ShowFront');
+    cam = await c.waitLog(/\[Showroom\] camera view=front yaw=(-?\d+)/, m, 60); check(!!cam && /yaw=0 /.test(cam + ' '), 'the Front preset looks at the vehicle from the front', cam);
+    m = c.logs.length; await c.click('Btn_ShowRear'); cam = await c.waitLog(/\[Showroom\] camera view=rear yaw=(-?\d+)/, m, 60); check(!!cam && /yaw=(180|-180) /.test(cam + ' '), 'the Rear preset looks from behind', cam);
+    m = c.logs.length; await c.click('Btn_ShowTop'); cam = await c.waitLog(/\[Showroom\] camera view=top yaw=-?\d+ pitch=(\d+)/, m, 60); check(!!cam && +/pitch=(\d+)/.exec(cam)[1] >= 80, 'the Top preset looks down', cam);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-31-garage-top.png` });
+    m = c.logs.length; await c.click('Btn_ShowReset'); cam = await c.waitLog(/\[Showroom\] camera view=default/, m, 60); check(!!cam, 'Reset returns to the default view', cam);
+    m = c.logs.length; await c.click('Btn_Show360'); cam = await c.waitLog(/\[Showroom\] camera view=turntable/, m, 60); check(!!cam, '360 view turns the vehicle on a turntable', cam);
+    await sleep(2500); await c.click('Btn_ShowExterior');
+    m = c.logs.length; await c.page.mouse.click(cx, cy); check(!!(await c.waitLog(/\[Showroom\] pick part=\w+/, m, 60)), 'clicking the vehicle picks a part');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-32-garage-part.png` });
+
+    // paint: preview, buy, equip (the server decides and the 3D model follows)
+    m = c.logs.length; await c.click('Btn_Skin_sunset_gold');
+    check(!!(await c.waitLog(/\[Garage\] preview skin=sunset_gold base=#d9a21b/, m, 60)), 'selecting a skin previews its colour on the 3D vehicle');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-33-garage-skin-preview.png` });
+    const bal0 = +db(`select balance from player_wallets where player_id = '${gabe.id}'`);
+    await c.click('Btn_SkinAct_sunset_gold'); await c.settle(); check(!!c.targets()['Btn_SkinBuyConfirm'], 'buying a skin asks for confirmation');
+    check(db(`select count(*) from player_skins where player_id = '${gabe.id}'`) === '0', 'nothing is bought before the player confirms');
+    m = c.logs.length; await c.click('Btn_SkinBuyConfirm');
+    check(!!(await c.waitLog(/\[Garage\] buy skin=sunset_gold ok=True/, m, 90)), 'Confirm purchase: the server accepted');
+    check(db(`select count(*) from player_skins where player_id = '${gabe.id}' and skin_id = 'sunset_gold'`) === '1' && +db(`select balance from player_wallets where player_id = '${gabe.id}'`) === bal0 - 15000, 'the skin is owned and exactly its server price was debited');
+    await c.settle(); m = c.logs.length; await c.click('Btn_SkinAct_sunset_gold');
+    check(!!(await c.waitLog(/\[Garage\] skin id=sunset_gold ok=True/, m, 90)), 'Equip: the server accepted');
+    check(db(`select customization->>'skin' from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === 'sunset_gold', 'the equipped skin is stored on the vehicle in the database');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-34-garage-skin-equipped.png` });
+    m = c.logs.length; await c.click('Btn_GarCat_wheels'); check(!!(await c.waitLog(/\\[Garage\\] category=wheels/, m, 60)), 'a category the game has no system for opens its explanation, not fake content'); await c.settle(); await c.page.screenshot({ path: `${prefix}-35-garage-wheels.png` });
+    await c.click('Btn_GarTab_Upgrades'); await c.settle(); await c.page.screenshot({ path: `${prefix}-36-garage-upgrades.png` });
+
+    // maintenance: prices from the server, the actions change the database
+    m = c.logs.length; await c.click('Btn_GarTab_Maintenance');
+    const q = await c.waitLog(/\[Garage\] quote state=ready repair=(\d+) refuel=(\d+) litres=(\d+)/, m, 60);
+    check(!!q && +/repair=(\d+)/.exec(q)[1] === 300, 'the repair price shown is the server quote (30 % damage = 300)', q);
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-37-garage-maintenance.png` });
+    const bal1 = +db(`select balance from player_wallets where player_id = '${gabe.id}'`);
+    m = c.logs.length; await c.click('Btn_GarRepair'); check(!!(await c.waitLog(/\[Garage\] repair ok=True/, m, 60)), 'Repair: the server accepted');
+    check(db(`select damage_pct from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === '0' && +db(`select balance from player_wallets where player_id = '${gabe.id}'`) === bal1 - 300, 'the vehicle is repaired and exactly the quote was charged');
+    await c.settle(); m = c.logs.length; await c.click('Btn_GarRefuel'); check(!!(await c.waitLog(/\[Garage\] refuel ok=True/, m, 60)), 'Refuel: the server accepted');
+    check(+db(`select fuel_l from vehicle_ownership where player_id = '${gabe.id}' and definition_id = 'truck_light_01'`) === +db(`select fuel_capacity_l from vehicle_definitions where id = 'truck_light_01'`), 'the tank is full in the database');
+
+    // inspect another vehicle and make it the active one
+    m = c.logs.length; await c.click('Btn_GarVeh_bus_city_01');
+    check(!!(await c.waitLog(/\[Showroom\] ready vehicle=bus_city_01 model=placeholder/, m, 120)), 'selecting a vehicle loads it into the showroom');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-38-garage-bus.png` });
+    m = c.logs.length; await c.click('Btn_GarSetActive');
+    check(!!(await c.waitLog(/\[Garage\] active id=bus_city_01 ok=True/, m, 60)), 'Set as Active: the server accepted');
+    check(db(`select (p.selected_vehicle_id = o.id)::text from profiles p, vehicle_ownership o where p.id = '${gabe.id}' and o.player_id = p.id and o.definition_id = 'bus_city_01'`) === 'true', 'the active vehicle is persisted in the database');
+  });
 
   // a failing catalogue shows Unavailable and a retry that works (injected failures only)
   const uma = await signup('BrowserUma');

@@ -101,6 +101,7 @@ same "no retroactive analytics" "0" "$(q -c "select count(*) from analytics_even
 same "the catalogue: 3 drivable vehicles keep their ids, 11 announced models added" "3/11" "$(q -c "select count(*) filter (where availability = 'available') || '/' || count(*) filter (where availability = 'coming_soon') from vehicle_definitions")"
 same "the drivable vehicles took their torque and kerb mass from their own physics stats" "900/4200/aro_light_180" "$(q -c "select torque_nm || '/' || weight_kg || '/' || picture_key from vehicle_definitions where id = 'truck_light_01'")"
 same "legacy players still own exactly what they owned (one copy of a model each)" "0" "$(q -c "select count(*) from (select player_id, definition_id from vehicle_ownership group by 1, 2 having count(*) > 1) d")"
+same "the garage: 8 paint skins, and no player owns a paid skin they never bought" "8/0" "$(q -c "select (select count(*) from vehicle_skins) || '/' || (select count(*) from player_skins)")"
 same "legacy convoy gained defaults only" "8/false" "$(q -c "select capacity || '/' || is_private from convoys where id='$CV'")"
 same "legacy convoy members intact" "2" "$(q -c "select count(*) from convoy_members where convoy_id='$CV'")"
 

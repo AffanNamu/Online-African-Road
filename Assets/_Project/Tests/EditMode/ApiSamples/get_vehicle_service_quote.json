@@ -1,0 +1,16 @@
+{
+ "balance": 5000,
+ "can_refuel": true,
+ "can_repair": true,
+ "condition_pct": 88.0,
+ "damage_pct": 12,
+ "fuel_capacity_l": 120,
+ "fuel_l": 60,
+ "fuel_price_per_l": 2,
+ "refuel_cost": 120,
+ "refuel_liters": 60,
+ "repair_cost": 120,
+ "repair_needed": true,
+ "server_time": "2026-10-11T11:08:44.625127+00:00",
+ "vehicle_id": "369a5a38-790e-4c50-aa02-9fe00e34dca8"
+}

@@ -7,7 +7,7 @@ MIG = os.path.join(ROOT, "migrations")
 NAMES = {1: "20261009000001_core_schema.sql", 2: "20261009000002_game_functions.sql", 3: "20261009000003_server_telemetry.sql", 4: "20261009000004_convoy_sessions.sql", 5: "20261009000005_bus_system.sql", 6: "20261009000006_exclusive_activity.sql",
          "enum": "20261010000001_ledger_kinds.sql", "foundation": "20261010000002_foundation.sql", "profile": "20261010000003_profile_presence.sql",
          "world": "20261010000004_world_state.sql", "social": "20261010000005_social.sql", "vehjobs": "20261010000006_vehicles_jobs.sql",
-         "econ": "20261010000007_progression_content_economy.sql", "catalog": "20261011000001_job_board_catalog.sql", "lobby": "20261011000002_convoy_lobby.sql", "discovery": "20261011000003_discovery.sql", "vcat": "20261012000001_vehicle_catalog.sql"}
+         "econ": "20261010000007_progression_content_economy.sql", "catalog": "20261011000001_job_board_catalog.sql", "lobby": "20261011000002_convoy_lobby.sql", "discovery": "20261011000003_discovery.sql", "vcat": "20261012000001_vehicle_catalog.sql", "garage": "20261012000003_garage.sql"}
 F = {k: open(os.path.join(MIG, v)).read() for k, v in NAMES.items()}
 # any migration added later is copied through unchanged so mutants always run against the complete schema
 EXTRA = {n: open(os.path.join(MIG, n)).read() for n in sorted(os.listdir(MIG)) if n.endswith(".sql") and n not in NAMES.values()}
@@ -83,10 +83,10 @@ MUTANTS = {
  "convoy: code fns left at default EXECUTE":  (4, lambda t: resub(t, r"revoke execute on function get_convoy_session_code.*?from public, anon, authenticated;", "")),
  "RLS disabled on job_telemetry":              (3, lambda t: sub(t, "alter table job_telemetry enable row level security;", "")),
  # ---- shop + bus system (file 5)
- "shop: not_for_sale check removed":          (5, lambda t: sub(t, "if v_def.price <= 0 then raise exception 'not_for_sale'; end if;", "")),
- "shop: price debited as zero":               (5, lambda t: sub(t, "'VEHICLE_PURCHASE', -v_def.price,", "'VEHICLE_PURCHASE', -1,")),
- "shop: vehicle granted without payment":     (5, lambda t: sub(t, "perform _apply_transaction(v_uid, 'VEHICLE_PURCHASE', -v_def.price, 'buy:' || gen_random_uuid(), 'vehicle_definition', null);", "null;")),
- "shop: starts with empty tank":              (5, lambda t: sub(t, "values (v_uid, v_def.id, v_def.fuel_capacity_l)", "values (v_uid, v_def.id, 0)")),
+ "shop: not_for_sale check removed":          ("vcat", lambda t: sub(t, "if v_def.price <= 0 then raise exception 'not_for_sale'; end if;", "")),
+ "shop: price debited as zero":               ("vcat", lambda t: sub(t, "'VEHICLE_PURCHASE', -v_def.price,", "'VEHICLE_PURCHASE', -1,")),
+ "shop: vehicle granted without payment":     ("vcat", lambda t: sub(t, "perform _apply_transaction(v_uid, 'VEHICLE_PURCHASE', -v_def.price, 'buy:' || gen_random_uuid(), 'vehicle_definition', null);", "null;")),
+ "shop: starts with empty tank":              ("vcat", lambda t: sub(t, "values (v_uid, v_def.id, v_def.fuel_capacity_l)", "values (v_uid, v_def.id, 0)")),
  "shop: buy_vehicle to anon":                 (5, lambda t: t + "\ngrant execute on function buy_vehicle(text) to anon;\n"),
  "bus start: category check removed":         (5, lambda t: sub(t, "if v_cat <> 'bus' then raise exception 'wrong_vehicle_category'; end if;", "")),
  "bus start: ownership check removed":        (5, lambda t: sub(t, "where id = p_vehicle and player_id = v_uid for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select category", "where id = p_vehicle for update;\n  if not found then raise exception 'vehicle_not_owned'; end if;\n  select category")),
