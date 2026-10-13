@@ -228,14 +228,18 @@ namespace ARO.Tests
             public VehicleInputState Next; public VehicleInputState Read() { var s = Next; Next = default; return s; }
         }
 
+        /// <summary>Edit Mode does not run Update on a component that is not ExecuteInEditMode (and SendMessage refuses), so call the vehicle's own Update directly.</summary>
+        static void RunUpdate(VehicleController v) =>
+            typeof(VehicleController).GetMethod("Update", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(v, null);
+
         [Test] public void KeyGamepadAndTouchRequestsAllReachTheCameraThroughTheVehicle()
         {
             var input = new OneShotInput(); _veh.SetInput(input);
             var got = new List<CameraRequest>(); _veh.CameraRequested += r => got.Add(r);
-            input.Next = new VehicleInputState { CameraToggled = true }; _veh.SendMessage("Update");
-            input.Next = new VehicleInputState { CameraPrevious = true }; _veh.SendMessage("Update");
-            input.Next = new VehicleInputState { CameraSelect = 8 }; _veh.SendMessage("Update");
-            input.Next = default; _veh.SendMessage("Update");
+            input.Next = new VehicleInputState { CameraToggled = true }; RunUpdate(_veh);
+            input.Next = new VehicleInputState { CameraPrevious = true }; RunUpdate(_veh);
+            input.Next = new VehicleInputState { CameraSelect = 8 }; RunUpdate(_veh);
+            input.Next = default; RunUpdate(_veh);
             Assert.AreEqual(3, got.Count, "an idle frame raises nothing");
             Assert.AreEqual(1, got[0].Step); Assert.AreEqual(-1, got[1].Step); Assert.AreEqual(8, got[2].Select);
         }
