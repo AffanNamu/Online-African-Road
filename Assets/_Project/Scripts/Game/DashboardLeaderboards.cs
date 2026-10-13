@@ -318,7 +318,10 @@ namespace ARO.Game
             string myCountry = Me != null ? Me.country_code : Sum != null && Sum.profile != null ? Sum.profile.country_code : null; bool noCountry = string.IsNullOrEmpty(myCountry);
             Debug.Log("[Leaderboards] me flag=" + (CountryFlags.AssetName(myCountry) ?? "none"));
             var lvl = Ui.Label(_stage, "Level " + pr.level, "SemiBold", 17, Soft, LbRX + 112, y + 116, 200, 24);
-            float tagX = LbRX + 112 + lvl.preferredWidth + 14, tagW = Ui.CountryTag(_stage, myCountry, tagX, y + 117, 24, 15, noCountry ? Gold : Soft, "SemiBold", noCountry ? "Add your country" : "");
+            // with a country: the flag and code follow "Level N". Without one: the neutral placeholder and "Add your country" sit at the RIGHT end of that row, so the middle of the card still opens the profile
+            float tagW, tagX;
+            if (noCountry) { var probe = Ui.Label(_stage, "Add your country", "SemiBold", 15, Gold, 0, 0, 10, 10); float tw = probe.preferredWidth; Destroy(probe.gameObject); tagW = 24 + 8 + tw; tagX = LbRX + LbRW - 22 - tagW; Ui.CountryTag(_stage, myCountry, tagX, y + 117, 24, 15, Gold, "SemiBold", "Add your country"); }
+            else { tagX = LbRX + 112 + lvl.preferredWidth + 14; tagW = Ui.CountryTag(_stage, myCountry, tagX, y + 117, 24, 15, Soft, "SemiBold", ""); }
             Ui.Label(_stage, ranked ? LeaderboardRules.FormatValue(_lbMetric, me.value) + (_lbPeriod == BoardPeriod.Week && EffPeriod == BoardPeriod.Week ? " this week" : "") : LeaderboardRules.UnrankedText(_lbMetric, EffPeriod), "SemiBold", 15, ranked ? Gold : Soft, LbRX + 112, y + 142, LbRW - 130, 22);
             // xp progress: the server's progression
             var prog = Sum != null ? Sum.progression : null;
