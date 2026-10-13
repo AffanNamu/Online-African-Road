@@ -8,7 +8,7 @@ cinematic lighting, believable Lagos/Ibadan environments). Reference image is di
   with the driving code unchanged (`VehicleDefinition.visualPrefab`). Placeholder fallback logs a warning.
 - `TimeOfDay`: sun/sky/ambient/fog from live West Africa Time. `WeatherSystem`: rain particles, wet road materials
   (darker + glossier), overcast, grip loss.
-- `FollowCamera`: chase/cockpit, speed FOV, restrained shake, brake/accel pitch, zoom.
+- `FollowCamera`: the camera manager, eight views (cockpit, driver cabin, chase, far chase, left, right, overhead, bumper), blended switching, obstruction-aware, speed FOV, restrained shake and brake/accel pitch on the chase view, zoom. See `docs/CAMERA.md`.
 - `EngineAudio`: RPM-driven synth until recorded loops exist.
 - `ChunkStreamer`: budgeted async chunk build, pooled props, data-driven `RouteDefinition`.
 

@@ -22,6 +22,7 @@ namespace ARO.Game
         Text _unit, _speed, _gear, _job1, _job2, _jobReward, _eta, _wallet, _convoy, _indicators, _prompt;
         Image _arc, _fuelFill, _dmgFill, _progress; RectTransform _needle; GameObject _root, _jobCard, _convoyPanel;
         Text[] _toast = new Text[3]; Image[] _toastBg = new Image[3];
+        Text _camName; Button _camBtn; int _camShown = -1; bool _camLogged;
         float _smoothSpeed; int _mapVersion = -1;
 
         public void Init(DrivingSession s, GameServices svc)
@@ -29,11 +30,11 @@ namespace ARO.Game
             _s = s; _svc = svc;
             var canvas = UIKit.CreateCanvas("HUD", 5); _root = canvas.gameObject; transform.SetParent(_root.transform, false);
             var t = canvas.transform;
-            BuildDial(t); BuildJobCard(t); BuildMinimap(t); BuildConvoy(t); BuildToasts(t);
+            BuildDial(t); BuildJobCard(t); BuildMinimap(t); BuildCameraButton(t); BuildConvoy(t); BuildToasts(t);
 
             // Contextual prompt (centre-bottom), e.g. "Stop to load cargo".
             _prompt = UIKit.Label(t, "", 30, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0.25f, 0.16f), new Vector2(0.75f, 0.24f), Vector2.zero, Vector2.zero);
-            UIKit.Label(t, "W/S drive   A/D steer   Space brake   L lights   Q/E indicators   H horn   C camera   Esc menu", 16,
+            UIKit.Label(t, "W/S drive   A/D steer   Space brake   L lights   Q/E indicators   H horn   C / Shift+C / 1-8 camera   Esc menu", 16,
                 new Color(1, 1, 1, 0.35f), TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.035f), Vector2.zero, Vector2.zero);
             SetVisible(false);
         }
@@ -107,6 +108,24 @@ namespace ARO.Game
             _wallet = UIKit.Label(wal.transform, "", 22, UIKit.Accent, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
         }
 
+        /// <summary>
+        /// Camera-switch button, top right beside the minimap (not over it): one tap goes to the next view; it names the current one.
+        /// A normal uGUI button, so a finger, a mouse and a gamepad-driven pointer all work; nothing here needs a mouse. 150 x 76 on the 1920 x 1080 canvas.
+        /// </summary>
+        void BuildCameraButton(Transform t)
+        {
+            var go = new GameObject("Btn_Camera", typeof(RectTransform), typeof(Image), typeof(Button)); go.transform.SetParent(t, false);
+            var rt = (RectTransform)go.transform; rt.anchorMin = rt.anchorMax = new Vector2(1, 1); rt.pivot = new Vector2(1, 1);
+            rt.anchoredPosition = new Vector2(-346f, -28f); rt.sizeDelta = new Vector2(150f, 76f);
+            var img = go.GetComponent<Image>(); img.sprite = UIGfx.Glass; img.type = Image.Type.Sliced; img.color = Glass;
+            _camBtn = go.GetComponent<Button>(); _camBtn.targetGraphic = img;
+            var cb = _camBtn.colors; cb.highlightedColor = new Color(1f, 1f, 1f, 0.85f); cb.pressedColor = new Color(0.75f, 0.75f, 0.75f); _camBtn.colors = cb;
+            _camBtn.onClick.AddListener(() => { if (_s != null && _s.Cam != null && _s.Active) _s.Cam.Next("button"); });
+            UIKit.Label(go.transform, "CAMERA", 16, UIKit.Accent, TextAnchor.UpperCenter, new Vector2(0, 0.5f), new Vector2(1, 1), new Vector2(4, 0), new Vector2(-4, -8));
+            _camName = UIKit.Label(go.transform, "", 22, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0, 0), new Vector2(1, 0.62f), new Vector2(4, 4), new Vector2(-4, 0));
+            _camName.horizontalOverflow = HorizontalWrapMode.Overflow;
+        }
+
         void BuildConvoy(Transform t)
         {
             var panel = UIGfx.Panel(t, "Convoy", Glass, new Vector2(1, 0.5f), new Vector2(1, 0.5f), new Vector2(-300, -170), new Vector2(-28, 60));
@@ -148,6 +167,13 @@ namespace ARO.Game
             fill.color = Color.Lerp(bad, good, Mathf.Clamp01(f * 2f));
         }
 
+        /// <summary>Screen centre of the camera button as fractions of the screen (origin top-left), for the browser test.</summary>
+        public Vector2 CameraButtonCentre()
+        {
+            var corners = new Vector3[4]; ((RectTransform)_camBtn.transform).GetWorldCorners(corners);   // overlay canvas: world == screen pixels
+            return new Vector2((corners[0].x + corners[2].x) * 0.5f / Screen.width, 1f - (corners[0].y + corners[2].y) * 0.5f / Screen.height);
+        }
+
         public void SetVisible(bool v) { if (_root) _root.SetActive(v); if (_map != null) _map.SetVisible(v && ARO.Core.RuntimeSettings.ShowMinimap); }
 
         // ---------------------------------------------------------------- update
@@ -157,6 +183,11 @@ namespace ARO.Game
             _s.Notifications.Tick(Time.unscaledDeltaTime);
             DrawToasts();
             if (_mapVersion != ARO.Core.RuntimeSettings.Version) { _mapVersion = ARO.Core.RuntimeSettings.Version; if (_map != null && _root != null && _root.activeSelf) _map.SetVisible(ARO.Core.RuntimeSettings.ShowMinimap); }   // the Show Minimap setting
+            if (_camName != null && _s.Cam != null && _s.Cam.Config != null && _camShown != (int)_s.Cam.View) { _camShown = (int)_s.Cam.View; _camName.text = CameraViews.Digit(_s.Cam.View) + "  " + _s.Cam.ViewName; }
+            if (!_camLogged && _s.Vehicle != null && _s.Active && _camBtn != null && _camBtn.isActiveAndEnabled)
+            {   // where the button is, for the browser test (fractions of the screen, origin top-left)
+                _camLogged = true; var c = CameraButtonCentre(); Debug.Log($"[Hud] camera button x={c.x:0.000} y={c.y:0.000} screen={Screen.width}x{Screen.height}");
+            }
             if (_s.Vehicle == null || !_s.Active) return;
 
             var v = _s.Vehicle; var def = v.definition;

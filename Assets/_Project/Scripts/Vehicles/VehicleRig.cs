@@ -11,6 +11,11 @@ namespace ARO.Vehicles
     {
         public WheelAxle[] axles;
         public Transform centerOfMass, cockpitCameraAnchor, exhaust;
+        [Header("Cameras (all optional: a vehicle without them uses the per-category placeholder positions)")]
+        [Tooltip("Front bumper / low front camera position, looking forward.")]
+        public Transform bumperCameraAnchor;
+        [Tooltip("The driver at the wheel. Without a complete DriverRig the Driver cabin view is unavailable.")]
+        public DriverRig driverRig;
         [Header("Lights (emissive renderers use _EmissionColor; Lights are optional real lights)")]
         public Light[] headlightLights;
         public Renderer[] headlightEmitters, brakeEmitters, reverseEmitters, indicatorLeftEmitters, indicatorRightEmitters;

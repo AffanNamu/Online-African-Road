@@ -9,7 +9,7 @@ namespace ARO.Input
     public sealed class TouchVehicleInput : MonoBehaviour, IVehicleInput
     {
         float _steer, _throttle, _brake;
-        bool _horn, _handbrake, _lights, _left, _right, _camera;
+        bool _horn, _handbrake, _lights, _left, _right, _camera, _cameraPrev; int _cameraSelect;
 
         public void SetSteer(float v) => _steer = Mathf.Clamp(v, -1f, 1f);
         public void SetThrottle(float v) => _throttle = Mathf.Clamp01(v);
@@ -20,6 +20,8 @@ namespace ARO.Input
         public void PressIndicatorLeft() => _left = true;
         public void PressIndicatorRight() => _right = true;
         public void PressCamera() => _camera = true;
+        public void PressCameraPrevious() => _cameraPrev = true;
+        public void PressCameraSelect(int number) => _cameraSelect = number;
 
         public VehicleInputState Read()
         {
@@ -28,9 +30,9 @@ namespace ARO.Input
                 Steer = _steer, Throttle = _throttle, Brake = _brake,
                 Handbrake = _handbrake, HornHeld = _horn,
                 LightsToggled = _lights, IndicatorLeftToggled = _left,
-                IndicatorRightToggled = _right, CameraToggled = _camera
+                IndicatorRightToggled = _right, CameraToggled = _camera, CameraPrevious = _cameraPrev, CameraSelect = _cameraSelect
             };
-            _lights = _left = _right = _camera = false; // consume edges
+            _lights = _left = _right = _camera = _cameraPrev = false; _cameraSelect = 0; // consume edges
             return s;
         }
     }

@@ -217,10 +217,10 @@ namespace ARO.NetCore
     }
 
     // ===================================================================================================== controls
-    /// <summary>The bindings the driving input reads (KeyboardVehicleInput). Shown read-only: the game cannot rebind keys yet. A test keeps this list equal to the code.</summary>
+    /// <summary>The bindings the driving input reads (KeyboardVehicleInput; the camera keys through CameraBindings). Shown read-only: the game cannot rebind keys yet. A test keeps this list equal to the code.</summary>
     public static class ControlBindings
     {
-        public sealed class Binding { public string Action, Keys, Device; public string[] KeyProps; }
+        public sealed class Binding { public string Action, Keys, Device; public string[] KeyProps; /** true when the key is read through the rebindable ARO.Input.CameraBindings, not by a fixed property */ public bool Mapped; }
         public static readonly IReadOnlyList<Binding> All = new List<Binding>
         {
             new Binding { Device = "Keyboard", Action = "Accelerate", Keys = "W  /  Up", KeyProps = new[] { "wKey", "upArrowKey" } },
@@ -232,8 +232,10 @@ namespace ARO.NetCore
             new Binding { Device = "Keyboard", Action = "Lights", Keys = "L", KeyProps = new[] { "lKey" } },
             new Binding { Device = "Keyboard", Action = "Left indicator", Keys = "Q", KeyProps = new[] { "qKey" } },
             new Binding { Device = "Keyboard", Action = "Right indicator", Keys = "E", KeyProps = new[] { "eKey" } },
-            new Binding { Device = "Keyboard", Action = "Change camera", Keys = "C", KeyProps = new[] { "cKey" } },
-            new Binding { Device = "Mouse", Action = "Camera distance", Keys = "Mouse wheel", KeyProps = new[] { "scroll" } },
+            new Binding { Device = "Keyboard", Action = "Next camera", Keys = "C", KeyProps = new[] { "cKey" }, Mapped = true },
+            new Binding { Device = "Keyboard", Action = "Previous camera", Keys = "Shift + C", KeyProps = new[] { "cKey", "leftShiftKey", "rightShiftKey" }, Mapped = true },
+            new Binding { Device = "Keyboard", Action = "Select camera", Keys = "1 - 8", KeyProps = new[] { "digit1Key", "digit2Key", "digit3Key", "digit4Key", "digit5Key", "digit6Key", "digit7Key", "digit8Key" }, Mapped = true },
+            new Binding { Device = "Mouse", Action = "Camera distance (chase views)", Keys = "Mouse wheel", KeyProps = new[] { "scroll" } },
             new Binding { Device = "Gamepad", Action = "Steer", Keys = "Left stick", KeyProps = new[] { "leftStick" } },
             new Binding { Device = "Gamepad", Action = "Accelerate", Keys = "Right trigger", KeyProps = new[] { "rightTrigger" } },
             new Binding { Device = "Gamepad", Action = "Brake / Reverse", Keys = "Left trigger", KeyProps = new[] { "leftTrigger" } },

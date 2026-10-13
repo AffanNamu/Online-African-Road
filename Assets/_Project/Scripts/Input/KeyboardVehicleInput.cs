@@ -7,7 +7,7 @@ namespace ARO.Input
     public sealed class KeyboardVehicleInput : MonoBehaviour, IVehicleInput
     {
         const float SteerSmoothing = 8f;
-        float _steer;
+        float _steer; static bool _padLogged;
 
         public VehicleInputState Read()
         {
@@ -27,10 +27,14 @@ namespace ARO.Input
                 s.LightsToggled = kb.lKey.wasPressedThisFrame;
                 s.IndicatorLeftToggled = kb.qKey.wasPressedThisFrame;
                 s.IndicatorRightToggled = kb.eKey.wasPressedThisFrame;
-                s.CameraToggled = kb.cKey.wasPressedThisFrame;
+                // Camera keys come from CameraBindings (C next, Shift+C previous, 1..8 direct) so they can be rebound in one place.
+                bool shift = kb[CameraBindings.PreviousModifierLeft].isPressed || kb[CameraBindings.PreviousModifierRight].isPressed;
+                if (kb[CameraBindings.Next].wasPressedThisFrame) { if (shift) s.CameraPrevious = true; else s.CameraToggled = true; }
+                for (int i = 0; i < CameraBindings.Direct.Length; i++) if (kb[CameraBindings.Direct[i]].wasPressedThisFrame) { s.CameraSelect = i + 1; break; }
             }
             if (pad != null)
             {
+                if (!_padLogged) { _padLogged = true; Debug.Log("[Input] gamepad detected: " + pad.displayName); }
                 float stick = pad.leftStick.x.ReadValue();
                 if (Mathf.Abs(stick) > Mathf.Abs(steerTarget)) steerTarget = stick;
                 throttle = Mathf.Max(throttle, pad.rightTrigger.ReadValue());

@@ -3,7 +3,6 @@ using ARO.Backend;
 using ARO.Vehicles;
 using ARO.World;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ARO.Game
@@ -44,7 +43,7 @@ namespace ARO.Game
         {
             _svc = svc; _route = route; _defs = defs; _body = body; _wheel = wheel; _marker = marker; Streamer = streamer;
             if (!Camera.main.TryGetComponent(out FollowCamera cam)) cam = Camera.main.gameObject.AddComponent<FollowCamera>();
-            Cam = cam;
+            Cam = cam; Cam.Notice += m => Say(m, 4f, ARO.NetCore.Severity.Warning);
         }
 
         /// <summary>Spawn the player's vehicle. Default: start of the corridor; pass a position to start elsewhere (e.g. a bus stop).</summary>
@@ -63,9 +62,13 @@ namespace ARO.Game
             _lastSafe = Vehicle.transform.position; _lastSafeRot = Vehicle.transform.rotation; _nextSafe = 0f;
             _vehicleId = owned.id;
             Cam.target = Vehicle.transform; Streamer.target = Vehicle.transform; Streamer.route = _route;
+            Vehicle.CameraRequested += OnCameraRequested;   // C / Shift+C / 1-8 / gamepad Y reach the camera through the vehicle's input, not a second key reader
             Active = true; Time.timeScale = 1f;
             VehicleSpawned?.Invoke(Vehicle);
         }
+
+        /// <summary>The driver asked for another camera view. Ignored while the menu has the game paused, so typing in a menu field never switches the camera.</summary>
+        void OnCameraRequested(ARO.Input.CameraRequest r) { if (Active && !_holding && Cam != null) Cam.Request(r, "input"); }
 
         public void Pause(bool paused) { Active = !paused; Time.timeScale = paused ? 0f : 1f; }
         public string VehicleId => _vehicleId;
@@ -99,7 +102,6 @@ namespace ARO.Game
             if (!Active || Vehicle == null) return;
             if (_holding) { TryRelease(); return; }
             WatchVehicle();
-            if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame) Cam.ToggleCockpit();
             if (Job == null || _busy || Time.time < _retryAt) return;
 
             bool stopped = Vehicle.SpeedKmh < StopSpeedKmh;
@@ -144,7 +146,7 @@ namespace ARO.Game
             if (SmokeMode.Drive && Time.unscaledTime >= _nextLog)
             {
                 _nextLog = Time.unscaledTime + 1f;
-                Debug.Log($"[Drive] t={Time.time:F1} pos=({pos.x:F1},{pos.y:F2},{pos.z:F1}) kmh={Vehicle.SpeedKmh:F1} dist={Vector3.Distance(pos, _spawnPos):F1} ground={floor:F2} fuel={Vehicle.fuelL:F1} chunks={Streamer.LoadedChunkCount}");
+                Debug.Log($"[Drive] t={Time.time:F1} pos=({pos.x:F1},{pos.y:F2},{pos.z:F1}) kmh={Vehicle.SpeedKmh:F1} dist={Vector3.Distance(pos, _spawnPos):F1} ground={floor:F2} fuel={Vehicle.fuelL:F1} chunks={Streamer.LoadedChunkCount} yaw={t.eulerAngles.y:F0} cam={Cam.View}");
             }
         }
 

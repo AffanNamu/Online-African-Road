@@ -95,7 +95,14 @@ public class SettingsModelTests
     [Fact] public void TheKeyboardBindingsShownAreTheOnesTheInputReads()
     {
         var src = File.ReadAllText(Path.Combine(Scripts(), "Input", "KeyboardVehicleInput.cs"));
-        foreach (var b in ControlBindings.All.Where(x => x.Device == "Keyboard")) foreach (var k in b.KeyProps) Assert.True(src.Contains("kb." + k), $"{b.Action}: {k} is not read by KeyboardVehicleInput");
+        var mapped = File.ReadAllText(Path.Combine(Scripts(), "Input", "CameraBindings.cs"));
+        string Declared(string prop) => char.ToUpperInvariant(prop[0]) + prop.Substring(1, prop.Length - 4);   // cKey -> C, digit1Key -> Digit1, leftShiftKey -> LeftShift
+        foreach (var b in ControlBindings.All.Where(x => x.Device == "Keyboard"))
+            foreach (var k in b.KeyProps)
+            {
+                if (b.Mapped) { Assert.Contains("CameraBindings", src); Assert.True(mapped.Contains("Key." + Declared(k)), $"{b.Action}: {k} is not declared in CameraBindings"); }
+                else Assert.True(src.Contains("kb." + k), $"{b.Action}: {k} is not read by KeyboardVehicleInput");
+            }
         foreach (var b in ControlBindings.All.Where(x => x.Device == "Gamepad")) foreach (var k in b.KeyProps) Assert.True(src.Contains("pad." + k), $"{b.Action}: {k} is not read by KeyboardVehicleInput");
         Assert.Contains("scroll", File.ReadAllText(Path.Combine(Scripts(), "Vehicles", "FollowCamera.cs")));
     }

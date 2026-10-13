@@ -44,6 +44,12 @@ namespace ARO.Vehicles
         public GameObject visualPrefab;
         public float rainGripPenalty = 0.35f;   // fraction of grip lost in full rain
 
+        [Header("Camera framing (this model; the views themselves are per category, see CameraProfiles)")]
+        [Tooltip("Scales how far the following camera views sit from the vehicle. A longer vehicle wants more than 1.")]
+        [Range(0.75f, 2f)] public float cameraFollowScale = 1f;
+        [Tooltip("Scales how high the following camera views sit.")]
+        [Range(0.75f, 2f)] public float cameraHeightScale = 1f;
+
         /// <summary>Overlay backend `stats` json onto this definition (runtime instance only).</summary>
         public void ApplyBackendStats(string statsJson)
         {

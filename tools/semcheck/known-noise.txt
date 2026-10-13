@@ -6,7 +6,7 @@ Game/Hud.cs
 Game/LoginScreen.cs
 Game/UIDiagnostics.cs
 Game/DrivingSession.cs(102
-Game/DrivingSession.cs(137
+Game/DrivingSession.cs(139
 Game/WorldMapScreen.cs(205
 Game/WorldMapScreen.cs(372
 Game/WorldMapScreen.cs(548

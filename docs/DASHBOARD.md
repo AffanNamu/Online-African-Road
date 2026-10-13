@@ -208,7 +208,7 @@ Edits are a *draft*: "Save Settings" stores and applies, "Reset to Default Setti
 | Traffic Density, Graphics Quality | OnReload: the traffic scale and the quality tier chosen when the world is built (`RenderingRig.Select`; a `?quality=` in the address still wins). The shared tier objects are never modified |
 | Shadows, Post Processing | live: the sun's shadows and the post-processing volume (`RenderingRig`) |
 | Show Minimap | the driving view's route map (`Hud`, `MinimapView`) |
-| Camera Shake | scales the chase camera's shake (`FollowCamera`) |
+| Camera Shake | scales the shake of the chase view (`FollowCamera`); the other seven views are fixed or smooth and never shake (`docs/CAMERA.md`) |
 | Display Mode | `Screen.fullScreen` when Save is pressed (the browser only allows it after a click, so it is a session choice, never replayed at start-up) |
 | Show FPS Counter | a small counter bottom-right (`FpsOverlay`) |
 | Show Player Names | the name above other players' vehicles (`NetworkVehicle`) |
@@ -217,7 +217,7 @@ Edits are a *draft*: "Save Settings" stores and applies, "Reset to Default Setti
 | Appear in Nearby Players | **account**, OFF until the player turns it on: `set_nearby_visibility`, saved at once; the current value is read from `list_nearby_players`. It controls Players Nearby only: country, level, leaderboard rows, friends and the map do not depend on it |
 | Blocked Players | **account**: `list_blocked_players` / `unblock_player` |
 | Anti-Aliasing, View Distance | read-only: what the active quality tier really uses |
-| Controls tab | the bindings `KeyboardVehicleInput` and `FollowCamera` read, shown read-only; a test fails if the list and the code disagree |
+| Controls tab | the bindings `KeyboardVehicleInput` (the camera keys through `CameraBindings`) and `FollowCamera` read, shown read-only; a test fails if the list and the code disagree |
 
 Device settings are stored by `SettingsStore` in PlayerPrefs (the browser's storage in WebGL) as `id=value` lines. A damaged or older file never stops the game: unknown keys, bad numbers and options that no longer exist fall back to defaults.
 
