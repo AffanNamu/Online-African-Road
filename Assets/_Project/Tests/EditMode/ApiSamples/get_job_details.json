@@ -10,7 +10,7 @@
   "weight_kg": 1000
  },
  "code": "CT-1",
- "created_at": "2026-10-11T11:08:41.848798+00:00",
+ "created_at": "2026-10-13T12:58:53.870531+00:00",
  "destination": {
   "city": "Lagos",
   "city_slug": "lagos",
@@ -28,8 +28,8 @@
   "fuel_l": 0.7,
   "profit": 638
  },
- "expires_at": "2026-10-13T11:08:41.878742+00:00",
- "id": "04e97c39-f459-4496-a34f-d72fb7ccde4e",
+ "expires_at": "2026-10-15T12:58:53.923047+00:00",
+ "id": "d6e3ecda-6974-4cb3-b54b-8a27109934c7",
  "origin": {
   "city": "Lagos",
   "city_slug": "lagos",

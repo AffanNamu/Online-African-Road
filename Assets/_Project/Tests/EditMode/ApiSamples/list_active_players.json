@@ -3,12 +3,12 @@
   {
    "activity": "driving",
    "avatar_id": "default",
-   "country_code": null,
+   "country_code": "GH",
    "display_name": "CtB",
    "friend_status": "friends",
    "in_convoy": true,
    "level": 1,
-   "player_id": "e544aedb-bcc0-422d-a5f6-02dbcffe48bf",
+   "player_id": "75978292-281a-47db-9e9c-384227c84ff5",
    "username": "ctb",
    "vehicle": "Savanna 4x2 Light Truck"
   },
@@ -20,7 +20,7 @@
    "friend_status": "none",
    "in_convoy": false,
    "level": 1,
-   "player_id": "261ef663-1123-461e-9680-b361386c77a5",
+   "player_id": "1c84b987-a64d-4b56-afa1-488e6bb9e904",
    "username": "ctc",
    "vehicle": "Savanna 4x2 Light Truck"
   },
@@ -32,7 +32,7 @@
    "friend_status": "outgoing",
    "in_convoy": false,
    "level": 1,
-   "player_id": "49e8b81a-de45-48f1-9a12-4829867596d9",
+   "player_id": "d4581cac-37d3-42d1-b2f3-8cef69c1b95d",
    "username": "cte",
    "vehicle": "Savanna 4x2 Light Truck"
   },
@@ -44,11 +44,11 @@
    "friend_status": "none",
    "in_convoy": true,
    "level": 1,
-   "player_id": "a81e5a67-7442-47d8-a614-7d94ea55a1fd",
+   "player_id": "0415d5a4-fd2f-43e9-96c7-67514666f6ed",
    "username": "ctf",
    "vehicle": "Savanna 4x2 Light Truck"
   }
  ],
- "server_time": "2026-10-11T11:08:43.884128+00:00",
+ "server_time": "2026-10-13T12:58:57.590544+00:00",
  "total": 4
 }

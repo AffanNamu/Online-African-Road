@@ -5,7 +5,7 @@
    "country_code": "NG",
    "display_name": "CtA",
    "level": 2,
-   "player_id": "c987a198-32ca-425d-a03c-5590ec185e6b",
+   "player_id": "e91420f1-f7f5-416d-842d-55dc202760dc",
    "rank": 1,
    "username": "cta",
    "value": 300
@@ -19,6 +19,6 @@
  "metric": "xp",
  "offset": 0,
  "period": "all",
- "server_time": "2026-10-11T11:08:44.881096+00:00",
+ "server_time": "2026-10-13T12:58:59.194359+00:00",
  "total": 1
 }

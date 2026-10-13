@@ -3,7 +3,7 @@
  "coins": 5000,
  "convoy": {
   "capacity": 4,
-  "id": "7cf92b4f-b777-40a0-b3fb-42541a8d1d1a",
+  "id": "4d675094-d2d1-4b2e-a39a-25cd89c972ae",
   "is_leader": true,
   "member_count": 2,
   "name": "Contract Run"
@@ -18,9 +18,9 @@
  "pending_friend_requests": 1,
  "profile": {
   "avatar_id": "default",
-  "country_code": null,
+  "country_code": "NG",
   "display_name": "CtA",
-  "id": "c987a198-32ca-425d-a03c-5590ec185e6b",
+  "id": "e91420f1-f7f5-416d-842d-55dc202760dc",
   "level": 2,
   "username": "cta"
  },
@@ -46,10 +46,10 @@
   "xp_next_level": 400,
   "xp_to_next": 100
  },
- "server_time": "2026-10-11T11:08:43.182436+00:00",
+ "server_time": "2026-10-13T12:58:56.270903+00:00",
  "unread_notifications": 5,
  "vehicle": {
-  "acquired_at": "2026-10-11T11:08:41.350396+00:00",
+  "acquired_at": "2026-10-13T12:58:52.948978+00:00",
   "cargo_capacity_kg": 4000,
   "category": "truck",
   "condition_pct": 100.0,
@@ -59,7 +59,7 @@
   "fuel_capacity_l": 120,
   "fuel_l": 120,
   "fuel_pct": 100.0,
-  "id": "634f5264-ad25-4837-9138-d75948e66762",
+  "id": "984501c7-eebd-4817-8ed1-e2e9b3a21c74",
   "mileage_km": 0.0,
   "model": "Savanna 4x2 Light Truck",
   "name": "Savanna 4x2 Light Truck",

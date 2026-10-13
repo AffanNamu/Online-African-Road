@@ -2,10 +2,10 @@
  "items": [
   {
    "capacity": 6,
-   "created_at": "2026-10-11T11:08:42.697364+00:00",
+   "created_at": "2026-10-13T12:58:55.219984+00:00",
    "driving_mode": "realistic",
    "has_password": true,
-   "id": "c3c1d6c7-b926-45c8-9613-990ef53676d4",
+   "id": "60f9e15b-7fb0-473b-8926-dc052348ffa6",
    "joinable": true,
    "language": "en",
    "leader": "CtF",
@@ -21,10 +21,10 @@
   },
   {
    "capacity": 8,
-   "created_at": "2026-10-11T11:08:42.377354+00:00",
+   "created_at": "2026-10-13T12:58:54.710529+00:00",
    "driving_mode": "relaxed",
    "has_password": false,
-   "id": "1c8d433d-8624-48b5-aed7-abf44acfcc6a",
+   "id": "23ee8955-7198-424b-9850-785c28a29485",
    "joinable": true,
    "language": "en",
    "leader": "CtD",
@@ -49,6 +49,6 @@
    ]
   }
  ],
- "server_time": "2026-10-11T11:08:43.772869+00:00",
+ "server_time": "2026-10-13T12:58:57.393573+00:00",
  "total": 2
 }

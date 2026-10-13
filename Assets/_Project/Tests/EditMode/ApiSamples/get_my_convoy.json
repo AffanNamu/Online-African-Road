@@ -2,22 +2,22 @@
  "convoy": {
   "all_ready": true,
   "capacity": 4,
-  "created_at": "2026-10-11T14:27:08.597788+00:00",
+  "created_at": "2026-10-13T12:58:54.447415+00:00",
   "driving_mode": "relaxed",
   "has_password": false,
-  "id": "caa0cb6d-1aad-4ed4-bfcf-6689cbf77c3e",
+  "id": "4d675094-d2d1-4b2e-a39a-25cd89c972ae",
   "invited": [
    {
-    "created_at": "2026-10-11T14:27:08.714554+00:00",
+    "created_at": "2026-10-13T12:58:54.640106+00:00",
     "display_name": "CtC",
     "level": 1,
-    "player_id": "796e3893-7ccf-48aa-a19f-9f359e81b985"
+    "player_id": "1c84b987-a64d-4b56-afa1-488e6bb9e904"
    }
   ],
   "is_leader": true,
   "is_private": true,
   "language": "fr",
-  "leader_id": "0293c992-7fbf-48d2-9014-3c80979bc470",
+  "leader_id": "e91420f1-f7f5-416d-842d-55dc202760dc",
   "member_count": 2,
   "members": [
    {
@@ -26,16 +26,16 @@
     "country_code": "NG",
     "display_name": "CtA",
     "is_leader": true,
-    "joined_at": "2026-10-11T14:27:08.597788+00:00",
+    "joined_at": "2026-10-13T12:58:54.447415+00:00",
     "level": 2,
-    "player_id": "0293c992-7fbf-48d2-9014-3c80979bc470",
+    "player_id": "e91420f1-f7f5-416d-842d-55dc202760dc",
     "presence": {
      "activity": "driving",
      "city_slug": "lagos",
-     "last_seen_at": "2026-10-11T14:27:09.89071+00:00",
+     "last_seen_at": "2026-10-13T12:58:56.962068+00:00",
      "online": true,
      "route_code": "lagos-ibadan",
-     "session_id": "c471ab6e-0b15-4297-aea7-590b5e94b276"
+     "session_id": "329514fa-0643-47e2-9007-40894c07fb9c"
     },
     "ready": true,
     "username": "cta",
@@ -45,19 +45,19 @@
    {
     "avatar_id": "default",
     "connected": true,
-    "country_code": null,
+    "country_code": "GH",
     "display_name": "CtB",
     "is_leader": false,
-    "joined_at": "2026-10-11T14:27:08.633088+00:00",
+    "joined_at": "2026-10-13T12:58:54.503667+00:00",
     "level": 1,
-    "player_id": "c513a1c5-fc43-4eb6-aa6a-761871a12dc3",
+    "player_id": "75978292-281a-47db-9e9c-384227c84ff5",
     "presence": {
      "activity": "driving",
      "city_slug": "lagos",
-     "last_seen_at": "2026-10-11T14:27:09.202871+00:00",
+     "last_seen_at": "2026-10-13T12:58:55.651237+00:00",
      "online": true,
      "route_code": "lagos-ibadan",
-     "session_id": "aa140eee-58e8-4e16-9cc9-a4f7b15e83d0"
+     "session_id": "43ba1242-fef1-4af4-85ce-1398bda67956"
     },
     "ready": true,
     "username": "ctb",
@@ -85,5 +85,5 @@
    "freight"
   ]
  },
- "server_time": "2026-10-11T14:27:10.097884+00:00"
+ "server_time": "2026-10-13T12:58:57.334906+00:00"
 }

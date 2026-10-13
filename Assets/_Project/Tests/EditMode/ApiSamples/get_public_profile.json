@@ -1,22 +1,22 @@
 {
  "achievements": 0,
  "avatar_id": "default",
- "country_code": null,
+ "country_code": "GH",
  "display_name": "CtB",
  "distance_km": 0,
  "experience": 0,
  "friend_status": "friends",
  "jobs_completed": 0,
  "level": 1,
- "member_since": "2026-10-11T14:27:07.697873+00:00",
- "player_id": "c513a1c5-fc43-4eb6-aa6a-761871a12dc3",
+ "member_since": "2026-10-13T12:58:53.011319+00:00",
+ "player_id": "75978292-281a-47db-9e9c-384227c84ff5",
  "presence": {
   "activity": "driving",
   "city_slug": "lagos",
-  "last_seen_at": "2026-10-11T14:27:09.202871+00:00",
+  "last_seen_at": "2026-10-13T12:58:55.651237+00:00",
   "online": true,
   "route_code": "lagos-ibadan",
-  "session_id": "aa140eee-58e8-4e16-9cc9-a4f7b15e83d0"
+  "session_id": "43ba1242-fef1-4af4-85ce-1398bda67956"
  },
  "username": "ctb",
  "vehicle": "Savanna 4x2 Light Truck",
