@@ -234,6 +234,7 @@ namespace ARO.Game
         // ---- country (a long list: search + scroll) and language (twelve rows)
         void OpenCountryPicker()
         {
+            Debug.Log("[Profile] country picker opened");
             _prCountryQuery = ""; _prCountryPending = ""; _scrollPos.Remove("pr_countries"); BuildCountryPicker();
             if (_svc.Player.Countries.State != LoadState.Ready) _ = PrLoadCountries();
         }

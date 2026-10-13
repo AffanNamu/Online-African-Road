@@ -615,7 +615,7 @@ const allErrors = [], allExc = [];
     await c.settle(); check(!!c.targets()['Btn_FriSent_browserfe'] && !c.targets()['Btn_FriAddFriend_browserfe'], 'the card now says "Request Sent" and cannot be added again');
 
     // find players: exact username, from the backend
-    await c.click('Btn_FriTab_Find'); await c.settle(); await c.page.screenshot({ path: `${prefix}-67-friends-find.png` });
+    await c.clickUntil('Btn_FriTab_Find', /\[Friends\] tab=find/, 30, 3); await c.settle(); await c.page.screenshot({ path: `${prefix}-67-friends-find.png` });      // a click the software-WebGL player drops is repeated, the assertions are not weakened
     m = c.logs.length; await c.click('Fri_Search_Input'); await sleep(500); await c.page.keyboard.type('nobody_here', { delay: 100 }); await sleep(600); await c.click('Btn_FriFindGo');
     check(!!(await c.waitLog(/\[Friends\] find "nobody_here" result=not_found/, m, 60)), 'a username that does not exist is reported as not found'); await c.settle(); await c.page.screenshot({ path: `${prefix}-68-friends-notfound.png` });
     await c.click('Fri_Search_Input'); await sleep(500); await wipe(c);                              // the box lost focus when the search ran: focus it again and empty it
@@ -730,7 +730,7 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_LbTab_Xp'); check(!!(await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 60)), 'XP has no weekly record: the board falls back to All Time instead of inventing weekly XP');
 
     // friends scope
-    await c.settle(); m = c.logs.length; await c.click('Btn_LbScope_Friends'); check(!!(await c.waitLog(/\[Leaderboards\] scope=friends/, m, 30)), 'the My Friends scope opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-86-leaderboards-friends.png` });
+    await c.settle(); m = c.logs.length; check(!!(await c.clickUntil('Btn_LbScope_Friends', /\[Leaderboards\] scope=friends/, 30, 3)), 'the My Friends scope opens'); await c.settle(); await c.page.screenshot({ path: `${prefix}-86-leaderboards-friends.png` });
     tg = c.targets(); check(!!tg['Btn_LbRow_browserlba'] && !!tg['Btn_LbRow_browserlbc'] && !!tg['Btn_LbRow_browserlbo'] && !!tg['Btn_LbRow_browserlbn'] && !tg['Btn_LbRow_browserlbb'], 'the friends board lists me and my 3 friends, and nobody else');
     await c.click('Btn_LbScope_Global'); await c.settle();
 
@@ -756,11 +756,11 @@ const allErrors = [], allExc = [];
     await c.settle(); tg = c.targets(); check(!!tg['Btn_LbAddCountry'], 'a player with no country is offered "Add your country" on Your Rank (the neutral placeholder, not a guess)');
     check(c.logs.some(l => /\[Leaderboards\] me flag=none/.test(l)), 'Your Rank shows no flag for a player who has no country');
     await c.page.screenshot({ path: `${prefix}-83-leaderboards-no-country.png` });
-    m = c.logs.length; await c.click('Btn_LbAddCountry');
-    check(!!(await c.waitLog(/\[Leaderboards\] add country/, m, 30)) && !!(await c.waitLog(/\[Dashboard\] page=profile/, m, 40)), 'Add your country opens the profile (not onboarding)');
+    m = c.logs.length; const addc = await c.clickUntil('Btn_LbAddCountry', /\[Leaderboards\] add country/, 30, 3);
+    check(!!addc && !!(await c.waitLog(/\[Dashboard\] page=profile/, m, 40)), 'Add your country opens the profile (not onboarding)');
     await c.settle();
     tg = c.targets(); check(!!tg['Btn_PrCountry_GH'] && !!tg['Pr_Country_Search'], 'the country picker is open with the server\'s countries'); await c.page.screenshot({ path: `${prefix}-84-country-picker-flags.png` });
-    m = c.logs.length; await c.click('Btn_PrCountry_GH'); check(!!(await c.waitLog(/\[Profile\] country=GH ok=True/, m, 60)), 'Ghana is saved through the profile country picker');
+    m = c.logs.length; check(!!(await c.clickUntil('Btn_PrCountry_GH', /\[Profile\] country=GH ok=True/, 40, 3)), 'Ghana is saved through the profile country picker');
     check(db(`select country_code || '|' || appear_nearby::text from profiles where id = '${lbv.id}'`) === 'GH|false', 'the country is stored on the account and Players Nearby stays off (independent preferences)');
     await c.settle(); await c.page.screenshot({ path: `${prefix}-85-profile-flag.png` });
     check(!!(await c.waitLog(/\[Profile\] country flag=gh state=known/, m, 30)), 'the profile now shows the Ghana flag');
@@ -862,7 +862,7 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_PrEditSave'); check(!!(await c.waitLog(/\[Profile\] edit name=False username=True ok=True/, m, 60)), 'a free username is saved');
     check(db(`select username from profiles where id = '${newbie.id}'`) === 'chidi_eze', 'the new username is in the database'); await c.settle();
     // country: search the real list, pick one
-    m = c.logs.length; await c.click('Btn_PrCountry'); await c.settle(); check(!!c.targets()['Pr_Country_Search'], 'Change country opens a searchable list');
+    m = c.logs.length; await c.clickUntil('Btn_PrCountry', /\[Profile\] country picker opened/, 30, 3); await c.settle(); check(!!c.targets()['Pr_Country_Search'], 'Change country opens a searchable list');
     await c.click('Pr_Country_Search'); await sleep(500); await c.page.keyboard.type('nigeria', { delay: 80 }); await c.waitLog(/\[Profile\] country search="nigeria"/, m, 40); await c.settle(); await c.page.screenshot({ path: `${prefix}-103-profile-country.png` });
     m = c.logs.length; await c.click('Btn_PrCountry_NG'); check(!!(await c.waitLog(/\[Profile\] country=NG ok=True/, m, 60)), 'a new country is saved');
     check(db(`select country_code from profiles where id = '${newbie.id}'`) === 'NG', 'the new country is in the database'); await c.settle();
