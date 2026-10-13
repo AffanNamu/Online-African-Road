@@ -105,7 +105,7 @@ tab in Settings shows the defaults read-only. The other (driving) keys are still
   the driver cabin refused with a message, incomplete and complete `DriverRig`, rig anchors, wall pull-in and release, the vehicle's own colliders never pulling in, blending, a vehicle change keeping
   the view, per-category and per-model framing, fixed views staying on the vehicle while it moves, no drift when stationary, key / gamepad / touch requests reaching the camera, no camera key
   equal to a driving key.
-* `tools/webgl-drive.js` (real WebGL build in headless Chromium, run by CI): all eight views by number (2 refused explicitly), `C` / `Shift+C` including wrap-around and skipping the cabin,
+* `tools/webgl-drive.js` (real WebGL build in headless Chromium, run by CI). Its original throttle-only run is unchanged and ends with the truck crashed off the road at the first bend, so the camera checks run on a freshly reloaded page with a new truck: all eight views by number (2 refused explicitly), `C` / `Shift+C` including wrap-around and skipping the cabin,
   acceleration while switching views, steering in the overhead view, braking in the far chase view, the on-screen button's position and click, and a gamepad Y press **if the game sees the pad**
   (the Gamepad API is faked; if the game does not detect it the step prints SKIPPED and verifies nothing). Screenshots of every view are published with the other CI screenshots.
 

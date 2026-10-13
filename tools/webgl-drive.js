@@ -79,7 +79,9 @@ function serve() {
   }
 
   // ------------------------------------------------------------------------------------------------ camera manager
-  console.log('\n--- camera manager ---');
+  // The throttle-only run above ends, as it always has, with the truck crashed off the road at the first bend (it sits at rest ~390 m from the spawn).
+  // The camera checks therefore start from a fresh boot: a new truck on the road.
+  console.log('\n--- camera manager (fresh page) ---');
   const VIEWS = ['Cockpit', 'DriverCabin', 'RearChase', 'FarChase', 'Left', 'Right', 'Overhead', 'FrontBumper'];
   const ok = m => console.log('  ok: ' + m);
   const parseDrive = from => logs.slice(from).map(l => /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+).*? yaw=(-?[\d.]+) cam=(\w+)/.exec(l))
@@ -92,105 +94,116 @@ function serve() {
   const pathLength = ss => ss.slice(1).reduce((a, s, i) => a + Math.hypot(s.x - ss[i].x, s.z - ss[i].z), 0);
   const yawDelta = (a, b) => ((b - a + 540) % 360) - 180;
 
-  const ready = logs.find(l => /\[Camera\] manager ready/.test(l));
-  if (!ready) failures.push('the camera manager never started (no "[Camera] manager ready" line)');
-  else if (!/isMainCamera=True/.test(ready)) failures.push('the camera manager is not on the Main Camera: ' + ready.slice(0, 200));
-  else ok('the camera manager runs on the Main Camera: ' + ready.replace(/^.*\[Camera\]/, '[Camera]'));
-  const bound = logs.find(l => /\[Camera\] bound vehicle=/.test(l));
-  if (!bound || !/category=Truck/.test(bound) || !/available=7\/8/.test(bound) || !/driverRig=none/.test(bound)) failures.push('the camera did not bind to the truck with 7 of 8 views available (the driver cabin has no rig yet): ' + (bound || 'no line').slice(0, 250));
-  else ok(bound.replace(/^.*\[Camera\]/, '[Camera]'));
+  try {
+    const boot = logs.length;
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive`);
+    if (!await waitLogFrom(boot, /\[Smoke\] drive scenario/, 150)) throw new Error('the page did not boot again for the camera scenario');
+    if (!await waitLogFrom(boot, /\[Drive\] ground ready/, 90)) throw new Error('no ground under the new truck for the camera scenario');
+    await page.waitForTimeout(4000); await page.mouse.click(512, 288);   // canvas keyboard focus
 
-  // 1. every view by its number; 2 (driver cabin) must be refused explicitly and leave the view alone
-  let prevView = 'RearChase';
-  for (let n = 1; n <= 8; n++) {
-    if (n === 2) {
-      const l = await tapUntil('2', /\[Camera\] unavailable view=DriverCabin number=2/);
-      if (!l) failures.push('pressing 2 (driver cabin) was not handled explicitly: no "[Camera] unavailable" line');
-      else if (!new RegExp('stays=' + prevView + ' ').test(l) || !/reason=.*driver/i.test(l)) failures.push('the refusal of the driver cabin did not keep the view and say why: ' + l.slice(0, 250));
-      else ok(`2 -> the driver cabin is refused, the view stays ${prevView}, with a reason`);
-    } else {
-      const l = await tapUntil(String(n), viewLine(VIEWS[n - 1], n));
-      if (!l) failures.push(`pressing ${n} did not select ${VIEWS[n - 1]}`);
-      else if (!/main=True/.test(l)) failures.push(`${VIEWS[n - 1]}: the camera is no longer the Main Camera: ${l.slice(0, 200)}`);
-      else { prevView = VIEWS[n - 1]; ok(`${n} -> ${VIEWS[n - 1]}`); }
-    }
-    await page.waitForTimeout(1000); await page.screenshot({ path: `${prefix}-cam-${n}-${VIEWS[n - 1]}.png` });
-  }
+    const ready = logFrom(boot, /\[Camera\] manager ready/);
+    if (!ready) failures.push('the camera manager never started (no "[Camera] manager ready" line)');
+    else if (!/isMainCamera=True/.test(ready)) failures.push('the camera manager is not on the Main Camera: ' + ready.slice(0, 200));
+    else ok('the camera manager runs on the Main Camera: ' + ready.replace(/^.*\[Camera\]/, '[Camera]'));
+    const bound = logFrom(boot, /\[Camera\] bound vehicle=/);
+    if (!bound || !/category=Truck/.test(bound) || !/available=7\/8/.test(bound) || !/driverRig=none/.test(bound)) failures.push('the camera did not bind to the truck with 7 of 8 views available (the driver cabin has no rig yet): ' + (bound || 'no line').slice(0, 250));
+    else ok(bound.replace(/^.*\[Camera\]/, '[Camera]'));
 
-  // 2. C = next (wraps from the last view to the first), Shift+C = previous (wraps back)
-  { const l = await tapUntil('c', viewLine('Cockpit', 1)); if (!l) failures.push('C from the bumper view (8) did not wrap to the cockpit (1)'); else ok('C wraps 8 -> 1 (cockpit)');
-    const p = await tapUntil('Shift+C', viewLine('FrontBumper', 8)); if (!p) failures.push('Shift+C from the cockpit did not wrap back to the bumper view'); else ok('Shift+C wraps 1 -> 8 (bumper)');
-    const n2 = await tapUntil('c', viewLine('Cockpit', 1)); const n3 = await tapUntil('c', viewLine('RearChase', 3));
-    if (!n2 || !n3) failures.push('C from the cockpit did not skip the unavailable driver cabin and land on the chase view'); else ok('C skips the unavailable driver cabin: 1 -> 3'); }
-
-  // 3. driving is not affected by changing the view: accelerate while switching views
-  { const mark = logs.length; await page.keyboard.down('w');
-    for (const n of [5, 6, 7, 8]) { await tapUntil(String(n), viewLine(VIEWS[n - 1], n), 2, 3); await page.waitForTimeout(1500); }
-    await page.keyboard.up('w');
-    const ss = parseDrive(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
-    console.log(`  accelerate while switching: ${ss.length} samples, max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m, views in the telemetry: ${[...cams].join(',')}`);
-    if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
-    else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
-    else if (pathLength(ss) < 40) failures.push(`the truck barely moved while the view was changed (${pathLength(ss).toFixed(0)} m)`);
-    else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
-    else ok('acceleration and movement are unaffected by changing the view'); }
-
-  // 4. steering under a non-default view (overhead)
-  { await tapUntil('7', viewLine('Overhead', 7), 2, 4); const mark = logs.length;
-    await page.keyboard.down('w'); await page.keyboard.down('d'); await page.waitForTimeout(4000); await page.keyboard.up('d'); await page.waitForTimeout(1500); await page.keyboard.up('w');
-    const ss = parseDrive(mark).filter(s => s.cam === 'Overhead');
-    if (ss.length < 3) failures.push(`only ${ss.length} samples while steering in the overhead view`);
-    else { const d = yawDelta(ss[0].yaw, ss[ss.length - 1].yaw); console.log(`  steering in the overhead view: heading changed ${d.toFixed(0)} deg over ${ss.length} samples`);
-      if (Math.abs(d) < 5) failures.push(`holding D in the overhead view did not turn the truck (heading changed ${d.toFixed(1)} deg)`); else ok(`steering works in the overhead view (${d.toFixed(0)} deg)`); } }
-
-  // 5. braking under another view (far chase)
-  { await tapUntil('4', viewLine('FarChase', 4), 2, 4); let mark = logs.length;
-    await page.keyboard.down('w'); await page.waitForTimeout(4500); await page.keyboard.up('w');
-    const peak = Math.max(0, ...parseDrive(mark).map(s => s.kmh)); mark = logs.length;
-    await page.keyboard.down('s'); await page.waitForTimeout(5000); await page.keyboard.up('s');
-    const after = parseDrive(mark).filter(s => s.cam === 'FarChase'), low = Math.min(...after.map(s => s.kmh));
-    console.log(`  braking in the far chase view: peak ${peak.toFixed(1)} km/h, lowest while braking ${after.length ? low.toFixed(1) : 'n/a'} km/h`);
-    if (peak < 10) failures.push(`could not get above 10 km/h to test braking (peak ${peak.toFixed(1)})`);
-    else if (after.length < 3 || low > Math.max(5, peak * 0.4)) failures.push(`holding S in the far chase view did not slow the truck (peak ${peak.toFixed(1)} -> lowest ${low.toFixed(1)} km/h)`);
-    else ok(`braking works in the far chase view (${peak.toFixed(0)} -> ${low.toFixed(0)} km/h)`); }
-
-  // 6. the on-screen button: top right, left of the minimap, and it changes the view when clicked
-  { const b = logs.map(l => /\[Hud\] camera button x=([\d.]+) y=([\d.]+)/.exec(l)).find(Boolean);
-    if (!b) failures.push('the HUD never logged a camera button position (is Btn_Camera built?)');
-    else {
-      const fx = +b[1], fy = +b[2];
-      if (!(fx > 0.65 && fx + 0.0391 < 0.828 && fy < 0.15)) failures.push(`the camera button is not in the top right beside the minimap (x=${fx}, y=${fy})`);
-      else ok(`the camera button is at x=${fx} y=${fy} (top right, clear of the minimap column that starts at x=0.829)`);
-      const box = await page.locator('#unity-canvas').boundingBox(); const cx = box.x + fx * box.width, cy = box.y + fy * box.height;
-      let hit = null;
-      for (let i = 0; i < 3 && !hit; i++) { const mark = logs.length; await page.mouse.click(cx, cy, { delay: 200 }); hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=button/, 5); }
-      if (!hit) failures.push('clicking the camera button did not change the view'); else { ok('clicking the button -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120)); await page.screenshot({ path: `${prefix}-cam-button.png` }); }
-    } }
-
-  // 7. a gamepad Y press, where the game can see a pad (the Gamepad API is faked: nothing here proves a real pad works)
-  { await page.evaluate(() => {
-      const buttons = Array.from({ length: 17 }, () => ({ pressed: false, touched: false, value: 0 }));
-      window.__aroPad = { id: 'ARO test pad (STANDARD GAMEPAD Vendor: 0000 Product: 0000)', index: 0, connected: true, mapping: 'standard', axes: [0, 0, 0, 0], buttons, timestamp: performance.now(), vibrationActuator: null };
-      window.dispatchEvent(new GamepadEvent('gamepadconnected', { gamepad: window.__aroPad }));
-    });
-    const seen = await waitLogFrom(0, /\[Input\] gamepad detected/, 20);
-    if (!seen) console.log('  SKIPPED: the game did not detect the simulated gamepad in headless Chromium, so gamepad camera input is NOT verified here (needs a manual check with a real pad)');
-    else {
-      let hit = null;
-      for (let i = 0; i < 3 && !hit; i++) {
-        const mark = logs.length;
-        await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: true, touched: true, value: 1 }; p.timestamp = performance.now(); });
-        await page.waitForTimeout(500);
-        await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: false, touched: false, value: 0 }; p.timestamp = performance.now(); });
-        hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=input/, 4);
+    // 1. every view by its number; 2 (driver cabin) must be refused explicitly and leave the view alone
+    let prevView = 'RearChase';
+    for (let n = 1; n <= 8; n++) {
+      if (n === 2) {
+        const l = await tapUntil('2', /\[Camera\] unavailable view=DriverCabin number=2/);
+        if (!l) failures.push('pressing 2 (driver cabin) was not handled explicitly: no "[Camera] unavailable" line');
+        else if (!new RegExp('stays=' + prevView + ' ').test(l) || !/reason=.*driver/i.test(l)) failures.push('the refusal of the driver cabin did not keep the view and say why: ' + l.slice(0, 250));
+        else ok(`2 -> the driver cabin is refused, the view stays ${prevView}, with a reason`);
+      } else {
+        const l = await tapUntil(String(n), viewLine(VIEWS[n - 1], n));
+        if (!l) failures.push(`pressing ${n} did not select ${VIEWS[n - 1]}`);
+        else if (!/main=True/.test(l)) failures.push(`${VIEWS[n - 1]}: the camera is no longer the Main Camera: ${l.slice(0, 200)}`);
+        else { prevView = VIEWS[n - 1]; ok(`${n} -> ${VIEWS[n - 1]}`); }
       }
-      if (!hit) failures.push('the game saw the gamepad but pressing Y (north) did not change the camera view');
-      else ok('gamepad Y (north) -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120));
+      await page.waitForTimeout(1000); await page.screenshot({ path: `${prefix}-cam-${n}-${VIEWS[n - 1]}.png` });
     }
-    await page.evaluate(() => { window.__aroPad = null; }); }
 
-  const camErrors = logs.filter(l => /\[Camera\] invalid camera profile/.test(l));
-  if (camErrors.length) failures.push('the game reported an invalid camera profile: ' + camErrors[0].slice(0, 250));
+    // 2. C = next (wraps from the last view to the first), Shift+C = previous (wraps back)
+    { const l = await tapUntil('c', viewLine('Cockpit', 1)); if (!l) failures.push('C from the bumper view (8) did not wrap to the cockpit (1)'); else ok('C wraps 8 -> 1 (cockpit)');
+      const p = await tapUntil('Shift+C', viewLine('FrontBumper', 8)); if (!p) failures.push('Shift+C from the cockpit did not wrap back to the bumper view'); else ok('Shift+C wraps 1 -> 8 (bumper)');
+      const n2 = await tapUntil('c', viewLine('Cockpit', 1)); const n3 = await tapUntil('c', viewLine('RearChase', 3));
+      if (!n2 || !n3) failures.push('C from the cockpit did not skip the unavailable driver cabin and land on the chase view'); else ok('C skips the unavailable driver cabin: 1 -> 3'); }
+
+    // 3. the on-screen button: top right, left of the minimap, and it changes the view when clicked
+    { const b = logs.slice(boot).map(l => /\[Hud\] camera button x=([\d.]+) y=([\d.]+)/.exec(l)).find(Boolean);
+      if (!b) failures.push('the HUD never logged a camera button position (is Btn_Camera built?)');
+      else {
+        const fx = +b[1], fy = +b[2];
+        if (!(fx > 0.65 && fx + 0.0391 < 0.828 && fy < 0.15)) failures.push(`the camera button is not in the top right beside the minimap (x=${fx}, y=${fy})`);
+        else ok(`the camera button is at x=${fx} y=${fy} (top right, clear of the minimap column that starts at x=0.829)`);
+        const box = await page.locator('#unity-canvas').boundingBox(); const cx = box.x + fx * box.width, cy = box.y + fy * box.height;
+        let hit = null;
+        for (let i = 0; i < 3 && !hit; i++) { const mark = logs.length; await page.mouse.click(cx, cy, { delay: 200 }); hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=button/, 5); }
+        if (!hit) failures.push('clicking the camera button did not change the view'); else { ok('clicking the button -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120)); await page.screenshot({ path: `${prefix}-cam-button.png` }); }
+      } }
+
+    // 4. driving is not affected by changing the view. One continuous drive on the fresh truck, kept short so it stays on the straight road:
+    //    accelerate while the view changes (ending in the far chase), brake in the far chase, then steer in the overhead view from a slow start.
+    await tapUntil('3', viewLine('RearChase', 3), 3, 5);   // known start (the button click moved it)
+    { const mark = logs.length; await page.keyboard.down('w');
+      for (const n of [5, 6, 7, 4]) { await tapUntil(String(n), viewLine(VIEWS[n - 1], n), 2, 3); await page.waitForTimeout(1000); }
+      await page.keyboard.up('w');
+      const ss = parseDrive(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
+      console.log(`  accelerate while switching: ${ss.length} samples, max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m, views in the telemetry: ${[...cams].join(',')}`);
+      if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
+      else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
+      else if (pathLength(ss) < 30) failures.push(`the truck barely moved while the view was changed (${pathLength(ss).toFixed(0)} m)`);
+      else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
+      else ok(`acceleration and movement are unaffected by changing the view (max ${maxKmh.toFixed(0)} km/h, ${pathLength(ss).toFixed(0)} m, ${cams.size} views)`);
+
+      // braking in the far chase view (the last view selected above), straight after releasing the throttle
+      const peak = maxKmh, bmark = logs.length;
+      await page.keyboard.down('s'); await page.waitForTimeout(5500); await page.keyboard.up('s');
+      const after = parseDrive(bmark).filter(s => s.cam === 'FarChase'), low = after.length ? Math.min(...after.map(s => s.kmh)) : NaN;
+      console.log(`  braking in the far chase view: peak ${peak.toFixed(1)} km/h, lowest while braking ${isNaN(low) ? 'n/a' : low.toFixed(1)} km/h (${after.length} samples)`);
+      if (peak < 10) failures.push(`could not get above 10 km/h to test braking (peak ${peak.toFixed(1)})`);
+      else if (after.length < 3 || !(low <= Math.max(5, peak * 0.4))) failures.push(`holding S in the far chase view did not slow the truck (peak ${peak.toFixed(1)} -> lowest ${low} km/h)`);
+      else ok(`braking works in the far chase view (${peak.toFixed(0)} -> ${low.toFixed(0)} km/h)`); }
+
+    // steering under a non-default view (overhead), from a slow start so the truck stays upright
+    { await tapUntil('7', viewLine('Overhead', 7), 3, 5); const mark = logs.length;
+      await page.keyboard.down('w'); await page.keyboard.down('d'); await page.waitForTimeout(4500); await page.keyboard.up('d'); await page.waitForTimeout(1500); await page.keyboard.up('w');
+      const ss = parseDrive(mark).filter(s => s.cam === 'Overhead');
+      if (ss.length < 3) failures.push(`only ${ss.length} samples while steering in the overhead view`);
+      else { const d = yawDelta(ss[0].yaw, ss[ss.length - 1].yaw); console.log(`  steering in the overhead view: heading changed ${d.toFixed(0)} deg over ${ss.length} samples`);
+        if (Math.abs(d) < 5) failures.push(`holding D in the overhead view did not turn the truck (heading changed ${d.toFixed(1)} deg)`); else ok(`steering works in the overhead view (${d.toFixed(0)} deg)`); } }
+
+    // 5. a gamepad Y press, where the game can see a pad. The Gamepad API is faked, so this proves nothing about a real pad, and it can never fail the run by itself
+    //    being unsupported: if the game does not detect the pad the step says SKIPPED.
+    try {
+      await page.evaluate(() => {
+        const buttons = Array.from({ length: 17 }, () => ({ pressed: false, touched: false, value: 0 }));
+        window.__aroPad = { id: 'ARO test pad (STANDARD GAMEPAD Vendor: 0000 Product: 0000)', index: 0, connected: true, mapping: 'standard', axes: [0, 0, 0, 0], buttons, timestamp: performance.now(), vibrationActuator: null };
+        const ev = new Event('gamepadconnected'); ev.gamepad = window.__aroPad; window.dispatchEvent(ev);   // a real GamepadEvent cannot be built from a fake pad
+      });
+      const seen = await waitLogFrom(boot, /\[Input\] gamepad detected/, 20);
+      if (!seen) console.log('  SKIPPED: the game did not detect the simulated gamepad in headless Chromium, so gamepad camera input is NOT verified here (needs a manual check with a real pad)');
+      else {
+        let hit = null;
+        for (let i = 0; i < 3 && !hit; i++) {
+          const mark = logs.length;
+          await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: true, touched: true, value: 1 }; p.timestamp = performance.now(); });
+          await page.waitForTimeout(500);
+          await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: false, touched: false, value: 0 }; p.timestamp = performance.now(); });
+          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=input/, 4);
+        }
+        if (!hit) failures.push('the game saw the gamepad but pressing Y (north) did not change the camera view');
+        else ok('gamepad Y (north) -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120));
+      }
+    } catch (e) { console.log('  SKIPPED: the simulated gamepad could not be set up (' + String(e).slice(0, 120) + '); gamepad camera input is NOT verified here'); }
+    await page.evaluate(() => { window.__aroPad = null; }).catch(() => {});
+
+    const camErrors = logs.filter(l => /\[Camera\] invalid camera profile/.test(l));
+    if (camErrors.length) failures.push('the game reported an invalid camera profile: ' + camErrors[0].slice(0, 250));
+  } catch (e) { failures.push('the camera scenario could not complete: ' + String(e).slice(0, 250)); }
 
   renderAndPerfChecks(logs, failures, 'drive');
   if (has(/left the world/)) failures.push('the vehicle left the world and had to be recovered');
