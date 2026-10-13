@@ -8,6 +8,11 @@ on:
       confirm:
         description: 'Type dedicated-project to confirm this Supabase project is used ONLY by African Roads Online'
         required: true
+permissions:
+  contents: read
+concurrency:   # never two applies against the live database at once; a second dispatch waits for the first to finish
+  group: supabase-apply
+  cancel-in-progress: false
 jobs:
   apply:
     runs-on: ubuntu-latest
