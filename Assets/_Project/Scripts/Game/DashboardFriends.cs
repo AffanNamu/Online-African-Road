@@ -283,7 +283,7 @@ namespace ARO.Game
             Ui.Outlined(host, "FriRow", CardFill, new Color(1, 1, 1, 0.10f), 2, y, w, FrRowH, 16, 1.3f);
             FriAvatar(host, c, 18, y + 16, 64, true);
             var nm = Ui.Label(host, c.Name, "Bold", 23, White, 100, y + 12, 250, 30); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 14; nm.resizeTextMaxSize = 23; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate;
-            Ui.Label(host, "Level " + c.Level + (string.IsNullOrEmpty(c.Country) ? "" : "  -  " + c.Country), "Regular", 16, new Color(0.78f, 0.8f, 0.86f), 100, y + 42, 250, 22);
+            Ui.TextWithCountry(host, "Level " + c.Level, c.Country, "Regular", 16, new Color(0.78f, 0.8f, 0.86f), 100, y + 42, 250, 22);
             if (c.Relation == Relation.Friends && c.HasPresence) { Ui.Disc(host, "SDot", c.Online ? Brand.Good : Muted, 100, y + 70, 11); Ui.Label(host, FriendsRules.StatusText(c), "SemiBold", 16, c.Online ? Brand.Good : Muted, 118, y + 65, 120, 22); }
             else { string chip = FriendsRules.RelationChip(c); if (chip.Length > 0) Ui.Label(host, chip, "SemiBold", 15, c.Relation == Relation.Friends ? Brand.Good : Gold, 100, y + 66, 220, 22); }
             Ui.Click(host, "Btn_FriProfile_" + c.Username, 2, y, 320, FrRowH, () => FriOpenProfile(c));
@@ -338,7 +338,7 @@ namespace ARO.Game
                 foreach (var c in list)
                 {
                     Ui.Outlined(host, "FriRow", CardFill, new Color(1, 1, 1, 0.10f), 2, y, FrLW - 44, FrRowH, 16, 1.3f); FriAvatar(host, c, 18, y + 16, 64, false);
-                    Ui.Label(host, c.Name, "Bold", 23, White, 100, y + 14, 330, 30); Ui.Label(host, "Level " + c.Level + (string.IsNullOrEmpty(c.Country) ? "" : "  -  " + c.Country), "Regular", 16, new Color(0.78f, 0.8f, 0.86f), 100, y + 44, 330, 22);
+                    Ui.Label(host, c.Name, "Bold", 23, White, 100, y + 14, 330, 30); Ui.TextWithCountry(host, "Level " + c.Level, c.Country, "Regular", 16, new Color(0.78f, 0.8f, 0.86f), 100, y + 44, 330, 22);
                     Ui.Label(host, (incoming ? "Asked you " : "Sent ") + FriendsRules.AgoOf(c.Since, now), "Regular", 15, Muted, 100, y + 66, 330, 22);
                     Ui.Click(host, "Btn_FriProfile_" + c.Username, 2, y, 500, FrRowH, () => FriOpenProfile(c));
                     float rx = FrLW - 44 - 14; var cc = c;
@@ -517,7 +517,7 @@ namespace ARO.Game
             var c = _frDlgCard; if (c == null) return; var m = OpenModal(c.Relation == Relation.Self ? "Your profile" : "Player profile", 760, 640); float x0 = 960 - 380, y0 = 540 - 320;
             var pf = _frProfile; var show = pf != null ? new PersonCard { Id = pf.player_id, Name = pf.display_name, Username = pf.username, Country = pf.country_code, Level = pf.level, Status = pf.friend_status ?? c.Status, Online = pf.presence != null && pf.presence.online, HasPresence = pf.presence != null && (pf.presence.online || !string.IsNullOrEmpty(pf.presence.last_seen_at)) || pf.friend_status == "friends" || pf.friend_status == "self", Activity = pf.presence != null ? pf.presence.activity ?? "" : "", Route = pf.presence != null ? pf.presence.route_code ?? "" : "", LastSeen = pf.presence != null ? pf.presence.last_seen_at ?? "" : "", Vehicle = pf.vehicle ?? "", VehicleId = pf.vehicle_id ?? "" } : c;
             FriAvatar(m, show, x0 + 32, y0 + 84, 110, true);
-            Ui.Label(m, show.Name, "ExtraBold", 36, White, x0 + 164, y0 + 88, 540, 46); Ui.Label(m, (string.IsNullOrEmpty(show.Username) ? "" : "@" + show.Username + "   ") + "Level " + show.Level + (string.IsNullOrEmpty(show.Country) ? "" : "   " + show.Country), "Regular", 19, Soft, x0 + 164, y0 + 134, 540, 26);
+            Ui.Label(m, show.Name, "ExtraBold", 36, White, x0 + 164, y0 + 88, 540, 46); Ui.TextWithCountry(m, (string.IsNullOrEmpty(show.Username) ? "" : "@" + show.Username + "   ") + "Level " + show.Level, show.Country, "Regular", 19, Soft, x0 + 164, y0 + 134, 540, 26, 32);
             string st = FriendsRules.StatusText(show), ac = Activity(show); if (st.Length > 0) { Ui.Disc(m, "d", show.Online ? Brand.Good : Muted, x0 + 166, y0 + 172, 12); Ui.Label(m, st + (ac.Length > 0 && show.Online ? "  -  " + ac : ""), "SemiBold", 18, show.Online ? Brand.Good : Muted, x0 + 186, y0 + 167, 520, 24); }
             string chip = FriendsRules.RelationChip(show); if (chip.Length > 0 && show.Relation != Relation.Self) Ui.Label(m, chip, "Bold", 16, show.Relation == Relation.Friends ? Brand.Good : Gold, x0 + 166, y0 + 196, 400, 22);
             Ui.Flat(m, "Div", new Color(1, 1, 1, 0.08f), x0 + 28, y0 + 232, 704, 1.5f);

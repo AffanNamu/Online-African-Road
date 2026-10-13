@@ -2,7 +2,7 @@
 // Usage: source /tmp/aro-e2e.env && node tools/webgl-e2e.js [screenshot-prefix]      (tools/e2e/up.sh started the backend and serves the build)
 // Every dashboard value on screen is checked against what the DATABASE holds; every action is checked in the database afterwards.
 // Failure states are exercised by injecting request failures (?fault=...), never by injecting data.
-const crypto = require('crypto'), { execFileSync } = require('child_process');
+const crypto = require('crypto'), fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 const { chromium } = require('playwright');
 
 const BASE = process.env.E2E_URL, ANON = process.env.E2E_ANON_KEY, DB_URL = process.env.E2E_DB_URL, SECRET = process.env.PGRST_JWT_SECRET;
@@ -669,6 +669,11 @@ const allErrors = [], allExc = [];
   db(`select _apply_transaction('${lbu[0].id}', 'BONUS', 5000, 'e2e-lb:' || gen_random_uuid())`);        // this week's earnings come from the ledger
   const befriendLb = (a, b) => { asUser(a, `select send_friend_request('${b.id}')::text`); const id = db(`select id from friendships where requester_id = '${a.id}' and addressee_id = '${b.id}'`); asUser(b, `select respond_friend_request('${id}', true)`); };
   befriendLb(lbv, lbu[0]); befriendLb(lbv, lbu[2]); befriendLb(lbv, lbu[14]);                      // friends ranked 1st, 3rd and 15th overall: 4th..1st among friends, the viewer is third
+  // countries for the first four players (the rest have none: an existing account from before onboarding); the second is hidden from Players Nearby on purpose: its flag must stay on the board
+  const shipped = new Set(fs.readdirSync(path.join(__dirname, '..', 'Assets', '_Project', 'Resources', 'Flags')).filter(f => f.endsWith('.png')).map(f => f.slice(0, -4)));
+  db(`insert into countries(code, name) values ('FR', 'France') on conflict do nothing`);
+  [['NG', 0], ['GH', 1], ['CI', 2], ['FR', 3]].forEach(([cc, i]) => db(`update profiles set country_code = '${cc}' where id = '${lbu[i].id}'`));
+  db(`update profiles set appear_nearby = false where id = '${lbu[1].id}'`);
   const rankOf = (col, id) => +db(`select count(*) + 1 from profiles where ${col} > (select ${col} from profiles where id = '${id}')`);
   const ranked = col => +db(`select count(*) from profiles where ${col} > 0`);
   await open(lbv, '', async c => {
@@ -678,6 +683,11 @@ const allErrors = [], allExc = [];
     const xpTotal = ranked('experience'), xpRank = rankOf('experience', lbv.id);
     const b1 = await c.waitLog(/\[Leaderboards\] board metric=xp period=all page=1 state=ready/, m, 90);
     check(!!b1 && b1.includes(`shown=12 total=${xpTotal} me=${xpRank}`), `the XP board is the database board: 12 rows on the page, ${xpTotal} ranked players, and I am rank ${xpRank}`, b1);
+    const top12 = db(`select coalesce(country_code, '') from profiles where experience > 0 order by experience desc, id limit 12`).split('\n').map(s => s.trim());
+    const expKnown = top12.filter(cc => shipped.has(cc.toLowerCase())).map(cc => cc.toLowerCase()), expNoArt = top12.filter(cc => cc && !shipped.has(cc.toLowerCase())).length;
+    const fl = await c.waitLog(/\[Leaderboards\] flags view=table rows=12 /, m, 60);
+    check(!!fl && fl.includes(`known=${expKnown.length} noartwork=${expNoArt} notset=${12 - expKnown.length - expNoArt} drawn=${expKnown.join(',')}`), `the board draws the flag of each player's stored country (${expKnown.join(',')}), the neutral placeholder for a country with no artwork (${expNoArt}) and for no country (${12 - expKnown.length - expNoArt})`, fl);
+    check(expKnown.join(',') === 'ng,gh,ci', 'the players with a country are the first three, in rank order: Nigeria, Ghana (hidden from Players Nearby, flag still shown), Cote d\'Ivoire', expKnown.join(','));
     const fb1 = await c.waitLog(/\[Leaderboards\] friends metric=xp period=all state=ready/, m, 90);
     check(!!fb1 && /players=4 me=3/.test(fb1), 'the friends board is the database friends board: me and 3 friends, I am third', fb1);
     check(!!(await c.waitLog(/\[Leaderboards\] weekly state=(ready|empty)/, m, 90)), 'Top Drivers This Week is read from the server');
@@ -741,6 +751,21 @@ const allErrors = [], allExc = [];
     }
     await c.page.setViewportSize({ width: 1024, height: 576 }); await sleep(1500);
     check(c.errors.length === 0, 'Leaderboards at six window sizes cause no page errors', c.errors[0]);
+
+    // an existing player with no country: Your Rank offers a clear way to add it (no forced onboarding), the profile's own country picker saves it, and the flag follows
+    await c.settle(); tg = c.targets(); check(!!tg['Btn_LbAddCountry'], 'a player with no country is offered "Add your country" on Your Rank (the neutral placeholder, not a guess)');
+    check(c.logs.some(l => /\[Leaderboards\] me flag=none/.test(l)), 'Your Rank shows no flag for a player who has no country');
+    await c.page.screenshot({ path: `${prefix}-83-leaderboards-no-country.png` });
+    m = c.logs.length; await c.click('Btn_LbAddCountry');
+    check(!!(await c.waitLog(/\[Leaderboards\] add country/, m, 30)) && !!(await c.waitLog(/\[Dashboard\] page=profile/, m, 40)), 'Add your country opens the profile (not onboarding)');
+    await c.settle();
+    tg = c.targets(); check(!!tg['Btn_PrCountry_GH'] && !!tg['Pr_Country_Search'], 'the country picker is open with the server\'s countries'); await c.page.screenshot({ path: `${prefix}-84-country-picker-flags.png` });
+    m = c.logs.length; await c.click('Btn_PrCountry_GH'); check(!!(await c.waitLog(/\[Profile\] country=GH ok=True/, m, 60)), 'Ghana is saved through the profile country picker');
+    check(db(`select country_code || '|' || appear_nearby::text from profiles where id = '${lbv.id}'`) === 'GH|false', 'the country is stored on the account and Players Nearby stays off (independent preferences)');
+    await c.settle(); await c.page.screenshot({ path: `${prefix}-85-profile-flag.png` });
+    check(!!(await c.waitLog(/\[Profile\] country flag=gh state=known/, m, 30)), 'the profile now shows the Ghana flag');
+    m = c.logs.length; await c.click('Nav_Leaderboards'); check(!!(await c.waitLog(/\[Leaderboards\] me flag=gh/, m, 60)), 'back on Leaderboards, Your Rank shows the Ghana flag');
+    await c.settle(); check(!c.targets()['Btn_LbAddCountry'], 'the Add-your-country link is gone once a country is set');
   });
   // a service that fails shows an error with a working retry; a player with no score sees "unranked", and a player with no friends sees the empty friends panel
   const lbk = await signup('BrowserLbQ');
@@ -824,6 +849,8 @@ const allErrors = [], allExc = [];
     const ld = await c.waitLog(/\[Profile\] loaded profile=ok ranks=ready xp_rank=(\d+) achievements=ready unlocked=(\d+)\/(\d+)/, m, 90); const myRank = +db(`select count(*) + 1 from profiles where experience > 250`);
     check(!!ld && ld.includes(`xp_rank=${myRank}`), `the profile loads the real ranking (XP rank ${myRank}), achievements and numbers from the server`, ld);
     const nAch = +db(`select count(*) from achievement_definitions`); check(!!ld && new RegExp(`unlocked=\\d+/${nAch}\\b`).test(ld), `all ${nAch} achievements are listed`, ld);
+    const wantFlag = shipped.has(otherCode.toLowerCase()) ? otherCode.toLowerCase() + ' state=known' : 'none state=noartwork';
+    check(!!(await c.waitLog(new RegExp('\\[Profile\\] country flag=' + wantFlag), m, 30)), `the profile draws the flag of the country chosen in onboarding (${otherCode})`);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-101-profile.png` }); tg = c.targets();
     for (const k of ['Btn_PrEdit', 'Btn_PrPublic', 'Btn_PrCountry', 'Btn_PrLanguage', 'Btn_PrStyle_jobs', 'Btn_PrStyle_bus', 'Btn_PrStyle_convoy', 'Btn_PrStyle_explore', 'Btn_PrRank_xp', 'Btn_PrRank_earnings', 'Btn_PrOpenBoards']) check(!!tg[k], `${k} is a clickable target on the profile page`);
     // edit: the server refuses a taken username, accepts a free one

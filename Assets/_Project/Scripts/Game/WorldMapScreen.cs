@@ -432,7 +432,7 @@ namespace ARO.Game
             var c = _m.City(_selId); int level = Level; var st = _m.StateFor(c, level);
             y = Back(p, W, y);
             Ui.Label(p, c.name, "ExtraBold", 34, White, 22, y, W, 44); y += 46;
-            Ui.Label(p, _m.CountryName(c.country), "SemiBold", 18, Muted, 22, y, W, 26); y += 36;
+            Ui.Flag(p, c.country, 22, y + 2, 32); Ui.Label(p, _m.CountryName(c.country), "SemiBold", 18, Muted, 22 + 32 + 10, y, W - 44, 26); y += 36;      // the CITY's country (world_map.json), not any player's
             float cx = 22; string stText = st == CityState.Open ? "OPEN · PROTOTYPE" : st == CityState.Locked ? "LOCKED" : st == CityState.Unavailable ? "STATUS UNAVAILABLE" : "PLANNED"; Chip(p, stText, st == CityState.Open ? Gold : st == CityState.Locked ? Grey : new Color(0.88f, 0.9f, 0.95f), cx, y); y += 44;
             y = Row(p, "Coordinates", $"{c.lat:0.0000}°, {c.lon:0.0000}°", W, y);
             y = Section(p, "ROUTES THROUGH " + c.name.ToUpperInvariant(), y + 6);

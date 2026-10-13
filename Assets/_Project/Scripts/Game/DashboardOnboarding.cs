@@ -174,7 +174,7 @@ namespace ARO.Game
                 {
                     var c = list[i]; bool on = c.Code == _obCountry; float y = i * pitch + 2;
                     if (on) Ui.Outlined(host, "CRowOn", new Color(Gold.r, Gold.g, Gold.b, 0.16f), Gold, 2, y, lw - 16, pitch - 4, 11, 1.6f); else Ui.Rounded(host, "CRow", new Color(1, 1, 1, i % 2 == 0 ? 0.04f : 0.02f), 2, y, lw - 16, pitch - 4, 11);
-                    Ui.Label(host, c.Name, on ? "Bold" : "Regular", 19, on ? Gold : White, 20, y + 8, lw - 100, 28); Ui.Label(host, c.Code, "SemiBold", 14, Muted, lw - 76, y + 12, 40, 22, TextAnchor.UpperRight);
+                    Ui.Flag(host, c.Code, 16, y + 10, 28); Ui.Label(host, c.Name, on ? "Bold" : "Regular", 19, on ? Gold : White, 60, y + 8, lw - 140, 28); Ui.Label(host, c.Code, "SemiBold", 14, Muted, lw - 76, y + 12, 40, 22, TextAnchor.UpperRight);
                     if (on) Ui.Icon(host, "icon_check", Gold, lw - 60 - 30, y + 10, 22);
                     var cc = c; Ui.Click(host, "Btn_ObCountry_" + c.Code, 2, y, lw - 16, pitch - 4, () => { _obCountry = cc.Code; _obError = null; Debug.Log("[Onboarding] country=" + cc.Code); RefreshOb(); });
                 }

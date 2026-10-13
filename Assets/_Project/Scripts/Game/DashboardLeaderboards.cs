@@ -182,7 +182,7 @@ namespace ARO.Game
             var card = new PersonCard { Id = r.Id, Name = r.Name, Username = r.Username, Level = r.Level, Country = r.Country };
             FriAvatar(_stage, card, x + 24, y + 70, first ? 96 : 84, false);
             float ax = x + 24 + (first ? 96 : 84) + 18; var nm = Ui.Label(_stage, r.Name, "ExtraBold", first ? 26 : 23, White, ax, y + 78, w - (ax - x) - 16, 34); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 14; nm.resizeTextMaxSize = first ? 26 : 23; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate; Ui.Drop(nm, 0.5f);
-            Ui.Label(_stage, "Level " + r.Level + (string.IsNullOrEmpty(r.Country) ? "" : "  -  " + r.Country), "Regular", 16, new Color(0.8f, 0.83f, 0.88f), ax, y + 114, w - (ax - x) - 16, 22);
+            Ui.TextWithCountry(_stage, "Level " + r.Level, r.Country, "Regular", 16, new Color(0.8f, 0.83f, 0.88f), ax, y + 114, w - (ax - x) - 16, 22);
             var vt = Ui.Label(_stage, LeaderboardRules.FormatValue(_lbMetric, r.Value), "ExtraBold", first ? 36 : 31, mc, x + 20, y + h - 62, w - 40, 46, TextAnchor.MiddleLeft); vt.resizeTextForBestFit = true; vt.resizeTextMinSize = 18; vt.resizeTextMaxSize = first ? 36 : 31; vt.horizontalOverflow = HorizontalWrapMode.Wrap; vt.verticalOverflow = VerticalWrapMode.Truncate;
             if (LeaderboardRules.IsMe(r, MyId())) { Ui.Rounded(_stage, "YouChip", new Color(Gold.r, Gold.g, Gold.b, 0.9f), x + w - 76, y + h - 52, 58, 26, 13); Ui.Label(_stage, "You", "Bold", 15, Ink, x + w - 76, y + h - 50, 58, 22, TextAnchor.UpperCenter); }
             Ui.Click(_stage, "Btn_LbPodium_" + place, x, y, w, h, () => LbOpenProfile(r));
@@ -212,7 +212,7 @@ namespace ARO.Game
                 else LbEmpty("ic_trophy", "No drivers have been ranked yet.", "Complete a job to be the first on this board.", null, null, null);
                 return;
             }
-            for (int i = 0; i < rows.Count; i++) LbRow(rows[i], LbTableY + 54 + i * LbRowPitch, myId);
+            for (int i = 0; i < rows.Count; i++) LbRow(rows[i], LbTableY + 54 + i * LbRowPitch, myId); LbLogFlags("table", rows);
             if (_lbScope == BoardScope.Global) LbPager(page.total, page.offset, rows.Count);
             else Ui.Label(_stage, "Showing " + rows.Count + (rows.Count == 1 ? " player" : " players") + " - you and your friends", "Regular", 16, Soft, LbLX + 1090 - 24 - 520, LbTableY + LbTableH - 40, 520, 24, TextAnchor.UpperRight);
         }
@@ -225,6 +225,9 @@ namespace ARO.Game
             Ui.Label(_stage, valueTitle + " >", "Bold", 15, Gold, LbLX + 1090 - 70 - 260, y - 18, 260, 20, TextAnchor.UpperRight);
         }
 
+        /// <summary>One log line per table build: how many rows drew a flag, a neutral placeholder for a missing country, or the placeholder for a code with no artwork (the browser test reads it).</summary>
+        void LbLogFlags(string view, List<BoardRow> rows) { var c = CountryFlags.Count(rows.Select(r => r.Country)); Debug.Log($"[Leaderboards] flags view={view} rows={rows.Count} known={c.Known} noartwork={c.NoArtwork} notset={c.NotSet} drawn={c.Drawn}"); }
+
         void LbRow(BoardRow r, float y, string myId)
         {
             bool me = LeaderboardRules.IsMe(r, myId); int medal = LeaderboardRules.MedalOf(r.Rank); float x = LbLX + 12, w = 1090 - 24;
@@ -233,7 +236,7 @@ namespace ARO.Game
             var card = new PersonCard { Id = r.Id, Name = r.Name }; FriAvatar(_stage, card, x + 82, y + 3, 30, false);
             var nm = Ui.Label(_stage, r.Name, me ? "Bold" : "SemiBold", 18, White, x + 124, y + 6, 280, 26); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 12; nm.resizeTextMaxSize = 18; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate;
             if (me) { Ui.Rounded(_stage, "YouTag", Gold, x + 124 + Mathf.Min(nm.preferredWidth, 270f) + 8, y + 9, 40, 20, 10); Ui.Label(_stage, "You", "Bold", 12, Ink, x + 124 + Mathf.Min(nm.preferredWidth, 270f) + 8, y + 10, 40, 18, TextAnchor.UpperCenter); }
-            Ui.Label(_stage, r.Level.ToString(), "Regular", 18, new Color(0.84f, 0.86f, 0.9f), x + 458, y + 6, 100, 26); Ui.Label(_stage, string.IsNullOrEmpty(r.Country) ? "-" : r.Country, "Regular", 18, new Color(0.84f, 0.86f, 0.9f), x + 588, y + 6, 160, 26);
+            Ui.Label(_stage, r.Level.ToString(), "Regular", 18, new Color(0.84f, 0.86f, 0.9f), x + 458, y + 6, 100, 26); Ui.CountryTag(_stage, r.Country, x + 588, y + 7, 28, 18, new Color(0.84f, 0.86f, 0.9f), "Regular", "Not set");
             Ui.Label(_stage, LeaderboardRules.FormatBare(_lbMetric, r.Value), "Bold", 19, me ? Gold : White, x + w - 70 - 260, y + 6, 260, 26, TextAnchor.UpperRight); Ui.Icon(_stage, "ic_chevron_right", new Color(1, 1, 1, 0.35f), x + w - 40, y + 8, 20);
             Ui.Click(_stage, "Btn_LbRow_" + r.Username, x, y, w, LbRowPitch - 3, () => LbOpenProfile(r));
         }
@@ -286,7 +289,7 @@ namespace ARO.Game
             if (_lbSearchState == LoadState.Empty) { LbEmpty("ic_people", "No driver found.", "Only ranked drivers appear here: a player needs some " + LeaderboardRules.MetricLabel(_lbMetric) + " on this board. Check the spelling.", null, null, null); return; }
             if (_lbSearchState != LoadState.Ready || _lbResults == null) { LbLoading("Searching..."); return; }
             var rows = Rows(_lbResults); string myId = MyId();
-            for (int i = 0; i < rows.Count; i++) LbRow(rows[i], LbTableY + 54 + i * LbRowPitch, myId);
+            for (int i = 0; i < rows.Count; i++) LbRow(rows[i], LbTableY + 54 + i * LbRowPitch, myId); LbLogFlags("table", rows);
             Ui.Label(_stage, _lbResults.total > rows.Count ? "Showing the top " + rows.Count + " of " + _lbResults.total.ToString("N0") + " matches. Type more of the name to narrow it down." : _lbResults.total + (_lbResults.total == 1 ? " match" : " matches") + ". Ranks are on the " + LeaderboardRules.PeriodLabel(EffPeriod).ToLowerInvariant() + " " + LeaderboardRules.MetricLabel(_lbMetric) + " board.", "Regular", 16, Soft, LbLX + 24, LbTableY + LbTableH - 38, 1000, 24);
         }
 
@@ -312,7 +315,10 @@ namespace ARO.Game
             var card = new PersonCard { Id = pr.id ?? "", Name = pr.display_name ?? "Driver", Username = Sum != null && Sum.profile != null ? Sum.profile.username ?? "" : "", Level = pr.level, Status = "self" };
             FriAvatar(_stage, card, LbRX + 20, y + 78, 76, false);
             var nm = Ui.Label(_stage, card.Name, "ExtraBold", 24, White, LbRX + 112, y + 82, LbRW - 134, 32); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 14; nm.resizeTextMaxSize = 24; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate; Ui.Drop(nm, 0.6f);
-            Ui.Label(_stage, "Level " + pr.level, "SemiBold", 17, Soft, LbRX + 112, y + 116, 200, 24);
+            string myCountry = Me != null ? Me.country_code : Sum != null && Sum.profile != null ? Sum.profile.country_code : null; bool noCountry = string.IsNullOrEmpty(myCountry);
+            Debug.Log("[Leaderboards] me flag=" + (CountryFlags.AssetName(myCountry) ?? "none"));
+            var lvl = Ui.Label(_stage, "Level " + pr.level, "SemiBold", 17, Soft, LbRX + 112, y + 116, 200, 24);
+            float tagX = LbRX + 112 + lvl.preferredWidth + 14, tagW = Ui.CountryTag(_stage, myCountry, tagX, y + 117, 24, 15, noCountry ? Gold : Soft, "SemiBold", noCountry ? "Add your country" : "");
             Ui.Label(_stage, ranked ? LeaderboardRules.FormatValue(_lbMetric, me.value) + (_lbPeriod == BoardPeriod.Week && EffPeriod == BoardPeriod.Week ? " this week" : "") : LeaderboardRules.UnrankedText(_lbMetric, EffPeriod), "SemiBold", 15, ranked ? Gold : Soft, LbRX + 112, y + 142, LbRW - 130, 22);
             // xp progress: the server's progression
             var prog = Sum != null ? Sum.progression : null;
@@ -326,6 +332,7 @@ namespace ARO.Game
             float sw = (LbRW - 24) / 4f;
             for (int i = 0; i < 4; i++) { float sx = LbRX + 12 + i * sw; Ui.Icon(_stage, stats[i].Item3, Gold, sx + sw / 2 - 10, y + 198, 20); Ui.Label(_stage, stats[i].Item1, "ExtraBold", 17, White, sx, y + 217, sw, 20, TextAnchor.UpperCenter); Ui.Label(_stage, stats[i].Item2, "Regular", 12, Muted, sx, y + 235, sw, 16, TextAnchor.UpperCenter); }
             Ui.Click(_stage, "Btn_LbMeProfile", LbRX + 10, y + 70, LbRW - 20, 96, () => FriOpenProfile(card));
+            if (noCountry) Ui.Click(_stage, "Btn_LbAddCountry", tagX - 4, y + 112, tagW + 12, 30, () => { Debug.Log("[Leaderboards] add country"); ShowPage(Page.Profile); OpenCountryPicker(); });     // existing players with no country: straight to the profile's country picker, never forced through onboarding
         }
 
         void BuildLbFriendsPanel()
@@ -363,7 +370,7 @@ namespace ARO.Game
                 Ui.Disc(_stage, "Medal", mc, LbRX + 18, ry + 8, 34); Ui.Label(_stage, r.Rank.ToString(), "ExtraBold", 18, Ink, LbRX + 18, ry + 8, 34, 34, TextAnchor.MiddleCenter);
                 FriAvatar(_stage, new PersonCard { Id = r.Id, Name = r.Name }, LbRX + 62, ry + 4, 42, false);
                 var nm = Ui.Label(_stage, r.Name, "Bold", 17, White, LbRX + 114, ry + 4, 170, 24); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 11; nm.resizeTextMaxSize = 17; nm.horizontalOverflow = HorizontalWrapMode.Wrap; nm.verticalOverflow = VerticalWrapMode.Truncate;
-                Ui.Label(_stage, "Level " + r.Level + (string.IsNullOrEmpty(r.Country) ? "" : "  -  " + r.Country), "Regular", 13, Muted, LbRX + 114, ry + 28, 200, 18);
+                Ui.TextWithCountry(_stage, "Level " + r.Level, r.Country, "Regular", 13, Muted, LbRX + 114, ry + 28, 200, 18, 20);
                 Ui.Label(_stage, LeaderboardRules.FormatValue(BoardMetric.Jobs, r.Value), "Bold", 17, Gold, LbRX + LbRW - 20 - 110, ry + 12, 110, 24, TextAnchor.UpperRight);
                 Ui.Click(_stage, "Btn_LbWeekly_" + r.Username, LbRX + 10, ry, LbRW - 20, 52, () => LbOpenProfile(r));
             }

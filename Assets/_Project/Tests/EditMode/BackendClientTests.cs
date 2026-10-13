@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using ARO.Backend;
 using ARO.Jobs;
+using ARO.Game;
 using ARO.NetCore;
 using NUnit.Framework;
 using UnityEngine;
@@ -79,6 +80,17 @@ namespace ARO.Tests
             var board = Parse<LeaderboardPage>("get_leaderboard"); var top = board.items.First(x => x.display_name == "CtA"); Assert.AreEqual("NG", top.country_code);
             var fb = Parse<LeaderboardPage>("get_friends_leaderboard"); Assert.AreEqual("GH", fb.items.First(x => x.display_name == "CtB").country_code); Assert.AreEqual("NG", fb.items.First(x => x.display_name == "CtA").country_code);
             var nearby = Parse<NearbyList>("list_nearby_players"); Assert.IsTrue(nearby.visible, "the contract player chose to appear");
+        }
+
+        // the stored country is what picks the flag on every screen: the real replies of the real functions, through the real flag mapping
+        [Test] public void TheFlagFollowsTheStoredCountryOnEveryScreenThatShowsOne()
+        {
+            Assert.AreSame(FlagArt.Get("NG"), FlagArt.Get(Parse<ProfileFull>("get_my_profile").country_code), "profile");
+            var friend = Parse<PeopleList>("list_friends").items[0]; Assert.AreEqual(FlagState.Known, CountryFlags.StateOf(friend.country_code)); Assert.AreSame(FlagArt.Get("GH"), FlagArt.Get(friend.country_code), "friends list");
+            Assert.AreSame(FlagArt.Get("GH"), FlagArt.Get(Parse<PublicProfile>("get_public_profile").country_code), "public player card");
+            foreach (var board in new[] { "get_leaderboard", "get_friends_leaderboard" })
+                foreach (var row in Parse<LeaderboardPage>(board).items) Assert.AreSame(FlagArt.Get(row.display_name == "CtA" ? "NG" : "GH"), FlagArt.Get(row.country_code), board + " " + row.display_name);
+            Assert.IsNull(FlagArt.Get(null), "a player with no country gets no flag");
         }
 
         [Test] public void OnboardingAndPreferenceRepliesParse()

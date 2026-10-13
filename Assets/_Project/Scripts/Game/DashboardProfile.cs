@@ -64,7 +64,9 @@ namespace ARO.Game
             var nm = Ui.Label(_stage, me.display_name, "ExtraBold", 44, White, PrX + 200, 160, 640, 56); nm.resizeTextForBestFit = true; nm.resizeTextMinSize = 24; nm.resizeTextMaxSize = 44;
             Ui.Label(_stage, "@" + me.username, "SemiBold", 21, Soft, PrX + 202, 218, 400, 28);
             float cx = PrX + 202, cy = 262;
-            cx += PrChip(cx, cy, "icon_globe", string.IsNullOrEmpty(me.country_name) ? "Country not set" : me.country_name, !string.IsNullOrEmpty(me.country_name)) + 12;
+            bool noCountry = string.IsNullOrEmpty(me.country_code); Debug.Log("[Profile] country flag=" + (CountryFlags.AssetName(me.country_code) ?? "none") + " state=" + CountryFlags.StateOf(me.country_code).ToString().ToLowerInvariant()); float cw = PrChip(cx, cy, "icon_globe", noCountry ? "Add your country" : string.IsNullOrEmpty(me.country_name) ? me.country_code : me.country_name, !noCountry, me.country_code, noCountry);
+            if (noCountry) Ui.Click(_stage, "Btn_PrAddCountry", cx, cy, cw, 40, OpenCountryPicker);       // the non-disruptive way for a player who never chose a country: one click on the profile, no forced onboarding
+            cx += cw + 12;
             cx += PrChip(cx, cy, "ic_chat", string.IsNullOrEmpty(me.language_name) ? "Language not set" : me.language_name, !string.IsNullOrEmpty(me.language_name)) + 12;
             string since = ProfileRules.MemberSince(me.created_at); if (since.Length > 0) PrChip(cx, cy, "ic_clock", since, true);
             // level and XP window (the server's)
@@ -77,11 +79,12 @@ namespace ARO.Game
             FriButton(_stage, "Btn_PrPublic", PrX + PrW - 290, 228, 260, 54, "How others see me", Color.clear, White, () => FriOpenProfile(new PersonCard { Id = me.id, Name = me.display_name, Username = me.username, Level = me.level, Country = me.country_code, Status = "self" }), true, null, 18);
         }
 
-        float PrChip(float x, float y, string icon, string text, bool set)
+        float PrChip(float x, float y, string icon, string text, bool set, string flagCode = null, bool accent = false)
         {
-            var probe = Ui.Label(_stage, text, "SemiBold", 17, White, 0, 0, 10, 10); float tw = probe.preferredWidth; Destroy(probe.gameObject); float w = tw + 56;
-            Ui.Outlined(_stage, "PrChip", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.14f), x, y, w, 40, 12, 1.2f);
-            Ui.Icon(_stage, icon, set ? Soft : Muted, x + 14, y + 10, 20); Ui.Label(_stage, text, "SemiBold", 17, set ? White : Muted, x + 42, y + 8, tw + 8, 26);
+            var probe = Ui.Label(_stage, text, "SemiBold", 17, White, 0, 0, 10, 10); float tw = probe.preferredWidth; Destroy(probe.gameObject); bool flag = flagCode != null; float lead = flag ? 38 : 28, w = tw + 28 + lead;
+            Ui.Outlined(_stage, "PrChip", new Color(0.05f, 0.055f, 0.075f, 0.9f), accent ? new Color(Gold.r, Gold.g, Gold.b, 0.8f) : new Color(1, 1, 1, 0.14f), x, y, w, 40, 12, 1.2f);
+            if (flag) Ui.Flag(_stage, flagCode, x + 12, y + 10, 26); else Ui.Icon(_stage, icon, set ? Soft : Muted, x + 14, y + 10, 20);
+            Ui.Label(_stage, text, "SemiBold", 17, accent ? Gold : set ? White : Muted, x + 14 + lead, y + 8, tw + 8, 26);
             return w;
         }
 
@@ -158,8 +161,8 @@ namespace ARO.Game
         {
             var me = Me; if (me == null) return; const float x = PrX + 1100, y = 500, w = 450, h = 550; PrCard(x, y, w, h);
             Ui.Label(_stage, "Preferences", "Bold", 24, White, x + 26, y + 20, w - 52, 32);
-            PrPrefRow(x + 20, y + 68, w - 40, "Country", string.IsNullOrEmpty(me.country_name) ? "Not set" : me.country_name, !string.IsNullOrEmpty(me.country_name), "Btn_PrCountry", OpenCountryPicker, "icon_globe");
-            PrPrefRow(x + 20, y + 158, w - 40, "Language", string.IsNullOrEmpty(me.language_name) ? "Not set" : me.language_name, !string.IsNullOrEmpty(me.language_name), "Btn_PrLanguage", OpenLanguagePicker, "ic_chat");
+            PrPrefRow(x + 20, y + 68, w - 40, "Country", string.IsNullOrEmpty(me.country_name) ? "Not set" : me.country_name, !string.IsNullOrEmpty(me.country_name), "Btn_PrCountry", OpenCountryPicker, "icon_globe", me.country_code ?? "", string.IsNullOrEmpty(me.country_code));
+            PrPrefRow(x + 20, y + 158, w - 40, "Language", string.IsNullOrEmpty(me.language_name) ? "Not set" : me.language_name, !string.IsNullOrEmpty(me.language_name), "Btn_PrLanguage", OpenLanguagePicker, "ic_chat", null, false);
             Ui.Label(_stage, "How I like to drive", "SemiBold", 17, Soft, x + 26, y + 258, w - 52, 24);
             var cur = OnboardingRules.StyleFromKey(me.play_style); float cx = x + 20, cy = y + 290; int k = 0;
             foreach (var s in OnboardingRules.AllStyles)
@@ -180,12 +183,13 @@ namespace ARO.Game
             }
         }
 
-        void PrPrefRow(float x, float y, float w, string label, string value, bool set, string btn, Action change, string icon)
+        void PrPrefRow(float x, float y, float w, string label, string value, bool set, string btn, Action change, string icon, string flagCode, bool accent)
         {
-            Ui.Outlined(_stage, "PrefRow", new Color(0.075f, 0.085f, 0.11f, 1f), new Color(1, 1, 1, 0.10f), x, y, w, 80, 14, 1.2f);
-            Ui.Icon(_stage, icon, Soft, x + 16, y + 26, 28); Ui.Label(_stage, label, "Regular", 14, Muted, x + 58, y + 12, 200, 20);
+            Ui.Outlined(_stage, "PrefRow", new Color(0.075f, 0.085f, 0.11f, 1f), accent ? new Color(Gold.r, Gold.g, Gold.b, 0.55f) : new Color(1, 1, 1, 0.10f), x, y, w, 80, 14, 1.2f);
+            if (flagCode != null) Ui.Flag(_stage, flagCode, x + 14, y + 29, 32); else Ui.Icon(_stage, icon, Soft, x + 16, y + 26, 28);
+            Ui.Label(_stage, label, "Regular", 14, Muted, x + 58, y + 12, 200, 20);
             var v = Ui.Label(_stage, value, "Bold", 20, set ? White : Muted, x + 58, y + 34, w - 190, 28); v.resizeTextForBestFit = true; v.resizeTextMinSize = 13; v.resizeTextMaxSize = 20;
-            FriButton(_stage, btn, x + w - 16 - 100, y + 20, 100, 40, "Change", Color.clear, White, change, true, null, 15);
+            FriButton(_stage, btn, x + w - 16 - 100, y + 20, 100, 40, accent ? "Choose" : "Change", Color.clear, accent ? Gold : White, change, true, null, 15);
         }
 
         // ================================================================================================================ actions
@@ -256,7 +260,7 @@ namespace ARO.Game
             {
                 var c = list[i]; bool on = Me != null && c.Code == Me.country_code; float y = i * pitch + 2;
                 if (on) Ui.Outlined(host, "CRowOn", new Color(Gold.r, Gold.g, Gold.b, 0.16f), Gold, 2, y, 690, pitch - 4, 11, 1.6f); else Ui.Rounded(host, "CRow", new Color(1, 1, 1, i % 2 == 0 ? 0.04f : 0.02f), 2, y, 690, pitch - 4, 11);
-                Ui.Label(host, c.Name, on ? "Bold" : "Regular", 19, on ? Gold : White, 20, y + 8, 540, 28); Ui.Label(host, c.Code, "SemiBold", 14, Muted, 600, y + 12, 40, 22, TextAnchor.UpperRight); if (on) Ui.Icon(host, "icon_check", Gold, 650, y + 10, 22);
+                Ui.Flag(host, c.Code, 16, y + 10, 28); Ui.Label(host, c.Name, on ? "Bold" : "Regular", 19, on ? Gold : White, 60, y + 8, 520, 28); Ui.Label(host, c.Code, "SemiBold", 14, Muted, 600, y + 12, 40, 22, TextAnchor.UpperRight); if (on) Ui.Icon(host, "icon_check", Gold, 650, y + 10, 22);
                 var cc = c; Ui.Click(host, "Btn_PrCountry_" + c.Code, 2, y, 690, pitch - 4, () => _ = PrSetCountry(cc));
             }
             RestoreScroll(area); MarkTargetsDirty();

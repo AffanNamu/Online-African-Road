@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ARO.NetCore;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,6 +76,45 @@ namespace ARO.Game
         {
             var go = new GameObject("Icon_" + icon, typeof(RectTransform), typeof(Image)); Place(go, parent, Anchor.TopLeft, x, y, size, size);
             var img = go.GetComponent<Image>(); img.sprite = Brand.Icon(icon); img.color = tint; img.preserveAspect = true; img.raycastTarget = false; img.enabled = img.sprite != null; return img;
+        }
+
+        /// <summary>
+        /// A national flag, `w` wide and 3/4 as high, with a hairline frame. The flag is chosen ONLY from the stored country code (ARO.NetCore.CountryFlags): a missing, malformed or
+        /// artwork-less code draws a neutral slate box with a muted globe, never a guessed flag. The object is named Flag_{CODE} (Flag_none when no country is stored).
+        /// </summary>
+        public static Image Flag(Transform parent, string code, float x, float y, float w)
+        {
+            float h = Mathf.Round(w * 0.75f);
+            var frame = Rounded(parent, "Flag_" + (CountryFlags.Normalize(code) ?? "none"), new Color(1f, 1f, 1f, 0.30f), x - 1f, y - 1f, w + 2f, h + 2f, 3f);
+            var sprite = FlagArt.Get(code);
+            if (sprite != null)
+            {
+                var go = new GameObject("Flag", typeof(RectTransform), typeof(Image)); Place(go, frame.transform, Anchor.TopLeft, 1f, 1f, w, h);
+                var img = go.GetComponent<Image>(); img.sprite = sprite; img.color = Color.white; img.raycastTarget = false; return img;
+            }
+            var none = Rounded(frame.transform, "NoFlag", new Color(0.16f, 0.18f, 0.23f, 1f), 1f, 1f, w, h, 2.5f);
+            float g = Mathf.Max(8f, Mathf.Round(h * 0.72f)); Icon(none.transform, "icon_globe", new Color(0.62f, 0.66f, 0.74f, 1f), (w - g) / 2f, (h - g) / 2f, g);
+            return none;
+        }
+
+        /// <summary>A flag followed by the country code ("NG"). With no country stored: the neutral placeholder and `missing` as text (empty = placeholder only). Returns the width used.</summary>
+        public static float CountryTag(Transform parent, string code, float x, float y, float flagW, int fontSize, Color textColor, string weight = "Regular", string missing = "")
+        {
+            float flagH = Mathf.Round(flagW * 0.75f), line = Mathf.Max(Mathf.Round(fontSize * 1.35f), flagH);
+            Flag(parent, code, x, y + (line - flagH) / 2f, flagW);
+            string text = CountryFlags.StateOf(code) == FlagState.Known || CountryFlags.StateOf(code) == FlagState.NoArtwork ? CountryFlags.CodeText(code) : missing;
+            if (string.IsNullOrEmpty(text)) return flagW;
+            var l = Label(parent, text, weight, fontSize, textColor, x + flagW + 8f, y, 220f, line, TextAnchor.MiddleLeft);
+            return flagW + 8f + l.preferredWidth;
+        }
+
+        /// <summary>`text` (e.g. "Level 7") followed, after a gap, by the player's flag and code. The flag comes only from the player's stored country.</summary>
+        public static Text TextWithCountry(Transform parent, string text, string code, string weight, int size, Color c, float x, float y, float w, float h, float flagW = 0f)
+        {
+            var t = Label(parent, text, weight, size, c, x, y, w, h);
+            float fw = flagW > 0f ? flagW : Mathf.Round(size * 1.5f);
+            CountryTag(parent, code, x + t.preferredWidth + 14f, y + (h - Mathf.Max(Mathf.Round(size * 1.35f), Mathf.Round(fw * 0.75f))) / 2f, fw, size, c, weight);
+            return t;
         }
 
         public static Text Label(Transform parent, string s, string weight, int size, Color c, float x, float y, float w, float h, TextAnchor al = TextAnchor.UpperLeft)

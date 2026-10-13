@@ -1,0 +1,285 @@
+{
+ "flags": {
+  "AO": {
+   "png_sha256": "8c1e1861efd16583e5ca6fbf45a8875e4e2fdab335c27b28a259de40df76c303",
+   "svg": "flags/4x3/ao.svg",
+   "svg_sha256": "4321af76f78e12171558b9ea691092c3e1ae7fd8cfff79ab39b305a11145b49d"
+  },
+  "BF": {
+   "png_sha256": "2cec6bed5772bc9ad431dec35b9956b121cbce4dac8a9ca425817b31111fafbc",
+   "svg": "flags/4x3/bf.svg",
+   "svg_sha256": "606b17add6a8aeb9610b06aae674785a3e795c22b564f5a204c6de93753e612e"
+  },
+  "BI": {
+   "png_sha256": "0a97d9a94e0355624cb86b6f3fdecf4ddb20fc2abeeeb5c049c48b742178f74f",
+   "svg": "flags/4x3/bi.svg",
+   "svg_sha256": "5ef1a56b4ebe90326d6d807bbf61bd2d6f0b752fd6966588cd42471a886307bb"
+  },
+  "BJ": {
+   "png_sha256": "d2172816ce5cbadc6ec8b1a039079e13c3fa0abb56c47365d1c2e74c4911c6c8",
+   "svg": "flags/4x3/bj.svg",
+   "svg_sha256": "0a46cbae6018acdbc4a485f6b1c4a3df7a7b36680439f6eb5d1bfb957f704888"
+  },
+  "BW": {
+   "png_sha256": "4373c42b0e669830d255f2daa3ad187ca9f273d807cfedfc0a7e0a194f151674",
+   "svg": "flags/4x3/bw.svg",
+   "svg_sha256": "180bfa4e76b78fa7b52bf9f3c8e99d3c1b4aa520b97a239661a8953dc90658b3"
+  },
+  "CD": {
+   "png_sha256": "549fc5e283dea6e667ba76b832231a0befbf73896313adfc61e534ad0fe26eab",
+   "svg": "flags/4x3/cd.svg",
+   "svg_sha256": "ad93c1afd68e6a7364d141e0989a798e81a202fe4674f21fece3ceea83fd167c"
+  },
+  "CF": {
+   "png_sha256": "9ee1e02b77d863baa8b5ce8374cc098bdd9aa62172e0677a9b34219439288df6",
+   "svg": "flags/4x3/cf.svg",
+   "svg_sha256": "1b58dc2035ff0039c82e4dfb16a536dcf74ee09ab4d95b75221d404ad616dc0f"
+  },
+  "CG": {
+   "png_sha256": "10b479c3358ba62bb72352e74d9250b725965c6388b746f27d81dea43e5c06be",
+   "svg": "flags/4x3/cg.svg",
+   "svg_sha256": "628dcfc7f00ab09cc9074b837863c31fe4472c7c3e17c30e233332d94c37585b"
+  },
+  "CI": {
+   "png_sha256": "d1ed92ee358a7fa385fc45dc045aec3adbb96e1a8601fc2d1b536d5644048ef4",
+   "svg": "flags/4x3/ci.svg",
+   "svg_sha256": "4ecfea70e4e0860fdb49a523db7cd64431b4da8130ee9038cf87bfcc85c3806e"
+  },
+  "CM": {
+   "png_sha256": "e140aa2cef8eb0c0ea7a4a0dace9088f0219b6ec1af32aaa11ac71bc85922adb",
+   "svg": "flags/4x3/cm.svg",
+   "svg_sha256": "c9a327dc0e355739a9f2bc0a91e1293f8e08e13910e718bc63fda35a244acef5"
+  },
+  "CV": {
+   "png_sha256": "addb000d8411a6aabc4b9e2aa4fbc737e60e0484a7cd40e1311ea9ec8259518e",
+   "svg": "flags/4x3/cv.svg",
+   "svg_sha256": "2fa67e0a2477306f0427877b78d2276c58c496ff50faf4b3d69252350821e138"
+  },
+  "DJ": {
+   "png_sha256": "8e64ee1a321c1424aaaea4a330a385b797dfb1eba12fa7d442ab8d6633a81232",
+   "svg": "flags/4x3/dj.svg",
+   "svg_sha256": "2a22d382f85cef20ba39a9abb6e6ecffdfa806d46afea3f6d26b8a23a5c12e43"
+  },
+  "DZ": {
+   "png_sha256": "9940c0dd902f9ecc5b3cbecc66ac1a5070fa348ad5cf7622585dd4c54fb1509a",
+   "svg": "flags/4x3/dz.svg",
+   "svg_sha256": "9ea0cf93222ab7b5e7b77b9576afcad80dad1eff33827e8e58dbfbb42aeb8213"
+  },
+  "EG": {
+   "png_sha256": "317bad989837c2895143c410f85116b7406662675f6de6b4c37760c62f2760f5",
+   "svg": "flags/4x3/eg.svg",
+   "svg_sha256": "c5997f42129e5df98495c59310db752ede9c493dc31811af58016b86264a5053"
+  },
+  "EH": {
+   "png_sha256": "6c5ddaa0a649e75941f81c08097a3daf39f58cdf372193a8294e3c46067e2c08",
+   "svg": "flags/4x3/eh.svg",
+   "svg_sha256": "a957f2aedbb4178a79710d178de3fdb77ebdd3b441ef8fb59e51d9b11966b06b"
+  },
+  "ER": {
+   "png_sha256": "aed362030f31705839138edbfe14e5d1deb0c4b5e72d5752eda91f90e13ec3be",
+   "svg": "flags/4x3/er.svg",
+   "svg_sha256": "fb5f4394b72a94f65e17937d9eb5a663fe3ed12bb9bd695cd2d968f76a11d262"
+  },
+  "ET": {
+   "png_sha256": "9715c5f96009263255156a6b3e41ba54a560bfbe3bcf103a712dadfcdb5ae014",
+   "svg": "flags/4x3/et.svg",
+   "svg_sha256": "43d5922fff81ae1accda75ed99b1b6e68dbebaa3d88a5d87f10a744f17cba34c"
+  },
+  "GA": {
+   "png_sha256": "17a96e278425bc5f8ae120f2ccd141c07bd79a986e25d415298e7fe383a5b83e",
+   "svg": "flags/4x3/ga.svg",
+   "svg_sha256": "f7b775c474b0331222ed84a3d1b5a5d66af1c097c8565766db17a5cff5237c93"
+  },
+  "GH": {
+   "png_sha256": "f26da53f5da2ba67689353503eab631797c33660a0971f449ce9bc0130e10573",
+   "svg": "flags/4x3/gh.svg",
+   "svg_sha256": "53c55ca455293bceecfe6a5d6b12dc0bb670734c50bfd95cb21dc4ef12197405"
+  },
+  "GM": {
+   "png_sha256": "9804074c51bec14ff6b64cb1e1d1943dd5825337f16389b3fa28fe396a24633f",
+   "svg": "flags/4x3/gm.svg",
+   "svg_sha256": "2aa3fad4e8820fb42386f62d3efee1d3923817a49ed2bb05ba364c58d0ca4d3f"
+  },
+  "GN": {
+   "png_sha256": "789939da223fb259d61bd34d8f9a60af10e69107655cf2168f84b5ce9becfce7",
+   "svg": "flags/4x3/gn.svg",
+   "svg_sha256": "ee01e7dd4abb0a995980ec8d0ba2bf314b564c73fcaba39fed8a5f48a7c49753"
+  },
+  "GQ": {
+   "png_sha256": "737bf74a4233415423d43182e97a30967aacf9a5c4233e66c1e92a1b4d5d05e6",
+   "svg": "flags/4x3/gq.svg",
+   "svg_sha256": "b8d96a07cb3bacaa529c0c3eaa74d11878750b11dd3a52ef6c7fc0bf55cc7188"
+  },
+  "GW": {
+   "png_sha256": "016ab6d5c4b541f991c0c1f293975ae17dfd47c28fe3ab340dbd236c55c95bfd",
+   "svg": "flags/4x3/gw.svg",
+   "svg_sha256": "6b81a234b51ceacb4b67e889bb5b7ccf5f1084ac34b4fded2b97af5336f4797e"
+  },
+  "KE": {
+   "png_sha256": "89ab5194fc0492910a8d93f7f7b24121e8d1fd36918c23616ef5fdbe0f81fbfd",
+   "svg": "flags/4x3/ke.svg",
+   "svg_sha256": "699163d87382eb969d8a26d4ce1a99a00264e8b7b95276abf585476506f46e82"
+  },
+  "KM": {
+   "png_sha256": "723a4638ce5e9722aa669ab6fdaafeacc7408e786284530eb04489bc26bb089d",
+   "svg": "flags/4x3/km.svg",
+   "svg_sha256": "81e1befbbdeab3b2a4ec451e060b161bbcc6de00b97ef9d99791bc5741dfddab"
+  },
+  "LR": {
+   "png_sha256": "b0f3901e0939146f6ab761e3b9981007af2cc1a56dc1987afe1b5e8d6391f2a2",
+   "svg": "flags/4x3/lr.svg",
+   "svg_sha256": "69f2ce4b9490ab3c94ca30dc94862e5f1e8cb0f84344e5db0eb9300df5c66146"
+  },
+  "LS": {
+   "png_sha256": "c7df2e9916ed59a8138f746262d00742b52aba83c8a2230e553db844acd39c85",
+   "svg": "flags/4x3/ls.svg",
+   "svg_sha256": "83d2e4152ef06ed39f5792dd2d5b9aa9953e3cbfe645f0384449e87b73dc96fb"
+  },
+  "LY": {
+   "png_sha256": "ce34ff089188e1d22aa944fedf2ff5d02b506c800bb435454ace05bc3a0da2d1",
+   "svg": "flags/4x3/ly.svg",
+   "svg_sha256": "47d96b6e011cd540bdeb30155cbd7994f929cd2f5b84cffdd50936b876823f41"
+  },
+  "MA": {
+   "png_sha256": "1b015395f13db9834308bbc1a8641bbaf459401bacb4a55682a6289fc236aa15",
+   "svg": "flags/4x3/ma.svg",
+   "svg_sha256": "28cfcdecf9675b0a14fbfae176324aea03711edab1a13592cfb7d58e6772b25c"
+  },
+  "MG": {
+   "png_sha256": "754c9a6f6eea8bf0d1d1f8354a5cf6c5fcd407bdb3c920ab19fef4a72f416e5d",
+   "svg": "flags/4x3/mg.svg",
+   "svg_sha256": "59246c21300e2456c0c5170791698e43399b089de80a69474deeac00697d2b7b"
+  },
+  "ML": {
+   "png_sha256": "3e2d1f2187e078b55d24269159281d18012fdb0da03326829af04a8692a854bf",
+   "svg": "flags/4x3/ml.svg",
+   "svg_sha256": "49e84081981f2b8ec245dcc66ebf44521fc91b3eae6e9f10c925616f78951f14"
+  },
+  "MR": {
+   "png_sha256": "8e4c28aacd29d85dbd5d06aa0668ce63ec2d5356a25627e219733db8aaa8a2f2",
+   "svg": "flags/4x3/mr.svg",
+   "svg_sha256": "7f3c3ca0b04990e1cbfdd8963b91418a3fb12de1aa69e10c9e91897b84fab33b"
+  },
+  "MU": {
+   "png_sha256": "83717a4d0672a67d69e0092423b0bc40acdb311facf7f38f7f322e503889eb64",
+   "svg": "flags/4x3/mu.svg",
+   "svg_sha256": "51f86810118855ca9a0b0501f3d363e0556fe74f429a66d1be9af5c027b3b593"
+  },
+  "MW": {
+   "png_sha256": "a50bf9a6f6bd605c9f43af6b8d6b8689ca3282b5405ecda3f2e88786798e3172",
+   "svg": "flags/4x3/mw.svg",
+   "svg_sha256": "81a7fe8f882bf78532a6f3db297cda5ec50d5b2efa5d9c2b00241ea569bddd7a"
+  },
+  "MZ": {
+   "png_sha256": "57ffe287a59ac730462bc10cff42a6c4f3cfb7253fffd09b9e05e3e2e6948dfc",
+   "svg": "flags/4x3/mz.svg",
+   "svg_sha256": "207c2ddc28b1435c3eedeea7f5a80bb6757647242e601496a8276470755607c2"
+  },
+  "NA": {
+   "png_sha256": "8388073f1132f39139a55ed62d4965ffdc598f8208c7e3f1fc9be43b12008f08",
+   "svg": "flags/4x3/na.svg",
+   "svg_sha256": "caa43fcdebb595ebf9808be7c5ba326a65bb40f78172182b1470102dd97a0182"
+  },
+  "NE": {
+   "png_sha256": "25981afe68f543569a3767dcf261ecf3ff47d0fc7eae6fbb3e44d79dd8804adc",
+   "svg": "flags/4x3/ne.svg",
+   "svg_sha256": "4b91653d53f76ddaf492a61adad3c1be86528ee9f23d7a18a6044c4eed165cad"
+  },
+  "NG": {
+   "png_sha256": "22f00b9397ccdfe5b851a9254c3a8a08f4a92a082ed750df4237ebcece903cf5",
+   "svg": "flags/4x3/ng.svg",
+   "svg_sha256": "b7a2a45a6499095efce41592428ff558ec5bd83d2751858dfe5fa4589334b66f"
+  },
+  "RW": {
+   "png_sha256": "01df43a27a9b062384a931b983aa78320bc2d097ca4fb63581b4208f578b2e34",
+   "svg": "flags/4x3/rw.svg",
+   "svg_sha256": "9512100aa3e8079ed3780e8b3d6cd6a49639d0986ad78a709f81e9d0827b65b2"
+  },
+  "SC": {
+   "png_sha256": "6b67800e237a08dbe396b7348ce8f72b685460527933ede4c44712a1dc5d64dd",
+   "svg": "flags/4x3/sc.svg",
+   "svg_sha256": "30cdbe42a1aed2dab0b26cb7b510901813cad3289835ef58e07d5ff1b554ec61"
+  },
+  "SD": {
+   "png_sha256": "81ae11a7a0911f6a365f66bcd4b03baaf05b2b7c19ece75c24a08bf116334c99",
+   "svg": "flags/4x3/sd.svg",
+   "svg_sha256": "25b3fa24693ccbb80991235e235e9370895f182c509c687e96824faf6b65809a"
+  },
+  "SL": {
+   "png_sha256": "f760622dd51c721155d0236ef067bc70a3ffb60d8d6a2eea1bce030a44afde4d",
+   "svg": "flags/4x3/sl.svg",
+   "svg_sha256": "d0c384b03a037f4eeb6c967346e3faafb4a09a3706667ac762999e54b55bc647"
+  },
+  "SN": {
+   "png_sha256": "78e5bc94ada13ac3531a1ed7889d14fdeecf8b4220a113bc6e5f3d94146dfb0c",
+   "svg": "flags/4x3/sn.svg",
+   "svg_sha256": "6437db13c13fa5cc1b121e6b59739902c6583be6db361260873ce2664f666478"
+  },
+  "SO": {
+   "png_sha256": "f1b9289a805bbb2c13180e4e52e8d13620888225b87209898ff9e74ac9a7fe1e",
+   "svg": "flags/4x3/so.svg",
+   "svg_sha256": "249e1acb87efcd0ef0f685285f14f5063f0bf260e0d28ca462e713c3f6178e7d"
+  },
+  "SS": {
+   "png_sha256": "2018897a6e723495e14584ba78e4313d84b2ea64536f439dcba47e3906386c33",
+   "svg": "flags/4x3/ss.svg",
+   "svg_sha256": "f7ac7017201841eee0b261f66be6787200a80fbeadbb869dc6e8823e3b2ec220"
+  },
+  "ST": {
+   "png_sha256": "bb3bbdd4740f084736e81f20b7cd7b1ab3f323b86f0e2f49d50b6f10c989bfba",
+   "svg": "flags/4x3/st.svg",
+   "svg_sha256": "880c17f94cb564b1818f604b764ac8c3b87e019d97724a7ebb9e69aa96821238"
+  },
+  "SZ": {
+   "png_sha256": "81ba3b5ac0aa7033cba6de1345199f1252a547798b35feaebff61257554e8278",
+   "svg": "flags/4x3/sz.svg",
+   "svg_sha256": "cc06803f0607c8fe4cebd69b852d89f9a1f92449b6f4e0e0a588a65a9b6ea8c4"
+  },
+  "TD": {
+   "png_sha256": "52202784fe5d4abd43dc93a4f5fefdd9784ac2794216214f7b659f7569295b37",
+   "svg": "flags/4x3/td.svg",
+   "svg_sha256": "19a278fbd88e7fa245b44b40a829bd2bc83f4a2b5521feb665cee8d629e2f026"
+  },
+  "TG": {
+   "png_sha256": "0b90e8420fc04bbc1a5b07413a216d7eb4aa011cb686de89f0e9689c0f14e66a",
+   "svg": "flags/4x3/tg.svg",
+   "svg_sha256": "ec624b49c82cc005eed51f68bee71ca3706e16f7d992334396417d1e40f0d7e5"
+  },
+  "TN": {
+   "png_sha256": "191f9fe253f480f71db001506e243afddd562c7c5fa8cea1398ce9cdbabe0e01",
+   "svg": "flags/4x3/tn.svg",
+   "svg_sha256": "8e0274e5762a4d5f783e64f1206dd69008454f750de21d3ba61439d0af3c577c"
+  },
+  "TZ": {
+   "png_sha256": "ba0e6167aa819e1ba2275037c891227d0e346f414b0ae8c54e9414745f252ef5",
+   "svg": "flags/4x3/tz.svg",
+   "svg_sha256": "fd317abae009fa3629c51b82a6b9f1c529a7254406478047734bb52de83611cd"
+  },
+  "UG": {
+   "png_sha256": "8e71273db16ae26361eb41576f47cd0da32effeee99d915a400eec55de183601",
+   "svg": "flags/4x3/ug.svg",
+   "svg_sha256": "cfbbc57edf1b9403bd786c0ae8591ddd579dcff3b3fb59d6037c58f6f1149008"
+  },
+  "ZA": {
+   "png_sha256": "e58030c1c0191b4c546a75513a421985c4f52736d5fbaa7b1676ccb17803bc21",
+   "svg": "flags/4x3/za.svg",
+   "svg_sha256": "1755a5e16f1c9f5120e4871e8454bdee663beb4fb4827012bcd02cb9044249c2"
+  },
+  "ZM": {
+   "png_sha256": "e6e52dd589fda6caa575e345e8e62da05fad44b0c8ef8f2ca7616b28ebbb1c57",
+   "svg": "flags/4x3/zm.svg",
+   "svg_sha256": "32fbded94226e40df3537525e73c667c7698e66d472736ccbb107f8baf360c4b"
+  },
+  "ZW": {
+   "png_sha256": "2268cbe2b219563f591d219878c95cb33a58e6b1e5653f8523be9ac49dc1e753",
+   "svg": "flags/4x3/zw.svg",
+   "svg_sha256": "de8ce5888be3cbb39bce5092ed412e4a7d2ce8ee8731a8bb4cb12a5e64f42ca7"
+  }
+ },
+ "licence": "MIT",
+ "size": [
+  96,
+  72
+ ],
+ "source": "flag-icons 7.2.3 (npm), flags/4x3/*.svg"
+}
