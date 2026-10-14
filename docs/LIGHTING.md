@@ -11,6 +11,20 @@ comparison and a UI check first; there is no evidence yet that it is necessary, 
 `?hour=` in the page address wins over everything: `dawn` (6.4), `noon` (12), `sunset` (17.6), `night` (23), a decimal (`17.25`) or `HH:MM`. Precedence: URL, then the Time-of-Day setting,
 then the real West Africa Time clock. Invalid values are ignored. `[Light] hour=… source=url|setting|clock` shows which one applied. `?quality=low|medium|high` works the same way.
 
+## Refinement iteration (after commit f096663)
+Findings from the f096663 screenshots (measured pixels, not impressions):
+* **Post-processing was never drawn.** Low and Medium frames had identical corners and sky/terrain colours (e.g. terrain `233,187,126` vs `233,187,127`), so the Medium vignette and colour grade, and probably
+  the ACES tonemapper, did not render. The renderer asset the build generates (`SceneBuilder.EnsureUrp`) was made with `CreateInstance`, which leaves its post-process data empty. The fix assigns URP's own
+  default asset; `[Render] ... rendererPostProcessData=` and `[Render] post-processing check ...` log whether it took, and `webgl-lighting.js --compare` checks the Medium corners are darker than Low's.
+* **Lemon-yellow truck.** The body material is orange (0.85, 0.55, 0.10) and its true hue shows where only ambient light falls (`100,67,15`). The horizontal top received sun 1.35 plus ambient (R 1.5, G 1.06 before tonemapping)
+  and clipped to `255,255,58`. Cause: too much light and no tonemapper, not the material. Noon is now sun 0.95 with lower ambient; a unit test keeps an orange body from clipping to yellow.
+* **Dark golden-hour terrain.** A sun 6 degrees up gives flat ground 10% of its light, and the ambient was a weak 0.31. The light is now lifted by up to 12 degrees at golden hour (fading out by 22 degrees,
+  monotonic), the sun is stronger there, and the warm fill is brighter. Flat-ground light rose from about 0.39 to about 0.6.
+* **Dawn and sunset** share the sun height but now differ in character: sunset light is deeper gold, haze orange and the fill warm; dawn light is paler and rosier, the fill cooler and there is a morning mist (about twice the haze).
+* **Night / headlights:** intensity 80 to 240, range 100 m, inner cone 25 degrees (the beam was too weak to reach the road far ahead).
+* **Reproducible screenshots:** `?smoke=drive&hold=1` freezes the truck 3 s after it lands, so chase and bumper shots come from the same place. New regions measure the road, the truck top and the terrain, plus
+  saturation and "red and green both clipped"; the old bands are kept for comparison.
+
 ## What the model does
 * Sun: warm and low at dawn / sunset (golden-hour tint, thicker atmosphere, orange fog), white overhead; switched off just below the horizon where its intensity is already ~0 (no pop).
 * Moon: a cool, dim second directional light that fades in as the sun sets, so the road keeps its shape at night. Night ambient has a blue floor (never pure black).
