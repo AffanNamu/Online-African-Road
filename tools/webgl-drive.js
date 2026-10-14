@@ -145,7 +145,7 @@ function serve() {
         for (let i = 0; i < 3 && !hit; i++) {
           const mark = logs.length;
           await page.mouse.move(cx, cy); await page.waitForTimeout(250); await page.mouse.down(); await page.waitForTimeout(150); await page.mouse.up();
-          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=button/, 5);
+          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d .*source=button/, 5);
           if (logFrom(mark, /\[Hud\] camera button clicked/)) reached = true;
         }
         if (!hit) {
@@ -204,7 +204,7 @@ function serve() {
           await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: true, touched: true, value: 1 }; p.timestamp = performance.now(); });
           await page.waitForTimeout(600);
           await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: false, touched: false, value: 0 }; p.timestamp = performance.now(); });
-          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=input/, 4);
+          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d .*source=input/, 4);
           if (logFrom(mark, /\[Input\] gamepad Y \(north\) pressed/)) arrived = true;
         }
         if (hit) ok('gamepad Y (north) -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120));
