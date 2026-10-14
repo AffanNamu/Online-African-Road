@@ -104,7 +104,9 @@ async function main() {
     await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&hour=${name}&quality=${quality}${extra}`);
     if (!await waitFor(/\[Smoke\] drive scenario/, 150)) { failures.push(`${name}: the build did not start the drive scenario`); await page.close(); continue; }
     if (!await waitFor(/\[Drive\] ground ready/, 90)) failures.push(`${name}: no ground under the truck`);
-    if (!await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 40)) failures.push(`${name}: the truck was not frozen in place, so the screenshots are not reproducible`);
+    const frozen = await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
+    if (!frozen) failures.push(`${name}: the truck was not frozen in place, so the screenshots are not reproducible`);
+    else { const u = /upright=([\d.]+)/.exec(frozen); if (!u || +u[1] < 0.95) failures.push(`${name}: the truck was frozen but is not upright (${frozen.slice(0, 140)})`); }
     await waitFor(/\[Light\] headlights on=True/, name === 'night' ? 15 : 1);   // at night the truck switches its headlights on when it spawns
     await page.waitForTimeout(5000);
     await page.mouse.click(512, 288);

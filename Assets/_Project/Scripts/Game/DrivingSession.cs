@@ -130,15 +130,30 @@ namespace ARO.Game
             }
         }
 
-        float _freezeAt = -1f;
-        /// <summary>Test hook (?smoke=drive&hold=1 only): stop the truck where it settled so the lighting screenshots are reproducible.</summary>
+        float _freezeAt = -1f; int _freezeTries;
+        /// <summary>
+        /// Test hook (?smoke=drive&hold=1 only): stop the truck where it settled so the lighting screenshots are reproducible. The truck is dropped onto the road
+        /// and on a slow software-GL frame rate it can roll onto its side (seen in a Medium-quality run), so it is only frozen when it is upright and nearly still;
+        /// otherwise it is stood up and dropped again (a few tries). The log line says how many tries it took and how upright it is.
+        /// </summary>
         void FreezeForScreenshots()
         {
+            var rb = Vehicle.GetComponent<Rigidbody>(); if (rb == null) { _freezeAt = -1f; return; }
+            var t = Vehicle.transform; float upright = Vector3.Dot(t.up, Vector3.up);
+            if ((upright < 0.95f || Vehicle.SpeedKmh > 2f) && _freezeTries < 6)
+            {
+                _freezeTries++;
+                Vector3 fwd = Vector3.ProjectOnPlane(t.forward, Vector3.up); if (fwd.sqrMagnitude < 0.01f) fwd = Quaternion.Euler(0f, t.eulerAngles.y, 0f) * Vector3.forward;
+                rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+                t.SetPositionAndRotation(t.position + Vector3.up * 1.0f, Quaternion.LookRotation(fwd.normalized, Vector3.up));
+                _freezeAt = Time.unscaledTime + 3f;
+                Debug.Log($"[Drive] smoke hold: truck not settled upright (up={upright:F2}, {Vehicle.SpeedKmh:F1} km/h); stood up and dropped again, try {_freezeTries}");
+                return;
+            }
             _freezeAt = -1f;
-            var rb = Vehicle.GetComponent<Rigidbody>(); if (rb == null) return;
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; rb.constraints = RigidbodyConstraints.FreezeAll;
-            var p = Vehicle.transform.position;
-            Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={Vehicle.transform.eulerAngles.y:F0} for reproducible screenshots");
+            var p = t.position;
+            Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={t.eulerAngles.y:F0} upright={upright:F2} tries={_freezeTries} for reproducible screenshots");
         }
 
         /// <summary>Remember the last good spot; if the vehicle ever leaves the world, put it back instead of letting it fall forever.</summary>

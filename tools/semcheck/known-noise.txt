@@ -10,4 +10,6 @@ Game/DrivingSession.cs(139
 Game/WorldMapScreen.cs(205
 Game/WorldMapScreen.cs(372
 Game/WorldMapScreen.cs(548
-Game/DrivingSession.cs(152
+Game/DrivingSession.cs(147
+Game/DrivingSession.cs(154
+Game/DrivingSession.cs(167

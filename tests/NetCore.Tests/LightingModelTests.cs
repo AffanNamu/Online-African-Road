@@ -112,7 +112,7 @@ public class LightingModelTests
 
     [Fact] public void TheSunIsUpInTheDayAndDownAtNight()
     {
-        Assert.True(At(12f).SunEnabled); Assert.InRange(At(12f).SunIntensity, 0.85f, 1.05f); Assert.Equal(90f, At(12f).SunElevationDeg, 1);
+        Assert.True(At(12f).SunEnabled); Assert.InRange(At(12f).SunIntensity, 0.75f, 1.0f); Assert.Equal(90f, At(12f).SunElevationDeg, 1);
         Assert.False(At(23f).SunEnabled); Assert.Equal(0f, At(23f).SunIntensity, 3); Assert.False(At(2f).SunEnabled);
         Assert.True(At(23f).SunElevationDeg < -15f);
     }
@@ -148,19 +148,19 @@ public class LightingModelTests
     {
         var d = At(LightingHour.Dawn); var e = At(LightingHour.Sunset);
         Assert.Equal(d.SunElevationDeg, e.SunElevationDeg, 1); Assert.Equal(d.Day, e.Day, 2); Assert.Equal(d.Golden, e.Golden, 2);   // same sun height, same amount of golden hour
-        Assert.True(e.SunColor.R - e.SunColor.B > d.SunColor.R - d.SunColor.B + 0.08f, $"sunset light is deeper gold ({e.SunColor.R - e.SunColor.B:0.00} vs {d.SunColor.R - d.SunColor.B:0.00})");
+        Assert.True(e.SunColor.R - e.SunColor.B > d.SunColor.R - d.SunColor.B + 0.06f, $"sunset light is deeper gold ({e.SunColor.R - e.SunColor.B:0.00} vs {d.SunColor.R - d.SunColor.B:0.00})");
         Assert.True(d.SunIntensity < e.SunIntensity, "the morning sun is a little softer");
         Assert.True(d.FogDensity > 1.5f * e.FogDensity, "morning mist is thicker than the evening haze");
         Assert.True(e.FogColor.R - e.FogColor.B > d.FogColor.R - d.FogColor.B + 0.1f, "the evening haze is orange, the morning mist pinker and greyer");
         Assert.True(d.AmbientSky.B > e.AmbientSky.B + 0.04f && e.AmbientSky.R > d.AmbientSky.R + 0.03f, "the morning fill is cooler, the evening fill warmer");
-        Assert.True(Math.Abs(d.SkyTint.B - e.SkyTint.B) > 0.05f, "the sky tint differs");
+        Assert.True(Math.Abs(d.SkyTint.B - e.SkyTint.B) + Math.Abs(d.SkyTint.R - e.SkyTint.R) > 0.06f, "the sky tint differs (a little: strong tints made the upper sky olive)");
     }
     [Fact] public void GoldenHourLightsTheGroundNotJustTheSky()
     {
         foreach (var h in new[] { LightingHour.Dawn, LightingHour.Sunset })
         {
             var f = At(h).FlatGroundLight; Assert.True(f.Mean >= 0.5f, $"flat ground at {h}h gets only {f.Mean:0.00} (the previous curve gave 0.39)");
-            Assert.InRange(At(h).SunElevationDeg, 12f, 22f);
+            Assert.InRange(At(h).SunElevationDeg, 12f, 23f);
         }
     }
     [Fact] public void TheSunRisesMonotonicallyAndTheGoldenLiftNeverPops()
@@ -173,7 +173,7 @@ public class LightingModelTests
         var f = At(LightingHour.Noon).FlatGroundLight;
         float r = 0.85f * f.R, g = 0.55f * f.G;
         Assert.True(r <= 1.12f, $"red {r:0.00}"); Assert.True(g <= 0.85f, $"green {g:0.00}");
-        float shownRatio = Math.Min(1f, g) / Math.Min(1f, r); Assert.True(shownRatio >= 0.6f, $"on screen the body is G/R {shownRatio:0.00}; the material is {0.55f / 0.85f:0.00}; yellow would be 1.00");
+        float shownRatio = Math.Min(1f, g) / Math.Min(1f, r); Assert.True(shownRatio >= 0.62f, $"on screen the body is G/R {shownRatio:0.00}; the material is {0.55f / 0.85f:0.00}; yellow would be 1.00");
         Assert.True(f.Mean <= 1.45f, $"flat ground at noon {f.Mean:0.00}");
     }
     [Fact] public void TheLightingChangesAreTheSameInEveryTier() { Assert.Equal(At(12f).SunIntensity, At(12f, 0f).SunIntensity); }
@@ -181,7 +181,7 @@ public class LightingModelTests
     {
         Assert.True(At(LightingHour.Dawn).Golden > 0.6f); Assert.True(At(LightingHour.Sunset).Golden > 0.6f); Assert.True(At(12f).Golden < 0.01f); Assert.True(At(23f).Golden < 0.01f);
         var gf = At(LightingHour.Sunset).FogColor; var nf = At(12f).FogColor; Assert.True(gf.R - gf.B > nf.R - nf.B + 0.15f, "the haze is orange at sunset");
-        Assert.True(At(LightingHour.Sunset).Atmosphere > At(12f).Atmosphere + 0.4f, "a deeper horizon sky at sunset");
+        Assert.True(At(LightingHour.Sunset).Atmosphere > At(12f).Atmosphere + 0.4f, "a deeper horizon sky at sunset"); Assert.True(At(LightingHour.Sunset).Atmosphere < 1.6f, "but not so thick that the upper sky turns olive");
         var f = At(LightingHour.Sunset).PostFilter; Assert.True(f.R > f.B);
     }
     [Fact] public void OvercastDimsTheSunAndThickensTheAir()

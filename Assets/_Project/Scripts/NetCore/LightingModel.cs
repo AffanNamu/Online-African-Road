@@ -142,15 +142,15 @@ namespace ARO.NetCore
 
             // ---- sun. At dawn and sunset the light is lifted a little above the true elevation: a sun at 6 degrees gives flat ground 10% of its light, which leaves
             // the terrain a dark brown; at about 17 degrees the ground is lit and still throws long shadows. The lift fades out by 22 degrees, so the sun still rises monotonically.
-            st.SunElevationDeg = (float)(Math.Asin(Math.Max(-1f, Math.Min(1f, elev))) * 180.0 / Math.PI) + 12f * golden;
+            st.SunElevationDeg = (float)(Math.Asin(Math.Max(-1f, Math.Min(1f, elev))) * 180.0 / Math.PI) + 13f * golden;
             st.SunEnabled = elev > -0.075f;                                   // switched on where its intensity is ~0, so it never pops
             var sunCol = SunGradient(elev * 2f);
-            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.80f, 0.72f), 0.45f * gDawn);   // dawn: paler, rosier light
-            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.66f, 0.36f), 0.45f * gDusk);   // sunset: deeper gold
+            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.82f, 0.76f), 0.45f * gDawn);   // dawn: paler, rosier light
+            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.70f, 0.40f), 0.30f * gDusk);   // sunset: deeper gold (not deeper orange: the procedural sky multiplies its blue by the sun colour, and orange x blue is the olive-green zenith measured at f096663)
             st.SunColor = sunCol;
-            // Noon 0.95 (was 1.35): in a gamma pipeline the surface's light is sun + ambient and a value above 1.0 clips, so an orange body (0.85, 0.55, 0.10) at 1.35 + 0.45
+            // Noon 0.85 (was 1.35): in a gamma pipeline the surface's light is sun + ambient and a value above 1.0 clips, so an orange body (0.85, 0.55, 0.10) at 1.35 + 0.45
             // came out as flat yellow (255, 255, 58). Golden hour is stronger than the old curve (a clear low sun is bright); dawn a little softer than sunset.
-            st.SunIntensity = 0.95f * sunPow * (1f + 0.45f * golden) * (1f - 0.10f * gDawn) * Lerp(1f, 0.35f, oc);
+            st.SunIntensity = 0.85f * sunPow * (1f + 0.62f * golden) * (1f - 0.10f * gDawn) * Lerp(1f, 0.35f, oc);
 
             // ---- moon: only while the sun is down; fades in as the sky darkens so the road keeps its shape at night
             float moon = Smooth(InvLerp(0.12f, -0.12f, elev));
@@ -160,10 +160,10 @@ namespace ARO.NetCore
 
             // ---- sky
             st.SkyExposure = Lerp(0.30f, 1.25f, day) * Lerp(1f, 0.6f, oc);
-            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.45f + gDawn * 0.15f + oc * 0.6f;      // thicker air near the horizon reddens the sky; hazier at dawn
+            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.12f + oc * 0.6f;      // thicker air near the horizon reddens the sky. The extra golden-hour thickness was 0.45 (+0.15 at dawn): measured, it turned the upper sky olive green
             var tint = Rgb.Lerp(new Rgb(0.5f, 0.5f, 0.5f), new Rgb(0.45f, 0.5f, 0.6f), 1f - oc);
-            tint = Rgb.Lerp(tint, new Rgb(0.47f, 0.48f, 0.57f), 0.6f * gDawn);     // dawn sky: cooler and pinker at the top
-            st.SkyTint = Rgb.Lerp(tint, new Rgb(0.56f, 0.48f, 0.42f), 0.6f * gDusk);   // sunset sky: warmer
+            tint = Rgb.Lerp(tint, new Rgb(0.46f, 0.49f, 0.60f), 0.6f * gDawn);     // dawn sky: cooler at the top
+            st.SkyTint = Rgb.Lerp(tint, new Rgb(0.52f, 0.49f, 0.52f), 0.6f * gDusk);   // sunset sky: a touch warmer, still blue enough at the top
 
             // ---- ambient (trilight): a deep blue floor at night, a gentle daylight blue, and a warm, brighter-than-physical fill at dawn and sunset (the lit sky bounces light onto the ground)
             var skyAmb = Rgb.Lerp(new Rgb(0.050f, 0.070f, 0.130f), new Rgb(0.30f, 0.38f, 0.52f), day);

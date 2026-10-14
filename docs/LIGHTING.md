@@ -25,6 +25,23 @@ Findings from the f096663 screenshots (measured pixels, not impressions):
 * **Reproducible screenshots:** `?smoke=drive&hold=1` freezes the truck 3 s after it lands, so chase and bumper shots come from the same place. New regions measure the road, the truck top and the terrain, plus
   saturation and "red and green both clipped"; the old bands are kept for comparison.
 
+### Result of enabling post-processing, and the tonemapper decision
+Once the renderer had its post-process data (`[Render] post-processing check ... rendererPostProcessData=present volumeTonemap=ACES`), the CI run of commit 0634c3c showed that **ACES is the wrong tonemapper for this
+project**: colours are in the Gamma colour space, so the tonemapper sees display-referred values and ACES crushed the dark range (night frame mean 39 to 19 with 59% crushed blacks; golden-hour ground 46 to 17-36).
+The default is now **Neutral** (rolls off highlights, leaves darks and mid-tones alone); `?tonemap=aces|none` stays available, and CI renders the Low tier with all three so the comparison is reproducible.
+Measured at Low quality, commit 28ba0ee (chase view, mean luma, ground = terrain right of the road):
+
+| | f096663 (no post-processing drawn) | ACES | none | Neutral (default) |
+|---|---|---|---|---|
+| noon whole / truck top | 161 / `255,255,58` | 110 / `218,166,46` | 129 / 179 | 126 / `214,170,43` |
+| dawn ground / sunset ground | 46 / 45 | 36 / 17 | 65 / 42 | 67 / 69 |
+| night whole / crushed blacks | 39 / 0% | 19 / 59% | 38 / 0% | 40 / 0% |
+
+The Medium tier's grade now also exists: its saturation was +8 (the oranges were already vivid) and is 0; contrast is still +10 and the vignette 0.22.
+Other changes in the iteration after that run: the olive-green upper sky at dawn and sunset (an orange sun colour times a thick atmosphere; measured zenith `153,157,108` at dawn) is addressed by a thinner
+golden-hour atmosphere and a less orange sun; noon sun 0.95 to 0.85 so the truck's green/red ratio gets closer to its material; golden-hour lift 12 to 13 degrees; the frozen-truck test hook now stands the truck up
+and drops it again if it is not upright (a Medium run froze it on its side).
+
 ## What the model does
 * Sun: warm and low at dawn / sunset (golden-hour tint, thicker atmosphere, orange fog), white overhead; switched off just below the horizon where its intensity is already ~0 (no pop).
 * Moon: a cool, dim second directional light that fades in as the sun sets, so the road keeps its shape at night. Night ambient has a blue floor (never pure black).
