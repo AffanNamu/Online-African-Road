@@ -22,7 +22,7 @@ namespace ARO.NetCore
                 {
                     float x = x0 + i * step, z = z0 + j * step;
                     h[i, j] = t.HeightAt(x, z);
-                    inside[i, j] = cutRoad && t.InsideFormation(x, z, -1.0f);
+                    inside[i, j] = cutRoad && t.InsideRoadAlong(x, z, -1.0f);   // along the road only: the caps beyond a road's ends have no road mesh to cover a cut
                 }
             var idx = new int[n, n];
             for (int i = 0; i < n; i++)
@@ -39,6 +39,18 @@ namespace ARO.NetCore
                 }
             if (skirts) AddSkirts(mb, x0, z0, size, cells, h, origin, SkirtDepth, null);
             return mb;
+        }
+
+        /// <summary>The cells of a visual tile that BuildTile leaves out because the road covers them: corners (x0 + i * step, z0 + j * step) of each, for tests and diagnostics.</summary>
+        public static System.Collections.Generic.List<(float x, float z)[]> CutCells(TerrainModel t, float x0, float z0, float size, int cells)
+        {
+            var list = new System.Collections.Generic.List<(float x, float z)[]>(); float step = size / cells; int n = cells + 1;
+            var inside = new bool[n, n];
+            for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) inside[i, j] = t.InsideRoadAlong(x0 + i * step, z0 + j * step, -1.0f);
+            for (int i = 0; i < cells; i++) for (int j = 0; j < cells; j++)
+                if (inside[i, j] && inside[i + 1, j] && inside[i, j + 1] && inside[i + 1, j + 1])
+                    list.Add(new[] { (x0 + i * step, z0 + j * step), (x0 + (i + 1) * step, z0 + j * step), (x0 + i * step, z0 + (j + 1) * step), (x0 + (i + 1) * step, z0 + (j + 1) * step) });
+            return list;
         }
 
         /// <summary>Closed slab: terrain surface, four walls and a flat underside `thickness` below the lowest point. Mesh colliders on a slab cannot be tunnelled by heavy bodies.</summary>

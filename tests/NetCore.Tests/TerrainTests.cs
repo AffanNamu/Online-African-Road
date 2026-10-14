@@ -32,6 +32,42 @@ public class TerrainTests
         Assert.False(m.Terrain.InsideFormation(x, z));
     }
 
+    // The Medium-tier hole in front of the spawn point: the legacy formation test reports "inside the road" for a cap beyond each end of a road (the sideways offset is ~0 straight ahead of an
+    // end), terrain quads there were deleted, and nothing covered them. See RouteModel.InsideRoadAlong.
+    [Fact] public void TheRoadFormationDoesNotExtendBeyondTheEndsOfTheRoad()
+    {
+        var m = Fx.Shipped; var c = m.Main;
+        foreach (bool atStart in new[] { true, false })
+        {
+            float s0 = atStart ? 0f : c.Spline.Length; c.Spline.FrameAt(s0, out var p, out var fwd, out _);
+            float away = atStart ? -1f : 1f;                                                       // away from the road
+            foreach (float d in new[] { 1f, 3f, 6f, 10f })
+            {
+                float x = p.X + fwd.X * away * d, z = p.Z + fwd.Z * away * d;
+                Assert.False(m.Terrain.InsideRoadAlong(x, z, -1f), $"main road {(atStart ? "start" : "end")}: {d} m beyond the end is not on the road");
+            }
+            // the legacy test (still used to keep props off the ends of the road) does report the cap: this is the root cause of the hole, kept here so the difference stays deliberate
+            Assert.True(m.Terrain.InsideFormation(p.X + fwd.X * away * 3f, p.Z + fwd.Z * away * 3f, -1f), "InsideFormation reports the cap beyond an end (sideways offset ~0)");
+            Assert.True(m.Terrain.InsideRoadAlong(p.X - fwd.X * away * 4f, p.Z - fwd.Z * away * 4f, 0f), $"main road {(atStart ? "start" : "end")}: 4 m along the road is on the road");
+        }
+    }
+
+    [Theory] [InlineData(10)] [InlineData(20)] [InlineData(40)] [InlineData(80)]
+    public void NoTerrainIsCutBehindTheFirstPointOfTheRoadAtAnyCellSize(int cells)
+    {   // Low uses 20 cells per 200 m tile, Medium 40, High 50. The defect only appeared where whole cells fit inside the cap, so every size is checked.
+        var m = Fx.Shipped; var c = m.Main; c.Spline.FrameAt(0f, out var p0, out var fwd, out _); const float chunk = 200f;
+        int cx = (int)Math.Floor(p0.X / chunk), cz = (int)Math.Floor(p0.Z / chunk); int checkedCuts = 0;
+        for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++)
+            foreach (var cell in TerrainGeometry.CutCells(m.Terrain, (cx + dx) * chunk, (cz + dz) * chunk, chunk, cells))
+            {
+                checkedCuts++;
+                float ahead = cell.Max(q => (q.x - p0.X) * fwd.X + (q.z - p0.Z) * fwd.Z);
+                Assert.True(ahead > 0f || Math.Sqrt(Math.Pow(cell[0].x - p0.X, 2) + Math.Pow(cell[0].z - p0.Z, 2)) > 60f,
+                    $"a cut cell lies wholly behind the start of the road: corner ({cell[0].x:0.0},{cell[0].z:0.0}), start ({p0.X:0.0},{p0.Z:0.0}), {cells} cells per tile");
+            }
+        if (200f / cells <= 10f) Assert.True(checkedCuts > 0, "the road itself still cuts the terrain tiles it runs through");   // (20 m cells are wider than the road: nothing fits)
+    }
+
     [Fact] public void EmbankmentSlopesRespectTheDesignLimit()
     {
         var m = Fx.Shipped; var c = m.Main; float limit = m.Spec.terrain.maxEmbankmentSlope;

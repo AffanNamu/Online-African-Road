@@ -165,7 +165,7 @@ namespace ARO.NetCore
             st.SunColor = sunCol;
             // Noon 0.85 (was 1.35): in a gamma pipeline the surface's light is sun + ambient and a value above 1.0 clips, so an orange body (0.85, 0.55, 0.10) at 1.35 + 0.45
             // came out as flat yellow (255, 255, 58). Golden hour is stronger than the old curve (a clear low sun is bright); dawn a little softer than sunset.
-            st.SunIntensity = 0.85f * sunPow * (1f + 0.62f * golden) * (1f - 0.16f * gDawn) * Lerp(1f, 0.35f, oc);
+            st.SunIntensity = 0.85f * sunPow * (1f + 0.62f * golden) * (1f - 0.08f * gDawn) * Lerp(1f, 0.35f, oc);
 
             // ---- moon: only while the sun is down; fades in as the sky darkens so the road keeps its shape at night
             float moon = Smooth(InvLerp(0.12f, -0.12f, elev));
@@ -175,7 +175,7 @@ namespace ARO.NetCore
 
             // ---- sky
             st.SkyExposure = Lerp(0.30f, 1.25f, day) * Lerp(1f, 0.6f, oc);
-            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.12f + gDusk * 0.14f - gDawn * 0.12f + oc * 0.6f;      // thicker air near the horizon reddens the sky. The extra golden-hour thickness was 0.45 (+0.15 at dawn): measured, it turned the upper sky olive green
+            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.12f + gDusk * 0.07f - gDawn * 0.24f + oc * 0.6f;      // thicker air near the horizon reddens the sky. The extra golden-hour thickness was 0.45 (+0.15 at dawn): measured, it turned the upper sky olive green. Chosen from the CI sky study (dawn and sunset rendered at thickness 1.0, 1.25, 1.5, 1.75): about 1.25 at dawn keeps a bluish zenith (121,142,153) under a pale horizon, about 1.5 at sunset gives the warmest horizon (174,162,84) before the zenith goes olive (1.75: 155,160,121)
             var tint = Rgb.Lerp(new Rgb(0.5f, 0.5f, 0.5f), new Rgb(0.45f, 0.5f, 0.6f), 1f - oc);
             tint = Rgb.Lerp(tint, new Rgb(0.46f, 0.49f, 0.60f), 0.6f * gDawn);     // dawn sky: cooler at the top
             st.SkyTint = Rgb.Lerp(tint, new Rgb(0.52f, 0.49f, 0.52f), 0.6f * gDusk);   // sunset sky: a touch warmer, still blue enough at the top

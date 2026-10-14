@@ -302,6 +302,26 @@ namespace ARO.NetCore
             return result;
         }
 
+        /// <summary>
+        /// Like <see cref="InsideFormation"/>, but measured along the road: a point beyond a road's first or last point is NOT inside. InsideFormation only looks at the sideways
+        /// offset, and for a point straight ahead of (or behind) an end of the centre line that offset is about zero, so it reports "inside the road" for a cap roughly
+        /// MaxFormationHalf + 2 m long beyond every end. The terrain tiles delete the quads that are inside the road (the road mesh covers them); in that cap there is no road mesh,
+        /// and on the Medium and High tiers (finer terrain cells, so whole quads fit in the cap) it showed as a hole in front of the spawn point at the start of the route.
+        /// Props still use InsideFormation (keeping the ends of the road clear is wanted there).
+        /// </summary>
+        public bool InsideRoadAlong(float x, float z, float margin = 0f)
+        {
+            foreach (var c in _route.AllCorridors)
+            {
+                float reach = c.MaxFormationHalf + 2f;
+                if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
+                if (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon) continue;     // the nearest point is an end of the centre line: this point is beyond the road, not on it
+                if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
+            }
+            return false;
+        }
+        const float EndEpsilon = 1e-3f;
+
         /// <summary>True when (x, z) lies inside a road formation shrunk by margin metres (negative margin = strictly inside).</summary>
         public bool InsideFormation(float x, float z, float margin = 0f)
         {
