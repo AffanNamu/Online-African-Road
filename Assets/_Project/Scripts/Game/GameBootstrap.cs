@@ -61,6 +61,7 @@ namespace ARO.Game
             drive.VehicleSpawned += v => traffic.player = v.transform;
 
             // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
+            ARO.Core.RuntimeSettings.TestHour = ARO.NetCore.LightingHour.FromUrl(Application.absoluteURL);   // ?hour=dawn|noon|sunset|night|6.5|18:30 (tests and reviews); otherwise the setting, then the real clock
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };

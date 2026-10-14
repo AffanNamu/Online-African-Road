@@ -8,7 +8,7 @@ namespace ARO.Vehicles
     {
         static readonly int Emission = Shader.PropertyToID("_EmissionColor");
         public Light[] headlights; public Renderer[] headEmit, brakeEmit, reverseEmit, leftEmit, rightEmit;
-        VehicleController _v; MaterialPropertyBlock _mpb;
+        VehicleController _v; MaterialPropertyBlock _mpb; bool _lastOn;
         const float IndicatorHz = 1.5f;
 
         void Awake() { _v = GetComponent<VehicleController>(); _mpb = new MaterialPropertyBlock(); }
@@ -23,6 +23,12 @@ namespace ARO.Vehicles
         {
             bool blink = Mathf.Repeat(Time.time * IndicatorHz, 1f) < 0.5f;
             foreach (var l in headlights) if (l != null) l.enabled = _v.LightsOn;
+            if (_v.LightsOn != _lastOn)
+            {   // lighting diagnostics: what the headlights actually are when they switch (tests and reviews read this)
+                _lastOn = _v.LightsOn; int n = 0; Light first = null; foreach (var l in headlights) if (l != null) { n++; if (first == null) first = l; }
+                var ci = System.Globalization.CultureInfo.InvariantCulture;
+                Debug.Log($"[Light] headlights on={_v.LightsOn} lights={n}" + (first != null ? $" type={first.type} angle={first.spotAngle.ToString("0", ci)} range={first.range.ToString("0", ci)} intensity={first.intensity.ToString("0.0", ci)} enabled={first.enabled}" : "") + $" pixelLightCount={QualitySettings.pixelLightCount}");
+            }
             Set(headEmit, _v.LightsOn ? new Color(3f, 2.8f, 2.2f) : Color.black);
             // Tail lights glow dim when headlights are on, bright when braking.
             Set(brakeEmit, _v.BrakeLit ? new Color(4f, 0f, 0f) : _v.LightsOn ? new Color(0.8f, 0f, 0f) : Color.black);

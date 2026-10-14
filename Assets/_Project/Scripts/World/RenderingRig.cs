@@ -17,7 +17,7 @@ namespace ARO.World
         public TimeOfDay timeOfDay; public WeatherSystem weather;
 
         Volume _volume; VolumeProfile _profile; ColorAdjustments _grade; Vignette _vignette; Bloom _bloom; Tonemapping _tonemap;
-        Camera _cam; Light _sun; float _nextGrade;
+        Camera _cam; Light _sun; float _nextGrade, _loggedExposure = 99f;
         public bool PostProcessingActive { get; private set; }
         public string PostProcessingNote { get; private set; } = "not applied";
 
@@ -42,7 +42,10 @@ namespace ARO.World
             ARO.Core.RuntimeSettings.TierName = SettingsEffect.QualityName(Tier); ARO.Core.RuntimeSettings.AntiAliasing = SettingsEffect.AntiAliasing(Tier); ARO.Core.RuntimeSettings.ViewDistance = SettingsEffect.ViewDistance(Tier); ARO.Core.RuntimeSettings.TierSummary = SettingsEffect.TierSummary(Tier);
             Apply();
             Debug.Log($"[Render] tier={Tier.Name} (url='{Application.absoluteURL}') shadows={Tier.ShadowDistance:0}m x{Tier.ShadowCascades} msaa={Tier.MsaaSamples} renderScale={Tier.RenderScale:0.0} loadRadius={Tier.LoadRadiusChunks} " +
-                      $"post={(PostProcessingActive ? "on" : "off")} ({PostProcessingNote}) pipeline={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.name : "NONE")}");
+                      $"post={(PostProcessingActive ? "on" : "off")} ({PostProcessingNote}) pipeline={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.name : "NONE")} " +
+                      $"colorSpace={QualitySettings.activeColorSpace} hdr={(UniversalRenderPipeline.asset != null && UniversalRenderPipeline.asset.supportsHDR)} cameraHdr={(_cam != null && _cam.allowHDR)} " +
+                      $"additionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.additionalLightsRenderingMode.ToString() : "n/a")} maxAdditionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.maxAdditionalLightsCount : 0)} " +
+                      $"graphicsApi={SystemInfo.graphicsDeviceType}");
         }
 
         void Apply()
@@ -90,6 +93,7 @@ namespace ARO.World
             _nextGrade = Time.unscaledTime + 1f;
             float h = timeOfDay.hour, golden = Mathf.Max(Mathf.InverseLerp(1.6f, 0f, Mathf.Abs(h - 6.3f)), Mathf.InverseLerp(1.6f, 0f, Mathf.Abs(h - 17.7f)));
             _grade.postExposure.value = timeOfDay.IsNight ? -0.35f : 0.1f + golden * 0.15f;
+            if (Mathf.Abs(_grade.postExposure.value - _loggedExposure) > 0.005f) { _loggedExposure = _grade.postExposure.value; Debug.Log($"[Light] grade postExposure={_loggedExposure.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)} night={timeOfDay.IsNight} hour={timeOfDay.hour.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}"); }
             _grade.colorFilter.Override(Color.Lerp(Color.white, new Color(1f, 0.93f, 0.82f), golden));
         }
 

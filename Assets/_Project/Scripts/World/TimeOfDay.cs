@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using ARO.NetCore;
 using UnityEngine;
 
 namespace ARO.World
@@ -17,7 +19,9 @@ namespace ARO.World
         public bool IsNight => hour < 5.6f || hour > 18.4f;
         public event Action<bool> NightChanged;
 
-        Material _sky; bool _wasNight;
+        Material _sky; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
+        /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
+        public string HourSource => _source;
         static readonly Gradient SunColour = MakeGradient();
 
         static Gradient MakeGradient()
@@ -46,10 +50,10 @@ namespace ARO.World
         void Update()
         {
             if (Suspended) return;
-            float fixedHour = ARO.Core.RuntimeSettings.FixedHour;     // the player's Time of Day setting: a fixed hour, or -1 for the real clock
-            if (fixedHour >= 0f) hour = fixedHour;
-            else if (followWestAfricaTime) { var wat = DateTime.UtcNow.AddHours(1); hour = wat.Hour + wat.Minute / 60f + wat.Second / 3600f; }
-            else hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f);
+            float setting = ARO.Core.RuntimeSettings.FixedHour;       // the player's Time of Day setting: a fixed hour, or -1 for the real clock
+            float urlHour = ARO.Core.RuntimeSettings.TestHour;        // ?hour= in the page address (tests, reviews): beats the setting
+            if (urlHour >= 0f || setting >= 0f || followWestAfricaTime) hour = LightingHour.Resolve(urlHour, setting, LightingHour.ClockHour(DateTime.UtcNow), out _source);
+            else { hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f); _source = "accelerated"; }
             Apply();
             if (IsNight != _wasNight) { _wasNight = IsNight; NightChanged?.Invoke(IsNight); }
         }
@@ -78,6 +82,19 @@ namespace ARO.World
             Color fog = Color.Lerp(new Color(0.02f, 0.03f, 0.05f), new Color(0.72f, 0.76f, 0.80f), day);
             RenderSettings.fogColor = Color.Lerp(fog, fog * 0.75f, overcast);
             RenderSettings.fogDensity = Mathf.Lerp(0.00035f, 0.0011f, overcast);
+            LogState(elev);
+        }
+
+        static string F(float v) => v.ToString("0.000", CultureInfo.InvariantCulture);
+        static string C(Color c) => "(" + F(c.r) + "," + F(c.g) + "," + F(c.b) + ")";
+
+        /// <summary>One line every 5 s with everything that decides how bright the world is, so a screenshot can be explained by numbers (tests read it).</summary>
+        void LogState(float elev)
+        {
+            if (Time.unscaledTime < _nextLog) return; _nextLog = Time.unscaledTime + 5f;
+            Debug.Log($"[Light] hour={F(hour)} source={_source} night={IsNight} elev={F(elev)} sun={(sun != null && sun.enabled ? "on" : "off")} sunIntensity={F(sun != null ? sun.intensity : 0f)} sunColor={C(sun != null ? sun.color : Color.black)} " +
+                      $"skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
+                      $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)}");
         }
     }
 }
