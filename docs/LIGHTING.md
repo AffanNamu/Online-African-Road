@@ -42,6 +42,23 @@ Other changes in the iteration after that run: the olive-green upper sky at dawn
 golden-hour atmosphere and a less orange sun; noon sun 0.95 to 0.85 so the truck's green/red ratio gets closer to its material; golden-hour lift 12 to 13 degrees; the frozen-truck test hook now stands the truck up
 and drops it again if it is not upright (a Medium run froze it on its side).
 
+### Medium-tier ground defect (hole in front of the spawn): cause and fix
+Seen as a grey slab and brown vertical faces behind the road start in Medium frames (not in Low). Traced with a test-only probe (`?smoke=drive&hold=1&probe=1`, which logs the renderers within 45 m and a 7 x 7 grid of
+ground heights around the frozen truck): the spawn is the route start at the world origin; the road mesh exists only east of it; ground raycasts west of it hit only the invisible collision slab (so the truck never fell), and
+Medium's terrain tiles had about 3.5 times Low's triangles (about 3,500 against 960: 40 cells per 200 m tile against 20). Cause: `RoadSpline.Nearest` returns `lateral` as the perpendicular part of the offset to the nearest centre-line point,
+which is about zero for a point straight ahead of or behind an end, so `TerrainModel.InsideFormation` reported "inside the road" for a cap of about 14 m beyond every road end. `TerrainGeometry.BuildTile` deletes the quads whose four
+corners are inside the road (the road mesh covers them); in the cap there is no road mesh, and only Medium's 5 m cells (against Low's 10 m) leave whole quads there. Not a streaming, camera-visibility or shadow problem.
+Fix: `TerrainModel.InsideRoadAlong` (a point whose nearest centre-line point is an end of the line is not on the road) is used for the terrain cut; props keep `InsideFormation`. Regression tests (`TerrainTests`): the formation does not extend beyond the
+main road's ends, and no cut cell lies wholly behind the road's first point at 10, 20, 40 and 80 cells per tile; with the old predicate they fail at 40 and 80 (a cut cell at (-15,-5) behind the start at (0,0)) and pass at 10 and 20, as observed.
+
+### Driving test methodology (tools/webgl-drive.js)
+The camera-while-driving checks used wall-clock windows (a 1 s pause after each view change, 5.5 s of braking, 4.5 s of steering). On the software renderer (140-290 ms per frame) the same drive covers a different amount of game time, which is why 30 m
+in about 5 s measured 26 m after the renderer got slower. The windows are now defined on the game clock (the `t=` of each `[Drive]` line, `Time.time`): the throttle is held until 6 game seconds have passed, braking for 5, steering for 4 plus 1.5 coasting,
+and the acceptance is 30 m within the first 4 game seconds (linearly interpolated), maximum speed above 10 km/h, at least 4 samples and at least 3 camera views seen in the telemetry. Nothing was skipped, the camera changes are all still made, the speed is not
+altered, and the distance requirement is the original 30 m for the original 4 s. Calibration (CI run of 9d6c3b2, the same drive at two frame rates): speed against game time was the same, Low (about 220 ms per frame) 28, 38, 47, 54, 61, 68 km/h at 0, 1.1, 2.3, 3.4, 4.6, 5.8 s
+and Medium (about 290 ms) 25, 35, 45, 53, 59, 67 km/h at 0, 1.1, 2.3, 3.6, 4.8, 6.0 s; 39 m and 40 m were covered by 3.4 s and 3.6 s, about 30% above the limit at both. A second drive at Medium quality runs in CI as a calibration step.
+A truck that does not move (throttle swallowed after a camera change) covers 0 m and fails.
+
 ## What the model does
 * Sun: warm and low at dawn / sunset (golden-hour tint, thicker atmosphere, orange fog), white overhead; switched off just below the horizon where its intensity is already ~0 (no pop).
 * Moon: a cool, dim second directional light that fades in as the sun sets, so the road keeps its shape at night. Night ambient has a blue floor (never pure black).

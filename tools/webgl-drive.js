@@ -105,6 +105,12 @@ function serve() {
     }
     return null;
   }
+  // Distance covered by the last sample that is no later than `seconds` of GAME time after the first one (linearly interpolated inside the segment that crosses the limit). The original acceptance was 30 m in about 4 s of driving,
+  // so the criterion is kept as 30 m within the first 4 game seconds, whatever the frame rate. (Calibration, CI run of 9d6c3b2: speed against game time was the same at ~220 ms and ~290 ms per frame,
+  // 28 -> 61 km/h by 4.6 s and 25 -> 59 km/h by 4.8 s, and 39 m / 40 m covered by 3.4 s / 3.6 s: about 30% above the 30 m limit at both frame rates.)
+  const pathWithin = (ss, seconds) => { let a = 0; for (let i = 1; i < ss.length; i++) {
+    const dt = ss[i].t - ss[i - 1].t, seg = Math.hypot(ss[i].x - ss[i - 1].x, ss[i].z - ss[i - 1].z), t1 = ss[i].t - ss[0].t;
+    if (t1 <= seconds) a += seg; else { const t0 = ss[i - 1].t - ss[0].t; if (t0 < seconds && dt > 0) a += seg * (seconds - t0) / dt; break; } } return a; };   // linear interpolation inside the segment that crosses `seconds`
   const GAME_ACCEL_S = 6, GAME_BRAKE_S = 5, GAME_STEER_S = 4, GAME_COAST_S = 1.5;
   const pathLength = ss => ss.slice(1).reduce((a, s, i) => a + Math.hypot(s.x - ss[i].x, s.z - ss[i].z), 0);
   const yawDelta = (a, b) => ((b - a + 540) % 360) - 180;
@@ -179,12 +185,13 @@ function serve() {
       await page.keyboard.up('w');
       const ss = parseDrive(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
       const gameDt = ss.length > 1 ? ss[ss.length - 1].t - ss[0].t : 0, meanMs = gameDt > 0 ? pathLength(ss) / gameDt : 0;
-      console.log(`  accelerate while switching: ${ss.length} samples over ${gameDt.toFixed(1)} game s (${win ? win.wall.toFixed(1) : 'n/a'} wall s), max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m, mean ${meanMs.toFixed(1)} m/s, views in the telemetry: ${[...cams].join(',')}`);
+      const early = pathWithin(ss, 4);
+      console.log(`  accelerate while switching: ${ss.length} samples over ${gameDt.toFixed(1)} game s (${win ? win.wall.toFixed(1) : 'n/a'} wall s), max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m (${early.toFixed(0)} m within the first 4 game s), mean ${meanMs.toFixed(1)} m/s, views in the telemetry: ${[...cams].join(',')}`);
       console.log('    samples (game t, km/h, view): ' + ss.map(x => `${x.t.toFixed(1)}s ${x.kmh.toFixed(0)} ${x.cam}`).join(' | '));
       if (!win) failures.push(`the game clock did not advance ${GAME_ACCEL_S} s while the throttle was held (a stall, not a slow renderer)`);
       else if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
       else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
-      else if (pathLength(ss) < 30) failures.push(`the truck barely moved while the view was changed (${pathLength(ss).toFixed(0)} m)`);
+      else if (early < 30) failures.push(`the truck barely moved while the view was changed (${early.toFixed(0)} m in the first 4 game seconds, ${pathLength(ss).toFixed(0)} m in all)`);
       else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
       else ok(`acceleration and movement are unaffected by changing the view (max ${maxKmh.toFixed(0)} km/h, ${pathLength(ss).toFixed(0)} m, ${cams.size} views)`);
 
