@@ -68,4 +68,116 @@ namespace ARO.NetCore
             source = SourceClock; return clockHour;
         }
     }
+
+    /// <summary>A colour as three floats, so the lighting maths stays outside the engine and can be tested.</summary>
+    public struct Rgb
+    {
+        public float R, G, B;
+        public Rgb(float r, float g, float b) { R = r; G = g; B = b; }
+        public static Rgb Lerp(Rgb a, Rgb b, float t) { t = t < 0f ? 0f : t > 1f ? 1f : t; return new Rgb(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t); }
+        public static Rgb operator *(Rgb c, float k) => new Rgb(c.R * k, c.G * k, c.B * k);
+        public float Mean => (R + G + B) / 3f;
+        public bool IsFinite => !(float.IsNaN(R) || float.IsNaN(G) || float.IsNaN(B) || float.IsInfinity(R) || float.IsInfinity(G) || float.IsInfinity(B));
+    }
+
+    /// <summary>Everything that lights the world at one moment. Pure data: <c>TimeOfDay</c> and <c>RenderingRig</c> apply it.</summary>
+    public sealed class LightingState
+    {
+        public float Hour, Elevation, Day, Golden, OvercastIn;
+        public float SunElevationDeg; public bool SunEnabled; public float SunIntensity; public Rgb SunColor;
+        public bool MoonEnabled; public float MoonIntensity; public Rgb MoonColor;
+        public float SkyExposure, Atmosphere; public Rgb SkyTint;
+        public Rgb AmbientSky, AmbientEquator, AmbientGround;
+        public Rgb FogColor; public float FogDensity;
+        public float PostExposure; public Rgb PostFilter;
+        /// <summary>One number for "how much light is there": the sun and moon plus the ambient. Used by tests, never by the renderer.</summary>
+        public float IlluminationIndex => SunIntensity * (SunEnabled ? 1f : 0f) + MoonIntensity * (MoonEnabled ? 1f : 0f) + AmbientSky.Mean * 0.5f + AmbientEquator.Mean * 0.5f;
+    }
+
+    /// <summary>
+    /// The sun, moon, sky, ambient light, fog and exposure for an hour of day and an overcast amount (0 clear .. 1 overcast).
+    /// The sun is on the equator model used since the first version (up at 6:00, overhead at 12:00, down at 18:00). What this adds over that version: a moon
+    /// so a night road has shape, a floor on night ambient light so nothing is pure black, warm horizon light and haze at dawn and sunset, a deeper horizon
+    /// sky, and exposure that follows the light. Every curve is smooth in the hour (tested), so nothing pops as the day advances.
+    /// </summary>
+    public static class LightingModel
+    {
+        /// <summary>The moon's fixed direction (elevation and azimuth in degrees). It lights the scene; it is not drawn in the sky.</summary>
+        public const float MoonElevationDeg = 42f, MoonAzimuthDeg = 150f;
+
+        static float Smooth(float t) { t = t < 0f ? 0f : t > 1f ? 1f : t; return t * t * (3f - 2f * t); }
+        static float InvLerp(float a, float b, float v) => b == a ? 0f : Math.Min(1f, Math.Max(0f, (v - a) / (b - a)));
+        static float Lerp(float a, float b, float t) { t = t < 0f ? 0f : t > 1f ? 1f : t; return a + (b - a) * t; }
+        static float Clamp01(float v) => float.IsNaN(v) ? 0f : v < 0f ? 0f : v > 1f ? 1f : v;
+
+        // Sun colour by elevation: deep orange at the horizon, warm white high up (the original gradient).
+        static readonly float[] SunKeyT = { 0.00f, 0.18f, 0.45f, 1.00f };
+        static readonly Rgb[] SunKeyC = { new Rgb(1f, 0.45f, 0.18f), new Rgb(1f, 0.78f, 0.55f), new Rgb(1f, 0.96f, 0.88f), new Rgb(1f, 0.98f, 0.94f) };
+        static Rgb SunGradient(float t)
+        {
+            t = Clamp01(t);
+            for (int i = 1; i < SunKeyT.Length; i++) if (t <= SunKeyT[i]) return Rgb.Lerp(SunKeyC[i - 1], SunKeyC[i], (t - SunKeyT[i - 1]) / (SunKeyT[i] - SunKeyT[i - 1]));
+            return SunKeyC[SunKeyC.Length - 1];
+        }
+
+        public static LightingState Evaluate(float hour, float overcast)
+        {
+            if (float.IsNaN(hour) || float.IsInfinity(hour)) hour = 12f;
+            hour = hour % 24f; if (hour < 0f) hour += 24f;
+            overcast = Clamp01(overcast);
+
+            float ang = (hour - 6f) / 12f * (float)Math.PI;
+            float elev = (float)Math.Sin(ang);                                   // -1 .. 1
+            float day = Smooth(InvLerp(-0.08f, 0.25f, elev));                    // 0 in the dark, 1 in full daylight
+            float night = 1f - day;
+            float golden = Smooth(InvLerp(0.38f, 0.0f, Math.Abs(elev))) * Smooth(InvLerp(-0.10f, 0.05f, elev)) * (1f - 0.7f * overcast);   // close to the horizon with the sun up (dawn, sunset)
+            float oc = overcast;
+
+            var st = new LightingState { Hour = hour, Elevation = elev, Day = day, Golden = golden, OvercastIn = overcast };
+
+            // ---- sun
+            st.SunElevationDeg = (float)(Math.Asin(Math.Max(-1f, Math.Min(1f, elev))) * 180.0 / Math.PI);
+            st.SunEnabled = elev > -0.075f;                                   // switched on where its intensity is ~0, so it never pops
+            st.SunColor = SunGradient(elev * 2f);
+            st.SunIntensity = Lerp(0f, 1.35f, day) * Lerp(1f, 0.35f, oc);
+
+            // ---- moon: only while the sun is down; fades in as the sky darkens so the road keeps its shape at night
+            float moon = Smooth(InvLerp(0.12f, -0.12f, elev));
+            st.MoonEnabled = moon > 0.01f;
+            st.MoonIntensity = 0.20f * moon * Lerp(1f, 0.45f, oc);                // about a seventh of the sun: night reads as night but the road keeps its shape
+            st.MoonColor = new Rgb(0.60f, 0.70f, 1.00f);
+
+            // ---- sky
+            st.SkyExposure = Lerp(0.30f, 1.25f, day) * Lerp(1f, 0.6f, oc);
+            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.45f + oc * 0.6f;      // thicker air near the horizon reddens the sky; more at dawn and sunset
+            st.SkyTint = Rgb.Lerp(new Rgb(0.5f, 0.5f, 0.5f), new Rgb(0.45f, 0.5f, 0.6f), 1f - oc);
+
+            // ---- ambient (trilight): a deep blue floor at night, daylight blue, warmed at dawn and sunset
+            var skyAmb = Rgb.Lerp(new Rgb(0.050f, 0.070f, 0.130f), new Rgb(0.45f, 0.58f, 0.78f), day);
+            skyAmb = Rgb.Lerp(skyAmb, new Rgb(0.62f, 0.46f, 0.40f) * Math.Max(0.35f, day), golden * 0.45f);
+            st.AmbientSky = Rgb.Lerp(skyAmb, skyAmb * 0.7f, oc);
+            var eq = Rgb.Lerp(new Rgb(0.040f, 0.048f, 0.075f), new Rgb(0.50f, 0.50f, 0.48f), day);
+            eq = Rgb.Lerp(eq, new Rgb(0.55f, 0.42f, 0.34f) * Math.Max(0.35f, day), golden * 0.40f);
+            st.AmbientEquator = eq * Lerp(1f, 0.8f, oc);
+            st.AmbientGround = Rgb.Lerp(new Rgb(0.025f, 0.025f, 0.030f), new Rgb(0.22f, 0.20f, 0.16f), day);
+
+            // ---- fog: dark blue haze at night, pale daytime haze (harmattan-like), orange haze at dawn and sunset; denser under cloud
+            var fog = Rgb.Lerp(new Rgb(0.030f, 0.040f, 0.075f), new Rgb(0.72f, 0.76f, 0.80f), day);
+            fog = Rgb.Lerp(fog, new Rgb(0.95f, 0.62f, 0.40f), golden * 0.50f);
+            st.FogColor = Rgb.Lerp(fog, fog * 0.75f, oc);
+            st.FogDensity = Lerp(0.00035f, 0.0011f, oc);
+
+            // ---- exposure and tint of the final image
+            float expBlend = Smooth(InvLerp(-0.10f, 0.10f, elev));                // dark grade below the horizon, daytime grade (warmer, +golden boost) just above it
+            st.PostExposure = Lerp(-0.15f, 0.10f + golden * 0.15f, expBlend);
+            st.PostFilter = Rgb.Lerp(Rgb.Lerp(new Rgb(0.88f, 0.94f, 1.0f), new Rgb(1f, 1f, 1f), day), new Rgb(1f, 0.93f, 0.82f), golden);
+            return st;
+        }
+    }
+
+    /// <summary>What the (placeholder) headlights are. Production vehicle prefabs bring their own lights; this is the fallback and the reference for tests.</summary>
+    public static class HeadlightSpec
+    {
+        public const float Intensity = 80f, Range = 90f, OuterAngleDeg = 55f, InnerAngleDeg = 22f, PitchDownDeg = 1.5f;
+    }
 }

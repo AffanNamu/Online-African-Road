@@ -22,19 +22,9 @@ namespace ARO.World
         Material _sky; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
         /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
         public string HourSource => _source;
-        static readonly Gradient SunColour = MakeGradient();
-
-        static Gradient MakeGradient()
-        {
-            var g = new Gradient();
-            g.SetKeys(new[] {
-                new GradientColorKey(new Color(1f, 0.45f, 0.18f), 0.00f),   // horizon (sunrise/sunset)
-                new GradientColorKey(new Color(1f, 0.78f, 0.55f), 0.18f),
-                new GradientColorKey(new Color(1f, 0.96f, 0.88f), 0.45f),   // high sun
-                new GradientColorKey(new Color(1f, 0.98f, 0.94f), 1.00f) },
-                new[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) });
-            return g;
-        }
+        /// <summary>The lighting for the current hour and weather (sun, moon, sky, ambient, fog, grade). Read by the rendering rig for the post-processing grade.</summary>
+        public LightingState State { get; private set; } = LightingModel.Evaluate(12f, 0f);
+        Light _moon;
 
         void Awake()
         {
@@ -42,6 +32,10 @@ namespace ARO.World
             RenderSettings.skybox = _sky; RenderSettings.sun = sun;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
+            // The moon: a second, shadowless directional light that only lights the world while the sun is down, so a night road keeps its shape.
+            var moonGo = new GameObject("Moon"); moonGo.transform.SetParent(transform, false);
+            moonGo.transform.rotation = Quaternion.Euler(LightingModel.MoonElevationDeg, LightingModel.MoonAzimuthDeg, 0f);
+            _moon = moonGo.AddComponent<Light>(); _moon.type = LightType.Directional; _moon.shadows = LightShadows.None; _moon.enabled = false; _moon.intensity = 0f;
         }
 
         /// <summary>While true the world's sun and ambient are left alone (the Garage showroom lights its own room and restores everything when it closes).</summary>
@@ -60,29 +54,24 @@ namespace ARO.World
 
         void Apply()
         {
-            // Equator ~06:00/18:00. Elevation in [-1,1].
-            float ang = (hour - 6f) / 12f * Mathf.PI;
-            float elev = Mathf.Sin(ang);
-            float day = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(-0.08f, 0.25f, elev));
+            var st = State = LightingModel.Evaluate(hour, overcast);
             if (sun != null)
             {
-                sun.transform.rotation = Quaternion.Euler(Mathf.Asin(Mathf.Clamp(elev, -1f, 1f)) * Mathf.Rad2Deg, -20f, 0f);
-                sun.color = SunColour.Evaluate(Mathf.Clamp01(elev * 2f));
-                sun.intensity = Mathf.Lerp(0f, 1.35f, day) * Mathf.Lerp(1f, 0.35f, overcast);
-                sun.enabled = elev > -0.05f;
+                sun.transform.rotation = Quaternion.Euler(st.SunElevationDeg, -20f, 0f);
+                sun.color = new Color(st.SunColor.R, st.SunColor.G, st.SunColor.B);
+                sun.intensity = st.SunIntensity;
+                sun.enabled = st.SunEnabled;
             }
-            _sky.SetFloat("_Exposure", Mathf.Lerp(0.15f, 1.25f, day) * Mathf.Lerp(1f, 0.6f, overcast));
-            _sky.SetFloat("_AtmosphereThickness", Mathf.Lerp(0.9f, 1.4f, 1f - Mathf.Abs(elev)) + overcast * 0.6f);
-            _sky.SetColor("_SkyTint", Color.Lerp(new Color(0.5f, 0.5f, 0.5f), new Color(0.45f, 0.5f, 0.6f), 1f - overcast));
-            Color skyAmb = Color.Lerp(new Color(0.02f, 0.03f, 0.06f), new Color(0.45f, 0.58f, 0.78f), day);
-            RenderSettings.ambientSkyColor = Color.Lerp(skyAmb, skyAmb * 0.7f, overcast);
-            RenderSettings.ambientEquatorColor = Color.Lerp(new Color(0.02f, 0.02f, 0.03f), new Color(0.50f, 0.50f, 0.48f), day) * Mathf.Lerp(1f, 0.8f, overcast);
-            RenderSettings.ambientGroundColor = Color.Lerp(new Color(0.01f, 0.01f, 0.01f), new Color(0.22f, 0.20f, 0.16f), day);
-            // Harmattan-style haze toward the horizon in daytime; thicker fog with overcast/rain.
-            Color fog = Color.Lerp(new Color(0.02f, 0.03f, 0.05f), new Color(0.72f, 0.76f, 0.80f), day);
-            RenderSettings.fogColor = Color.Lerp(fog, fog * 0.75f, overcast);
-            RenderSettings.fogDensity = Mathf.Lerp(0.00035f, 0.0011f, overcast);
-            LogState(elev);
+            if (_moon != null) { _moon.enabled = st.MoonEnabled; _moon.intensity = st.MoonIntensity; _moon.color = new Color(st.MoonColor.R, st.MoonColor.G, st.MoonColor.B); }
+            _sky.SetFloat("_Exposure", st.SkyExposure);
+            _sky.SetFloat("_AtmosphereThickness", st.Atmosphere);
+            _sky.SetColor("_SkyTint", new Color(st.SkyTint.R, st.SkyTint.G, st.SkyTint.B));
+            RenderSettings.ambientSkyColor = new Color(st.AmbientSky.R, st.AmbientSky.G, st.AmbientSky.B);
+            RenderSettings.ambientEquatorColor = new Color(st.AmbientEquator.R, st.AmbientEquator.G, st.AmbientEquator.B);
+            RenderSettings.ambientGroundColor = new Color(st.AmbientGround.R, st.AmbientGround.G, st.AmbientGround.B);
+            RenderSettings.fogColor = new Color(st.FogColor.R, st.FogColor.G, st.FogColor.B);
+            RenderSettings.fogDensity = st.FogDensity;
+            LogState(st.Elevation);
         }
 
         static string F(float v) => v.ToString("0.000", CultureInfo.InvariantCulture);
@@ -94,7 +83,7 @@ namespace ARO.World
             if (Time.unscaledTime < _nextLog) return; _nextLog = Time.unscaledTime + 5f;
             Debug.Log($"[Light] hour={F(hour)} source={_source} night={IsNight} elev={F(elev)} sun={(sun != null && sun.enabled ? "on" : "off")} sunIntensity={F(sun != null ? sun.intensity : 0f)} sunColor={C(sun != null ? sun.color : Color.black)} " +
                       $"skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
-                      $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)}");
+                      $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)} moon={(_moon != null && _moon.enabled ? "on" : "off")} moonIntensity={F(_moon != null ? _moon.intensity : 0f)} golden={F(State.Golden)} postExposure={F(State.PostExposure)}");
         }
     }
 }

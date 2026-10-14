@@ -61,19 +61,20 @@ function serve(dir) {
 
 async function main() {
   const dir = path.resolve(process.argv[2] || 'Builds/WebGL'), prefix = process.argv[3] || 'webgl-light';
+  const quality = (process.argv[4] || 'low').toLowerCase();   // low (what CI's software GL picks by itself) or medium (exercises the colour grade)
   const { chromium } = require('playwright');
   const failures = [], metrics = {}, lines = {};
   const server = await serve(dir); const port = server.address().port;
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
 
   for (const [name, hour] of PRESETS) {
-    console.log(`\n=== ${name} (hour ${hour}) ===`);
+    console.log(`\n=== ${name} (hour ${hour}, quality ${quality}) ===`);
     const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
     const logs = [], errors = [];
     page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
     const find = (re, from = 0) => logs.slice(from).find(l => re.test(l));
     const waitFor = async (re, secs, from = 0) => { for (let i = 0; i < secs * 4; i++) { const l = find(re, from); if (l) return l; await page.waitForTimeout(250); } return null; };
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hour=${name}`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hour=${name}&quality=${quality}`);
     if (!await waitFor(/\[Smoke\] drive scenario/, 150)) { failures.push(`${name}: the build did not start the drive scenario`); await page.close(); continue; }
     if (!await waitFor(/\[Drive\] ground ready/, 90)) failures.push(`${name}: no ground under the truck`);
     await waitFor(/\[Light\] headlights on=True/, name === 'night' ? 15 : 1);   // at night the truck switches its headlights on when it spawns
@@ -112,7 +113,7 @@ async function main() {
   }
   await browser.close(); server.close();
 
-  fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ regions: REGIONS, presets: PRESETS, thresholds: THRESHOLDS, metrics, lines }, null, 2));
+  fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ quality, regions: REGIONS, presets: PRESETS, thresholds: THRESHOLDS, metrics, lines }, null, 2));
   const means = n => metrics[n] && metrics[n].chase ? metrics[n].chase.whole.mean : NaN;
   console.log('\n--- brightness (mean luminance 0..255, chase view) --- ' + PRESETS.map(([n]) => `${n}=${means(n).toFixed(1)}`).join('  '));
   if (!(means('noon') > means('night') + 10)) failures.push(`noon (${means('noon').toFixed(1)}) is not clearly brighter than night (${means('night').toFixed(1)})`);

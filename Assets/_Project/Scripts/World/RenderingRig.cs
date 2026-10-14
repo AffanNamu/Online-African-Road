@@ -91,10 +91,10 @@ namespace ARO.World
             // Hook: grade follows the clock (cheaper than anything per-pixel): darker, cooler exposure at night, warmer at the horizon.
             if (_grade == null || timeOfDay == null || Time.unscaledTime < _nextGrade) return;
             _nextGrade = Time.unscaledTime + 1f;
-            float h = timeOfDay.hour, golden = Mathf.Max(Mathf.InverseLerp(1.6f, 0f, Mathf.Abs(h - 6.3f)), Mathf.InverseLerp(1.6f, 0f, Mathf.Abs(h - 17.7f)));
-            _grade.postExposure.value = timeOfDay.IsNight ? -0.35f : 0.1f + golden * 0.15f;
+            var st = timeOfDay.State;   // the tested lighting model: exposure and tint follow the light
+            _grade.postExposure.value = st.PostExposure;
+            _grade.colorFilter.Override(new Color(st.PostFilter.R, st.PostFilter.G, st.PostFilter.B));
             if (Mathf.Abs(_grade.postExposure.value - _loggedExposure) > 0.005f) { _loggedExposure = _grade.postExposure.value; Debug.Log($"[Light] grade postExposure={_loggedExposure.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)} night={timeOfDay.IsNight} hour={timeOfDay.hour.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}"); }
-            _grade.colorFilter.Override(Color.Lerp(Color.white, new Color(1f, 0.93f, 0.82f), golden));
         }
 
         void OnDestroy() { if (_profile != null) Destroy(_profile); }

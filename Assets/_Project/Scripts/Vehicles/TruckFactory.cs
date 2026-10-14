@@ -70,7 +70,10 @@ namespace ARO.Vehicles
             foreach (int side in new[] { -1, 1 })
             {
                 var h = new GameObject("Headlight").AddComponent<Light>(); h.transform.SetParent(root.transform, false);
-                h.transform.localPosition = new Vector3(side * 0.9f, 1.3f, zFront + 1.4f); h.type = LightType.Spot; h.spotAngle = 65; h.range = 60; h.intensity = 8; h.enabled = false; heads.Add(h);
+                h.transform.localPosition = new Vector3(side * 0.9f, 1.3f, zFront + 1.4f);
+                h.transform.localRotation = Quaternion.Euler(ARO.NetCore.HeadlightSpec.PitchDownDeg, 0f, 0f);
+                h.type = LightType.Spot; h.spotAngle = ARO.NetCore.HeadlightSpec.OuterAngleDeg; h.innerSpotAngle = ARO.NetCore.HeadlightSpec.InnerAngleDeg;
+                h.range = ARO.NetCore.HeadlightSpec.Range; h.intensity = ARO.NetCore.HeadlightSpec.Intensity; h.shadows = LightShadows.None; h.enabled = false; heads.Add(h);
                 brake.Add(Emitter(root, baseMat, new Vector3(side * 0.95f, 1.5f, zRear), new Vector3(0.35f, 0.2f, 0.05f)));
                 rev.Add(Emitter(root, baseMat, new Vector3(side * 0.6f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
                 (side < 0 ? left : right).Add(Emitter(root, baseMat, new Vector3(side * 1.1f, 1.5f, zRear), new Vector3(0.2f, 0.15f, 0.05f)));
