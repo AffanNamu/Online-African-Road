@@ -244,8 +244,17 @@ jobs:
       - name: Lighting scenario - dawn, noon, sunset and night by ?hour=, with the game's own [Render] and [Light] lines and measured brightness
         run: node tools/webgl-lighting.js Builds/WebGL webgl-light
       - name: Lighting scenario, Medium quality (colour grade and vignette active; informational, a failure here is reported but does not hide the Low result above)
+        if: always()
         continue-on-error: true
         run: node tools/webgl-lighting.js Builds/WebGL webgl-light-medium medium
+      - name: Tonemap study, Low quality with ACES (what the renderer drew before the default changed; informational)
+        if: always()
+        continue-on-error: true
+        run: node tools/webgl-lighting.js Builds/WebGL webgl-light-aces low "&tonemap=aces"
+      - name: Tonemap study, Low quality with no tonemapper (informational)
+        if: always()
+        continue-on-error: true
+        run: node tools/webgl-lighting.js Builds/WebGL webgl-light-none low "&tonemap=none"
       - name: Is post-processing really drawn? (Medium corners must be darker than Low corners at the same hour; informational)
         if: always()
         continue-on-error: true

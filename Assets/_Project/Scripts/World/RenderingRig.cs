@@ -34,6 +34,19 @@ namespace ARO.World
             return QualityTiers.Detect(new DeviceInfo { IsMobile = mobile, SystemMemoryMb = systemMemoryMb, GraphicsMemoryMb = graphicsMemoryMb, Requested = requested });
         }
 
+        /// <summary>
+        /// Which tonemapper: "neutral" (the default), "aces" or "none", from ?tonemap= in the page address. Colours in this project are in the Gamma colour space, so the tonemapper sees
+        /// display-referred values. ACES (a filmic curve for linear light) crushed the dark range there: measured, night frames went from 39 to 19 mean luma with 59% crushed blacks and
+        /// the golden-hour terrain got darker. Neutral keeps the dark and middle range and only rolls off the highlights, which is what stops an orange body clipping to yellow.
+        /// </summary>
+        public static string TonemapChoice(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return "neutral";
+            int i = url.IndexOf("tonemap=", System.StringComparison.OrdinalIgnoreCase); if (i < 0) return "neutral";
+            string v = url.Substring(i + 8); int end = v.IndexOfAny(new[] { '&', '#' }); if (end >= 0) v = v.Substring(0, end);
+            v = v.ToLowerInvariant(); return v == "aces" || v == "none" ? v : "neutral";
+        }
+
         public void Init(Camera cam, Light sun)
         {
             _cam = cam; _sun = sun;
@@ -92,11 +105,13 @@ namespace ARO.World
             var go = new GameObject("PostProcessing"); go.transform.SetParent(transform, false);
             _volume = go.AddComponent<Volume>(); _volume.isGlobal = true; _volume.priority = 10f;
             _profile = ScriptableObject.CreateInstance<VolumeProfile>(); _volume.sharedProfile = _profile;
-            if (Tier.Tonemapping) { _tonemap = _profile.Add<Tonemapping>(true); _tonemap.mode.Override(TonemappingMode.ACES); }
-            if (Tier.ColorGrading) { _grade = _profile.Add<ColorAdjustments>(true); _grade.postExposure.Override(0.1f); _grade.contrast.Override(10f); _grade.saturation.Override(8f); }
+            string tm = TonemapChoice(Application.absoluteURL);
+            if (Tier.Tonemapping && tm != "none") { _tonemap = _profile.Add<Tonemapping>(true); _tonemap.mode.Override(tm == "aces" ? TonemappingMode.ACES : TonemappingMode.Neutral); }
+            // Saturation 0 (was +8): the orange terrain and truck were already vivid, and the grade is now actually drawn.
+            if (Tier.ColorGrading) { _grade = _profile.Add<ColorAdjustments>(true); _grade.postExposure.Override(0.1f); _grade.contrast.Override(10f); _grade.saturation.Override(0f); }
             if (Tier.Vignette) { _vignette = _profile.Add<Vignette>(true); _vignette.intensity.Override(0.22f); _vignette.smoothness.Override(0.5f); }
             if (Tier.Bloom) { _bloom = _profile.Add<Bloom>(true); _bloom.threshold.Override(1.1f); _bloom.intensity.Override(0.25f); _bloom.scatter.Override(0.6f); }
-            PostProcessingActive = true; PostProcessingNote = $"tonemap={Tier.Tonemapping} grade={Tier.ColorGrading} vignette={Tier.Vignette} bloom={Tier.Bloom}";
+            PostProcessingActive = true; PostProcessingNote = $"tonemap={Tier.Tonemapping}({(Tier.Tonemapping ? tm : "off")}) grade={Tier.ColorGrading} vignette={Tier.Vignette} bloom={Tier.Bloom}";
         }
 
         int _settingsVersion = -1;

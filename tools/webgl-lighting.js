@@ -87,6 +87,7 @@ function serve(dir) {
 
 async function main() {
   const dir = path.resolve(process.argv[2] || 'Builds/WebGL'), prefix = process.argv[3] || 'webgl-light';
+  const extra = process.argv[5] || '';   // extra page-address parameters, e.g. "&tonemap=aces" (the tonemap study)
   const quality = (process.argv[4] || 'low').toLowerCase();   // low (what CI's software GL picks by itself) or medium (exercises the colour grade)
   const { chromium } = require('playwright');
   const failures = [], metrics = {}, lines = {};
@@ -94,13 +95,13 @@ async function main() {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
 
   for (const [name, hour] of PRESETS) {
-    console.log(`\n=== ${name} (hour ${hour}, quality ${quality}) ===`);
+    console.log(`\n=== ${name} (hour ${hour}, quality ${quality}${extra ? ', ' + extra.replace(/^&/, '') : ''}) ===`);
     const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
     const logs = [], errors = [];
     page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
     const find = (re, from = 0) => logs.slice(from).find(l => re.test(l));
     const waitFor = async (re, secs, from = 0) => { for (let i = 0; i < secs * 4; i++) { const l = find(re, from); if (l) return l; await page.waitForTimeout(250); } return null; };
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&hour=${name}&quality=${quality}`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&hour=${name}&quality=${quality}${extra}`);
     if (!await waitFor(/\[Smoke\] drive scenario/, 150)) { failures.push(`${name}: the build did not start the drive scenario`); await page.close(); continue; }
     if (!await waitFor(/\[Drive\] ground ready/, 90)) failures.push(`${name}: no ground under the truck`);
     if (!await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 40)) failures.push(`${name}: the truck was not frozen in place, so the screenshots are not reproducible`);
@@ -144,7 +145,7 @@ async function main() {
   }
   await browser.close(); server.close();
 
-  fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ quality, regions: REGIONS, presets: PRESETS, thresholds: THRESHOLDS, metrics, lines }, null, 2));
+  fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ quality, extra, regions: REGIONS, presets: PRESETS, thresholds: THRESHOLDS, metrics, lines }, null, 2));
   const means = n => metrics[n] && metrics[n].chase ? metrics[n].chase.whole.mean : NaN;
   console.log('\n--- brightness (mean luminance 0..255, chase view) --- ' + PRESETS.map(([n]) => `${n}=${means(n).toFixed(1)}`).join('  '));
   if (!(means('noon') > means('night') + 10)) failures.push(`noon (${means('noon').toFixed(1)}) is not clearly brighter than night (${means('night').toFixed(1)})`);

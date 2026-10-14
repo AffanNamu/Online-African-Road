@@ -165,6 +165,15 @@ namespace ARO.Tests
             Assert.AreEqual("medium", RenderingRig.Select("http://x/?quality=ultra", false, 4000, 1000).Name);
         }
 
+        [Test] public void TonemapChoiceDefaultsToNeutralAndHonoursTheUrl()
+        {   // ACES crushed the dark range in this Gamma-space project, so Neutral is the default; aces / none exist for the CI tonemap study
+            Assert.AreEqual("neutral", RenderingRig.TonemapChoice(null));
+            Assert.AreEqual("neutral", RenderingRig.TonemapChoice("http://x/index.html"));
+            Assert.AreEqual("aces", RenderingRig.TonemapChoice("http://x/index.html?smoke=drive&tonemap=ACES&quality=low"));
+            Assert.AreEqual("none", RenderingRig.TonemapChoice("http://x/?tonemap=none#frag"));
+            Assert.AreEqual("neutral", RenderingRig.TonemapChoice("http://x/?tonemap=filmic"));
+        }
+
         [Test] public void ResourcesStayInsideTheDownloadBudget()
         {
             long total = 0;
