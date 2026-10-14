@@ -154,6 +154,39 @@ namespace ARO.Game
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; rb.constraints = RigidbodyConstraints.FreezeAll;
             var p = t.position;
             Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={t.eulerAngles.y:F0} upright={upright:F2} tries={_freezeTries} for reproducible screenshots");
+            if (SmokeMode.Probe) ProbeSurroundings();
+        }
+
+        /// <summary>
+        /// Test-only diagnostic (?smoke=drive&hold=1&probe=1): what is within 45 m of the frozen truck, nearest first (name chain, material, bounds, shadow mode, triangles), and the
+        /// ground height under a 7 x 7 grid (6 m apart) by downward raycast. Used to tell a missing ground block (no hit, no renderer) from a shadow or a wrongly placed mesh.
+        /// </summary>
+        void ProbeSurroundings()
+        {
+            var ci = System.Globalization.CultureInfo.InvariantCulture; var c = Cam != null ? Cam.GetComponentInChildren<Camera>() : Camera.main; var origin = Vehicle.transform.position;
+            if (c != null) Debug.Log($"[Probe] camera pos=({c.transform.position.x.ToString("F1", ci)},{c.transform.position.y.ToString("F1", ci)},{c.transform.position.z.ToString("F1", ci)}) euler=({c.transform.eulerAngles.x.ToString("F0", ci)},{c.transform.eulerAngles.y.ToString("F0", ci)}) fov={c.fieldOfView.ToString("F0", ci)} near={c.nearClipPlane.ToString("F2", ci)} far={c.farClipPlane.ToString("F0", ci)}");
+            var found = new System.Collections.Generic.List<(float d, string line)>();
+            foreach (var r in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))
+            {
+                float d = Mathf.Sqrt(r.bounds.SqrDistance(origin)); if (d > 45f) continue;
+                string path = r.name; var tr = r.transform.parent; for (int i = 0; i < 3 && tr != null; i++, tr = tr.parent) path = tr.name + "/" + path;
+                var mf = r.GetComponent<MeshFilter>(); int tris = mf != null && mf.sharedMesh != null ? mf.sharedMesh.triangles.Length / 3 : -1;
+                var b = r.bounds; string mats = ""; foreach (var m in r.sharedMaterials) mats += (m != null ? m.name : "null") + ",";
+                found.Add((d, $"[Probe] r d={d.ToString("F1", ci)} {path} enabled={r.enabled} active={r.gameObject.activeInHierarchy} mats={mats} centre=({b.center.x.ToString("F0", ci)},{b.center.y.ToString("F1", ci)},{b.center.z.ToString("F0", ci)}) size=({b.size.x.ToString("F0", ci)},{b.size.y.ToString("F1", ci)},{b.size.z.ToString("F0", ci)}) shadow={r.shadowCastingMode} tris={tris}"));
+            }
+            found.Sort((x, y) => x.d.CompareTo(y.d));
+            for (int i = 0; i < found.Count && i < 45; i++) Debug.Log(found[i].line);
+            Debug.Log($"[Probe] {found.Count} renderers within 45 m");
+            for (int zi = 3; zi >= -3; zi--)
+            {
+                string row = "";
+                for (int xi = -3; xi <= 3; xi++)
+                {
+                    var from = origin + new Vector3(xi * 6f, 60f, zi * 6f);
+                    row += Physics.Raycast(from, Vector3.down, out var hit, 200f, ~0, QueryTriggerInteraction.Ignore) ? $"{(from.y - hit.distance).ToString("F1", ci)}:{hit.collider.name}  " : "NONE  ";
+                }
+                Debug.Log($"[Probe] ground z={zi * 6:+0;-0;0} (x -18..+18): {row}");
+            }
         }
 
         /// <summary>Remember the last good spot; if the vehicle ever leaves the world, put it back instead of letting it fall forever.</summary>

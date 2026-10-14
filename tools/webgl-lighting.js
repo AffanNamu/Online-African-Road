@@ -18,7 +18,7 @@ const REGIONS = {
 // Added with the reproducible truck position (?hold=1): regions placed on what they name. Chase view: the road left of the truck, the truck's top surface, the terrain on the right.
 // Bumper view: the road surface straight ahead (where the headlights land).
 const VIEW_REGIONS = {
-  chase: { roadSurface: [0.30, 0.48, 0.42, 0.56], truck: [0.45, 0.50, 0.56, 0.57], ground: [0.72, 0.48, 0.98, 0.72] },
+  chase: { roadSurface: [0.30, 0.48, 0.42, 0.56], truck: [0.45, 0.50, 0.56, 0.57], ground: [0.72, 0.48, 0.98, 0.72], skyHorizon: [0.25, 0.26, 0.72, 0.32], skyHigh: [0.25, 0.02, 0.72, 0.10] },
   bumper: { roadSurface: [0.30, 0.55, 0.70, 0.64] },
 };
 const CORNER = [0, 0, 0.04, 0.04], TOP_CENTRE = [0.48, 0, 0.52, 0.04];   // a vignette darkens the corner but not the centre of the same sky row
@@ -91,17 +91,20 @@ async function main() {
   const quality = (process.argv[4] || 'low').toLowerCase();   // low (what CI's software GL picks by itself) or medium (exercises the colour grade)
   const { chromium } = require('playwright');
   const failures = [], metrics = {}, lines = {};
+  // LIGHT_ONLY=dawn,sunset runs a subset as a STUDY (used to choose sky settings from real frames): chase view only, no thresholds, only technical failures count.
+  const only = process.env.LIGHT_ONLY ? process.env.LIGHT_ONLY.split(',').map(x => x.trim()) : null, study = !!only;
+  const presets = only ? PRESETS.filter(([n]) => only.includes(n)) : PRESETS;
   const server = await serve(dir); const port = server.address().port;
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
 
-  for (const [name, hour] of PRESETS) {
+  for (const [name, hour] of presets) {
     console.log(`\n=== ${name} (hour ${hour}, quality ${quality}${extra ? ', ' + extra.replace(/^&/, '') : ''}) ===`);
     const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
     const logs = [], errors = [];
     page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
     const find = (re, from = 0) => logs.slice(from).find(l => re.test(l));
     const waitFor = async (re, secs, from = 0) => { for (let i = 0; i < secs * 4; i++) { const l = find(re, from); if (l) return l; await page.waitForTimeout(250); } return null; };
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&hour=${name}&quality=${quality}${extra}`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&hour=${name}&quality=${quality}&probe=1${extra}`);
     if (!await waitFor(/\[Smoke\] drive scenario/, 150)) { failures.push(`${name}: the build did not start the drive scenario`); await page.close(); continue; }
     if (!await waitFor(/\[Drive\] ground ready/, 90)) failures.push(`${name}: no ground under the truck`);
     const frozen = await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
@@ -126,13 +129,25 @@ async function main() {
     }
 
     metrics[name] = {};
+    // Software-renderer frame time from the game's own [Perf] lines. This is a CPU-emulated GL driver: it says how much work a change adds, NOT how long a real GPU takes.
+    const perf = logs.filter(l => /\[Perf\].*avgFrameMs=/.test(l)).slice(-3).map(l => +/avgFrameMs=([\d.]+)/.exec(l)[1]);
+    if (perf.length) { metrics[name].softwareFrameMs = perf.reduce((a, b) => a + b, 0) / perf.length; console.log(`  software-GL frame time ${metrics[name].softwareFrameMs.toFixed(0)} ms (a CPU-emulated driver: NOT a GPU measurement)`); }
+    const probe = logs.filter(l => /^\[Probe\]/.test(l)); lines[name].probe = probe;
+    if (probe.length && (name === 'noon' || process.env.LIGHT_PROBE_ALL)) { console.log('  ground/renderer probe around the frozen truck:'); probe.forEach(l => console.log('    ' + l.slice(0, 330))); }
     await page.screenshot({ path: `${prefix}-${name}-chase.png` });
     metrics[name].chase = measure(`${prefix}-${name}-chase.png`, 'chase');
+    if (study) { const s0 = metrics[name].chase, f = k => `${k} rgb=(${s0[k].r.toFixed(0)},${s0[k].g.toFixed(0)},${s0[k].b.toFixed(0)}) sat=${s0[k].sat.toFixed(2)} R/B=${(s0[k].r / Math.max(1, s0[k].b)).toFixed(2)}`;
+      console.log(`  SKY STUDY ${name}: ${f('skyHigh')} | ${f('skyHorizon')} | ${f('ground')} | whole mean=${s0.whole.mean.toFixed(1)}`);
+      if (errors.length) failures.push(`${name}: ${errors.length} page error(s): ${errors[0].slice(0, 160)}`); await page.close(); continue; }
     // the bumper view looks along the road: press 8 (held across a rendered frame; repeated only if nothing was logged)
     for (let i = 0; i < 3; i++) { const mark = logs.length; await page.keyboard.press('8', { delay: 350 }); if (await waitFor(/\[Camera\] view=FrontBumper number=8 /, 5, mark)) break; }
     await page.waitForTimeout(1500);
     await page.screenshot({ path: `${prefix}-${name}-bumper.png` });
     metrics[name].bumper = measure(`${prefix}-${name}-bumper.png`, 'bumper');
+    // overhead (key 7): a missing block of ground, or a shadow, is easy to tell apart from above. Looked at by a person, not measured.
+    for (let i = 0; i < 3; i++) { const mark = logs.length; await page.keyboard.press('7', { delay: 350 }); if (await waitFor(/\[Camera\] view=Overhead number=7 /, 5, mark)) break; }
+    await page.waitForTimeout(2500);
+    await page.screenshot({ path: `${prefix}-${name}-overhead.png` });
     for (const view of ['chase', 'bumper']) {
       const s = metrics[name][view];
       const x = VIEW_REGIONS[view], ex = Object.keys(x).map(k => `${k} mean=${s[k].mean.toFixed(1)} sat=${s[k].sat.toFixed(2)} warm(R/B)=${(s[k].r / Math.max(1, s[k].b)).toFixed(2)} clip2=${(s[k].clip2 * 100).toFixed(0)}% blown=${(s[k].blown * 100).toFixed(1)}%`).join(' | ');
@@ -147,9 +162,16 @@ async function main() {
   }
   await browser.close(); server.close();
 
-  fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ quality, extra, regions: REGIONS, presets: PRESETS, thresholds: THRESHOLDS, metrics, lines }, null, 2));
+  if (study) {
+    fs.writeFileSync(`${prefix}-metrics.json`, JSON.stringify({ quality, extra, study: true, metrics, lines }, null, 2));
+    if (failures.length) { console.log('\nSKY STUDY FAILED (technical):'); failures.forEach(f => console.log(' - ' + f)); process.exit(1); }
+    console.log('\nSKY STUDY DONE: frames and colour samples recorded; nothing is judged here.'); return;
+  }
   const means = n => metrics[n] && metrics[n].chase ? metrics[n].chase.whole.mean : NaN;
   console.log('\n--- brightness (mean luminance 0..255, chase view) --- ' + PRESETS.map(([n]) => `${n}=${means(n).toFixed(1)}`).join('  '));
+  const fm = PRESETS.map(([n]) => metrics[n] && metrics[n].softwareFrameMs).filter(Boolean);
+  if (fm.length) console.log(`  software-GL frame time, mean of the hours: ${(fm.reduce((a, b) => a + b, 0) / fm.length).toFixed(0)} ms (CPU-emulated driver, not a GPU measurement)`);
+  separation(metrics, true);
   if (!(means('noon') > means('night') + 10)) failures.push(`noon (${means('noon').toFixed(1)}) is not clearly brighter than night (${means('night').toFixed(1)})`);
   if (THRESHOLDS) enforce(metrics, failures); else console.log('  thresholds: NOT ENFORCED yet (baseline measurement)');
   const advisory = []; enforce(metrics, advisory, ADVISORY);
@@ -159,6 +181,17 @@ async function main() {
 
   if (failures.length) { console.log('\nLIGHTING TEST FAILED:'); failures.forEach(f => console.log(' - ' + f)); process.exit(1); }
   console.log('\nLIGHTING TEST PASSED: four hours lit, measured and screenshotted. Review the screenshots: passing says nothing about how good they look.');
+}
+
+/** How far apart dawn and sunset look in the chase view: warmth (R/B of the region mean) and brightness of the sky near the horizon, the sky overhead, the terrain and the truck. */
+function separation(metrics, print) {
+  const d = metrics.dawn && metrics.dawn.chase, s = metrics.sunset && metrics.sunset.chase; if (!d || !s) return null; const out = {};
+  for (const k of ['skyHigh', 'skyHorizon', 'ground', 'truck', 'roadSurface']) {
+    const w = r => r.r / Math.max(1, r.b);
+    out[k] = { dawnWarm: w(d[k]), sunsetWarm: w(s[k]), warmDelta: w(s[k]) - w(d[k]), dawnLuma: d[k].mean, sunsetLuma: s[k].mean, lumaDelta: s[k].mean - d[k].mean };
+    if (print) console.log(`  dawn vs sunset ${k.padEnd(11)} warmth R/B ${w(d[k]).toFixed(2)} -> ${w(s[k]).toFixed(2)} (delta ${(w(s[k]) - w(d[k])).toFixed(2)}) | luma ${d[k].mean.toFixed(0)} -> ${s[k].mean.toFixed(0)}`);
+  }
+  metrics.separation = out; return out;
 }
 
 /** `--compare low.json medium.json`: the Medium tier has a vignette and a colour grade, Low has neither. The same hour from the same truck position must therefore differ at the frame corner. */
@@ -219,6 +252,11 @@ function selftest() {
   expect(run(m(st(100, 0.5), st(100)), { noon: { chase: { whole: { maxCrushed: 0.2 } } } }).length === 1, 'too many crushed blacks fails');
   expect(run(m(st(100, 0, 0.2), st(100)), { noon: { chase: { whole: { maxBlown: 0.05 } } } }).length === 1, 'too many blown whites fails');
   expect(run(m(st(100), st(10)), { noon: { chase: { whole: { min: 50 }, road: { min: 40 } } } }).length === 1, 'each region is judged on its own');
+  const mk = (r, g, b, mean) => ({ r, g, b, mean });
+  const sep = separation({ dawn: { chase: { skyHigh: mk(100, 100, 100, 100), skyHorizon: mk(180, 150, 100, 150), ground: mk(60, 45, 30, 45), truck: mk(80, 50, 10, 55), roadSurface: mk(40, 40, 40, 40) } },
+                           sunset: { chase: { skyHigh: mk(100, 100, 100, 100), skyHorizon: mk(200, 150, 80, 150), ground: mk(70, 45, 25, 48), truck: mk(80, 50, 10, 55), roadSurface: mk(40, 40, 40, 40) } } }, false);
+  expect(Math.abs(sep.skyHorizon.warmDelta - (2.5 - 1.8)) < 1e-9 && sep.skyHigh.warmDelta === 0 && sep.truck.lumaDelta === 0, 'the dawn/sunset separation report is the sunset-minus-dawn warmth (R/B) and luma of each region');
+  expect(separation({ dawn: { chase: {} } }, false) === null, 'no sunset measurement gives no separation report, not a crash');
   const sat = c => lumaStats(make(10, 10, () => c), REGIONS.whole);
   expect(sat([128, 128, 128]).sat === 0 && sat([255, 0, 0]).sat === 1 && Math.abs(sat([200, 100, 50]).sat - 0.75) < 0.01, 'saturation: grey 0, pure red 1, (200,100,50) 0.75');
   expect(sat([255, 255, 58]).clip2 === 1 && sat([255, 160, 30]).clip2 === 0 && sat([255, 250, 10]).clip2 === 1 && sat([249, 255, 0]).clip2 === 0, 'clip2 counts red and green both at the ceiling (the lemon-yellow case) and nothing else');
@@ -233,5 +271,5 @@ function selftest() {
   console.log(bad ? `\nSELFTEST FAILED (${bad})` : '\nSELFTEST PASSED'); process.exit(bad ? 1 : 0);
 }
 
-module.exports = { measure, lumaStats, REGIONS, VIEW_REGIONS, PRESETS, THRESHOLDS, ADVISORY, enforce };
+module.exports = { measure, separation, lumaStats, REGIONS, VIEW_REGIONS, PRESETS, THRESHOLDS, ADVISORY, enforce };
 if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });

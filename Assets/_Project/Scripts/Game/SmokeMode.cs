@@ -16,6 +16,8 @@ namespace ARO.Game
         public static bool Drive => Url != null && Url.Contains("smoke=drive");
         /// <summary>"?smoke=drive&hold=1": once the truck has settled on the road it is frozen there, so screenshots from every camera are taken from the same place.</summary>
         public static bool Hold => Drive && Url.Contains("hold=1");
+        /// <summary>"?smoke=drive&hold=1&probe=1": when the truck is frozen, log what is around it (renderers, ground heights) so a visual defect can be traced to a system instead of guessed at.</summary>
+        public static bool Probe => Hold && Url.Contains("probe=1");
         /// <summary>The page is a loopback test page that asked for a scripted sign-in on a throw-away backend.</summary>
         public static bool E2E => BackendOverride.PageIsLoopback(Url) && !string.IsNullOrEmpty(BackendOverride.Query(Url, "autologin"));
         /// <summary>The browser tests need the on-screen click positions of the current screen.</summary>

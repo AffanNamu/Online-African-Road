@@ -32,6 +32,21 @@ namespace ARO.NetCore
             return -1f;
         }
 
+        /// <summary>A numeric page-address parameter (<c>atm=1.4</c>) inside [min, max], or -1 when it is absent, not a number or out of range. Culture-independent. For test hooks only.</summary>
+        public static float QueryNumber(string url, string name, float min, float max)
+        {
+            if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(name)) return -1f;
+            int q = url.IndexOf('?'); if (q < 0) return -1f;
+            foreach (var part in url.Substring(q + 1).Split('&', '#'))
+            {
+                int eq = part.IndexOf('=');
+                if (eq <= 0 || !string.Equals(part.Substring(0, eq), name, StringComparison.OrdinalIgnoreCase)) continue;
+                return float.TryParse(Uri.UnescapeDataString(part.Substring(eq + 1)), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float v)
+                       && !float.IsNaN(v) && !float.IsInfinity(v) && v >= min && v <= max ? v : -1f;
+            }
+            return -1f;
+        }
+
         /// <summary>A preset name (dawn, noon, sunset, night), a decimal hour (<c>6.5</c>) or a clock time (<c>18:30</c>). 0 to 24; 24 means 0.</summary>
         public static bool TryParse(string value, out float hour)
         {
@@ -146,11 +161,11 @@ namespace ARO.NetCore
             st.SunEnabled = elev > -0.075f;                                   // switched on where its intensity is ~0, so it never pops
             var sunCol = SunGradient(elev * 2f);
             sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.82f, 0.76f), 0.45f * gDawn);   // dawn: paler, rosier light
-            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.70f, 0.40f), 0.30f * gDusk);   // sunset: deeper gold (not deeper orange: the procedural sky multiplies its blue by the sun colour, and orange x blue is the olive-green zenith measured at f096663)
+            sunCol = Rgb.Lerp(sunCol, new Rgb(1.00f, 0.70f, 0.40f), 0.38f * gDusk);   // sunset: deeper gold (not deeper orange: the procedural sky multiplies its blue by the sun colour, and orange x blue is the olive-green zenith measured at f096663)
             st.SunColor = sunCol;
             // Noon 0.85 (was 1.35): in a gamma pipeline the surface's light is sun + ambient and a value above 1.0 clips, so an orange body (0.85, 0.55, 0.10) at 1.35 + 0.45
             // came out as flat yellow (255, 255, 58). Golden hour is stronger than the old curve (a clear low sun is bright); dawn a little softer than sunset.
-            st.SunIntensity = 0.85f * sunPow * (1f + 0.62f * golden) * (1f - 0.10f * gDawn) * Lerp(1f, 0.35f, oc);
+            st.SunIntensity = 0.85f * sunPow * (1f + 0.62f * golden) * (1f - 0.16f * gDawn) * Lerp(1f, 0.35f, oc);
 
             // ---- moon: only while the sun is down; fades in as the sky darkens so the road keeps its shape at night
             float moon = Smooth(InvLerp(0.12f, -0.12f, elev));
@@ -160,7 +175,7 @@ namespace ARO.NetCore
 
             // ---- sky
             st.SkyExposure = Lerp(0.30f, 1.25f, day) * Lerp(1f, 0.6f, oc);
-            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.12f + oc * 0.6f;      // thicker air near the horizon reddens the sky. The extra golden-hour thickness was 0.45 (+0.15 at dawn): measured, it turned the upper sky olive green
+            st.Atmosphere = Lerp(0.9f, 1.4f, 1f - Math.Abs(elev)) + golden * 0.12f + gDusk * 0.14f - gDawn * 0.12f + oc * 0.6f;      // thicker air near the horizon reddens the sky. The extra golden-hour thickness was 0.45 (+0.15 at dawn): measured, it turned the upper sky olive green
             var tint = Rgb.Lerp(new Rgb(0.5f, 0.5f, 0.5f), new Rgb(0.45f, 0.5f, 0.6f), 1f - oc);
             tint = Rgb.Lerp(tint, new Rgb(0.46f, 0.49f, 0.60f), 0.6f * gDawn);     // dawn sky: cooler at the top
             st.SkyTint = Rgb.Lerp(tint, new Rgb(0.52f, 0.49f, 0.52f), 0.6f * gDusk);   // sunset sky: a touch warmer, still blue enough at the top
@@ -169,7 +184,7 @@ namespace ARO.NetCore
             var skyAmb = Rgb.Lerp(new Rgb(0.050f, 0.070f, 0.130f), new Rgb(0.30f, 0.38f, 0.52f), day);
             var eq = Rgb.Lerp(new Rgb(0.040f, 0.048f, 0.075f), new Rgb(0.36f, 0.36f, 0.34f), day);
             var grd = Rgb.Lerp(new Rgb(0.025f, 0.025f, 0.030f), new Rgb(0.17f, 0.15f, 0.12f), day);
-            skyAmb = Rgb.Lerp(skyAmb, Rgb.Lerp(new Rgb(0.42f, 0.35f, 0.34f), new Rgb(0.34f, 0.35f, 0.44f), dawnW), golden * 0.85f);
+            skyAmb = Rgb.Lerp(skyAmb, Rgb.Lerp(new Rgb(0.40f, 0.33f, 0.31f), new Rgb(0.36f, 0.38f, 0.48f), dawnW), golden * 0.85f);
             eq = Rgb.Lerp(eq, Rgb.Lerp(new Rgb(0.42f, 0.32f, 0.24f), new Rgb(0.38f, 0.34f, 0.30f), dawnW), golden * 0.85f);
             grd = Rgb.Lerp(grd, Rgb.Lerp(new Rgb(0.17f, 0.13f, 0.10f), new Rgb(0.15f, 0.13f, 0.11f), dawnW), golden * 0.85f);
             st.AmbientSky = Rgb.Lerp(skyAmb, skyAmb * 0.7f, oc);
@@ -180,7 +195,7 @@ namespace ARO.NetCore
             var fog = Rgb.Lerp(new Rgb(0.030f, 0.040f, 0.075f), new Rgb(0.72f, 0.76f, 0.80f), day);
             fog = Rgb.Lerp(fog, Rgb.Lerp(new Rgb(0.95f, 0.62f, 0.40f), new Rgb(0.88f, 0.68f, 0.66f), dawnW), golden * 0.50f);
             st.FogColor = Rgb.Lerp(fog, fog * 0.75f, oc);
-            st.FogDensity = Lerp(0.00035f, 0.0011f, oc) * (1f + 1.0f * gDawn);   // morning mist: about twice the evening haze
+            st.FogDensity = Lerp(0.00035f, 0.0011f, oc) * (1f + 1.8f * gDawn);   // morning mist: about 2.5 times the evening haze
 
             // ---- exposure and tint of the final image (applied only where the tier has a colour grade)
             float expBlend = Smooth(InvLerp(-0.10f, 0.10f, elev));                // below the horizon: the night grade; just above it: the daytime grade (+ a little at golden hour)

@@ -55,6 +55,7 @@ namespace ARO.World
         void Apply()
         {
             var st = State = LightingModel.Evaluate(hour, overcast);
+            if (ARO.Core.RuntimeSettings.TestAtmosphere >= 0f) st.Atmosphere = ARO.Core.RuntimeSettings.TestAtmosphere;   // sky study only (?smoke= pages)
             if (sun != null)
             {
                 sun.transform.rotation = Quaternion.Euler(st.SunElevationDeg, -20f, 0f);
@@ -83,7 +84,7 @@ namespace ARO.World
             if (Time.unscaledTime < _nextLog) return; _nextLog = Time.unscaledTime + 5f;
             Debug.Log($"[Light] hour={F(hour)} source={_source} night={IsNight} elev={F(elev)} sun={(sun != null && sun.enabled ? "on" : "off")} sunIntensity={F(sun != null ? sun.intensity : 0f)} sunColor={C(sun != null ? sun.color : Color.black)} " +
                       $"skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
-                      $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)} moon={(_moon != null && _moon.enabled ? "on" : "off")} moonIntensity={F(_moon != null ? _moon.intensity : 0f)} golden={F(State.Golden)} postExposure={F(State.PostExposure)}");
+                      $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)} moon={(_moon != null && _moon.enabled ? "on" : "off")} moonIntensity={F(_moon != null ? _moon.intensity : 0f)} golden={F(State.Golden)} postExposure={F(State.PostExposure)} atmosphere={F(_sky.GetFloat("_AtmosphereThickness"))} skyTint={C(_sky.GetColor("_SkyTint"))} fogColor={C(RenderSettings.fogColor)} fogDensityExact={RenderSettings.fogDensity.ToString("0.00000", CultureInfo.InvariantCulture)}");
         }
     }
 }

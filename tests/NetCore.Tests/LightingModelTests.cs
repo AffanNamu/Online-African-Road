@@ -13,6 +13,16 @@ public class LightingHourTests
     [Theory] [InlineData("")] [InlineData(null)] [InlineData("   ")] [InlineData("noonish")] [InlineData("-1")] [InlineData("24.5")] [InlineData("99")] [InlineData("NaN")] [InlineData("Infinity")] [InlineData("12:75")] [InlineData("ab:cd")] [InlineData("12:")] [InlineData(":30")] [InlineData("1,5")]
     public void InvalidValuesAreRefused(string v) { Assert.False(LightingHour.TryParse(v, out float h)); Assert.Equal(-1f, h); }
 
+    [Theory] [InlineData("http://x/?smoke=drive&atm=1.4", 1.4f)] [InlineData("http://x/?ATM=0.5#f", 0.5f)] [InlineData("http://x/?atm=3", 3f)] [InlineData("http://x/?atm=0.3", 0.3f)]
+    public void ANumericParameterIsRead(string url, float expected) => Assert.Equal(expected, LightingHour.QueryNumber(url, "atm", 0.3f, 3f), 4);
+    [Theory] [InlineData("http://x/?atm=3.01")] [InlineData("http://x/?atm=0.29")] [InlineData("http://x/?atm=abc")] [InlineData("http://x/?atm=")] [InlineData("http://x/?atm=NaN")] [InlineData("http://x/?atm=Infinity")] [InlineData("http://x/")] [InlineData("http://x/?atmosphere=1.2")] [InlineData(null)] [InlineData("")] [InlineData("http://x/?atm=1,5")]
+    public void ABadOrMissingNumericParameterIsMinusOne(string url) => Assert.Equal(-1f, LightingHour.QueryNumber(url, "atm", 0.3f, 3f));
+    [Fact] public void ANumericParameterIgnoresTheCulture()
+    {
+        var old = System.Globalization.CultureInfo.CurrentCulture;
+        try { System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("de-DE"); Assert.Equal(1.4f, LightingHour.QueryNumber("http://x/?atm=1.4", "atm", 0.3f, 3f), 4); Assert.Equal(-1f, LightingHour.QueryNumber("http://x/?atm=1,4", "atm", 0.3f, 3f)); }
+        finally { System.Globalization.CultureInfo.CurrentCulture = old; }
+    }
     [Fact] public void ParsingIgnoresTheCulture()
     {
         var old = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -150,9 +160,11 @@ public class LightingModelTests
         Assert.Equal(d.SunElevationDeg, e.SunElevationDeg, 1); Assert.Equal(d.Day, e.Day, 2); Assert.Equal(d.Golden, e.Golden, 2);   // same sun height, same amount of golden hour
         Assert.True(e.SunColor.R - e.SunColor.B > d.SunColor.R - d.SunColor.B + 0.06f, $"sunset light is deeper gold ({e.SunColor.R - e.SunColor.B:0.00} vs {d.SunColor.R - d.SunColor.B:0.00})");
         Assert.True(d.SunIntensity < e.SunIntensity, "the morning sun is a little softer");
-        Assert.True(d.FogDensity > 1.5f * e.FogDensity, "morning mist is thicker than the evening haze");
+        Assert.True(d.FogDensity > 2.2f * e.FogDensity, "morning mist is much thicker than the evening haze");
+        Assert.True(e.Atmosphere > d.Atmosphere + 0.15f && e.Atmosphere < 1.6f, $"the evening air is deeper ({e.Atmosphere:0.00}) than the morning air ({d.Atmosphere:0.00}), but never so thick that the sky turns olive");
         Assert.True(e.FogColor.R - e.FogColor.B > d.FogColor.R - d.FogColor.B + 0.1f, "the evening haze is orange, the morning mist pinker and greyer");
-        Assert.True(d.AmbientSky.B > e.AmbientSky.B + 0.04f && e.AmbientSky.R > d.AmbientSky.R + 0.03f, "the morning fill is cooler, the evening fill warmer");
+        float dw = d.AmbientSky.R / d.AmbientSky.B, ew = e.AmbientSky.R / e.AmbientSky.B;
+        Assert.True(ew > dw + 0.2f && d.AmbientSky.B > e.AmbientSky.B + 0.06f, $"the morning fill is cooler, the evening fill warmer (sky fill R/B: dawn {dw:0.00}, sunset {ew:0.00})");
         Assert.True(Math.Abs(d.SkyTint.B - e.SkyTint.B) + Math.Abs(d.SkyTint.R - e.SkyTint.R) > 0.06f, "the sky tint differs (a little: strong tints made the upper sky olive)");
     }
     [Fact] public void GoldenHourLightsTheGroundNotJustTheSky()

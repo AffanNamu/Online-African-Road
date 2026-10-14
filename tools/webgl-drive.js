@@ -9,6 +9,7 @@ const { renderAndPerfChecks } = require('./webgl-checks');
 
 const dir = path.resolve(process.argv[2] || 'Builds/WebGL');
 const prefix = process.argv[3] || 'webgl-drive';
+const QUERY = process.env.DRIVE_QUERY || '';   // extra page-address parameters for a calibration run at another frame rate, e.g. "&quality=medium"
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.wasm': 'application/wasm', '.json': 'application/json',
   '.png': 'image/png', '.ico': 'image/x-icon', '.gz': 'application/octet-stream', '.data': 'application/octet-stream' };
 
@@ -38,7 +39,7 @@ function serve() {
   const logs = [], errors = [];
   page.on('console', m => logs.push(m.text()));
   page.on('pageerror', e => errors.push(String(e)));
-  await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive`);
+  await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive${QUERY}`);
   const has = re => logs.some(l => re.test(l));
   async function waitFor(re, seconds) { for (let i = 0; i < seconds && !has(re); i++) await page.waitForTimeout(1000); return has(re); }
 
@@ -91,12 +92,26 @@ function serve() {
   // An edge-triggered key must be held across at least one rendered frame (software WebGL runs slowly), and is repeated only when nothing at all was logged.
   async function tapUntil(key, re, tries = 3, secs = 5) { for (let i = 0; i < tries; i++) { const mark = logs.length; await page.keyboard.press(key, { delay: 350 }); const l = await waitLogFrom(mark, re, secs); if (l) return l; } return null; }
   const viewLine = (v, n) => new RegExp(`\\[Camera\\] view=${v} number=${n} `);
+  // The acceptance windows below are measured on the GAME clock (the t= of the [Drive] telemetry, Time.time), not on a wall-clock timer. The same physical drive
+  // takes a different number of wall-clock seconds on a software renderer (about 140-180 ms per frame, and it varies with what the renderer is doing), which is what made
+  // "30 m in about 5 s of wall-clock" an unreliable test: the build got slower and the identical drive measured 26 m. Waiting until the game clock has advanced N seconds
+  // makes the amount of driving the same whatever the frame rate. Returns {game, wall, samples} or null if the game clock stopped (a real stall: the caller fails).
+  async function holdGameSeconds(from, seconds, maxWallSeconds = 120) {
+    const w0 = Date.now(); let t0 = null;
+    while ((Date.now() - w0) / 1000 < maxWallSeconds) {
+      const ss = parseDrive(from);
+      if (ss.length) { if (t0 === null) t0 = ss[0].t; const g = ss[ss.length - 1].t - t0; if (g >= seconds) return { game: g, wall: (Date.now() - w0) / 1000, samples: ss.length }; }
+      await page.waitForTimeout(250);
+    }
+    return null;
+  }
+  const GAME_ACCEL_S = 6, GAME_BRAKE_S = 5, GAME_STEER_S = 4, GAME_COAST_S = 1.5;
   const pathLength = ss => ss.slice(1).reduce((a, s, i) => a + Math.hypot(s.x - ss[i].x, s.z - ss[i].z), 0);
   const yawDelta = (a, b) => ((b - a + 540) % 360) - 180;
 
   try {
     const boot = logs.length;
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive${QUERY}`);
     if (!await waitLogFrom(boot, /\[Smoke\] drive scenario/, 150)) throw new Error('the page did not boot again for the camera scenario');
     if (!await waitLogFrom(boot, /\[Drive\] ground ready/, 90)) throw new Error('no ground under the new truck for the camera scenario');
     await page.waitForTimeout(4000); await page.mouse.click(512, 288);   // canvas keyboard focus
@@ -160,10 +175,14 @@ function serve() {
     await tapUntil('3', viewLine('RearChase', 3), 3, 5);   // known start (the button click moved it)
     { const mark = logs.length; await page.keyboard.down('w');
       for (const n of [5, 6, 7, 4]) { await tapUntil(String(n), viewLine(VIEWS[n - 1], n), 2, 3); await page.waitForTimeout(1000); }
+      const win = await holdGameSeconds(mark, GAME_ACCEL_S);   // keep the throttle held until the GAME clock has run the same number of seconds whatever the frame rate
       await page.keyboard.up('w');
       const ss = parseDrive(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
-      console.log(`  accelerate while switching: ${ss.length} samples, max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m, views in the telemetry: ${[...cams].join(',')}`);
-      if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
+      const gameDt = ss.length > 1 ? ss[ss.length - 1].t - ss[0].t : 0, meanMs = gameDt > 0 ? pathLength(ss) / gameDt : 0;
+      console.log(`  accelerate while switching: ${ss.length} samples over ${gameDt.toFixed(1)} game s (${win ? win.wall.toFixed(1) : 'n/a'} wall s), max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m, mean ${meanMs.toFixed(1)} m/s, views in the telemetry: ${[...cams].join(',')}`);
+      console.log('    samples (game t, km/h, view): ' + ss.map(x => `${x.t.toFixed(1)}s ${x.kmh.toFixed(0)} ${x.cam}`).join(' | '));
+      if (!win) failures.push(`the game clock did not advance ${GAME_ACCEL_S} s while the throttle was held (a stall, not a slow renderer)`);
+      else if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
       else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
       else if (pathLength(ss) < 30) failures.push(`the truck barely moved while the view was changed (${pathLength(ss).toFixed(0)} m)`);
       else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
@@ -171,7 +190,8 @@ function serve() {
 
       // braking in the far chase view (the last view selected above), straight after releasing the throttle
       const peak = maxKmh, bmark = logs.length;
-      await page.keyboard.down('s'); await page.waitForTimeout(5500); await page.keyboard.up('s');
+      await page.keyboard.down('s'); const bwin = await holdGameSeconds(bmark, GAME_BRAKE_S); await page.keyboard.up('s');
+      if (!bwin) failures.push(`the game clock did not advance ${GAME_BRAKE_S} s while braking`);
       const after = parseDrive(bmark).filter(s => s.cam === 'FarChase'), low = after.length ? Math.min(...after.map(s => s.kmh)) : NaN;
       console.log(`  braking in the far chase view: peak ${peak.toFixed(1)} km/h, lowest while braking ${isNaN(low) ? 'n/a' : low.toFixed(1)} km/h (${after.length} samples)`);
       if (peak < 10) failures.push(`could not get above 10 km/h to test braking (peak ${peak.toFixed(1)})`);
@@ -180,7 +200,9 @@ function serve() {
 
     // steering under a non-default view (overhead), from a slow start so the truck stays upright
     { await tapUntil('7', viewLine('Overhead', 7), 3, 5); const mark = logs.length;
-      await page.keyboard.down('w'); await page.keyboard.down('d'); await page.waitForTimeout(4500); await page.keyboard.up('d'); await page.waitForTimeout(1500); await page.keyboard.up('w');
+      await page.keyboard.down('w'); await page.keyboard.down('d'); const swin = await holdGameSeconds(mark, GAME_STEER_S); await page.keyboard.up('d');
+      const cmark = logs.length; const cwin = await holdGameSeconds(cmark, GAME_COAST_S); await page.keyboard.up('w');
+      if (!swin || !cwin) failures.push('the game clock stopped while steering in the overhead view');
       const ss = parseDrive(mark).filter(s => s.cam === 'Overhead');
       if (ss.length < 3) failures.push(`only ${ss.length} samples while steering in the overhead view`);
       else { const d = yawDelta(ss[0].yaw, ss[ss.length - 1].yaw); console.log(`  steering in the overhead view: heading changed ${d.toFixed(0)} deg over ${ss.length} samples`);

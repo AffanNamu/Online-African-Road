@@ -194,6 +194,11 @@ jobs:
       - name: Drive scenario (?smoke=drive) - the truck must land on real ground, accelerate and move
         if: always()
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive
+      - name: Drive scenario at Medium quality (calibration - the game-clock windows must give the same driving at a different frame rate; informational)
+        if: always()
+        continue-on-error: true
+        env: { DRIVE_QUERY: "&quality=medium" }
+        run: node tools/webgl-drive.js Builds/WebGL webgl-drive-medium
       - name: Install PostgREST
         if: always()
         run: tools/e2e/install_postgrest.sh
@@ -255,6 +260,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: node tools/webgl-lighting.js Builds/WebGL webgl-light-none low "&tonemap=none"
+      - name: Sky study - dawn and sunset at four sky thicknesses (frames and colour samples to choose the setting from; informational)
+        if: always()
+        continue-on-error: true
+        run: |
+          for a in 1.0 1.25 1.5 1.75; do
+            LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL "webgl-light-sky-atm$a" low "&atm=$a"
+          done
       - name: Is post-processing really drawn? (Medium corners must be darker than Low corners at the same hour; informational)
         if: always()
         continue-on-error: true
