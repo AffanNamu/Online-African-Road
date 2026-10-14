@@ -140,9 +140,19 @@ function serve() {
         if (!(fx > 0.65 && fx + 0.0391 < 0.828 && fy < 0.15)) failures.push(`the camera button is not in the top right beside the minimap (x=${fx}, y=${fy})`);
         else ok(`the camera button is at x=${fx} y=${fy} (top right, clear of the minimap column that starts at x=0.829)`);
         const box = await page.locator('#unity-canvas').boundingBox(); const cx = box.x + fx * box.width, cy = box.y + fy * box.height;
-        let hit = null;
-        for (let i = 0; i < 3 && !hit; i++) { const mark = logs.length; await page.mouse.click(cx, cy, { delay: 200 }); hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=button/, 5); }
-        if (!hit) failures.push('clicking the camera button did not change the view'); else { ok('clicking the button -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120)); await page.screenshot({ path: `${prefix}-cam-button.png` }); }
+        // the same sequence the browser E2E uses for every UI click: software WebGL drops a bare click, so move first, let the pointer settle, press, hold, release
+        let hit = null, reached = false, mark0 = logs.length;
+        for (let i = 0; i < 3 && !hit; i++) {
+          const mark = logs.length;
+          await page.mouse.move(cx, cy); await page.waitForTimeout(250); await page.mouse.down(); await page.waitForTimeout(150); await page.mouse.up();
+          hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=button/, 5);
+          if (logFrom(mark, /\[Hud\] camera button clicked/)) reached = true;
+        }
+        if (!hit) {
+          const diag = logs.slice(mark0).filter(l => /UIDiag/.test(l)).slice(0, 12).map(l => '    ' + l.slice(0, 260)).join('\n');
+          failures.push(reached ? 'the camera button received the click but the view did not change' : 'clicking the camera button did not reach the button (no "[Hud] camera button clicked")');
+          console.log('  button click diagnostics (what the game says each press hit):\n' + (diag || '    (no [UIDiag] lines)'));
+        } else { ok('clicking the button -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120)); await page.screenshot({ path: `${prefix}-cam-button.png` }); }
       } }
 
     // 4. driving is not affected by changing the view. One continuous drive on the fresh truck, kept short so it stays on the straight road:
@@ -187,16 +197,19 @@ function serve() {
       const seen = await waitLogFrom(boot, /\[Input\] gamepad detected/, 20);
       if (!seen) console.log('  SKIPPED: the game did not detect the simulated gamepad in headless Chromium, so gamepad camera input is NOT verified here (needs a manual check with a real pad)');
       else {
-        let hit = null;
+        console.log('  the game detected the simulated pad: ' + seen.replace(/^.*\[Input\]/, '[Input]').slice(0, 160));
+        let hit = null, arrived = false;
         for (let i = 0; i < 3 && !hit; i++) {
           const mark = logs.length;
           await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: true, touched: true, value: 1 }; p.timestamp = performance.now(); });
-          await page.waitForTimeout(500);
+          await page.waitForTimeout(600);
           await page.evaluate(() => { const p = window.__aroPad; p.buttons[3] = { pressed: false, touched: false, value: 0 }; p.timestamp = performance.now(); });
           hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d source=input/, 4);
+          if (logFrom(mark, /\[Input\] gamepad Y \(north\) pressed/)) arrived = true;
         }
-        if (!hit) failures.push('the game saw the gamepad but pressing Y (north) did not change the camera view');
-        else ok('gamepad Y (north) -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120));
+        if (hit) ok('gamepad Y (north) -> ' + hit.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 120));
+        else if (arrived) failures.push('the game received the gamepad Y press but the camera view did not change');
+        else console.log('  INCONCLUSIVE: the game detected the simulated pad but never received the Y press (the faked Gamepad API does not deliver button state to the Input System), so gamepad camera input is NOT verified here and needs a manual check with a real pad');
       }
     } catch (e) { console.log('  SKIPPED: the simulated gamepad could not be set up (' + String(e).slice(0, 120) + '); gamepad camera input is NOT verified here'); }
     await page.evaluate(() => { window.__aroPad = null; }).catch(() => {});

@@ -34,7 +34,8 @@ namespace ARO.Input
             }
             if (pad != null)
             {
-                if (!_padLogged) { _padLogged = true; Debug.Log("[Input] gamepad detected: " + pad.displayName); }
+                if (!_padLogged) { _padLogged = true; Debug.Log("[Input] gamepad detected: " + pad.displayName + " layout=" + pad.layout); }
+                if (pad.buttonNorth.wasPressedThisFrame) Debug.Log("[Input] gamepad Y (north) pressed");   // one line per press: lets the browser test tell "the press never arrived" from "arrived and was ignored"
                 float stick = pad.leftStick.x.ReadValue();
                 if (Mathf.Abs(stick) > Mathf.Abs(steerTarget)) steerTarget = stick;
                 throttle = Mathf.Max(throttle, pad.rightTrigger.ReadValue());

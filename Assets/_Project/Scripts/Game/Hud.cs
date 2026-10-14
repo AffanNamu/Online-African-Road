@@ -120,7 +120,7 @@ namespace ARO.Game
             var img = go.GetComponent<Image>(); img.sprite = UIGfx.Glass; img.type = Image.Type.Sliced; img.color = Glass;
             _camBtn = go.GetComponent<Button>(); _camBtn.targetGraphic = img;
             var cb = _camBtn.colors; cb.highlightedColor = new Color(1f, 1f, 1f, 0.85f); cb.pressedColor = new Color(0.75f, 0.75f, 0.75f); _camBtn.colors = cb;
-            _camBtn.onClick.AddListener(() => { if (_s != null && _s.Cam != null && _s.Active) _s.Cam.Next("button"); });
+            _camBtn.onClick.AddListener(() => { Debug.Log("[Hud] camera button clicked"); if (_s != null && _s.Cam != null && _s.Active) _s.Cam.Next("button"); });
             UIKit.Label(go.transform, "CAMERA", 16, UIKit.Accent, TextAnchor.UpperCenter, new Vector2(0, 0.5f), new Vector2(1, 1), new Vector2(4, 0), new Vector2(-4, -8));
             _camName = UIKit.Label(go.transform, "", 22, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0, 0), new Vector2(1, 0.62f), new Vector2(4, 4), new Vector2(-4, 0));
             _camName.horizontalOverflow = HorizontalWrapMode.Overflow;
