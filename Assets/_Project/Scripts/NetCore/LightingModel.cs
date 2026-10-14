@@ -154,12 +154,13 @@ namespace ARO.NetCore
 
             // ---- ambient (trilight): a deep blue floor at night, daylight blue, warmed at dawn and sunset
             var skyAmb = Rgb.Lerp(new Rgb(0.050f, 0.070f, 0.130f), new Rgb(0.45f, 0.58f, 0.78f), day);
-            skyAmb = Rgb.Lerp(skyAmb, new Rgb(0.62f, 0.46f, 0.40f) * Math.Max(0.35f, day), golden * 0.45f);
+            skyAmb = Rgb.Lerp(skyAmb, new Rgb(0.66f, 0.50f, 0.42f) * Math.Max(0.50f, day), golden * 0.60f);
             st.AmbientSky = Rgb.Lerp(skyAmb, skyAmb * 0.7f, oc);
             var eq = Rgb.Lerp(new Rgb(0.040f, 0.048f, 0.075f), new Rgb(0.50f, 0.50f, 0.48f), day);
-            eq = Rgb.Lerp(eq, new Rgb(0.55f, 0.42f, 0.34f) * Math.Max(0.35f, day), golden * 0.40f);
+            eq = Rgb.Lerp(eq, new Rgb(0.62f, 0.46f, 0.36f) * Math.Max(0.50f, day), golden * 0.65f);
             st.AmbientEquator = eq * Lerp(1f, 0.8f, oc);
             st.AmbientGround = Rgb.Lerp(new Rgb(0.025f, 0.025f, 0.030f), new Rgb(0.22f, 0.20f, 0.16f), day);
+            st.AmbientGround = Rgb.Lerp(st.AmbientGround, new Rgb(0.30f, 0.22f, 0.16f), golden * 0.5f);   // warm bounce off the ground at dawn and sunset
 
             // ---- fog: dark blue haze at night, pale daytime haze (harmattan-like), orange haze at dawn and sunset; denser under cloud
             var fog = Rgb.Lerp(new Rgb(0.030f, 0.040f, 0.075f), new Rgb(0.72f, 0.76f, 0.80f), day);

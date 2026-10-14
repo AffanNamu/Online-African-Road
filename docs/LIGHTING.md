@@ -25,6 +25,16 @@ then the real West Africa Time clock. Invalid values are ignored. `[Light] hour=
   bumper screenshots, prints the game's own `[Render]` / `[Light]` lines, and measures luminance (whole frame, sky band, road band; crushed blacks below 6, blown whites from 250).
   `--selftest` checks the measuring code on synthetic images (not on the game).
 
+## Thresholds (enforced on the Low-quality chase view)
+| Hour | Whole frame mean | Other |
+|---|---|---|
+| dawn, sunset | 45 to 130 | sky mean >= 80, road mean >= 25 |
+| noon | 110 to 200 | blown whites <= 3%, road mean >= 80 |
+| night | 28 to 90 | crushed blacks <= 10%, road mean >= 12, sky mean >= 30 |
+
+Set from the Stage B measurement (night chase whole 38.8, road 18.0; baseline was 20.7 and 5.9, which these thresholds reject). They catch regressions only. The bumper view is measured and
+published but not enforced: the scripted truck has driven off the road by the time it is taken, so its content varies. The Medium-tier pass is informational.
+
 ## What this does not prove
 CI renders with a software GL driver at the Low tier (and a second pass at Medium). Passing numbers do not say the lighting looks right: the screenshots must be looked at, and real-GPU appearance and
 performance are not measured.

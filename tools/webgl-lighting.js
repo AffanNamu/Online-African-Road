@@ -43,7 +43,15 @@ function measure(file) {
 // ---- the four reference hours and the thresholds ---------------------------------------------------------------------------------------------------
 // Thresholds are mean luminance (0..255) of a region, plus limits on crushed blacks and blown whites. `null` = measured and printed, not enforced (baseline).
 const PRESETS = [['dawn', 6.4], ['noon', 12], ['sunset', 17.6], ['night', 23]];
-const THRESHOLDS = null;
+// Set from the measured Stage B run (software GL, Low quality, chase view only: the bumper shot is taken after the scripted truck has driven off, so its content varies).
+// They guard against regressions (a black night, a washed-out noon, a lost sunset); they say nothing about whether the result looks good.
+// Baseline (before Stage B) for comparison: night road 5.9, night whole 20.7, 8% crushed.
+const THRESHOLDS = {
+  dawn:   { chase: { whole: { min: 45, max: 130 }, sky: { min: 80 }, road: { min: 25 } } },
+  noon:   { chase: { whole: { min: 110, max: 200, maxBlown: 0.03 }, road: { min: 80 } } },
+  sunset: { chase: { whole: { min: 45, max: 130 }, sky: { min: 80 }, road: { min: 25 } } },
+  night:  { chase: { whole: { min: 28, max: 90, maxCrushed: 0.10 }, road: { min: 12 }, sky: { min: 30 } } },
+};
 
 // ---- the browser run -------------------------------------------------------------------------------------------------------------------------------
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.ico': 'image/x-icon', '.gz': 'application/octet-stream', '.data': 'application/octet-stream' };
@@ -169,5 +177,5 @@ function selftest() {
   console.log(bad ? `\nSELFTEST FAILED (${bad})` : '\nSELFTEST PASSED'); process.exit(bad ? 1 : 0);
 }
 
-module.exports = { lumaStats, REGIONS, PRESETS };
+module.exports = { lumaStats, REGIONS, PRESETS, THRESHOLDS, enforce };
 if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
