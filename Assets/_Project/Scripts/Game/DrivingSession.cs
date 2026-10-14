@@ -101,6 +101,7 @@ namespace ARO.Game
         {
             if (!Active || Vehicle == null) return;
             if (_holding) { TryRelease(); return; }
+            if (_freezeAt > 0f && Time.unscaledTime >= _freezeAt) FreezeForScreenshots();
             WatchVehicle();
             if (Job == null || _busy || Time.time < _retryAt) return;
 
@@ -120,12 +121,24 @@ namespace ARO.Game
                 Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = Vehicle.transform.position; _lastSafe = _spawnPos;
                 Debug.Log($"[Drive] ground ready after {Time.unscaledTime - _holdSince:F1}s at y={gy:F2}; vehicle released");
+                if (SmokeMode.Hold) _freezeAt = Time.unscaledTime + 3f;   // let the suspension settle first
             }
             else if (Time.unscaledTime - _holdSince > HoldTimeout)
             {
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = pos;
                 Debug.LogError("[Drive] no ground after " + HoldTimeout + "s; releasing the vehicle anyway");
             }
+        }
+
+        float _freezeAt = -1f;
+        /// <summary>Test hook (?smoke=drive&hold=1 only): stop the truck where it settled so the lighting screenshots are reproducible.</summary>
+        void FreezeForScreenshots()
+        {
+            _freezeAt = -1f;
+            var rb = Vehicle.GetComponent<Rigidbody>(); if (rb == null) return;
+            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; rb.constraints = RigidbodyConstraints.FreezeAll;
+            var p = Vehicle.transform.position;
+            Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={Vehicle.transform.eulerAngles.y:F0} for reproducible screenshots");
         }
 
         /// <summary>Remember the last good spot; if the vehicle ever leaves the world, put it back instead of letting it fall forever.</summary>

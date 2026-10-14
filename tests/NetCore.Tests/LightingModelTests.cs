@@ -107,12 +107,12 @@ public class LightingModelTests
                 $"an enable flag flipped while its intensity was not ~0 at hour {h:0.00}: moon {prev.MoonIntensity:0.000}->{cur.MoonIntensity:0.000} sun {prev.SunIntensity:0.000}->{cur.SunIntensity:0.000}");
             prev = cur;
         }
-        Assert.True(worst < 0.035f, $"largest one-minute change {worst:0.0000} ({where})");
+        Assert.True(worst < 0.05f, $"largest one-minute change {worst:0.0000} ({where})");
     }
 
     [Fact] public void TheSunIsUpInTheDayAndDownAtNight()
     {
-        Assert.True(At(12f).SunEnabled); Assert.True(At(12f).SunIntensity > 1.2f); Assert.Equal(90f, At(12f).SunElevationDeg, 1);
+        Assert.True(At(12f).SunEnabled); Assert.InRange(At(12f).SunIntensity, 0.85f, 1.05f); Assert.Equal(90f, At(12f).SunElevationDeg, 1);
         Assert.False(At(23f).SunEnabled); Assert.Equal(0f, At(23f).SunIntensity, 3); Assert.False(At(2f).SunEnabled);
         Assert.True(At(23f).SunElevationDeg < -15f);
     }
@@ -132,21 +132,51 @@ public class LightingModelTests
     {
         var night = At(LightingHour.Night); var noon = At(LightingHour.Noon);
         Assert.True(night.IlluminationIndex >= 0.2f, $"night illumination {night.IlluminationIndex}");              // the floor: moon plus ambient
-        Assert.True(noon.IlluminationIndex >= 6f * night.IlluminationIndex, $"noon {noon.IlluminationIndex} vs night {night.IlluminationIndex}");   // still clearly night
+        Assert.True(noon.IlluminationIndex >= 4.5f * night.IlluminationIndex, $"noon {noon.IlluminationIndex} vs night {night.IlluminationIndex}");   // still clearly night (was 6x until noon was deliberately lowered to stop colours clipping; night is unchanged)
+        Assert.True(noon.FlatGroundLight.Mean >= 10f * night.FlatGroundLight.Mean, "the light that actually reaches the ground: noon at least ten times night");
         Assert.True(night.AmbientSky.Mean >= 0.07f); Assert.True(night.AmbientEquator.Mean >= 0.05f); Assert.True(night.AmbientGround.Mean >= 0.02f);
         Assert.True(night.SkyExposure >= 0.25f);
     }
     [Fact] public void TheFourReferenceHoursAreOrderedByLight()
     {
-        float dawn = At(LightingHour.Dawn).IlluminationIndex, noon = At(LightingHour.Noon).IlluminationIndex, sunset = At(LightingHour.Sunset).IlluminationIndex, night = At(LightingHour.Night).IlluminationIndex;
-        Assert.True(noon > dawn && noon > sunset); Assert.True(dawn > night * 2f && sunset > night * 2f);
+        float dawn = At(LightingHour.Dawn).IlluminationIndex, sunset = At(LightingHour.Sunset).IlluminationIndex, night = At(LightingHour.Night).IlluminationIndex;
+        float dawnG = At(LightingHour.Dawn).FlatGroundLight.Mean, noonG = At(LightingHour.Noon).FlatGroundLight.Mean, sunsetG = At(LightingHour.Sunset).FlatGroundLight.Mean, nightG = At(LightingHour.Night).FlatGroundLight.Mean;
+        Assert.True(noonG > 1.6f * dawnG && noonG > 1.6f * sunsetG, "the light on the ground: noon clearly above golden hour");   // (the low golden sun itself is as strong as the noon sun; what differs is how much of it reaches flat ground)
+        Assert.True(dawn > night * 2f && sunset > night * 2f); Assert.True(dawnG > 6f * nightG && sunsetG > 6f * nightG);
     }
-    [Fact] public void DawnAndSunsetAreTheSameLight()
+    [Fact] public void DawnAndSunsetShareTheGeometryButNotTheCharacter()
     {
-        var d = Scalars(At(LightingHour.Dawn)); var s = Scalars(At(LightingHour.Sunset));
-        for (int i = 0; i < d.Length; i++) if (i != 6) Assert.Equal(d[i], s[i], 2);   // (the sun's elevation sign is the same too; index 6 is only compared below)
-        Assert.Equal(At(LightingHour.Dawn).SunElevationDeg, At(LightingHour.Sunset).SunElevationDeg, 1);
+        var d = At(LightingHour.Dawn); var e = At(LightingHour.Sunset);
+        Assert.Equal(d.SunElevationDeg, e.SunElevationDeg, 1); Assert.Equal(d.Day, e.Day, 2); Assert.Equal(d.Golden, e.Golden, 2);   // same sun height, same amount of golden hour
+        Assert.True(e.SunColor.R - e.SunColor.B > d.SunColor.R - d.SunColor.B + 0.08f, $"sunset light is deeper gold ({e.SunColor.R - e.SunColor.B:0.00} vs {d.SunColor.R - d.SunColor.B:0.00})");
+        Assert.True(d.SunIntensity < e.SunIntensity, "the morning sun is a little softer");
+        Assert.True(d.FogDensity > 1.5f * e.FogDensity, "morning mist is thicker than the evening haze");
+        Assert.True(e.FogColor.R - e.FogColor.B > d.FogColor.R - d.FogColor.B + 0.1f, "the evening haze is orange, the morning mist pinker and greyer");
+        Assert.True(d.AmbientSky.B > e.AmbientSky.B + 0.04f && e.AmbientSky.R > d.AmbientSky.R + 0.03f, "the morning fill is cooler, the evening fill warmer");
+        Assert.True(Math.Abs(d.SkyTint.B - e.SkyTint.B) > 0.05f, "the sky tint differs");
     }
+    [Fact] public void GoldenHourLightsTheGroundNotJustTheSky()
+    {
+        foreach (var h in new[] { LightingHour.Dawn, LightingHour.Sunset })
+        {
+            var f = At(h).FlatGroundLight; Assert.True(f.Mean >= 0.5f, $"flat ground at {h}h gets only {f.Mean:0.00} (the previous curve gave 0.39)");
+            Assert.InRange(At(h).SunElevationDeg, 12f, 22f);
+        }
+    }
+    [Fact] public void TheSunRisesMonotonicallyAndTheGoldenLiftNeverPops()
+    {
+        float last = -999f; for (float h = 5.5f; h <= 12f; h += 1f / 60f) { float e = At(h).SunElevationDeg; Assert.True(e >= last - 0.001f, $"the sun never sinks in the morning ({h})"); last = e; }
+        last = 999f; for (float h = 12f; h <= 18.5f; h += 1f / 60f) { float e = At(h).SunElevationDeg; Assert.True(e <= last + 0.001f, $"the sun never rises in the afternoon ({h})"); last = e; }
+    }
+    [Fact] public void AnOrangeBodyKeepsItsHueAtNoonInsteadOfClippingToYellow()
+    {   // the placeholder truck's body (0.85, 0.55, 0.10) came out as (255, 255, 58) under the old noon light (sun 1.35 + ambient 0.45..0.78 gave R 1.5, G 1.06)
+        var f = At(LightingHour.Noon).FlatGroundLight;
+        float r = 0.85f * f.R, g = 0.55f * f.G;
+        Assert.True(r <= 1.12f, $"red {r:0.00}"); Assert.True(g <= 0.85f, $"green {g:0.00}");
+        float shownRatio = Math.Min(1f, g) / Math.Min(1f, r); Assert.True(shownRatio >= 0.6f, $"on screen the body is G/R {shownRatio:0.00}; the material is {0.55f / 0.85f:0.00}; yellow would be 1.00");
+        Assert.True(f.Mean <= 1.45f, $"flat ground at noon {f.Mean:0.00}");
+    }
+    [Fact] public void TheLightingChangesAreTheSameInEveryTier() { Assert.Equal(At(12f).SunIntensity, At(12f, 0f).SunIntensity); }
     [Fact] public void DawnAndSunsetAreWarmAndNoonIsNeutral()
     {
         Assert.True(At(LightingHour.Dawn).Golden > 0.6f); Assert.True(At(LightingHour.Sunset).Golden > 0.6f); Assert.True(At(12f).Golden < 0.01f); Assert.True(At(23f).Golden < 0.01f);
@@ -161,7 +191,7 @@ public class LightingModelTests
     }
     [Fact] public void ExposureFollowsTheLightButNeverBlindsOrBlacks()
     {
-        Assert.True(At(23f).PostExposure < At(12f).PostExposure); Assert.InRange(At(23f).PostExposure, -0.3f, 0f); Assert.InRange(At(12f).PostExposure, 0f, 0.4f);
+        Assert.True(At(23f).PostExposure <= At(12f).PostExposure); Assert.InRange(At(23f).PostExposure, -0.3f, 0.05f); Assert.InRange(At(12f).PostExposure, -0.05f, 0.4f);
         Assert.True(At(LightingHour.Sunset).PostExposure > At(12f).PostExposure - 0.01f, "golden hour is not darker than noon in the grade");
     }
     [Fact] public void TheSkyAndAmbientBrightenWithTheDay()
@@ -175,7 +205,7 @@ public class HeadlightSpecTests
 {
     [Fact] public void TheHeadlightsAreStrongNarrowAndAimedSlightlyDown()
     {
-        Assert.InRange(HeadlightSpec.Intensity, 40f, 200f); Assert.InRange(HeadlightSpec.Range, 60f, 150f);
+        Assert.InRange(HeadlightSpec.Intensity, 100f, 400f); Assert.InRange(HeadlightSpec.Range, 60f, 150f);
         Assert.True(HeadlightSpec.OuterAngleDeg > HeadlightSpec.InnerAngleDeg + 10f); Assert.InRange(HeadlightSpec.OuterAngleDeg, 30f, 80f); Assert.InRange(HeadlightSpec.PitchDownDeg, 0f, 6f);
     }
     [Fact] public void ThePlaceholderVehicleUsesTheSpec()

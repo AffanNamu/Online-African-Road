@@ -116,12 +116,30 @@ namespace ARO.Editor
             string dir = $"{Root}/Settings"; Directory.CreateDirectory(dir);
             var rd = ScriptableObject.CreateInstance<UniversalRendererData>();
             AssetDatabase.CreateAsset(rd, $"{dir}/ARO_Renderer.asset");
+            AssignPostProcessData(rd);
             var pipe = UniversalRenderPipelineAsset.Create(rd);
             pipe.shadowDistance = 150f;
             AssetDatabase.CreateAsset(pipe, $"{dir}/ARO_URP.asset");
             GraphicsSettings.defaultRenderPipeline = pipe;
             for (int i = 0; i < QualitySettings.names.Length; i++) { QualitySettings.SetQualityLevel(i); QualitySettings.renderPipeline = pipe; }
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// A renderer made with CreateInstance (not through the Create menu) has no post-process data, and URP then draws no post-processing at all: the Volume that
+        /// RenderingRig builds (ACES tonemapping, colour grade, vignette) is accepted but never rendered. Measured in the CI screenshots: Low and Medium frames had identical
+        /// corners and colours, and a body colour that ACES would compress clipped to flat yellow. This assigns URP's own default asset. It is set through the serialised
+        /// property so it compiles whether the member is a field or a property; if the member or the asset is not found it says so and changes nothing.
+        /// </summary>
+        static void AssignPostProcessData(UniversalRendererData rd)
+        {
+            const string path = "Packages/com.unity.render-pipelines.universal/Runtime/Data/PostProcessData.asset";
+            var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+            var so = new SerializedObject(rd);
+            var prop = so.FindProperty("postProcessData") ?? so.FindProperty("m_PostProcessData");
+            if (asset == null || prop == null) { Debug.LogWarning($"[Render] could not assign the URP post-process data (asset found={asset != null}, property found={prop != null}); post-processing may not render"); return; }
+            prop.objectReferenceValue = asset; so.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(rd);
+            Debug.Log("[Render] assigned the URP post-process data to the renderer");
         }
 
         static Material Mat(string name, Color c)

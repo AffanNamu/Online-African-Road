@@ -17,7 +17,7 @@ namespace ARO.World
         public TimeOfDay timeOfDay; public WeatherSystem weather;
 
         Volume _volume; VolumeProfile _profile; ColorAdjustments _grade; Vignette _vignette; Bloom _bloom; Tonemapping _tonemap;
-        Camera _cam; Light _sun; float _nextGrade, _loggedExposure = 99f;
+        Camera _cam; Light _sun; float _nextGrade, _loggedExposure = 99f; bool _postChecked;
         public bool PostProcessingActive { get; private set; }
         public string PostProcessingNote { get; private set; } = "not applied";
 
@@ -45,7 +45,30 @@ namespace ARO.World
                       $"post={(PostProcessingActive ? "on" : "off")} ({PostProcessingNote}) pipeline={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.name : "NONE")} " +
                       $"colorSpace={QualitySettings.activeColorSpace} hdr={(UniversalRenderPipeline.asset != null && UniversalRenderPipeline.asset.supportsHDR)} cameraHdr={(_cam != null && _cam.allowHDR)} " +
                       $"additionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.additionalLightsRenderingMode.ToString() : "n/a")} maxAdditionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.maxAdditionalLightsCount : 0)} " +
-                      $"graphicsApi={SystemInfo.graphicsDeviceType}");
+                      $"graphicsApi={SystemInfo.graphicsDeviceType} rendererPostProcessData={PostProcessDataState()}");
+        }
+
+        /// <summary>Whether the URP renderer has post-process data. Without it the Volume is never drawn (see SceneBuilder.AssignPostProcessData). Read by reflection: "present", "NULL" or why it could not be read.</summary>
+        static string PostProcessDataState()
+        {
+            try
+            {
+                var a = UniversalRenderPipeline.asset; if (a == null) return "no-pipeline";
+                var list = typeof(UniversalRenderPipelineAsset).GetField("m_RendererDataList", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(a) as ScriptableRendererData[];
+                if (list == null || list.Length == 0 || list[0] == null) return "renderer-data-unreadable";
+                var t = list[0].GetType(); var fi = t.GetField("postProcessData"); var pi = t.GetProperty("postProcessData");
+                if (fi == null && pi == null) return "member-not-found";
+                var v = fi != null ? fi.GetValue(list[0]) : pi.GetValue(list[0]);
+                return v == null ? "NULL" : "present";
+            }
+            catch (System.Exception e) { return "probe-failed:" + e.GetType().Name; }
+        }
+
+        /// <summary>What the Volume stack resolves for tonemapping (proves the Volume is seen by the camera, not that URP draws it).</summary>
+        string VolumeTonemapState()
+        {
+            try { var tm = VolumeManager.instance.stack.GetComponent<Tonemapping>(); return tm == null ? "none" : (tm.active ? tm.mode.value.ToString() : "inactive"); }
+            catch (System.Exception e) { return "probe-failed:" + e.GetType().Name; }
         }
 
         void Apply()
@@ -88,6 +111,11 @@ namespace ARO.World
         void Update()
         {
             ApplyLiveSettings();
+            if (!_postChecked && Time.unscaledTime > 3f && _cam != null)   // once the Volume stack has been evaluated by a few rendered frames
+            {
+                _postChecked = true;
+                Debug.Log($"[Render] post-processing check rendererPostProcessData={PostProcessDataState()} volumeTonemap={VolumeTonemapState()} cameraPost={_cam.GetUniversalAdditionalCameraData().renderPostProcessing} settingOn={ARO.Core.RuntimeSettings.PostProcessing}");
+            }
             // Hook: grade follows the clock (cheaper than anything per-pixel): darker, cooler exposure at night, warmer at the horizon.
             if (_grade == null || timeOfDay == null || Time.unscaledTime < _nextGrade) return;
             _nextGrade = Time.unscaledTime + 1f;
