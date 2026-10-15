@@ -117,3 +117,42 @@ M3 and M4 are independent of M1/M2 and can proceed while models are procured.
 **M0 + M1 together as "Pipeline foundation and one-vehicle vertical slice"**, preceded by two owner decisions: (1) repository private vs private companion repo, (2) the source of the first truck (commissioned model, licensed model, or an ARO 3D Studio output treated as a pilot with its clean-up cost measured). The vehicle is the largest visual gap and the only way to validate the whole chain (import rules, rig, LOD, lights, cameras, texture memory, WebGL build size) before spending on environment art.
 
 If no vehicle asset can be supplied soon, run **M3 (road surface)** and **M4 (sky gradient)** first; they need no purchases, are fully testable by the existing lighting job, and every driving frame benefits.
+
+## Appendix B. Lighting iteration: evidence and closing assessment (Phase 2)
+
+Source: CI run 38705487149 (commit 2bda4bc), job "Lighting at four hours"; screenshots on branch `ci-lighting`. All numbers are mean luminance 0..255 of the chase view rendered with **software GL**; they say nothing about real-GPU appearance or performance. I looked at the Low and Medium sunset and night chase screenshots; that is a reading of CI screenshots, not an owner review.
+
+### B.1 Recoverable baseline
+Commit `0a85308` is the lighting baseline (model, tonemapper, tier settings, thresholds). `LightingModel` is pure and tested, and every later lighting change should be a separate commit on top of it so `git revert` or `git checkout 0a85308 -- <files>` restores it. A tag was created locally but could not be pushed from this environment; a branch `baseline/lighting-0a85308` needs the owner's permission and has not been created.
+
+### B.2 Low vs Medium (whole-frame mean, chase)
+
+| Hour | Low | Medium (shipping) | Medium, vignette off | Medium, contrast 0 + vignette off | Medium, shadows off |
+|---|---|---|---|---|---|
+| dawn | 85.6 | 75.7 | 82.4 | 83.2 | 74.3 |
+| noon | 119.7 | 108.4 | 118.3 | 113.2 | 111.6 |
+| sunset | 87.7 | 76.0 | 82.6 | 84.1 | 75.0 |
+| night | 39.4 | 29.5 | 33.4 | 34.8 | 29.7 |
+
+Corner/centre luminance (vignette drawn): Medium corners are 0.70 (dawn), 0.77 (noon), 0.75 (sunset), 0.52 (night) of Low's corners.
+
+Attribution (measured):
+* **The vignette (0.22) is the main cause**: removing it restores about 6.7 (dawn), 9.9 (noon), 6.6 (sunset) and 3.6 (night) of the 9.9/11.3/11.7/9.9 deficit.
+* **Shadows are not a cause**: shadows off changes the mean by −1.4 to +3.2, the noise level of a single frozen frame.
+* **Contrast +10 is not darkening**: with contrast 0 the noon mean falls (118.3 → 113.2) and the dark hours rise by only about 1 to 1.5. Setting contrast to 0 also drops the noon road region to 77.7, below the enforced 80 for the Low view, so it is not a free change.
+* **Unattributed remainder**: about 3 (dawn), 1 (noon), 5 (sunset), 6 (night). Candidates are render scale (0.8 vs 1.0), MSAA and the longer load radius putting more dark buildings in view, but none was isolated, so this is not a finding.
+* Caveat: the Medium hold logged "not settled upright, stood up and dropped again" in most study frames, so the truck pose differs slightly between variants. The effect on whole-frame luminance is small but unmeasured.
+
+### B.3 Is Medium unnecessarily dark?
+Whole-frame, 10 to 12 luma below Low at every hour, mostly from the vignette. At night the Medium corners are about half as bright as Low's, which costs peripheral road visibility. **Evidence-backed proposal (not implemented):** reduce Medium vignette intensity from 0.22 to about 0.10 (and keep it from darkening the night frame more than Low's corners). Expected effect, to be re-measured: means within ~5 of Low at every hour, Medium corner/centre ratio ≥ 0.85, night corners ≥ 0.75 of Low. Acceptance: the existing enforced thresholds still pass for Low and Medium, `--compare` still reports the vignette as drawn (ratio < 0.93), night road ≥ 12.
+
+### B.4 Night and headlights
+Night chase road region: Low 19.0, Medium 15.3 (15.0 with shadows off, 18.0 with the vignette removed); the enforced floor (12) holds but the advisory (20) is missed on Medium. In the screenshots the headlight pools are visible only a few metres ahead; the terrain and far road are near black, and the buildings read as dark silhouettes against the sky. Headlight intensity and range were fixed in the earlier iteration; no further change is proposed without a measurement of the lit road ahead (add a "road at 15 to 40 m" region to the night capture first).
+
+### B.5 Can the procedural sky give a convincing dawn/sunset?
+Measured on Medium: dawn skyHigh R/B 0.85 → sunset 1.18, skyHorizon 1.40 → 2.26 (separation exists, the earlier "dawn = sunset" defect is fixed). But zenith saturation is only 0.15 to 0.19 at both hours, so the upper sky reads as pale grey-green, and the screenshots show a yellow horizon fading to grey, not the orange-to-deep-blue gradient of the references. The shader multiplies its blue channel by the sun colour, so a thicker atmosphere warms the horizon but also dulls the zenith; the two cannot be tuned independently with the current parameters (`atmosphere`, `skyTint`, `exposure`).
+
+**Proposal: a small custom sky-gradient shader** (horizon colour, zenith colour, sun-glow colour and radius, ground colour; driven from `LightingModel`, which already computes sun colour and elevation). Needs: the shader included in the WebGL build (Always Included Shaders or referenced material), a `LightingModel` extension with unit tests (zenith stays blue at every hour, horizon warmth rises towards the sun), and the existing lighting job extended with zenith-saturation and R/B-delta assertions. This is milestone M4; no code written yet. Real-device appearance remains unverified.
+
+### B.6 Performance
+No hardware measurement exists. Software-GL frame times (about 260 to 300 ms) are CPU emulation and must not be quoted as performance. The hardware plan is in `docs/PERFORMANCE_VALIDATION.md`.
