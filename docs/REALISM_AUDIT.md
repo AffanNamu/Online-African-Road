@@ -1,4 +1,4 @@
-# Realism audit and phased plan (commit 0a85308 + 2bda4bc diagnostics)
+# Realism audit and phased plan (lighting baseline 0a85308; CI evidence from 2bda4bc)
 
 Status: AUDIT AND PLAN ONLY. Nothing in section 5 onward is implemented. The owner approves the first milestone before any work starts.
 
@@ -15,7 +15,7 @@ Honesty rules used throughout: "measured" means a number from a CI log or screen
 | Road | `RoadSpline`/`RoadCrossSection` (NetCore, tested) produce asphalt, shoulder, verge, concrete, metal sub-meshes with 256²/128² *procedural* grain textures. 10 m longitudinal subdivision. No PBR asphalt, no normal map, no kerbs, camber or guardrail geometry were found in the mesh builder. Lane markings are not verified in this audit; the render shows none that read as real paint. |
 | Terrain | Corridor terrain tiles (20/40 cells per 200 m chunk), 256² patchy procedural textures, two materials (lush, dry). |
 | Props | `prop_catalog.json`: 16 ids (palm, tropical tree, bush, house, apartment block, shop row, kiosk, market stall, warehouse, fuel station, bus stop, utility pole, street light, sign, billboard, telecom mast), **all `status: dev`**, generated boxes/cones by `DevPropGeometry`. Production prefabs at `Resources/Props/{id}` replace them by id; `PropCatalogValidator` enforces LOD triangle budgets. Props are batched into one mesh per chunk. |
-| Sky/lighting | Procedural skybox, trilight ambient, exp² fog, tested `LightingModel`, Neutral tonemapper, Low/Medium/High tiers (see section 2 of this file's lighting part, and `docs/LIGHTING.md`). |
+| Sky/lighting | Procedural skybox, trilight ambient, exp² fog, tested `LightingModel`, Neutral tonemapper, Low/Medium/High tiers (see Appendix B and `docs/LIGHTING.md`). |
 | Licensing | Repository is public. `Assets/ThirdParty/` and `Assets/AssetStore/` are gitignored and refused by `tools/check_repo_safety.py`. Private companion repo/submodule recommended in `docs/ASSET_PIPELINE.md` but **not adopted**. `docs/ASSET_LICENSES.md` lists only flag-icons (MIT) and Montserrat (OFL). Note P-33: AI-mockup crops are already committed publicly, which needs a licence decision. |
 | Own docs verdict | `docs/VISUAL_STANDARD.md` records that the current 3D output **fails** "realistic", "commercial-grade", "authentically African" and "not placeholder". This audit agrees. |
 
@@ -156,3 +156,20 @@ Measured on Medium: dawn skyHigh R/B 0.85 → sunset 1.18, skyHorizon 1.40 → 2
 
 ### B.6 Performance
 No hardware measurement exists. Software-GL frame times (about 260 to 300 ms) are CPU emulation and must not be quoted as performance. The hardware plan is in `docs/PERFORMANCE_VALIDATION.md`.
+
+## Appendix A. Current state and CI (Phase 1)
+
+Repository: `main` and `claude/intelligent-faraday-sykb0x` carry the same history; terrain fix, driving-test calibration and gameplay are unchanged since 0a85308 (later commits add test diagnostics, test-script fixes and docs only). Details and per-check table: `docs/CI_HEALTH.md`.
+
+| Result (commit 2bda4bc, main run 38705487149) | Status |
+|---|---|
+| Safety gate, .NET core, DB migrations/rules, Backend HTTP, Unity tests + WebGL build | pass |
+| WebGL boot, Drive (Low), Drive (Medium) | pass |
+| Lighting job (Low thresholds enforced) | pass |
+| Browser E2E | **fail, 497/500**: one root failure (selecting the second Garage vehicle) plus two checks that depend on it |
+| World map | pass |
+
+Intermittent failures, separated:
+1. **Infrastructure (no test ran):** Docker image pull `toomanyrequests: Data limit exceeded` in "Initialize containers" (seen on several jobs and commits). Re-run.
+2. **Backend rate-limit test, cause established:** the limiter is a fixed 60 s window and the test's 45 calls straddled a boundary (`ok:45, limited:0`). Test-only fix, assertion unchanged, not yet seen green after the fix.
+3. **Browser E2E click failures, cause NOT established:** the first diagnostics show the click reached the game at the right place on a visible card and the card did not react; my first classifier printed a misleading "MISSED", now corrected. An `onClick` log is deployed to split "Unity UI did not invoke the button" from "the handler ignored it". A CI run with it is in flight (commit c20f75b) and will say which; until then this is an open, real problem, not infrastructure, not caused by the lighting work (the suite failed before it, at 4f7ace0, 2e9468d and 550f9fd).
