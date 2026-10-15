@@ -118,7 +118,7 @@ function serve() {
   const speedAt = (pts, t) => { for (let i = 1; i < pts.length; i++) if (pts[i].t >= t) { const f = (t - pts[i - 1].t) / Math.max(1e-6, pts[i].t - pts[i - 1].t); return pts[i - 1].kmh + (pts[i].kmh - pts[i - 1].kmh) * Math.max(0, Math.min(1, f)); } return pts.length ? pts[pts.length - 1].kmh : 0; };
   // Calibration (CI runs of 9d6c3b2 and 933f34f, the same drive at two frame rates, four runs): speed at 6 game s after the press 51 to 75 km/h, distance in those 6 s from rest about 55 m (from rest) to 100 m
   // (the runs whose first sample was already moving), so the requirements below (30 m, 35 km/h) sit at about half of what the truck does.
-  const ACCEL_WINDOW_S = 6, ACCEL_MIN_M = 30, ACCEL_MIN_KMH = 35;
+  const ACCEL_WINDOW_S = 6, ACCEL_MIN_M = 30;   // (the original criteria: 30 m, and a maximum speed above 10 km/h below. A 35 km/h speed-at-6-s check that was added in the first anchored version was removed: across twelve CI measurements the distance was 46-59 m but the interpolated speed at exactly 6 s ranged 38-58 km/h (gear changes), so it had almost no margin and added nothing the distance does not already prove.)
   const GAME_BRAKE_S = 5, GAME_STEER_S = 4, GAME_COAST_S = 1.5;
   const pathLength = ss => ss.slice(1).reduce((a, s, i) => a + Math.hypot(s.x - ss[i].x, s.z - ss[i].z), 0);
   const yawDelta = (a, b) => ((b - a + 540) % 360) - 180;
@@ -203,7 +203,7 @@ function serve() {
       else if (!reached) failures.push(`the game clock did not advance ${ACCEL_WINDOW_S} s after the throttle press (a stall, not a slow renderer)`);
       else if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
       else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
-      else if (dWin < ACCEL_MIN_M || vWin < ACCEL_MIN_KMH) failures.push(`the truck barely moved while the view was changed (${dWin.toFixed(0)} m and ${vWin.toFixed(0)} km/h ${ACCEL_WINDOW_S} game seconds after the throttle press; needs ${ACCEL_MIN_M} m and ${ACCEL_MIN_KMH} km/h)`);
+      else if (dWin < ACCEL_MIN_M) failures.push(`the truck barely moved while the view was changed (${dWin.toFixed(0)} m ${ACCEL_WINDOW_S} game seconds after the throttle press; needs ${ACCEL_MIN_M} m)`);
       else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
       else ok(`acceleration and movement are unaffected by changing the view (${dWin.toFixed(0)} m and ${vWin.toFixed(0)} km/h ${ACCEL_WINDOW_S} game s after the press, max ${maxKmh.toFixed(0)} km/h, ${cams.size} views)`);
 
