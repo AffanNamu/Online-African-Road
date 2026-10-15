@@ -24,6 +24,21 @@ namespace ARO.Game
             float t = Time.realtimeSinceStartup - _started;
             if (!_targetsLogged && t > 4f) { _targetsLogged = true; LogTargets(); }
             if (t > _nextStatus && t < 40f) { _nextStatus += 6f; LogStatus(); }
+            // The project uses the Input System only (the legacy Input below throws and is ignored), so presses are read from the Input System. Browser end-to-end runs only: every press and release the
+            // game actually receives, where it was, which UI elements were under it, and the frame time (a press lost between two frames never shows up here, which is the evidence the tests need).
+            if (SmokeMode.E2E)
+            {
+                try
+                {
+                    var ms = UnityEngine.InputSystem.Mouse.current;
+                    if (ms != null)
+                    {
+                        if (ms.leftButton.wasPressedThisFrame) LogPointer("pressed", ms.position.ReadValue());
+                        if (ms.leftButton.wasReleasedThisFrame) LogPointer("released", ms.position.ReadValue());
+                    }
+                }
+                catch (System.Exception) { /* diagnostics must never break the game */ }
+            }
             try
             {
                 if (UnityEngine.Input.GetMouseButtonDown(0)) LogPress(UnityEngine.Input.mousePosition);
@@ -70,6 +85,16 @@ namespace ARO.Game
                       $"module={(mod != null ? mod.GetType().Name : "none")} mousePresent={mouse} " +
                       $"selected={(es != null && es.currentSelectedGameObject != null ? es.currentSelectedGameObject.name : "none")} " +
                       $"fps={(1f / Mathf.Max(Time.unscaledDeltaTime, 0.0001f)):0} focused={Application.isFocused}");
+        }
+
+        void LogPointer(string what, Vector2 pos)
+        {
+            _hits.Clear();
+            if (EventSystem.current != null) EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = pos }, _hits);
+            var sb = new StringBuilder($"[UIDiag] pointer {what} at {pos.x:0},{pos.y:0} of {Screen.width}x{Screen.height} frame={(Time.unscaledDeltaTime * 1000f):0}ms; ui hits=[");
+            foreach (var h in _hits) sb.Append(h.gameObject.name).Append(' ');
+            sb.Append("]");
+            Debug.Log(sb.ToString());
         }
 
         void LogPress(Vector2 pos)

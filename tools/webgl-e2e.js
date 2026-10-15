@@ -9,11 +9,35 @@ const BASE = process.env.E2E_URL, ANON = process.env.E2E_ANON_KEY, DB_URL = proc
 if (!BASE || !ANON || !DB_URL) { console.error('source /tmp/aro-e2e.env first (tools/e2e/up.sh)'); process.exit(2); }
 const prefix = process.argv[2] || 'webgl-e2e';
 const failures = [], passes = [];
-let currentLogs = null;
+let currentLogs = null, currentPage = null, currentTargets = null; const clickLog = [];   // clickLog: every click the harness made (what, where, where in the game's log), for the failure diagnostics below
 const check = (ok, what, detail) => {
   (ok ? passes : failures).push(what); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${!ok && detail !== undefined ? '  -> ' + String(detail).slice(0, 300) : ''}`);
   if (!ok && currentLogs) console.log('      last game log lines: ' + currentLogs.slice(-8).map(l => l.replace(/\s+/g, ' ').slice(0, 160)).join(' | '));   // what the game itself said just before
+  if (!ok) failureDiagnostics();
 };
+// Evidence for intermittent failures (no behaviour change): a screenshot at the moment of failure and, for each of the last clicks, whether the game reported a press, where, what was under it, and whether the
+// target had moved since the harness read its position. The game logs "[UIDiag] pointer pressed/released ..." from the Input System in E2E mode. Classification printed per click:
+//   NO-PRESS     the game never received a press after this click (lost before the game saw it)
+//   MISSED       the game received the press but nothing named like the target was under it (target moved, or something covered it)
+//   MOVED        the target is now somewhere else than where the harness clicked
+//   HIT          the press landed on the intended element: the effect is missing for another reason (a game or backend problem)
+function failureDiagnostics() {
+  try {
+    const n = failures.length;
+    if (currentPage) currentPage.screenshot({ path: `${prefix}-FAIL-${n}.png` }).catch(() => {});
+    if (!currentLogs) return;
+    console.log(`      click diagnostics for failure ${n} (screenshot ${prefix}-FAIL-${n}.png):`);
+    for (const c of clickLog.slice(-3)) {
+      const after = currentLogs.slice(c.from, c.to === undefined ? undefined : c.to);
+      const press = after.find(l => /\[UIDiag\] pointer pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));
+      const now = currentTargets ? currentTargets()[c.name] : null; const moved = now && c.pos && (Math.abs(now.x - c.pos.x) > 0.008 || Math.abs(now.y - c.pos.y) > 0.008);
+      const hits = press ? (/ui hits=\[(.*)\]/.exec(press) || [])[1] || '' : '';
+      const key = c.name.replace(/^(Btn_|Nav_)/, '');
+      const cls = !press ? 'NO-PRESS' : (!hits.includes(key) && !hits.includes(c.name)) ? 'MISSED' : moved ? 'MOVED' : 'HIT';
+      console.log(`        ${cls.padEnd(9)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}`);
+    }
+  } catch (e) { console.log('      (diagnostics failed: ' + String(e).slice(0, 100) + ')'); }
+}
 const db = sql => execFileSync('psql', [DB_URL, '-X', '-q', '-At', '-v', 'ON_ERROR_STOP=1', '-c', sql], { encoding: 'utf8' }).trim();
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const wipe = async c => { await c.page.keyboard.press('End'); for (let i = 0; i < 30; i++) await c.page.keyboard.press('Backspace'); };      // empties a focused text field (the game's fields take key presses, not select-all)
@@ -34,13 +58,14 @@ function url(user, extra = '') {
 async function open(user, extra, body, opts = {}) {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
   const page = await browser.newPage({ viewport: { width: 1024, height: 576 }, ...(opts.locale ? { locale: opts.locale } : {}) });
-  const logs = [], errors = []; currentLogs = logs;
+  const logs = [], errors = []; currentLogs = logs; currentPage = page;
   page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
   const waitLog = async (re, from = 0, seconds = 60) => { for (let i = 0; i < seconds * 2; i++) { const hit = logs.slice(from).find(l => re.test(l)); if (hit) return hit; await sleep(500); } return null; };
   const targets = () => { const l = [...logs].reverse().find(x => x.startsWith('[WorldMap] targets')) || ''; return Object.fromEntries([...l.matchAll(/TARGET (\S+) x=([\d.]+) y=([\d.]+)/g)].map(m => [m[1], { x: +m[2], y: +m[3] }])); };
   const click = async name => {
     for (let attempt = 0; attempt < 3; attempt++) {
       const t = targets()[name]; if (!t) { await sleep(1500); continue; }
+      const rec = { name, from: logs.length, pos: { x: t.x, y: t.y } }; if (clickLog.length) clickLog[clickLog.length - 1].to = rec.from; clickLog.push(rec);
       const b = await page.locator('#unity-canvas').boundingBox(); await page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); return true;
     }
     return false;
@@ -49,6 +74,7 @@ async function open(user, extra, body, opts = {}) {
     for (let i = 0; i < tries; i++) { const from = logs.length; await click(name); const hit = await waitLog(re, from, seconds); if (hit) return hit; }
     return null;
   };
+  currentTargets = targets;
   const settle = async () => { await sleep(4000); };      // the game re-reports its click positions about a second after anything is rebuilt
   await page.goto(url(user, extra));
   try { await body({ page, logs, errors, waitLog, targets, click, clickUntil, settle }); }

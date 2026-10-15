@@ -17,7 +17,7 @@ namespace ARO.World
         public TimeOfDay timeOfDay; public WeatherSystem weather;
 
         Volume _volume; VolumeProfile _profile; ColorAdjustments _grade; Vignette _vignette; Bloom _bloom; Tonemapping _tonemap;
-        Camera _cam; Light _sun; float _nextGrade, _loggedExposure = 99f; bool _postChecked;
+        Camera _cam; Light _sun; float _nextGrade, _loggedExposure = 99f; bool _postChecked, _noShadowsTest;
         public bool PostProcessingActive { get; private set; }
         public string PostProcessingNote { get; private set; } = "not applied";
 
@@ -94,7 +94,8 @@ namespace ARO.World
                 urp.msaaSampleCount = Tier.MsaaSamples; urp.renderScale = Tier.RenderScale;
             }
             if (_cam != null) _cam.farClipPlane = Tier.FarClip;
-            if (_sun != null) { _sun.shadows = Tier.ShadowCascades > 0 ? (Tier.SoftShadows ? LightShadows.Soft : LightShadows.Hard) : LightShadows.None; _sun.shadowStrength = 0.92f; _sun.shadowBias = 0.05f; _sun.shadowNormalBias = 0.4f; }
+            _noShadowsTest = !string.IsNullOrEmpty(Application.absoluteURL) && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("shadows=off");   // test-only: isolates the shadow contribution in the Medium study
+            if (_sun != null) { _sun.shadows = Tier.ShadowCascades > 0 && !_noShadowsTest ? (Tier.SoftShadows ? LightShadows.Soft : LightShadows.Hard) : LightShadows.None; _sun.shadowStrength = 0.92f; _sun.shadowBias = 0.05f; _sun.shadowNormalBias = 0.4f; }
             try { BuildPost(); } catch (System.Exception e) { PostProcessingActive = false; PostProcessingNote = "failed: " + e.Message; Debug.LogWarning("[Render] post-processing unavailable: " + e.Message); }
         }
 
@@ -108,8 +109,12 @@ namespace ARO.World
             string tm = TonemapChoice(Application.absoluteURL);
             if (Tier.Tonemapping && tm != "none") { _tonemap = _profile.Add<Tonemapping>(true); _tonemap.mode.Override(tm == "aces" ? TonemappingMode.ACES : TonemappingMode.Neutral); }
             // Saturation 0 (was +8): the orange terrain and truck were already vivid, and the grade is now actually drawn.
-            if (Tier.ColorGrading) { _grade = _profile.Add<ColorAdjustments>(true); _grade.postExposure.Override(0.1f); _grade.contrast.Override(10f); _grade.saturation.Override(0f); }
-            if (Tier.Vignette) { _vignette = _profile.Add<Vignette>(true); _vignette.intensity.Override(0.22f); _vignette.smoothness.Override(0.5f); }
+            // Test-only overrides, honoured on ?smoke= pages only: ?contrast=0..100 and ?vignette=0..1 let CI render the Medium tier with the grade contrast or the vignette changed, so that what makes
+            // Medium darker than Low is measured instead of guessed (the CI "Medium study" passes). Absent or invalid: the tier's own values.
+            string url = Application.absoluteURL; bool smokePage = !string.IsNullOrEmpty(url) && url.Contains("smoke=");
+            float contrast = smokePage ? ARO.NetCore.LightingHour.QueryNumber(url, "contrast", 0f, 100f) : -1f, vignette = smokePage ? ARO.NetCore.LightingHour.QueryNumber(url, "vignette", 0f, 1f) : -1f;
+            if (Tier.ColorGrading) { _grade = _profile.Add<ColorAdjustments>(true); _grade.postExposure.Override(0.1f); _grade.contrast.Override(contrast >= 0f ? contrast : 10f); _grade.saturation.Override(0f); }
+            if (Tier.Vignette) { _vignette = _profile.Add<Vignette>(true); _vignette.intensity.Override(vignette >= 0f ? vignette : 0.22f); _vignette.smoothness.Override(0.5f); }
             if (Tier.Bloom) { _bloom = _profile.Add<Bloom>(true); _bloom.threshold.Override(1.1f); _bloom.intensity.Override(0.25f); _bloom.scatter.Override(0.6f); }
             PostProcessingActive = true; PostProcessingNote = $"tonemap={Tier.Tonemapping}({(Tier.Tonemapping ? tm : "off")}) grade={Tier.ColorGrading} vignette={Tier.Vignette} bloom={Tier.Bloom}";
         }
@@ -120,7 +125,7 @@ namespace ARO.World
         {
             if (_settingsVersion == ARO.Core.RuntimeSettings.Version) return; _settingsVersion = ARO.Core.RuntimeSettings.Version;
             if (_volume != null) _volume.enabled = ARO.Core.RuntimeSettings.PostProcessing;
-            if (_sun != null) _sun.shadows = ARO.Core.RuntimeSettings.Shadows && Tier.ShadowCascades > 0 ? (Tier.SoftShadows ? LightShadows.Soft : LightShadows.Hard) : LightShadows.None;
+            if (_sun != null) _sun.shadows = ARO.Core.RuntimeSettings.Shadows && Tier.ShadowCascades > 0 && !_noShadowsTest ? (Tier.SoftShadows ? LightShadows.Soft : LightShadows.Hard) : LightShadows.None;
         }
 
         void Update()
