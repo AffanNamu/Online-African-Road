@@ -57,7 +57,9 @@ namespace ARO.World
             _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));
             _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
             _gradient.SetColor("_GlowColor", new Color(g.Glow.R, g.Glow.G, g.Glow.B));
-            _gradient.SetFloat("_GlowStrength", g.GlowStrength); _gradient.SetFloat("_GlowPower", g.GlowPower); _gradient.SetFloat("_DiscStrength", g.DiscStrength);
+            float glowK = ARO.Core.RuntimeSettings.TestSkyGlow >= 0f ? ARO.Core.RuntimeSettings.TestSkyGlow : 1f;   // sky study overrides (smoke pages only)
+            _gradient.SetFloat("_MidHeight", ARO.Core.RuntimeSettings.TestSkyMid >= 0f ? ARO.Core.RuntimeSettings.TestSkyMid : g.MidHeight); _gradient.SetFloat("_HeightExp", ARO.Core.RuntimeSettings.TestSkyExp >= 0f ? ARO.Core.RuntimeSettings.TestSkyExp : g.HeightExp);
+            _gradient.SetFloat("_GlowStrength", g.GlowStrength * glowK); _gradient.SetFloat("_GlowPower", g.GlowPower); _gradient.SetFloat("_DiscStrength", g.DiscStrength);
             var toSun = sun != null ? -sun.transform.forward : Vector3.up;                // a directional light shines along its forward axis; the sun is in the opposite direction
             _gradient.SetVector("_SunDir", new Vector4(toSun.x, toSun.y, toSun.z, 0f));
         }

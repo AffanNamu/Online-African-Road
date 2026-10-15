@@ -64,6 +64,8 @@ namespace ARO.Game
             ARO.Core.RuntimeSettings.TestHour = ARO.NetCore.LightingHour.FromUrl(Application.absoluteURL);   // ?hour=dawn|noon|sunset|night|6.5|18:30 (tests and reviews); otherwise the setting, then the real clock
             ARO.Core.RuntimeSettings.TestAtmosphere = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") ? ARO.NetCore.LightingHour.QueryNumber(Application.absoluteURL, "atm", 0.3f, 3f) : -1f;   // sky study (CI only)
             ARO.Core.RuntimeSettings.TestSkyGradient = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("sky=gradient");   // gradient sky study (CI only)
+            { bool sm = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke="); string u = Application.absoluteURL;
+              ARO.Core.RuntimeSettings.TestSkyGlow = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyglow", 0f, 3f) : -1f; ARO.Core.RuntimeSettings.TestSkyMid = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skymid", 0.03f, 0.6f) : -1f; ARO.Core.RuntimeSettings.TestSkyExp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyexp", 0.3f, 2f) : -1f; }
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };

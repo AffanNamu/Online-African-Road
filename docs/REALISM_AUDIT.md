@@ -193,3 +193,26 @@ Both experiments are isolated and default-off: the vignette is tried with the ex
 6. the lit world is unchanged: ground plus truck luma differ by <= 6 from the procedural sky at each hour (the sky change must not move the lighting).
 
 Passing these numbers would still be software rendering of CI screenshots; a person has to look at the frames, and a real display has not been used. Results are recorded below once CI has run (not before).
+
+### Appendix C results, iteration 1 (CI run 38720599652, commit da256f5; software GL, Low and Medium, chase view)
+
+**Medium vignette 0.10: not adopted by the rule as written, by a hair.** Every criterion passed except one:
+| Hour | whole mean: shipping Medium -> v10 (Low) | corner brightness vs Low: shipping -> v10 |
+|---|---|---|
+| dawn | 75.9 -> 81.1 (86.9) | 0.64 -> **0.80, FAIL: just under the 0.8 limit (the printout rounds)** |
+| noon | 108.0 -> 115.6 (120.8) | 0.77 -> 0.95 |
+| sunset | 76.0 -> 79.6 (87.6) | 0.75 -> 0.93 |
+| night | 29.5 -> 32.2 (38.2) | 0.62 -> 0.81 |
+Also passed: all enforced thresholds on the v10 run, night road 14.9 -> 15.5. I am not moving the goalposts after seeing the numbers: the verdict stays "do not adopt as is". The next run adds 0.08 under the same criteria; the decision between 0.10 and 0.08 (or keeping 0.22) is the owner's, with these numbers.
+
+**Gradient sky, default parameters: not yet.** The shader compiled and ran (log says `sky=gradient`, no fallback warning, all enforced thresholds pass). Measured against the criteria:
+| Criterion | Dawn | Sunset | Noon |
+|---|---|---|---|
+| zenith saturation >= 0.30 (procedural) | **0.21 FAIL** (0.21) | 0.31 pass (0.09) | 0.38 pass |
+| zenith blue-dominant R/B <= 1.0 (procedural) | 0.79 pass (0.79) | 0.69 pass (0.99) | 0.62 pass |
+| horizon warmth R/B >= 1.4 dawn, >= 1.8 sunset (procedural) | **1.08 FAIL** (1.43) | **1.24 FAIL** (2.10) | |
+| sunset horizon >= 0.5 warmer than dawn | **1.08 -> 1.24 FAIL** | | |
+| lit world unchanged (ground+truck luma <= 6) | 4.4 pass | **8.0 FAIL** | 0.3 pass (night 1.6 pass) |
+What it shows: the gradient fixes the zenith at sunset (saturation 0.09 -> 0.31, R/B 0.99 -> 0.69) and keeps the night readable, but the warm band was too thin: the horizon region sampled at about 2 to 6 degrees above the horizon came out less warm than the procedural sky. Two suspects, both untested: (1) the mid-sky stop sat at sqrt(elevation) 0.35, so by 3 degrees the colour was already mostly the blue mid stop; (2) the broad sun glow plus the Neutral tonemapper whiten the zenith at dawn. The "lit world unchanged" failure at sunset (8.0) may be run-to-run noise (the frozen truck's pose and top-surface luma vary between runs); that is not known, so iteration 2 measures the noise floor with a repeat run of the procedural sky.
+
+Iteration 2 (this commit, still behind `?sky=gradient` on smoke pages): mid stop moved to 0.16 (about 9 degrees) with a linear height curve, peach-pink dawn horizon, and test-only overrides `skyglow`, `skymid`, `skyexp`. CI renders the defaults at four hours and three tuning variants at dawn and sunset, each judged by the same criteria, plus the noise-floor repeat. Results will be recorded here after CI has run.

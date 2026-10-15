@@ -14,6 +14,8 @@ namespace ARO.Core
         public static float TestAtmosphere = -1f;
         /// <summary>Test hook (only on ?smoke= pages): ?sky=gradient draws the custom gradient sky (ARO/SkyGradient) instead of the procedural one, so CI can render both and the choice is made from frames. False by default.</summary>
         public static bool TestSkyGradient;
+        /// <summary>Test hooks for the gradient sky study (smoke pages only): ?skyglow= scales the sun glow, ?skymid= moves the mid-colour stop, ?skyexp= bends the height curve. -1 = the model's own value.</summary>
+        public static float TestSkyGlow = -1f, TestSkyMid = -1f, TestSkyExp = -1f;
         public static bool ShowPlayerNames = true, ShowMinimap = true, Shadows = true, PostProcessing = true, SpeedMph;
         public static string QualityPreference = "auto", TrafficChoice = "medium";
         public static int Version;

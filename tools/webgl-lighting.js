@@ -245,6 +245,12 @@ function skyVerdict(procFile, gradFile) {
   console.log(rows.every(Boolean) ? 'SKY VERDICT: the gradient sky meets every pre-declared criterion (software rendering only; a real display still needs a human look).' : 'SKY VERDICT: NOT YET - a pre-declared criterion failed; see the lines above.');
 }
 
+/** `--noise a.json b.json`: two runs of the SAME configuration (a control). Shows how far ground, truck and whole-frame luma move between identical runs, i.e. the noise floor any "unchanged" criterion has to be read against. */
+function noise(fa, fb) {
+  const A = JSON.parse(fs.readFileSync(fa)).metrics, B = JSON.parse(fs.readFileSync(fb)).metrics;
+  for (const [name] of PRESETS) { const a = A[name] && A[name].chase, b = B[name] && B[name].chase; if (!a || !b) continue; console.log(`  noise ${name.padEnd(6)} ground ${Math.abs(a.ground.mean - b.ground.mean).toFixed(1)}  truck ${Math.abs(a.truck.mean - b.truck.mean).toFixed(1)}  ground+truck ${(Math.abs(a.ground.mean - b.ground.mean) + Math.abs(a.truck.mean - b.truck.mean)).toFixed(1)}  whole ${Math.abs(a.whole.mean - b.whole.mean).toFixed(1)}  (identical configuration, two runs)`); }
+}
+
 function enforce(metrics, failures, thresholds = THRESHOLDS) {
   if (!thresholds) return;
   for (const [name] of PRESETS) for (const view of ['chase', 'bumper']) {
@@ -310,4 +316,4 @@ function selftest() {
 }
 
 module.exports = { measure, separation, lumaStats, REGIONS, VIEW_REGIONS, PRESETS, THRESHOLDS, ADVISORY, enforce };
-if (process.argv.includes('--vignette-verdict')) { const i = process.argv.indexOf('--vignette-verdict'); vignetteVerdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3]); } else if (process.argv.includes('--sky-verdict')) { const i = process.argv.indexOf('--sky-verdict'); skyVerdict(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
+if (process.argv.includes('--noise')) { const i = process.argv.indexOf('--noise'); noise(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--vignette-verdict')) { const i = process.argv.indexOf('--vignette-verdict'); vignetteVerdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3]); } else if (process.argv.includes('--sky-verdict')) { const i = process.argv.indexOf('--sky-verdict'); skyVerdict(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });

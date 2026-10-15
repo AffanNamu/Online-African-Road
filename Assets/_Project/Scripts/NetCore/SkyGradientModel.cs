@@ -8,6 +8,8 @@ namespace ARO.NetCore
         public Rgb Zenith, Mid, Horizon, Ground, Glow;
         /// <summary>Strength of the wide glow around the sun (0 at night), its tightness (higher = smaller) and the brightness of the sun disc.</summary>
         public float GlowStrength, GlowPower, DiscStrength;
+        /// <summary>Where the mid colour sits (as the sine of the elevation: 0.16 is about 9 degrees) and the curve of the climb to the zenith (1 = linear in that sine). A low mid stop keeps the warm horizon band wide enough to be seen from a chase camera that looks down the road.</summary>
+        public float MidHeight, HeightExp;
     }
 
     /// <summary>
@@ -24,7 +26,7 @@ namespace ARO.NetCore
         // Clear day.
         static readonly Rgb DayZ = new Rgb(0.20f, 0.44f, 0.82f), DayM = new Rgb(0.50f, 0.68f, 0.88f), DayH = new Rgb(0.72f, 0.83f, 0.92f);
         // Dawn golden hour: a cool blue sky over a peach-pink horizon.
-        static readonly Rgb DawnZ = new Rgb(0.26f, 0.40f, 0.72f), DawnM = new Rgb(0.66f, 0.66f, 0.80f), DawnH = new Rgb(1.00f, 0.74f, 0.58f);
+        static readonly Rgb DawnZ = new Rgb(0.26f, 0.40f, 0.72f), DawnM = new Rgb(0.66f, 0.66f, 0.80f), DawnH = new Rgb(1.00f, 0.70f, 0.50f);
         // Sunset golden hour: a deeper blue sky over a gold-orange horizon.
         static readonly Rgb DuskZ = new Rgb(0.17f, 0.34f, 0.68f), DuskM = new Rgb(0.55f, 0.62f, 0.78f), DuskH = new Rgb(1.00f, 0.60f, 0.26f);
         // Night: dark blue, a little lighter at the horizon (the night rendering keeps the sky readable; the old sky's night mean was about 57/255).
@@ -59,7 +61,7 @@ namespace ARO.NetCore
             s.Glow = st.SunColor;
             float sunUp = st.SunEnabled ? Smooth((st.Elevation + 0.05f) / 0.15f) : 0f;
             s.GlowStrength = sunUp * (0.10f + 0.50f * golden) * (1f - 0.8f * oc);
-            s.GlowPower = 6f;
+            s.GlowPower = 6f; s.MidHeight = 0.16f; s.HeightExp = 1f;
             s.DiscStrength = sunUp * (1f - oc) * (0.60f + 0.40f * golden);
             return s;
         }
