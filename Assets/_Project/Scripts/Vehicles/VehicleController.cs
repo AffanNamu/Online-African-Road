@@ -113,11 +113,16 @@ namespace ARO.Vehicles
             var sd = w.sidewaysFriction; sd.stiffness = side; w.sidewaysFriction = sd;
         }
 
+        float _prevThrottle; static int _smokeLog = -1;
+        /// <summary>True on ?smoke= pages (CI): the throttle press is logged with the game clock, so a test measures from the press and not from the next telemetry sample.</summary>
+        static bool SmokeLog { get { if (_smokeLog < 0) { var u = Application.absoluteURL; _smokeLog = !string.IsNullOrEmpty(u) && u.Contains("smoke=") ? 1 : 0; } return _smokeLog == 1; } }
+
         void Update()
         {
             if (IsRemote) return;
             if (_input == null) return;
             _state = _input.Read();
+            if (SmokeLog) { if (_state.Throttle > 0.1f && _prevThrottle <= 0.1f) Debug.Log($"[Drive] throttle on t={Time.time.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}"); _prevThrottle = _state.Throttle; }   // browser tests anchor their game-time windows to the real throttle press
             if (_state.LightsToggled) LightsOn = !LightsOn;
             if (_state.IndicatorLeftToggled) Indicator = Indicator == -1 ? 0 : -1;
             if (_state.IndicatorRightToggled) Indicator = Indicator == 1 ? 0 : 1;

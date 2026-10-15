@@ -626,10 +626,11 @@ const allErrors = [], allExc = [];
     check(db(`select status from friendships where requester_id = '${fin.id}' and addressee_id = '${fx.id}'`) === 'pending', 'the request is pending in the database');
 
     // profiles, from the server (the list is shown again with an empty search box)
-    await c.click('Fri_Search_Input'); await sleep(500); await wipe(c); await sleep(800); await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length; await c.click('Btn_FriProfile_browserfg');
-    const pv = await c.waitLog(/\[Friends\] profile id=browserfg ok=True.* level=(\d+) jobs=(\d+) status=friends/, m, 60); check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
+    await c.click('Fri_Search_Input'); await sleep(500); await wipe(c); await sleep(800); await c.click('Btn_FriTab_All'); await c.settle(); m = c.logs.length;
+    const pv = await c.clickUntil('Btn_FriProfile_browserfg', /\[Friends\] profile id=browserfg ok=True.* level=(\d+) jobs=(\d+) status=friends/, 25, 3);   // a click the software-WebGL player drops is repeated (as elsewhere in this file); the assertion is unchanged
+    check(!!pv, 'View Profile loads the player\'s public profile from the server', pv);
     await c.settle(); await c.page.screenshot({ path: `${prefix}-70-friends-profile.png` }); tg = c.targets(); check(!!tg['Btn_FriProfileInvite'] && !!tg['Btn_FriProfileRemove'], 'the profile of a friend offers Invite to Convoy and Remove Friend');
-    await c.click('Btn_CloseDialog'); await c.settle(); m = c.logs.length; await c.click('Btn_FriMeProfile'); check(!!(await c.waitLog(/\[Friends\] profile id=browserfin ok=True .*status=self/, m, 60)), 'View Profile on your own card shows your public profile');
+    await c.click('Btn_CloseDialog'); await c.settle(); m = c.logs.length; check(!!(await c.clickUntil('Btn_FriMeProfile', /\[Friends\] profile id=browserfin ok=True .*status=self/, 25, 3)), 'View Profile on your own card shows your public profile');
     await c.click('Btn_CloseDialog');
 
     // remove a friend (with a confirmation) and block another

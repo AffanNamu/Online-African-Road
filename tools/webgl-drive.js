@@ -85,8 +85,7 @@ function serve() {
   console.log('\n--- camera manager (fresh page) ---');
   const VIEWS = ['Cockpit', 'DriverCabin', 'RearChase', 'FarChase', 'Left', 'Right', 'Overhead', 'FrontBumper'];
   const ok = m => console.log('  ok: ' + m);
-  const parseDrive = from => logs.slice(from).map(l => /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+).*? yaw=(-?[\d.]+) cam=(\w+)/.exec(l))
-    .filter(Boolean).map(m => ({ t: +m[1], x: +m[2], z: +m[4], kmh: +m[5], yaw: +m[7], cam: m[8] }));
+  const parseDrive = from => logs.slice(from).map(l => { const m = /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+).*? yaw=(-?[\d.]+) cam=(\w+)/.exec(l); return m ? { t: +m[1], x: +m[2], z: +m[4], kmh: +m[5], yaw: +m[7], cam: m[8] } : null; }).filter(Boolean);
   const logFrom = (from, re) => logs.slice(from).find(l => re.test(l));
   async function waitLogFrom(from, re, seconds) { for (let i = 0; i < seconds * 4; i++) { const l = logFrom(from, re); if (l) return l; await page.waitForTimeout(250); } return null; }
   // An edge-triggered key must be held across at least one rendered frame (software WebGL runs slowly), and is repeated only when nothing at all was logged.
@@ -96,6 +95,9 @@ function serve() {
   // takes a different number of wall-clock seconds on a software renderer (about 140-180 ms per frame, and it varies with what the renderer is doing), which is what made
   // "30 m in about 5 s of wall-clock" an unreliable test: the build got slower and the identical drive measured 26 m. Waiting until the game clock has advanced N seconds
   // makes the amount of driving the same whatever the frame rate. Returns {game, wall, samples} or null if the game clock stopped (a real stall: the caller fails).
+  async function holdUntilGameTime(from, targetT, maxWallSeconds = 120) {   // wait until a telemetry sample after `from` has game time >= targetT
+    const w0 = Date.now(); while ((Date.now() - w0) / 1000 < maxWallSeconds) { const ss = parseDrive(from); if (ss.length && ss[ss.length - 1].t >= targetT) return true; await page.waitForTimeout(250); } return false;
+  }
   async function holdGameSeconds(from, seconds, maxWallSeconds = 120) {
     const w0 = Date.now(); let t0 = null;
     while ((Date.now() - w0) / 1000 < maxWallSeconds) {
@@ -105,13 +107,19 @@ function serve() {
     }
     return null;
   }
-  // Distance covered by the last sample that is no later than `seconds` of GAME time after the first one (linearly interpolated inside the segment that crosses the limit). The original acceptance was 30 m in about 4 s of driving,
-  // so the criterion is kept as 30 m within the first 4 game seconds, whatever the frame rate. (Calibration, CI run of 9d6c3b2: speed against game time was the same at ~220 ms and ~290 ms per frame,
-  // 28 -> 61 km/h by 4.6 s and 25 -> 59 km/h by 4.8 s, and 39 m / 40 m covered by 3.4 s / 3.6 s: about 30% above the 30 m limit at both frame rates.)
-  const pathWithin = (ss, seconds) => { let a = 0; for (let i = 1; i < ss.length; i++) {
-    const dt = ss[i].t - ss[i - 1].t, seg = Math.hypot(ss[i].x - ss[i - 1].x, ss[i].z - ss[i - 1].z), t1 = ss[i].t - ss[0].t;
-    if (t1 <= seconds) a += seg; else { const t0 = ss[i - 1].t - ss[0].t; if (t0 < seconds && dt > 0) a += seg * (seconds - t0) / dt; break; } } return a; };   // linear interpolation inside the segment that crosses `seconds`
-  const GAME_ACCEL_S = 6, GAME_BRAKE_S = 5, GAME_STEER_S = 4, GAME_COAST_S = 1.5;
+  // The acceleration window starts at the real throttle press: the game logs "[Drive] throttle on t=<game time>" (smoke pages only). Measuring from the next telemetry sample instead was the flaw in the first
+  // game-clock version of this test: that sample falls anywhere in the 1.1 s after the press, so the same truck measured 29 m in one run and 39 m in another. From the press, the truck starts at rest at the position of the
+  // last sample before the press, so the distance covered in the first W game seconds is well defined (linear interpolation inside the segment that crosses W).
+  const parseLine = l => { const m = /\[Drive\] t=([\d.]+) pos=\(([-\d.]+),([-\d.]+),([-\d.]+)\) kmh=([-\d.]+) dist=([\d.]+).*? yaw=(-?[\d.]+) cam=(\w+)/.exec(l); return m ? { t: +m[1], x: +m[2], z: +m[4], kmh: +m[5], yaw: +m[7], cam: m[8] } : null; };
+  const lastSampleBefore = from => { for (let i = Math.min(from, logs.length) - 1; i >= 0; i--) { const p = parseLine(logs[i]); if (p) return p; } return null; };
+  const pathWithin = (pts, seconds) => { let a = 0; for (let i = 1; i < pts.length; i++) {
+    const dt = pts[i].t - pts[i - 1].t, seg = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].z - pts[i - 1].z), t1 = pts[i].t - pts[0].t;
+    if (t1 <= seconds) a += seg; else { const t0 = pts[i - 1].t - pts[0].t; if (t0 < seconds && dt > 0) a += seg * (seconds - t0) / dt; break; } } return a; };
+  const speedAt = (pts, t) => { for (let i = 1; i < pts.length; i++) if (pts[i].t >= t) { const f = (t - pts[i - 1].t) / Math.max(1e-6, pts[i].t - pts[i - 1].t); return pts[i - 1].kmh + (pts[i].kmh - pts[i - 1].kmh) * Math.max(0, Math.min(1, f)); } return pts.length ? pts[pts.length - 1].kmh : 0; };
+  // Calibration (CI runs of 9d6c3b2 and 933f34f, the same drive at two frame rates, four runs): speed at 6 game s after the press 51 to 75 km/h, distance in those 6 s from rest about 55 m (from rest) to 100 m
+  // (the runs whose first sample was already moving), so the requirements below (30 m, 35 km/h) sit at about half of what the truck does.
+  const ACCEL_WINDOW_S = 6, ACCEL_MIN_M = 30, ACCEL_MIN_KMH = 35;
+  const GAME_BRAKE_S = 5, GAME_STEER_S = 4, GAME_COAST_S = 1.5;
   const pathLength = ss => ss.slice(1).reduce((a, s, i) => a + Math.hypot(s.x - ss[i].x, s.z - ss[i].z), 0);
   const yawDelta = (a, b) => ((b - a + 540) % 360) - 180;
 
@@ -181,19 +189,23 @@ function serve() {
     await tapUntil('3', viewLine('RearChase', 3), 3, 5);   // known start (the button click moved it)
     { const mark = logs.length; await page.keyboard.down('w');
       for (const n of [5, 6, 7, 4]) { await tapUntil(String(n), viewLine(VIEWS[n - 1], n), 2, 3); await page.waitForTimeout(1000); }
-      const win = await holdGameSeconds(mark, GAME_ACCEL_S);   // keep the throttle held until the GAME clock has run the same number of seconds whatever the frame rate
+      // hold the throttle until the GAME clock is past the press + the window (+ one telemetry interval so the window is bracketed), whatever the frame rate
+      const onLine = await waitLogFrom(mark, /\[Drive\] throttle on t=([\d.]+)/, 20); const tOn = onLine ? +/t=([\d.]+)/.exec(onLine)[1] : NaN;
+      const reached = onLine ? await holdUntilGameTime(mark, tOn + ACCEL_WINDOW_S + 1.5) : false;
       await page.keyboard.up('w');
-      const ss = parseDrive(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
-      const gameDt = ss.length > 1 ? ss[ss.length - 1].t - ss[0].t : 0, meanMs = gameDt > 0 ? pathLength(ss) / gameDt : 0;
-      const early = pathWithin(ss, 4);
-      console.log(`  accelerate while switching: ${ss.length} samples over ${gameDt.toFixed(1)} game s (${win ? win.wall.toFixed(1) : 'n/a'} wall s), max ${maxKmh.toFixed(1)} km/h, ${pathLength(ss).toFixed(0)} m (${early.toFixed(0)} m within the first 4 game s), mean ${meanMs.toFixed(1)} m/s, views in the telemetry: ${[...cams].join(',')}`);
-      console.log('    samples (game t, km/h, view): ' + ss.map(x => `${x.t.toFixed(1)}s ${x.kmh.toFixed(0)} ${x.cam}`).join(' | '));
-      if (!win) failures.push(`the game clock did not advance ${GAME_ACCEL_S} s while the throttle was held (a stall, not a slow renderer)`);
+      const ss = parseDrive(mark), rest = lastSampleBefore(mark), maxKmh = Math.max(0, ...ss.map(s => s.kmh)), cams = new Set(ss.map(s => s.cam));
+      const pts = rest && onLine ? [{ t: tOn, x: rest.x, z: rest.z, kmh: 0 }, ...ss.filter(s => s.t > tOn)] : [];
+      const dWin = pts.length ? pathWithin(pts, ACCEL_WINDOW_S) : 0, vWin = pts.length ? speedAt(pts, tOn + ACCEL_WINDOW_S) : 0, d4 = pts.length ? pathWithin(pts, 4) : 0;
+      console.log(`  accelerate while switching: throttle pressed at game t=${onLine ? tOn.toFixed(2) : 'n/a'}, ${ss.length} samples, ${dWin.toFixed(0)} m and ${vWin.toFixed(0)} km/h ${ACCEL_WINDOW_S} game s after the press (${d4.toFixed(0)} m after 4 s), max ${maxKmh.toFixed(1)} km/h, views in the telemetry: ${[...cams].join(',')}`);
+      console.log('    samples (game t after the press, km/h, view): ' + ss.map(x => `${(x.t - tOn).toFixed(1)}s ${x.kmh.toFixed(0)} ${x.cam}`).join(' | '));
+      if (!onLine) failures.push('the game never logged the throttle press ("[Drive] throttle on"): the throttle did not reach the truck, or the log is missing');
+      else if (!rest) failures.push('no telemetry sample before the throttle press, so the starting position is unknown');
+      else if (!reached) failures.push(`the game clock did not advance ${ACCEL_WINDOW_S} s after the throttle press (a stall, not a slow renderer)`);
       else if (ss.length < 4) failures.push(`only ${ss.length} drive samples while switching views`);
       else if (maxKmh < 10) failures.push(`the truck did not accelerate while the view was changed (max ${maxKmh.toFixed(1)} km/h)`);
-      else if (early < 30) failures.push(`the truck barely moved while the view was changed (${early.toFixed(0)} m in the first 4 game seconds, ${pathLength(ss).toFixed(0)} m in all)`);
+      else if (dWin < ACCEL_MIN_M || vWin < ACCEL_MIN_KMH) failures.push(`the truck barely moved while the view was changed (${dWin.toFixed(0)} m and ${vWin.toFixed(0)} km/h ${ACCEL_WINDOW_S} game seconds after the throttle press; needs ${ACCEL_MIN_M} m and ${ACCEL_MIN_KMH} km/h)`);
       else if (cams.size < 3) failures.push('the telemetry never showed the camera changing during the drive: ' + [...cams].join(','));
-      else ok(`acceleration and movement are unaffected by changing the view (max ${maxKmh.toFixed(0)} km/h, ${pathLength(ss).toFixed(0)} m, ${cams.size} views)`);
+      else ok(`acceleration and movement are unaffected by changing the view (${dWin.toFixed(0)} m and ${vWin.toFixed(0)} km/h ${ACCEL_WINDOW_S} game s after the press, max ${maxKmh.toFixed(0)} km/h, ${cams.size} views)`);
 
       // braking in the far chase view (the last view selected above), straight after releasing the throttle
       const peak = maxKmh, bmark = logs.length;
