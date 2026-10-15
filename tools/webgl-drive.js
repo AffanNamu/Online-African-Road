@@ -173,7 +173,7 @@ function serve() {
         let hit = null, reached = false, mark0 = logs.length;
         for (let i = 0; i < 3 && !hit; i++) {
           const mark = logs.length;
-          await page.mouse.move(cx, cy); await page.waitForTimeout(250); await page.mouse.down(); await page.waitForTimeout(150); await page.mouse.up();
+          await page.mouse.move(cx, cy); await page.waitForTimeout(250); await page.mouse.down(); await page.waitForTimeout(700); await page.mouse.up();   // held across at least one rendered frame (150-300 ms each on the software renderer): a shorter press can fall between two samples and be dropped
           hit = await waitLogFrom(mark, /\[Camera\] view=\w+ number=\d .*source=button/, 5);
           if (logFrom(mark, /\[Hud\] camera button clicked/)) reached = true;
         }
