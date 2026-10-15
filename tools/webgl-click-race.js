@@ -37,23 +37,34 @@ async function signup(name) {
   const waitFrom = async (re, from, ms) => { const end = Date.now() + ms; while (Date.now() < end) { const i = logs.findIndex((l, k) => k >= from && re.test(l)); if (i >= 0) return i; await sleep(10); } return -1; };
   const box = () => page.locator('#unity-canvas').boundingBox();
   const at = async name => { const t = targets()[name]; if (!t) return null; const b = await box(); return { x: b.x + t.x * b.width, y: b.y + t.y * b.height }; };
-  const click = async name => { const p = await at(name); if (!p) return false; await page.mouse.move(p.x, p.y); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); return true; };
+  // Every click reports what the game saw: was the target published, did a press arrive and where, did a release arrive, did Unity UI invoke the button (the control used to say only "NOT selected").
+  const click = async (name, label) => {
+    let p = null; for (let i = 0; i < 100 && !(p = await at(name)); i++) await sleep(100);              // the game re-publishes click positions about a second after a rebuild
+    const from = logs.length;
+    if (!p) { say(`  click ${label || name}: NO TARGET POSITION published for ${name}; nothing was clicked`); return { found: false, from }; }
+    await page.mouse.move(p.x, p.y); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); await sleep(1200);
+    const seen = re => logs.slice(from).find(l => re.test(l)) || null;
+    const r = { found: true, from, press: seen(/\[UIDiag\] pointer pressed/), release: seen(/\[UIDiag\] pointer released/), onClick: seen(new RegExp('\\[UIDiag\\] onClick ' + name + ' ')) };
+    say(`  click ${label || name}: target found at (${p.x.toFixed(0)},${p.y.toFixed(0)}) | press: ${r.press ? r.press.replace('[UIDiag] ', '').slice(0, 90) : 'NONE'} | release: ${r.release ? 'yes' : 'NONE'} | onClick: ${r.onClick ? 'yes' : 'NONE'}`);
+    return r;
+  };
   const BUS = 'Btn_GarVeh_bus_city_01', TRUCK = 'Btn_GarVeh_truck_light_01';
   const selectedOnClick = (from, name) => logs.findIndex((l, k) => k >= from && l.startsWith('[UIDiag] onClick ' + name + ' ')) >= 0;
 
   await page.goto(`${BASE}/index.html?backend=${encodeURIComponent(BASE)}&anon=${encodeURIComponent(ANON)}&autologin=${encodeURIComponent(user.email + '|' + user.password)}`);
   if ((await waitFrom(/\[Dashboard\] built for ProbePat/, 0, 150000)) < 0) { say('PROBE: the dashboard never opened; nothing was measured'); await browser.close(); return; }
-  await sleep(4000); let m = logs.length; await click('Nav_Garage');
+  await sleep(4000); let m = logs.length; await click('Nav_Garage', 'Nav_Garage');
   if ((await waitFrom(/\[Garage\] vehicles state=ready count=2 /, m, 90000)) < 0 || (await waitFrom(/\[Showroom\] ready vehicle=truck_light_01/, m, 120000)) < 0) { say('PROBE: the Garage did not load; nothing was measured'); await browser.close(); return; }
-  await sleep(4000); m = logs.length; await click('Btn_GarTab_Maintenance'); await waitFrom(/\[Garage\] quote state=ready repair=300/, m, 60000); await sleep(4000);
+  await sleep(4000); m = logs.length; const hook = await click('Btn_GarTab_Maintenance'); await waitFrom(/\[Garage\] quote state=ready repair=300/, m, 60000); await sleep(4000);
+  say(`HOOK CHECK: the Maintenance tab click ${hook.onClick ? 'logged onClick, so the onClick diagnostics work in this build' : 'did NOT log onClick, so the onClick diagnostics may not be working (press seen: ' + !!hook.press + ')'}`);
 
   // control: a click in a quiet period must work
-  m = logs.length; await click(BUS);
-  const ctrlSel = await waitFrom(/\[Garage\] select vehicle=\S+ definition=bus_city_01/, m, 30000);
-  const ctrl = ctrlSel >= 0 && selectedOnClick(m, BUS);
-  say(`CONTROL (quiet click on the bus card): ${ctrl ? 'selected, onClick logged' : 'NOT selected' + (selectedOnClick(m, BUS) ? ' although onClick was logged' : ', no onClick logged')}`);
+  m = logs.length; const cr = await click(BUS, 'control: bus card');
+  const ctrlSel = await waitFrom(/\[Garage\] select vehicle=\S+ definition=bus_city_01/, m, 15000);
+  const ctrl = ctrlSel >= 0 && !!cr.onClick;
+  say(`CONTROL (quiet click on the bus card): ${ctrl ? 'selected, onClick logged' : `NOT selected (target published=${cr.found}, press seen=${!!cr.press}, onClick=${!!cr.onClick}, selection logged=${ctrlSel >= 0})`}`);
   if (!ctrl) { say('PROBE: the control click failed, so the probe cannot separate causes; stopping'); await page.screenshot({ path: `${prefix}-control-failed.png` }).catch(() => {}); await browser.close(); return; }
-  await sleep(2000); m = logs.length; await click(TRUCK); await waitFrom(/\[Garage\] select vehicle=\S+ definition=truck_light_01/, m, 30000); await waitFrom(/\[Garage\] quote state=ready/, m, 30000); await sleep(4000);
+  await sleep(2000); m = logs.length; await click(TRUCK, 'back to the truck'); await waitFrom(/\[Garage\] select vehicle=\S+ definition=truck_light_01/, m, 30000); await waitFrom(/\[Garage\] quote state=ready/, m, 30000); await sleep(4000);
 
   const trials = [];
   for (const action of [{ btn: 'Btn_GarRepair', ok: /\[Garage\] repair ok=True/ }, { btn: 'Btn_GarRefuel', ok: /\[Garage\] refuel ok=True/ }]) {
@@ -78,7 +89,7 @@ async function signup(name) {
     const releasedAfter = relIdx >= 0 && rebuildIdx >= 0 && relIdx > rebuildIdx;
     trials.push({ action: action.btn, pressedBefore, releasedAfter, fired, selected, order: { ok: okIdx, press: pressIdx, rebuild: rebuildIdx, release: relIdx } });
     await page.mouse.move(5, 5);
-    if (selected) { await sleep(2000); m = logs.length; await click(TRUCK); await waitFrom(/\[Garage\] select vehicle=\S+ definition=truck_light_01/, m, 30000); await waitFrom(/\[Garage\] quote state=ready/, m, 30000); await sleep(3000); }
+    if (selected) { await sleep(2000); m = logs.length; await click(TRUCK, 'back to the truck'); await waitFrom(/\[Garage\] select vehicle=\S+ definition=truck_light_01/, m, 30000); await waitFrom(/\[Garage\] quote state=ready/, m, 30000); await sleep(3000); }
   }
   await page.screenshot({ path: `${prefix}-end.png` }).catch(() => {});
   await browser.close();
