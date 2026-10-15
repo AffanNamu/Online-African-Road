@@ -22,7 +22,7 @@ Recorded from GitHub (job results of the runs themselves), commit 0a853087 unles
 ## The intermittent end-to-end failures
 The suite fails one to seven checks in roughly half of the CI runs, always starting at a single click whose effect the test waits 60 s for (the later failures in the same run are checks that depend on it). It predates the lighting work: it failed at 4f7ace0, 2e9468d and 550f9fd, and the same commit has passed on one run and failed on another. Failing starting points seen so far:
 View Profile (933f34f main), the Jobs board tab (4450e2c twice, 0a85308 branch), the Requests tab (4450e2c, 0dfc313 main, 0a85308 main), the Front preset (cb45c26, 64581f5), an exact username search (64581f5), Recent Players (4f7ace0), sorting by name (550f9fd).
-Two remedies were tried and did not work (a press-log retry that never activated, because the project uses the Input System only and the legacy log used for it never fires; a 700 ms press hold). The assertions, regexes and timeouts have never been changed.
+Two remedies were tried and did not work: a retry that repeated a click when the game logged no press line (it printed no repeat in the next run, which means either every press was seen or the safeguard never switched on; an earlier note here that the build 'rarely logs presses' was a wrong inference, because the CI log holds only the harness output, not the browser console, and the project runs both input handlers: `activeInputHandler: 2`), and a 700 ms press hold. The assertions, regexes and timeouts have never been changed.
 Cause: **not yet established.** Evidence now being collected (see below). This section is updated with the result.
 
 ### Evidence collection (added at the next commit after 0a85308)

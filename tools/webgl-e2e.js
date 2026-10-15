@@ -16,7 +16,7 @@ const check = (ok, what, detail) => {
   if (!ok) failureDiagnostics();
 };
 // Evidence for intermittent failures (no behaviour change): a screenshot at the moment of failure and, for each of the last clicks, whether the game reported a press, where, what was under it, and whether the
-// target had moved since the harness read its position. The game logs "[UIDiag] pointer pressed/released ..." from the Input System in E2E mode. Classification printed per click:
+// target had moved since the harness read its position. The game logs "[UIDiag] pointer pressed/released ..." from the Input System in E2E mode (and the older "[UIDiag] mouse pressed ..." from the legacy input, which the project also has enabled). Classification printed per click:
 //   NO-PRESS     the game never received a press after this click (lost before the game saw it)
 //   MISSED       the game received the press but nothing named like the target was under it (target moved, or something covered it)
 //   MOVED        the target is now somewhere else than where the harness clicked
@@ -29,7 +29,7 @@ function failureDiagnostics() {
     console.log(`      click diagnostics for failure ${n} (screenshot ${prefix}-FAIL-${n}.png):`);
     for (const c of clickLog.slice(-3)) {
       const after = currentLogs.slice(c.from, c.to === undefined ? undefined : c.to);
-      const press = after.find(l => /\[UIDiag\] pointer pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));
+      const press = after.find(l => /\[UIDiag\] (pointer|mouse) pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));   // the Input System line (E2E mode) or the legacy-input line (the project runs both handlers)
       const now = currentTargets ? currentTargets()[c.name] : null; const moved = now && c.pos && (Math.abs(now.x - c.pos.x) > 0.008 || Math.abs(now.y - c.pos.y) > 0.008);
       const hits = press ? (/ui hits=\[(.*)\]/.exec(press) || [])[1] || '' : '';
       const key = c.name.replace(/^(Btn_|Nav_)/, '');
