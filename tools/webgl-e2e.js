@@ -38,16 +38,10 @@ async function open(user, extra, body, opts = {}) {
   page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
   const waitLog = async (re, from = 0, seconds = 60) => { for (let i = 0; i < seconds * 2; i++) { const hit = logs.slice(from).find(l => re.test(l)); if (hit) return hit; await sleep(500); } return null; };
   const targets = () => { const l = [...logs].reverse().find(x => x.startsWith('[WorldMap] targets')) || ''; return Object.fromEntries([...l.matchAll(/TARGET (\S+) x=([\d.]+) y=([\d.]+)/g)].map(m => [m[1], { x: +m[2], y: +m[3] }])); };
-  // The software-WebGL player samples the mouse once per rendered frame, and a frame takes about 150-300 ms here. A press shorter than a frame can start and end between two samples and is
-  // never seen (the press is "dropped"), after which the check waiting for the click's effect times out: a different check in each CI run ('View Profile', 'the Jobs board', 'the Requests tab',
-  // 'the Front preset'), roughly half of all runs, and it predates the lighting work (it failed at 4f7ace0 and 2e9468d too). The press used to be held for 150 ms; at 200 ms per frame about a
-  // quarter of presses (1 - 150/200) fall between two samples. It is now held for E2E_PRESS_MS (default 700 ms, more than two frames), so every press spans at least one sample. Nothing is repeated
-  // (a repeated click can toggle something twice) and no assertion, regex or timeout changed.
-  const PRESS_MS = +(process.env.E2E_PRESS_MS || 700);
   const click = async name => {
     for (let attempt = 0; attempt < 3; attempt++) {
       const t = targets()[name]; if (!t) { await sleep(1500); continue; }
-      const b = await page.locator('#unity-canvas').boundingBox(); await page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(250); await page.mouse.down(); await sleep(PRESS_MS); await page.mouse.up(); return true;
+      const b = await page.locator('#unity-canvas').boundingBox(); await page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); return true;
     }
     return false;
   };
