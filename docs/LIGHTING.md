@@ -64,6 +64,11 @@ Calibration (four earlier CI runs, the same drive at two frame rates; Low about 
 6 game seconds after the press the truck was at 51 to 75 km/h and had covered about 55 m (runs that started from rest) to about 100 m (runs whose first sample was already moving). The 30 m and 35 km/h limits sit at roughly half of that; the number (30 m) is unchanged from the original test, the window
 is now defined in game time from the press instead of "five samples of wall-clock". A second drive at Medium quality runs in CI as a calibration step, and each run prints the press time, the per-sample speeds relative to the press, and the distance and speed at the window.
 
+### Browser E2E: delivering clicks (tools/webgl-e2e.js)
+The end-to-end suite (about 530 checks against a real backend) intermittently failed one check per run, a different one each time ("View Profile", then "the Jobs board"), always a single plain click followed by a 60 s wait for the log line the click should cause.
+The software-WebGL player sometimes never sees a press (down and up fall between two frames). The same file already repeats such clicks where it knew about them (`clickUntil`). Now the harness `click` itself repeats a click when the game did not log the press
+(`[UIDiag] mouse pressed ...`, which the game writes for every press it receives), but only after the first clicks have shown that the build produces those lines, so a build without them behaves as before. No assertion, regex or timeout was changed.
+
 ## What the model does
 * Sun: warm and low at dawn / sunset (golden-hour tint, thicker atmosphere, orange fog), white overhead; switched off just below the horizon where its intensity is already ~0 (no pop).
 * Moon: a cool, dim second directional light that fades in as the sun sets, so the road keeps its shape at night. Night ambient has a blue floor (never pure black).
