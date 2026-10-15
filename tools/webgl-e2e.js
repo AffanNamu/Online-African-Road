@@ -15,26 +15,31 @@ const check = (ok, what, detail) => {
   if (!ok && currentLogs) console.log('      last game log lines: ' + currentLogs.slice(-8).map(l => l.replace(/\s+/g, ' ').slice(0, 160)).join(' | '));   // what the game itself said just before
   if (!ok) failureDiagnostics();
 };
-// Evidence for intermittent failures (no behaviour change): a screenshot at the moment of failure and, for each of the last clicks, whether the game reported a press, where, what was under it, and whether the
-// target had moved since the harness read its position. The game logs "[UIDiag] pointer pressed/released ..." from the Input System in E2E mode (and the older "[UIDiag] mouse pressed ..." from the legacy input, which the project also has enabled). Classification printed per click:
-//   NO-PRESS     the game never received a press after this click (lost before the game saw it)
-//   MISSED       the game received the press but nothing named like the target was under it (target moved, or something covered it)
-//   MOVED        the target is now somewhere else than where the harness clicked
-//   HIT          the press landed on the intended element: the effect is missing for another reason (a game or backend problem)
+// Evidence for intermittent failures (no behaviour change): a screenshot at the moment of failure and, for each of the last clicks, what the game reported. In E2E mode the game logs
+// "[UIDiag] pointer pressed/released ..." from the Input System (and the older "[UIDiag] mouse pressed ..." from the legacy input, which the project also has enabled) and, for every button, "[UIDiag] onClick <name>"
+// when Unity UI invokes it. Classification printed per click (the "ui hits" list is printed but NOT used: it is empty for clicks that worked, e.g. Repair and Refuel in run 38705487149, so it proves nothing):
+//   NO-PRESS      the game never received a press after this click (lost before the game saw it)
+//   OFF-TARGET    a press arrived more than 6 px from the position the harness clicked (the page moved, or the harness aimed wrongly)
+//   MOVED         the target is now somewhere else than where the harness clicked
+//   NO-ONCLICK    the press arrived on the target but Unity UI did not invoke the button (an input or UI-event problem)
+//   CLICKED       the button was invoked: the missing effect is a game or backend problem
+//   PRESS-ON-TARGET  the press arrived on the target; this build does not log onClick, so nothing more can be said
 function failureDiagnostics() {
   try {
     const n = failures.length;
     if (currentPage) currentPage.screenshot({ path: `${prefix}-FAIL-${n}.png` }).catch(() => {});
     if (!currentLogs) return;
     console.log(`      click diagnostics for failure ${n} (screenshot ${prefix}-FAIL-${n}.png):`);
+    const hooked = currentLogs.some(l => /\[UIDiag\] onClick /.test(l));
     for (const c of clickLog.slice(-3)) {
       const after = currentLogs.slice(c.from, c.to === undefined ? undefined : c.to);
-      const press = after.find(l => /\[UIDiag\] (pointer|mouse) pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));   // the Input System line (E2E mode) or the legacy-input line (the project runs both handlers)
+      const press = after.find(l => /\[UIDiag\] (pointer|mouse) pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));
+      const oc = after.find(l => new RegExp('\\[UIDiag\\] onClick ' + c.name + '\\b').test(l));
       const now = currentTargets ? currentTargets()[c.name] : null; const moved = now && c.pos && (Math.abs(now.x - c.pos.x) > 0.008 || Math.abs(now.y - c.pos.y) > 0.008);
-      const hits = press ? (/ui hits=\[(.*)\]/.exec(press) || [])[1] || '' : '';
-      const key = c.name.replace(/^(Btn_|Nav_)/, '');
-      const cls = !press ? 'NO-PRESS' : (!hits.includes(key) && !hits.includes(c.name)) ? 'MISSED' : moved ? 'MOVED' : 'HIT';
-      console.log(`        ${cls.padEnd(9)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}`);
+      let off = false;
+      if (press && c.pos) { const m = /pressed at (\d+),(\d+) of (\d+)x(\d+)/.exec(press); if (m) off = Math.hypot(+m[1] - c.pos.x * +m[3], +m[2] - (1 - c.pos.y) * +m[4]) > 6; }   // the game's y axis points up, the target's points down
+      const cls = !press ? 'NO-PRESS' : off ? 'OFF-TARGET' : moved ? 'MOVED' : oc ? 'CLICKED' : hooked ? 'NO-ONCLICK' : 'PRESS-ON-TARGET';
+      console.log(`        ${cls.padEnd(15)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}${oc ? ' | ' + oc.replace(/^\[UIDiag\] /, '').slice(0, 80) : ''}`);
     }
   } catch (e) { console.log('      (diagnostics failed: ' + String(e).slice(0, 100) + ')'); }
 }

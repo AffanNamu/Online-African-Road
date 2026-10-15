@@ -16,6 +16,7 @@ namespace ARO.Game
         float _nextStatus = 3f, _started;
         bool _targetsLogged;
         readonly List<RaycastResult> _hits = new List<RaycastResult>();
+        readonly HashSet<int> _hooked = new HashSet<int>();   // buttons that already log their onClick (browser end-to-end runs only)
 
         void Start() { _started = Time.realtimeSinceStartup; }
 
@@ -28,6 +29,7 @@ namespace ARO.Game
             // game actually receives, where it was, which UI elements were under it, and the frame time (a press lost between two frames never shows up here, which is the evidence the tests need).
             if (SmokeMode.E2E)
             {
+                HookButtons();
                 try
                 {
                     var ms = UnityEngine.InputSystem.Mouse.current;
@@ -49,6 +51,20 @@ namespace ARO.Game
                 }
             }
             catch (InvalidOperationException) { /* legacy Input disabled by the project's input setting */ }
+        }
+
+        /// <summary>
+        /// Browser end-to-end runs only: every button logs "[UIDiag] onClick name" when Unity UI actually invokes it. With the press line this separates "the press never reached the button" (press logged, no onClick)
+        /// from "the button fired but its handler did nothing" (onClick logged, no effect). The listener is added after the game's own, so it never changes what a click does.
+        /// </summary>
+        void HookButtons()
+        {
+            foreach (var b in FindObjectsByType<Button>(FindObjectsSortMode.None))
+            {
+                if (!_hooked.Add(b.GetInstanceID())) continue;
+                string n = b.name;
+                b.onClick.AddListener(() => Debug.Log($"[UIDiag] onClick {n} interactable=true frame={(Time.unscaledDeltaTime * 1000f):0}ms"));
+            }
         }
 
         static void LogTargets()
