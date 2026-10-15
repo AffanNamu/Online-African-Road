@@ -207,6 +207,44 @@ function compare(lowFile, mediumFile) {
   process.exit(drawn === n && n > 0 ? 0 : 1);
 }
 
+/**
+ * `--vignette-verdict low.json medium.json medium-v10.json`: does lowering the Medium vignette from 0.22 to 0.10 help without harming anything? The criteria below were written down BEFORE the
+ * v10 run was read (docs/REALISM_AUDIT.md, Appendix C). Informational: it prints every criterion and one verdict and never fails the build.
+ */
+function vignetteVerdict(lowFile, medFile, newFile) {
+  const rd = f => JSON.parse(fs.readFileSync(f)).metrics, low = rd(lowFile), med = rd(medFile), neu = rd(newFile); const rows = []; const ck = (ok, msg) => { rows.push(ok); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
+  for (const [name] of PRESETS) {
+    const L = low[name] && low[name].chase, M = med[name] && med[name].chase, N = neu[name] && neu[name].chase; if (!L || !M || !N) { ck(false, `${name}: missing in one of the three runs`); continue; }
+    ck(N.whole.mean - M.whole.mean >= 1.5, `${name}: whole-frame mean rises by at least 1.5 (shipping Medium ${M.whole.mean.toFixed(1)} -> v10 ${N.whole.mean.toFixed(1)}; Low ${L.whole.mean.toFixed(1)})`);
+    const ratio = N.cornerLuma / L.cornerLuma, need = name === 'night' ? 0.65 : 0.80;
+    ck(ratio >= need && ratio < 0.97, `${name}: corner brightness is ${ratio.toFixed(2)} of Low's (need >= ${need} and < 0.97 so the vignette is still drawn; shipping Medium ${(M.cornerLuma / L.cornerLuma).toFixed(2)})`);
+  }
+  const f = []; enforce(neu, f); ck(f.length === 0, `every enforced threshold passes on the v10 run${f.length ? ': ' + f.join('; ') : ''}`);
+  if (neu.night && med.night) { const a = neu.night.chase, b = med.night.chase; ck(a.roadSurface.mean >= b.roadSurface.mean && a.whole.mean >= b.whole.mean, `night visibility is not worse (road ${b.roadSurface.mean.toFixed(1)} -> ${a.roadSurface.mean.toFixed(1)}, whole ${b.whole.mean.toFixed(1)} -> ${a.whole.mean.toFixed(1)})`); }
+  console.log(rows.every(Boolean) ? 'VIGNETTE VERDICT: ADOPT 0.10 (every pre-declared criterion met, software rendering only).' : 'VIGNETTE VERDICT: DO NOT ADOPT as is (a pre-declared criterion failed).');
+}
+
+/**
+ * `--sky-verdict procedural.json gradient.json`: does the gradient sky give a blue zenith over a warm horizon, and does it leave the lighting of the world alone? Criteria fixed before the
+ * gradient run was read (docs/REALISM_AUDIT.md, Appendix C). Software rendering only; informational.
+ */
+function skyVerdict(procFile, gradFile) {
+  const rd = f => JSON.parse(fs.readFileSync(f)), P = rd(procFile).metrics, graw = rd(gradFile), G = graw.metrics; const rows = []; const ck = (ok, msg) => { rows.push(ok); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
+  const w = r => r.r / Math.max(1, r.b), c = (m, h) => m[h] && m[h].chase;
+  ck(JSON.stringify(graw.lines || {}).includes('sky=gradient'), 'the game reports it is drawing the gradient sky ([Light] ... sky=gradient)');
+  for (const h of ['dawn', 'sunset']) {
+    const g = c(G, h), p = c(P, h); if (!g || !p) { ck(false, `${h}: missing`); continue; }
+    ck(g.skyHigh.sat >= 0.30, `${h}: zenith saturation ${g.skyHigh.sat.toFixed(2)} >= 0.30 (procedural ${p.skyHigh.sat.toFixed(2)})`);
+    ck(w(g.skyHigh) <= 1.0, `${h}: zenith is blue-dominant, R/B ${w(g.skyHigh).toFixed(2)} <= 1.0 (procedural ${w(p.skyHigh).toFixed(2)})`);
+    const need = h === 'dawn' ? 1.4 : 1.8; ck(w(g.skyHorizon) >= need, `${h}: horizon warmth R/B ${w(g.skyHorizon).toFixed(2)} >= ${need} (procedural ${w(p.skyHorizon).toFixed(2)})`);
+  }
+  const gd = c(G, 'dawn'), gs = c(G, 'sunset'); if (gd && gs) ck(w(gs.skyHorizon) - w(gd.skyHorizon) >= 0.5, `sunset horizon is at least 0.5 warmer than dawn's (${w(gd.skyHorizon).toFixed(2)} -> ${w(gs.skyHorizon).toFixed(2)})`);
+  const gn = c(G, 'noon'); if (gn) ck(gn.skyHigh.sat >= 0.35 && w(gn.skyHigh) <= 0.8, `noon: blue sky, saturation ${gn.skyHigh.sat.toFixed(2)} >= 0.35 and R/B ${w(gn.skyHigh).toFixed(2)} <= 0.8`);
+  const f = []; enforce(G, f); ck(f.length === 0, `every enforced threshold passes with the gradient sky${f.length ? ': ' + f.join('; ') : ''}`);
+  for (const [name] of PRESETS) { const g = c(G, name), p = c(P, name); if (!g || !p) continue; const d = Math.abs(g.ground.mean - p.ground.mean) + Math.abs(g.truck.mean - p.truck.mean); ck(d <= 6, `${name}: the sky change leaves the lit world alone (ground+truck luma differ by ${d.toFixed(1)} <= 6)`); }
+  console.log(rows.every(Boolean) ? 'SKY VERDICT: the gradient sky meets every pre-declared criterion (software rendering only; a real display still needs a human look).' : 'SKY VERDICT: NOT YET - a pre-declared criterion failed; see the lines above.');
+}
+
 function enforce(metrics, failures, thresholds = THRESHOLDS) {
   if (!thresholds) return;
   for (const [name] of PRESETS) for (const view of ['chase', 'bumper']) {
@@ -272,4 +310,4 @@ function selftest() {
 }
 
 module.exports = { measure, separation, lumaStats, REGIONS, VIEW_REGIONS, PRESETS, THRESHOLDS, ADVISORY, enforce };
-if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
+if (process.argv.includes('--vignette-verdict')) { const i = process.argv.indexOf('--vignette-verdict'); vignetteVerdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3]); } else if (process.argv.includes('--sky-verdict')) { const i = process.argv.indexOf('--sky-verdict'); skyVerdict(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });

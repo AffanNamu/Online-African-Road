@@ -12,6 +12,8 @@ namespace ARO.Core
         public static float TestHour = -1f;
         /// <summary>Test hook (only on ?smoke= pages): a sky atmosphere thickness from ?atm=, so CI can render dawn and sunset at several thicknesses and the value is chosen from real frames. -1 when none.</summary>
         public static float TestAtmosphere = -1f;
+        /// <summary>Test hook (only on ?smoke= pages): ?sky=gradient draws the custom gradient sky (ARO/SkyGradient) instead of the procedural one, so CI can render both and the choice is made from frames. False by default.</summary>
+        public static bool TestSkyGradient;
         public static bool ShowPlayerNames = true, ShowMinimap = true, Shadows = true, PostProcessing = true, SpeedMph;
         public static string QualityPreference = "auto", TrafficChoice = "medium";
         public static int Version;

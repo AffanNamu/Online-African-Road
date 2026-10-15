@@ -281,6 +281,18 @@ jobs:
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v0 medium "&vignette=0" || true
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-c0v0 medium "&contrast=0&vignette=0" || true
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-ns medium "&shadows=off" || true
+      - name: Medium vignette study - 0.10 instead of 0.22, judged against criteria written down beforehand (informational; docs/REALISM_AUDIT.md Appendix C)
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v10 medium "&vignette=0.1" || true
+          node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-metrics.json webgl-light-medium-v10-metrics.json
+      - name: Gradient sky study - the custom ARO/SkyGradient sky at Low, four hours, judged against criteria written down beforehand (informational; Appendix C)
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-lighting.js Builds/WebGL webgl-light-grad low "&sky=gradient" || true
+          node tools/webgl-lighting.js --sky-verdict webgl-light-metrics.json webgl-light-grad-metrics.json
       - name: Is post-processing really drawn? (Medium corners must be darker than Low corners at the same hour; informational)
         if: always()
         continue-on-error: true

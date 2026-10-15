@@ -19,7 +19,7 @@ namespace ARO.World
         public bool IsNight => hour < 5.6f || hour > 18.4f;
         public event Action<bool> NightChanged;
 
-        Material _sky; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
+        Material _sky, _gradient; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
         /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
         public string HourSource => _source;
         /// <summary>The lighting for the current hour and weather (sun, moon, sky, ambient, fog, grade). Read by the rendering rig for the post-processing grade.</summary>
@@ -30,12 +30,36 @@ namespace ARO.World
         {
             _sky = new Material(Shader.Find("Skybox/Procedural"));
             RenderSettings.skybox = _sky; RenderSettings.sun = sun;
+            if (ARO.Core.RuntimeSettings.TestSkyGradient) UseGradientSky();
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
             // The moon: a second, shadowless directional light that only lights the world while the sun is down, so a night road keeps its shape.
             var moonGo = new GameObject("Moon"); moonGo.transform.SetParent(transform, false);
             moonGo.transform.rotation = Quaternion.Euler(LightingModel.MoonElevationDeg, LightingModel.MoonAzimuthDeg, 0f);
             _moon = moonGo.AddComponent<Light>(); _moon.type = LightType.Directional; _moon.shadows = LightShadows.None; _moon.enabled = false; _moon.intensity = 0f;
+        }
+
+        /// <summary>
+        /// Switches the skybox to the custom gradient (Resources/Sky/ARO_SkyGradient, made by SceneBuilder). Only on request (?smoke= pages with sky=gradient); if the material or its shader is
+        /// missing or unsupported, the procedural sky stays and the log says so. Ambient light, fog and the sun are untouched either way.
+        /// </summary>
+        void UseGradientSky()
+        {
+            var template = Resources.Load<Material>("Sky/ARO_SkyGradient");
+            if (template == null || template.shader == null || !template.shader.isSupported) { Debug.LogWarning($"[Light] gradient sky requested but unavailable (material found={template != null}, shader supported={(template != null && template.shader != null && template.shader.isSupported)}); keeping the procedural sky"); return; }
+            _gradient = new Material(template); RenderSettings.skybox = _gradient;
+            Debug.Log("[Light] sky=gradient (ARO/SkyGradient)");
+        }
+
+        void ApplyGradient(LightingState st)
+        {
+            var g = SkyGradientModel.Evaluate(st);
+            _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));
+            _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
+            _gradient.SetColor("_GlowColor", new Color(g.Glow.R, g.Glow.G, g.Glow.B));
+            _gradient.SetFloat("_GlowStrength", g.GlowStrength); _gradient.SetFloat("_GlowPower", g.GlowPower); _gradient.SetFloat("_DiscStrength", g.DiscStrength);
+            var toSun = sun != null ? -sun.transform.forward : Vector3.up;                // a directional light shines along its forward axis; the sun is in the opposite direction
+            _gradient.SetVector("_SunDir", new Vector4(toSun.x, toSun.y, toSun.z, 0f));
         }
 
         /// <summary>While true the world's sun and ambient are left alone (the Garage showroom lights its own room and restores everything when it closes).</summary>
@@ -64,6 +88,7 @@ namespace ARO.World
                 sun.enabled = st.SunEnabled;
             }
             if (_moon != null) { _moon.enabled = st.MoonEnabled; _moon.intensity = st.MoonIntensity; _moon.color = new Color(st.MoonColor.R, st.MoonColor.G, st.MoonColor.B); }
+            if (_gradient != null) ApplyGradient(st);
             _sky.SetFloat("_Exposure", st.SkyExposure);
             _sky.SetFloat("_AtmosphereThickness", st.Atmosphere);
             _sky.SetColor("_SkyTint", new Color(st.SkyTint.R, st.SkyTint.G, st.SkyTint.B));
@@ -83,7 +108,7 @@ namespace ARO.World
         {
             if (Time.unscaledTime < _nextLog) return; _nextLog = Time.unscaledTime + 5f;
             Debug.Log($"[Light] hour={F(hour)} source={_source} night={IsNight} elev={F(elev)} sun={(sun != null && sun.enabled ? "on" : "off")} sunIntensity={F(sun != null ? sun.intensity : 0f)} sunColor={C(sun != null ? sun.color : Color.black)} " +
-                      $"skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
+                      $"sky={(_gradient != null ? "gradient" : "procedural")} skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
                       $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)} moon={(_moon != null && _moon.enabled ? "on" : "off")} moonIntensity={F(_moon != null ? _moon.intensity : 0f)} golden={F(State.Golden)} postExposure={F(State.PostExposure)} atmosphere={F(_sky.GetFloat("_AtmosphereThickness"))} skyTint={C(_sky.GetColor("_SkyTint"))} fogColor={C(RenderSettings.fogColor)} fogDensityExact={RenderSettings.fogDensity.ToString("0.00000", CultureInfo.InvariantCulture)}");
         }
     }

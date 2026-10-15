@@ -63,6 +63,7 @@ namespace ARO.Game
             // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
             ARO.Core.RuntimeSettings.TestHour = ARO.NetCore.LightingHour.FromUrl(Application.absoluteURL);   // ?hour=dawn|noon|sunset|night|6.5|18:30 (tests and reviews); otherwise the setting, then the real clock
             ARO.Core.RuntimeSettings.TestAtmosphere = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") ? ARO.NetCore.LightingHour.QueryNumber(Application.absoluteURL, "atm", 0.3f, 3f) : -1f;   // sky study (CI only)
+            ARO.Core.RuntimeSettings.TestSkyGradient = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("sky=gradient");   // gradient sky study (CI only)
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };

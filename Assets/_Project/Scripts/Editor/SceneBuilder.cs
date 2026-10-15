@@ -30,6 +30,7 @@ namespace ARO.Editor
             foreach (var d in new[] { "Data", "Materials", "Scenes", "Resources" }) Directory.CreateDirectory($"{Root}/{d}");
 
             EnsureUrp();
+            EnsureSkyGradientMaterial();
             var mats = new
             {
                 good = Mat("RoadGood", new Color(0.16f, 0.16f, 0.17f)),
@@ -140,6 +141,22 @@ namespace ARO.Editor
             if (asset == null || prop == null) { Debug.LogWarning($"[Render] could not assign the URP post-process data (asset found={asset != null}, property found={prop != null}); post-processing may not render"); return; }
             prop.objectReferenceValue = asset; so.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(rd);
             Debug.Log("[Render] assigned the URP post-process data to the renderer");
+        }
+
+        /// <summary>
+        /// The gradient sky's material lives in Resources so the player build includes the shader (a shader nothing references is stripped). It is only used when TimeOfDay is asked
+        /// for the gradient sky; a missing shader here is reported and nothing else changes.
+        /// </summary>
+        static void EnsureSkyGradientMaterial()
+        {
+            var shader = Shader.Find("ARO/SkyGradient");
+            if (shader == null) { Debug.LogWarning("[Render] shader ARO/SkyGradient not found; the gradient sky will be unavailable"); return; }
+            Directory.CreateDirectory($"{Root}/Resources/Sky");
+            string path = $"{Root}/Resources/Sky/ARO_SkyGradient.mat";
+            var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (m == null) { m = new Material(shader); AssetDatabase.CreateAsset(m, path); }
+            m.shader = shader; EditorUtility.SetDirty(m); AssetDatabase.SaveAssets();
+            Debug.Log("[Render] gradient sky material ready (Resources/Sky/ARO_SkyGradient)");
         }
 
         static Material Mat(string name, Color c)

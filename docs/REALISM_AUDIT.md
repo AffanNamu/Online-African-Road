@@ -173,3 +173,23 @@ Intermittent failures, separated:
 1. **Infrastructure (no test ran):** Docker image pull `toomanyrequests: Data limit exceeded` in "Initialize containers" (seen on several jobs and commits). Re-run.
 2. **Backend rate-limit test, cause established:** the limiter is a fixed 60 s window and the test's 45 calls straddled a boundary (`ok:45, limited:0`). Test-only fix, assertion unchanged, not yet seen green after the fix.
 3. **Browser E2E click failures, cause NOT established:** the first diagnostics show the click reached the game at the right place on a visible card and the card did not react; my first classifier printed a misleading "MISSED", now corrected. An `onClick` log is deployed to split "Unity UI did not invoke the button" from "the handler ignored it". A CI run with it is in flight (commit c20f75b) and will say which; until then this is an open, real problem, not infrastructure, not caused by the lighting work (the suite failed before it, at 4f7ace0, 2e9468d and 550f9fd).
+
+## Appendix C. Graphics experiments and their pre-declared criteria (written before the results were read)
+
+Both experiments are isolated and default-off: the vignette is tried with the existing smoke-page override (`&vignette=0.1`), and the gradient sky is selected only by `&sky=gradient` on a smoke page (`TimeOfDay.UseGradientSky`, `Resources/Sky/ARO_SkyGradient` made by `SceneBuilder`, shader `Assets/_Project/Shaders/ARO_SkyGradient.shader`, colours from the tested `SkyGradientModel`, 13 unit tests, NetCore suite 1030 passing locally). Without the URL flag the game is unchanged; reverting is deleting those files and the flag.
+
+**Medium vignette 0.22 -> 0.10** (`webgl-lighting.js --vignette-verdict`, Low vs shipping Medium vs v10, chase view, software GL). Adopt only if ALL hold:
+1. whole-frame mean rises by at least 1.5 luma over shipping Medium at all four hours;
+2. corner brightness is at least 0.80 of Low's (0.65 at night) and still below 0.97 (the vignette remains drawn);
+3. every enforced lighting threshold passes on the v10 run;
+4. night road and whole-frame means are not lower than shipping Medium's.
+
+**Gradient sky** (`--sky-verdict`, Low, chase view). Meets the goal only if ALL hold:
+1. the log says `sky=gradient`;
+2. dawn and sunset: zenith saturation >= 0.30 and R/B <= 1.0 (procedural: saturation 0.15 to 0.19, sunset R/B 1.18);
+3. horizon warmth R/B >= 1.4 at dawn and >= 1.8 at sunset, and sunset at least 0.5 warmer than dawn;
+4. noon: zenith saturation >= 0.35 and R/B <= 0.8;
+5. every enforced lighting threshold passes with the gradient sky;
+6. the lit world is unchanged: ground plus truck luma differ by <= 6 from the procedural sky at each hour (the sky change must not move the lighting).
+
+Passing these numbers would still be software rendering of CI screenshots; a person has to look at the frames, and a real display has not been used. Results are recorded below once CI has run (not before).
