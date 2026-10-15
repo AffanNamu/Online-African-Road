@@ -208,6 +208,12 @@ jobs:
           E2E_BUILD_DIR="$PWD/Builds/WebGL" tools/e2e/up.sh
           source /tmp/aro-e2e.env
           node tools/webgl-e2e.js webgl-e2e
+      - name: Click-versus-rebuild probe (informational - what happens to a click pressed before and released after the Garage rebuilds its widgets; never fails the job)
+        if: always()
+        continue-on-error: true
+        run: |
+          source /tmp/aro-e2e.env
+          node tools/webgl-click-race.js webgl-click-race
       - name: Backend logs
         if: failure()
         run: tail -n 60 /tmp/aro-e2e-postgrest.log /tmp/aro-e2e-shim.log || true
