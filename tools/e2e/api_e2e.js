@@ -167,6 +167,9 @@ async function signup(name) {
   check('the world state is authoritative: one open route, the rest planned', world.routes.filter(r => r.effective_status === 'OPEN').length === 1 && world.cities.length === 23);
   check('authored news is labelled authored', (await rpc(A.token, 'get_content', { p_kind: 'news' })).body.items.every(i => i.source === 'authored'));
   let ok = 0, limited = 0;
+  // The limiter is a FIXED 60 s window (30 calls). A loop that straddles a window boundary splits its calls between two windows and can legitimately see none limited ({ok:45,limited:0}, observed in run 38706152411).
+  // Start the loop in a fresh window when fewer than 15 s of the current one remain; the assertion below is unchanged.
+  { const left = 60000 - (Date.now() % 60000); if (left < 15000) await sleep(left + 500); }
   for (let i = 0; i < 45; i++) { const r = await rpc(A.token, 'find_player', { p_username: 'e2ebob' }); if (r.status === 200) ok++; else if (msg(r) === 'rate_limited') limited++; }
   check('excessive requests are rate limited (HTTP)', limited > 0 && ok <= 40, { ok, limited });
   check("one player's limit does not affect another", (await rpc(carol.token, 'find_player', { p_username: 'e2ebob' })).status === 200);

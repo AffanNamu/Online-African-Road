@@ -56,3 +56,15 @@ So: the click reached the game, at the right place, on a visible card, and the c
 | Lighting (Low enforced; Medium and studies informational) | pass | the "contrast 0 + vignette off" study variant fails the noon road threshold (77.7 < 80); that variant is not shipped, the job still passes |
 | Browser E2E | **fail, 497/500** | one root failure (above), a real unresolved problem, not infrastructure |
 | World map | pass | |
+
+## Second flaky check, cause established: the HTTP rate-limit test
+Run 38706152411 (commit 1e03ee1, main), job "Backend over HTTP": 112 passed, 1 failed: `excessive requests are rate limited (HTTP) -> {"ok":45,"limited":0}`. This job passed on the previous commit with identical backend code.
+
+Cause (from the code, and the result itself): `_rate_limit` is a **fixed 60 s window** (`find_player`: 30 calls per 60 s, `supabase/migrations/20261010000002_foundation.sql`, `20261010000005_social.sql`). The test sends 45 calls in a row and expects some to be refused. With a 30-call window, 45 calls inside ONE window must give at least 15 refusals, so `ok:45, limited:0` can only happen when the loop straddled a window boundary and its calls were split across two windows (for example 20 + 25). The chance of this per run is roughly the loop duration over 60 s, which is why it appears rarely and at random. The limiter is behaving as designed; the test was racing the clock.
+
+Fix (test only, the assertion `limited > 0 && ok <= 40` is unchanged): `tools/e2e/api_e2e.js` now waits for the next window when fewer than 15 s of the current one remain, so the loop always runs inside one window. Not yet seen passing in CI after the change.
+
+## Infrastructure failures in the 1e03ee1 runs (no test ran)
+* "WebGL build boots in a browser" (main): `docker pull public.ecr.aws/docker/library/postgres:15` failed three times with `toomanyrequests: Data limit exceeded` in "Initialize containers". The job then continued into later steps with the workspace missing (`Cannot find module tools/webgl-drive.js`, `tools/e2e/up.sh: No such file`), so five steps show red; **none of them ran a test**. This is why a single image-pull failure can look like many failures.
+* "Database migrations + rule tests" (main) and "Backend over HTTP" (branch): the same image pull failure.
+Re-run when it happens; the cause is the registry's rate limit on the runner's address, not the repository.
