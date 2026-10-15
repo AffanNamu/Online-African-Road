@@ -21,7 +21,9 @@ const check = (ok, what, detail) => {
 //   NO-PRESS      the game never received a press after this click (lost before the game saw it)
 //   OFF-TARGET    a press arrived more than 6 px from the position the harness clicked (the page moved, or the harness aimed wrongly)
 //   MOVED         the target is now somewhere else than where the harness clicked
-//   NO-ONCLICK    the press arrived on the target but Unity UI did not invoke the button (an input or UI-event problem)
+//   NOTHING-THERE the press arrived on the target but NO button existed under the pointer at that moment: the page was in a loading state or being rebuilt (the printed rebuild times show it)
+//   BLOCKED       the button existed under the pointer but nothing raycast to it (something covered it or it was not raycastable)
+//   NO-ONCLICK    the press hit the button but Unity UI did not invoke it (an input or UI-event problem)
 //   CLICKED       the button was invoked: the missing effect is a game or backend problem
 //   PRESS-ON-TARGET  the press arrived on the target; this build does not log onClick, so nothing more can be said
 function failureDiagnostics() {
@@ -38,8 +40,15 @@ function failureDiagnostics() {
       const now = currentTargets ? currentTargets()[c.name] : null; const moved = now && c.pos && (Math.abs(now.x - c.pos.x) > 0.008 || Math.abs(now.y - c.pos.y) > 0.008);
       let off = false;
       if (press && c.pos) { const m = /pressed at (\d+),(\d+) of (\d+)x(\d+)/.exec(press); if (m) off = Math.hypot(+m[1] - c.pos.x * +m[3], +m[2] - (1 - c.pos.y) * +m[4]) > 6; }   // the game's y axis points up, the target's points down
-      const cls = !press ? 'NO-PRESS' : off ? 'OFF-TARGET' : moved ? 'MOVED' : oc ? 'CLICKED' : hooked ? 'NO-ONCLICK' : 'PRESS-ON-TARGET';
-      console.log(`        ${cls.padEnd(15)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}${oc ? ' | ' + oc.replace(/^\[UIDiag\] /, '').slice(0, 80) : ''}`);
+      const under = press ? (/buttons under pointer=\[(.*?)\]/.exec(press) || [])[1] : undefined, hitList = press ? (/ui hits=\[(.*?)\]/.exec(press) || [])[1] || '' : '';
+      const tP = press ? +((/ t=([\d.]+);/.exec(press) || [])[1]) : NaN;
+      const rb = currentLogs.filter(l => /\[UIDiag\] rebuild /.test(l)).map(l => ({ name: l.split(' ')[2], t: +(/ t=([\d.]+)/.exec(l) || [])[1] }));
+      const before = rb.filter(r => r.t <= tP).pop(), next = rb.find(r => r.t > tP);
+      const rbText = Number.isFinite(tP) && rb.length ? ` | rebuilds: last before press ${before ? before.name + ' ' + ((tP - before.t) * 1000).toFixed(0) + ' ms earlier' : 'none'}, next ${next ? next.name + ' ' + ((next.t - tP) * 1000).toFixed(0) + ' ms later' : 'none'}` : '';
+      const present = under === undefined ? null : under.includes(c.name);                  // does the aimed button exist under the pointer at the moment of the press?
+      const cls = !press ? 'NO-PRESS' : off ? 'OFF-TARGET' : moved ? 'MOVED' : oc ? 'CLICKED'
+        : present === false ? 'NOTHING-THERE' : present === true && !hitList.includes(c.name) ? 'BLOCKED' : hooked ? 'NO-ONCLICK' : 'PRESS-ON-TARGET';
+      console.log(`        ${cls.padEnd(15)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}${oc ? ' | ' + oc.replace(/^\[UIDiag\] /, '').slice(0, 80) : ''}${rbText}`);
     }
   } catch (e) { console.log('      (diagnostics failed: ' + String(e).slice(0, 100) + ')'); }
 }
@@ -80,7 +89,9 @@ async function open(user, extra, body, opts = {}) {
     return null;
   };
   currentTargets = targets;
-  const settle = async () => { await sleep(4000); };      // the game re-reports its click positions about a second after anything is rebuilt
+  // The game re-reports its click positions about a second after anything is rebuilt, and a region that reloads its data shows a loading state WITHOUT its buttons until the server answers. A fixed 4 s is
+  // not always enough under the software renderer (about 5 frames per second), so settle also waits until no new position report has arrived for 2.5 s (at most 20 s). It only waits longer; no check changed.
+  const settle = async () => { await sleep(4000); let n = logs.filter(l => l.startsWith('[WorldMap] targets')).length, quiet = Date.now(); const end = Date.now() + 16000; while (Date.now() < end && Date.now() - quiet < 2500) { await sleep(250); const k = logs.filter(l => l.startsWith('[WorldMap] targets')).length; if (k !== n) { n = k; quiet = Date.now(); } } };
   await page.goto(url(user, extra));
   try { await body({ page, logs, errors, waitLog, targets, click, clickUntil, settle }); }
   finally { allErrors.push(...errors); allExc.push(...logs.filter(l => /exception|NullReference|IndexOutOfRange|error CS/i.test(l) && !/GLib|swiftshader|\[Backend\].*(->|failed)|\[Session\] create failed: .*Bad Gateway|Could not do Qos region selection/i.test(l))); await browser.close(); }

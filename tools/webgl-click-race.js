@@ -38,16 +38,19 @@ async function signup(name) {
   const box = () => page.locator('#unity-canvas').boundingBox();
   const at = async name => { const t = targets()[name]; if (!t) return null; const b = await box(); return { x: b.x + t.x * b.width, y: b.y + t.y * b.height }; };
   // Every click reports what the game saw: was the target published, did a press arrive and where, did a release arrive, did Unity UI invoke the button (the control used to say only "NOT selected").
-  const click = async (name, label) => {
+  const click = async (name, label, fast) => {
     let p = null; for (let i = 0; i < 100 && !(p = await at(name)); i++) await sleep(100);              // the game re-publishes click positions about a second after a rebuild
     const from = logs.length;
     if (!p) { say(`  click ${label || name}: NO TARGET POSITION published for ${name}; nothing was clicked`); return { found: false, from }; }
-    await page.mouse.move(p.x, p.y); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); await sleep(1200);
+    await page.mouse.move(p.x, p.y); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up();
+    if (fast) return { found: true, from };                                                              // no wait and no report: the caller is timing what happens next
+    await sleep(1200);
     const seen = re => logs.slice(from).find(l => re.test(l)) || null;
     const r = { found: true, from, press: seen(/\[UIDiag\] pointer pressed/), release: seen(/\[UIDiag\] pointer released/), onClick: seen(new RegExp('\\[UIDiag\\] onClick ' + name + ' ')) };
     say(`  click ${label || name}: target found at (${p.x.toFixed(0)},${p.y.toFixed(0)}) | press: ${r.press ? r.press.replace('[UIDiag] ', '').slice(0, 90) : 'NONE'} | release: ${r.release ? 'yes' : 'NONE'} | onClick: ${r.onClick ? 'yes' : 'NONE'}`);
     return r;
   };
+  const settleQuiet = async () => { await sleep(4000); let n = logs.filter(l => l.startsWith('[WorldMap] targets')).length, quiet = Date.now(); const end = Date.now() + 16000; while (Date.now() < end && Date.now() - quiet < 2500) { await sleep(250); const k = logs.filter(l => l.startsWith('[WorldMap] targets')).length; if (k !== n) { n = k; quiet = Date.now(); } } };
   const BUS = 'Btn_GarVeh_bus_city_01', TRUCK = 'Btn_GarVeh_truck_light_01';
   const selectedOnClick = (from, name) => logs.findIndex((l, k) => k >= from && l.startsWith('[UIDiag] onClick ' + name + ' ')) >= 0;
 
@@ -55,7 +58,7 @@ async function signup(name) {
   if ((await waitFrom(/\[Dashboard\] built for ProbePat/, 0, 150000)) < 0) { say('PROBE: the dashboard never opened; nothing was measured'); await browser.close(); return; }
   await sleep(4000); let m = logs.length; await click('Nav_Garage', 'Nav_Garage');
   if ((await waitFrom(/\[Garage\] vehicles state=ready count=2 /, m, 90000)) < 0 || (await waitFrom(/\[Showroom\] ready vehicle=truck_light_01/, m, 120000)) < 0) { say('PROBE: the Garage did not load; nothing was measured'); await browser.close(); return; }
-  await sleep(4000); m = logs.length; const hook = await click('Btn_GarTab_Maintenance'); await waitFrom(/\[Garage\] quote state=ready repair=300/, m, 60000); await sleep(4000);
+  await settleQuiet(); m = logs.length; const hook = await click('Btn_GarTab_Maintenance'); await waitFrom(/\[Garage\] quote state=ready repair=300/, m, 60000); await sleep(4000);
   say(`HOOK CHECK: the Maintenance tab click ${hook.onClick ? 'logged onClick, so the onClick diagnostics work in this build' : 'did NOT log onClick, so the onClick diagnostics may not be working (press seen: ' + !!hook.press + ')'}`);
 
   // control: a click in a quiet period must work
@@ -68,11 +71,12 @@ async function signup(name) {
 
   const trials = [];
   for (const action of [{ btn: 'Btn_GarRepair', ok: /\[Garage\] repair ok=True/ }, { btn: 'Btn_GarRefuel', ok: /\[Garage\] refuel ok=True/ }]) {
-    await sleep(4000);
+    await settleQuiet();
     const busPos = await at(BUS), actPos = await at(action.btn);
     if (!busPos || !actPos) { trials.push({ action: action.btn, result: 'no target position' }); continue; }
     const start = logs.length;
-    await page.mouse.move(actPos.x, actPos.y); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up();
+    const ar = await click(action.btn, 'service action ' + action.btn, true);
+    if (!ar.found) { trials.push({ action: action.btn, result: 'no target position published for the service button' }); continue; }
     await page.mouse.move(busPos.x, busPos.y);                                                          // go to the bus card while the server works
     const okIdx = await waitFrom(action.ok, start, 30000);                                              // polls every 10 ms
     if (okIdx < 0) { trials.push({ action: action.btn, result: 'the service action never finished' }); continue; }

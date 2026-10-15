@@ -68,3 +68,29 @@ Fix (test only, the assertion `limited > 0 && ok <= 40` is unchanged): `tools/e2
 * "WebGL build boots in a browser" (main): `docker pull public.ecr.aws/docker/library/postgres:15` failed three times with `toomanyrequests: Data limit exceeded` in "Initialize containers". The job then continued into later steps with the workspace missing (`Cannot find module tools/webgl-drive.js`, `tools/e2e/up.sh: No such file`), so five steps show red; **none of them ran a test**. This is why a single image-pull failure can look like many failures.
 * "Database migrations + rule tests" (main) and "Backend over HTTP" (branch): the same image pull failure.
 Re-run when it happens; the cause is the registry's rate limit on the runner's address, not the repository.
+
+## Click failures: what four more runs showed (updated)
+
+| Run (commit, branch) | Browser E2E | Notes |
+|---|---|---|
+| 1e03ee1 (main) | did not run | Docker pull limit in "Initialize containers"; later steps ran with no workspace |
+| c20f75b (branch) | did not run | same Docker pull limit (smoke job); Backend, DB, Unity passed |
+| fcd14a6 (branch) | **500/500 pass** | click probe: control click failed (probe flaw, see below) |
+| da256f5 (main) | **500/500 pass** | same probe flaw; the job log shows `toomanyrequests: Rate exceeded` once at the start and carried on |
+| ca4620d (branch) | **498/500, fail** | one root failure: `Btn_PrStyle_jobs` ("a new play style is saved"); the second failure is its database check |
+
+The new onClick diagnostics have now classified a real failure:
+* The `Btn_PrStyle_jobs` click: the game logged a pointer press at (826, 141), exactly the aimed target (0.807, 0.754); `ui hits=[]` (nothing raycast), no `onClick`. The two clicks just before it (Language, English) each had the button in `ui hits` and an `onClick` line, so the diagnostics work in this build (the probe's HOOK CHECK also confirmed it).
+* The failure screenshot, taken afterwards, shows the "Deliver freight" button at exactly that position and the previous play style still selected.
+* So: **the press reached the game at the right pixel, Unity UI found nothing there to click, and the button was never invoked.** That excludes a lost or mis-aimed input and excludes a handler that ignored a click; the same signature (press at target, `ui hits=[]`) was recorded in the Garage failure of run 38705487149.
+* **Not yet shown: why nothing was there.** The most likely reason, from reading the code, is a loading state: a region that reloads its data is rebuilt WITHOUT its buttons until the server answers (for example `BuildGarList` returns early with "Loading vehicles..." while the data state is Idle or Loading), and the harness clicks at the position the game published before the reload. The harness' fixed 4 s wait is shorter than that reload under the software renderer (about 5 frames per second). This is a hypothesis, not a finding.
+* A contradiction I have not resolved: in run 38705487149 the Repair and Refuel clicks also printed `ui hits=[]` and still worked. That is why `ui hits=[]` alone is not accepted as the cause.
+
+Added to settle it (no gameplay behaviour, E2E mode only): the press line now lists the buttons that exist under the pointer whether or not anything raycast to them, every region rebuild is logged with a timestamp, and the harness prints for a failed click NOTHING-THERE (no button existed at that spot: a loading state or rebuild), BLOCKED (a button existed but nothing raycast to it) or NO-ONCLICK (it was hit and not invoked), plus how many ms before the press the last rebuild happened and how soon the next one followed.
+
+Harness change (waits only, no assertion changed): `settle()` now also waits until the game has published no new click positions for 2.5 s (at most 20 s), instead of a fixed 4 s. If the loading-state hypothesis is right this removes the failure; if the failure persists, the new diagnostics will say what was under the pointer.
+
+Probe findings: the control click failed in the first two probe runs because the probe looked up the target once with no retry; with retry it selected the bus and logged `onClick`. The probe's Repair and Refuel trials never completed ("the service action never finished"), which is a probe defect (its raw click bypassed the diagnostics); fixed in the next commit. The question the probe was written for (does a press before and a release after a list rebuild lose the click?) is still unanswered.
+
+## Database job also lost to the image pull
+ca4620d (branch): "Database migrations + rule tests" failed in "Initialize containers" (nothing ran; it passed on the main run of the same commit family).

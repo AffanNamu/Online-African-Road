@@ -63,7 +63,7 @@ namespace ARO.Game
             {
                 if (!_hooked.Add(b.GetInstanceID())) continue;
                 string n = b.name;
-                b.onClick.AddListener(() => Debug.Log($"[UIDiag] onClick {n} interactable=true frame={(Time.unscaledDeltaTime * 1000f):0}ms"));
+                b.onClick.AddListener(() => Debug.Log($"[UIDiag] onClick {n} interactable=true frame={(Time.unscaledDeltaTime * 1000f):0}ms t={Time.realtimeSinceStartup:0.00}"));
             }
         }
 
@@ -107,9 +107,20 @@ namespace ARO.Game
         {
             _hits.Clear();
             if (EventSystem.current != null) EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = pos }, _hits);
-            var sb = new StringBuilder($"[UIDiag] pointer {what} at {pos.x:0},{pos.y:0} of {Screen.width}x{Screen.height} frame={(Time.unscaledDeltaTime * 1000f):0}ms; ui hits=[");
+            var sb = new StringBuilder($"[UIDiag] pointer {what} at {pos.x:0},{pos.y:0} of {Screen.width}x{Screen.height} frame={(Time.unscaledDeltaTime * 1000f):0}ms t={Time.realtimeSinceStartup:0.00}; ui hits=[");
             foreach (var h in _hits) sb.Append(h.gameObject.name).Append(' ');
             sb.Append("]");
+            if (what == "pressed")
+            {   // which buttons EXIST under the pointer, whether or not anything raycasts to them: "hits empty and no button here" means the UI was not there (a loading state or a rebuild), "button here but no hit" means something blocks it
+                sb.Append("; buttons under pointer=[");
+                int total = 0;
+                foreach (var b in FindObjectsByType<Button>(FindObjectsSortMode.None))
+                {
+                    if (!b.gameObject.activeInHierarchy) continue; total++;
+                    if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform)b.transform, pos, null)) sb.Append(b.name).Append(b.interactable ? "" : "(not interactable)").Append(' ');
+                }
+                sb.Append("] active buttons=").Append(total);
+            }
             Debug.Log(sb.ToString());
         }
 

@@ -146,6 +146,7 @@ namespace ARO.Game
             if (!_regions.TryGetValue(name, out var r) || r == null) return;
             for (int i = r.childCount - 1; i >= 0; i--) Destroy(r.GetChild(i).gameObject);
             var prev = _stage; _stage = r; build(); _stage = prev; MarkTargetsDirty();
+            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
         }
 
         void RefillIfChanged(string name, string key, Action build)
