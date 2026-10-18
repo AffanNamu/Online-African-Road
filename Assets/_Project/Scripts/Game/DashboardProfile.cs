@@ -28,7 +28,12 @@ namespace ARO.Game
 
         void PrOpened() { _prOpen = true; _nextPr = Time.unscaledTime + 30f; Debug.Log("[Profile] opened"); _ = PrLoad(false); RefreshPr(); }
         void PrClosed() { _prOpen = false; if (_modal != null) CloseModal(); }
-        void RefreshPr() { if (_prRoot == null || !_prOpen) return; Refill("PrHero", BuildPrHero); Refill("PrStats", BuildPrStats); Refill("PrRanks", BuildPrRanks); Refill("PrAch", BuildPrAch); Refill("PrPrefs", BuildPrPrefs); }
+        string PrSig() => RefreshGate.Key(JsonKey(_svc.Me, "server_time", "last_seen_at", "updated_at"),
+            _prRankState + ":" + _prRankErr + ":" + string.Join(",", _prRank) + ":" + string.Join(",", _prValue.Select(x => x.ToString("R", System.Globalization.CultureInfo.InvariantCulture))) + ":" + string.Join(",", _prTotal),
+            _prAchState + ":" + _prAchErr + ":" + string.Join(",", _prAch.Select(a => a.id + "=" + a.current.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + "@" + a.unlocked_at)));
+        /// <summary>The 30-second background reload redraws the profile only if what it loaded differs from what is drawn.</summary>
+        void RefreshPrIfChanged() { if (_prRoot == null || !_prOpen) return; if (!_gate.Changed("profile", PrSig())) { if (SmokeMode.E2E) Debug.Log("[UIDiag] profile reload: nothing changed, no rebuild"); return; } RefreshPr(); }
+        void RefreshPr() { if (_prRoot == null || !_prOpen) return; _gate.Drew("profile", PrSig()); Refill("PrHero", BuildPrHero); Refill("PrStats", BuildPrStats); Refill("PrRanks", BuildPrRanks); Refill("PrAch", BuildPrAch); Refill("PrPrefs", BuildPrPrefs); }
 
         async Task PrLoad(bool quiet)
         {
@@ -40,7 +45,7 @@ namespace ARO.Game
             if (rr.All(x => x.Ok)) { for (int i = 0; i < 4; i++) { var me2 = rr[i].Value.me; _prRank[i] = me2 != null ? me2.rank : 0; _prValue[i] = me2 != null ? me2.value : 0; _prTotal[i] = rr[i].Value.total; } _prRankState = LoadState.Ready; _prRankErr = null; }
             else if (_prRankState != LoadState.Ready) { _prRankState = LoadState.Unavailable; _prRankErr = rr.First(x => !x.Ok).UserMessage; }
             Debug.Log($"[Profile] loaded profile={(mr.Ok ? "ok" : "unavailable")} ranks={_prRankState.ToString().ToLowerInvariant()} xp_rank={_prRank[0]} achievements={_prAchState.ToString().ToLowerInvariant()} unlocked={_prAch.Count(a => a.Unlocked)}/{_prAch.Length}");
-            RefreshPr();
+            if (quiet) RefreshPrIfChanged(); else RefreshPr();
         }
 
         // ================================================================================================================ build

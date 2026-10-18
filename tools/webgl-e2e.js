@@ -1026,6 +1026,59 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Btn_RetryVehicles'); check(!!(await c.waitLog(/\[Vehicles\] catalog state=ready/, m, 90)), 'Retry reaches the server');
   });
 
+  // =========================================================================================== 2z. UI refresh regression: background reloads must not rebuild an unchanged page, and clicks must survive them
+  // Cause (docs/CI_HEALTH.md): the friends (15 s), garage (45 s) and profile (30 s) reloads used to destroy and recreate every button of the page even when nothing had changed, and Unity UI only
+  // sends a click when the button that took the press is still under the pointer at release. These checks ADD coverage; no existing check was changed. Rebuilds are read from the game's own
+  // "[UIDiag] rebuild <region>" lines, which exist only in E2E mode.
+  const rfa = await signup('BrowserRfa'), rfb = await signup('BrowserRfb'), rfc = await signup('BrowserRfc');
+  db(`select _apply_transaction('${rfa.id}', 'BONUS', 100000, 'fund:' || gen_random_uuid())`);
+  db(`insert into vehicle_ownership(player_id, definition_id, fuel_l) values ('${rfa.id}', 'bus_city_01', 180)`);
+  { const rid = JSON.parse(asUser(rfa, `select send_friend_request('${rfb.id}')::text`)).request_id; asUser(rfb, `select respond_friend_request('${rid}', true)`); }
+  await open(rfa, '', async c => {
+    check(!!(await c.waitLog(/\[Dashboard\] built for BrowserRfa/, 0, 150)), 'Refresh regression: the dashboard opens for the new player');
+    await c.settle(); let m = c.logs.length;
+    const rebuildsSince = (from, re) => c.logs.slice(from).filter(l => re.test(l));
+
+    // ---- Friends: an unchanged background reload rebuilds nothing; a changed one still does; tabs answer repeated clicks
+    await c.click('Nav_Friends'); check(!!(await c.waitLog(/\[Friends\] friends state=ready count=1/, m, 90)), 'Refresh regression: the Friends page lists the one friend');
+    await c.settle(); m = c.logs.length;
+    const frQuiet = await c.waitLog(/\[UIDiag\] friends reload: nothing changed/, m, 45); await sleep(3000);       // the page reloads every 15 s; let the three reloads (friends, requests, recent) all finish
+    check(!!frQuiet, 'Refresh regression: the Friends page reloaded in the background and found nothing new');
+    const frRb = rebuildsSince(m, /\[UIDiag\] rebuild Fri(Tabs|Main|Side|Pop)/);
+    check(frRb.length === 0, 'Refresh regression: a Friends reload with unchanged data rebuilds no region', frRb.join(' | '));
+    m = c.logs.length; asUser(rfc, `select send_friend_request('${rfa.id}')::text`);
+    const frNew = await c.waitLog(/\[Friends\] requests state=ready incoming=1/, m, 45); await sleep(2000);
+    const frNewAt = c.logs.findIndex((l, i) => i >= m && /\[Friends\] requests state=ready incoming=1/.test(l));
+    check(!!frNew && c.logs.slice(frNewAt).some(l => /\[UIDiag\] rebuild FriMain/.test(l)), 'Refresh regression: a Friends reload that brings new data (a friend request) still redraws the page');
+    await c.settle(); let tabsOk = 0;
+    for (const [btn, tab] of [['Btn_FriTab_Requests', 'requests'], ['Btn_FriTab_All', 'all'], ['Btn_FriTab_Recent', 'recent'], ['Btn_FriTab_All', 'all'], ['Btn_FriTab_Requests', 'requests'], ['Btn_FriTab_All', 'all']]) {
+      const mt = c.logs.length; await c.click(btn); if (await c.waitLog(new RegExp('\\[Friends\\] tab=' + tab), mt, 30)) tabsOk++;
+    }
+    check(tabsOk === 6, `Refresh regression: six Friends tab clicks in a row each change the tab (${tabsOk}/6)`);
+
+    // ---- Garage: repeated selection, and the 45 s reload leaves the page alone
+    m = c.logs.length; await c.click('Nav_Garage');
+    check(!!(await c.waitLog(/\[Garage\] vehicles state=ready count=2 /, m, 90)), 'Refresh regression: the Garage lists the two vehicles');
+    await c.waitLog(/\[Showroom\] ready vehicle=truck_light_01/, m, 120); await c.settle(); let selOk = 0;
+    for (let i = 0; i < 4; i++) for (const [btn, def] of [['Btn_GarVeh_bus_city_01', 'bus_city_01'], ['Btn_GarVeh_truck_light_01', 'truck_light_01']]) {
+      const ms = c.logs.length; await c.click(btn); if (await c.waitLog(new RegExp('\\[Garage\\] select vehicle=\\S+ definition=' + def), ms, 60)) selOk++; await c.settle();
+    }
+    check(selOk === 8, `Refresh regression: eight vehicle selections in a row (bus, truck, four times) each take effect (${selOk}/8)`);
+    m = c.logs.length;
+    const gaQuiet = await c.waitLog(/\[UIDiag\] garage reload: nothing changed/, m, 70); await sleep(2500);       // the page reloads every 45 s
+    check(!!gaQuiet, 'Refresh regression: the Garage reloaded in the background and found nothing new');
+    const gaRb = rebuildsSince(m, /\[UIDiag\] rebuild Gar(Tabs|List|ViewUi|Info|Bottom)/);
+    check(gaRb.length === 0, 'Refresh regression: a Garage reload with unchanged data rebuilds no region', gaRb.join(' | '));
+
+    // ---- Profile: the 30 s reload leaves the page alone
+    m = c.logs.length; await c.click('Btn_Profile'); check(!!(await c.waitLog(/\[Profile\] opened/, m, 60)), 'Refresh regression: the profile opens');
+    await c.waitLog(/\[Profile\] loaded/, m, 60); await c.settle(); m = c.logs.length;
+    const prQuiet = await c.waitLog(/\[UIDiag\] profile reload: nothing changed/, m, 50); await sleep(2500);
+    check(!!prQuiet, 'Refresh regression: the profile reloaded in the background and found nothing new');
+    const prRb = rebuildsSince(m, /\[UIDiag\] rebuild Pr(Hero|Stats|Ranks|Ach|Prefs)/);
+    check(prRb.length === 0, 'Refresh regression: a profile reload with unchanged data rebuilds no region', prRb.join(' | '));
+  });
+
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });
   const ivy = await signup('BrowserIvy');

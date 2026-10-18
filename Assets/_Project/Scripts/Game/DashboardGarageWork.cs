@@ -15,7 +15,7 @@ namespace ARO.Game
         void GarUpdate(float now)
         {
             if (_show != null) _show.Tick(Time.unscaledDeltaTime);
-            if (_gDataLoaded && !_gBusy && now - _gAt > 45f) { _gAt = now; _ = LoadGarage(); }
+            if (_gDataLoaded && !_gBusy && now - _gAt > 45f) { _gAt = now; _ = LoadGarage(true); }
             float dy = 0f; Vector2 mp = Vector2.zero;
             try { dy = UnityEngine.Input.mouseScrollDelta.y; mp = UnityEngine.Input.mousePosition; } catch (InvalidOperationException) { }
             if (dy != 0f)
@@ -69,7 +69,7 @@ namespace ARO.Game
         void BuildSkins(float X, float Y, float W, float H, VehicleInfo v)
         {
             Ui.Label(_stage, "Paint & Skins", "Bold", 26, White, X + 24, Y + 14, 400, 34);
-            if (_gSkinState == LoadState.Idle || _gSkinState == LoadState.Loading) { Ui.Label(_stage, "Loading paints...", "SemiBold", 20, Muted, X, Y + H / 2 - 16, W, 30, TextAnchor.UpperCenter); return; }
+            if (_gSkinState == LoadState.Idle || (_gSkinState == LoadState.Loading && _gSkins == null)) { Ui.Label(_stage, "Loading paints...", "SemiBold", 20, Muted, X, Y + H / 2 - 16, W, 30, TextAnchor.UpperCenter); return; }
             if (_gSkinState == LoadState.Unavailable)
             {
                 Ui.Label(_stage, "Unable to load the paints.", "Bold", 24, Brand.Bad, X + 40, Y + 80, 800, 32); Ui.Label(_stage, _gSkinErr ?? "Please try again.", "Regular", 17, Soft, X + 40, Y + 116, 900, 26);

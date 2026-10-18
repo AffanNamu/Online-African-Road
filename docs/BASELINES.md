@@ -18,3 +18,6 @@ Changes since it that touch the game build (all verified by diff, `git diff 0a85
 * `Assets/_Project/Scripts/World/RenderingRig.cs`: smoke-page-only URL overrides (`contrast`, `vignette`, `shadows=off`). Without those parameters the Medium tier uses the baseline values (contrast 10, vignette 0.22, shadows on). **The Medium lighting proposal and a custom sky shader are NOT implemented.**
 
 A tag `lighting-baseline-0a85308` exists in the local clone of the working session; pushing it failed three times ("remote end hung up unexpectedly") and was not worked around. A named branch or tag on the remote would be a convenience, not a requirement, and needs the owner's permission (new branch).
+
+## Remote baseline branch (created 2026-10-18 with the owner's approval)
+`baseline/lighting-0a85308` was created on `origin` and points at exactly `0a853087cbb2b5630b09c53190f5a42c2570e5cb` (verified with `git ls-remote`). It must not be moved, rewritten or force-pushed without the owner's approval. The local-only tag `lighting-baseline-0a85308` is superseded by this branch.

@@ -47,22 +47,29 @@ namespace ARO.Game
         void GarClosed() { _gOpen = false; if (_show != null) _show.Exit(); Debug.Log("[Garage] closed"); }
         void OnDestroy() { if (_show != null) Destroy(_show.gameObject); }
 
-        void RefreshGarage() { Refill("GarTabs", BuildGarTabs); Refill("GarList", BuildGarList); Refill("GarViewUi", BuildGarViewUi); Refill("GarInfo", BuildGarInfo); Refill("GarBottom", BuildGarBottom); }
+        string GarSig() => RefreshGate.Key(Sig(_svc.Garage.Garage), Sig(_svc.Garage.Catalog), _gVeh ?? "");
+        void RefreshGarage() { _gate.Drew("garage", GarSig()); Refill("GarTabs", BuildGarTabs); Refill("GarList", BuildGarList); Refill("GarViewUi", BuildGarViewUi); Refill("GarInfo", BuildGarInfo); Refill("GarBottom", BuildGarBottom); }
 
         // ================================================================================================================ data
         List<VehicleInfo> Owned() { var g = _svc.Garage.Garage.Value; return g != null && g.items != null ? g.items.ToList() : new List<VehicleInfo>(); }
         VehicleInfo GVeh() => Owned().FirstOrDefault(v => v.id == _gVeh);
         VehicleRow GRow(VehicleInfo v) => v == null ? null : _vehRows.FirstOrDefault(r => r.Id == v.definition_id);
 
-        async Task LoadGarage()
+        /// <summary>
+        /// Loads the garage. <paramref name="quiet"/> is the periodic background reload: it draws nothing at its start (the list on screen stays exactly as it is) and redraws at its end only if the
+        /// vehicles or the catalogue differ from what was last drawn; otherwise the buttons the player is pointing at are not destroyed and recreated.
+        /// </summary>
+        async Task LoadGarage(bool quiet = false)
         {
-            _gAt = Time.unscaledTime; Refill("GarList", BuildGarList); Refill("GarInfo", BuildGarInfo);
+            _gAt = Time.unscaledTime; if (!quiet) { Refill("GarList", BuildGarList); Refill("GarInfo", BuildGarInfo); }
             var own = _svc.Garage.LoadGarage(); var cat = _svc.Garage.LoadCatalog(); await own; await cat;
             if (this == null) return;
             var list = _svc.Garage.Catalog.Value; _vehRows = list != null && list.items != null ? list.items.Select(ToRow).ToList() : _vehRows;
             _gDataLoaded = true; _gAt = Time.unscaledTime;
             var owned = Owned(); if (owned.All(v => v.id != _gVeh)) _gVeh = (owned.FirstOrDefault(v => v.selected) ?? owned.FirstOrDefault())?.id;
             Debug.Log($"[Garage] vehicles state={_svc.Garage.Garage.State.ToString().ToLowerInvariant()} count={owned.Count} selected={_gVeh} active={owned.FirstOrDefault(v => v.selected)?.definition_id}");
+            if (quiet && (_svc.Garage.Garage.State == LoadState.Loading || _svc.Garage.Catalog.State == LoadState.Loading)) return;      // this answer was superseded by a newer load that is still in flight: that one will redraw
+            if (quiet && !_gate.Changed("garage", GarSig())) { if (SmokeMode.E2E) Debug.Log("[UIDiag] garage reload: nothing changed, no rebuild"); return; }
             RefreshGarage(); LoadShowroom(); _ = LoadSkins(); _ = LoadQuote();
         }
 
@@ -75,11 +82,15 @@ namespace ARO.Game
 
         async Task LoadSkins()
         {
-            var v = GVeh(); if (v == null) return; string id = v.id; _gSkinState = LoadState.Loading; _gSkinErr = null; Refill("GarBottom", BuildGarBottom);
+            var v = GVeh(); if (v == null) return; string id = v.id;
+            bool had = _gSkins != null && _gSkinState == LoadState.Ready; string before = had ? JsonKey(_gSkins, "server_time") : null;      // the paints of THIS vehicle are already on screen (SelectGarageVehicle clears them for another one)
+            _gSkinErr = null; if (!had) { _gSkinState = LoadState.Loading; Refill("GarBottom", BuildGarBottom); }
             var r = await _svc.Garage.Skins(id); if (this == null || _gVeh != id) return;
             if (r.Ok) { _gSkins = r.Value; _gSkinState = LoadState.Ready; Debug.Log($"[Garage] skins state=ready count={r.Value.items.Length} equipped={r.Value.equipped_id}"); }
             else { _gSkinState = LoadState.Unavailable; _gSkinErr = r.UserMessage; Debug.Log("[Garage] skins state=unavailable"); }
-            ApplyEquippedSkinToShowroom(); Refill("GarBottom", BuildGarBottom);
+            ApplyEquippedSkinToShowroom();
+            if (had && r.Ok && before != null && before == JsonKey(_gSkins, "server_time")) { if (SmokeMode.E2E) Debug.Log("[UIDiag] skins reload: nothing changed, no rebuild"); return; }
+            Refill("GarBottom", BuildGarBottom);
         }
 
         async Task LoadQuote()
@@ -155,8 +166,9 @@ namespace ARO.Game
             Ui.Outlined(_stage, "AddBg", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.2f), X + W - 62, Y + 12, 42, 38, 10); Ui.Label(_stage, "+", "Bold", 26, White, X + W - 62, Y + 14, 42, 32, TextAnchor.UpperCenter);
             Ui.Click(_stage, "Btn_GarAddVehicle", X + W - 62, Y + 12, 42, 38, OpenVehicles);
             var gs = _svc.Garage.Garage;
-            if ((gs.State == LoadState.Idle || gs.State == LoadState.Loading) && SmokeMode.E2E) Debug.Log($"[UIDiag] GarList is drawn in the LOADING state, without vehicle cards (state={gs.State}, previous list kept in memory={gs.Value != null && gs.Value.items != null}) t={Time.realtimeSinceStartup:0.00}");
-            if (gs.State == LoadState.Idle || gs.State == LoadState.Loading) { Ui.Label(_stage, "Loading vehicles...", "SemiBold", 20, Muted, X, Y + 150, W, 30, TextAnchor.UpperCenter); return; }
+            bool haveList = gs.Value != null && gs.Value.items != null;          // a reload in flight keeps showing the list it is replacing (the Loadable's own contract), so the cards do not vanish and come back
+            if ((gs.State == LoadState.Idle || (gs.State == LoadState.Loading && !haveList)) && SmokeMode.E2E) Debug.Log($"[UIDiag] GarList is drawn in the LOADING state, without vehicle cards (state={gs.State}) t={Time.realtimeSinceStartup:0.00}");
+            if (gs.State == LoadState.Idle || (gs.State == LoadState.Loading && !haveList)) { Ui.Label(_stage, "Loading vehicles...", "SemiBold", 20, Muted, X, Y + 150, W, 30, TextAnchor.UpperCenter); return; }
             if (gs.State == LoadState.Unavailable)
             {
                 Ui.Label(_stage, "Unable to load your vehicles.", "Bold", 20, Brand.Bad, X + 20, Y + 110, W - 40, 28); Ui.Paragraph(_stage, gs.Error ?? "Please try again.", "Regular", 15, Soft, X + 20, Y + 142, W - 40, 44);

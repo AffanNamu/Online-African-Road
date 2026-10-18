@@ -129,3 +129,14 @@ Not changed (a UI behaviour change, awaiting approval). Options, smallest first:
 The harness was not changed to hide this (no shorter press, no retry added to the failing checks): a faster click would lower the failure rate and leave the defect in the game.
 
 Earlier statements in this file that pointed at "the page is in a loading state" or that "`ui hits=[]` means nothing was there" are superseded by the above (the hit list is read after the click is handled, so it can be empty for a click that worked).
+
+## Milestone 1: the UI rebuild fix (owner-approved) and how it is verified
+Change (targeted; no other behaviour touched):
+* **Unchanged data is not redrawn.** `RefreshGate` (NetCore, 10 unit tests) remembers a key of what each page last drew. The Friends (15 s), Garage (45 s) and Profile (30 s) background reloads now redraw only when the key differs. The key is the data (JSON without server clocks), the relative times as the cards would print them, and the flags the page depends on; if a key cannot be built it is null and the page is redrawn as before, so the worst case is the old behaviour, never a stale screen. User actions still redraw immediately.
+* **The previous list stays visible while a reload runs** (the `Loadable` contract): the Garage vehicle list and the paint grid of the same vehicle are no longer replaced by "Loading..." during a refresh (only the first load, or another vehicle, shows it). Maintenance prices keep their "Loading service prices..." state on purpose: the displayed price must be the server's.
+* **Concurrent loads: latest wins.** `Loadable.Begin()` counts generations and the shared `Track` ignores an answer that arrives after a newer load of the same data has started (a periodic reload that finishes after a Repair's reload can no longer overwrite the newer data). Test: `ALoadThatFinishesAfterANewerOneStartedIsStale`.
+* **No pointer-down guard was added.** Requirement 4 asked for it only if the simpler fix proves insufficient; that can only be judged from CI, and it is recorded below.
+
+Regression coverage (additions; no existing check changed): 10 NetCore tests (`RefreshGateTests`, 1044 NetCore tests pass locally) and a new E2E scenario "Refresh regression" (13 checks): an unchanged Friends reload rebuilds no region; a reload that brings a new friend request still redraws; six Friends tab clicks in a row all act; eight Garage vehicle selections in a row (bus, truck, four times) all act; an unchanged Garage reload and an unchanged Profile reload rebuild no region. The existing Repair, Refuel, equip, skins, profile and friends checks are untouched and still run.
+
+Evidence required before this is called fixed (to be filled in from CI, not claimed here): three consecutive browser E2E runs with no failure of the click classes above, and zero `[UIDiag] rebuild` lines during unchanged background reloads in the new scenario.

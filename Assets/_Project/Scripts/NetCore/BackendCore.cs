@@ -75,7 +75,10 @@ namespace ARO.NetCore
         public double UpdatedAt { get; private set; } = double.NegativeInfinity;
         public event Action Changed;
 
-        public void Begin() { State = LoadState.Loading; Error = null; Failure = FailureKind.None; Changed?.Invoke(); }
+        /// <summary>Counts the loads started. A load that finished after a NEWER one had started is stale (its answer may predate an action the newer load already reflects) and must not overwrite the newer answer.</summary>
+        public int Generation { get; private set; }
+        public bool IsCurrent(int generation) => generation == Generation;
+        public void Begin() { Generation++; State = LoadState.Loading; Error = null; Failure = FailureKind.None; Changed?.Invoke(); }
         public void Succeed(T value, bool empty, double now) { Value = value; State = empty ? LoadState.Empty : LoadState.Ready; Error = null; Failure = FailureKind.None; UpdatedAt = now; Changed?.Invoke(); }
         public void Fail(FailureKind kind, string message, double now) { State = LoadState.Unavailable; Failure = kind; Error = message; UpdatedAt = now; Changed?.Invoke(); }
         public void Reset() { State = LoadState.Idle; Value = default(T); Error = null; Failure = FailureKind.None; UpdatedAt = double.NegativeInfinity; Changed?.Invoke(); }

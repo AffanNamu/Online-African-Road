@@ -156,6 +156,30 @@ namespace ARO.Game
             if (!first) Refill(name, build);
         }
 
+        // ---- background reloads must not redraw what has not changed (RefreshGate explains why: a redraw between a press and its release loses the click)
+        readonly RefreshGate _gate = new RefreshGate();
+        [Serializable] sealed class SigBox<T> { public T v; }
+
+        /// <summary>
+        /// A comparable description of a data object: its JSON without the fields named in <paramref name="ignore"/> (server clocks and the like change on every reply and are not drawn).
+        /// Null when it cannot be built, which makes the caller redraw: never a stale screen.
+        /// </summary>
+        static string JsonKey<T>(T value, params string[] ignore) where T : class
+        {
+            if (value == null) return "null";
+            try
+            {
+                string s = JsonUtility.ToJson(new SigBox<T> { v = value }); if (s == null || s.Length < 12) return null;
+                foreach (var f in ignore) s = System.Text.RegularExpressions.Regex.Replace(s, "\"" + f + "\":\"[^\"]*\",?", "");
+                return s;
+            }
+            catch (Exception) { return null; }
+        }
+
+        /// <summary>What a loadable list contributes to a drawing: its data when it has any (a reload in flight keeps showing it), otherwise its state and error.</summary>
+        static string Sig<T>(Loadable<T> l, params string[] ignore) where T : class
+            => HasData(l) ? JsonKey(l.Value, ignore.Length == 0 ? new[] { "server_time" } : ignore) : l.State + ":" + l.Error;
+
         /// <summary>Smoke/E2E only: the browser tests need the dashboard's own click positions, re-reported about a second after anything is rebuilt.</summary>
         void MarkTargetsDirty() { if (SmokeMode.LogTargets) { _targetsLogged = false; _builtAt = Time.unscaledTime - 1.5f; } }
 

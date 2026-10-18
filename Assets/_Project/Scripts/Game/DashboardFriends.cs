@@ -73,7 +73,7 @@ namespace ARO.Game
         }
         void FriClosed() { _frOpen = false; _frSortPop = false; if (_modal != null) CloseModal(); Debug.Log("[Friends] closed"); }
 
-        async Task LoadCatalogForFriends() { await _svc.Garage.LoadCatalog(); if (this != null && _page == Page.Friends) RefreshFriends(); }     // the vehicle pictures of friends come from the catalogue
+        async Task LoadCatalogForFriends() { await _svc.Garage.LoadCatalog(); if (this != null && _page == Page.Friends) RefreshFriendsIfChanged(); }     // the vehicle pictures of friends come from the catalogue
 
         void LoadFriendsPage(bool quiet) { _ = LoadFriendsList(quiet); _ = LoadFriendRequests(quiet); _ = LoadRecentList(quiet); _ = LoadMineForFriends(); }
 
@@ -89,22 +89,41 @@ namespace ARO.Game
         {
             var pending = _svc.Friends.LoadFriends(); if (!quiet) RefreshFriends(); var r = await pending; if (this == null) return;
             var l = FrFriends(); Debug.Log($"[Friends] friends state={_svc.Friends.Friends.State.ToString().ToLowerInvariant()} count={l.Count} online={FriendsRules.OnlineCount(l)}" + (r.Ok ? "" : " error=" + r.ErrorCode));
-            if (_page == Page.Friends) RefreshFriends();
+            if (_page == Page.Friends) RefreshFriendsIfChanged();
         }
         async Task LoadFriendRequests(bool quiet)
         {
             var pending = _svc.Friends.LoadRequests(); if (!quiet) RefreshFriends(); var r = await pending; if (this == null) return;
             Debug.Log($"[Friends] requests state={_svc.Friends.Requests.State.ToString().ToLowerInvariant()} incoming={FrIncoming().Count} outgoing={FrOutgoing().Count}" + (r.Ok ? "" : " error=" + r.ErrorCode));
-            if (_page == Page.Friends) RefreshFriends();
+            if (_page == Page.Friends) RefreshFriendsIfChanged();
         }
         async Task LoadRecentList(bool quiet)
         {
             var pending = _svc.Friends.LoadRecent(30); if (!quiet) RefreshFriends(); var r = await pending; if (this == null) return;
             Debug.Log($"[Friends] recent state={_svc.Friends.Recent.State.ToString().ToLowerInvariant()} count={FrRecent().Count}" + (r.Ok ? "" : " error=" + r.ErrorCode));
-            if (_page == Page.Friends) RefreshFriends();
+            if (_page == Page.Friends) RefreshFriendsIfChanged();
         }
 
-        void RefreshFriends() { if (!_frOpen && _page != Page.Friends) return; Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
+        /// <summary>Everything the lists contribute to what is drawn: the data (without server clocks), the relative times as the cards would print them, the convoy flag and the catalogue pictures.</summary>
+        string FrSig()
+        {
+            var now = FrNow(); var ago = new System.Text.StringBuilder();
+            void Add(PersonDto p) { if (p == null) return; ago.Append(FriendsRules.AgoOf(p.since, now)).Append('/').Append(FriendsRules.AgoOf(p.last_played_at, now)).Append('/').Append(FriendsRules.AgoOf(p.presence != null ? p.presence.last_seen_at : null, now)).Append(';'); }
+            var fl = _svc.Friends.Friends.Value; if (fl != null && fl.items != null) foreach (var p in fl.items) Add(p);
+            var rl = _svc.Friends.Recent.Value; if (rl != null && rl.items != null) foreach (var p in rl.items) Add(p);
+            var rq = _svc.Friends.Requests.Value; if (rq != null) { if (rq.incoming != null) foreach (var i in rq.incoming) { Add(i.person); ago.Append(FriendsRules.AgoOf(i.created_at, now)).Append(';'); } if (rq.outgoing != null) foreach (var i in rq.outgoing) { Add(i.person); ago.Append(FriendsRules.AgoOf(i.created_at, now)).Append(';'); } }
+            return RefreshGate.Key(Sig(_svc.Friends.Friends), Sig(_svc.Friends.Requests), Sig(_svc.Friends.Recent), FrInConvoy().ToString(), Sig(_svc.Garage.Catalog), ago.ToString());
+        }
+
+        /// <summary>A background reload finished: redraw only if it brought something the screen does not already show.</summary>
+        void RefreshFriendsIfChanged()
+        {
+            if (!_frOpen && _page != Page.Friends) return;
+            if (!_gate.Changed("friends", FrSig())) { if (SmokeMode.E2E) Debug.Log("[UIDiag] friends reload: nothing changed, no rebuild"); return; }
+            RefreshFriends();
+        }
+
+        void RefreshFriends() { if (!_frOpen && _page != Page.Friends) return; _gate.Drew("friends", FrSig()); Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
 
         // ================================================================================================================ build
         void BuildFriendsPage()

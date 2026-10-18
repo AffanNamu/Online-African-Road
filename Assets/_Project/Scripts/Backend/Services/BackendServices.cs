@@ -22,8 +22,9 @@ namespace ARO.Backend
         /// <summary>Runs a read, publishes its honest state on the Loadable and returns the raw result.</summary>
         protected async Task<Result<T>> Track<T>(Loadable<T> state, Func<Task<Result<T>>> call, Func<T, bool> isEmpty = null)
         {
-            state.Begin();
+            state.Begin(); int generation = state.Generation;
             var r = await call();
+            if (!state.IsCurrent(generation)) return r;     // a newer load of the same data started while this one was in flight: its answer is the one to keep, an older one must not overwrite it
             if (r.Ok) state.Succeed(r.Value, isEmpty != null && isEmpty(r.Value), Now);
             else state.Fail(KindOf(r.ErrorCode), r.UserMessage, Now);
             return r;
