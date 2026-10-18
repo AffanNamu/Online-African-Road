@@ -140,3 +140,32 @@ Change (targeted; no other behaviour touched):
 Regression coverage (additions; no existing check changed): 10 NetCore tests (`RefreshGateTests`, 1044 NetCore tests pass locally) and a new E2E scenario "Refresh regression" (13 checks): an unchanged Friends reload rebuilds no region; a reload that brings a new friend request still redraws; six Friends tab clicks in a row all act; eight Garage vehicle selections in a row (bus, truck, four times) all act; an unchanged Garage reload and an unchanged Profile reload rebuild no region. The existing Repair, Refuel, equip, skins, profile and friends checks are untouched and still run.
 
 Evidence required before this is called fixed (to be filled in from CI, not claimed here): three consecutive browser E2E runs with no failure of the click classes above, and zero `[UIDiag] rebuild` lines during unchanged background reloads in the new scenario.
+
+### Milestone 1 evidence from CI (filled in from the runs, 2026-10-18)
+
+Browser E2E on the game code with the fix (ec28d46 and later). "Harness" means a defect in `tools/webgl-e2e.js`, not in the game; no game code was changed to answer those.
+
+| Run | Commit / branch | Browser E2E | Cause |
+|---|---|---|---|
+| 39101515622 | ec28d46 main | **pass, 513/0** (all six new "Refresh regression" groups pass: unchanged Friends/Garage/profile reloads rebuild no region, six Friends tab clicks 6/6, eight vehicle selections 8/8, a reload with new data still redraws) | |
+| 39101838729 | 156c1f9 sky branch | fail, 1 check (bus affordability) | harness: five unpaced Backspaces were lost, the search stayed "TiTan", the bus card was never listed |
+| 39106075022 | 58d2298 vignette branch | fail, 3 checks (Friends "more" menu, Remove Friend, friendship gone) | **click dropped**: a Friends redraw 20 ms before the press (button age 0 frames) |
+| 39106061632 | 4c7c912 main | pass | |
+| 39111853248 | ca1b703 branch | pass | |
+| 39111862646 | f55d2bb vignette branch | fail, 3 checks (same three) | **click dropped again**: redraw 0 ms before the press |
+| 39114664952 | 602d23c main | fail, 2 checks | harness: Backspaces lost although paced (my new "search box is cleared again" check made the loss visible) |
+| 39119211163 | c452430 vignette branch | pass | |
+| 39121222091 | 4caf974 main | fail, 2 checks | harness: the "Clear search" fallback I added does not exist when a search has results (the page draws it only for an empty result) |
+| 39121221987 | 4caf974 branch | **pass, 514/0**; the job then failed in `actions/upload-artifact` (blob-storage request error after every test had passed) | infrastructure |
+| 39128349212 | 8a1e61e main | pass (attempt 1 and attempt 2) | |
+| 39128349294 | 8a1e61e branch | pass | |
+
+What this does and does not show:
+* **Not yet proven fixed.** There are now several consecutive passes on 8a1e61e (main and branch) and ec28d46/4c7c912/ca1b703, but the target ("three consecutive runs with no click-class failure") is met only if the two Friends failures on the vignette branch are counted as something other than the fix not working. They are not excluded: a Friends redraw landed on the press twice in twelve runs, both times on the vignette branch, and I could not explain why only that branch. The branches differ from main only in Medium-tier rendering and workflow lines.
+* **Why a redraw can still land on a click.** The fix skips a redraw when the data is unchanged; it cannot skip one when the data really changed (a relative label such as "5 min ago" turning over, a friend's presence). The new E2E-only log `[UIDiag] friends reload: <part> changed, rebuilding | was ... | now ...` names the part that changed. It was added in 602d23c; the runs since then that failed did not fail in Friends, so **the cause of the two Friends redraws is still unexplained**.
+* **Pointer-down guard.** Not added. The owner's rule was to add it only if the simpler fix proved insufficient; two unexplained drops in twelve runs is a signal, not yet a proof. If another Friends drop is logged with a "changed" reason, the next step is to decide between (a) holding a redraw for a few hundred milliseconds after a press and (b) making a changed-label redraw only update the labels. Neither is done.
+* The E2E harness repeats a dropped Friends "more" click (3 attempts; the assertion is unchanged) and clears the vehicle search by clicking into it and pressing Backspace again (up to 3 attempts; the cleared state is asserted). These are harness changes made for the software renderer's ~4 frames per second; they are not evidence about real devices.
+* A pointer-event probe (`tools/webgl-click-race.js`) is still inconclusive: its Repair/Refuel trials never completed, so it neither confirms nor rules out a click loss between press and release. It is informational and does not gate CI.
+
+### A lighting-gate outlier on main (8a1e61e)
+The enforced Low lighting step failed in both 8a1e61e runs with "noon chase road: mean 73.4 / 68.0 is below 80" (usual Low noon road in earlier runs: 94 to 104). No lighting code changed since 0a85308 and the commit changed only the E2E harness. Attempt 2 of the main run passed (the one allowed re-run, used to confirm a flake after this explanation). I cannot show why the road region read so much darker in those two runs; the failing frame looks like an ordinary noon scene. The threshold is unchanged. Treat it as an unexplained measurement outlier on the software renderer, not a lighting regression; if it recurs it needs its own investigation (suspect: how much of the sampled road region is in the truck's shadow or still unloaded when the frame is captured).
