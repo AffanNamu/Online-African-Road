@@ -398,11 +398,19 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Veh_Search_Input'); await sleep(500); await c.page.keyboard.type('TiTan', { delay: 120 });
     v = await c.waitLog(/\[Vehicles\] view tab=trucks .*search="TiTan" shown=(\d+)/, m, 60);
     check(!!v && +/shown=(\d+)/.exec(v)[1] === titanDefsDb, 'searching "TiTan" (any case) finds the TITAN models of the database', v);
-    // Backspace at the same pace as the typing above: five presses with no delay arrive inside one ~200 ms CI frame and can be lost
-    // (run 39101838729: the search stayed "TiTan", so the bus card was never listed and this step waited 60 s three times)
-    const mClear = c.logs.length;
-    for (let i = 0; i < 5; i++) await c.page.keyboard.press('Backspace', { delay: 120 });
-    check(!!(await c.waitLog(/\[Vehicles\] view tab=trucks .*search="" shown=/, mClear, 60)), 'the search box is cleared again');
+    // Backspace is sometimes lost under the ~4 fps software renderer, even when paced (runs 39101838729 and 39114664952: the search stayed "TiTan", so the bus card was never
+    // listed and the next step waited 60 s three times). Each attempt clicks into the box again (focus) and presses Backspace more times than the text is long. The Clear search
+    // button is not an option: the page only draws it when a search finds nothing. The box must end up cleared, as before; the attempts are reported.
+    const clearRe = /\[Vehicles\] view tab=trucks .*search="" shown=/;
+    let cleared = null;
+    for (let attempt = 1; attempt <= 3 && !cleared; attempt++) {
+      const mClear = c.logs.length;
+      await c.click('Veh_Search_Input'); await sleep(500);
+      for (let i = 0; i < 8; i++) await c.page.keyboard.press('Backspace', { delay: 200 });
+      cleared = await c.waitLog(clearRe, mClear, 12);
+      if (!cleared && attempt < 3) console.log(`      (the search box was not cleared after Backspace attempt ${attempt}; clicking into it and trying again)`);
+    }
+    check(!!cleared, 'the search box is cleared again');
 
     // not enough money: the server's own verdict, in words
     m = c.logs.length; await c.click('Btn_VehTab_Buses'); await c.settle(); await c.click('Btn_Veh_bus_city_01');
@@ -698,7 +706,10 @@ const allErrors = [], allExc = [];
     await c.click('Btn_CloseDialog');
 
     // remove a friend (with a confirmation) and block another
-    await c.settle(); m = c.logs.length; await c.click('Btn_FriMore_browserfh'); await c.settle(); tg = c.targets(); check(!!tg['Btn_FriMenu_RemoveFriend'] && !!tg['Btn_FriMenu_ViewProfile'] && !!tg['Btn_FriMenu_BlockPlayer'], 'the more menu offers View Profile, Remove Friend and Block Player');
+    await c.settle(); m = c.logs.length;
+    // a press that lands in the same frame as a redraw is dropped (run 39106075022: the redraw was 20 ms before the press); like the other clicks in this file it is repeated while the menu is not open. The assertion is unchanged.
+    for (let i = 0; i < 3; i++) { await c.click('Btn_FriMore_browserfh'); await c.settle(); tg = c.targets(); if (tg['Btn_FriMenu_RemoveFriend']) break; }
+    check(!!tg['Btn_FriMenu_RemoveFriend'] && !!tg['Btn_FriMenu_ViewProfile'] && !!tg['Btn_FriMenu_BlockPlayer'], 'the more menu offers View Profile, Remove Friend and Block Player');
     await c.page.screenshot({ path: `${prefix}-71-friends-menu.png` }); await c.click('Btn_FriMenu_RemoveFriend'); await c.settle();
     check(friendsInDb() === 3, 'nothing is removed before the player confirms'); await c.page.screenshot({ path: `${prefix}-72-friends-confirm.png` });
     m = c.logs.length; await c.click('Btn_FriConfirm'); check(!!(await c.waitLog(/\[Friends\] remove id=browserfh ok=True/, m, 60)), 'Remove Friend: the server accepted');
