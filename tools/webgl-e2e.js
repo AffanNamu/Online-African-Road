@@ -399,10 +399,15 @@ const allErrors = [], allExc = [];
     v = await c.waitLog(/\[Vehicles\] view tab=trucks .*search="TiTan" shown=(\d+)/, m, 60);
     check(!!v && +/shown=(\d+)/.exec(v)[1] === titanDefsDb, 'searching "TiTan" (any case) finds the TITAN models of the database', v);
     // Backspace at the same pace as the typing above: five presses with no delay arrive inside one ~200 ms CI frame and can be lost
-    // (run 39101838729: the search stayed "TiTan", so the bus card was never listed and this step waited 60 s three times)
-    const mClear = c.logs.length;
+    // (run 39101838729: the search stayed "TiTan", so the bus card was never listed and this step waited 60 s three times).
+    // Run 39114664952 showed paced presses can be lost too under the ~4 fps software renderer. A player clears the box with the keyboard or with the page's own
+    // Clear search button, so when the keys did not clear it the button is used (and said so); the box must be cleared either way.
+    const clearRe = /\[Vehicles\] view tab=trucks .*search="" shown=/;
+    let mClear = c.logs.length;
     for (let i = 0; i < 5; i++) await c.page.keyboard.press('Backspace', { delay: 120 });
-    check(!!(await c.waitLog(/\[Vehicles\] view tab=trucks .*search="" shown=/, mClear, 60)), 'the search box is cleared again');
+    let cleared = await c.waitLog(clearRe, mClear, 15);
+    if (!cleared) { console.log('      (Backspace did not clear the search box in 15 s under the software renderer; using the Clear search button)'); cleared = await c.clickUntil('Btn_VehClearSearch', clearRe, 25, 3); }
+    check(!!cleared, 'the search box is cleared again');
 
     // not enough money: the server's own verdict, in words
     m = c.logs.length; await c.click('Btn_VehTab_Buses'); await c.settle(); await c.click('Btn_Veh_bus_city_01');
