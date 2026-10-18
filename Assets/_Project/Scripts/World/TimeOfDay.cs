@@ -53,7 +53,9 @@ namespace ARO.World
 
         void ApplyGradient(LightingState st)
         {
-            var g = SkyGradientModel.Evaluate(st, ARO.Core.RuntimeSettings.TestSkyPalette, ARO.Core.RuntimeSettings.TestSkyHaze >= 0f ? ARO.Core.RuntimeSettings.TestSkyHaze : SkyGradientModel.DefaultHazeMix);
+            var tune = SkyTune.None; if (ARO.Core.RuntimeSettings.TestSkyDim >= 0f) tune.BandDim = ARO.Core.RuntimeSettings.TestSkyDim; if (ARO.Core.RuntimeSettings.TestSkyDip >= 0f) tune.Dip = ARO.Core.RuntimeSettings.TestSkyDip;   // horizon study overrides (smoke pages only)
+            var g = SkyGradientModel.Evaluate(st, ARO.Core.RuntimeSettings.TestSkyPalette, ARO.Core.RuntimeSettings.TestSkyHaze >= 0f ? ARO.Core.RuntimeSettings.TestSkyHaze : SkyGradientModel.DefaultHazeMix, tune);
+            _gradient.SetFloat("_Dip", g.Dip); _gradient.SetFloat("_DipHeight", g.DipHeight);
             _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));
             _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Haze", new Color(g.Haze.R, g.Haze.G, g.Haze.B)); _gradient.SetFloat("_LowHeight", g.LowHeight); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
             _gradient.SetColor("_GlowColor", new Color(g.Glow.R, g.Glow.G, g.Glow.B));
@@ -102,6 +104,8 @@ namespace ARO.World
             RenderSettings.fogDensity = st.FogDensity;
             if (_gradient != null && _lastGradient != null && ARO.Core.RuntimeSettings.TestSkyFog > 0f)       // sky study only (?skyfog=): the distant terrain fades into the sky's haze instead of ending on a hard edge
             { RenderSettings.fogColor = new Color(_lastGradient.Haze.R, _lastGradient.Haze.G, _lastGradient.Haze.B); RenderSettings.fogDensity = st.FogDensity * ARO.Core.RuntimeSettings.TestSkyFog; }
+            if (_gradient != null && _lastGradient != null && ARO.Core.RuntimeSettings.TestSkyFogD > 0f)       // horizon study only (?skyfogd=): an absolute density, so the haze can be strong enough to reach the terrain 50 to 150 m away
+            { RenderSettings.fogColor = new Color(_lastGradient.Haze.R, _lastGradient.Haze.G, _lastGradient.Haze.B); RenderSettings.fogDensity = ARO.Core.RuntimeSettings.TestSkyFogD; }
             LogState(st.Elevation);
         }
 

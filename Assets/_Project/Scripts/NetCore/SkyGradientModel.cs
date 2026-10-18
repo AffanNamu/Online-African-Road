@@ -11,6 +11,15 @@ namespace ARO.NetCore
         public float GlowStrength, GlowPower, DiscStrength;
         /// <summary>Where the mid colour sits (as the sine of the elevation: 0.22 is about 13 degrees) and the curve of the climb to the zenith (1 = linear in that sine). A low mid stop keeps the warm horizon band wide enough to be seen from a chase camera that looks down the road.</summary>
         public float LowHeight, MidHeight, HeightExp;
+        /// <summary>Darkening of the lowest part of the sky (a "dusty land haze" that meets the terrain): the sky is multiplied by (1 - Dip * (1 - smoothstep(height / DipHeight))), so it is darkest exactly at the horizon and back to normal at DipHeight.</summary>
+        public float Dip, DipHeight;
+    }
+
+    /// <summary>Optional adjustments of the horizon (all neutral by default): <see cref="BandDim"/> scales the horizon band and the haze, <see cref="Dip"/> darkens the sky right at the horizon up to <see cref="DipHeight"/>.</summary>
+    public struct SkyTune
+    {
+        public float BandDim, Dip, DipHeight;
+        public static SkyTune None => new SkyTune { BandDim = 1f, Dip = 0f, DipHeight = 0.10f };
     }
 
     /// <summary>
@@ -48,10 +57,16 @@ namespace ARO.NetCore
         public static Rgb ColourAt(SkyGradientState s, float sinElevation)
         {
             float h = (float)Math.Pow(Clamp01(sinElevation), s.HeightExp);
-            if (s.LowHeight > 0.0001f && h < s.LowHeight) return Rgb.Lerp(s.Haze, s.Horizon, SmoothStep(h / s.LowHeight));
-            float from = s.LowHeight;
-            return h < s.MidHeight ? Rgb.Lerp(s.Horizon, s.Mid, SmoothStep((h - from) / Math.Max(s.MidHeight - from, 0.001f)))
-                                   : Rgb.Lerp(s.Mid, s.Zenith, SmoothStep((h - s.MidHeight) / Math.Max(1f - s.MidHeight, 0.001f)));
+            Rgb c;
+            if (s.LowHeight > 0.0001f && h < s.LowHeight) c = Rgb.Lerp(s.Haze, s.Horizon, SmoothStep(h / s.LowHeight));
+            else
+            {
+                float from = s.LowHeight;
+                c = h < s.MidHeight ? Rgb.Lerp(s.Horizon, s.Mid, SmoothStep((h - from) / Math.Max(s.MidHeight - from, 0.001f)))
+                                    : Rgb.Lerp(s.Mid, s.Zenith, SmoothStep((h - s.MidHeight) / Math.Max(1f - s.MidHeight, 0.001f)));
+            }
+            if (s.Dip > 0.0001f) c = c * (1f - s.Dip * (1f - SmoothStep(h / Math.Max(s.DipHeight, 0.001f))));
+            return c;
         }
 
         /// <summary>What a colour is expected to look like on screen: its saturation scaled by <see cref="DisplaySaturation"/> around its own luma.</summary>
@@ -64,11 +79,13 @@ namespace ARO.NetCore
         public const int DefaultPalette = 4;
         public const float DefaultHazeMix = 0.6f;
 
-        public static SkyGradientState Evaluate(LightingState st) => Evaluate(st, DefaultPalette, DefaultHazeMix);
+        public static SkyGradientState Evaluate(LightingState st) => Evaluate(st, DefaultPalette, DefaultHazeMix, SkyTune.None);
 
         /// <param name="palette">3 = the iteration-3 palette (the control), 4 = the current default.</param>
         /// <param name="hazeMix">0 = no haze (the horizon colour runs right down to the horizon), 1 = the full pale haze colour exactly at the horizon (palette 4 only).</param>
-        public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix)
+        public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix) => Evaluate(st, palette, hazeMix, SkyTune.None);
+
+        public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix, SkyTune tune)
         {
             float oc = Clamp01(st.OvercastIn), day = Clamp01(st.Day), golden = Clamp01(st.Golden); hazeMix = Clamp01(hazeMix);
             float ang = (st.Hour - 6f) / 12f * (float)Math.PI;
@@ -104,6 +121,9 @@ namespace ARO.NetCore
             }
             if (palette == 3) s.Haze = s.Horizon;
             s.HeightExp = 1f;
+            float dim = tune.BandDim <= 0f ? 1f : Clamp01(tune.BandDim);          // 0 / unset means neutral
+            s.Horizon = s.Horizon * dim; s.Haze = s.Haze * dim;
+            s.Dip = Clamp01(tune.Dip); s.DipHeight = tune.DipHeight > 0f ? tune.DipHeight : 0.10f;
             s.Ground = Rgb.Lerp(new Rgb(0.04f, 0.05f, 0.08f), new Rgb(0.45f, 0.47f, 0.46f), day);
             s.Ground = Rgb.Lerp(s.Ground, st.FogColor, 0.35f);
             s.Glow = st.SunColor;

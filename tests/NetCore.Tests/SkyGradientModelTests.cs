@@ -156,3 +156,44 @@ public class SkyGradientModelTests
         var a = SkyGradientModel.ColourAt(full, 0f); Assert.Equal(full.Haze.G, a.G, 4);   // exactly at the horizon the colour IS the haze
     }
 }
+
+/// <summary>The optional horizon adjustments (band dimming and the dip at the horizon) are neutral by default and only touch the low sky.</summary>
+public class SkyHorizonTuneTests
+{
+    static LightingState At(float hour) => LightingModel.Evaluate(hour, 0f);
+    static float Luma(Rgb c) => 0.2126f * c.R + 0.7152f * c.G + 0.0722f * c.B;
+
+    [Fact] public void NoTuneChangesNothing()
+    {
+        foreach (var hour in new[] { 6.4f, 12f, 17.6f, 23f })
+        {
+            var a = SkyGradientModel.Evaluate(At(hour)); var b = SkyGradientModel.Evaluate(At(hour), SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, SkyTune.None);
+            foreach (float e in new[] { 0f, 0.03f, 0.1f, 0.4f, 1f })
+            { var x = SkyGradientModel.ColourAt(a, e); var y = SkyGradientModel.ColourAt(b, e); Assert.Equal(x.R, y.R, 5); Assert.Equal(x.G, y.G, 5); Assert.Equal(x.B, y.B, 5); }
+        }
+    }
+
+    [Fact] public void TheDipDarkensTheHorizonMostAndLeavesTheUpperSkyAlone()
+    {
+        var st = At(6.4f); var plain = SkyGradientModel.Evaluate(st); var dip = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 1f, Dip = 0.5f, DipHeight = 0.10f });
+        float atHorizon = Luma(SkyGradientModel.ColourAt(dip, 0f)) / Luma(SkyGradientModel.ColourAt(plain, 0f));
+        float low = Luma(SkyGradientModel.ColourAt(dip, 0.05f)) / Luma(SkyGradientModel.ColourAt(plain, 0.05f));
+        Assert.InRange(atHorizon, 0.49f, 0.51f);                       // half as bright exactly at the horizon
+        Assert.InRange(low, atHorizon, 1f);                            // less dark higher up
+        Assert.Equal(Luma(SkyGradientModel.ColourAt(plain, 0.3f)), Luma(SkyGradientModel.ColourAt(dip, 0.3f)), 5);   // the mid and upper sky are untouched
+        Assert.Equal(Luma(SkyGradientModel.ColourAt(plain, 1f)), Luma(SkyGradientModel.ColourAt(dip, 1f)), 5);
+    }
+
+    [Fact] public void TheBandDimScalesTheHorizonColoursOnly()
+    {
+        var st = At(17.6f); var plain = SkyGradientModel.Evaluate(st); var dim = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 0.8f, Dip = 0f, DipHeight = 0.10f });
+        Assert.Equal(plain.Horizon.R * 0.8f, dim.Horizon.R, 5); Assert.Equal(plain.Haze.B * 0.8f, dim.Haze.B, 5);
+        Assert.Equal(plain.Zenith.G, dim.Zenith.G, 5); Assert.Equal(plain.Mid.R, dim.Mid.R, 5);
+    }
+
+    [Fact] public void AMissingOrZeroTuneIsNeutral()
+    {
+        var st = At(12f); var plain = SkyGradientModel.Evaluate(st); var z = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, default(SkyTune));
+        Assert.Equal(plain.Horizon.R, z.Horizon.R, 5); Assert.Equal(0f, z.Dip);
+    }
+}

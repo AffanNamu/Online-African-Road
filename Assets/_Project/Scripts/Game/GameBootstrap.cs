@@ -67,7 +67,8 @@ namespace ARO.Game
             { bool sm = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke="); string u = Application.absoluteURL;
               ARO.Core.RuntimeSettings.TestSkyGlow = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyglow", 0f, 3f) : -1f; ARO.Core.RuntimeSettings.TestSkyMid = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skymid", 0.03f, 0.6f) : -1f; ARO.Core.RuntimeSettings.TestSkyExp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyexp", 0.3f, 2f) : -1f;
               float sp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skypal", 3f, 4f) : -1f; ARO.Core.RuntimeSettings.TestSkyPalette = sp >= 3.5f ? 4 : sp >= 2.5f ? 3 : ARO.NetCore.SkyGradientModel.DefaultPalette;
-              ARO.Core.RuntimeSettings.TestSkyHaze = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyhaze", 0f, 1f) : -1f; ARO.Core.RuntimeSettings.TestSkyFog = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyfog", 0.1f, 16f) : -1f; }
+              ARO.Core.RuntimeSettings.TestSkyHaze = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyhaze", 0f, 1f) : -1f; ARO.Core.RuntimeSettings.TestSkyFog = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyfog", 0.1f, 16f) : -1f;
+              ARO.Core.RuntimeSettings.TestSkyDim = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skydim", 0.3f, 1f) : -1f; ARO.Core.RuntimeSettings.TestSkyDip = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skydip", 0f, 0.9f) : -1f; ARO.Core.RuntimeSettings.TestSkyFogD = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyfogd", 0.0005f, 0.03f) : -1f; }
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };

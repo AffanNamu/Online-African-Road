@@ -18,6 +18,8 @@ namespace ARO.Core
         public static float TestSkyGlow = -1f, TestSkyMid = -1f, TestSkyExp = -1f;
         /// <summary>Gradient sky study (smoke pages only): ?skypal=3|4 chooses the palette (3 is the control), ?skyhaze=0..1 the haze at the horizon, ?skyfog=k multiplies the fog density and tints the fog with the haze (the only one of these that touches the lit world).</summary>
         public static int TestSkyPalette = 4; public static float TestSkyHaze = -1f, TestSkyFog = -1f;
+        /// <summary>Gradient sky horizon study (smoke pages only): ?skydim= scales the horizon band and haze, ?skydip= darkens the sky right at the horizon, ?skyfogd= sets the fog density outright (fog tinted with the haze). -1 = off.</summary>
+        public static float TestSkyDim = -1f, TestSkyDip = -1f, TestSkyFogD = -1f;
         public static bool ShowPlayerNames = true, ShowMinimap = true, Shadows = true, PostProcessing = true, SpeedMph;
         public static string QualityPreference = "auto", TrafficChoice = "medium";
         public static int Version;

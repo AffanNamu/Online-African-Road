@@ -18,6 +18,8 @@ Shader "ARO/SkyGradient"
         _LowHeight ("Horizon band height", Float) = 0.07
         _MidHeight ("Mid stop height", Float) = 0.35
         _HeightExp ("Height curve", Float) = 0.5
+        _Dip ("Darkening right at the horizon", Float) = 0
+        _DipHeight ("Height where the darkening ends", Float) = 0.10
     }
     SubShader
     {
@@ -33,7 +35,7 @@ Shader "ARO/SkyGradient"
 
             fixed4 _Zenith, _Mid, _Horizon, _Haze, _Ground, _GlowColor;
             float4 _SunDir;
-            float _GlowStrength, _GlowPower, _DiscStrength, _LowHeight, _MidHeight, _HeightExp;
+            float _GlowStrength, _GlowPower, _DiscStrength, _LowHeight, _MidHeight, _HeightExp, _Dip, _DipHeight;
 
             struct appdata { float4 vertex : POSITION; };
             struct v2f { float4 pos : SV_POSITION; float3 dir : TEXCOORD0; };
@@ -59,6 +61,7 @@ Shader "ARO/SkyGradient"
                     float highT = smoothstep(0.0, 1.0, saturate((h - _MidHeight) / max(1.0 - _MidHeight, 0.001)));
                     c = h < _MidHeight ? lerp(_Horizon.rgb, _Mid.rgb, lowT) : lerp(_Mid.rgb, _Zenith.rgb, highT);
                 }
+                c *= 1.0 - _Dip * (1.0 - smoothstep(0.0, 1.0, saturate(h / max(_DipHeight, 0.001))));      // the same darkening as SkyGradientModel.ColourAt
                 c = lerp(c, _Ground.rgb, smoothstep(0.0, -0.08, d.y));
                 float s = saturate(dot(d, normalize(_SunDir.xyz)));
                 float glow = pow(s, _GlowPower) * _GlowStrength + pow(s, _GlowPower * 8.0) * _GlowStrength * 0.6;
