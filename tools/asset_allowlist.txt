@@ -1,0 +1,3 @@
+# Tracked 3D / art-source files that are allowed in this PUBLIC repository (tools/check_repo_safety.py).
+# One path or glob per line; a comment says why it may be public. Adding a line is a reviewed change and needs the owner's written confirmation of ownership/licence.
+# Empty on purpose: no 3D model of any kind is committed. (ARO TITAN 480 is a pipeline fixture and is NOT listed until its ownership and licence are confirmed, docs/ASSET_LICENSES.md.)

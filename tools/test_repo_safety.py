@@ -31,6 +31,15 @@ cases = [
     (".env.example is allowed", {".env.example": "A="}, 0),
     ("third party asset path is rejected", {"Assets/ThirdParty/Vendor/car.fbx": "x"}, 1),
     ("build output is rejected", {"Builds/WebGL/index.html": "x"}, 1),
+    ("a tracked glb model is rejected", {"Assets/_Project/Art/Vehicles/truck.glb": "x"}, 1),
+    ("a tracked fbx model is rejected", {"Assets/Anything/car.FBX": "x"}, 1),
+    ("a tracked texture source is rejected", {"Assets/_Project/Art/Textures/paint.psd": "x"}, 1),
+    ("a generated vehicle prefab is rejected", {"Assets/_Project/Resources/Vehicles/aro_titan_480.prefab": "x"}, 1),
+    ("a generated prop material is rejected", {"Assets/_Project/Resources/Props/kiosk.mat": "x"}, 1),
+    ("the prop catalogue (json) is allowed", {"Assets/_Project/Resources/Props/prop_catalog.json": "{}"}, 0),
+    ("an allowlisted model is allowed", {"tools/asset_allowlist.txt": "# owner-original\nAssets/_Project/Art/Vehicles/fixture.glb\n", "Assets/_Project/Art/Vehicles/fixture.glb": "x"}, 0),
+    ("the allowlist is exact: another model next to it is still rejected", {"tools/asset_allowlist.txt": "Assets/_Project/Art/Vehicles/fixture.glb\n", "Assets/_Project/Art/Vehicles/other.glb": "x"}, 1),
+    ("an empty allowlist with only comments allows nothing", {"tools/asset_allowlist.txt": "# nothing\n", "x/model.obj": "x"}, 1),
 ]
 bad = 0
 for name, files, want in cases:
