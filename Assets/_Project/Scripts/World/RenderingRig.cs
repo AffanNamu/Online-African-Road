@@ -114,7 +114,7 @@ namespace ARO.World
             string url = Application.absoluteURL; bool smokePage = !string.IsNullOrEmpty(url) && url.Contains("smoke=");
             float contrast = smokePage ? ARO.NetCore.LightingHour.QueryNumber(url, "contrast", 0f, 100f) : -1f, vignette = smokePage ? ARO.NetCore.LightingHour.QueryNumber(url, "vignette", 0f, 1f) : -1f;
             if (Tier.ColorGrading) { _grade = _profile.Add<ColorAdjustments>(true); _grade.postExposure.Override(0.1f); _grade.contrast.Override(contrast >= 0f ? contrast : 10f); _grade.saturation.Override(0f); }
-            if (Tier.Vignette) { _vignette = _profile.Add<Vignette>(true); _vignette.intensity.Override(vignette >= 0f ? vignette : 0.22f); _vignette.smoothness.Override(0.5f); }
+            if (Tier.Vignette) { _vignette = _profile.Add<Vignette>(true); _vignette.intensity.Override(vignette >= 0f ? vignette : Tier.VignetteIntensity); _vignette.smoothness.Override(0.5f); }
             if (Tier.Bloom) { _bloom = _profile.Add<Bloom>(true); _bloom.threshold.Override(1.1f); _bloom.intensity.Override(0.25f); _bloom.scatter.Override(0.6f); }
             PostProcessingActive = true; PostProcessingNote = $"tonemap={Tier.Tonemapping}({(Tier.Tonemapping ? tm : "off")}) grade={Tier.ColorGrading} vignette={Tier.Vignette} bloom={Tier.Bloom}";
         }

@@ -13,6 +13,8 @@ namespace ARO.NetCore
         public float ShadowDistance; public int ShadowCascades, ShadowResolution; public bool SoftShadows;
         public int MsaaSamples; public float RenderScale;
         public bool Tonemapping, ColorGrading, Vignette, Bloom;
+        /// <summary>Strength of the vignette where the tier has one (0..1). Medium 0.10 (was 0.22, which measured 10 luma darker than Low at every hour); High keeps 0.22. Reverting is changing this number.</summary>
+        public float VignetteIntensity;
         public float LodBias;                       // QualitySettings.lodBias
         public int LoadRadiusChunks, UnloadRadiusChunks;
         public float PropDensity;                   // multiplies PropRule.presence
@@ -41,13 +43,13 @@ namespace ARO.NetCore
         public static readonly QualityTier Medium = new QualityTier
         {
             Name = "medium", ShadowDistance = 110f, ShadowCascades = 2, ShadowResolution = 2048, SoftShadows = false, MsaaSamples = 2, RenderScale = 1f,
-            Tonemapping = true, ColorGrading = true, Vignette = true, Bloom = false, LodBias = 1f, LoadRadiusChunks = 3, UnloadRadiusChunks = 5,
+            Tonemapping = true, ColorGrading = true, Vignette = true, VignetteIntensity = 0.10f, Bloom = false, LodBias = 1f, LoadRadiusChunks = 3, UnloadRadiusChunks = 5,
             PropDensity = 0.8f, PropCullScale = 1f, TerrainDetail = 1f, MaxTrafficAgents = 40, TrafficDensity = 5f, FarClip = 1500f
         };
         public static readonly QualityTier High = new QualityTier
         {
             Name = "high", ShadowDistance = 150f, ShadowCascades = 3, ShadowResolution = 4096, SoftShadows = true, MsaaSamples = 4, RenderScale = 1f,
-            Tonemapping = true, ColorGrading = true, Vignette = true, Bloom = true, LodBias = 1.5f, LoadRadiusChunks = 4, UnloadRadiusChunks = 6,
+            Tonemapping = true, ColorGrading = true, Vignette = true, VignetteIntensity = 0.22f, Bloom = true, LodBias = 1.5f, LoadRadiusChunks = 4, UnloadRadiusChunks = 6,
             PropDensity = 1f, PropCullScale = 1.4f, TerrainDetail = 1.25f, MaxTrafficAgents = 80, TrafficDensity = 8f, FarClip = 2200f
         };
 

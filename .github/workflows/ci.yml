@@ -263,14 +263,12 @@ jobs:
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v0 medium "&vignette=0" || true
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-c0v0 medium "&contrast=0&vignette=0" || true
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-ns medium "&shadows=off" || true
-      - name: Medium vignette study - 0.10 and 0.08 instead of 0.22, judged against criteria written down beforehand (informational; docs/REALISM_AUDIT.md Appendix C)
+      - name: Medium vignette - the previous value 0.22 rendered in THIS run as the control, judged against the new default 0.10 by the criteria in docs/REALISM_AUDIT.md Appendix C (informational)
         if: always()
         continue-on-error: true
         run: |
-          node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v10 medium "&vignette=0.1" || true
-          node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-metrics.json webgl-light-medium-v10-metrics.json
-          node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v08 medium "&vignette=0.08" || true
-          node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-metrics.json webgl-light-medium-v08-metrics.json
+          node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v22 medium "&vignette=0.22" || true
+          node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-v22-metrics.json webgl-light-medium-metrics.json
       - name: Gradient sky study - the retuned gradient at four hours and two mid-stop variants at dawn and sunset (checks the model's predictions), plus a repeat of the procedural sky as the noise floor (informational; Appendix C)
         if: always()
         continue-on-error: true

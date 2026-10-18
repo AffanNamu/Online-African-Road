@@ -422,3 +422,20 @@ public class PropBatcherTests
         Assert.Equal(cat["concrete_house"].heightM * 1.5f, boxes[0].Size.Y, 3); Assert.Equal(2f + cat["concrete_house"].heightM * 0.75f, boxes[0].Centre.Y, 3); Assert.Equal(30f, boxes[0].YawDeg);
     }
 }
+
+public class VignetteTierTests
+{
+    [Fact] public void MediumHasALightVignetteAndHighKeepsItsOwn()
+    {
+        Assert.True(ARO.NetCore.QualityTiers.Medium.Vignette);
+        Assert.Equal(0.10f, ARO.NetCore.QualityTiers.Medium.VignetteIntensity, 3);
+        Assert.Equal(0.22f, ARO.NetCore.QualityTiers.High.VignetteIntensity, 3);       // the High tier was not part of this change
+    }
+
+    [Fact] public void EveryTierWithAVignetteHasAStrengthInRange()
+    {
+        foreach (var t in ARO.NetCore.QualityTiers.All) if (t.Vignette) Assert.InRange(t.VignetteIntensity, 0.01f, 0.5f);
+    }
+
+    [Fact] public void LowHasNoVignette() => Assert.False(ARO.NetCore.QualityTiers.Low.Vignette);
+}
