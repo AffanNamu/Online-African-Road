@@ -142,7 +142,10 @@ jobs:
           versioning: None   # semantic versioning refuses a dirty tree, and Unity just generated untracked .meta files (run 28)
           # Bake the backend into the player when configured (repo variable SUPABASE_URL + secret SUPABASE_ANON_KEY, the PUBLIC anon key only).
           customParameters: ${{ secrets.SUPABASE_ANON_KEY != '' && format('-supabaseUrl {0} -supabaseAnonKey {1}', vars.SUPABASE_URL || secrets.SUPABASE_URL || 'https://echmdzqxlbiszyeawbcd.supabase.co', secrets.SUPABASE_ANON_KEY) || '' }}
+      # PRIVATE-ASSET BOUNDARY (docs/ASSET_PIPELINE_PLAN.md section 10): artifacts and published screenshots of a PUBLIC repository are readable by anyone signed in to GitHub. When the repository variable
+      # ASSETS_REPO is set (private assets are being fetched into the build), nothing built from them is uploaded or published; the steps below that need the build then fail, which is the safe direction.
       - uses: actions/upload-artifact@v4
+        if: ${{ vars.ASSETS_REPO == '' }}
         with: { name: webgl-build, path: Builds/WebGL, if-no-files-found: error }   # BuildScript writes Builds/WebGL (run 29: the old path build/WebGL was empty)
 
   webgl-smoke:
@@ -203,10 +206,10 @@ jobs:
         if: always()
         run: node tools/webgl-worldmap.js Builds/WebGL webgl-worldmap
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-smoke-screenshot, path: "webgl-*.png", if-no-files-found: ignore }
       - name: Publish screenshots to the ci-screenshots branch (reviewable without downloading artifacts)
-        if: always() && github.event_name == 'push'
+        if: always() && github.event_name == 'push' && vars.ASSETS_REPO == ''
         run: |
           mkdir -p /tmp/shots && cp webgl-*.png /tmp/shots/ 2>/dev/null || true
           cd /tmp/shots
@@ -286,10 +289,10 @@ jobs:
         continue-on-error: true
         run: node tools/webgl-lighting.js --compare webgl-light-metrics.json webgl-light-medium-metrics.json
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }
       - name: Publish the lighting screenshots to the ci-lighting branch (reviewable without downloading artifacts)
-        if: always() && github.event_name == 'push'
+        if: always() && github.event_name == 'push' && vars.ASSETS_REPO == ''
         run: |
           mkdir -p /tmp/lightshots && cp webgl-light-* /tmp/lightshots/ 2>/dev/null || true
           cd /tmp/lightshots

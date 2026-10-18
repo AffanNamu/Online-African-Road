@@ -5,7 +5,7 @@ The repository is PUBLIC. Secrets belong in GitHub Actions secrets; paid/commerc
 never here (their licences forbid redistribution). The Supabase anon key and project URL are public by design and are allowed;
 a service_role key is not.
 """
-import base64, json, re, subprocess, sys
+import base64, fnmatch, json, os, re, subprocess, sys
 
 files = subprocess.run(["git", "ls-files", "-z"], capture_output=True, check=True).stdout.decode().split("\0")
 files = [f for f in files if f]
@@ -13,6 +13,16 @@ problems = []
 
 BAD_NAMES = re.compile(r"(\.ulf$|\.pem$|\.p12$|\.pfx$|\.keystore$|\.jks$|(^|/)\.env($|\.)(?!example)|service[-_]account.*\.json$|(^|/)id_rsa)", re.I)
 THIRD_PARTY = re.compile(r"^Assets/(ThirdParty|AssetStore|Plugins/ThirdParty)/")
+# 3D, texture-source and package formats: a tracked file of these kinds is almost certainly somebody's licensed art. Unity assets that a vehicle or prop importer GENERATES from such art
+# (prefabs, materials, meshes under Resources/Vehicles and Resources/Props) are derivatives of it and are refused too. The only way in is a line in tools/asset_allowlist.txt, a tracked file,
+# so it takes a reviewed change that names the path and says (in a comment) why it may be public (owner-original, CC0, ...).
+ASSET_EXT = re.compile(r"\.(fbx|glb|gltf|obj|blend|dae|3ds|max|ma|mb|stl|ply|usd|usda|usdc|usdz|abc|psd|tga|exr|hdr|spp|sbsar|unitypackage|mesh)$", re.I)
+GENERATED_ART = re.compile(r"^Assets/_Project/Resources/(Vehicles|Props)/.+\.(prefab|asset|mat|anim|controller)$", re.I)
+ALLOW = []
+if os.path.exists("tools/asset_allowlist.txt"):
+    for _line in open("tools/asset_allowlist.txt", encoding="utf-8"):
+        _line = _line.split("#", 1)[0].strip()
+        if _line: ALLOW.append(_line)
 TEXT_EXT = re.compile(r"\.(cs|json|js|py|sh|yml|yaml|md|txt|sql|asmdef|asset|html|xml|toml|cfg|ini|csproj|jslib)$", re.I)
 PATTERNS = [
     (re.compile(r"-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"), "private key"),
@@ -27,6 +37,8 @@ JWT = re.compile(r"eyJ[A-Za-z0-9_-]{10,}\.(eyJ[A-Za-z0-9_-]{10,})\.[A-Za-z0-9_-]
 
 for f in files:
     if BAD_NAMES.search(f): problems.append(f"{f}: file name looks like a secret/licence/credential")
+    if (ASSET_EXT.search(f) or GENERATED_ART.search(f)) and not any(fnmatch.fnmatch(f, a) for a in ALLOW):
+        problems.append(f"{f}: a 3D or art-source file is tracked in a public repo and is not in tools/asset_allowlist.txt (private assets are fetched at build time and never committed; see docs/ASSET_PIPELINE_PLAN.md section 10)")
     if THIRD_PARTY.search(f): problems.append(f"{f}: third-party asset path is tracked in a public repo (use a private repo or submodule)")
     if re.search(r"(^|/)(Library|Temp|Builds|Logs|obj)/", f): problems.append(f"{f}: build output is tracked")
     if not TEXT_EXT.search(f): continue
