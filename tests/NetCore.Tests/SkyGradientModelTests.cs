@@ -104,4 +104,35 @@ public class SkyGradientModelTests
         }
         Assert.True(worst < 0.05f, $"largest one-minute colour step {worst:0.000}");   // the same limit LightingModelTests uses for the lighting itself
     }
+
+    // What the chase camera sees (fitted to CI frames, see SkyGradientModel.DisplaySaturation): the upper part of the frame samples the sky near sin(elevation) 0.37, the band above the horizon near 0.04.
+    const float SkyTop = 0.37f, SkyHorizonBand = 0.04f;
+    static float DisplayedSat(Rgb c) { c = SkyGradientModel.Displayed(c); float mx = Math.Max(c.R, Math.Max(c.G, c.B)), mn = Math.Min(c.R, Math.Min(c.G, c.B)); return mx <= 0f ? 0f : (mx - mn) / mx; }
+
+    [Theory]
+    [InlineData(6.4f)] [InlineData(17.6f)]
+    public void TheVisibleUpperSkyIsClearlyBlueAtTheGoldenHours(float hour)
+    {
+        var c = SkyGradientModel.ColourAt(At(hour), SkyTop);
+        Assert.True(DisplayedSat(c) >= 0.36f, $"hour {hour}: displayed saturation {DisplayedSat(c):0.00} (CI criterion 0.30, kept 0.06 above it)");
+        Assert.True(Warm(SkyGradientModel.Displayed(c)) <= 0.85f, $"hour {hour}: displayed R/B {Warm(SkyGradientModel.Displayed(c)):0.00}");
+    }
+
+    [Fact]
+    public void TheVisibleNoonSkyIsBlue()
+    {
+        var c = SkyGradientModel.ColourAt(At(LightingHour.Noon), SkyTop);
+        Assert.True(DisplayedSat(c) >= 0.42f, $"displayed saturation {DisplayedSat(c):0.00} (CI criterion 0.35)");
+        Assert.True(Warm(SkyGradientModel.Displayed(c)) <= 0.70f);
+    }
+
+    [Fact]
+    public void TheBandAboveTheHorizonIsWarmAtDawnAndSunset()
+    {
+        float dawn = Warm(SkyGradientModel.Displayed(SkyGradientModel.ColourAt(At(LightingHour.Dawn), SkyHorizonBand)));
+        float dusk = Warm(SkyGradientModel.Displayed(SkyGradientModel.ColourAt(At(LightingHour.Sunset), SkyHorizonBand)));
+        Assert.True(dawn >= 1.6f, $"dawn band R/B {dawn:0.00} (CI criterion 1.4)");
+        Assert.True(dusk >= 2.2f, $"sunset band R/B {dusk:0.00} (CI criterion 1.8)");
+        Assert.True(dusk - dawn >= 0.6f, $"sunset is only {dusk - dawn:0.00} warmer than dawn (CI criterion 0.5)");
+    }
 }

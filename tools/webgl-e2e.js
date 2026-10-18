@@ -73,11 +73,23 @@ async function open(user, extra, body, opts = {}) {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
   const page = await browser.newPage({ viewport: { width: 1024, height: 576 }, ...(opts.locale ? { locale: opts.locale } : {}) });
   const logs = [], errors = []; currentLogs = logs; currentPage = page;
-  page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
+  const stamps = []; page.on('console', m => { logs.push(m.text()); stamps.push(Date.now()); }); page.on('pageerror', e => errors.push(String(e)));   // stamps[i] = when logs[i] reached the harness
   const waitLog = async (re, from = 0, seconds = 60) => { for (let i = 0; i < seconds * 2; i++) { const hit = logs.slice(from).find(l => re.test(l)); if (hit) return hit; await sleep(500); } return null; };
   const targets = () => { const l = [...logs].reverse().find(x => x.startsWith('[WorldMap] targets')) || ''; return Object.fromEntries([...l.matchAll(/TARGET (\S+) x=([\d.]+) y=([\d.]+)/g)].map(m => [m[1], { x: +m[2], y: +m[3] }])); };
+  // Evidence from runs 38733515306 and 38733515055: failed clicks arrived within 10 to 20 ms after the game rebuilt the region they aimed at (DashboardScreen.Refill destroys and recreates the buttons),
+  // with the aimed button present under the pointer but nothing raycast to it. The harness used to click straight after a server-confirmed action, when the game's own refresh was still on its way. So a click
+  // now waits until no region has been rebuilt for 2 s (at most 8 s) and reads the target position afterwards. It only waits longer; no check or timeout of a check changed.
+  const quietUi = async (ms = 2000, max = 8000) => {
+    const end = Date.now() + max;
+    for (;;) {
+      let last = 0; for (let i = logs.length - 1; i >= 0 && i >= logs.length - 800; i--) if (logs[i].startsWith('[UIDiag] rebuild ')) { last = stamps[i]; break; }
+      if (!last || Date.now() - last >= ms || Date.now() >= end) return;
+      await sleep(100);
+    }
+  };
   const click = async name => {
     for (let attempt = 0; attempt < 3; attempt++) {
+      await quietUi();
       const t = targets()[name]; if (!t) { await sleep(1500); continue; }
       const rec = { name, from: logs.length, pos: { x: t.x, y: t.y } }; if (clickLog.length) clickLog[clickLog.length - 1].to = rec.from; clickLog.push(rec);
       const b = await page.locator('#unity-canvas').boundingBox(); await page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); return true;

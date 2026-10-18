@@ -16,7 +16,9 @@ namespace ARO.Game
         float _nextStatus = 3f, _started;
         bool _targetsLogged;
         readonly List<RaycastResult> _hits = new List<RaycastResult>();
-        readonly HashSet<int> _hooked = new HashSet<int>();   // buttons that already log their onClick (browser end-to-end runs only)
+        readonly HashSet<int> _hooked = new HashSet<int>();
+        readonly Dictionary<int, int> _seen = new Dictionary<int, int>();   // button instance id -> frame it was first seen
+        int FirstSeen(Button b) => _seen.TryGetValue(b.GetInstanceID(), out int f) ? f : Time.frameCount;   // buttons that already log their onClick (browser end-to-end runs only)
 
         void Start() { _started = Time.realtimeSinceStartup; }
 
@@ -62,6 +64,7 @@ namespace ARO.Game
             foreach (var b in FindObjectsByType<Button>(FindObjectsSortMode.None))
             {
                 if (!_hooked.Add(b.GetInstanceID())) continue;
+                _seen[b.GetInstanceID()] = Time.frameCount;
                 string n = b.name;
                 b.onClick.AddListener(() => Debug.Log($"[UIDiag] onClick {n} interactable=true frame={(Time.unscaledDeltaTime * 1000f):0}ms t={Time.realtimeSinceStartup:0.00}"));
             }
@@ -120,6 +123,17 @@ namespace ARO.Game
                     if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform)b.transform, pos, null)) sb.Append(b.name).Append(b.interactable ? "" : "(not interactable)").Append(' ');
                 }
                 sb.Append("] active buttons=").Append(total);
+                // A button under the pointer that nothing raycast to: say why (a graphic that has not been drawn yet has depth -1 and is never hit; a CanvasGroup can switch raycasts off; a canvas or its raycaster can be disabled)
+                foreach (var b in FindObjectsByType<Button>(FindObjectsSortMode.None))
+                {
+                    if (!b.gameObject.activeInHierarchy || !RectTransformUtility.RectangleContainsScreenPoint((RectTransform)b.transform, pos, null)) continue;
+                    bool hit = false; foreach (var h in _hits) if (h.gameObject == b.gameObject) { hit = true; break; }
+                    if (hit) continue;
+                    var g = b.targetGraphic; var cv = b.GetComponentInParent<Canvas>(); var gr = cv != null ? cv.GetComponent<GraphicRaycaster>() : null;
+                    sb.Append($"; WHY-NOT-HIT {b.name}: graphic={(g != null ? g.GetType().Name : "none")} raycastTarget={(g != null && g.raycastTarget)} depth={(g != null ? g.depth : -99)} cull={(g != null && g.canvasRenderer.cull)} alpha={(g != null ? g.canvasRenderer.GetInheritedAlpha() : -1f):0.000} canvasEnabled={(cv != null && cv.enabled)} raycasterEnabled={(gr != null && gr.enabled)} groups=[");
+                    foreach (var cg in b.GetComponentsInParent<CanvasGroup>()) sb.Append(cg.name).Append("(blocks=").Append(cg.blocksRaycasts).Append(",alpha=").Append(cg.alpha.ToString("0.00")).Append(") ");
+                    sb.Append("] age=").Append(((Time.frameCount - FirstSeen(b)) ).ToString()).Append(" frames");
+                }
             }
             Debug.Log(sb.ToString());
         }
