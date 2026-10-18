@@ -94,3 +94,7 @@ Probe findings: the control click failed in the first two probe runs because the
 
 ## Database job also lost to the image pull
 ca4620d (branch): "Database migrations + rule tests" failed in "Initialize containers" (nothing ran; it passed on the main run of the same commit family).
+
+## Infrastructure: the image pull, and what changed (2026-10-18)
+The runs for f341f46 lost the browser job twice in a row (the original run and the re-run) at "Initialize containers": `toomanyrequests` from the registry, so **no browser test, drive test or world-map test ran for that commit** in either attempt; the Backend and Database jobs of the main run were lost the same way. The Lighting job (which needs no database) ran and passed on both runs.
+Change (CI plumbing only; no test, assertion or database version changed): the three jobs that need Postgres no longer use a service container with one fixed registry. `.github/actions/postgres` pulls the same official `postgres:15` image from `public.ecr.aws`, then `mirror.gcr.io`, then Docker Hub, three attempts each, starts it on localhost:5432, waits for `pg_isready`, and if no registry answers it fails with an explicit "INFRASTRUCTURE FAILURE ... not a code failure" message. This is untested until its first CI run; if it fails in some other way it is a defect in this change, not in the game. Reverting is restoring the three `services:` blocks.

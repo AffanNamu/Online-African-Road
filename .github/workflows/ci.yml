@@ -11,16 +11,10 @@ jobs:
   sql:
     name: Database migrations + rule tests
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: public.ecr.aws/docker/library/postgres:15   # AWS mirror: avoids Docker Hub anonymous rate limits
-        env: { POSTGRES_PASSWORD: postgres }
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/postgres
       - name: Rule, security-matrix and concurrency tests
         run: ./supabase/tests/run.sh
       - name: Generated seeds are up to date with the authored data (world map, news, hero)
@@ -35,16 +29,10 @@ jobs:
   api-e2e:
     name: Backend over HTTP (PostgREST + auth + security tests)
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: public.ecr.aws/docker/library/postgres:15
-        env: { POSTGRES_PASSWORD: postgres }
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/postgres
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - name: Install PostgREST
@@ -163,16 +151,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
     permissions: { contents: write }   # only to publish screenshots to the ci-screenshots branch
-    services:
-      postgres:     # the browser end-to-end test runs the real game against a real (throw-away) backend
-        image: public.ecr.aws/docker/library/postgres:15
-        env: { POSTGRES_PASSWORD: postgres }
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/postgres
       - uses: actions/download-artifact@v4
         with: { name: webgl-build, path: Builds/WebGL }
       - uses: actions/setup-node@v4

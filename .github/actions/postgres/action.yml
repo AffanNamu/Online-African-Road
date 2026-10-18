@@ -1,0 +1,25 @@
+name: Start a throw-away Postgres 15
+description: >-
+  Starts the official postgres:15 image on localhost:5432 (password postgres). Image pulls are the one part of this workflow that has failed for reasons unrelated to the code
+  ("toomanyrequests: Data limit exceeded" on the registry), so it tries three registries that serve the SAME official image, three times each, and fails with an explicit
+  INFRASTRUCTURE message if none answers. It never skips a test and never changes the database version.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        image=""
+        for candidate in public.ecr.aws/docker/library/postgres:15 mirror.gcr.io/library/postgres:15 docker.io/library/postgres:15; do
+          for attempt in 1 2 3; do
+            if docker pull "$candidate"; then image="$candidate"; break 2; fi
+            echo "pull of $candidate failed (attempt $attempt)"; sleep $((attempt * 10))
+          done
+        done
+        if [ -z "$image" ]; then echo "::error::INFRASTRUCTURE FAILURE: no registry could serve postgres:15 (three registries, three attempts each). No test ran; this is not a code failure."; exit 1; fi
+        echo "using $image"
+        docker run -d --name aro-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres "$image"
+        for i in $(seq 1 60); do
+          if docker exec aro-postgres pg_isready -U postgres >/dev/null 2>&1; then echo "postgres ready after ${i}s"; exit 0; fi
+          sleep 1
+        done
+        docker logs aro-postgres | tail -20; echo "::error::postgres did not become ready in 60 s"; exit 1
