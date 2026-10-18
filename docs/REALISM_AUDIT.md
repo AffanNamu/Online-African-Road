@@ -260,3 +260,18 @@ Also: all enforced thresholds pass; the game's [Light] state (sun, ambient, fog,
 Change: `QualityTier.VignetteIntensity` (NetCore) replaces the literal 0.22 in `RenderingRig`; Medium is 0.10, High keeps 0.22, Low has no vignette. Reversal is setting Medium's number back to 0.22 (one line), or not merging the branch. The branch was cut from `main` at ec28d46; `main` and the recorded baseline (`baseline/lighting-0a85308`) are unchanged by it.
 
 How it is compared with the recorded baseline: the same CI run renders Low, Medium at the new default 0.10, and Medium forced back to 0.22 (`&vignette=0.22`, the control), then `--vignette-verdict` applies the criteria of Appendix C to (Low, control, new). The recorded numbers of the shipping 0.22 for reference (runs of 31c5752 and f341f46, software GL): whole-frame mean 74.6 to 74.9 / 108.4 to 108.5 / 72.5 to 76.0 / 29.3 to 29.5 for dawn / noon / sunset / night, corner brightness 0.63 to 0.77 of Low. The existing lighting thresholds are enforced on the new default by the normal Medium lighting step. Results are recorded below after CI; software rendering of CI frames is not real-device validation.
+
+### Appendix D results (CI, software rendering only; no real display or device was used)
+
+Samples of "shipping 0.22 to 0.10" with the Appendix C criteria. Whole-frame mean rise (dawn / noon / sunset / night), corner brightness against Low (dawn / noon / sunset / night), and what failed.
+
+| # | Source | mean rise | corners vs Low | failed |
+|---|---|---|---|---|
+| 1-3 | Appendix C iterations 1-3 | +4.8 / +6.9 / +5.2 / +2.7 (third) | 0.80-0.92 / 0.95 / 0.88-0.93 / 0.81-0.84 | none |
+| 4 | run 39101838729 (156c1f9, URL override on the sky branch) | +4.7 / +9.5 / **+0.5** / +2.2 | 0.88 / 0.95 / 0.86 / 0.86 | sunset whole-frame rise below the pre-declared +1.5 |
+| 5 | run 39111862646 (f55d2bb, this branch, in-run 0.22 control) | +5.4 / +5.3 / +5.1 / +2.9 | 0.91 / 0.95 / 0.88 / 0.96 | enforced `night chase road` 11.4 below 12; the 0.22 control read 11.7 and also failed it (and failed noon whole 108.7 below 110) |
+| 6 | run 39119211163 (c452430, this branch) | +5.0 / +2.2 / +4.1 / +3.1 | 0.90 / 0.95 / 0.90 / 0.78 | enforced `noon chase road` 73.8 below 80; the control failed noon whole 109.2 below 110 |
+
+Reading: 0.10 consistently brightens Medium (mean rise +2 to +9, corners 0.78 to 0.96 of Low's, so the vignette is still drawn) and never made night visibility worse. But in three of six samples one criterion failed, each time on a different, marginal metric, and the 0.22 control fails an enforced threshold in the same runs. The enforced thresholds are Low's; Medium sits close to them whichever vignette it uses, and 0.10 closes only part of the gap (the colour grade's contrast of 10 and the other Medium settings make up the rest). Separately, the same `noon chase road >= 80` threshold failed on the Low tier twice (73.4 and 68.0, usual 94 to 104) in the 8a1e61e runs, which shows that this metric moves by tens of units between runs on the software renderer; see `docs/CI_HEALTH.md`. The thresholds were not changed.
+
+**Verdict by the pre-declared rule ("every criterion met"): NOT ADOPTED as a shipped default.** This branch stays unmerged. Decision for the owner: (a) accept 0.10 on the measured corner and mean gain, with the noise noted; (b) ask for a calibrated Medium threshold set from measured noise (a change to the criteria, which I will not make on my own); or (c) leave Medium at 0.22.
