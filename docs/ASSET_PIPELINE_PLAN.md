@@ -108,3 +108,51 @@ Approvals needed before step 3 of section 5: the storage option; the owner's wri
 * Transparent glass on WebGL: sorting and fill cost; one material, no double-sided duplicates.
 * `Resources` ships every prefab in every build; fine for one truck, Addressables beyond a handful (see `docs/VISUAL_DIRECTION.md`).
 * Realism is not delivered by this milestone: a stylised flat-colour truck will still look placeholder-like next to the reference screenshots.
+
+## 9. Options for the first realistic truck, compared (added after the owner's request to compare A, B and C)
+
+Evidence limits: the market facts below come from a few web searches (listing titles and snippets) and **were not verified on the listings**; prices, licences, LOD counts, URP support and wheel setup must be read on each listing before any purchase. Nothing was downloaded or bought.
+
+| | A. Generate with ARO 3D Studio | B. Licensed game-ready asset | Hybrid (recommended) |
+|---|---|---|---|
+| What you get | A mesh from a reference image (TripoSR) or the procedural TITAN 480 | A modelled, textured, LOD'd vehicle (Asset Store, TurboSquid, CGTrader) or a commission | A purchased/commissioned body and interior, run through the Studio's rig/LOD/collision/validation stages and our converter |
+| Proven today | Procedural TITAN 480 only (stylised, flat colours, 42k tris, 4 LODs, rig spec, Khronos-valid GLB). AI reconstruction **never run**; Unity import **never run** | Listings exist (a "Truck and Trailers" pack with 3 LODs per model, a "Heavy Duty Truck" with five LODs and a drivable prefab, an "EV Semi Truck" pack marked URP-compatible); suitability for our rig is unverified | Nothing yet; the converter and validator are the new work |
+| Realism | Low to unknown: no textures on the reference; AI output needs retopology, UVs, textures by hand | Highest of the three, if the pack is good; real PBR textures | As B |
+| African authenticity | Whatever we design (the TITAN is ours) | Generic European/US trucks; West African vehicles are rare, expect commission or heavy re-skinning (livery, dirt, modifications) | Commission for the African specifics |
+| Licence risk | Own work; the Studio's own licence is undecided; a generated mesh needs a rights check of the generator's terms | Asset Store licences generally forbid redistributing source files; **public repo is the problem** (see section 7) | As B |
+| Cost / time | Free, but unknown clean-up hours | Money (not purchased; owner's call) plus integration | Money plus integration |
+| Technical fit | Rig conventions already match our node naming idea; handedness and Unity import unverified | Wheels/steering usually set for the vendor's own controller, not our `VehicleRig`; expect re-rigging | Our converter normalises both |
+| Main risk | It will not look realistic; AI step unproven | Licence and public-repo handling; rig adaptation; may be too heavy (triangles, textures) | Two moving parts |
+
+**Recommendation.** Do not choose between A and B yet; split the work by purpose:
+1. **Prove the pipeline with A's one real asset (the TITAN 480):** it is ours, small, structured and already validated by the Studio; it exercises import, rig mapping, LODs, lights, cameras, colliders and the budgets. It will look placeholder-like and the plan must say so.
+2. **Get realism from B (or a commission),** after the pipeline works and the owner has decided repository privacy. Shortlist 2 to 3 listings, then download the vendor's free/preview material or buy one under the owner's approval, and run it through the same validator before anything else is spent.
+3. **Use A's AI route only as a measured pilot** on a prop (a kiosk or bush) to learn the real clean-up cost; never as the truck.
+
+### Model acceptance checklist (applies to any generated, purchased or commissioned model)
+
+| Area | Requirement | How it is checked |
+|---|---|---|
+| Unity compatibility | Exports as GLB/FBX that the converter imports; scale 1 unit = 1 m, forward +Z, up +Y, ground at y=0; left-hand-drive cab means steering wheel at x < 0 in Unity | converter spike + validator |
+| Materials | URP/Lit (metallic-smoothness), no Standard shader, no per-object material copies, one glass material, emissive for lights, <= 20 materials | validator |
+| UVs and textures | non-overlapping UV0 for baked parts, power-of-two textures <= 2048, sRGB only for base colour and emissive, compressed per platform, texture memory within budget | validator + build report |
+| Geometry optimisation | triangle budgets per LOD (hero LOD0 <= 60k), no non-manifold or degenerate triangles, merged static parts per material, separate rigid parts only where they move | validator |
+| Rigging | wheels as separate transforms about X, steer and spin split, dual tyres under one holder, doors/mirrors/wipers/steering wheel pivots with limits, axles map to `WheelAxle` | rig mapping test |
+| Wheels | collider radius within 5% of the visual radius; track and wheelbase match the definition's physics | validator + drive test |
+| Lights | head, brake, reverse and indicator emitters separate and split left/right; real `Light`s from `HeadlightSpec` | play-mode test |
+| Cameras | chase offset, bumper and cockpit anchors; near plane does not clip; driver view only with a complete `DriverRig` | camera tests |
+| Colliders | simple convex hulls (<= 255 tris) or primitives on a separate child, never the render mesh | validator |
+| LODs | LOD0 to LOD3 with `LODGroup`, last LOD <= 20% of LOD0, remote vehicles forced to LOD1 or lower | validator + traffic test |
+| Memory and build size | counters from the player build, not source files: build size (35 MB today, budget 120), `[Perf]` texture MB and heap MB, no regression beyond the agreed delta | CI build report |
+| Licence | recorded in `docs/ASSET_LICENSES.md` with source, licence, date and the owner's confirmation | safety gate |
+
+## 10. Keeping paid assets private while CI still builds (recommended mechanism; nothing created)
+
+1. A private repository (for example `aro-assets`, created by the owner) holds the purchased/commissioned sources and the converter's input (GLB + sidecar JSON). The public game repository holds no asset bytes.
+2. CI fetches it in the Unity job with a read-only deploy key or fine-grained token limited to that one repository, stored by the owner as an Actions secret, only when the secret is present: `if: ${{ secrets.ASSETS_KEY != '' }}`. Without it (forks, outside contributors, runs without the secret) the build uses the existing primitive placeholder and still passes, as it does today.
+3. `tools/check_repo_safety.py` keeps refusing any tracked file under `Assets/ThirdParty/`; if a submodule pointer is used instead of a CI checkout, the gate must allow the gitlink entry and still refuse blobs. A test must cover both.
+4. **Public-repo leaks to close before the first paid asset:** Actions artifacts of a public repository are downloadable by any signed-in GitHub user, so the `webgl-build` artifact (which would contain the converted meshes and textures) must not be uploaded from runs that fetched private assets, or must be restricted; screenshots published to the `ci-screenshots` and `ci-lighting` branches show the asset rendered (usually acceptable for a game, but check each licence); CI logs must not print asset file lists beyond ids.
+5. Shipped builds contain the converted assets by nature; vendor licences normally allow that, but extractability of textures and meshes from a WebGL build is a licence point to read per asset.
+6. If the owner prefers simplicity over this, making the game repository private removes items 1 to 4 (at the cost noted in section 7: Actions minutes).
+
+Decisions needed from the owner (none taken): the repository option (section 7); whether to create the private asset repository and add the secret; confirmation of ownership and licence of the TITAN model and the Studio code; approval to shortlist and, separately, to purchase or commission a realistic truck.
