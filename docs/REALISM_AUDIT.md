@@ -266,3 +266,19 @@ Criteria written before the CI run is read (`webgl-lighting.js --sky2-verdict`, 
 2. upper-sky saturation 0.30 to 0.42 at dawn and sunset, 0.35 to 0.45 at noon (iteration 3 measured 0.52 to 0.54);
 3. the brightness step across the horizon (sky just above minus terrain just below, regions `skyHorizon` and `terrainFar`) is at most 0.85 of the control's at dawn and at sunset.
 "Atmospheric appearance" and fit to the visual direction cannot be a number: dawn, noon, sunset and night frames are compared by eye and described, labelled as my reading of software-rendered CI frames. Results, and the decision on the default, follow after CI and the owner's review.
+
+### Appendix E results (CI run 39101838729, commit 156c1f9; software rendering only)
+
+Pre-declared in this appendix: upper-sky saturation 0.30 to 0.42 (dawn, sunset) and 0.35 to 0.45 (noon); brightness step across the horizon at most 0.85 of the control's; every earlier gradient criterion still holding.
+
+| Variant | upper-sky saturation dawn / sunset (control 0.52 / 0.53) | horizon step dawn / sunset (control 93.9 / 74.3; limit 0.85 x = 79.8 / 63.2) | earlier criteria | verdict |
+|---|---|---|---|---|
+| new palette, default haze | 0.36 / 0.37 (noon 0.40) | **114.4 / 99.8** | all met | **not met** |
+| haze h0 | 0.36 / 0.34 | **104.6 / 83.1** | all met | **not met** |
+| haze h1 | 0.36 / 0.37 | **118.4 / 108.3** | one failed (dawn horizon warmth 1.38 below 1.4) | **not met** |
+| fog 4 | 0.36 / 0.36 | **111.7 / 95.1** | all met | **not met** |
+| fog 8 | 0.36 / 0.38 | **114.7 / 97.1** | all met | **not met** |
+
+Reading: the saturation defect is fixed (0.36 to 0.40 instead of 0.52, inside the declared band). The hard-horizon defect is **not** fixed: in every variant the step across the horizon is larger than the control's, not smaller, because the sky near the horizon became brighter (sky 145 to 180 against terrain 60 to 64) while the terrain did not change. Raising fog density did not close it either. Making the horizon softer needs the terrain side of the edge to change (haze/fog that lifts distant ground) or the sky band to be darker/more neutral there; both are the next experiment, not done. The pre-declared horizon criterion is unchanged and unmet.
+
+**Status:** the gradient sky stays behind `?sky=gradient`; the shipped game keeps the procedural sky. Not proposed as the default. An owner look at the frames (on branch `ci-lighting` after each run) is still needed for the colour direction; my reading of software-rendered frames is: better saturation and a recognisable warm band at sunrise/sunset, but a visible hard edge where sky meets terrain.
