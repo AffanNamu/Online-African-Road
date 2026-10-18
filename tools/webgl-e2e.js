@@ -53,7 +53,7 @@ function failureDiagnostics() {
       const present = under === undefined ? null : under.includes(c.name);                  // does the aimed button exist under the pointer at the moment of the press?
       const cls = !press ? 'NO-PRESS' : off ? 'OFF-TARGET' : moved ? 'MOVED' : oc ? 'CLICKED'
         : present === false ? 'NOTHING-THERE' : present === true && !hitList.includes(c.name) ? 'BLOCKED' : hooked ? 'NO-ONCLICK' : 'PRESS-ON-TARGET';
-      console.log(`        ${cls.padEnd(15)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 170) : 'none'}${rel ? '' : ' | no release logged'}${oc ? ' | ' + oc.replace(/^\[UIDiag\] /, '').slice(0, 80) : ''}${rbText}`);
+      console.log(`        ${cls.padEnd(15)} click ${c.name} at ${c.pos ? c.pos.x.toFixed(3) + ',' + c.pos.y.toFixed(3) : '?'}${moved ? ` (target now ${now.x.toFixed(3)},${now.y.toFixed(3)})` : ''} | press: ${press ? press.replace(/^\[UIDiag\] /, '').slice(0, 480) : 'none'}${rel ? '' : ' | no release logged'}${oc ? ' | ' + oc.replace(/^\[UIDiag\] /, '').slice(0, 80) : ''}${rbText}`);
     }
   } catch (e) { console.log('      (diagnostics failed: ' + String(e).slice(0, 100) + ')'); }
 }
