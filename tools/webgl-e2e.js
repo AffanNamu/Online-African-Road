@@ -398,8 +398,11 @@ const allErrors = [], allExc = [];
     m = c.logs.length; await c.click('Veh_Search_Input'); await sleep(500); await c.page.keyboard.type('TiTan', { delay: 120 });
     v = await c.waitLog(/\[Vehicles\] view tab=trucks .*search="TiTan" shown=(\d+)/, m, 60);
     check(!!v && +/shown=(\d+)/.exec(v)[1] === titanDefsDb, 'searching "TiTan" (any case) finds the TITAN models of the database', v);
-    for (let i = 0; i < 5; i++) await c.page.keyboard.press('Backspace');
-    await c.waitLog(/\[Vehicles\] view tab=trucks .*search="" shown=/, m, 60);
+    // Backspace at the same pace as the typing above: five presses with no delay arrive inside one ~200 ms CI frame and can be lost
+    // (run 39101838729: the search stayed "TiTan", so the bus card was never listed and this step waited 60 s three times)
+    const mClear = c.logs.length;
+    for (let i = 0; i < 5; i++) await c.page.keyboard.press('Backspace', { delay: 120 });
+    check(!!(await c.waitLog(/\[Vehicles\] view tab=trucks .*search="" shown=/, mClear, 60)), 'the search box is cleared again');
 
     // not enough money: the server's own verdict, in words
     m = c.logs.length; await c.click('Btn_VehTab_Buses'); await c.settle(); await c.click('Btn_Veh_bus_city_01');

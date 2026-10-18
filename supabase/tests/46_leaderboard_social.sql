@@ -30,6 +30,8 @@ select testkit.assert_eq('then the next', pg_temp.fb('A', 'xp')->'items'->1->>'d
 select testkit.assert_eq('I am third among friends', pg_temp.fb('A', 'xp')->'me'->>'rank', '3');
 select testkit.assert_eq('with my own value', pg_temp.fb('A', 'xp')->'me'->>'value', '5000');
 select testkit.assert_eq('a friend with nothing is listed last', pg_temp.fb('A', 'xp')->'items'->3->>'display_name', 'ZqEcho');
+select testkit.assert_eq('every row carries its own rank, in order (ties would share one)', (select string_agg(e->>'rank', ',' order by o) from jsonb_array_elements(pg_temp.fb('A', 'xp')->'items') with ordinality t(e, o)), '1,2,3,4');
+select testkit.assert_eq('and the whole order is by value, not by id', (select string_agg(e->>'display_name', ',' order by o) from jsonb_array_elements(pg_temp.fb('A', 'xp')->'items') with ordinality t(e, o)), 'ZqBravo,ZqCharlie,ZqAlpha,ZqEcho');
 select testkit.assert_eq('the stranger far ahead is not on a friends board', (select count(*)::text from jsonb_array_elements(pg_temp.fb('A', 'xp')->'items') e where e->>'display_name' = 'ZqDelta'), '0');
 select testkit.assert_eq('the scope is stated', pg_temp.fb('A', 'xp')->>'scope', 'friends');
 select testkit.assert_eq('the metric chooses the order: distance', pg_temp.fb('A', 'distance')->'items'->0->>'display_name', 'ZqBravo');

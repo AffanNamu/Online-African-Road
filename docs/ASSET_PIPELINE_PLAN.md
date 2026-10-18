@@ -156,3 +156,31 @@ Evidence limits: the market facts below come from a few web searches (listing ti
 6. If the owner prefers simplicity over this, making the game repository private removes items 1 to 4 (at the cost noted in section 7: Actions minutes).
 
 Decisions needed from the owner (none taken): the repository option (section 7); whether to create the private asset repository and add the secret; confirmation of ownership and licence of the TITAN model and the Studio code; approval to shortlist and, separately, to purchase or commission a realistic truck.
+
+
+## 11. The first production truck: licensed game-ready model, commissioned model, and what ARO 3D Studio adds (decision material; nothing purchased or commissioned)
+
+| Criterion | Licensed game-ready model (Asset Store, TurboSquid, CGTrader) | Commissioned model | ARO 3D Studio |
+|---|---|---|---|
+| What it is for us | The fastest route to a textured, LOD'd, realistic-looking vehicle | The only route to an authentic West African truck or bus that exists nowhere on a shelf | A pipeline around the model, not a source of realistic art: rig spec, collision, LODs, validation, export |
+| Realism and authenticity | High realism; generic (mostly European or US trucks) unless re-skinned | Exactly as briefed | Procedural TITAN is stylised; AI output unproven (never run) |
+| Licence risk | Standard Asset Store terms generally forbid redistributing source files; extractable assets in a WebGL build are a point to read per listing; paid assets must stay out of this public repo (section 10) | Clean if the contract assigns the rights; AI-generated deliveries must be excluded by contract | Own work, but the owner has not chosen a licence and the code is partly AI-assisted (see `ASSET_LICENSES.md`) |
+| Technical fit | Usually set up for the vendor's own vehicle controller; wheels, steering and lights need re-rigging to `VehicleRig`; LOD and texture budgets must be re-checked | Built to our rig, naming, budgets and validator from day one | Its rig-node naming and sidecar JSON are already our proposed contract; Unity import never run |
+| Cost and time | Money (not spent) plus integration days; free or preview packs exist but are mostly low-poly or stylised | Money (not spent) plus weeks; quotes needed (no price is assumed here) | Free; clean-up hours unknown until a pilot |
+| Control | Little: updates and changes belong to the vendor | Full, under the contract | Full |
+| Main risk | Licence and public-repo handling; a model that cannot be adapted cheaply | Quality varies by artist; scope and revision costs | It will not look realistic by itself |
+
+Recommendation (a recommendation, not a decision):
+1. **Use the commissioning route for the hero truck** if the goal is an authentic realistic African truck, because it is the only one that gives authenticity, a clean licence and our rig in one deliverable. Use **a licensed game-ready model only as a stand-in** while the commission runs, or for traffic vehicles, after reading the exact listing terms.
+2. **Use ARO 3D Studio for what it does**: the rig, collision, LOD and validation stages applied to whichever mesh arrives, and its sidecar JSON as the contract in the commission brief. Use the **TITAN 480 only as a pipeline fixture** until its ownership and licence are confirmed.
+3. Do the **importer spike** (section 5, step 1) first; it needs no purchase and tells us whether our converter and the Studio's export agree on handedness, naming and LODs.
+
+Commission brief (what the owner would send; for review, nothing has been sent): deliverables (GLB or FBX with separate wheels, steering wheel, doors, mirrors, glass, light meshes; LOD0 to LOD3 within the budgets of section 4; PBR textures at most 2048; collision hulls; sidecar JSON in the Studio's schema; source files); conventions (1 unit = 1 metre, +Z forward, ground at y = 0, left-hand-drive cab); acceptance (our validator passes, a drive test passes, the owner approves screenshots under the four lighting hours); stage payments tied to those gates (blockout, textured exterior, rigged and LOD'd, interior, final); rights (assignment of all rights to the owner, no use of AI generation or of third-party meshes, textures or brands, a written list of any licensed material used, delivery of editable sources); confidentiality.
+
+## 12. Private-asset boundary: what is already enforced, and what enabling it takes
+Already in the repository (inert until private assets exist; tested):
+* `tools/check_repo_safety.py` refuses any tracked 3D or art-source file (fbx, glb, gltf, obj, blend, psd, tga, exr, hdr and others) and any generated prefab, material or asset under `Resources/Vehicles` or `Resources/Props` unless the path is in `tools/asset_allowlist.txt` (empty). 22 gate tests, including "allowlist is exact" and "an empty allowlist allows nothing". Derivatives of private art are refused as well as the art.
+* The workflow is fail-closed: when the repository variable `ASSETS_REPO` is set, the build artifact, the smoke and lighting screenshot artifacts and the publishing of screenshots to the public `ci-screenshots` and `ci-lighting` branches are all skipped, so nothing built from private assets can leave the job through a public channel; the jobs that need the build artifact then fail loudly instead of silently running.
+* Converter output (prefabs, meshes, materials made from private sources) is generated in CI and never committed; the gate enforces that.
+
+Not built (needs the owner): the private repository itself, the read-only deploy key as an Actions secret, the `ASSETS_REPO` variable, and a fetch step in the Unity job (a plain `actions/checkout` of that repository into `Assets/ThirdParty` using the key, skipped when the key is absent so forks still build with placeholders). Because the smoke and lighting jobs need the build, the first real enablement also needs one of: run them in the same job as the build, or upload the build **encrypted** (for example `openssl enc -aes-256-cbc -pbkdf2` with a key from a secret) and decrypt it in the downstream job. Which of the two, and whether screenshots of the licensed vehicle may be published at all, depends on the licence text of the chosen asset; that is decided per asset, not in advance.
