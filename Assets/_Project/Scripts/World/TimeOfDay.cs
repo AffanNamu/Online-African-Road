@@ -19,7 +19,7 @@ namespace ARO.World
         public bool IsNight => hour < 5.6f || hour > 18.4f;
         public event Action<bool> NightChanged;
 
-        Material _sky, _gradient; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
+        Material _sky, _gradient; SkyGradientState _lastGradient; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
         /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
         public string HourSource => _source;
         /// <summary>The lighting for the current hour and weather (sun, moon, sky, ambient, fog, grade). Read by the rendering rig for the post-processing grade.</summary>
@@ -53,14 +53,15 @@ namespace ARO.World
 
         void ApplyGradient(LightingState st)
         {
-            var g = SkyGradientModel.Evaluate(st);
+            var g = SkyGradientModel.Evaluate(st, ARO.Core.RuntimeSettings.TestSkyPalette, ARO.Core.RuntimeSettings.TestSkyHaze >= 0f ? ARO.Core.RuntimeSettings.TestSkyHaze : SkyGradientModel.DefaultHazeMix);
             _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));
-            _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
+            _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Haze", new Color(g.Haze.R, g.Haze.G, g.Haze.B)); _gradient.SetFloat("_LowHeight", g.LowHeight); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
             _gradient.SetColor("_GlowColor", new Color(g.Glow.R, g.Glow.G, g.Glow.B));
             float glowK = ARO.Core.RuntimeSettings.TestSkyGlow >= 0f ? ARO.Core.RuntimeSettings.TestSkyGlow : 1f;   // sky study overrides (smoke pages only)
             _gradient.SetFloat("_MidHeight", ARO.Core.RuntimeSettings.TestSkyMid >= 0f ? ARO.Core.RuntimeSettings.TestSkyMid : g.MidHeight); _gradient.SetFloat("_HeightExp", ARO.Core.RuntimeSettings.TestSkyExp >= 0f ? ARO.Core.RuntimeSettings.TestSkyExp : g.HeightExp);
             _gradient.SetFloat("_GlowStrength", g.GlowStrength * glowK); _gradient.SetFloat("_GlowPower", g.GlowPower); _gradient.SetFloat("_DiscStrength", g.DiscStrength);
             var toSun = sun != null ? -sun.transform.forward : Vector3.up;                // a directional light shines along its forward axis; the sun is in the opposite direction
+            _lastGradient = g;
             _gradient.SetVector("_SunDir", new Vector4(toSun.x, toSun.y, toSun.z, 0f));
         }
 
@@ -99,6 +100,8 @@ namespace ARO.World
             RenderSettings.ambientGroundColor = new Color(st.AmbientGround.R, st.AmbientGround.G, st.AmbientGround.B);
             RenderSettings.fogColor = new Color(st.FogColor.R, st.FogColor.G, st.FogColor.B);
             RenderSettings.fogDensity = st.FogDensity;
+            if (_gradient != null && _lastGradient != null && ARO.Core.RuntimeSettings.TestSkyFog > 0f)       // sky study only (?skyfog=): the distant terrain fades into the sky's haze instead of ending on a hard edge
+            { RenderSettings.fogColor = new Color(_lastGradient.Haze.R, _lastGradient.Haze.G, _lastGradient.Haze.B); RenderSettings.fogDensity = st.FogDensity * ARO.Core.RuntimeSettings.TestSkyFog; }
             LogState(st.Elevation);
         }
 

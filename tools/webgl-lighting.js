@@ -18,7 +18,7 @@ const REGIONS = {
 // Added with the reproducible truck position (?hold=1): regions placed on what they name. Chase view: the road left of the truck, the truck's top surface, the terrain on the right.
 // Bumper view: the road surface straight ahead (where the headlights land).
 const VIEW_REGIONS = {
-  chase: { roadSurface: [0.30, 0.48, 0.42, 0.56], truck: [0.45, 0.50, 0.56, 0.57], ground: [0.72, 0.48, 0.98, 0.72], skyHorizon: [0.25, 0.26, 0.72, 0.32], skyHigh: [0.25, 0.02, 0.72, 0.10] },
+  chase: { roadSurface: [0.30, 0.48, 0.42, 0.56], truck: [0.45, 0.50, 0.56, 0.57], ground: [0.72, 0.48, 0.98, 0.72], skyHorizon: [0.25, 0.26, 0.72, 0.32], skyHigh: [0.25, 0.02, 0.72, 0.10], terrainFar: [0.25, 0.345, 0.72, 0.40] },
   bumper: { roadSurface: [0.30, 0.55, 0.70, 0.64] },
 };
 const CORNER = [0, 0, 0.04, 0.04], TOP_CENTRE = [0.48, 0, 0.52, 0.04];   // a vignette darkens the corner but not the centre of the same sky row
@@ -252,6 +252,34 @@ function skyVerdict(procFile, gradFile) {
     console.log(`  info ${name}: ground+truck luma differ by ${(Math.abs(g.ground.mean - p.ground.mean) + Math.abs(g.truck.mean - p.truck.mean)).toFixed(1)} (pixel noise between identical runs was 2.4 to 4.9)`);
   }
   console.log(rows.every(Boolean) ? 'SKY VERDICT: the gradient sky meets every pre-declared criterion (software rendering only; a real display still needs a human look).' : 'SKY VERDICT: NOT YET - a pre-declared criterion failed; see the lines above.');
+  return rows.every(Boolean);
+}
+
+/**
+ * `--sky2-verdict procedural.json control.json new.json [--fog]`: Milestone 3 (hard horizon, excessive saturation). `control` is the iteration-3 gradient (palette 3), `new` the retuned one, rendered in the same run.
+ * Criteria written down before the run was read (docs/REALISM_AUDIT.md, Appendix E): (1) every earlier gradient criterion still holds (with --fog, the lit-world identity ignores the fog fields, which that variant changes
+ * on purpose); (2) upper-sky saturation 0.30 to 0.42 at dawn and sunset, 0.35 to 0.45 at noon (iteration 3 measured 0.52 to 0.54); (3) the brightness step across the horizon (sky just above minus terrain just below) is at
+ * most 0.85 of the control's at dawn and at sunset. Software rendering only; informational.
+ */
+function sky2Verdict(procFile, ctlFile, newFile, fog) {
+  const rd = f => JSON.parse(fs.readFileSync(f)), P = rd(procFile), C = rd(ctlFile).metrics, Nraw = rd(newFile), N = Nraw.metrics; const rows = []; const ck = (ok, msg) => { rows.push(ok); console.log((ok ? 'PASS ' : 'FAIL ') + msg); };
+  const c = (m, h) => m[h] && m[h].chase, edge = r => r && r.terrainFar ? r.skyHorizon.mean - r.terrainFar.mean : NaN;
+  if (!fog) { ck(skyVerdict(procFile, newFile), 'every earlier gradient criterion still holds (see the lines above)'); }
+  else {
+    ck(JSON.stringify(Nraw.lines || {}).includes('sky=gradient'), 'the game reports it is drawing the gradient sky');
+    const norm = l => String(l || '').replace(/ sky=\S+/, '').replace(/ fogDensity=\S+/, '').replace(/ fogColor=\S+/, '').replace(/ fogDensityExact=\S+/, '');
+    for (const [name] of PRESETS) { const a = Nraw.lines && Nraw.lines[name] && Nraw.lines[name].light, b = P.lines && P.lines[name] && P.lines[name].light; if (a && b) ck(norm(a) === norm(b), `${name}: sun, ambient and grade are identical (only the fog differs, by design)`); }
+    const f = []; enforce(N, f); ck(f.length === 0, `every enforced threshold passes${f.length ? ': ' + f.join('; ') : ''}`);
+  }
+  for (const h of ['dawn', 'sunset', 'noon']) {
+    const n = c(N, h); if (!n) continue; const lo = h === 'noon' ? 0.35 : 0.30, hi = h === 'noon' ? 0.45 : 0.42;
+    ck(n.skyHigh.sat >= lo && n.skyHigh.sat <= hi, `${h}: upper-sky saturation ${n.skyHigh.sat.toFixed(2)} is within ${lo} to ${hi} (control ${c(C, h) ? c(C, h).skyHigh.sat.toFixed(2) : '-'})`);
+  }
+  for (const h of ['dawn', 'sunset']) {
+    const n = c(N, h), o = c(C, h); if (!n || !o) { ck(false, `${h}: missing`); continue; }
+    const en = edge(n), eo = edge(o); ck(Number.isFinite(en) && Number.isFinite(eo) && en <= 0.85 * eo, `${h}: brightness step across the horizon ${en.toFixed(1)} <= 0.85 x the control's ${eo.toFixed(1)} (sky ${n.skyHorizon.mean.toFixed(0)} vs terrain ${n.terrainFar.mean.toFixed(0)})`);
+  }
+  console.log(rows.every(Boolean) ? 'SKY2 VERDICT: meets every pre-declared criterion (software rendering only; a real display and the owner\'s eye are still required).' : 'SKY2 VERDICT: NOT MET - a pre-declared criterion failed; see the lines above.');
 }
 
 /** `--noise a.json b.json`: two runs of the SAME configuration (a control). Shows how far ground, truck and whole-frame luma move between identical runs, i.e. the noise floor any "unchanged" criterion has to be read against. */
@@ -325,4 +353,4 @@ function selftest() {
 }
 
 module.exports = { measure, separation, lumaStats, REGIONS, VIEW_REGIONS, PRESETS, THRESHOLDS, ADVISORY, enforce };
-if (process.argv.includes('--noise')) { const i = process.argv.indexOf('--noise'); noise(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--vignette-verdict')) { const i = process.argv.indexOf('--vignette-verdict'); vignetteVerdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3]); } else if (process.argv.includes('--sky-verdict')) { const i = process.argv.indexOf('--sky-verdict'); skyVerdict(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
+if (process.argv.includes('--sky2-verdict')) { const i = process.argv.indexOf('--sky2-verdict'); sky2Verdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3], process.argv.includes('--fog')); } else if (process.argv.includes('--noise')) { const i = process.argv.indexOf('--noise'); noise(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--vignette-verdict')) { const i = process.argv.indexOf('--vignette-verdict'); vignetteVerdict(process.argv[i + 1], process.argv[i + 2], process.argv[i + 3]); } else if (process.argv.includes('--sky-verdict')) { const i = process.argv.indexOf('--sky-verdict'); skyVerdict(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--compare')) { const i = process.argv.indexOf('--compare'); compare(process.argv[i + 1], process.argv[i + 2]); } else if (process.argv.includes('--selftest')) selftest(); else if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });

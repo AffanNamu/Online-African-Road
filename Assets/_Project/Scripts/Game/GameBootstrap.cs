@@ -65,7 +65,9 @@ namespace ARO.Game
             ARO.Core.RuntimeSettings.TestAtmosphere = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") ? ARO.NetCore.LightingHour.QueryNumber(Application.absoluteURL, "atm", 0.3f, 3f) : -1f;   // sky study (CI only)
             ARO.Core.RuntimeSettings.TestSkyGradient = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("sky=gradient");   // gradient sky study (CI only)
             { bool sm = Application.absoluteURL != null && Application.absoluteURL.Contains("smoke="); string u = Application.absoluteURL;
-              ARO.Core.RuntimeSettings.TestSkyGlow = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyglow", 0f, 3f) : -1f; ARO.Core.RuntimeSettings.TestSkyMid = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skymid", 0.03f, 0.6f) : -1f; ARO.Core.RuntimeSettings.TestSkyExp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyexp", 0.3f, 2f) : -1f; }
+              ARO.Core.RuntimeSettings.TestSkyGlow = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyglow", 0f, 3f) : -1f; ARO.Core.RuntimeSettings.TestSkyMid = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skymid", 0.03f, 0.6f) : -1f; ARO.Core.RuntimeSettings.TestSkyExp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyexp", 0.3f, 2f) : -1f;
+              float sp = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skypal", 3f, 4f) : -1f; ARO.Core.RuntimeSettings.TestSkyPalette = sp >= 3.5f ? 4 : sp >= 2.5f ? 3 : ARO.NetCore.SkyGradientModel.DefaultPalette;
+              ARO.Core.RuntimeSettings.TestSkyHaze = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyhaze", 0f, 1f) : -1f; ARO.Core.RuntimeSettings.TestSkyFog = sm ? ARO.NetCore.LightingHour.QueryNumber(u, "skyfog", 0.1f, 16f) : -1f; }
             var tod = new GameObject("TimeOfDay").AddComponent<TimeOfDay>(); tod.sun = sun;
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };

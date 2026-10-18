@@ -114,7 +114,7 @@ public class SkyGradientModelTests
     public void TheVisibleUpperSkyIsClearlyBlueAtTheGoldenHours(float hour)
     {
         var c = SkyGradientModel.ColourAt(At(hour), SkyTop);
-        Assert.True(DisplayedSat(c) >= 0.36f, $"hour {hour}: displayed saturation {DisplayedSat(c):0.00} (CI criterion 0.30, kept 0.06 above it)");
+        Assert.True(DisplayedSat(c) >= 0.32f && DisplayedSat(c) <= 0.42f, $"hour {hour}: displayed saturation {DisplayedSat(c):0.00} (Milestone 3 criterion: 0.30 to 0.42)");
         Assert.True(Warm(SkyGradientModel.Displayed(c)) <= 0.85f, $"hour {hour}: displayed R/B {Warm(SkyGradientModel.Displayed(c)):0.00}");
     }
 
@@ -122,7 +122,7 @@ public class SkyGradientModelTests
     public void TheVisibleNoonSkyIsBlue()
     {
         var c = SkyGradientModel.ColourAt(At(LightingHour.Noon), SkyTop);
-        Assert.True(DisplayedSat(c) >= 0.42f, $"displayed saturation {DisplayedSat(c):0.00} (CI criterion 0.35)");
+        Assert.True(DisplayedSat(c) >= 0.37f && DisplayedSat(c) <= 0.45f, $"displayed saturation {DisplayedSat(c):0.00} (Milestone 3 criterion: 0.35 to 0.45)");
         Assert.True(Warm(SkyGradientModel.Displayed(c)) <= 0.70f);
     }
 
@@ -131,8 +131,28 @@ public class SkyGradientModelTests
     {
         float dawn = Warm(SkyGradientModel.Displayed(SkyGradientModel.ColourAt(At(LightingHour.Dawn), SkyHorizonBand)));
         float dusk = Warm(SkyGradientModel.Displayed(SkyGradientModel.ColourAt(At(LightingHour.Sunset), SkyHorizonBand)));
-        Assert.True(dawn >= 1.6f, $"dawn band R/B {dawn:0.00} (CI criterion 1.4)");
-        Assert.True(dusk >= 2.2f, $"sunset band R/B {dusk:0.00} (CI criterion 1.8)");
-        Assert.True(dusk - dawn >= 0.6f, $"sunset is only {dusk - dawn:0.00} warmer than dawn (CI criterion 0.5)");
+        Assert.True(dawn >= 1.5f, $"dawn band R/B {dawn:0.00} (CI criterion 1.4)");   // the model has under-predicted the measured horizon warmth so far (predicted 1.66 and 2.34, measured 1.88 and 3.61)
+        Assert.True(dusk >= 2.0f, $"sunset band R/B {dusk:0.00} (CI criterion 1.8)");
+        Assert.True(dusk - dawn >= 0.5f, $"sunset is only {dusk - dawn:0.00} warmer than dawn (CI criterion 0.5)");
+    }
+
+    [Fact]
+    public void ThePreviousPaletteStaysAvailableAsTheControl()
+    {
+        var st = LightingModel.Evaluate(LightingHour.Sunset, 0f);
+        var old = SkyGradientModel.Evaluate(st, 3, 0f); var neu = SkyGradientModel.Evaluate(st);
+        Assert.Equal(0f, old.LowHeight);                                       // palette 3 has no haze stop
+        Assert.Equal(old.Horizon.R, old.Haze.R); Assert.Equal(old.Horizon.B, old.Haze.B);
+        Assert.True(DisplayedSat(SkyGradientModel.ColourAt(old, SkyTop)) > DisplayedSat(SkyGradientModel.ColourAt(neu, SkyTop)) + 0.05f, "palette 4 is less saturated than the control in the visible upper sky");
+    }
+
+    [Fact]
+    public void TheHazeSitsBetweenTheBandAndWhiteAndHazeMixZeroRemovesIt()
+    {
+        var st = LightingModel.Evaluate(LightingHour.Sunset, 0f);
+        var none = SkyGradientModel.Evaluate(st, 4, 0f); var full = SkyGradientModel.Evaluate(st, 4, 1f);
+        Assert.Equal(none.Horizon.G, none.Haze.G, 4);                          // no haze: the band colour runs down to the horizon
+        Assert.True(full.Haze.G > full.Horizon.G && full.Haze.B > full.Horizon.B, "the full haze is paler than the band");
+        var a = SkyGradientModel.ColourAt(full, 0f); Assert.Equal(full.Haze.G, a.G, 4);   // exactly at the horizon the colour IS the haze
     }
 }

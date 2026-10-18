@@ -16,6 +16,8 @@ namespace ARO.Core
         public static bool TestSkyGradient;
         /// <summary>Test hooks for the gradient sky study (smoke pages only): ?skyglow= scales the sun glow, ?skymid= moves the mid-colour stop, ?skyexp= bends the height curve. -1 = the model's own value.</summary>
         public static float TestSkyGlow = -1f, TestSkyMid = -1f, TestSkyExp = -1f;
+        /// <summary>Gradient sky study (smoke pages only): ?skypal=3|4 chooses the palette (3 is the control), ?skyhaze=0..1 the haze at the horizon, ?skyfog=k multiplies the fog density and tints the fog with the haze (the only one of these that touches the lit world).</summary>
+        public static int TestSkyPalette = 4; public static float TestSkyHaze = -1f, TestSkyFog = -1f;
         public static bool ShowPlayerNames = true, ShowMinimap = true, Shadows = true, PostProcessing = true, SpeedMph;
         public static string QualityPreference = "auto", TrafficChoice = "medium";
         public static int Version;

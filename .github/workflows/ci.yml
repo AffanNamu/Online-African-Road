@@ -271,16 +271,19 @@ jobs:
           node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-metrics.json webgl-light-medium-v10-metrics.json
           node tools/webgl-lighting.js Builds/WebGL webgl-light-medium-v08 medium "&vignette=0.08" || true
           node tools/webgl-lighting.js --vignette-verdict webgl-light-metrics.json webgl-light-medium-metrics.json webgl-light-medium-v08-metrics.json
-      - name: Gradient sky study - the retuned gradient at four hours and two mid-stop variants at dawn and sunset (checks the model's predictions), plus a repeat of the procedural sky as the noise floor (informational; Appendix C)
+      - name: Gradient sky, Milestone 3 - control (iteration-3 palette), the retuned palette at four hours, and haze/fog variants at dawn and sunset, judged by criteria written down beforehand (informational; Appendix E)
         if: always()
         continue-on-error: true
         run: |
-          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-ctl low || true
-          node tools/webgl-lighting.js --noise webgl-light-metrics.json webgl-light-ctl-metrics.json
-          node tools/webgl-lighting.js Builds/WebGL webgl-light-grad low "&sky=gradient" || true
-          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad-m16 low "&sky=gradient&skymid=0.16" || true
-          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad-m28 low "&sky=gradient&skymid=0.28" || true
-          for v in grad grad-m16 grad-m28; do echo "=== sky verdict: $v"; node tools/webgl-lighting.js --sky-verdict webgl-light-metrics.json webgl-light-$v-metrics.json 2>&1 || true; done
+          node tools/webgl-lighting.js Builds/WebGL webgl-light-ctl3 low "&sky=gradient&skypal=3" || true
+          node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4 low "&sky=gradient" || true
+          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-h0 low "&sky=gradient&skyhaze=0" || true
+          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-h1 low "&sky=gradient&skyhaze=1" || true
+          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-fog4 low "&sky=gradient&skyfog=4" || true
+          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-fog8 low "&sky=gradient&skyfog=8" || true
+          echo "=== new palette, default haze"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-metrics.json 2>&1 || true
+          for v in h0 h1; do echo "=== new palette, haze variant $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-$v-metrics.json 2>&1 || true; done
+          for v in fog4 fog8; do echo "=== new palette with $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-$v-metrics.json --fog 2>&1 || true; done
       - name: Is post-processing really drawn? (Medium corners must be darker than Low corners at the same hour; informational)
         if: always()
         continue-on-error: true
