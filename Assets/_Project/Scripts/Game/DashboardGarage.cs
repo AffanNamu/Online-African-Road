@@ -155,6 +155,7 @@ namespace ARO.Game
             Ui.Outlined(_stage, "AddBg", new Color(0.05f, 0.055f, 0.075f, 0.9f), new Color(1, 1, 1, 0.2f), X + W - 62, Y + 12, 42, 38, 10); Ui.Label(_stage, "+", "Bold", 26, White, X + W - 62, Y + 14, 42, 32, TextAnchor.UpperCenter);
             Ui.Click(_stage, "Btn_GarAddVehicle", X + W - 62, Y + 12, 42, 38, OpenVehicles);
             var gs = _svc.Garage.Garage;
+            if ((gs.State == LoadState.Idle || gs.State == LoadState.Loading) && SmokeMode.E2E) Debug.Log($"[UIDiag] GarList is drawn in the LOADING state, without vehicle cards (state={gs.State}, previous list kept in memory={gs.Value != null && gs.Value.items != null}) t={Time.realtimeSinceStartup:0.00}");
             if (gs.State == LoadState.Idle || gs.State == LoadState.Loading) { Ui.Label(_stage, "Loading vehicles...", "SemiBold", 20, Muted, X, Y + 150, W, 30, TextAnchor.UpperCenter); return; }
             if (gs.State == LoadState.Unavailable)
             {

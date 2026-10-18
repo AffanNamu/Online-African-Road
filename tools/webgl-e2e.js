@@ -34,6 +34,11 @@ function failureDiagnostics() {
     console.log(`      click diagnostics for failure ${n} (screenshot ${prefix}-FAIL-${n}.png):`);
     const hooked = currentLogs.some(l => /\[UIDiag\] onClick /.test(l));
     for (const c of clickLog.slice(-3)) {
+      if (c.gaveUp) {
+        const loading = currentLogs.filter(l => /\[UIDiag\] GarList is drawn in the LOADING state/.test(l)), rbs = currentLogs.filter(l => /\[UIDiag\] rebuild GarList/.test(l));
+        console.log(`        NO-TARGET       click ${c.name}: the game never published a position for it, so the harness did not click. Garage list drawn in the loading state ${loading.length} time(s); last: ${loading.length ? loading[loading.length - 1].replace(/^\[UIDiag\] /, '').slice(0, 170) : 'never'}; last GarList rebuild: ${rbs.length ? rbs[rbs.length - 1].replace(/^\[UIDiag\] /, '') : 'none'}`);
+        continue;
+      }
       const after = currentLogs.slice(c.from, c.to === undefined ? undefined : c.to);
       const press = after.find(l => /\[UIDiag\] (pointer|mouse) pressed/.test(l)), rel = after.find(l => /\[UIDiag\] pointer released/.test(l));
       const oc = after.find(l => new RegExp('\\[UIDiag\\] onClick ' + c.name + '\\b').test(l));
@@ -94,6 +99,8 @@ async function open(user, extra, body, opts = {}) {
       const rec = { name, from: logs.length, pos: { x: t.x, y: t.y } }; if (clickLog.length) clickLog[clickLog.length - 1].to = rec.from; clickLog.push(rec);
       const b = await page.locator('#unity-canvas').boundingBox(); await page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(250); await page.mouse.down(); await sleep(150); await page.mouse.up(); return true;
     }
+    clickLog.push({ name, from: logs.length, pos: null, gaveUp: true });                 // nothing was clicked: the target was never published; failureDiagnostics says so
+    console.log(`      (click ${name}: no position published after 3 attempts; ${Object.keys(targets()).length} targets known, ${Object.keys(targets()).filter(k => /^Btn_Gar/.test(k)).length} of them Btn_Gar*)`);
     return false;
   };
   const clickUntil = async (name, re, seconds = 30, tries = 3) => {
