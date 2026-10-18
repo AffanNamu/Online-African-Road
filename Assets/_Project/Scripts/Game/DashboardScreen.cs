@@ -77,7 +77,7 @@ namespace ARO.Game
         // ================================================================================================================ build
         void BuildCanvas()
         {
-            _regions.Clear(); _keys.Clear();
+            _regions.Clear(); _keys.Clear(); _hold.Clear();
             ResolveVehicle();
             var model = WorldMapScreen.Model();
             string place = "Lagos, Nigeria";
@@ -140,13 +140,36 @@ namespace ARO.Game
             var r = Ui.Box(_regionParent != null ? _regionParent : _root, name, 0, 0, 1920, 1080); _stage = r; _regions[name] = r; Entrance.On(r, delay); return r;
         }
 
-        /// <summary>Rebuilds one region in place (its data changed). The region container itself stays, so nothing re-animates except what is rebuilt.</summary>
+        /// <summary>Rebuilds one region in place (its data changed). The region container itself stays, so nothing re-animates except what is rebuilt.
+        /// While the player has a pointer pressed the rebuild is held back until it is released (RefreshDeferral): destroying the button under a pressed pointer loses the click.</summary>
         void Refill(string name, Action build)
         {
             if (!_regions.TryGetValue(name, out var r) || r == null) return;
+            if (PointerGuard.Enabled && _hold.Defer(name, () => RefillHeld(name, r, build), PointerGuard.Down, Time.unscaledTime))
+            {
+                if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} held back: the pointer is down t={Time.realtimeSinceStartup:0.00}");
+                return;
+            }
+            RefillNow(name, r, build);
+        }
+
+        RefreshDeferral _holdQueue;
+        RefreshDeferral _hold => _holdQueue ?? (_holdQueue = new RefreshDeferral(PointerGuard.MaxHold));
+
+        void RefillNow(string name, RectTransform r, Action build)
+        {
+            _hold.Cancel(name);                                                 // a held redraw of this region would only repeat this one
             for (int i = r.childCount - 1; i >= 0; i--) Destroy(r.GetChild(i).gameObject);
             var prev = _stage; _stage = r; build(); _stage = prev; MarkTargetsDirty();
-            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
+            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00} pointerDown={PointerGuard.Down.ToString().ToLowerInvariant()}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
+        }
+
+        /// <summary>The pointer was released: the redraw runs unless the page was rebuilt from scratch meanwhile (the region container is then another object and already shows the current data).</summary>
+        void RefillHeld(string name, RectTransform region, Action build)
+        {
+            if (!_regions.TryGetValue(name, out var now) || now == null || now != region) return;
+            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} applied after the pointer was released");
+            RefillNow(name, region, build);
         }
 
         void RefillIfChanged(string name, string key, Action build)
@@ -578,6 +601,7 @@ namespace ARO.Game
         void Update()
         {
             float now = Time.unscaledTime;
+            _hold.Flush(PointerGuard.Down, now);                                // after the event system has handled a release: held redraws run now
             if (_slides != null && _slides.Length > 1 && now > _nextSlide) { _slide = (_slide + 1) % _slides.Length; ShowSlide(_slide, true); _nextSlide = now + 8f; }
             if (_heroPhoto != null) { float p = Tween.Progress(now - _heroDip, 0f, 0.7f); _heroPhoto.color = new Color(1, 1, 1, Mathf.Lerp(0.15f, 1f, p)); }   // dips through dark and back on every slide change
             if (_toast != null && _toast.text.Length > 0 && now > _toastUntil) _toast.text = "";

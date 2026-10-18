@@ -67,13 +67,28 @@ namespace ARO.Game
         void FriOpened()
         {
             _frOpen = true; _frSortPop = false; Debug.Log("[Friends] opened");
-            LoadFriendsPage(false); _nextFr = Time.unscaledTime + 15f;
+            LoadFriendsPage(false); _nextFr = Time.unscaledTime + FrPoll;
             if (_svc.Garage.Catalog.State == LoadState.Idle) _ = LoadCatalogForFriends();
             RefreshFriends();
         }
         void FriClosed() { _frOpen = false; _frSortPop = false; if (_modal != null) CloseModal(); Debug.Log("[Friends] closed"); }
 
         async Task LoadCatalogForFriends() { await _svc.Garage.LoadCatalog(); if (this != null && _page == Page.Friends) RefreshFriendsIfChanged(); }     // the vehicle pictures of friends come from the catalogue
+
+        /// <summary>Seconds between background reloads of the Friends page: 15, or what a browser test page asks for ("frpoll=3") so a changed reload can be made to land at a chosen moment.</summary>
+        static float _frPoll = -1f;
+        static float FrPoll
+        {
+            get
+            {
+                if (_frPoll < 0f)
+                {
+                    _frPoll = 15f;
+                    if (SmokeMode.E2E && float.TryParse(BackendOverride.Query(Application.absoluteURL, "frpoll"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) && v >= 1f) _frPoll = v;
+                }
+                return _frPoll;
+            }
+        }
 
         void LoadFriendsPage(bool quiet) { _ = LoadFriendsList(quiet); _ = LoadFriendRequests(quiet); _ = LoadRecentList(quiet); _ = LoadMineForFriends(); }
 
@@ -142,7 +157,7 @@ namespace ARO.Game
             RefreshFriends();
         }
 
-        void RefreshFriends() { if (!_frOpen && _page != Page.Friends) return; var parts = FrParts(); _frLastParts = parts; _gate.Drew("friends", RefreshGate.Key(parts)); Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
+        void RefreshFriends([System.Runtime.CompilerServices.CallerMemberName] string why = "") { if (!_frOpen && _page != Page.Friends) return; if (SmokeMode.E2E) Debug.Log($"[UIDiag] friends redraw requested by {why} t={Time.realtimeSinceStartup:0.00}"); var parts = FrParts(); _frLastParts = parts; _gate.Drew("friends", RefreshGate.Key(parts)); Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
 
         // ================================================================================================================ build
         void BuildFriendsPage()
@@ -648,7 +663,7 @@ namespace ARO.Game
                     }
                 }
             }
-            if (now > _nextFr) { _nextFr = now + 15f; if (_modal == null) LoadFriendsPage(true); }
+            if (now > _nextFr) { _nextFr = now + FrPoll; if (_modal == null) LoadFriendsPage(true); }
             // wheel scrolling
             float dy = 0f; Vector2 mp = Vector2.zero;
             try { dy = UnityEngine.Input.mouseScrollDelta.y; mp = UnityEngine.Input.mousePosition; } catch (InvalidOperationException) { }

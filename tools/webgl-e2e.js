@@ -47,7 +47,7 @@ function failureDiagnostics() {
       if (press && c.pos) { const m = /pressed at (\d+),(\d+) of (\d+)x(\d+)/.exec(press); if (m) off = Math.hypot(+m[1] - c.pos.x * +m[3], +m[2] - (1 - c.pos.y) * +m[4]) > 6; }   // the game's y axis points up, the target's points down
       const under = press ? (/buttons under pointer=\[(.*?)\]/.exec(press) || [])[1] : undefined, hitList = press ? (/ui hits=\[(.*?)\]/.exec(press) || [])[1] || '' : '';
       const tP = press ? +((/ t=([\d.]+);/.exec(press) || [])[1]) : NaN;
-      const rb = currentLogs.filter(l => /\[UIDiag\] rebuild /.test(l)).map(l => ({ name: l.split(' ')[2], t: +(/ t=([\d.]+)/.exec(l) || [])[1] }));
+      const rb = currentLogs.filter(l => /\[UIDiag\] rebuild /.test(l) && !/held back|applied after/.test(l)).map(l => ({ name: l.split(' ')[2], t: +(/ t=([\d.]+)/.exec(l) || [])[1] }));
       const before = rb.filter(r => r.t <= tP).pop(), next = rb.find(r => r.t > tP);
       const rbText = Number.isFinite(tP) && rb.length ? ` | rebuilds: last before press ${before ? before.name + ' ' + ((tP - before.t) * 1000).toFixed(0) + ' ms earlier' : 'none'}, next ${next ? next.name + ' ' + ((next.t - tP) * 1000).toFixed(0) + ' ms later' : 'none'}` : '';
       const present = under === undefined ? null : under.includes(c.name);                  // does the aimed button exist under the pointer at the moment of the press?
@@ -1092,6 +1092,50 @@ const allErrors = [], allExc = [];
     const prRb = rebuildsSince(m, /\[UIDiag\] rebuild Pr(Hero|Stats|Ranks|Ach|Prefs)/);
     check(prRb.length === 0, 'Refresh regression: a profile reload with unchanged data rebuilds no region', prRb.join(' | '));
   });
+
+  // =========================================================================================== 2zz. a redraw that is needed while the pointer is pressed waits for the release (pointer-down guard)
+  // Mechanism (docs/CI_HEALTH.md): a click needs the button that took the press to be the one under the pointer at release; a redraw destroys and recreates the buttons. The page reloads every 3 s
+  // here ("frpoll=3", E2E only) so a reload that brings NEW data (a friend request that arrives while the button is held) is due while the pointer is down. With the guard on, the redraw must be held
+  // back, the click must arrive, and the redraw must then be applied. With the guard switched off by the E2E-only URL switch the same sequence is run to SHOW the failure; that run only reports.
+  const pointerRun = async (label, extra, guardOn) => {
+    const pa = await signup('BrowserPg' + label + 'a'), pb = await signup('BrowserPg' + label + 'b'), pr = await signup('BrowserPg' + label + 'r');
+    { const rid = JSON.parse(asUser(pa, `select send_friend_request('${pb.id}')::text`)).request_id; asUser(pb, `select respond_friend_request('${rid}', true)`); }
+    const btn = 'Btn_FriMore_' + ('BrowserPg' + label + 'b').toLowerCase(), tag = guardOn ? 'Pointer guard' : 'Pointer guard switched off (demonstration)';
+    const r = {};
+    await open(pa, extra, async c => {
+      await c.waitLog(new RegExp('\\[Dashboard\\] built for BrowserPg' + label + 'a'), 0, 150); await c.settle();
+      let m = c.logs.length; await c.click('Nav_Friends'); await c.waitLog(/\[Friends\] friends state=ready count=1/, m, 90); await c.settle();
+      await c.waitLog(/\[UIDiag\] friends reload: nothing changed/, m, 40);                   // the 3 s reloads are running and find nothing
+      await sleep(1500); await c.settle();
+      const t = c.targets()[btn]; r.target = !!t;
+      if (guardOn) check(r.target, `${tag}: the friend's More button is on screen`);
+      if (!t) return;
+      const b = await c.page.locator('#unity-canvas').boundingBox(); await c.page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(500);
+      const mDown = c.logs.length; await c.page.mouse.down();
+      asUser(pr, `select send_friend_request('${pa.id}')::text`);                         // new data arrives while the button is held
+      r.attempt = await c.waitLog(/\[UIDiag\] rebuild Fri(Main|Tabs|Side|Pop) (held back|t=)/, mDown, 45);
+      await sleep(600); const mUp = c.logs.length; await c.page.mouse.up();
+      r.clicked = await c.waitLog(new RegExp('\\[UIDiag\\] onClick ' + btn), mDown, 10);
+      r.applied = guardOn ? await c.waitLog(/\[UIDiag\] rebuild Fri(Main|Tabs|Side|Pop) applied after the pointer was released/, mUp - 1, 15) : null;
+      r.overlapped = c.logs.slice(mDown, mUp).filter(l => /\[UIDiag\] rebuild \S+ t=[\d.]+ pointerDown=true/.test(l));
+      r.held = c.logs.slice(mDown, mUp).filter(l => /rebuild \S+ held back/.test(l));
+      await c.settle();
+      if (guardOn) {
+        check(!!r.attempt && /held back/.test(r.attempt), `${tag}: a redraw that became due while the button was held was held back`, r.attempt);
+        check(r.overlapped.length === 0, `${tag}: no region was rebuilt while the pointer was down`, r.overlapped.join(' | '));
+        check(!!r.clicked, `${tag}: the held button still clicked when it was released`);
+        check(!!r.applied, `${tag}: the held redraw was applied after the release (the page cannot stay stale)`);
+        check(!!c.targets()['Btn_FriMenu_RemoveFriend'], `${tag}: the click opened the player menu (what the player asked for)`);
+        await c.click('Btn_CloseDialog');
+        m = c.logs.length; await c.click('Btn_FriTab_Requests'); check(!!(await c.waitLog(/\[Friends\] tab=requests/, m, 30)), `${tag}: the Friends page still answers clicks after the held redraw`);
+      } else {
+        console.log(`      DEMONSTRATION (guard off, E2E-only switch): redraw attempted while the pointer was down: ${r.attempt ? 'yes' : 'no'}; rebuilt with pointerDown=true: ${r.overlapped.length}; the held button clicked: ${r.clicked ? 'yes' : 'NO (click lost)'}`);
+      }
+    });
+    return r;
+  };
+  await pointerRun('Off', '&frpoll=3&pointerguard=off', false);
+  await pointerRun('On', '&frpoll=3&pointerhold=30', true);
 
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });
