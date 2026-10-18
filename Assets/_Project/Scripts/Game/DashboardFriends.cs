@@ -104,26 +104,45 @@ namespace ARO.Game
             if (_page == Page.Friends) RefreshFriendsIfChanged();
         }
 
+        static readonly string[] FrPartNames = { "friends", "requests", "recent", "convoy", "catalogue", "relative times" };
+        string[] _frLastParts;
+
         /// <summary>Everything the lists contribute to what is drawn: the data (without server clocks), the relative times as the cards would print them, the convoy flag and the catalogue pictures.</summary>
-        string FrSig()
+        string[] FrParts()
         {
             var now = FrNow(); var ago = new System.Text.StringBuilder();
             void Add(PersonDto p) { if (p == null) return; ago.Append(FriendsRules.AgoOf(p.since, now)).Append('/').Append(FriendsRules.AgoOf(p.last_played_at, now)).Append('/').Append(FriendsRules.AgoOf(p.presence != null ? p.presence.last_seen_at : null, now)).Append(';'); }
             var fl = _svc.Friends.Friends.Value; if (fl != null && fl.items != null) foreach (var p in fl.items) Add(p);
             var rl = _svc.Friends.Recent.Value; if (rl != null && rl.items != null) foreach (var p in rl.items) Add(p);
             var rq = _svc.Friends.Requests.Value; if (rq != null) { if (rq.incoming != null) foreach (var i in rq.incoming) { Add(i.person); ago.Append(FriendsRules.AgoOf(i.created_at, now)).Append(';'); } if (rq.outgoing != null) foreach (var i in rq.outgoing) { Add(i.person); ago.Append(FriendsRules.AgoOf(i.created_at, now)).Append(';'); } }
-            return RefreshGate.Key(Sig(_svc.Friends.Friends), Sig(_svc.Friends.Requests), Sig(_svc.Friends.Recent), FrInConvoy().ToString(), Sig(_svc.Garage.Catalog), ago.ToString());
+            return new[] { Sig(_svc.Friends.Friends), Sig(_svc.Friends.Requests), Sig(_svc.Friends.Recent), FrInConvoy().ToString(), Sig(_svc.Garage.Catalog), ago.ToString() };
+        }
+
+        /// <summary>E2E mode only: which part of what the page shows changed, so a redraw that lands on a click can be explained.</summary>
+        void LogFriendsChange(string[] now)
+        {
+            var was = _frLastParts; _frLastParts = now; if (!SmokeMode.E2E) return;
+            for (int i = 0; i < now.Length; i++)
+            {
+                string a = was != null && i < was.Length ? was[i] : null, b = now[i];
+                if (a == b) continue;
+                int d = 0; if (a != null && b != null) while (d < a.Length && d < b.Length && a[d] == b[d]) d++;
+                string Cut(string v) => v == null ? "(unknown)" : v.Substring(System.Math.Max(0, d - 30), System.Math.Min(v.Length - System.Math.Max(0, d - 30), 90));
+                Debug.Log($"[UIDiag] friends reload: {FrPartNames[i]} changed, rebuilding | was ...{Cut(a)} | now ...{Cut(b)}");
+            }
         }
 
         /// <summary>A background reload finished: redraw only if it brought something the screen does not already show.</summary>
         void RefreshFriendsIfChanged()
         {
             if (!_frOpen && _page != Page.Friends) return;
-            if (!_gate.Changed("friends", FrSig())) { if (SmokeMode.E2E) Debug.Log("[UIDiag] friends reload: nothing changed, no rebuild"); return; }
+            var parts = FrParts();
+            if (!_gate.Changed("friends", RefreshGate.Key(parts))) { if (SmokeMode.E2E) Debug.Log("[UIDiag] friends reload: nothing changed, no rebuild"); return; }
+            LogFriendsChange(parts);
             RefreshFriends();
         }
 
-        void RefreshFriends() { if (!_frOpen && _page != Page.Friends) return; _gate.Drew("friends", FrSig()); Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
+        void RefreshFriends() { if (!_frOpen && _page != Page.Friends) return; var parts = FrParts(); _frLastParts = parts; _gate.Drew("friends", RefreshGate.Key(parts)); Refill("FriTabs", BuildFriTabs); Refill("FriMain", BuildFriMain); Refill("FriSide", BuildFriSide); Refill("FriPop", BuildFriPop); }
 
         // ================================================================================================================ build
         void BuildFriendsPage()

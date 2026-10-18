@@ -698,7 +698,10 @@ const allErrors = [], allExc = [];
     await c.click('Btn_CloseDialog');
 
     // remove a friend (with a confirmation) and block another
-    await c.settle(); m = c.logs.length; await c.click('Btn_FriMore_browserfh'); await c.settle(); tg = c.targets(); check(!!tg['Btn_FriMenu_RemoveFriend'] && !!tg['Btn_FriMenu_ViewProfile'] && !!tg['Btn_FriMenu_BlockPlayer'], 'the more menu offers View Profile, Remove Friend and Block Player');
+    await c.settle(); m = c.logs.length;
+    // a press that lands in the same frame as a redraw is dropped (run 39106075022: the redraw was 20 ms before the press); like the other clicks in this file it is repeated while the menu is not open. The assertion is unchanged.
+    for (let i = 0; i < 3; i++) { await c.click('Btn_FriMore_browserfh'); await c.settle(); tg = c.targets(); if (tg['Btn_FriMenu_RemoveFriend']) break; }
+    check(!!tg['Btn_FriMenu_RemoveFriend'] && !!tg['Btn_FriMenu_ViewProfile'] && !!tg['Btn_FriMenu_BlockPlayer'], 'the more menu offers View Profile, Remove Friend and Block Player');
     await c.page.screenshot({ path: `${prefix}-71-friends-menu.png` }); await c.click('Btn_FriMenu_RemoveFriend'); await c.settle();
     check(friendsInDb() === 3, 'nothing is removed before the player confirms'); await c.page.screenshot({ path: `${prefix}-72-friends-confirm.png` });
     m = c.logs.length; await c.click('Btn_FriConfirm'); check(!!(await c.waitLog(/\[Friends\] remove id=browserfh ok=True/, m, 60)), 'Remove Friend: the server accepted');
