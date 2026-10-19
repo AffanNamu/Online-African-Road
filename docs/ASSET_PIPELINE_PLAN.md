@@ -184,3 +184,31 @@ Already in the repository (inert until private assets exist; tested):
 * Converter output (prefabs, meshes, materials made from private sources) is generated in CI and never committed; the gate enforces that.
 
 Not built (needs the owner): the private repository itself, the read-only deploy key as an Actions secret, the `ASSETS_REPO` variable, and a fetch step in the Unity job (a plain `actions/checkout` of that repository into `Assets/ThirdParty` using the key, skipped when the key is absent so forks still build with placeholders). Because the smoke and lighting jobs need the build, the first real enablement also needs one of: run them in the same job as the build, or upload the build **encrypted** (for example `openssl enc -aes-256-cbc -pbkdf2` with a key from a secret) and decrypt it in the downstream job. Which of the two, and whether screenshots of the licensed vehicle may be published at all, depends on the licence text of the chosen asset; that is decided per asset, not in advance.
+
+## 13. The three routes on the eight requested criteria, and the recommended first production vehicle route (decision material; nothing purchased, commissioned, created or changed in visibility)
+
+How to read the evidence column: **verified** = observed in this repository or in the Studio's own files; **estimate** = general market knowledge, not checked against a listing or quote for this project; **unknown** = nothing in hand. Prices and delivery times are typical ranges to be replaced by real quotes; no figure here is a quote.
+
+| Criterion | A. Licensed game-ready truck | B. Commissioned truck | C. ARO 3D Studio as an AI-assisted start |
+|---|---|---|---|
+| Realistic appearance | High if the pack is good (real PBR textures) - estimate; generic non-African body unless re-skinned | Exactly as briefed, including West African specifics - estimate | The procedural TITAN is stylised (flat colours, no textures; verified); AI reconstruction never run - **unknown**, and an AI mesh needs retopology, UVs and textures by hand |
+| Unity compatibility | Usually ships as FBX/prefab for the vendor's controller and a specific render pipeline; URP support must be read per listing - estimate | Built to our conventions from day one if the brief says so | GLB with a sidecar JSON that matches the planned converter's contract (verified in the Studio files); Unity import never run - **unknown** |
+| Geometry quality | Varies by seller; LOD counts differ - estimate; our budgets (`VehicleAssetValidator`) decide | Contractual: budgets and LOD ratios in the brief | TITAN: 42,140 / 56% / 30% / 15% triangles over four LODs, 165 LOD0 meshes, Khronos-valid GLB (verified); AI output quality unknown |
+| Rigging requirements | Wheel/steering usually set for the vendor's own controller: expect re-rigging to `VehicleRig` - estimate | Rigged to our node names (`Susp_Axle_*`, `Spin_*`, `Light_Head_*`, `COL_*`, `Attach_Camera_*`) - contractual | Node naming already matches the plan (verified); no automatic part detection or auto-rig (verified); cockpit/bumper anchors must be authored |
+| Optimisation effort | Medium to high: merge draw calls (165 meshes to about 25 is the TITAN estimate), cut textures, build LODs if absent | Low if the acceptance list is enforced by stage | Medium: the Studio already makes LODs and collision for its own procedural truck; for an AI mesh it would be high |
+| Licence terms | Asset Store/marketplace terms generally forbid redistributing source files; a public repository is the main obstacle (the private-asset boundary of section 12 exists for this); read each listing | Clean only if the contract assigns the rights and excludes AI-generated deliveries - estimate | Own code, but the owner has chosen no licence and parts are AI-assisted (`ASSET_LICENSES.md`); a generated mesh needs a rights check of the generator's terms |
+| Cost | Typically tens to a few hundred USD per pack - estimate; free/preview packs are mostly low-poly | Typically several hundred to a few thousand USD for one hero vehicle - estimate | No cash cost; unknown clean-up hours |
+| Delivery time | Immediate download; integration days to a couple of weeks | Typically several weeks with stage gates - estimate | TITAN available now; an AI pilot takes days to learn the real clean-up cost |
+
+### What exists now (all testable without any art file)
+* `VehicleAssetValidator` (NetCore, 8 tests): the acceptance rules of section 4 as code (triangle and LOD budgets, draw calls, materials, textures, scale, pivot, orientation, rig nodes, wheel colliders, collision hulls, licence entry). It judges numbers from a manifest only; it loads no asset and touches no vehicle code. The first real model must pass it before any prefab exists.
+* The private-asset boundary (section 12) and the safety gate that keeps art out of the public tree.
+* The existing vehicle system is untouched: no prefab, no `VehicleDefinition`, no controller change.
+
+### Recommended first production vehicle route (a recommendation, not a decision)
+1. **Commission the hero truck (B)** against the brief in section 11 and the validator above, with stage payments tied to the gates. It is the only route that gives authentic West African appearance, a clean licence and our rig in one deliverable.
+2. Meanwhile **do the importer spike with the TITAN fixture** (section 5, step 1; no purchase, no repository change). The TITAN stays a **fixture only**: its ownership and licence are not confirmed, so it is not shipped or distributed, and the pipeline's claim stops at what the spike demonstrates.
+3. **Use a licensed model (A) only as a stand-in or for traffic vehicles**, after reading the exact listing terms and only once the private-asset storage decision is made.
+4. **Treat ARO 3D Studio (C) as tooling**, not as the source of the realistic truck. Nothing in this repository claims that its AI reconstruction or its Unity import works end to end; that needs real inference and a real import to be demonstrated first.
+
+Decisions needed from the owner before anything beyond the importer spike: the private-asset storage option (section 7/10), approval to request commission quotes, approval to buy or fetch any listed pack, confirmation of the TITAN's ownership and licence.
