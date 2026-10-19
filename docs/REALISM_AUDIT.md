@@ -255,7 +255,6 @@ Also: all enforced thresholds pass; the game's [Light] state (sun, ambient, fog,
 
 **Status of the sky:** still flag-gated (`?sky=gradient` on smoke pages); the shipped game still uses the procedural sky. Making the gradient the default would be a separate, reversible change (TimeOfDay chooses the material) that needs the owner's approval after looking at the frames, plus the same evidence on a real display.
 
-<<<<<<< HEAD
 ## Appendix E. Milestone 3: softer horizon and less saturation for the gradient sky (owner-approved; branch `work/sky-gradient-v2`; still behind `?sky=gradient`, not the default)
 
 What is investigated: the two defects found in iteration 3 (the sky ends on a hard bright edge against the terrain, and the blues are too saturated). Everything stays behind the test-page flag; the shipped game keeps the procedural sky; no change to lighting, fog or the lit world unless a fog variant is requested by URL.
@@ -283,11 +282,9 @@ Pre-declared in this appendix: upper-sky saturation 0.30 to 0.42 (dawn, sunset) 
 Reading: the saturation defect is fixed (0.36 to 0.40 instead of 0.52, inside the declared band). The hard-horizon defect is **not** fixed: in every variant the step across the horizon is larger than the control's, not smaller, because the sky near the horizon became brighter (sky 145 to 180 against terrain 60 to 64) while the terrain did not change. Raising fog density did not close it either. Making the horizon softer needs the terrain side of the edge to change (haze/fog that lifts distant ground) or the sky band to be darker/more neutral there; both are the next experiment, not done. The pre-declared horizon criterion is unchanged and unmet.
 
 **Status:** the gradient sky stays behind `?sky=gradient`; the shipped game keeps the procedural sky. Not proposed as the default. An owner look at the frames (on branch `ci-lighting` after each run) is still needed for the colour direction; my reading of software-rendered frames is: better saturation and a recognisable warm band at sunrise/sunset, but a visible hard edge where sky meets terrain.
-=======
 ### Owner decision on the Medium vignette (2026-10-19)
 Medium stays at **0.22** (unchanged on `main`: `RenderingRig`/`QualityTier` still use it). The 0.10 experiment lives on the unmerged branch `work/medium-vignette-010` (Appendix D there, six software-rendered samples). The comparison is not presented as definitive: three of six samples met every pre-declared criterion and three failed one marginal check each, and the same enforced thresholds also failed for the 0.22 control and, once, for the Low tier (noon road 73.4 and 68.0 against the usual 94 to 104). No acceptance threshold was changed. The cause of the Low-tier noon outlier is **not established**. One observation that may matter: in one dawn frame of the sky study (`webgl-light-hz-f90-dawn-chase`) the frozen truck had settled off the road, sideways, so the sampled regions contained different things than usual, which shows the truck's resting pose is not repeatable under the software renderer. But the failing noon frame that was inspected (road mean 68.0) shows the truck centred on the road, so the pose does not explain that outlier. Revisit 0.10 only when repeatable evidence shows a clear improvement, ideally after the pose of the frozen truck is made repeatable.
 
->>>>>>> origin/main
 
 ### Appendix E, second round: why the horizon is hard, what was tried, what meets the criteria (CI runs 39173315772 and 39179671107; software rendering only)
 
