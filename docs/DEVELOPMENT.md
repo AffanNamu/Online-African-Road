@@ -13,7 +13,7 @@ not share a project with another app). In the GitHub repo set:
 
 ## Backend (manual alternative)
 1. Create a Supabase project. Run `supabase/migrations/*.sql` in order, then `supabase/seed.sql`.
-2. Run job generation with the service role (never from the client): `select generate_jobs(20);` — schedule it (pg_cron).
+2. Job generation (service role only, never from the client): `select generate_jobs(20);`. On the live project it is scheduled by `.github/workflows/supabase-jobs.yml` (every 15 minutes, `supabase/top_up_jobs.sh`, tested by `supabase/tests/49_top_up_jobs.sh`); jobs expire one day after creation, so without it the board is empty about a day after the last apply.
 3. Tests: `PGHOST=localhost PGUSER=postgres PGPASSWORD=... supabase/tests/run.sh` (needs Postgres; also runs in CI).
 
 ## Unity

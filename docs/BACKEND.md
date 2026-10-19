@@ -39,6 +39,7 @@ Existing tables and APIs are untouched; `complete_job`, `accept_job`, telemetry 
 * **World / content / ranking**: `get_world_state`, `get_content('news'|'hero')`, `get_leaderboard(metric, period)` (xp, distance, jobs, earnings; all-time and weekly), `get_my_daily_challenges`, `claim_challenge_reward`
 * **Wallet / analytics**: `get_my_wallet`, `list_my_transactions`, `track_event` (only multiplayer session facts; keys allow-listed)
 * **Operator only (not executable by clients)**: `admin_adjust_wallet`, `admin_refund_transaction`, `admin_broadcast`, `admin_set_route`, `generate_jobs`, `sweep_stale_sessions`, `purge_old_data`
+  * `generate_jobs` is scheduled: `.github/workflows/supabase-jobs.yml` runs `supabase/top_up_jobs.sh` every 15 minutes against the live database (secret `SUPABASE_DB_URL`). Jobs expire one day after creation. The script makes 20 when fewer than 10 are open, otherwise 4 at a time until 40 are open, so jobs also expire gradually; it changes no schema and no player data. Switch it off by disabling the workflow in the Actions tab.
 
 ## Presence, sessions and multiplayer
 

@@ -1,0 +1,28 @@
+# Keeps the live job board stocked. Jobs expire one day after they are created and only generate_jobs() creates them (clients cannot call it), so without this the board is empty
+# about 24 hours after the last schema apply. Every 15 minutes this runs supabase/top_up_jobs.sh against the database in the repository secret SUPABASE_DB_URL:
+# it only calls generate_jobs() when fewer than 40 jobs are open (a few at a time, so jobs also expire a few at a time), changes no schema and touches no player data.
+# Switch it off: Actions > "Supabase job board top-up" > ... > Disable workflow (or delete this file). Run it once by hand with "Run workflow".
+# GitHub pauses scheduled workflows in a repository with no activity for 60 days; a push or a manual run (or enabling it again) resumes the schedule.
+name: Supabase job board top-up
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'     # not on the hour: the top of the hour is when GitHub's schedule is busiest
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:   # never two top-ups (or a top-up and a schema apply) against the live database at once
+  group: supabase-apply
+  cancel-in-progress: false
+jobs:
+  top-up:
+    if: github.repository == 'AffanNamu/Online-African-Road'     # forks have no database to top up
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secret
+        env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
+        run: '[ -n "$DATABASE_URL" ] || { echo "Add the repository secret SUPABASE_DB_URL first (the same one the schema apply uses)."; exit 1; }'
+      - name: Top up the job board
+        env: { DATABASE_URL: "${{ secrets.SUPABASE_DB_URL }}" }
+        run: ./supabase/top_up_jobs.sh

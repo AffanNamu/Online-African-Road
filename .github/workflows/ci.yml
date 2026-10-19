@@ -21,6 +21,8 @@ jobs:
         run: python3 tools/gen_game_seed.py --check
       - name: Upgrade test (a database with players, money and a convoy is migrated by the real apply.sh; nothing is lost)
         run: bash supabase/tests/40_upgrade.sh
+      - name: Job board top-up script (cold start, steady top-up, the cap, expired and closed jobs not counted, a foreign database refused)
+        run: bash supabase/tests/49_top_up_jobs.sh
       - name: API contract (every C# DTO the client parses versus the real output of the real RPCs)
         run: python3 tools/check_api_contract.py
       - name: Mutation test (every protection must be caught by a test)
