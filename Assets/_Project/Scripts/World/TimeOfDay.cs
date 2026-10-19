@@ -53,7 +53,7 @@ namespace ARO.World
 
         void ApplyGradient(LightingState st)
         {
-            var tune = SkyTune.None; if (ARO.Core.RuntimeSettings.TestSkyDim >= 0f) tune.BandDim = ARO.Core.RuntimeSettings.TestSkyDim; if (ARO.Core.RuntimeSettings.TestSkyDip >= 0f) tune.Dip = ARO.Core.RuntimeSettings.TestSkyDip;   // horizon study overrides (smoke pages only)
+            var tune = ARO.Core.RuntimeSettings.TestSkyPalette == 3 ? SkyTune.None : SkyTune.Default; if (ARO.Core.RuntimeSettings.TestSkyDim >= 0f) tune.BandDim = ARO.Core.RuntimeSettings.TestSkyDim; if (ARO.Core.RuntimeSettings.TestSkyDip >= 0f) tune.Dip = ARO.Core.RuntimeSettings.TestSkyDip;   // horizon study overrides (smoke pages only)
             var g = SkyGradientModel.Evaluate(st, ARO.Core.RuntimeSettings.TestSkyPalette, ARO.Core.RuntimeSettings.TestSkyHaze >= 0f ? ARO.Core.RuntimeSettings.TestSkyHaze : SkyGradientModel.DefaultHazeMix, tune);
             _gradient.SetFloat("_Dip", g.Dip); _gradient.SetFloat("_DipHeight", g.DipHeight);
             _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));

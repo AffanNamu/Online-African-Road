@@ -19,7 +19,10 @@ namespace ARO.NetCore
     public struct SkyTune
     {
         public float BandDim, Dip, DipHeight;
+        /// <summary>Explicitly neutral: no dimming, no dip.</summary>
         public static SkyTune None => new SkyTune { BandDim = 1f, Dip = 0f, DipHeight = 0.10f };
+        /// <summary>The model's own horizon: no dimming and the default dip (<see cref="SkyGradientModel.DefaultDip"/>, strongest at dawn and sunset).</summary>
+        public static SkyTune Default => new SkyTune { BandDim = 1f, Dip = -1f, DipHeight = 0.10f };
     }
 
     /// <summary>
@@ -78,12 +81,15 @@ namespace ARO.NetCore
 
         public const int DefaultPalette = 4;
         public const float DefaultHazeMix = 0.6f;
+        /// <summary>How much the sky is darkened right at the horizon at dawn and sunset (CI measurement, docs/REALISM_AUDIT.md Appendix E: 0.5 met the horizon-step criterion with a wide margin; 0.0 to 0.2 did not). Dawn and sunset
+        /// are where a bright sky meets dark terrain; at noon and at night the dip is 40% of this.</summary>
+        public const float DefaultDip = 0.45f;
 
-        public static SkyGradientState Evaluate(LightingState st) => Evaluate(st, DefaultPalette, DefaultHazeMix, SkyTune.None);
+        public static SkyGradientState Evaluate(LightingState st) => Evaluate(st, DefaultPalette, DefaultHazeMix, SkyTune.Default);
 
         /// <param name="palette">3 = the iteration-3 palette (the control), 4 = the current default.</param>
         /// <param name="hazeMix">0 = no haze (the horizon colour runs right down to the horizon), 1 = the full pale haze colour exactly at the horizon (palette 4 only).</param>
-        public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix) => Evaluate(st, palette, hazeMix, SkyTune.None);
+        public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix) => Evaluate(st, palette, hazeMix, SkyTune.Default);
 
         public static SkyGradientState Evaluate(LightingState st, int palette, float hazeMix, SkyTune tune)
         {
@@ -123,7 +129,8 @@ namespace ARO.NetCore
             s.HeightExp = 1f;
             float dim = tune.BandDim <= 0f ? 1f : Clamp01(tune.BandDim);          // 0 / unset means neutral
             s.Horizon = s.Horizon * dim; s.Haze = s.Haze * dim;
-            s.Dip = Clamp01(tune.Dip); s.DipHeight = tune.DipHeight > 0f ? tune.DipHeight : 0.10f;
+            float goldenW = Clamp01(gDawn + gDusk);
+            s.Dip = tune.Dip < 0f ? DefaultDip * (0.4f + 0.6f * goldenW) : Clamp01(tune.Dip); s.DipHeight = tune.DipHeight > 0f ? tune.DipHeight : 0.10f;
             s.Ground = Rgb.Lerp(new Rgb(0.04f, 0.05f, 0.08f), new Rgb(0.45f, 0.47f, 0.46f), day);
             s.Ground = Rgb.Lerp(s.Ground, st.FogColor, 0.35f);
             s.Glow = st.SunColor;

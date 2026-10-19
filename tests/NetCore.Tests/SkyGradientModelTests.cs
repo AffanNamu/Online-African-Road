@@ -153,7 +153,9 @@ public class SkyGradientModelTests
         var none = SkyGradientModel.Evaluate(st, 4, 0f); var full = SkyGradientModel.Evaluate(st, 4, 1f);
         Assert.Equal(none.Horizon.G, none.Haze.G, 4);                          // no haze: the band colour runs down to the horizon
         Assert.True(full.Haze.G > full.Horizon.G && full.Haze.B > full.Horizon.B, "the full haze is paler than the band");
-        var a = SkyGradientModel.ColourAt(full, 0f); Assert.Equal(full.Haze.G, a.G, 4);   // exactly at the horizon the colour IS the haze
+        var fullN = SkyGradientModel.Evaluate(st, 4, 1f, SkyTune.None);
+        Assert.Equal(fullN.Haze.G, SkyGradientModel.ColourAt(fullN, 0f).G, 4);             // exactly at the horizon the colour IS the haze (neutral horizon)
+        Assert.Equal(full.Haze.G * (1f - full.Dip), SkyGradientModel.ColourAt(full, 0f).G, 4);   // with the default dip it is the haze darkened by the dip
     }
 }
 
@@ -162,12 +164,13 @@ public class SkyHorizonTuneTests
 {
     static LightingState At(float hour) => LightingModel.Evaluate(hour, 0f);
     static float Luma(Rgb c) => 0.2126f * c.R + 0.7152f * c.G + 0.0722f * c.B;
+    static SkyGradientState Neutral(LightingState st) => SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, SkyTune.None);
 
     [Fact] public void NoTuneChangesNothing()
     {
         foreach (var hour in new[] { 6.4f, 12f, 17.6f, 23f })
         {
-            var a = SkyGradientModel.Evaluate(At(hour)); var b = SkyGradientModel.Evaluate(At(hour), SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, SkyTune.None);
+            var a = SkyGradientModel.Evaluate(At(hour), SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, SkyTune.None); var b = SkyGradientModel.Evaluate(At(hour), SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, default(SkyTune)); b.Dip = 0f;
             foreach (float e in new[] { 0f, 0.03f, 0.1f, 0.4f, 1f })
             { var x = SkyGradientModel.ColourAt(a, e); var y = SkyGradientModel.ColourAt(b, e); Assert.Equal(x.R, y.R, 5); Assert.Equal(x.G, y.G, 5); Assert.Equal(x.B, y.B, 5); }
         }
@@ -175,7 +178,7 @@ public class SkyHorizonTuneTests
 
     [Fact] public void TheDipDarkensTheHorizonMostAndLeavesTheUpperSkyAlone()
     {
-        var st = At(6.4f); var plain = SkyGradientModel.Evaluate(st); var dip = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 1f, Dip = 0.5f, DipHeight = 0.10f });
+        var st = At(6.4f); var plain = Neutral(st); var dip = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 1f, Dip = 0.5f, DipHeight = 0.10f });
         float atHorizon = Luma(SkyGradientModel.ColourAt(dip, 0f)) / Luma(SkyGradientModel.ColourAt(plain, 0f));
         float low = Luma(SkyGradientModel.ColourAt(dip, 0.05f)) / Luma(SkyGradientModel.ColourAt(plain, 0.05f));
         Assert.InRange(atHorizon, 0.49f, 0.51f);                       // half as bright exactly at the horizon
@@ -186,14 +189,23 @@ public class SkyHorizonTuneTests
 
     [Fact] public void TheBandDimScalesTheHorizonColoursOnly()
     {
-        var st = At(17.6f); var plain = SkyGradientModel.Evaluate(st); var dim = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 0.8f, Dip = 0f, DipHeight = 0.10f });
+        var st = At(17.6f); var plain = Neutral(st); var dim = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, new SkyTune { BandDim = 0.8f, Dip = 0f, DipHeight = 0.10f });
         Assert.Equal(plain.Horizon.R * 0.8f, dim.Horizon.R, 5); Assert.Equal(plain.Haze.B * 0.8f, dim.Haze.B, 5);
         Assert.Equal(plain.Zenith.G, dim.Zenith.G, 5); Assert.Equal(plain.Mid.R, dim.Mid.R, 5);
     }
 
     [Fact] public void AMissingOrZeroTuneIsNeutral()
     {
-        var st = At(12f); var plain = SkyGradientModel.Evaluate(st); var z = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, default(SkyTune));
+        var st = At(12f); var plain = Neutral(st); var z = SkyGradientModel.Evaluate(st, SkyGradientModel.DefaultPalette, SkyGradientModel.DefaultHazeMix, default(SkyTune));
         Assert.Equal(plain.Horizon.R, z.Horizon.R, 5); Assert.Equal(0f, z.Dip);
+    }
+
+    [Fact] public void TheDefaultDipIsStrongestAtDawnAndSunsetAndGentleAtNoonAndNight()
+    {
+        float dawn = SkyGradientModel.Evaluate(At(6.4f)).Dip, dusk = SkyGradientModel.Evaluate(At(17.6f)).Dip, noon = SkyGradientModel.Evaluate(At(12f)).Dip, night = SkyGradientModel.Evaluate(At(23f)).Dip;
+        Assert.InRange(dawn, 0.85f * SkyGradientModel.DefaultDip, SkyGradientModel.DefaultDip + 0.001f);
+        Assert.InRange(dusk, 0.85f * SkyGradientModel.DefaultDip, SkyGradientModel.DefaultDip + 0.001f);
+        Assert.InRange(noon, 0.39f * SkyGradientModel.DefaultDip, 0.55f * SkyGradientModel.DefaultDip);
+        Assert.InRange(night, 0.39f * SkyGradientModel.DefaultDip, 0.55f * SkyGradientModel.DefaultDip);
     }
 }

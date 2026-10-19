@@ -282,22 +282,19 @@ jobs:
           node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4 low "&sky=gradient" || true
           LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-h0 low "&sky=gradient&skyhaze=0" || true
           LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-h1 low "&sky=gradient&skyhaze=1" || true
-          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-fog4 low "&sky=gradient&skyfog=4" || true
-          LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-grad4-fog8 low "&sky=gradient&skyfog=8" || true
           echo "=== new palette, default haze"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-metrics.json 2>&1 || true
           for v in h0 h1; do echo "=== new palette, haze variant $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-$v-metrics.json 2>&1 || true; done
-          for v in fog4 fog8; do echo "=== new palette with $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-$v-metrics.json --fog 2>&1 || true; done
-      - name: Gradient sky horizon study (Milestone 3 continued) - dim the horizon band, darken the sky right at the horizon, or tint a stronger fog (gradient sky only), dawn and sunset, judged by the same criteria (informational; Appendix E)
+      - name: Gradient sky horizon study (Milestone 3 continued) - the default dip at the horizon against weaker and stronger dips and the neutral horizon, dawn and sunset, judged by the same criteria (informational; Appendix E)
         if: always()
         continue-on-error: true
         run: |
-          B="&sky=gradient&skyhaze=0"
-          for v in "d85:&skydim=0.85" "d75:&skydim=0.75" "p5:&skydip=0.5" "p8:&skydip=0.8" "f45:&skyfogd=0.0045" "f65:&skyfogd=0.0065" "f90:&skyfogd=0.009" "c1:&skydim=0.9&skyfogd=0.004" "c2:&skydip=0.4&skyfogd=0.004"; do
+          B="&sky=gradient"
+          for v in "n0:&skydip=0" "q3:&skydip=0.3" "q6:&skydip=0.6" "q45:&skydip=0.45"; do
             n="${v%%:*}"; q="${v#*:}"
             LIGHT_ONLY=dawn,sunset node tools/webgl-lighting.js Builds/WebGL webgl-light-hz-$n low "$B$q" || true
           done
-          for v in d85 d75 p5 p8; do echo "=== horizon variant $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-hz-$v-metrics.json 2>&1 || true; done
-          for v in f45 f65 f90 c1 c2; do echo "=== horizon variant $v (fog tinted with the haze)"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-hz-$v-metrics.json --fog 2>&1 || true; done
+          echo "=== the default gradient sky (default dip), four hours"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-grad4-metrics.json 2>&1 || true
+          for v in n0 q3 q45 q6; do echo "=== horizon variant $v"; node tools/webgl-lighting.js --sky2-verdict webgl-light-metrics.json webgl-light-ctl3-metrics.json webgl-light-hz-$v-metrics.json 2>&1 || true; done
       - name: Is post-processing really drawn? (Medium corners must be darker than Low corners at the same hour; informational)
         if: always()
         continue-on-error: true
