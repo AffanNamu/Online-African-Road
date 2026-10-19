@@ -255,6 +255,7 @@ Also: all enforced thresholds pass; the game's [Light] state (sun, ambient, fog,
 
 **Status of the sky:** still flag-gated (`?sky=gradient` on smoke pages); the shipped game still uses the procedural sky. Making the gradient the default would be a separate, reversible change (TimeOfDay chooses the material) that needs the owner's approval after looking at the frames, plus the same evidence on a real display.
 
+<<<<<<< HEAD
 ## Appendix E. Milestone 3: softer horizon and less saturation for the gradient sky (owner-approved; branch `work/sky-gradient-v2`; still behind `?sky=gradient`, not the default)
 
 What is investigated: the two defects found in iteration 3 (the sky ends on a hard bright edge against the terrain, and the blues are too saturated). Everything stays behind the test-page flag; the shipped game keeps the procedural sky; no change to lighting, fog or the lit world unless a fog variant is requested by URL.
@@ -282,3 +283,32 @@ Pre-declared in this appendix: upper-sky saturation 0.30 to 0.42 (dawn, sunset) 
 Reading: the saturation defect is fixed (0.36 to 0.40 instead of 0.52, inside the declared band). The hard-horizon defect is **not** fixed: in every variant the step across the horizon is larger than the control's, not smaller, because the sky near the horizon became brighter (sky 145 to 180 against terrain 60 to 64) while the terrain did not change. Raising fog density did not close it either. Making the horizon softer needs the terrain side of the edge to change (haze/fog that lifts distant ground) or the sky band to be darker/more neutral there; both are the next experiment, not done. The pre-declared horizon criterion is unchanged and unmet.
 
 **Status:** the gradient sky stays behind `?sky=gradient`; the shipped game keeps the procedural sky. Not proposed as the default. An owner look at the frames (on branch `ci-lighting` after each run) is still needed for the colour direction; my reading of software-rendered frames is: better saturation and a recognisable warm band at sunrise/sunset, but a visible hard edge where sky meets terrain.
+=======
+### Owner decision on the Medium vignette (2026-10-19)
+Medium stays at **0.22** (unchanged on `main`: `RenderingRig`/`QualityTier` still use it). The 0.10 experiment lives on the unmerged branch `work/medium-vignette-010` (Appendix D there, six software-rendered samples). The comparison is not presented as definitive: three of six samples met every pre-declared criterion and three failed one marginal check each, and the same enforced thresholds also failed for the 0.22 control and, once, for the Low tier (noon road 73.4 and 68.0 against the usual 94 to 104). No acceptance threshold was changed. The cause of the Low-tier noon outlier is **not established**. One observation that may matter: in one dawn frame of the sky study (`webgl-light-hz-f90-dawn-chase`) the frozen truck had settled off the road, sideways, so the sampled regions contained different things than usual, which shows the truck's resting pose is not repeatable under the software renderer. But the failing noon frame that was inspected (road mean 68.0) shows the truck centred on the road, so the pose does not explain that outlier. Revisit 0.10 only when repeatable evidence shows a clear improvement, ideally after the pose of the frozen truck is made repeatable.
+
+>>>>>>> origin/main
+
+### Appendix E, second round: why the horizon is hard, what was tried, what meets the criteria (CI runs 39173315772 and 39179671107; software rendering only)
+
+**Why the sky is brighter than the terrain at the horizon, and why the terrain does not change.** The step is measured between the sky just above the horizon (about 2 to 7 degrees up) and the terrain 45 to 120 m away just below it. The terrain does not fade toward the sky because **fog has no visible effect on it in this build**: the game's own fog density is tiny (0.001 at dawn, 0.000 at noon and sunset by `LightingModel`), and when the study forced `RenderSettings.fogDensity` to 0.0045, 0.0065 and 0.009 (the log confirms the values were applied) the terrain's luma stayed at 61 to 64 and the step stayed at 102 to 105 at dawn. So fog cannot be the fix here, and why it has no effect is **not established** (a possible cause worth checking separately is that Unity strips fog shader variants from the player build when no scene enables fog at build time; I did not verify that). The game's fog settings were not changed. Raising the pale haze at the horizon made the step worse (sky 166 to 176 against terrain 61), which is the "sky gets brighter, terrain does not" effect.
+
+**What was tried (all behind `?sky=gradient`, dawn / sunset step against the control's 95 / 75, limit 0.85x = 81 / 64):**
+| Variant | dawn / sunset step | result |
+|---|---|---|
+| no dip, haze 0 (neutral) | 110 / 100 | not met |
+| fog 0.0045 to 0.009, any combination with the above | 102 to 105 / 81 | not met (fog changes nothing on the terrain) |
+| band dimmed to 0.85 / 0.75 | 83 / 68 and 69 / 53 | 0.85 not met; 0.75 met but a hard bright edge remains (my reading of the frames) |
+| dip 0.3 at the horizon | 85 / 70 | not met (just) |
+| **dip 0.45 (the new default)** | **67.7 / 56.4** | **met** |
+| dip 0.5 | 53 / 38 (earlier run) | met |
+| dip 0.6 | 51 / 38 | met (darker band) |
+| dip 0.8 | 16 / 7 | met, but a heavy dark band (my reading) |
+
+The **dip** darkens the sky multiplicatively near the horizon (full strength at the horizon, none above about 6 degrees up), so the sky meets the terrain in a soft warm band instead of a bright edge. The model's default is 0.45 at dawn and sunset and 40% of that at noon and night (`SkyGradientModel.DefaultDip`, unit-tested). Sun, ambient light, fog and the colour grade are identical to the procedural sky's (the `[Light]` state check passes at all four hours).
+
+**Result with the default dip, four hours (run 39179671107):** upper-sky saturation 0.36 / 0.34 / 0.40 (dawn / sunset / noon; control 0.49 / 0.52 / 0.53), horizon step 67.7 / 56.4, every earlier criterion holds, every enforced lighting threshold passes. One sample of the default plus the identical dip-0.45 variant in the same run (67.6 / 56.4): repeat before relying on it.
+
+**My reading of the four frames (software-rendered CI frames, not an owner review):** dawn and sunset show a blue upper sky, a warm band and a soft fade into the terrain, clearly softer than before, though the terrain edge is still a visible line; noon is a clean blue with a faint pale haze at the horizon; night is a dark blue sky that stays readable against the dark ground.
+
+**Status:** the gradient sky now meets every pre-declared criterion in CI, still behind `?sky=gradient`, **not the default**; the procedural sky stays the shipped sky and the fallback. It needs a repeat run and the owner's look at the frames on branch `ci-lighting` before anyone proposes making it the default. The Medium vignette is a separate matter and stays at 0.22.
