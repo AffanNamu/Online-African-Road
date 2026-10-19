@@ -141,13 +141,14 @@ namespace ARO.Game
         }
 
         /// <summary>Rebuilds one region in place (its data changed). The region container itself stays, so nothing re-animates except what is rebuilt.
-        /// While the player has a pointer pressed the rebuild is held back until it is released (RefreshDeferral): destroying the button under a pressed pointer loses the click.</summary>
+        /// While the player has a pointer pressed the rebuild is held back until it is released (RefreshDeferral): destroying the button under a pressed pointer loses the click.
+        /// A redraw that a button's own handler asks for (Ui.InClick) is never held back.</summary>
         void Refill(string name, Action build)
         {
             if (!_regions.TryGetValue(name, out var r) || r == null) return;
-            if (PointerGuard.Enabled && _hold.Defer(name, () => RefillHeld(name, r, build), PointerGuard.Down, Time.unscaledTime))
+            if (PointerGuard.Enabled && Ui.InClick == 0 && _hold.Defer(name, () => RefillHeld(name, r, build), PointerGuard.Down, Time.unscaledTime))
             {
-                if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} held back: the pointer is down t={Time.realtimeSinceStartup:0.00}");
+                if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} held back: the pointer is down t={Time.realtimeSinceStartup:0.00} fc={Time.frameCount}");
                 return;
             }
             RefillNow(name, r, build);
@@ -161,7 +162,7 @@ namespace ARO.Game
             _hold.Cancel(name);                                                 // a held redraw of this region would only repeat this one
             for (int i = r.childCount - 1; i >= 0; i--) Destroy(r.GetChild(i).gameObject);
             var prev = _stage; _stage = r; build(); _stage = prev; MarkTargetsDirty();
-            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00} pointerDown={PointerGuard.Down.ToString().ToLowerInvariant()}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
+            if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00} pointerDown={PointerGuard.Down.ToString().ToLowerInvariant()} fc={Time.frameCount}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
         }
 
         /// <summary>The pointer was released: the redraw runs unless the page was rebuilt from scratch meanwhile (the region container is then another object and already shows the current data).</summary>

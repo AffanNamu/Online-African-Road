@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ARO.Game
 {
     /// <summary>
-    /// Whether the player has a pointer pressed right now (mouse button or finger), read from the Input System, which is updated before any Update runs in the frame. The dashboard holds back a needed
+    /// Whether the player has a pointer pressed right now or pressed it during this frame (mouse button or finger), read from the Input System, which is updated before any Update runs in the frame. The dashboard holds back a needed
     /// background redraw while this is true (see RefreshDeferral), because destroying the button under a pressed pointer loses the click.
     /// Browser end-to-end pages (loopback with autologin) may switch the guard off ("pointerguard=off", to show what happens without it) or lengthen its cap ("pointerhold=seconds"); nothing else can.
     /// </summary>
@@ -32,8 +32,9 @@ namespace ARO.Game
                 _frame = Time.frameCount; _down = false;
                 try
                 {
-                    var m = UnityEngine.InputSystem.Mouse.current; if (m != null && m.leftButton.isPressed) _down = true;
-                    var t = UnityEngine.InputSystem.Touchscreen.current; if (t != null && t.primaryTouch.press.isPressed) _down = true;
+                    // pressed now, or pressed during this frame (a quick click can press and release inside one input update, and the event system may only finish it next frame)
+                    var m = UnityEngine.InputSystem.Mouse.current; if (m != null && (m.leftButton.isPressed || m.leftButton.wasPressedThisFrame)) _down = true;
+                    var t = UnityEngine.InputSystem.Touchscreen.current; if (t != null && (t.primaryTouch.press.isPressed || t.primaryTouch.press.wasPressedThisFrame)) _down = true;
                 }
                 catch (System.Exception) { /* no pointer device: nothing is pressed */ }
                 return _down;

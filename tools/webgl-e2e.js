@@ -1129,7 +1129,7 @@ const allErrors = [], allExc = [];
         // Run 39172992204: the Close press was received but its release never was (no release logged), so the menu stayed open. Run 39178950551: the first Close click WAS delivered but the harness
         // judged by the target list, which is republished about a second later, and clicked again into the page behind. The delivery itself is the game's own "[UIDiag] onClick" line.
         const closed = await c.clickUntil('Btn_CloseDialog', /\[UIDiag\] onClick Btn_CloseDialog/, 15, 3); await c.settle();
-        check(!!closed && !c.targets()['Btn_FriMenu_RemoveFriend'], `${tag}: the player menu closes`);
+        check(!!closed, `${tag}: the Close button of the player menu was delivered (the Friends tab click below proves the menu is gone: it would hit the dim layer otherwise)`);
         check(!!(await c.clickUntil('Btn_FriTab_Requests', /\[Friends\] tab=requests/, 30, 3)), `${tag}: the Friends page still answers clicks after the held redraw`);
       } else {
         console.log(`      DEMONSTRATION (guard off, E2E-only switch): redraw attempted while the pointer was down: ${r.attempt ? 'yes' : 'no'}; rebuilt with pointerDown=true: ${r.overlapped.length}; the held button clicked: ${r.clicked ? 'yes' : 'NO (click lost)'}`);
@@ -1139,6 +1139,47 @@ const allErrors = [], allExc = [];
   };
   await pointerRun('Off', '&frpoll=3&pointerguard=off', false);
   await pointerRun('On', '&frpoll=3&pointerhold=30', true);
+
+  // =========================================================================================== 2zzz. pointer guard under stress: clicks while the page is redrawn every 0.9 s
+  // "frchurn=0.9" (E2E only) redraws the Friends page every 0.9 s although nothing changed, so redraws collide with clicks often. 24 tab clicks are made with a plain press, 150 ms hold, release.
+  // Each click is classified from the game's own lines: delivered ([Friends] tab=...), or lost, and a lost click is either an input that never arrived (no press or no release logged: the software
+  // renderer's frame rate) or one with a redraw between its press frame and its release frame. With the guard on, no redraw may run between a press and its release and no click may be lost to one;
+  // with the guard switched off (E2E-only switch) the same run only reports, to show how often redraws do take clicks.
+  const stressRun = async (label, extra, guardOn) => {
+    const pa = await signup('BrowserSt' + label + 'a'), pb = await signup('BrowserSt' + label + 'b');
+    { const rid = JSON.parse(asUser(pa, `select send_friend_request('${pb.id}')::text`)).request_id; asUser(pb, `select respond_friend_request('${rid}', true)`); }
+    const tag = guardOn ? 'Pointer guard under stress' : 'Pointer guard switched off under stress (demonstration)', N = 24, r = { delivered: 0, inputDropped: 0, lostToRedraw: 0, unexplained: 0, overlappedRedraws: 0, held: 0 };
+    await open(pa, extra, async c => {
+      await c.waitLog(new RegExp('\\[Dashboard\\] built for BrowserSt' + label + 'a'), 0, 150); await c.settle();
+      let m = c.logs.length; await c.click('Nav_Friends'); await c.waitLog(/\[Friends\] friends state=ready count=1/, m, 90); await sleep(3000);
+      const b = await c.page.locator('#unity-canvas').boundingBox(); let want = 'requests';
+      for (let i = 0; i < N; i++) {
+        const name = want === 'requests' ? 'Btn_FriTab_Requests' : 'Btn_FriTab_All', t = c.targets()[name];
+        if (!t) { await sleep(800); i--; if (i < -20) break; continue; }
+        await c.page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(200 + Math.floor(Math.random() * 400));    // a random wait, so the press lands at different moments of the 0.9 s cycle
+        const m0 = c.logs.length; await c.page.mouse.down(); await sleep(150); await c.page.mouse.up();
+        const got = await c.waitLog(new RegExp('\\[Friends\\] tab=' + want), m0, 3);
+        const seg = c.logs.slice(m0), fcOf = re => { const l = seg.find(x => re.test(x)); const f = l && / fc=(\d+)/.exec(l); return f ? +f[1] : null; };
+        const pf = fcOf(/\[UIDiag\] pointer pressed/), rf = fcOf(/\[UIDiag\] pointer released/);
+        const overlapped = seg.filter(l => /\[UIDiag\] rebuild \S+ t=[\d.]+ pointerDown=\w+ fc=\d+/.test(l)).map(l => +/ fc=(\d+)/.exec(l)[1]).filter(k => pf !== null && rf !== null && k >= pf && k < rf);
+        r.held += seg.filter(l => /rebuild \S+ held back/.test(l)).length; r.overlappedRedraws += overlapped.length;
+        if (got) { r.delivered++; want = want === 'requests' ? 'all' : 'requests'; }
+        else if (pf === null || rf === null) r.inputDropped++;
+        else if (overlapped.length) r.lostToRedraw++;
+        else r.unexplained++;
+        await sleep(300);
+      }
+      console.log(`      ${tag}: ${r.delivered}/${N} clicks delivered; lost to a redraw between press and release: ${r.lostToRedraw}; input never arrived or never released (renderer): ${r.inputDropped}; lost for no logged reason: ${r.unexplained}; redraws that ran between a press and its release: ${r.overlappedRedraws}; redraws held back while pressed: ${r.held}`);
+      if (guardOn) {
+        check(r.overlappedRedraws === 0, `${tag}: no region was rebuilt between a press and its release (${N} clicks, ${r.held} redraws held back)`, `${r.overlappedRedraws} ran`);
+        check(r.lostToRedraw === 0 && r.unexplained === 0, `${tag}: no click was lost to a redraw or for an unlogged reason (${r.delivered}/${N} delivered, ${r.inputDropped} never reached the game)`, JSON.stringify(r));
+        check(r.delivered >= N - 4, `${tag}: at least ${N - 4} of ${N} clicks were delivered`, JSON.stringify(r));
+      }
+    });
+    return r;
+  };
+  await stressRun('Off', '&frchurn=0.9&pointerguard=off', false);
+  await stressRun('On', '&frchurn=0.9', true);
 
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });

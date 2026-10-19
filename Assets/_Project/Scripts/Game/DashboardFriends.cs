@@ -90,6 +90,21 @@ namespace ARO.Game
             }
         }
 
+        /// <summary>Browser test pages only ("frchurn=0.9"): redraw the Friends page every so many seconds although nothing changed, so a stress test can make redraws collide with clicks often enough to count losses.</summary>
+        static float _frChurn = -1f; float _nextChurn;
+        static float FrChurn
+        {
+            get
+            {
+                if (_frChurn < 0f)
+                {
+                    _frChurn = 0f;
+                    if (SmokeMode.E2E && float.TryParse(BackendOverride.Query(Application.absoluteURL, "frchurn"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) && v >= 0.3f) _frChurn = v;
+                }
+                return _frChurn;
+            }
+        }
+
         void LoadFriendsPage(bool quiet) { _ = LoadFriendsList(quiet); _ = LoadFriendRequests(quiet); _ = LoadRecentList(quiet); _ = LoadMineForFriends(); }
 
         /// <summary>Invite Convoy is only possible from a convoy, so the page asks the server whether the player is in one.</summary>
@@ -663,6 +678,7 @@ namespace ARO.Game
                     }
                 }
             }
+            if (FrChurn > 0f && now > _nextChurn) { _nextChurn = now + FrChurn; RefreshFriends(); }
             if (now > _nextFr) { _nextFr = now + FrPoll; if (_modal == null) LoadFriendsPage(true); }
             // wheel scrolling
             float dy = 0f; Vector2 mp = Vector2.zero;
