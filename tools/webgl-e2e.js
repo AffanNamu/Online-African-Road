@@ -1126,8 +1126,11 @@ const allErrors = [], allExc = [];
         check(!!r.clicked, `${tag}: the held button still clicked when it was released`);
         check(!!r.applied, `${tag}: the held redraw was applied after the release (the page cannot stay stale)`);
         check(!!c.targets()['Btn_FriMenu_RemoveFriend'], `${tag}: the click opened the player menu (what the player asked for)`);
-        await c.click('Btn_CloseDialog');
-        m = c.logs.length; await c.click('Btn_FriTab_Requests'); check(!!(await c.waitLog(/\[Friends\] tab=requests/, m, 30)), `${tag}: the Friends page still answers clicks after the held redraw`);
+        // Run 39172992204: the Close press was received but its release never was (no release logged: the software renderer's ~5 frames per second can lose one), so the menu stayed open and the next click
+        // hit the modal. A click the player's browser drops is repeated here as elsewhere in this file; the menu must close and the tab must answer.
+        for (let i = 0; i < 3 && c.targets()['Btn_FriMenu_RemoveFriend']; i++) { if (i) console.log('      (the Close click was not delivered; repeating it)'); await c.click('Btn_CloseDialog'); await c.settle(); }
+        check(!c.targets()['Btn_FriMenu_RemoveFriend'], `${tag}: the player menu closes`);
+        check(!!(await c.clickUntil('Btn_FriTab_Requests', /\[Friends\] tab=requests/, 30, 3)), `${tag}: the Friends page still answers clicks after the held redraw`);
       } else {
         console.log(`      DEMONSTRATION (guard off, E2E-only switch): redraw attempted while the pointer was down: ${r.attempt ? 'yes' : 'no'}; rebuilt with pointerDown=true: ${r.overlapped.length}; the held button clicked: ${r.clicked ? 'yes' : 'NO (click lost)'}`);
       }
