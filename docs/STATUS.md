@@ -1,4 +1,4 @@
-# Status (updated 2026-10-11: backend foundation written and verified on local Postgres; its CI run (api-e2e, Unity compile, WebGL E2E) is pending, rows marked LOCAL below)
+# Status (updated 2026-10-21; earlier note: backend foundation written and verified on local Postgres; its CI run (api-e2e, Unity compile, WebGL E2E) is pending, rows marked LOCAL below)
 
 **Everything that is a placeholder, a stand-in, authored-for-now or unbuilt is listed in [`docs/PLACEHOLDERS.md`](PLACEHOLDERS.md) (ids `P-xx`, what "real" means, where the real thing plugs in, what it is blocked on). It is the to-do list for making the game real.**
 
@@ -27,3 +27,6 @@ Legend: **VERIFIED** = executed and passing in CI; **COMPILES** = Unity compiles
 | Companies, leaderboards, touch UI, Flutter shell | INCOMPLETE - not started |
 | Production art (vehicles, roads, buildings, vegetation, signage) | INCOMPLETE - all visuals are primitives |
 | Performance measurements | NOT DONE - nothing has run |
+| **Pointer-down guard** (`RefreshDeferral`, `PointerGuard`; `docs/CI_HEALTH.md`) | **VERIFIED in CI** (software rendering, run 39576201404): a redraw between a press and its release lost 5 of 24 clicks without the guard and 0 of 24 with it; browser suite 525 passed, 0 failed. Not tested on a real device. |
+| **Job board top-up** (`.github/workflows/supabase-jobs.yml`, `supabase/top_up_jobs.sh`) | **RUNNING on the live project** since 2026-10-19 (GitHub runs it every 3 to 5 hours, not every 15 minutes; the first run took the board from 0 to 20 jobs). Script tested in CI against a real database. |
+| **Admin site, milestone 1** (`admin/`, migration `20261021000001`, `docs/ADMIN.md`): sign-in with two-step verification, live health, player lookup, audit log, roles | **VERIFIED in CI** against a local database and PostgREST with a stand-in sign-in service (135 SQL assertions, 35 mutants all killed, 46 browser checks). **NOT applied to the live project and NOT published**; the owner steps are in `docs/ADMIN.md`. The real Supabase MFA service has not been exercised. |
