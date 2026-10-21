@@ -132,11 +132,14 @@ namespace ARO.Game
         { var sh = t.gameObject.AddComponent<UnityEngine.UI.Shadow>(); sh.effectColor = new Color(0, 0, 0, a); sh.effectDistance = new Vector2(2f, -2f); }
 
         /// <summary>Invisible click area. Optionally tints `target` on hover/press (target is darkened on press).</summary>
+        /// <summary>&gt; 0 while a button's own handler runs: a redraw that the player's click asks for happens at once; only redraws that nobody clicked for (reloads, polls, answers arriving later) wait for a pressed pointer (PointerGuard).</summary>
+        public static int InClick;
+
         public static Button Click(Transform parent, string name, float x, float y, float w, float h, Action onClick)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button)); Place(go, parent, Anchor.TopLeft, x, y, w, h);
             var img = go.GetComponent<Image>(); img.color = new Color(1, 1, 1, 0.001f);
-            var b = go.GetComponent<Button>(); b.targetGraphic = img; b.transition = Selectable.Transition.None; b.onClick.AddListener(() => onClick());
+            var b = go.GetComponent<Button>(); b.targetGraphic = img; b.transition = Selectable.Transition.None; b.onClick.AddListener(() => { InClick++; try { onClick(); } finally { InClick--; } });
             go.AddComponent<HoverGlow>();
             return b;
         }

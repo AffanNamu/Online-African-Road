@@ -110,7 +110,7 @@ namespace ARO.Game
         {
             _hits.Clear();
             if (EventSystem.current != null) EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = pos }, _hits);
-            var sb = new StringBuilder($"[UIDiag] pointer {what} at {pos.x:0},{pos.y:0} of {Screen.width}x{Screen.height} frame={(Time.unscaledDeltaTime * 1000f):0}ms t={Time.realtimeSinceStartup:0.00}; ui hits=[");
+            var sb = new StringBuilder($"[UIDiag] pointer {what} at {pos.x:0},{pos.y:0} of {Screen.width}x{Screen.height} frame={(Time.unscaledDeltaTime * 1000f):0}ms t={Time.realtimeSinceStartup:0.00} fc={Time.frameCount}; ui hits=[");
             foreach (var h in _hits) sb.Append(h.gameObject.name).Append(' ');
             sb.Append("]");
             if (what == "pressed")
