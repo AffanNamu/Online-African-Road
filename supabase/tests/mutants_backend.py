@@ -502,6 +502,7 @@ def make(sub, resub):
     M["admin reports: the queue lists every line, even unreported"] = ("adminc", lambda t: sub(t, "from chat_reports r group by message_id) t", "from chat_reports r group by message_id union all select id, 0, now(), now(), null from convoy_messages where kind = 'chat') t"))
     M["admin reports: the open queue includes reviewed lines"] = ("adminc", lambda t: sub(t, "or (p_state = 'open' and (rv.message_id is null or t.last_at > rv.reviewed_at))", "or p_state = 'open'"))
     M["admin reports: a new report does not reopen a reviewed line"] = ("adminc", lambda t: sub(t, "or (p_state = 'open' and (rv.message_id is null or t.last_at > rv.reviewed_at))", "or (p_state = 'open' and rv.message_id is null)"))
+    M["admin reports: the shown order ignores the report count"] = ("adminc", lambda t: sub(t, "order by x.is_open desc, x.n desc, x.last_at desc)", "order by x.last_at)"))
     M["admin reports: most reported is not first"] = ("adminc", lambda t: sub(t, "order by (rv.message_id is null or t.last_at > rv.reviewed_at) desc, t.n desc, t.last_at desc limit v_lim) x;", "order by t.last_at limit v_lim) x;"))
     M["admin reports: the queue state is not validated"] = ("adminc", lambda t: sub(t, "if p_state is null or p_state not in ('open', 'reviewed', 'all') then raise exception 'invalid_state'; end if;", ""))
     M["admin reports: opening a report is not audited"] = ("adminc", lambda t: sub(t, "perform _admin_log('view_report', 'chat_message', p_message::text, null, jsonb_build_object('sender_id', m.sender_id));", ""))

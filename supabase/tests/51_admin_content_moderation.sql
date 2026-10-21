@@ -72,7 +72,11 @@ select pg_temp.denied('SUP', 'aal2', $$select admin_list_content()::text$$, 'not
 select pg_temp.denied('OPS', 'aal2', $$select admin_list_content()::text$$, 'not_allowed');
 select pg_temp.denied('ANA', 'aal2', $$select admin_list_content()::text$$, 'not_allowed');
 select pg_temp.denied('SUP', 'aal2', $$select admin_save_content('x1','news','tip','t','b',null,0,null,null,false,null,null,null,null,null,'testing it')::text$$, 'not_allowed');
+select pg_temp.denied('OPS', 'aal2', $$select admin_save_content('x1','news','tip','t','b',null,0,null,null,false,null,null,null,null,null,'testing it')::text$$, 'not_allowed');
 select pg_temp.denied('OPS', 'aal2', $$select admin_set_content_published('x1', true, 'testing it')::text$$, 'not_allowed');
+select pg_temp.denied('SUP', 'aal2', $$select admin_set_content_published('x1', true, 'testing it')::text$$, 'not_allowed');
+select pg_temp.denied('SUP', 'aal2', $$select admin_list_world()::text$$, 'not_allowed');
+select pg_temp.denied('CON', 'aal2', format($$select admin_lift_sanction(%L, 'testing it')::text$$, gen_random_uuid()), 'not_allowed');
 select pg_temp.denied('CON', 'aal2', $$select admin_send_broadcast('hello there','hello world','testing it')::text$$, 'not_allowed');
 select pg_temp.denied('SUP', 'aal2', $$select admin_send_broadcast('hello there','hello world','testing it')::text$$, 'not_allowed');
 select pg_temp.denied('CON', 'aal2', $$select admin_list_broadcasts()::text$$, 'not_allowed');
@@ -175,6 +179,8 @@ select testkit.assert_eq('a server into maintenance', pg_temp.j('OPS', $$select 
 select testkit.assert_eq('players see maintenance', (pg_temp.pl('L', $$select list_servers()::text$$)::jsonb->'items'->0->>'status'), 'MAINTENANCE');
 select testkit.assert_eq('capacity and region were set', (select capacity::text || '/' || region from game_servers where id = 'main'), '50/West Africa');
 select testkit.assert_eq('null leaves them alone', pg_temp.j('OPS', $$select admin_set_server_state('main', 'ONLINE', null, null, 'restart finished')::text$$)->>'region', 'West Africa');
+select testkit.assert_eq('... capacity too', (select capacity::text from game_servers where id = 'main'), '50');
+select testkit.assert_eq('a server change is audited with before and after', (select (details->'from'->>'status') || '>' || (details->'to'->>'status') from admin_audit_log where action = 'set_server' order by id desc limit 1), 'MAINTENANCE>ONLINE');
 select testkit.assert_eq('0 removes the capacity limit', ((pg_temp.j('OPS', $$select admin_set_server_state('main', null, 0, null, 'no limit for now')::text$$)->>'capacity') is null)::text, 'true');
 select pg_temp.denied('OPS', 'aal2', $$select admin_set_server_state('main', 'BROKEN', null, null, 'testing it')::text$$, 'invalid_status');
 select pg_temp.denied('OPS', 'aal2', $$select admin_set_server_state('main', null, -1, null, 'testing it')::text$$, 'invalid_capacity');
@@ -191,16 +197,20 @@ select pg_temp.pl(k, format('select join_convoy(%L)', (select v from fx where k 
 select pg_temp.pl(k, 'select start_session()::text') from (values ('L'), ('B'), ('C'), ('D')) t(k);
 select pg_temp.pl('C', $$select post_convoy_message('hello everyone')::text$$);
 select pg_temp.pl('B', $$select post_convoy_message('you are all idiots')::text$$);
+-- another convoy chatting at the same moment: its lines must never show up as context
+insert into fx select 'cv2', pg_temp.pl('E', $$select create_convoy('Other Run')$$);
+select pg_temp.pl('E', $$select post_convoy_message('other convoy chatter')::text$$);
 select pg_temp.pl('D', $$select post_convoy_message('nice drive')::text$$);
 create function pg_temp.mid(p_like text) returns bigint language sql as $$ select max(id) from convoy_messages where body like $1 $$;
+select pg_temp.pl('L', format($$select report_chat_message(%s, 'spam')::text$$, pg_temp.mid('nice drive')));     -- reported first, so the order below is not just oldest-first
 select pg_temp.pl('L', format($$select report_chat_message(%s, 'abuse')::text$$, pg_temp.mid('you are all idiots')));
 select pg_temp.pl('C', format($$select report_chat_message(%s, 'harassment')::text$$, pg_temp.mid('you are all idiots')));
 select testkit.assert_eq('two reports do not hide a line', (select moderation from convoy_messages where id = pg_temp.mid('you are all idiots')), 'ok');
 select pg_temp.pl('D', format($$select report_chat_message(%s, 'abuse')::text$$, pg_temp.mid('you are all idiots')));
 select testkit.assert_eq('three do (existing behaviour)', (select moderation from convoy_messages where id = pg_temp.mid('you are all idiots')), 'hidden');
-select pg_temp.pl('L', format($$select report_chat_message(%s, 'spam')::text$$, pg_temp.mid('nice drive')));
 select testkit.assert_eq('the queue holds both lines', jsonb_array_length(pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items')::text, '2');
 select testkit.assert_eq('the most reported line is first', pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items'->0->>'body', 'you are all idiots');
+select testkit.assert_eq('a limit keeps the most reported line', pg_temp.j('SUP', $$select admin_list_reports('open', 1)::text$$)->'items'->0->>'body', 'you are all idiots');
 select testkit.assert_eq('with the report count', pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items'->0->>'reports', '3');
 select testkit.assert_eq('and the reasons', pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items'->0->'reasons'->>'abuse', '2');
 select testkit.assert_eq('and who sent it', pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items'->0->>'sender_name', 'CmBad');
@@ -208,8 +218,9 @@ select testkit.assert_eq('the owner can open the queue too', jsonb_array_length(
 select pg_temp.denied('SUP', 'aal2', $$select admin_list_reports('everything')::text$$, 'invalid_state');
 -- the line with context
 select testkit.assert_eq('a report shows the lines around it (chat and system lines, at most 8)', (jsonb_array_length(pg_temp.j('SUP', format($$select admin_get_report(%s)::text$$, pg_temp.mid('you are all idiots')))->'context') between 3 and 8)::text, 'true');
+select testkit.assert_eq('... and none of another convoy', (select count(*)::text from jsonb_array_elements(pg_temp.j('SUP', format($$select admin_get_report(%s)::text$$, pg_temp.mid('you are all idiots')))->'context') c where c->>'body' = 'other convoy chatter'), '0');
 select testkit.assert_eq('... marks the reported one', (select count(*)::text from jsonb_array_elements(pg_temp.j('SUP', format($$select admin_get_report(%s)::text$$, pg_temp.mid('you are all idiots')))->'context') c where (c->>'reported')::boolean and c->>'body' = 'you are all idiots'), '1');
-select testkit.assert_eq('every view is audited (three views above)', (select count(*)::text from admin_audit_log where action = 'view_report' and target_id = pg_temp.mid('you are all idiots')::text), '3');
+select testkit.assert_eq('every view is audited (four views above)', (select count(*)::text from admin_audit_log where action = 'view_report' and target_id = pg_temp.mid('you are all idiots')::text), '4');
 select pg_temp.denied('SUP', 'aal2', format($$select admin_get_report(%s)::text$$, (select min(id) from convoy_messages where kind = 'system')), 'report_not_found');
 select pg_temp.denied('SUP', 'aal2', $$select admin_get_report(999999999)::text$$, 'report_not_found');
 -- dismissing and removing
@@ -219,6 +230,8 @@ select pg_temp.pl('B', format($$select report_chat_message(%s, 'spam')::text$$, 
 select testkit.assert_eq('a fresh report on a dismissed line puts it back in the queue', jsonb_array_length(pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items')::text, '2');
 select pg_temp.j('SUP', format($$select admin_review_report(%s, 'dismiss', 'still only banter')::text$$, pg_temp.mid('nice drive')));
 select testkit.assert_eq('the reviewed list shows it', pg_temp.j('SUP', $$select admin_list_reports('reviewed')::text$$)->'items'->0->>'decision', 'dismiss');
+select pg_temp.j('SUP', format($$select admin_review_report(%s, 'dismiss', 'second look: fine')::text$$, pg_temp.mid('you are all idiots')));
+select testkit.assert_eq('dismissing a hidden line shows it again', (select moderation from convoy_messages where id = pg_temp.mid('you are all idiots')), 'ok');
 select testkit.assert_eq('remove the abusive one', pg_temp.j('SUP', format($$select admin_review_report(%s, 'remove', 'plain abuse')::text$$, pg_temp.mid('you are all idiots')))->>'decision', 'remove');
 select testkit.assert_eq('the line is removed for everyone', (select moderation from convoy_messages where id = pg_temp.mid('you are all idiots')), 'removed');
 select testkit.assert_eq('nothing is left open', jsonb_array_length(pg_temp.j('SUP', $$select admin_list_reports()::text$$)->'items')::text, '0');
@@ -227,7 +240,7 @@ select pg_temp.denied('SUP', 'aal2', format($$select admin_review_report(%s, 'di
 select pg_temp.denied('SUP', 'aal2', $$select admin_review_report(999999999, 'dismiss', 'testing it')::text$$, 'report_not_found');
 select testkit.assert_eq('a line nobody reported cannot be reviewed', (select count(*)::text from chat_report_reviews where message_id = pg_temp.mid('hello everyone')), '0');
 select pg_temp.denied('SUP', 'aal2', format($$select admin_review_report(%s, 'remove', 'not reported')::text$$, pg_temp.mid('hello everyone')), 'report_not_found');
-select testkit.assert_eq('reviews are audited with the sender', (select details->>'sender_id' from admin_audit_log where action = 'review_report' and target_id = pg_temp.mid('you are all idiots')::text), pg_temp.u('B')::text);
+select testkit.assert_eq('reviews are audited with the sender', (select details->>'sender_id' from admin_audit_log where action = 'review_report' and target_id = pg_temp.mid('you are all idiots')::text order by id desc limit 1), pg_temp.u('B')::text);
 
 -- ===== 8. sanctions
 select testkit.assert_eq('mute for two hours', pg_temp.j('SUP', format($$select admin_apply_sanction(%L, 'mute', 2, 'abusive chat, see report', %s)::text$$, pg_temp.u('B'), pg_temp.mid('you are all idiots')))->>'kind', 'mute');
@@ -238,8 +251,10 @@ select testkit.assert_eq('the player was told', (select count(*)::text from noti
 select pg_temp.denied('SUP', 'aal2', format($$select admin_apply_sanction(%L, 'mute', 2, 'again please')::text$$, pg_temp.u('B')), 'already_sanctioned');
 select testkit.assert_eq('the list shows it active, with the line that led to it', (pg_temp.j('SUP', format($$select admin_list_sanctions('active', %L)::text$$, pg_temp.u('B')))->'items'->0->>'message_id')::bigint::text, pg_temp.mid('you are all idiots')::text);
 select testkit.assert_eq('the queue marks the sender as muted', pg_temp.j('SUP', $$select admin_list_reports('reviewed')::text$$)->'items'->0->'sender_sanctions'->>0, 'mute');
+select testkit.assert_eq('the list filtered to another player is empty', jsonb_array_length(pg_temp.j('SUP', format($$select admin_list_sanctions('active', %L)::text$$, pg_temp.u('C'))) ->'items')::text, '0');
 -- lifting
 select testkit.assert_eq('lift the mute', pg_temp.j('SUP', format($$select admin_lift_sanction(%L, 'apologised, lifting early')::text$$, (select id::text from player_sanctions where player_id = pg_temp.u('B') and kind = 'mute')))->>'kind', 'mute');
+select testkit.assert_eq('a lifted restriction leaves the active list', jsonb_array_length(pg_temp.j('SUP', format($$select admin_list_sanctions('active', %L)::text$$, pg_temp.u('B')))->'items')::text, '0');
 select testkit.assert_eq('they can chat again', (pg_temp.pl('B', $$select post_convoy_message('sorry all')::text$$)::jsonb ? 'id')::text, 'true');
 select pg_temp.denied('SUP', 'aal2', format($$select admin_lift_sanction(%L, 'twice')::text$$, (select id::text from player_sanctions where player_id = pg_temp.u('B') and kind = 'mute')), 'sanction_not_active');
 -- an expired mute needs no lifting
@@ -264,6 +279,7 @@ select testkit.assert_eq('... and they can play', (pg_temp.pl('C', $$select star
 select pg_temp.denied('SUP', 'aal2', format($$select admin_apply_sanction(%L, 'ban', null, 'cheating')::text$$, pg_temp.u('D')), 'not_allowed');
 select testkit.assert_eq('owner bans permanently', (pg_temp.j('OWN', format($$select admin_apply_sanction(%L, 'ban', null, 'sold stolen accounts', null)::text$$, pg_temp.u('D')))->>'expires_at' is null)::text, 'true');
 select pg_temp.pl_fail('D', $$select start_session()::text$$, 'account_suspended');
+select pg_temp.pl_fail('D', $$select post_convoy_message('can a banned player talk')::text$$, 'muted');
 select testkit.assert_eq('banned_until is far in the future', (select (banned_until > now() + interval '50 years')::text from auth.users where id = pg_temp.u('D')), 'true');
 select pg_temp.denied('SUP', 'aal2', format($$select admin_apply_sanction(%L, 'mute', 1, 'one more thing')::text$$, pg_temp.u('D')), 'already_banned');
 select pg_temp.denied('SUP', 'aal2', format($$select admin_lift_sanction(%L, 'let them back')::text$$, (select id::text from player_sanctions where player_id = pg_temp.u('D') and kind = 'ban')), 'not_allowed');
@@ -292,8 +308,11 @@ select testkit.assert_eq('every sanction is audited', (select count(*)::text fro
 select testkit.assert_eq('every lift is audited', (select count(*)::text from admin_audit_log where action = 'lift_sanction'), (select count(*)::text from player_sanctions where lifted_at is not null));
 do $$ begin
   begin insert into player_sanctions(player_id, kind, reason, created_by, expires_at) values (pg_temp.u('B'), 'ban', 'abc', pg_temp.u('OWN'), now() + interval '1 day');
-  exception when check_violation then return; end;
-  raise exception 'NOT REJECTED: a ban with an end date';
+  exception when check_violation then null; end;
+  if (select count(*) from player_sanctions where reason = 'abc') > 0 then raise exception 'NOT REJECTED: a ban with an end date'; end if;
+  begin insert into player_sanctions(player_id, kind, reason, created_by, expires_at) values (pg_temp.u('B'), 'mute', 'abd', pg_temp.u('OWN'), now() - interval '1 hour');
+  exception when check_violation then null; end;
+  if (select count(*) from player_sanctions where reason = 'abd') > 0 then raise exception 'NOT REJECTED: an end before the start'; end if;
 end $$;
 
 -- ===== 9. nothing about a player's wallet, progress or reward can be reached from here
