@@ -112,3 +112,18 @@ admin_get_player
 admin_list_audit
 admin_list_admins
 admin_set_role
+# --- admin content and moderation (20261022000001; same checks as above, roles listed in docs/ADMIN.md)
+admin_list_content
+admin_save_content
+admin_set_content_published
+admin_send_broadcast
+admin_list_broadcasts
+admin_list_world
+admin_set_route_state
+admin_set_server_state
+admin_list_reports
+admin_get_report
+admin_review_report
+admin_apply_sanction
+admin_lift_sanction
+admin_list_sanctions

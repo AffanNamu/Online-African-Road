@@ -75,6 +75,8 @@ function body(req) { return new Promise(r => { const c = []; req.on('data', d =>
 function json(res, code, obj) { const s = JSON.stringify(obj); res.writeHead(code, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(s), ...CORS }); res.end(s); }
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, apikey, content-type, prefer, accept, accept-profile, content-profile, x-client-info', 'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS' };
 
+const isBanned = async id => (await psql("select (coalesce(banned_until > now(), false))::text from auth.users where id = :'u'", { u: id })) === 'true';
+
 async function auth(req, res, url) {
   await ready;
   if (url.pathname === '/auth/v1/settings') return json(res, 200, { external: { google: false, apple: false, email: true }, disable_signup: false, mailer_autoconfirm: true });
@@ -95,6 +97,7 @@ async function auth(req, res, url) {
       const row = await psql('select user_id || \'|\' || salt || \'|\' || hash from e2e.users where email = :\'e\'', { e: email });
       const [id, salt, hash] = row ? row.split('|') : [];
       if (!row || hash !== hashPw(String(b.password || ''), salt)) return json(res, 400, { error: 'invalid_grant', error_description: 'Invalid login credentials' });
+      if (await isBanned(id)) return json(res, 400, { error_code: 'user_banned', msg: 'User is banned' });          // like GoTrue, which reads auth.users.banned_until
       return json(res, 200, await session(id, email));
     }
     if (grant === 'refresh_token') {
@@ -102,6 +105,7 @@ async function auth(req, res, url) {
       const row = await psql('update e2e.refresh_tokens set used = true where token = :\'t\' and not used returning user_id || \'|\' || aal', { t });
       if (!row) return json(res, 400, { error: 'invalid_grant', error_description: 'Invalid Refresh Token: Already Used' });
       const [uid, aal] = row.split('|');
+      if (await isBanned(uid)) return json(res, 400, { error_code: 'user_banned', msg: 'User is banned' });
       const email = await psql('select email from e2e.users where user_id = :\'u\'', { u: uid });
       return json(res, 200, await session(uid, email, aal));
     }
