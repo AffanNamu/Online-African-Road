@@ -177,7 +177,10 @@ select testkit.assert_eq('clients hold no write privilege on any table', (select
 select testkit.assert_eq('RLS is enabled on every table', (select count(*)::text from pg_class c where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and not c.relrowsecurity), '0');
 select testkit.assert_eq('no function is executable by anon', (select count(*)::text from pg_proc p where p.pronamespace = 'public'::regnamespace and has_function_privilege('anon', p.oid, 'execute')), '0');
 select testkit.assert_eq('no internal helper is executable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where proname like '\_%'), 'none');
-select testkit.assert_eq('no admin tool is executable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where proname like 'admin\_%' or proname in ('purge_old_data','sweep_stale_sessions','generate_jobs','cfg')), 'none');
+-- the eight reviewed admin-site endpoints (migration 20261021000001) check the caller's admin role and multi-factor sign-in themselves; tests/50_admin.sql proves it. Every OTHER operator tool stays unreachable.
+select testkit.assert_eq('no operator tool is executable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where (proname like 'admin\_%' and proname not in
+  ('admin_whoami','admin_health','admin_generate_jobs','admin_find_players','admin_get_player','admin_list_audit','admin_list_admins','admin_set_role'))
+  or proname in ('purge_old_data','sweep_stale_sessions','generate_jobs','cfg')), 'none');
 select testkit.assert_eq('trigger functions are not callable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where prosrc like '%TG_OP%' or proname in
   ('handle_new_user')), 'none');
 
