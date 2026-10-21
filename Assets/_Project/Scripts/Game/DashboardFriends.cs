@@ -67,7 +67,7 @@ namespace ARO.Game
         void FriOpened()
         {
             _frOpen = true; _frSortPop = false; Debug.Log("[Friends] opened");
-            LoadFriendsPage(false); _nextFr = Time.unscaledTime + FrPoll;
+            LoadFriendsPage(false); _nextFr = Time.unscaledTime + FrPoll; _nextChurn = 0f;
             if (_svc.Garage.Catalog.State == LoadState.Idle) _ = LoadCatalogForFriends();
             RefreshFriends();
         }
@@ -678,7 +678,7 @@ namespace ARO.Game
                     }
                 }
             }
-            if (FrChurn > 0f && now > _nextChurn) { _nextChurn = now + FrChurn; RefreshFriends(); }
+            if (FrChurn > 0f) { if (_nextChurn <= 0f) _nextChurn = now + 8f; if (now > _nextChurn) { _nextChurn = now + FrChurn; RefreshFriends(); } }      // the first churn comes 8 s after the page opens, so the test can read the button positions first
             if (now > _nextFr) { _nextFr = now + FrPoll; if (_modal == null) LoadFriendsPage(true); }
             // wheel scrolling
             float dy = 0f; Vector2 mp = Vector2.zero;

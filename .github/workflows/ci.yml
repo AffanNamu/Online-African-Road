@@ -152,6 +152,7 @@ jobs:
     name: WebGL build boots in a browser
     needs: unity
     runs-on: ubuntu-latest
+    timeout-minutes: 120      # the browser suite takes about 40 minutes; a hang (run 39191975590 sat in one step for 6 hours until GitHub's limit) now fails in two hours
     if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
     permissions: { contents: write }   # only to publish screenshots to the ci-screenshots branch
     env: { PGHOST: localhost, PGUSER: postgres, PGPASSWORD: postgres }

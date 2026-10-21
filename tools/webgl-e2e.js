@@ -1153,9 +1153,10 @@ const allErrors = [], allExc = [];
       await c.waitLog(new RegExp('\\[Dashboard\\] built for BrowserSt' + label + 'a'), 0, 150); await c.settle();
       let m = c.logs.length; await c.click('Nav_Friends'); await c.waitLog(/\[Friends\] friends state=ready count=1/, m, 90); await sleep(3000);
       const b = await c.page.locator('#unity-canvas').boundingBox(); let want = 'requests';
+      let missing = 0;
       for (let i = 0; i < N; i++) {
         const name = want === 'requests' ? 'Btn_FriTab_Requests' : 'Btn_FriTab_All', t = c.targets()[name];
-        if (!t) { await sleep(800); i--; if (i < -20) break; continue; }
+        if (!t) { if (++missing > 20) { console.log('      (the tab button position was never published; stopping)'); break; } await sleep(800); i--; continue; }
         await c.page.mouse.move(b.x + t.x * b.width, b.y + t.y * b.height); await sleep(200 + Math.floor(Math.random() * 400));    // a random wait, so the press lands at different moments of the 0.9 s cycle
         const m0 = c.logs.length; await c.page.mouse.down(); await sleep(150); await c.page.mouse.up();
         const got = await c.waitLog(new RegExp('\\[Friends\\] tab=' + want), m0, 3);
