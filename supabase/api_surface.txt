@@ -103,3 +103,12 @@ get_friends_leaderboard
 search_leaderboard
 complete_onboarding
 set_my_preferences
+# --- admin foundation (each checks the caller's admin role and multi-factor sign-in itself; a player gets 'not_admin')
+admin_whoami
+admin_health
+admin_generate_jobs
+admin_find_players
+admin_get_player
+admin_list_audit
+admin_list_admins
+admin_set_role

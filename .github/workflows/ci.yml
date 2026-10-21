@@ -45,6 +45,12 @@ jobs:
         run: |
           source /tmp/aro-e2e.env
           node tools/e2e/api_e2e.js
+      - name: Admin site end to end (real database, migrations and PostgREST; the auth service is a stand-in with real TOTP)
+        run: |
+          source /tmp/aro-e2e.env
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+          node tools/admin_e2e.js
       - name: Backend logs
         if: failure()
         run: tail -n 80 /tmp/aro-e2e-postgrest.log /tmp/aro-e2e-shim.log || true

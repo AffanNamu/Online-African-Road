@@ -29,4 +29,5 @@ run tests/45_person_vehicle.sql
 run tests/46_leaderboard_social.sql
 run tests/47_onboarding.sql
 run tests/48_nearby_opt_in.sql
+run tests/50_admin.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi
