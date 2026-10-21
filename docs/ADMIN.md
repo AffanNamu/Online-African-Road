@@ -42,8 +42,8 @@ Known limits, stated plainly: a refused attempt (not an admin, no second step, r
 5. Sign in, scan the QR code, check **Live health**.
 
 ## Tests
-* `supabase/tests/50_admin.sql`: about 100 assertions on the database side (role matrix, MFA, reasons, audit, roles, last owner, search, record, health, rate limit).
-* `supabase/tests/mutants_backend.py`: 33 mutants (remove the MFA check, widen a role, drop an audit call, allow audit updates, unmask e-mail, remove LIKE escaping, ...); every one must make the tests fail.
+* `supabase/tests/50_admin.sql`: 135 assertions on the database side (role matrix, MFA, reasons, audit, roles, last owner, search, record, health, rate limit).
+* `supabase/tests/mutants_backend.py`: 35 mutants (remove the MFA check, widen a role, drop an audit call, allow audit updates, unmask e-mail, remove LIKE escaping, ...); every one must make the tests fail.
 * `tools/admin_e2e.js`: 46 browser checks against a real database, real migrations and real PostgREST (the sign-in service is a stand-in with real TOTP): player refused, two-step set-up and sign-in, wrong codes refused, each role's sections, the server refusing what the page hides, reasons, masked e-mail, hostile text, audit contents, last owner. Runs in CI in the "Backend over HTTP" job.
 
 ## Not built yet (next milestones, in the order proposed)
