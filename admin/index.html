@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://*.supabase.co http://127.0.0.1:* http://localhost:*; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>African Roads Online - Admin</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header id="top" hidden>
+  <strong>African Roads Online <span class="muted">admin</span></strong>
+  <nav id="tabs" aria-label="Sections"></nav>
+  <span id="who" class="muted"></span>
+  <button id="signout" type="button" class="ghost">Sign out</button>
+</header>
+<main id="main" aria-live="polite"></main>
+<dialog id="ask"><form method="dialog" id="askform"><h2 id="asktitle"></h2><p id="asktext" class="muted"></p><div id="askfields"></div><p id="askerr" class="err" role="alert"></p><menu><button value="cancel" type="button" id="askcancel" class="ghost">Cancel</button><button value="ok" id="askok">Continue</button></menu></form></dialog>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

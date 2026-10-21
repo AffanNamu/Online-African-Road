@@ -43,3 +43,4 @@ supabase/.branches/
 tools/semcheck/obj/
 tools/semcheck/bin/
 __pycache__/
+admin/config.js

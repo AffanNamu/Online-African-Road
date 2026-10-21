@@ -39,15 +39,35 @@ function psql(sql, vars = {}) {
 const ready = psql(`
   create schema if not exists e2e;
   create table if not exists e2e.users (user_id uuid primary key, email text unique not null, salt text not null, hash text not null);
-  create table if not exists e2e.refresh_tokens (token text primary key, user_id uuid not null, used boolean not null default false);`);
+  create table if not exists e2e.refresh_tokens (token text primary key, user_id uuid not null, used boolean not null default false);
+  alter table e2e.refresh_tokens add column if not exists aal text not null default 'aal1';
+  create table if not exists e2e.factors (id uuid primary key default gen_random_uuid(), user_id uuid not null, secret_hex text not null, friendly_name text not null default '', status text not null default 'unverified');`);
 
 let TTL = 3600;                                   // seconds a new access token lives (tests shorten it to exercise renewal and expiry)
+
+// ------------------------------------------------------------------ TOTP (RFC 6238, SHA-1, 6 digits, 30 s) for the stand-in MFA endpoints
+const B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function base32(buf) { let bits = 0, val = 0, out = ''; for (const b of buf) { val = (val << 8) | b; bits += 8; while (bits >= 5) { out += B32[(val >>> (bits - 5)) & 31]; bits -= 5; } val &= (1 << bits) - 1; } if (bits > 0) out += B32[(val << (5 - bits)) & 31]; return out; }
+function totp(secret, atMs) {
+  const ctr = Buffer.alloc(8); ctr.writeBigUInt64BE(BigInt(Math.floor(atMs / 30000)));
+  const h = crypto.createHmac('sha1', secret).update(ctr).digest(), o = h[h.length - 1] & 15;
+  return String((((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3]) % 1000000).padStart(6, '0');
+}
+const totpOk = (secret, code) => [-1, 0, 1].some(d => totp(secret, Date.now() + d * 30000) === String(code));
+function bearer(req) {
+  const t = String(req.headers.authorization || '').replace(/^Bearer /, ''), [h, p, sig] = t.split('.');
+  if (!sig || crypto.createHmac('sha256', SECRET).update(h + '.' + p).digest('base64url') !== sig) return null;
+  const c = JSON.parse(Buffer.from(p, 'base64url').toString()); return c.exp > Date.now() / 1000 && c.role === 'authenticated' ? c : null;
+}
+const challenges = new Map();      // challenge id -> factor id (in memory: this is a throw-away server)
+
 const hashPw = (pw, salt) => crypto.scryptSync(pw, salt, 32).toString('hex');
-function session(userId, email) {
+function session(userId, email, aal = 'aal1') {
   const now = Math.floor(Date.now() / 1000);
-  const access = sign({ aud: 'authenticated', role: 'authenticated', sub: userId, email, iss: 'aro-e2e', iat: now, exp: now + TTL, session_id: crypto.randomUUID() }); // like GoTrue: every session's token is distinct, even within one second
+  const amr = aal === 'aal2' ? [{ method: 'totp', timestamp: now }, { method: 'password', timestamp: now }] : [{ method: 'password', timestamp: now }];
+  const access = sign({ aud: 'authenticated', role: 'authenticated', sub: userId, email, iss: 'aro-e2e', iat: now, exp: now + TTL, session_id: crypto.randomUUID(), aal, amr });   // like GoTrue: every session carries its assurance level
   const refresh = crypto.randomBytes(24).toString('hex');
-  return psql('insert into e2e.refresh_tokens(token, user_id) values (:\'t\', :\'u\')', { t: refresh, u: userId })
+  return psql('insert into e2e.refresh_tokens(token, user_id, aal) values (:\'t\', :\'u\', :\'a\')', { t: refresh, u: userId, a: aal })
     .then(() => ({ access_token: access, token_type: 'bearer', expires_in: TTL, refresh_token: refresh, user: { id: userId, email } }));
 }
 
@@ -79,11 +99,42 @@ async function auth(req, res, url) {
     }
     if (grant === 'refresh_token') {
       const t = String(b.refresh_token || '');
-      const row = await psql('update e2e.refresh_tokens set used = true where token = :\'t\' and not used returning user_id', { t });
+      const row = await psql('update e2e.refresh_tokens set used = true where token = :\'t\' and not used returning user_id || \'|\' || aal', { t });
       if (!row) return json(res, 400, { error: 'invalid_grant', error_description: 'Invalid Refresh Token: Already Used' });
-      const email = await psql('select email from e2e.users where user_id = :\'u\'', { u: row });
-      return json(res, 200, await session(row, email));
+      const [uid, aal] = row.split('|');
+      const email = await psql('select email from e2e.users where user_id = :\'u\'', { u: uid });
+      return json(res, 200, await session(uid, email, aal));
     }
+  }
+  // ---- stand-in MFA endpoints (same paths and shapes as GoTrue's)
+  const who = bearer(req);
+  if (url.pathname === '/auth/v1/user' && req.method === 'GET') {
+    if (!who) return json(res, 401, { msg: 'invalid JWT' });
+    const rows = await psql("select coalesce(string_agg(id || ',' || friendly_name || ',' || status, ';'), '') from e2e.factors where user_id = :'u'", { u: who.sub });
+    const factors = rows ? rows.split(';').map(r => { const [id, name, status] = r.split(','); return { id, friendly_name: name, factor_type: 'totp', status }; }) : [];
+    return json(res, 200, { id: who.sub, email: who.email, factors });
+  }
+  if (url.pathname === '/auth/v1/factors' && req.method === 'POST') {
+    if (!who) return json(res, 401, { msg: 'invalid JWT' });
+    if (b.factor_type !== 'totp') return json(res, 422, { msg: 'only totp is supported' });
+    await psql("delete from e2e.factors where user_id = :'u' and status = 'unverified'", { u: who.sub });
+    const secret = crypto.randomBytes(20), id = await psql("insert into e2e.factors(user_id, secret_hex, friendly_name) values (:'u', :'s', :'n') returning id", { u: who.sub, s: secret.toString('hex'), n: String(b.friendly_name || 'Authenticator').slice(0, 40) });
+    const b32 = base32(secret), uri = `otpauth://totp/ARO-E2E:${who.email}?secret=${b32}&issuer=ARO-E2E`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" fill="white"/><text x="6" y="60" font-size="10">QR (test double)</text></svg>`;
+    return json(res, 200, { id, type: 'totp', friendly_name: b.friendly_name || '', totp: { qr_code: 'data:image/svg+xml;utf-8,' + encodeURIComponent(svg), secret: b32, uri } });
+  }
+  const fm = /^\/auth\/v1\/factors\/([0-9a-f-]{36})\/(challenge|verify)$/.exec(url.pathname);
+  if (fm && req.method === 'POST') {
+    if (!who) return json(res, 401, { msg: 'invalid JWT' });
+    const row = await psql("select secret_hex || '|' || status from e2e.factors where id = :'f' and user_id = :'u'", { f: fm[1], u: who.sub });
+    if (!row) return json(res, 404, { code: 'mfa_factor_not_found', msg: 'MFA factor not found' });
+    const [secretHex] = row.split('|');
+    if (fm[2] === 'challenge') { const cid = crypto.randomUUID(); challenges.set(cid, fm[1]); return json(res, 200, { id: cid, type: 'totp', expires_at: Math.floor(Date.now() / 1000) + 300 }); }
+    if (challenges.get(String(b.challenge_id)) !== fm[1]) return json(res, 400, { code: 'mfa_challenge_expired', msg: 'MFA challenge has expired, verify against another challenge or create a new challenge.' });
+    if (!totpOk(Buffer.from(secretHex, 'hex'), b.code)) return json(res, 400, { code: 'mfa_verification_failed', msg: 'Invalid TOTP code entered' });
+    challenges.delete(String(b.challenge_id));
+    await psql("update e2e.factors set status = 'verified' where id = :'f'", { f: fm[1] });
+    return json(res, 200, await session(who.sub, who.email, 'aal2'));
   }
   if (url.pathname === '/auth/v1/recover') return json(res, 200, {});
   return json(res, 404, { msg: 'not found' });
@@ -92,7 +143,8 @@ async function auth(req, res, url) {
 function proxy(req, res) {
   const headers = { ...req.headers, host: REST.host };
   const up = http.request({ hostname: REST.hostname, port: REST.port, path: req.url.replace(/^\/rest\/v1/, ''), method: req.method, headers }, r => {
-    res.writeHead(r.statusCode, { ...r.headers, ...CORS }); r.pipe(res);
+    const h = { ...r.headers }; for (const k of Object.keys(h)) if (k.toLowerCase().startsWith('access-control-')) delete h[k];   // PostgREST adds its own CORS headers; two copies make browsers refuse the answer (the game is same-origin and never noticed)
+    res.writeHead(r.statusCode, { ...h, ...CORS }); r.pipe(res);
   });
   up.on('error', e => json(res, 502, { message: 'PostgREST unreachable: ' + e.message }));
   req.pipe(up);
@@ -112,6 +164,11 @@ http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://x');
     if (req.method === 'OPTIONS') { res.writeHead(204, CORS); return res.end(); }
     if (url.pathname === '/e2e/ttl' && req.method === 'POST') { TTL = Math.max(10, +url.searchParams.get('seconds') || 3600); return json(res, 200, { ttl: TTL }); }
+    if (url.pathname === '/e2e/totp') {      // test hook: the current code for a base32 secret the site displayed (what an authenticator app would show)
+      const sec = String(url.searchParams.get('secret') || '').toUpperCase().replace(/=+$/, ''); let bits = 0, val = 0; const out = [];
+      for (const ch of sec) { const v = B32.indexOf(ch); if (v < 0) return json(res, 400, { msg: 'bad secret' }); val = (val << 5) | v; bits += 5; if (bits >= 8) { out.push((val >>> (bits - 8)) & 255); bits -= 8; val &= (1 << bits) - 1; } }
+      return json(res, 200, { code: totp(Buffer.from(out), Date.now()) });
+    }
     if (url.pathname === '/e2e/health') return json(res, 200, { ok: true, anon_key: ANON });
     if (url.pathname.startsWith('/auth/v1/')) return await auth(req, res, url);
     if (url.pathname.startsWith('/rest/v1/')) return proxy(req, res);
