@@ -286,10 +286,11 @@
     }
     async function toggle(c) {
       const a = await ask({ title: (c.published ? 'Unpublish ' : 'Publish ') + c.id, text: c.published ? 'Players stop seeing it.' : 'Players see it once its start time has passed.', ok: c.published ? 'Unpublish' : 'Publish', fields: [reasonField('Reason')] }); if (!a) return;
-      try { await rpc('admin_set_content_published', { p_id: c.id, p_published: !c.published, p_reason: a.reason }); out.textContent = c.id + (c.published ? ' unpublished.' : ' published.'); out.className = 'ok'; await load(); } catch (e) { out.textContent = words(e); out.className = 'err'; }
+      out.textContent = ''; out.className = 'muted';
+      try { await rpc('admin_set_content_published', { p_id: c.id, p_published: !c.published, p_reason: a.reason }); await load(); out.textContent = c.id + (c.published ? ' unpublished.' : ' published.'); out.className = 'ok'; } catch (e) { out.textContent = words(e); out.className = 'err'; }
     }
     function edit(c) {
-      clear(editor); out.textContent = '';
+      clear(editor); out.textContent = ''; out.className = 'muted';
       const isNew = !c, v = c || { kind: 'news', category: 'update', priority: 0, published: false };
       const f = {};
       const mk = (name, tag, attrs, kids) => (f[name] = el(tag, Object.assign({ id: 'f_' + name }, attrs), kids || null));
@@ -327,7 +328,7 @@
           await rpc('admin_save_content', { p_id: f.id.value.trim(), p_kind: f.kind.value, p_category: f.category.value, p_title: f.title.value, p_body: f.body.value, p_image_key: f.image.value.trim() || null, p_priority: parseInt(f.priority.value || '0', 10),
             p_starts_at: dtIso(f.from.value), p_ends_at: dtIso(f.until.value), p_published: f.published.checked, p_eyebrow: hero ? f.eyebrow.value : null, p_headline: hero ? f.headline.value : null, p_headline_accent: hero ? f.accent.value : null,
             p_action: hero ? f.action.value : null, p_button: hero ? f.button.value : null, p_reason: f.reason.value });
-          out.textContent = 'Saved ' + f.id.value.trim() + '.'; out.className = 'ok'; clear(editor); await load();
+          clear(editor); await load(); out.textContent = 'Saved ' + f.id.value.trim() + '.'; out.className = 'ok';
         } catch (e) { err.textContent = words(e); btn.disabled = false; }
       } },
         el('div', { class: 'row' }, field('Kind', f.kind, 'f_kind'), field('Id (cannot change later)', f.id, 'f_id'), field('Category', f.category, 'f_category'), field('Priority (higher shows first)', f.priority, 'f_priority')),
@@ -351,10 +352,10 @@
       hist.append(el('h2', {}, 'Sent'), table(['When', 'Title', 'Message', 'Recipients', 'Reason'], r.items.map(b => [when(b.at), b.title, b.message, num(b.recipients), b.reason || ''])));
     }
     const form = el('form', { id: 'bcform', onsubmit: async ev => {
-      ev.preventDefault(); err.textContent = ''; out.textContent = '';
+      ev.preventDefault(); err.textContent = ''; out.textContent = ''; out.className = 'muted';
       let total = null; try { total = (await rpc('admin_health')).players.total; } catch (e) { total = null; }
       const a = await ask({ title: 'Send to every player?', text: 'This sends the notification to ' + (total == null ? 'every player' : num(total) + ' players') + ' and cannot be recalled. At most 3 can be sent an hour.', ok: 'Send to everyone', fields: [] }); if (!a) return;
-      try { const r = await rpc('admin_send_broadcast', { p_title: title.value, p_message: msg.value, p_reason: reason.value }); out.textContent = 'Sent to ' + num(r.recipients) + ' players.'; out.className = 'ok'; title.value = ''; msg.value = ''; reason.value = ''; preview(); await load(); }
+      try { const r = await rpc('admin_send_broadcast', { p_title: title.value, p_message: msg.value, p_reason: reason.value }); title.value = ''; msg.value = ''; reason.value = ''; preview(); await load(); out.textContent = 'Sent to ' + num(r.recipients) + ' players.'; out.className = 'ok'; }
       catch (e) { err.textContent = words(e); }
     } }, field('Title', title, 'bc_title'), field('Message', msg, 'bc_message'), field('Reason', reason, 'bc_reason'), el('h2', {}, 'Preview'), prev, err, el('button', { type: 'submit', id: 'bcsend' }, 'Send...'));
     form.addEventListener('input', preview); preview();
@@ -372,17 +373,17 @@
         el('h2', {}, 'Servers (' + num(r.online_now) + ' players online now)'), table(['Id', 'Name', 'Region', 'Capacity', 'Status', ''], r.servers.map(x => [el('code', {}, x.id), x.name, x.region || '-', x.capacity == null ? 'no limit' : x.capacity, badge(x.status),
           el('button', { type: 'button', class: 'ghost', 'data-server': x.id, onclick: () => editServer(x) }, 'Change')])));
     }
-    async function run(fn) { try { await fn(); out.className = 'ok'; await load(); } catch (e) { out.textContent = words(e); out.className = 'err'; } }
+    async function run(fn) { out.textContent = ''; out.className = 'muted'; try { const msg = await fn(); await load(); out.textContent = msg; out.className = 'ok'; } catch (e) { out.textContent = words(e); out.className = 'err'; } }
     async function editRoute(x) {
       const a = await ask({ title: 'Route ' + x.code, text: 'Locking a route stops new jobs on it; players already driving are not interrupted.', ok: 'Save', fields: [{ name: 'status', label: 'Status', type: 'select', options: ['OPEN', 'PLANNED', 'LOCKED'], value: x.status },
         { name: 'rank', label: 'Player level needed (1 to 100)', type: 'number', value: String(x.unlock_level), min: 1, maxv: 100, max: 3, check: v => (!/^\d+$/.test(v) || +v < 1 || +v > 100 ? 'Enter a number from 1 to 100.' : '') }, reasonField()] }); if (!a) return;
-      await run(async () => { const r = await rpc('admin_set_route_state', { p_code: x.code, p_status: a.status, p_unlock_rank: +a.rank, p_reason: a.reason }); out.textContent = x.code + ' is now ' + r.status + ' (level ' + r.unlock_level + ').'; });
+      await run(async () => { const r = await rpc('admin_set_route_state', { p_code: x.code, p_status: a.status, p_unlock_rank: +a.rank, p_reason: a.reason }); return x.code + ' is now ' + r.status + ' (level ' + r.unlock_level + ').'; });
     }
     async function editServer(x) {
       const a = await ask({ title: 'Server ' + x.name, text: 'Maintenance shows players that the server is down for now. Capacity 0 means no limit.', ok: 'Save', fields: [{ name: 'status', label: 'Status', type: 'select', options: ['ONLINE', 'MAINTENANCE'], value: x.status },
         { name: 'capacity', label: 'Capacity (0 = no limit)', type: 'number', value: x.capacity == null ? '0' : String(x.capacity), min: 0, maxv: 100000, max: 6, check: v => (!/^\d+$/.test(v) || +v > 100000 ? 'Enter a number from 0 to 100000.' : '') },
         { name: 'region', label: 'Region', value: x.region || '', max: 40 }, reasonField()] }); if (!a) return;
-      await run(async () => { const r = await rpc('admin_set_server_state', { p_id: x.id, p_status: a.status, p_capacity: +a.capacity, p_region: a.region || null, p_reason: a.reason }); out.textContent = x.name + ' is now ' + r.status + '.'; });
+      await run(async () => { const r = await rpc('admin_set_server_state', { p_id: x.id, p_status: a.status, p_capacity: +a.capacity, p_region: a.region || null, p_reason: a.reason }); return x.name + ' is now ' + r.status + '.'; });
     }
     await load();
   }
@@ -412,7 +413,7 @@
       const kinds = me.role === 'owner' ? ['mute', 'suspend', 'ban'] : ['mute', 'suspend'];
       box.append(el('p', { class: 'acts' }, kinds.map(k => el('button', { type: 'button', class: k === 'ban' ? 'danger' : 'ghost', 'data-sanction': k, onclick: () => act(() => applySanction(playerId, name, k, null)) }, k === 'ban' ? 'Ban...' : k === 'mute' ? 'Mute...' : 'Suspend...'))), out);
     }
-    async function act(fn) { out.textContent = ''; try { const r = await fn(); if (r) { out.textContent = 'Done.'; out.className = 'ok'; } await load(); } catch (e) { out.textContent = words(e); out.className = 'err'; } }
+    async function act(fn) { out.textContent = ''; out.className = 'muted'; try { const r = await fn(); await load(); if (r) { out.textContent = 'Done.'; out.className = 'ok'; } } catch (e) { out.textContent = words(e); out.className = 'err'; } }
     load().catch(e => { box.append(el('p', { class: 'err' }, words(e))); });
     return box;
   }
@@ -427,7 +428,7 @@
       if (!r.items.length) list.append(el('p', { class: 'muted' }, state.value === 'open' ? 'Nothing needs a decision.' : 'Nothing to show.'));
       for (const x of r.items) {
         const ctx = el('div', { class: 'ctx', hidden: true });
-        const act = fn => async () => { out.textContent = ''; try { const res = await fn(); if (res) { out.textContent = 'Done.'; out.className = 'ok'; await load(); } } catch (e) { show(e); } };
+        const act = fn => async () => { out.textContent = ''; out.className = 'muted'; try { const res = await fn(); if (res) { await load(); out.textContent = 'Done.'; out.className = 'ok'; } } catch (e) { show(e); } };
         const decide = decision => act(async () => {
           const a = await ask({ title: decision === 'remove' ? 'Remove this line' : 'Dismiss the reports', text: decision === 'remove' ? 'The line stays hidden for everyone.' : 'The line is shown again. A new report would bring it back here.', ok: decision === 'remove' ? 'Remove' : 'Dismiss', fields: [reasonField('Reason')] });
           return a && rpc('admin_review_report', { p_message: x.message_id, p_decision: decision, p_reason: a.reason });
@@ -458,7 +459,7 @@
     async function load() {
       const r = await rpc('admin_list_sanctions', { p_state: state.value }); clear(list);
       list.append(table(['Player', 'Restriction', 'Ends', 'Reason', 'By', 'Status', ''], r.items.map(s => [s.player_name || el('code', {}, s.player_id), badge(s.kind), until(s), s.reason, s.created_by_name || '-', s.active ? 'active' : s.lifted_at ? 'lifted: ' + (s.lift_reason || '') : 'ended',
-        s.active ? el('button', { type: 'button', class: 'ghost', 'data-lift': s.id, onclick: async () => { out.textContent = ''; try { if (await liftSanction(s)) { out.textContent = 'Lifted.'; out.className = 'ok'; await load(); } } catch (e) { show(e); } } }, 'Lift') : ''])));
+        s.active ? el('button', { type: 'button', class: 'ghost', 'data-lift': s.id, onclick: async () => { out.textContent = ''; out.className = 'muted'; try { if (await liftSanction(s)) { await load(); out.textContent = 'Lifted.'; out.className = 'ok'; } } catch (e) { show(e); } } }, 'Lift') : ''])));
     }
     await load();
   }
