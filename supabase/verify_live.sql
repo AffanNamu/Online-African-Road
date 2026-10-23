@@ -23,6 +23,13 @@ do $$ declare bad text; n int; begin
    where s.nspname = 'public' and p.prosecdef and not coalesce(p.proconfig::text like '%search_path=public%', false);
   if bad is not null then raise exception 'SECURITY DEFINER without pinned search_path: %', bad; end if;
 
+  -- bans and suspensions must be enforced on every request: PostgREST has to be pointed at the hook (skipped only on a database with no Supabase `authenticator` role)
+  if exists (select 1 from pg_roles where rolname = 'authenticator') and not exists (
+       select 1 from pg_db_role_setting s join pg_roles r on r.oid = s.setrole
+        where r.rolname = 'authenticator' and exists (select 1 from unnest(s.setconfig) c where c = 'pgrst.db_pre_request=public.enforce_account_status')) then
+    raise exception 'ban enforcement hook is NOT configured: run  alter role authenticator set pgrst.db_pre_request = ''public.enforce_account_status''; notify pgrst, ''reload config'';  (see docs/ADMIN_GO_LIVE.md)';
+  end if;
+
   select count(*) into n from vehicle_definitions; if n < 3 then raise exception 'seed missing: % vehicle definitions', n; end if;
   select count(*) into n from bus_route_stops;     if n < 3 then raise exception 'seed missing: bus route stops'; end if;
   raise notice 'live schema OK: RLS everywhere, anon has nothing, clients cannot write tables, only intended RPCs executable';

@@ -13,7 +13,7 @@ for f in supabase/tests/00_auth_stub.sql supabase/migrations/*.sql supabase/seed
   psql -q -v ON_ERROR_STOP=1 -d $DB -f "$f" >/dev/null
 done
 DB_URL="postgresql://$PGUSER:$PGPASSWORD@$PGHOST/$DB"
-PGRST_DB_URI="$DB_URL" PGRST_DB_SCHEMAS=public PGRST_DB_ANON_ROLE=anon PGRST_JWT_SECRET="$SECRET" PGRST_SERVER_HOST=127.0.0.1 PGRST_SERVER_PORT="$REST_PORT" PGRST_DB_POOL=10 \
+PGRST_DB_PRE_REQUEST=public.enforce_account_status PGRST_DB_URI="$DB_URL" PGRST_DB_SCHEMAS=public PGRST_DB_ANON_ROLE=anon PGRST_JWT_SECRET="$SECRET" PGRST_SERVER_HOST=127.0.0.1 PGRST_SERVER_PORT="$REST_PORT" PGRST_DB_POOL=10 \
   nohup "$POSTGREST" > /tmp/aro-e2e-postgrest.log 2>&1 & echo $! > /tmp/aro-e2e.pids
 E2E_PORT="$PORT" E2E_REST="http://127.0.0.1:$REST_PORT" PGRST_JWT_SECRET="$SECRET" E2E_DB_URL="$DB_URL" E2E_BUILD_DIR="${E2E_BUILD_DIR:-}" \
   nohup node tools/e2e/server.js > /tmp/aro-e2e-shim.log 2>&1 & echo $! >> /tmp/aro-e2e.pids

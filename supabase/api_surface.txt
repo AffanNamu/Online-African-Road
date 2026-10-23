@@ -127,3 +127,6 @@ admin_review_report
 admin_apply_sanction
 admin_lift_sanction
 admin_list_sanctions
+# --- immediate ban enforcement (20261023000001): the PostgREST pre-request hook and the player's own restriction view
+enforce_account_status
+get_my_restrictions

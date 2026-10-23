@@ -219,6 +219,7 @@ async function run() {
     await askReason(p, 'e2e: abuse in chat'); await p.waitForSelector('#reportout.ok');
     const m1 = await mk(PL.bad, 'post_convoy_message', { p_body: 'still here' }); check(m1.status >= 400 && /muted/.test(JSON.stringify(m1.body)), 'a muted player cannot chat', JSON.stringify(m1));
     check((await mk(PL.bad, 'start_session', {})).status === 200, 'a muted player can still play');
+    check((await mk(PL.bad, 'get_dashboard_summary', {})).status === 200, 'a muted player can still use the rest of the API (a mute only stops chat)');
     check(+db(`select count(*) from notifications where player_id = '${PL.bad.id}' and title = 'Chat muted'`) === 1, 'the player was told about the mute');
     await p.click(`[data-remove="${badId}"]`); await askReason(p, 'e2e: abusive'); await p.waitForSelector('#reportout.ok');
     check(db(`select moderation from convoy_messages where id = ${badId}`) === 'removed', 'removing keeps the line hidden for everyone');
@@ -233,20 +234,33 @@ async function run() {
     await p.click('[data-sanction="suspend"]'); await p.waitForSelector('dialog[open]'); await askReason(p, 'e2e: repeat offence'); await p.waitForSelector('#sanctionout.ok');
     const s1 = await mk(PL.bad, 'start_session', {}); check(s1.status >= 400 && /account_suspended/.test(JSON.stringify(s1.body)), 'a suspended player cannot start a session', JSON.stringify(s1));
     check(db(`select (banned_until > now() + interval '70 hours')::text from auth.users where id = '${PL.bad.id}'`) === 'true', 'the sign-in service is told (banned_until is set)');
+    // the token the player already holds stops working at once, on every endpoint, not only on the two the triggers guard
+    for (const [fn, args] of [['get_dashboard_summary', {}], ['get_my_wallet', {}], ['heartbeat', { p_session: '00000000-0000-0000-0000-000000000000' }], ['list_convoy_messages', {}], ['get_my_profile', {}]]) {
+      const r = await mk(PL.bad, fn, args); check(r.status >= 400 && /account_suspended/.test(JSON.stringify(r.body)), 'a suspended player\'s existing token is refused at once: ' + fn, JSON.stringify(r)); }
+    { const r = await mk(PL.bad, 'get_my_restrictions', {}); check(r.status === 200 && r.body.items[0].kind === 'suspend' && !('reason' in r.body.items[0]), 'but they can still see what is in force (and not the moderator\'s reason)', JSON.stringify(r)); }
+    { const r = await mk(PL.bad, 'admin_whoami', {}); check(r.status === 200 && r.body.is_admin === false, 'the admin endpoints are not blocked by the hook (a player still gets nothing from them)', JSON.stringify(r)); }
     const si = await fetch(BASE + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: PL.bad.email, password: PL.bad.password }) });
     check(si.status === 400 && /banned/.test(await si.text()), 'a suspended player cannot sign in again');
     const b1 = await rpcAs(tok, 'admin_apply_sanction', { p_player: PL.cc.id, p_kind: 'ban', p_hours: null, p_reason: 'bypassing the page' }); check(b1.status >= 400 && /not_allowed/.test(JSON.stringify(b1.body)), 'the server refuses support a ban', JSON.stringify(b1));
     const b2 = await rpcAs(tok, 'admin_apply_sanction', { p_player: U.own.id, p_kind: 'mute', p_hours: 1, p_reason: 'restricting an admin' }); check(b2.status >= 400 && /cannot_sanction_admin/.test(JSON.stringify(b2.body)), 'administrators cannot be restricted', JSON.stringify(b2));
+    // administrative recovery: an admin restricted by SQL (the site itself refuses to) is blocked from the game but never from the admin endpoints
+    db(`insert into player_sanctions(player_id, kind, reason, created_by, expires_at) values ('${U.sup.id}', 'suspend', 'e2e: set in SQL', '${U.own.id}', now() + interval '1 day')`);
+    { const g = await rpcAs(tok, 'get_dashboard_summary', {}); check(g.status >= 400 && /account_suspended/.test(JSON.stringify(g.body)), 'a restricted admin is blocked from the game endpoints', JSON.stringify(g));
+      const a = await rpcAs(tok, 'admin_list_sanctions', {}); check(a.status === 200, 'but still reaches the admin endpoints (recovery stays possible)', JSON.stringify(a));
+      const l = await rpcAs(tok, 'admin_lift_sanction', { p_id: db(`select id from player_sanctions where player_id = '${U.sup.id}' and lifted_at is null`), p_reason: 'e2e: recovering' }); check(l.status === 200, 'and can lift the restriction through the site', JSON.stringify(l));
+      check((await rpcAs(tok, 'get_dashboard_summary', {})).status === 200, 'after which the game endpoints work again'); }
     await p.context().close(); }
   { // the owner bans; only an owner can lift it
     await own.click('#tab_players'); await own.fill('#q', 'AdmE2eDd'); await own.click('button[type=submit]'); await own.waitForSelector('[data-open]'); await own.click('[data-open]'); await askReason(own, 'e2e: review'); await own.waitForSelector('[data-sanction="ban"]');
     await own.click('[data-sanction="ban"]'); await askReason(own, 'e2e: cheating'); await own.waitForSelector('#sanctionout.ok');
     check(db(`select (banned_until > now() + interval '50 years')::text from auth.users where id = '${PL.dd.id}'`) === 'true', 'a ban has no end');
+    { const r = await mk(PL.dd, 'get_dashboard_summary', {}); check(r.status >= 400 && /account_suspended/.test(JSON.stringify(r.body)), 'a banned player\'s existing token is refused at once', JSON.stringify(r)); }
     const s2 = await mk(PL.dd, 'start_session', {}); check(s2.status >= 400 && /account_suspended/.test(JSON.stringify(s2.body)), 'a banned player cannot start a session');
     const p = await rolePageAgain(U.sup); await p.click('#tab_sanctions'); await p.waitForSelector('[data-lift]'); await p.click('[data-lift]'); await askReason(p, 'e2e: support tries'); await p.waitForSelector('#sanctionsout.err');
     check(/not allowed/.test(await p.textContent('#sanctionsout')), 'support cannot lift a ban (the server says so)'); await p.context().close();
     await own.click('#tab_sanctions'); await own.waitForSelector('[data-lift]'); await own.locator('tr:has-text("AdmE2eDd") [data-lift]').click(); await askReason(own, 'e2e: appeal accepted'); await own.waitForSelector('#sanctionsout.ok');
     check((await mk(PL.dd, 'start_session', {})).status === 200, 'after an owner lifts the ban they can play again');
+    check((await mk(PL.dd, 'get_dashboard_summary', {})).status === 200, 'and the same token works again on every endpoint');
     check(db(`select (banned_until is null)::text from auth.users where id = '${PL.dd.id}'`) === 'true', 'and the sign-in block is cleared'); }
 
   check(errors.length === 0, 'no script errors on any page', errors.join(' | '));

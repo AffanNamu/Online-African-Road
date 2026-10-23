@@ -2,6 +2,8 @@
 do $$ begin
   if not exists (select 1 from pg_roles where rolname = 'anon') then create role anon nologin; end if;
   if not exists (select 1 from pg_roles where rolname = 'authenticated') then create role authenticated nologin; end if;
+  if not exists (select 1 from pg_roles where rolname = 'authenticator') then create role authenticator nologin; end if;     -- the role PostgREST connects as on Supabase; the account-status hook is configured on it
+  alter role authenticator reset pgrst.db_pre_request;      -- role settings are cluster-wide: start every test database from a clean slate so the migration must set it itself
 end $$;
 create schema if not exists auth;
 create table if not exists auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb default '{}'::jsonb, banned_until timestamptz);

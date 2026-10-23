@@ -20,7 +20,9 @@ q -f tests/00_auth_stub.sql >/dev/null
 
 # ---- 1. build the "existing production" state: only the first six migrations + the original seed, applied by apply.sh
 mkdir -p "$TMP/old/migrations" "$TMP/old/tests"
-cp seed.sql verify_live.sql api_surface.txt "$TMP/old/"
+cp seed.sql api_surface.txt "$TMP/old/"
+# the live check as it was before the ban-enforcement hook existed (that check is exercised by the real run below)
+sed '/bans and suspensions must be enforced/,/^  end if;$/d' verify_live.sql > "$TMP/old/verify_live.sql"
 # the production tool as it was before the backend foundation: same script, minus the new seed files
 sed -e 's/seed.sql, seed_world.sql, seed_content.sql/seed.sql/' -e '/^q -f seed_world.sql$/d' -e '/^q -f seed_content.sql$/d' apply.sh > "$TMP/old/apply.sh"
 for f in migrations/20261009*.sql; do cp "$f" "$TMP/old/migrations/"; done
