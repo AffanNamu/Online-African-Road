@@ -17,6 +17,13 @@ namespace ARO.NetCore
         public float[] WheelVisualRadius = new float[0], WheelColliderRadius = new float[0];
         public int[] CollisionHullTriangles = new int[0];
         public bool CenterOfMassInsideBounds = true;
+
+        // Provenance (the quality gate, docs/ASSET_PIPELINE_PLAN.md section 14). JsonUtility-compatible: the ARO 3D Studio sidecar or the converter fills them.
+        public string Origin = "";                                 // licensed | commissioned | generated | fixture
+        public string Source = "";                                 // the listing, the contract, or the generator and its version
+        public bool GeneratorTermsConfirmed;                       // generated only: the generator's terms allow commercial use and the owner confirmed it
+        public bool Retopologised, UvsAuthored;                    // generated only: a person rebuilt the topology and the UVs (an AI mesh is a blockout, not an asset)
+        public string ReviewedBy = ""; public bool VisualReviewPassed;   // generated only: a named person compared it with the reference and accepted the look
     }
 
     public enum AssetSeverity { Error, Warning }
@@ -46,6 +53,7 @@ namespace ARO.NetCore
         {
             var f = new List<AssetFinding>();
             if (m == null || string.IsNullOrEmpty(m.Id)) { Add(f, AssetSeverity.Error, "identity", "the asset has no id"); return f; }
+            Provenance(m, f);
             if (licenceKnown == null || !licenceKnown(m.Id)) Add(f, AssetSeverity.Error, "licence", $"{m.Id} has no confirmed licence entry (docs/ASSET_LICENSES.md); it may not be used or distributed");
 
             // triangles
@@ -92,6 +100,49 @@ namespace ARO.NetCore
             return f;
         }
 
+        /// <summary>Where the model came from, and what that origin must additionally prove. A generated model is a candidate, never an automatic acceptance.</summary>
+        static void Provenance(VehicleAssetManifest m, List<AssetFinding> f)
+        {
+            string o = (m.Origin ?? "").Trim();
+            if (o != Licensed && o != Commissioned && o != Generated && o != Fixture) { Add(f, AssetSeverity.Error, "provenance", $"unknown origin '{m.Origin}': it must be licensed, commissioned, generated or fixture"); return; }
+            if (o == Fixture) { Add(f, AssetSeverity.Error, "gate", "a fixture (for example the TITAN reference) only exercises the pipeline: it is never accepted for gameplay"); return; }
+            if (string.IsNullOrWhiteSpace(m.Source)) Add(f, AssetSeverity.Error, "provenance", "no source recorded (the listing, the contract, or the generator and its version)");
+            if (o != Generated) return;
+            if (!m.GeneratorTermsConfirmed) Add(f, AssetSeverity.Error, "provenance", "the generator's terms have not been confirmed to allow commercial use of its output");
+            if (!m.Retopologised) Add(f, AssetSeverity.Error, "generated", "the topology was not rebuilt by a person: a generated mesh is a blockout, not an asset");
+            if (!m.UvsAuthored) Add(f, AssetSeverity.Error, "generated", "the UVs were not authored by a person");
+            if (string.IsNullOrWhiteSpace(m.ReviewedBy) || !m.VisualReviewPassed) Add(f, AssetSeverity.Error, "generated", "no named person has compared it with the reference and accepted the look");
+        }
+
+        public const string Licensed = "licensed", Commissioned = "commissioned", Generated = "generated", Fixture = "fixture";
+
         public static bool Passes(List<AssetFinding> findings) => findings.All(x => x.Severity != AssetSeverity.Error);
+    }
+    public enum GateOutcome { Accepted, Rejected }
+
+    /// <summary>The verdict for one candidate model. A rejected candidate leaves the game exactly as it is; when a licensed or commissioned model that has itself passed is named as the fallback it is what stays in use.</summary>
+    public sealed class GateDecision
+    {
+        public GateOutcome Outcome; public string AssetId, FallbackId; public List<AssetFinding> Findings = new List<AssetFinding>();
+        public bool UseFallback => Outcome == GateOutcome.Rejected && !string.IsNullOrEmpty(FallbackId);
+    }
+
+    /// <summary>
+    /// The single question "may this model enter gameplay?". It applies every rule above, and one more for generated models: they may only be accepted while a licensed or commissioned game-ready model that
+    /// passes the same rules exists as the fallback, so a bad generation can always be backed out without touching the vehicle system. Nothing here changes any asset or any vehicle definition.
+    /// </summary>
+    public static class VehicleAssetGate
+    {
+        public static GateDecision Decide(VehicleAssetManifest candidate, Func<string, bool> licenceKnown, VehicleAssetManifest fallback)
+        {
+            var d = new GateDecision { AssetId = candidate?.Id, Findings = VehicleAssetValidator.Validate(candidate, licenceKnown) };
+            bool fallbackOk = fallback != null && (fallback.Origin == VehicleAssetValidator.Licensed || fallback.Origin == VehicleAssetValidator.Commissioned)
+                              && fallback.Id != candidate?.Id && VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(fallback, licenceKnown));
+            if (candidate != null && candidate.Origin == VehicleAssetValidator.Generated && !fallbackOk)
+                d.Findings.Add(new AssetFinding { Severity = AssetSeverity.Error, Rule = "fallback", Message = "a generated model may only enter gameplay while a licensed or commissioned game-ready model that passes the same rules is the fallback" });
+            d.Outcome = VehicleAssetValidator.Passes(d.Findings) ? GateOutcome.Accepted : GateOutcome.Rejected;
+            if (fallbackOk) d.FallbackId = fallback.Id;
+            return d;
+        }
     }
 }

@@ -8,12 +8,13 @@ public class VehicleAssetValidatorTests
 {
     static VehicleAssetManifest Good() => new VehicleAssetManifest
     {
-        Id = "fixture_truck", Hero = true, LodTriangles = new[] { 42140, 23600, 12640, 6320 }, Renderers = 28, Materials = 15, MaxTextureSize = 0, TextureMemoryMb = 0f,
+        Id = "fixture_truck", Origin = "commissioned", Source = "contract 2026-001, delivery 3", Hero = true, LodTriangles = new[] { 42140, 23600, 12640, 6320 }, Renderers = 28, Materials = 15, MaxTextureSize = 0, TextureMemoryMb = 0f,
         LengthM = 8.2f, GroundY = 0f, SteeringWheelX = -0.45f, FrontLightZ = 3.9f,
         Nodes = new[] { "Susp_Axle_F", "Susp_Axle_R1", "Spin_FL", "Spin_FR", "Spin_RL", "Spin_RR", "Light_Head_L", "Light_Head_R", "Attach_Camera_Chase", "COL_Body" },
         WheelVisualRadius = new[] { 0.5f, 0.5f, 0.5f, 0.5f }, WheelColliderRadius = new[] { 0.5f, 0.5f, 0.51f, 0.5f }, CollisionHullTriangles = new[] { 120, 200 }
     };
-    static bool Known(string id) => id == "fixture_truck";
+    static bool Known(string id) => id == "fixture_truck" || id == "generated_truck";
+    static VehicleAssetManifest GoodGenerated() { var m = Good(); m.Id = "generated_truck"; m.Origin = "generated"; m.Source = "ARO 3D Studio + TripoSR 0.1, seed 42"; m.GeneratorTermsConfirmed = true; m.Retopologised = true; m.UvsAuthored = true; m.ReviewedBy = "owner"; m.VisualReviewPassed = true; return m; }
     static string[] Rules(VehicleAssetManifest m) => VehicleAssetValidator.Validate(m, Known).Select(f => f.Rule).ToArray();
 
     [Fact] public void ATruckShapedLikeTheMeasuredFixtureWithAKnownLicencePasses()
@@ -79,5 +80,60 @@ public class VehicleAssetValidatorTests
     {
         Assert.False(VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(null, Known)));
         Assert.False(VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(new VehicleAssetManifest(), Known)));
+    }
+    // ---- provenance and the gate for generated models
+    [Fact] public void AnUnknownOrMissingOriginIsRefused()
+    {
+        var m = Good(); m.Origin = ""; Assert.Contains("provenance", Rules(m));
+        m = Good(); m.Origin = "downloaded-from-somewhere"; Assert.Contains("provenance", Rules(m));
+        m = Good(); m.Source = " "; Assert.Contains("provenance", Rules(m));
+    }
+
+    [Fact] public void AFixtureIsNeverAcceptedForGameplayWhateverItsNumbers()
+    {
+        var m = Good(); m.Origin = "fixture";
+        Assert.Contains("gate", Rules(m)); Assert.False(VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(m, Known)));
+    }
+
+    [Fact] public void ALicensedOrCommissionedModelPassesOnItsNumbersAlone()
+    {
+        foreach (var o in new[] { "licensed", "commissioned" }) { var m = Good(); m.Origin = o; Assert.True(VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(m, Known))); }
+    }
+
+    [Fact] public void AGeneratedModelNeedsEveryHumanStepOnTopOfTheNumbers()
+    {
+        Assert.True(VehicleAssetValidator.Passes(VehicleAssetValidator.Validate(GoodGenerated(), Known)));
+        var m = GoodGenerated(); m.GeneratorTermsConfirmed = false; Assert.Contains("provenance", Rules(m));
+        m = GoodGenerated(); m.Retopologised = false; Assert.Contains("generated", Rules(m));
+        m = GoodGenerated(); m.UvsAuthored = false; Assert.Contains("generated", Rules(m));
+        m = GoodGenerated(); m.ReviewedBy = ""; Assert.Contains("generated", Rules(m));
+        m = GoodGenerated(); m.VisualReviewPassed = false; Assert.Contains("generated", Rules(m));
+        m = GoodGenerated(); m.Source = ""; Assert.Contains("provenance", Rules(m));
+        m = GoodGenerated(); m.LodTriangles = new[] { 90000, 40000, 20000 }; Assert.Contains("triangles", Rules(m));          // good paperwork does not excuse bad geometry
+    }
+
+    [Fact] public void AGeneratedModelIsAcceptedOnlyWhileAGoodLicensedOrCommissionedFallbackExists()
+    {
+        var d = VehicleAssetGate.Decide(GoodGenerated(), Known, Good());
+        Assert.Equal(GateOutcome.Accepted, d.Outcome); Assert.Equal("fixture_truck", d.FallbackId);
+        d = VehicleAssetGate.Decide(GoodGenerated(), Known, null);
+        Assert.Equal(GateOutcome.Rejected, d.Outcome); Assert.Contains("fallback", d.Findings.Select(x => x.Rule));
+        var bad = Good(); bad.Materials = 99;                                                    // the fallback must itself pass
+        Assert.Equal(GateOutcome.Rejected, VehicleAssetGate.Decide(GoodGenerated(), Known, bad).Outcome);
+        var gen = GoodGenerated(); gen.Id = "fixture_truck";                                      // a model cannot be its own fallback
+        Assert.Equal(GateOutcome.Rejected, VehicleAssetGate.Decide(gen, Known, Good()).Outcome);
+        var generatedFallback = GoodGenerated(); generatedFallback.Id = "fixture_truck";          // and a generated one cannot be a fallback
+        var cand = GoodGenerated(); Assert.Equal(GateOutcome.Rejected, VehicleAssetGate.Decide(cand, Known, generatedFallback).Outcome);
+    }
+
+    [Fact] public void ARejectedCandidateKeepsTheFallbackInUseAndAnAcceptedOneNeedsNone()
+    {
+        var gen = GoodGenerated(); gen.VisualReviewPassed = false;
+        var d = VehicleAssetGate.Decide(gen, Known, Good());
+        Assert.Equal(GateOutcome.Rejected, d.Outcome); Assert.True(d.UseFallback); Assert.Equal("fixture_truck", d.FallbackId);
+        d = VehicleAssetGate.Decide(Good(), Known, null);                                          // a commissioned model needs no fallback
+        Assert.Equal(GateOutcome.Accepted, d.Outcome); Assert.False(d.UseFallback);
+        d = VehicleAssetGate.Decide(null, Known, Good());                                          // no manifest at all
+        Assert.Equal(GateOutcome.Rejected, d.Outcome);
     }
 }

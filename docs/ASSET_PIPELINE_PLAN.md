@@ -201,7 +201,7 @@ How to read the evidence column: **verified** = observed in this repository or i
 | Delivery time | Immediate download; integration days to a couple of weeks | Typically several weeks with stage gates - estimate | TITAN available now; an AI pilot takes days to learn the real clean-up cost |
 
 ### What exists now (all testable without any art file)
-* `VehicleAssetValidator` (NetCore, 8 tests): the acceptance rules of section 4 as code (triangle and LOD budgets, draw calls, materials, textures, scale, pivot, orientation, rig nodes, wheel colliders, collision hulls, licence entry). It judges numbers from a manifest only; it loads no asset and touches no vehicle code. The first real model must pass it before any prefab exists.
+* `VehicleAssetValidator` (NetCore, 14 tests with the gate of section 14): the acceptance rules of section 4 as code (triangle and LOD budgets, draw calls, materials, textures, scale, pivot, orientation, rig nodes, wheel colliders, collision hulls, licence entry). It judges numbers from a manifest only; it loads no asset and touches no vehicle code. The first real model must pass it before any prefab exists.
 * The private-asset boundary (section 12) and the safety gate that keeps art out of the public tree.
 * The existing vehicle system is untouched: no prefab, no `VehicleDefinition`, no controller change.
 
@@ -212,3 +212,19 @@ How to read the evidence column: **verified** = observed in this repository or i
 4. **Treat ARO 3D Studio (C) as tooling**, not as the source of the realistic truck. Nothing in this repository claims that its AI reconstruction or its Unity import works end to end; that needs real inference and a real import to be demonstrated first.
 
 Decisions needed from the owner before anything beyond the importer spike: the private-asset storage option (section 7/10), approval to request commission quotes, approval to buy or fetch any listed pack, confirmation of the TITAN's ownership and licence.
+
+## 14. The quality gate for generated models, and the fallback (added with the owner's instruction to keep improving the Studio route under a clear gate)
+
+**Rule.** Nothing generated enters gameplay on its own. A model reaches a vehicle definition only if `VehicleAssetGate.Decide` says `Accepted`, and for a **generated** model that verdict also requires a licensed or commissioned game-ready model, which itself passes every rule, to exist as the fallback. A rejected candidate changes nothing: the vehicle system, the definitions and the current vehicles stay exactly as they are, and the named fallback is what remains in use. This is code in `VehicleAssetValidator.cs`, tested without any art file (`VehicleAssetValidatorTests`, 14 tests).
+
+| Origin | What it must prove, on top of the number budgets of section 4 and the licence entry |
+|---|---|
+| `licensed` | a recorded source (the listing); the licence entry in `ASSET_LICENSES.md` |
+| `commissioned` | a recorded source (the contract and delivery); the licence entry (rights assigned) |
+| `generated` | a recorded source (the generator and its version); the generator's terms confirmed for commercial use; **topology rebuilt by a person**; **UVs authored by a person**; a **named person** compared it with the reference and accepted the look; and a good licensed or commissioned fallback exists |
+| `fixture` | never accepted for gameplay (the TITAN reference exercises the pipeline only) |
+| anything else or empty | refused |
+
+What the ARO 3D Studio sidecar JSON has to carry for this gate (the Studio is a separate repository that this session cannot change; the fields are the contract, nothing in it has been run): the existing geometry, LOD, material, rig and collider numbers, plus `Origin`, `Source`, and for generated models `GeneratorTermsConfirmed`, `Retopologised`, `UvsAuthored`, `ReviewedBy`, `VisualReviewPassed`. The last two are written by a person after looking at the model against the reference, never by the generator.
+
+What this does **not** do: it does not judge how the model looks (that is the named person's decision, recorded), it does not measure real frame time or memory (that needs a player build, section 9), and it does not import anything. Nothing here claims that AI reconstruction or the Studio's Unity import works; both remain unproven (section 6). The recommended first route is unchanged (section 13): commission or license the hero truck; use the Studio as tooling; the pilot on a prop measures the real clean-up cost before any vehicle depends on it.
