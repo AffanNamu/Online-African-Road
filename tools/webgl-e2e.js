@@ -46,7 +46,7 @@ function failureDiagnostics() {
       let off = false;
       if (press && c.pos) { const m = /pressed at (\d+),(\d+) of (\d+)x(\d+)/.exec(press); if (m) off = Math.hypot(+m[1] - c.pos.x * +m[3], +m[2] - (1 - c.pos.y) * +m[4]) > 6; }   // the game's y axis points up, the target's points down
       const under = press ? (/buttons under pointer=\[(.*?)\]/.exec(press) || [])[1] : undefined, hitList = press ? (/ui hits=\[(.*?)\]/.exec(press) || [])[1] || '' : '';
-      const tP = press ? +((/ t=([\d.]+);/.exec(press) || [])[1]) : NaN;
+      const tP = press ? +((/ t=([\d.]+)[ ;]/.exec(press) || [])[1]) : NaN;          // the line reads "... t=192.36 fc=1088;": the rebuild timing below was never printed while this expected a ';' right after the time
       const rb = currentLogs.filter(l => /\[UIDiag\] rebuild /.test(l) && !/held back|applied after/.test(l)).map(l => ({ name: l.split(' ')[2], t: +(/ t=([\d.]+)/.exec(l) || [])[1] }));
       const before = rb.filter(r => r.t <= tP).pop(), next = rb.find(r => r.t > tP);
       const rbText = Number.isFinite(tP) && rb.length ? ` | rebuilds: last before press ${before ? before.name + ' ' + ((tP - before.t) * 1000).toFixed(0) + ' ms earlier' : 'none'}, next ${next ? next.name + ' ' + ((next.t - tP) * 1000).toFixed(0) + ' ms later' : 'none'}` : '';

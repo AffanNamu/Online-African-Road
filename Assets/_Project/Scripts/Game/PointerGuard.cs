@@ -11,14 +11,17 @@ namespace ARO.Game
     /// </summary>
     public static class PointerGuard
     {
-        static string _off, _hold; static bool _read;
+        static string _off, _hold, _frameEnd; static bool _read;
         static void ReadOnce()
         {
             if (_read) return; _read = true;
-            if (SmokeMode.E2E) { _off = BackendOverride.Query(Application.absoluteURL, "pointerguard"); _hold = BackendOverride.Query(Application.absoluteURL, "pointerhold"); }
+            if (SmokeMode.E2E) { _off = BackendOverride.Query(Application.absoluteURL, "pointerguard"); _hold = BackendOverride.Query(Application.absoluteURL, "pointerhold"); _frameEnd = BackendOverride.Query(Application.absoluteURL, "frameend"); }
         }
 
         public static bool Enabled { get { ReadOnce(); return _off != "off"; } }
+
+        /// <summary>Background redraws run at the end of the frame (RedrawQueue). Browser end-to-end pages may switch it off ("frameend=off") to show what happens without it; nothing else can.</summary>
+        public static bool QueueAtFrameEnd { get { ReadOnce(); return _frameEnd != "off"; } }
 
         /// <summary>How long one press can hold redraws back; a press reported down for longer than this stops holding (the screen must not stay stale).</summary>
         public static float MaxHold { get { ReadOnce(); return float.TryParse(_hold, NumberStyles.Float, CultureInfo.InvariantCulture, out var f) && f > 0f ? f : 3f; } }
