@@ -122,6 +122,7 @@ async function run() {
   const rolePage = async u => { const p = await newPage(); await signIn(p, u); await enrol(p, u, false); return p; };
   { const p = await rolePage(U.sup);
     check((await tabs(p)).join('|') === 'Live health|Players|Reports|Restrictions', 'support sees Live health, Players, Reports and Restrictions', (await tabs(p)).join('|'));
+    await p.waitForSelector('.tile');          // the tabs appear before the health view has loaded; the button is added when it has
     check((await p.$('#gen')) === null, 'support has no "generate jobs" button');
     const tok = await p.evaluate(() => JSON.parse(sessionStorage.getItem('aro_admin_session')).access_token);
     const g = await rpcAs(tok, 'admin_generate_jobs', { p_count: 5, p_reason: 'bypassing the page' }); check(g.status >= 400 && /not_allowed/.test(JSON.stringify(g.body)), 'the server refuses support when the page is bypassed (generate jobs)', JSON.stringify(g));
@@ -131,6 +132,7 @@ async function run() {
     await p.context().close(); }
   { const p = await rolePage(U.ops);
     check((await tabs(p)).join('|') === 'Live health|Players|Broadcast|Routes & servers', 'operations sees Live health, Players, Broadcast and Routes & servers');
+    await p.waitForSelector('.tile');          // the tabs appear before the health view has loaded; the button is added when it has
     check((await p.$('#gen')) !== null, 'operations has the "generate jobs" button');
     await p.click('#tab_players'); await p.fill('#q', 'AdmE2eTar'); await p.click('button[type=submit]'); await p.waitForSelector('tbody tr');
     check((await p.$('[data-open]')) === null, 'operations can search but has no "open record" button');
@@ -139,6 +141,7 @@ async function run() {
     await p.context().close(); }
   { const p = await rolePage(U.ana);
     check((await tabs(p)).join('|') === 'Live health|Audit log', 'an analyst sees Live health and the Audit log only');
+    await p.waitForSelector('.tile');          // the tabs appear before the health view has loaded; the button is added when it has
     check((await p.$('#gen')) === null, 'an analyst has no "generate jobs" button');
     await p.click('#tab_audit'); await p.waitForSelector('tbody tr'); check(true, 'an analyst can read the audit log');
     const tok = await p.evaluate(() => JSON.parse(sessionStorage.getItem('aro_admin_session')).access_token);
