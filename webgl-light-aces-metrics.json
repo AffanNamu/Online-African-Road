@@ -1,0 +1,1083 @@
+{
+  "quality": "low",
+  "regions": {
+    "whole": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "sky": [
+      0.25,
+      0.03,
+      0.72,
+      0.25
+    ],
+    "road": [
+      0.3,
+      0.62,
+      0.7,
+      0.88
+    ],
+    "chase": {
+      "roadSurface": [
+        0.3,
+        0.48,
+        0.42,
+        0.56
+      ],
+      "truck": [
+        0.45,
+        0.5,
+        0.56,
+        0.57
+      ],
+      "ground": [
+        0.72,
+        0.48,
+        0.98,
+        0.72
+      ],
+      "skyHorizon": [
+        0.25,
+        0.26,
+        0.72,
+        0.32
+      ],
+      "skyHigh": [
+        0.25,
+        0.02,
+        0.72,
+        0.1
+      ]
+    },
+    "bumper": {
+      "roadSurface": [
+        0.3,
+        0.55,
+        0.7,
+        0.64
+      ]
+    }
+  },
+  "presets": [
+    [
+      "dawn",
+      6.4
+    ],
+    [
+      "noon",
+      12
+    ],
+    [
+      "sunset",
+      17.6
+    ],
+    [
+      "night",
+      23
+    ]
+  ],
+  "thresholds": {
+    "dawn": {
+      "chase": {
+        "whole": {
+          "min": 45,
+          "max": 130
+        },
+        "sky": {
+          "min": 80
+        },
+        "road": {
+          "min": 25
+        }
+      }
+    },
+    "noon": {
+      "chase": {
+        "whole": {
+          "min": 110,
+          "max": 200,
+          "maxBlown": 0.03
+        },
+        "road": {
+          "min": 80
+        }
+      }
+    },
+    "sunset": {
+      "chase": {
+        "whole": {
+          "min": 45,
+          "max": 130
+        },
+        "sky": {
+          "min": 80
+        },
+        "road": {
+          "min": 25
+        }
+      }
+    },
+    "night": {
+      "chase": {
+        "whole": {
+          "min": 28,
+          "max": 90,
+          "maxCrushed": 0.1
+        },
+        "road": {
+          "min": 12
+        },
+        "sky": {
+          "min": 30
+        }
+      }
+    }
+  },
+  "advisory": {
+    "dawn": {
+      "chase": {
+        "ground": {
+          "min": 70
+        }
+      }
+    },
+    "sunset": {
+      "chase": {
+        "ground": {
+          "min": 70
+        }
+      }
+    },
+    "noon": {
+      "chase": {
+        "truck": {
+          "maxClip2": 0.05
+        },
+        "ground": {
+          "maxSat": 0.42
+        }
+      }
+    },
+    "night": {
+      "chase": {
+        "roadSurface": {
+          "min": 20
+        }
+      },
+      "bumper": {
+        "roadSurface": {
+          "min": 25,
+          "maxBlown": 0.1
+        }
+      }
+    }
+  },
+  "advisoryFailures": [
+    "dawn chase ground: mean 37.6 is below 70",
+    "noon chase ground: saturation 0.55 is above 0.42",
+    "sunset chase ground: mean 37.2 is below 70",
+    "night chase roadSurface: mean 1.7 is below 20",
+    "night bumper roadSurface: mean 12.2 is below 25"
+  ],
+  "metrics": {
+    "dawn": {
+      "softwareFrameMs": 242.16666666666666,
+      "chase": {
+        "whole": {
+          "mean": 63.21180138946488,
+          "std": 51.87572325510751,
+          "p5": 11,
+          "p95": 159,
+          "crushed": 0.0037333170572916665,
+          "blown": 0,
+          "sat": 0.48436078297758456,
+          "clip2": 0,
+          "r": 68.15179782443576,
+          "g": 63.131461249457466,
+          "b": 49.461330837673614,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 128.38918711080007,
+          "std": 14.06696254095485,
+          "p5": 107,
+          "p95": 153,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.21369273831227423,
+          "clip2": 0,
+          "r": 111.27619498807462,
+          "g": 133.40461332374946,
+          "b": 129.09818015486653,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 23.692515889430684,
+          "std": 11.293286728808184,
+          "p5": 10,
+          "p95": 36,
+          "crushed": 0.022308943089430894,
+          "blown": 0,
+          "sat": 0.6987794606376325,
+          "clip2": 0,
+          "r": 35.83139837398374,
+          "g": 21.40949593495935,
+          "b": 10.563560975609755,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 13.808633905285928,
+          "std": 12.23673877420553,
+          "p5": 9,
+          "p95": 26,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.20748077344050425,
+          "clip2": 0,
+          "r": 15.44646533973919,
+          "g": 13.336993822923816,
+          "b": 13.657858613589568,
+          "pixels": 5828
+        },
+        "truck": {
+          "mean": 55.31754587077243,
+          "std": 11.461731836041263,
+          "p5": 13,
+          "p95": 59,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.9019559596989818,
+          "clip2": 0,
+          "r": 95.87248609328199,
+          "g": 48.285622593068034,
+          "b": 5.556482670089859,
+          "pixels": 4674
+        },
+        "ground": {
+          "mean": 37.590553536494035,
+          "std": 2.2569918382864333,
+          "p5": 34,
+          "p95": 41,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.6795363350688028,
+          "clip2": 0,
+          "r": 55.43960337348099,
+          "g": 34.28283889742139,
+          "b": 17.797887532670494,
+          "pixels": 37113
+        },
+        "skyHorizon": {
+          "mean": 153.28400753803172,
+          "std": 20.823269990959336,
+          "p5": 143,
+          "p95": 172,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.36523770354419066,
+          "clip2": 0,
+          "r": 153.08875057630243,
+          "g": 158.6542185338866,
+          "b": 100.662632549562,
+          "pixels": 17352
+        },
+        "skyHigh": {
+          "mean": 115.17116292928912,
+          "std": 9.38576674013103,
+          "p5": 103,
+          "p95": 133,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.2831872391981024,
+          "clip2": 0,
+          "r": 94.65621965215855,
+          "g": 119.57557164297695,
+          "b": 131.95016332656485,
+          "pixels": 22654
+        },
+        "vignette": 1.087311488279838,
+        "cornerLuma": 116.36177723577129
+      },
+      "bumper": {
+        "whole": {
+          "mean": 67.82843649521321,
+          "std": 55.65294011493518,
+          "p5": 7,
+          "p95": 166,
+          "crushed": 0.018644544813368056,
+          "blown": 0,
+          "sat": 0.30699276259424546,
+          "clip2": 0,
+          "r": 60.376614040798614,
+          "g": 69.5985616048177,
+          "b": 72.23652479383681,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 83.41911397392882,
+          "std": 12.776730057136579,
+          "p5": 67,
+          "p95": 107,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.4822498444801636,
+          "clip2": 0,
+          "r": 60.921733590355146,
+          "g": 86.72746430555102,
+          "b": 116.89294932531774,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 10.239044113829099,
+          "std": 6.090234946246709,
+          "p5": 6,
+          "p95": 14,
+          "crushed": 0.039723577235772356,
+          "blown": 0,
+          "sat": 0.1650263745475906,
+          "clip2": 0,
+          "r": 11.18530081300813,
+          "g": 9.862666666666666,
+          "b": 11.181024390243902,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 18.43355343764963,
+          "std": 14.520541736584313,
+          "p5": 11,
+          "p95": 35,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.22087192717116602,
+          "clip2": 0,
+          "r": 20.91872986654395,
+          "g": 17.8059364933272,
+          "b": 17.332765761619882,
+          "pixels": 21730
+        },
+        "vignette": 1.2429896420365287,
+        "cornerLuma": 82.67682418699208
+      }
+    },
+    "noon": {
+      "softwareFrameMs": 227.9666666666667,
+      "chase": {
+        "whole": {
+          "mean": 102.21807507242407,
+          "std": 36.42251283231358,
+          "p5": 36,
+          "p95": 166,
+          "crushed": 0.0015852186414930555,
+          "blown": 0,
+          "sat": 0.47037959607847285,
+          "clip2": 0,
+          "r": 108.40557352701823,
+          "g": 101.66375732421875,
+          "b": 89.48934766981337,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 119.87817973012187,
+          "std": 15.967608440899411,
+          "p5": 100,
+          "p95": 149,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.4682440734534211,
+          "clip2": 0,
+          "r": 90.59349168490868,
+          "g": 123.60778580063385,
+          "b": 169.16502760806353,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 80.23138172681976,
+          "std": 36.65154873795312,
+          "p5": 18,
+          "p95": 111,
+          "crushed": 0.014991869918699188,
+          "blown": 0,
+          "sat": 0.582800382740457,
+          "clip2": 0,
+          "r": 101.30154471544715,
+          "g": 77.5110243902439,
+          "b": 45.13557723577236,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 48.282278517502256,
+          "std": 25.71307496149804,
+          "p5": 34,
+          "p95": 91,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.18960388372133613,
+          "clip2": 0,
+          "r": 48.18102264927934,
+          "g": 48.09831846259437,
+          "b": 50.40271105010295,
+          "pixels": 5828
+        },
+        "truck": {
+          "mean": 148.1895278990209,
+          "std": 29.596804591341883,
+          "p5": 41,
+          "p95": 157,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.7799259275551069,
+          "clip2": 0,
+          "r": 196.9244758237056,
+          "g": 144.88489516474112,
+          "b": 37.41976893453145,
+          "pixels": 4674
+        },
+        "ground": {
+          "mean": 103.94102587772589,
+          "std": 6.928963179711387,
+          "p5": 96,
+          "p95": 112,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.550056442483182,
+          "clip2": 0,
+          "r": 130.28380890792982,
+          "g": 100.6752889822973,
+          "b": 58.72190337617546,
+          "pixels": 37113
+        },
+        "skyHorizon": {
+          "mean": 169.22820471416634,
+          "std": 17.185373313278507,
+          "p5": 157,
+          "p95": 185,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.2297062750794772,
+          "clip2": 0,
+          "r": 147.43211157215308,
+          "g": 173.57935684647302,
+          "b": 190.30722683264176,
+          "pixels": 17352
+        },
+        "skyHigh": {
+          "mean": 102.07881813365898,
+          "std": 3.6036681537316833,
+          "p5": 96,
+          "p95": 108,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.5447683269898539,
+          "clip2": 0,
+          "r": 71.84704687913835,
+          "g": 105.44742650304582,
+          "b": 157.730422883376,
+          "pixels": 22654
+        },
+        "vignette": 1.116221859429683,
+        "cornerLuma": 105.81908536585459
+      },
+      "bumper": {
+        "whole": {
+          "mean": 76.08214440423167,
+          "std": 42.017896765157474,
+          "p5": 24,
+          "p95": 159,
+          "crushed": 0.000020345052083333332,
+          "blown": 0,
+          "sat": 0.3932845898232767,
+          "clip2": 0,
+          "r": 63.6327633327908,
+          "g": 77.46959940592448,
+          "b": 98.99669562445746,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 72.51127217300545,
+          "std": 4.322936652933521,
+          "p5": 66,
+          "p95": 80,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.6532198307161381,
+          "clip2": 0,
+          "r": 45.408484987094454,
+          "g": 74.68618289933676,
+          "b": 130.7738262488973,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 39.69968920325207,
+          "std": 20.28681035472283,
+          "p5": 27,
+          "p95": 48,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.1866264617936942,
+          "clip2": 0,
+          "r": 38.506243902439024,
+          "g": 39.75560975609756,
+          "b": 42.6599674796748,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 54.93011215829277,
+          "std": 31.170192582673394,
+          "p5": 37,
+          "p95": 109,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.23400400227173793,
+          "clip2": 0,
+          "r": 56.61541647491946,
+          "g": 54.68794293603313,
+          "b": 52.366451909802116,
+          "pixels": 21730
+        },
+        "vignette": 1.132766912868274,
+        "cornerLuma": 71.965902845528
+      }
+    },
+    "sunset": {
+      "softwareFrameMs": 236.29999999999998,
+      "chase": {
+        "whole": {
+          "mean": 63.54331176369497,
+          "std": 53.03003593253776,
+          "p5": 11,
+          "p95": 159,
+          "crushed": 0.006673177083333333,
+          "blown": 0,
+          "sat": 0.5822395673932683,
+          "clip2": 0,
+          "r": 75.70503065321181,
+          "g": 62.47021823459201,
+          "b": 38.36180284288194,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 136.3068554480983,
+          "std": 10.1410908909734,
+          "p5": 120,
+          "p95": 154,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.24644119991454388,
+          "clip2": 0,
+          "r": 130.87563302512498,
+          "g": 140.93146992518052,
+          "b": 106.48903845525534,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 22.463054071544093,
+          "std": 12.118198835335125,
+          "p5": 8,
+          "p95": 36,
+          "crushed": 0.042682926829268296,
+          "blown": 0,
+          "sat": 0.7911430137848591,
+          "clip2": 0,
+          "r": 38.56011382113821,
+          "g": 19.207235772357723,
+          "b": 7.315219512195122,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 13.38158548387181,
+          "std": 11.213309705137837,
+          "p5": 9,
+          "p95": 25,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.36150231074515066,
+          "clip2": 0,
+          "r": 17.553706245710362,
+          "g": 12.491763898421414,
+          "b": 9.910775566231983,
+          "pixels": 5828
+        },
+        "truck": {
+          "mean": 56.85407522465193,
+          "std": 11.733314400973287,
+          "p5": 13,
+          "p95": 61,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.9256105199192811,
+          "clip2": 0,
+          "r": 107.00641848523749,
+          "g": 47.217586649550704,
+          "b": 4.632862644415918,
+          "pixels": 4674
+        },
+        "ground": {
+          "mean": 37.177901700206924,
+          "std": 2.091653403347413,
+          "p5": 34,
+          "p95": 41,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.7964009776914559,
+          "clip2": 0,
+          "r": 61.2287877563118,
+          "g": 32.520626195672676,
+          "b": 12.491822272519064,
+          "pixels": 37113
+        },
+        "skyHorizon": {
+          "mean": 141.81677648685698,
+          "std": 14.893807685796128,
+          "p5": 134,
+          "p95": 158,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.6375717767691155,
+          "clip2": 0,
+          "r": 160.1532388197326,
+          "g": 144.85713462425082,
+          "b": 57.70602812355924,
+          "pixels": 17352
+        },
+        "skyHigh": {
+          "mean": 128.64079962036885,
+          "std": 8.972871482175906,
+          "p5": 118,
+          "p95": 145,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.13470277123576965,
+          "clip2": 0,
+          "r": 116.89953209146287,
+          "g": 133.20190694800036,
+          "b": 118.0326211706542,
+          "pixels": 22654
+        },
+        "vignette": 1.072951289389023,
+        "cornerLuma": 131.0449991869909
+      },
+      "bumper": {
+        "whole": {
+          "mean": 73.12087547146682,
+          "std": 58.96882713698163,
+          "p5": 7,
+          "p95": 168,
+          "crushed": 0.018686930338541668,
+          "blown": 0,
+          "sat": 0.3500803566893943,
+          "clip2": 0,
+          "r": 71.43839348687067,
+          "g": 74.57267422146268,
+          "b": 63.693856133355034,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 101.68381101709096,
+          "std": 13.600336747391355,
+          "p5": 84,
+          "p95": 128,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.2851070592256949,
+          "clip2": 0,
+          "r": 83.92487012774855,
+          "g": 105.42612800993237,
+          "b": 116.90605090338812,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 10.385660448775049,
+          "std": 8.56733157655225,
+          "p5": 6,
+          "p95": 14,
+          "crushed": 0.04847154471544715,
+          "blown": 0,
+          "sat": 0.3847208375085947,
+          "clip2": 0,
+          "r": 13.729512195121952,
+          "g": 9.665934959349594,
+          "b": 7.668829268292683,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 18.29668039576144,
+          "std": 14.502461758325328,
+          "p5": 11,
+          "p95": 34,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.3342787930754388,
+          "clip2": 0,
+          "r": 24.090243902439024,
+          "g": 17.127979751495626,
+          "b": 12.813897837091579,
+          "pixels": 21730
+        },
+        "vignette": 1.1746309916409647,
+        "cornerLuma": 99.28342317073128
+      }
+    },
+    "night": {
+      "softwareFrameMs": 210.60000000000002,
+      "chase": {
+        "whole": {
+          "mean": 19.495341256435758,
+          "std": 26.732152902803538,
+          "p5": 1,
+          "p95": 75,
+          "crushed": 0.5908203125,
+          "blown": 0,
+          "sat": 0.3264073300563406,
+          "clip2": 0,
+          "r": 14.404666476779514,
+          "g": 20.263224283854168,
+          "b": 26.878824869791668,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 44.030989221413996,
+          "std": 9.96205413560097,
+          "p5": 32,
+          "p95": 62,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.5979551880793247,
+          "clip2": 0,
+          "r": 29.046835691181755,
+          "g": 45.771049106413564,
+          "b": 70.9165877086941,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 1.6766002764224759,
+          "std": 0.9472681345978163,
+          "p5": 1,
+          "p95": 2,
+          "crushed": 0.9948130081300813,
+          "blown": 0,
+          "sat": 0.2959338933325051,
+          "clip2": 0,
+          "r": 1.7900975609756098,
+          "g": 1.6440487804878048,
+          "b": 1.6648455284552846,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 1.7370912491419033,
+          "std": 1.805776631343682,
+          "p5": 1,
+          "p95": 2,
+          "crushed": 0.9836993822923816,
+          "blown": 0,
+          "sat": 0.691616217074701,
+          "clip2": 0,
+          "r": 1.1786204529855868,
+          "g": 1.6944063143445436,
+          "b": 3.804392587508579,
+          "pixels": 5828
+        },
+        "truck": {
+          "mean": 5.254045100555908,
+          "std": 3.8554445654849454,
+          "p5": 4,
+          "p95": 5,
+          "crushed": 0.9762516046213093,
+          "blown": 0,
+          "sat": 0.8355054488017817,
+          "clip2": 0,
+          "r": 7.002139495079161,
+          "g": 5.126016260162602,
+          "b": 1.374839537869063,
+          "pixels": 4674
+        },
+        "ground": {
+          "mean": 1.8672839651873858,
+          "std": 0.31174455560421144,
+          "p5": 1,
+          "p95": 2,
+          "crushed": 1,
+          "blown": 0,
+          "sat": 0.06175464123083545,
+          "clip2": 0,
+          "r": 1.8866434941934094,
+          "g": 1.8524236790343007,
+          "b": 1.9574812060463989,
+          "pixels": 37113
+        },
+        "skyHorizon": {
+          "mean": 76.18816886814155,
+          "std": 17.66772324519595,
+          "p5": 34,
+          "p95": 98,
+          "crushed": 0.020804518211157214,
+          "blown": 0,
+          "sat": 0.36391898393651606,
+          "clip2": 0,
+          "r": 58.78745965882895,
+          "g": 79.80774550484094,
+          "b": 91.57140387275243,
+          "pixels": 17352
+        },
+        "skyHigh": {
+          "mean": 33.71203306259297,
+          "std": 2.7754021208228328,
+          "p5": 30,
+          "p95": 39,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.6584732754154661,
+          "clip2": 0,
+          "r": 20.551425796768783,
+          "g": 34.96292045554869,
+          "b": 60.07367352343957,
+          "pixels": 22654
+        },
+        "vignette": 1.0649099897007785,
+        "cornerLuma": 32.03075081300766
+      },
+      "bumper": {
+        "whole": {
+          "mean": 21.21275296336874,
+          "std": 23.856862577525934,
+          "p5": 0,
+          "p95": 70,
+          "crushed": 0.3650495741102431,
+          "blown": 0,
+          "sat": 0.6253807168865355,
+          "clip2": 0,
+          "r": 14.413526746961805,
+          "g": 22.01715596516927,
+          "b": 33.26547410753038,
+          "pixels": 589824
+        },
+        "sky": {
+          "mean": 17.634789685369167,
+          "std": 2.562314886865416,
+          "p5": 14,
+          "p95": 22,
+          "crushed": 0,
+          "blown": 0,
+          "sat": 0.761443697504767,
+          "clip2": 0,
+          "r": 8.960515568334042,
+          "g": 18.22805240631228,
+          "b": 37.30029078315418,
+          "pixels": 61214
+        },
+        "road": {
+          "mean": 4.094774068287809,
+          "std": 8.908818888634135,
+          "p5": 0,
+          "p95": 25,
+          "crushed": 0.845869918699187,
+          "blown": 0,
+          "sat": 0.806414154543895,
+          "clip2": 0,
+          "r": 3.43,
+          "g": 4.104536585365854,
+          "b": 5.955560975609756,
+          "pixels": 61500
+        },
+        "roadSurface": {
+          "mean": 12.151399070409102,
+          "std": 16.27972341322765,
+          "p5": 2,
+          "p95": 40,
+          "crushed": 0.5106764841233318,
+          "blown": 0,
+          "sat": 0.42143892670182936,
+          "clip2": 0,
+          "r": 11.09452369995398,
+          "g": 12.157616198803497,
+          "b": 15.20188679245283,
+          "pixels": 21730
+        },
+        "vignette": 1.5569116266879433,
+        "cornerLuma": 20.985485162601623
+      }
+    },
+    "separation": {
+      "skyHigh": {
+        "dawnWarm": 0.7173634140784872,
+        "sunsetWarm": 0.9904002040456843,
+        "warmDelta": 0.27303678996719705,
+        "dawnLuma": 115.17116292928912,
+        "sunsetLuma": 128.64079962036885,
+        "lumaDelta": 13.469636691079728
+      },
+      "skyHorizon": {
+        "dawnWarm": 1.5208101228718416,
+        "sunsetWarm": 2.775329441784054,
+        "warmDelta": 1.2545193189122124,
+        "dawnLuma": 153.28400753803172,
+        "sunsetLuma": 141.81677648685698,
+        "lumaDelta": -11.467231051174736
+      },
+      "ground": {
+        "dawnWarm": 3.1149541355238877,
+        "sunsetWarm": 4.901509677335858,
+        "warmDelta": 1.7865555418119707,
+        "dawnLuma": 37.590553536494035,
+        "sunsetLuma": 37.177901700206924,
+        "lumaDelta": -0.412651836287111
+      },
+      "truck": {
+        "dawnWarm": 17.254168110584885,
+        "sunsetWarm": 23.09725685785536,
+        "warmDelta": 5.843088747270475,
+        "dawnLuma": 55.31754587077243,
+        "sunsetLuma": 56.85407522465193,
+        "lumaDelta": 1.5365293538795015
+      },
+      "roadSurface": {
+        "dawnWarm": 1.1309580642729717,
+        "sunsetWarm": 1.7711738227146814,
+        "warmDelta": 0.6402157584417096,
+        "dawnLuma": 13.808633905285928,
+        "sunsetLuma": 13.38158548387181,
+        "lumaDelta": -0.4270484214141188
+      }
+    }
+  },
+  "lines": {
+    "dawn": {
+      "render": "[Render] tier=low (url='http://127.0.0.1:46483/index.html?smoke=drive&hold=1&hour=dawn&quality=low&probe=1&tonemap=aces') shadows=60m x1 msaa=1 renderScale=0.8 loadRadius=2 post=on (tonemap=True(aces) grade=False vignette=False bloom=False) pipeline=ARO_URP colorSpace=Gamma hdr=True cameraHdr=True additionalLights=PerPixel maxAdditionalLights=4 graphicsApi=OpenGLES3 rendererPostProcessData=present\n",
+      "light": "[Light] hour=6.400 source=url night=False elev=0.105 sun=on sunIntensity=1.034 sunColor=(1.000,0.807,0.649) sky=procedural skyExposure=0.859 ambientSky=(0.310,0.341,0.443) ambientEquator=(0.333,0.307,0.279) ambientGround=(0.138,0.120,0.102) fogDensity=0.001 overcast=0.000 moon=on moonIntensity=0.002 golden=0.815 postExposure=0.098 atmosphere=1.250 skyTint=(0.455,0.495,0.600) fogColor=(0.617,0.552,0.566) fogDensityExact=0.00086\n",
+      "postCheck": "[Render] post-processing check rendererPostProcessData=present volumeTonemap=ACES cameraPost=True settingOn=True\n",
+      "hold": "[Drive] smoke hold: truck not settled upright (up=0.57, 7.2 km/h); stood up and dropped again, try 1\n",
+      "probe": [
+        "[Probe] camera pos=(-14.1,8.5,-5.6) euler=(10,87) fov=55 near=0.30 far=900\n",
+        "[Probe] r d=0.0 ChunkStreamer/Chunk_0_-1/Road_ng-lagos-ibadan enabled=True active=True mats=ARO_Asphalt,ARO_Shoulder,ARO_Verge,ARO_MarkWhite,ARO_MarkYellow, centre=(100,4.4,-22) size=(203,1.3,62) shadow=On tris=1088\n",
+        "[Probe] r d=0.2 ChunkStreamer/Chunk_-1_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.1,-100) size=(200,5.2,200) shadow=On tris=960\n",
+        "[Probe] r d=0.4 Savanna 4x2 Light Truck/Body enabled=True active=True mats=TruckBody, centre=(-2,5.2,-5) size=(6,1.8,3) shadow=On tris=12\n",
+        "[Probe] r d=1.2 ChunkStreamer/Chunk_0_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.9,-100) size=(200,5.5,200) shadow=On tris=942\n",
+        "[Probe] r d=1.5 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-3,4.2,-4) size=(2,1.6,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(1,4.4,-6) size=(2,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-3,4.2,-6) size=(1,1.3,0) shadow=On tris=80\n",
+        "[Probe] r d=1.9 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(1,4.5,-4) size=(1,1.1,0) shadow=On tris=80\n",
+        "[Probe] r d=2.0 Savanna 4x2 Light Truck/Cab enabled=True active=True mats=TruckBody, centre=(1,6.4,-5) size=(2,1.8,2) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-6) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-6) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-6) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=4.9 ChunkStreamer/Chunk_-1_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.3,100) size=(200,4.6,200) shadow=On tris=960\n",
+        "[Probe] r d=5.0 ChunkStreamer/Chunk_0_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.4,100) size=(200,4.4,200) shadow=On tris=960\n",
+        "[Probe] 17 renderers within 45 m\n",
+        "[Probe] ground z=+18 (x -18..+18): 3.4:TerrainCollision  3.3:TerrainCollision  3.4:TerrainCollision  3.5:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=+12 (x -18..+18): 3.6:TerrainCollision  3.5:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.8:Road_ng-lagos-ibadan  3.8:Road_ng-lagos-ibadan  3.5:TerrainCollision  \n",
+        "[Probe] ground z=+6 (x -18..+18): 3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=0 (x -18..+18): 3.4:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  5.9:Body  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.1:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-6 (x -18..+18): 3.1:TerrainCollision  3.3:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.5:TerrainCollision  3.9:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-12 (x -18..+18): 3.0:TerrainCollision  3.0:TerrainCollision  3.1:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=-18 (x -18..+18): 2.9:TerrainCollision  2.9:TerrainCollision  2.9:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  \n"
+      ]
+    },
+    "noon": {
+      "render": "[Render] tier=low (url='http://127.0.0.1:46483/index.html?smoke=drive&hold=1&hour=noon&quality=low&probe=1&tonemap=aces') shadows=60m x1 msaa=1 renderScale=0.8 loadRadius=2 post=on (tonemap=True(aces) grade=False vignette=False bloom=False) pipeline=ARO_URP colorSpace=Gamma hdr=True cameraHdr=True additionalLights=PerPixel maxAdditionalLights=4 graphicsApi=OpenGLES3 rendererPostProcessData=present\n",
+      "light": "[Light] hour=12.000 source=url night=False elev=1.000 sun=on sunIntensity=0.850 sunColor=(1.000,0.980,0.940) sky=procedural skyExposure=1.250 ambientSky=(0.300,0.380,0.520) ambientEquator=(0.360,0.360,0.340) ambientGround=(0.170,0.150,0.120) fogDensity=0.000 overcast=0.000 moon=off moonIntensity=0.000 golden=0.000 postExposure=0.000 atmosphere=0.900 skyTint=(0.450,0.500,0.600) fogColor=(0.720,0.760,0.800) fogDensityExact=0.00035\n",
+      "postCheck": "[Render] post-processing check rendererPostProcessData=present volumeTonemap=ACES cameraPost=True settingOn=True\n",
+      "hold": "[Drive] smoke hold: truck not settled upright (up=0.32, 0.5 km/h); stood up and dropped again, try 1\n",
+      "probe": [
+        "[Probe] camera pos=(-14.3,8.5,-4.7) euler=(10,86) fov=55 near=0.30 far=900\n",
+        "[Probe] r d=0.0 ChunkStreamer/Chunk_0_-1/Road_ng-lagos-ibadan enabled=True active=True mats=ARO_Asphalt,ARO_Shoulder,ARO_Verge,ARO_MarkWhite,ARO_MarkYellow, centre=(100,4.4,-22) size=(203,1.3,62) shadow=On tris=1088\n",
+        "[Probe] r d=0.2 ChunkStreamer/Chunk_-1_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.1,-100) size=(200,5.2,200) shadow=On tris=960\n",
+        "[Probe] r d=0.4 Savanna 4x2 Light Truck/Body enabled=True active=True mats=TruckBody, centre=(-2,5.2,-4) size=(6,1.8,3) shadow=On tris=12\n",
+        "[Probe] r d=1.4 ChunkStreamer/Chunk_0_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.9,-100) size=(200,5.5,200) shadow=On tris=942\n",
+        "[Probe] r d=1.6 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-3,4.2,-5) size=(2,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-3,4.2,-3) size=(1,1.3,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(1,4.5,-2) size=(2,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(1,4.5,-5) size=(1,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=2.0 Savanna 4x2 Light Truck/Cab enabled=True active=True mats=TruckBody, centre=(1,6.4,-4) size=(2,1.8,2) shadow=On tris=12\n",
+        "[Probe] r d=3.8 ChunkStreamer/Chunk_-1_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.3,100) size=(200,4.6,200) shadow=On tris=960\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-5) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-3) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-5) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-3) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-5) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-5,5.1,-3) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=4.0 ChunkStreamer/Chunk_0_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.4,100) size=(200,4.4,200) shadow=On tris=960\n",
+        "[Probe] 17 renderers within 45 m\n",
+        "[Probe] ground z=+18 (x -18..+18): 3.3:TerrainCollision  3.3:TerrainCollision  3.3:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=+12 (x -18..+18): 3.6:TerrainCollision  3.5:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.8:Road_ng-lagos-ibadan  3.6:TerrainCollision  3.4:TerrainCollision  \n",
+        "[Probe] ground z=+6 (x -18..+18): 3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=0 (x -18..+18): 3.4:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  5.9:Body  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.1:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-6 (x -18..+18): 3.1:TerrainCollision  3.4:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.9:Road_ng-lagos-ibadan  3.9:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-12 (x -18..+18): 3.0:TerrainCollision  3.0:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.3:TerrainCollision  3.2:TerrainCollision  3.3:TerrainCollision  \n",
+        "[Probe] ground z=-18 (x -18..+18): 2.9:TerrainCollision  2.9:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  \n"
+      ]
+    },
+    "sunset": {
+      "render": "[Render] tier=low (url='http://127.0.0.1:46483/index.html?smoke=drive&hold=1&hour=sunset&quality=low&probe=1&tonemap=aces') shadows=60m x1 msaa=1 renderScale=0.8 loadRadius=2 post=on (tonemap=True(aces) grade=False vignette=False bloom=False) pipeline=ARO_URP colorSpace=Gamma hdr=True cameraHdr=True additionalLights=PerPixel maxAdditionalLights=4 graphicsApi=OpenGLES3 rendererPostProcessData=present\n",
+      "light": "[Light] hour=17.600 source=url night=False elev=0.105 sun=on sunIntensity=1.106 sunColor=(1.000,0.769,0.528) sky=procedural skyExposure=0.859 ambientSky=(0.338,0.306,0.325) ambientEquator=(0.361,0.293,0.237) ambientGround=(0.152,0.120,0.095) fogDensity=0.000 overcast=0.000 moon=on moonIntensity=0.002 golden=0.815 postExposure=0.098 atmosphere=1.503 skyTint=(0.484,0.495,0.561) fogColor=(0.645,0.527,0.460) fogDensityExact=0.00035\n",
+      "postCheck": "[Render] post-processing check rendererPostProcessData=present volumeTonemap=ACES cameraPost=True settingOn=True\n",
+      "hold": "[Drive] smoke hold: truck not settled upright (up=0.43, 3.9 km/h); stood up and dropped again, try 1\n",
+      "probe": [
+        "[Probe] camera pos=(-13.0,8.5,-5.6) euler=(11,85) fov=55 near=0.30 far=900\n",
+        "[Probe] r d=0.0 ChunkStreamer/Chunk_0_-1/Road_ng-lagos-ibadan enabled=True active=True mats=ARO_Asphalt,ARO_Shoulder,ARO_Verge,ARO_MarkWhite,ARO_MarkYellow, centre=(100,4.4,-22) size=(203,1.3,62) shadow=On tris=1088\n",
+        "[Probe] r d=0.2 ChunkStreamer/Chunk_0_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.9,-100) size=(200,5.5,200) shadow=On tris=942\n",
+        "[Probe] r d=0.3 ChunkStreamer/Chunk_-1_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.1,-100) size=(200,5.2,200) shadow=On tris=960\n",
+        "[Probe] r d=0.4 Savanna 4x2 Light Truck/Body enabled=True active=True mats=TruckBody, centre=(-1,5.2,-5) size=(6,1.8,3) shadow=On tris=12\n",
+        "[Probe] r d=1.5 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-2,4.2,-4) size=(2,1.6,0) shadow=On tris=80\n",
+        "[Probe] r d=1.6 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-2,4.2,-6) size=(2,1.6,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(2,4.5,-6) size=(2,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(2,4.5,-3) size=(2,1.5,0) shadow=On tris=80\n",
+        "[Probe] r d=2.0 Savanna 4x2 Light Truck/Cab enabled=True active=True mats=TruckBody, centre=(2,6.4,-4) size=(2,1.8,2) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-5) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-6) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.2,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-6) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.2,-4) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=4.5 ChunkStreamer/Chunk_-1_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.3,100) size=(200,4.6,200) shadow=On tris=960\n",
+        "[Probe] r d=4.6 ChunkStreamer/Chunk_0_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.4,100) size=(200,4.4,200) shadow=On tris=960\n",
+        "[Probe] 17 renderers within 45 m\n",
+        "[Probe] ground z=+18 (x -18..+18): 3.4:TerrainCollision  3.3:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.3:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=+12 (x -18..+18): 3.6:TerrainCollision  3.5:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.8:Road_ng-lagos-ibadan  3.6:TerrainCollision  3.4:TerrainCollision  \n",
+        "[Probe] ground z=+6 (x -18..+18): 3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=0 (x -18..+18): 3.4:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  5.9:Body  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.1:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-6 (x -18..+18): 3.1:TerrainCollision  3.4:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.8:Road_ng-lagos-ibadan  3.9:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-12 (x -18..+18): 3.0:TerrainCollision  3.1:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=-18 (x -18..+18): 2.9:TerrainCollision  2.9:TerrainCollision  2.9:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  \n"
+      ]
+    },
+    "night": {
+      "render": "[Render] tier=low (url='http://127.0.0.1:46483/index.html?smoke=drive&hold=1&hour=night&quality=low&probe=1&tonemap=aces') shadows=60m x1 msaa=1 renderScale=0.8 loadRadius=2 post=on (tonemap=True(aces) grade=False vignette=False bloom=False) pipeline=ARO_URP colorSpace=Gamma hdr=True cameraHdr=True additionalLights=PerPixel maxAdditionalLights=4 graphicsApi=OpenGLES3 rendererPostProcessData=present\n",
+      "light": "[Light] hour=23.000 source=url night=True elev=-0.966 sun=off sunIntensity=0.000 sunColor=(1.000,0.450,0.180) sky=procedural skyExposure=0.300 ambientSky=(0.050,0.070,0.130) ambientEquator=(0.040,0.048,0.075) ambientGround=(0.025,0.025,0.030) fogDensity=0.000 overcast=0.000 moon=on moonIntensity=0.200 golden=0.000 postExposure=0.000 atmosphere=0.917 skyTint=(0.450,0.500,0.600) fogColor=(0.030,0.040,0.075) fogDensityExact=0.00035\n",
+      "head": "[Light] headlights on=True lights=2 type=Spot angle=55 range=100 intensity=240.0 enabled=True pixelLightCount=2\n",
+      "postCheck": "[Render] post-processing check rendererPostProcessData=present volumeTonemap=ACES cameraPost=True settingOn=True\n",
+      "hold": "[Drive] smoke hold: vehicle frozen at (-0.1,3.92,-1.8) yaw=106 upright=1.00 tries=0 for reproducible screenshots\n",
+      "probe": [
+        "[Probe] camera pos=(-12.7,8.5,1.7) euler=(10,106) fov=55 near=0.30 far=900\n",
+        "[Probe] r d=0.0 ChunkStreamer/Chunk_0_-1/Road_ng-lagos-ibadan enabled=True active=True mats=ARO_Asphalt,ARO_Shoulder,ARO_Verge,ARO_MarkWhite,ARO_MarkYellow, centre=(100,4.4,-22) size=(203,1.3,62) shadow=On tris=1088\n",
+        "[Probe] r d=0.1 ChunkStreamer/Chunk_0_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.9,-100) size=(200,5.5,200) shadow=On tris=942\n",
+        "[Probe] r d=0.3 ChunkStreamer/Chunk_-1_-1/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.1,-100) size=(200,5.2,200) shadow=On tris=960\n",
+        "[Probe] r d=0.4 Savanna 4x2 Light Truck/Body enabled=True active=True mats=TruckBody, centre=(-1,5.2,-2) size=(7,1.8,4) shadow=On tris=12\n",
+        "[Probe] r d=1.5 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-2,4.2,-2) size=(2,1.5,1) shadow=On tris=80\n",
+        "[Probe] r d=1.6 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(-2,4.2,0) size=(1,1.4,1) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(2,4.5,-1) size=(1,1.4,1) shadow=On tris=80\n",
+        "[Probe] r d=1.7 Savanna 4x2 Light Truck/WheelHolder/WheelVisual enabled=True active=True mats=TruckWheel, centre=(2,4.5,-4) size=(1,1.4,1) shadow=On tris=80\n",
+        "[Probe] r d=1.8 Savanna 4x2 Light Truck/Cab enabled=True active=True mats=TruckBody, centre=(2,6.4,-2) size=(2,1.8,3) shadow=On tris=12\n",
+        "[Probe] r d=1.8 ChunkStreamer/Chunk_-1_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(-100,1.3,100) size=(200,4.6,200) shadow=On tris=960\n",
+        "[Probe] r d=1.8 ChunkStreamer/Chunk_0_0/Terrain enabled=True active=True mats=ARO_TerrainDry, centre=(100,1.4,100) size=(200,4.4,200) shadow=On tris=960\n",
+        "[Probe] r d=3.7 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-3,5.1,0) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.7 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-3,5.1,0) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-1) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-2) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.8 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-3,5.1,0) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] r d=3.9 Savanna 4x2 Light Truck/Cube enabled=True active=True mats=TruckBody (Instance), centre=(-4,5.1,-2) size=(0,0.2,0) shadow=On tris=12\n",
+        "[Probe] 17 renderers within 45 m\n",
+        "[Probe] ground z=+18 (x -18..+18): 3.2:TerrainCollision  3.2:TerrainCollision  3.3:TerrainCollision  3.3:TerrainCollision  3.3:TerrainCollision  3.2:TerrainCollision  3.2:TerrainCollision  \n",
+        "[Probe] ground z=+12 (x -18..+18): 3.5:TerrainCollision  3.5:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.5:TerrainCollision  3.3:TerrainCollision  \n",
+        "[Probe] ground z=+6 (x -18..+18): 3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  3.9:Road_ng-lagos-ibadan  3.9:Road_ng-lagos-ibadan  3.9:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=0 (x -18..+18): 3.5:TerrainCollision  3.6:TerrainCollision  3.6:TerrainCollision  5.9:Body  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-6 (x -18..+18): 3.3:TerrainCollision  3.5:TerrainCollision  3.6:TerrainCollision  3.8:Road_ng-lagos-ibadan  3.9:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  4.0:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-12 (x -18..+18): 3.0:TerrainCollision  3.2:TerrainCollision  3.3:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.4:TerrainCollision  3.9:Road_ng-lagos-ibadan  \n",
+        "[Probe] ground z=-18 (x -18..+18): 2.9:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  3.0:TerrainCollision  \n"
+      ]
+    }
+  }
+}
