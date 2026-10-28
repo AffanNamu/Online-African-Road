@@ -77,7 +77,7 @@ namespace ARO.Game
         // ================================================================================================================ build
         void BuildCanvas()
         {
-            _regions.Clear(); _keys.Clear(); _hold.Clear();
+            _regions.Clear(); _keys.Clear(); _hold.Clear(); _late.Clear();
             ResolveVehicle();
             var model = WorldMapScreen.Model();
             string place = "Lagos, Nigeria";
@@ -146,6 +146,21 @@ namespace ARO.Game
         void Refill(string name, Action build)
         {
             if (!_regions.TryGetValue(name, out var r) || r == null) return;
+            // Background redraws (server replies, timers) wait for the end of the frame: the event system has then handled this frame's input, and the new buttons are drawn (hit-testable) before the next
+            // frame's input. A redraw a click asks for runs at once, as does one asked for while the queue itself is running.
+            if (Ui.InClick == 0 && !_flushing && PointerGuard.QueueAtFrameEnd)
+            {
+                _late.Add(name, () => { if (_regions.TryGetValue(name, out var now) && now != null && now == r) RefillDecide(name, r, build); });
+                return;
+            }
+            RefillDecide(name, r, build);
+        }
+
+        readonly RedrawQueue _late = new RedrawQueue();
+        bool _flushing;
+
+        void RefillDecide(string name, RectTransform r, Action build)
+        {
             if (PointerGuard.Enabled && Ui.InClick == 0 && _hold.Defer(name, () => RefillHeld(name, r, build), PointerGuard.Down, Time.unscaledTime))
             {
                 if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} held back: the pointer is down t={Time.realtimeSinceStartup:0.00} fc={Time.frameCount}");
@@ -160,6 +175,7 @@ namespace ARO.Game
         void RefillNow(string name, RectTransform r, Action build)
         {
             _hold.Cancel(name);                                                 // a held redraw of this region would only repeat this one
+            _late.Cancel(name);                                                 // and so would a queued one
             for (int i = r.childCount - 1; i >= 0; i--) Destroy(r.GetChild(i).gameObject);
             var prev = _stage; _stage = r; build(); _stage = prev; MarkTargetsDirty();
             if (SmokeMode.E2E) Debug.Log($"[UIDiag] rebuild {name} t={Time.realtimeSinceStartup:0.00} pointerDown={PointerGuard.Down.ToString().ToLowerInvariant()} fc={Time.frameCount}");   // E2E diagnostics: a click that lands while a region is being rebuilt can find nothing under it
@@ -602,7 +618,6 @@ namespace ARO.Game
         void Update()
         {
             float now = Time.unscaledTime;
-            _hold.Flush(PointerGuard.Down, now);                                // after the event system has handled a release: held redraws run now
             if (_slides != null && _slides.Length > 1 && now > _nextSlide) { _slide = (_slide + 1) % _slides.Length; ShowSlide(_slide, true); _nextSlide = now + 8f; }
             if (_heroPhoto != null) { float p = Tween.Progress(now - _heroDip, 0f, 0.7f); _heroPhoto.color = new Color(1, 1, 1, Mathf.Lerp(0.15f, 1f, p)); }   // dips through dark and back on every slide change
             if (_toast != null && _toast.text.Length > 0 && now > _toastUntil) _toast.text = "";
@@ -613,6 +628,15 @@ namespace ARO.Game
             if (now > _nextContent) { _nextContent = now + 120f; _ = LoadHeroContent(); _ = LoadNewsContent(); _ = LoadRecentPlayers(); }
             if (_page == Page.Jobs) JobsUpdate(now); else if (_page == Page.Multiplayer) MpUpdate(now); else if (_page == Page.Vehicles) VehUpdate(now); else if (_page == Page.Garage) GarUpdate(now); else if (_page == Page.Friends) FriUpdate(now); else if (_page == Page.Leaderboards) LbUpdate(now); else if (_page == Page.Profile) PrUpdate(now); else if (_page == Page.BusRoutes) BrUpdate(now); else if (_page == Page.Onboarding) ObUpdate(now);
             if (SmokeMode.LogTargets && !_targetsLogged && now > _builtAt + 2.5f) LogTargets();
+        }
+
+        /// <summary>After every Update, the event system included: the redraws asked for during this frame run now, then the ones held back for a pressed pointer if it has been released.</summary>
+        void LateUpdate()
+        {
+            var work = _late.Take(); float now = Time.unscaledTime;
+            _flushing = true;
+            try { foreach (var a in work) a(); _hold.Flush(PointerGuard.Down, now); }
+            finally { _flushing = false; }
         }
 
         // Smoke / E2E only: the browser tests need the dashboard's own click positions.
