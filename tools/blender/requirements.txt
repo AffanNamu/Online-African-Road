@@ -1,0 +1,4 @@
+# Blender as a Python module (the official Blender Foundation wheel; needs Python 3.13) and the MCP SDK. Pinned: the toolchain must give the same results every time.
+bpy==5.2.3
+mcp>=1.26,<2
+pytest>=8
