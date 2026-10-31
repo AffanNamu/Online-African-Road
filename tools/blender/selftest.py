@@ -102,8 +102,13 @@ async def main(keep: bool) -> int:
             _, loop, _, _ = await call(s, "execute_python", code="while True:\n    pass", timeout_seconds=1); check(loop and loop["ok"] is False and "ran longer" in json.dumps(loop), "a runaway script is stopped by the timeout")
             r, _, _, texts = await call(s, "run_script", script="../../../etc/passwd"); check(r.isError, "a script path outside the scripts folders is refused")
 
-            # render: the image comes back through MCP
-            for eng, w_, h_, smp in (("workbench", 480, 270, 1), ("cycles", 480, 270, 16)):
+            # render: the image comes back through MCP (Cycles always; Workbench only where OpenGL exists, otherwise it must be refused cleanly)
+            from aro_blender import render as _render
+            engines = (("workbench", 480, 270, 1), ("cycles", 480, 270, 16)) if _render.gl_available() else (("cycles", 480, 270, 16),)
+            if len(engines) == 1:
+                r, _, _, texts = await call(s, "render_preview", view="iso", engine="workbench", width=480, height=270, samples=1, name="bollard")
+                check(r.isError and "needs OpenGL" in " ".join(texts), "without OpenGL the Workbench engine is refused cleanly (the server stays up)")
+            for eng, w_, h_, smp in engines:
                 r, meta, images, _ = await call(s, "render_preview", view="iso", engine=eng, width=w_, height=h_, samples=smp, name="bollard")
                 png = ws / meta["path"] if meta else None
                 check(meta and meta["ok"] and png.is_file() and png.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n", f"{eng} renders a PNG file", str(meta))

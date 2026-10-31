@@ -10,7 +10,7 @@ Status: the toolchain exists and is tested (section 4). **No production asset ex
 | Blender on your computer | Blender 5.2.3 (you reported it). **Not reachable from the cloud agent**: the session's list of attachable folders on your computers is empty, and nothing connects a personal computer to the cloud by itself. |
 | The cloud agent's environment | Linux container, 4 CPU cores, 15 GB RAM, no GPU (`/dev/dri` absent, no `nvidia-smi`), Python 3.13. Outbound network goes through a policy proxy. |
 | Blender installed there | **No** (`which blender` is empty). `download.blender.org` is **blocked** by the proxy (HTTP 403 on CONNECT, recorded in the proxy status), as is `github.com`. PyPI is allowed. |
-| Can Blender run there | **Yes, as the official `bpy` Python module** from PyPI: `bpy==5.2.3` installs in 43 s and reports `5.2.3 LTS`, the same version as yours. Tested in that container: scene creation, materials, Cycles CPU render (2.7 s for a small scene), Workbench (6 s) and EEVEE (55 s, software OpenGL via Mesa after `apt-get install libegl1`), saving `.blend`, FBX and GLB export. |
+| Can Blender run there | **Yes, as the official `bpy` Python module** from PyPI: `bpy==5.2.3` installs in 43 s and reports `5.2.3 LTS`, the same version as yours. Tested in that container: scene creation, materials, Cycles CPU render (2.7 s for a small scene), Workbench (6 s) and EEVEE (55 s) both need OpenGL: software OpenGL via Mesa works after `apt-get install libegl1`, and WITHOUT libEGL Blender aborts the whole process, so the server now refuses those engines cleanly instead (found by the first CI run, which failed on exactly this), saving `.blend`, FBX and GLB export. |
 | Limits | No GPU: Cycles renders on 4 CPU cores (a 960x540 preview at 64 samples took 23 s); EEVEE works but is slow. No Blender GUI: nothing to look at except renders. |
 
 ## 2. Which MCP integration (and why not the popular one)
@@ -38,7 +38,7 @@ Candidates inspected (PyPI metadata and the package source, read not run; GitHub
 * **Public repository**: `.blend`, FBX, GLB and textures are blocked by the repository safety gate (`tools/asset_allowlist.txt`: an added line needs the owner's written confirmation of ownership). Nothing generated is in git. Only the scripts, the toolchain and the tests are.
 
 ## 4. What is tested (all in `tools/blender/`, in CI as the `blender` job)
-* `tests/` (51 unit tests): path confinement, versioning, approval freeze, name rules, and the raw-Python guard against 31 hostile snippets.
+* `tests/` (54 unit tests): path confinement, versioning, approval freeze, name rules, and the raw-Python guard against 31 hostile snippets.
 * `selftest.py` (49 checks) drives the server **over the real MCP protocol**: handshake, tool discovery, scene inspection with real triangle counts and dimensions, a reviewed script building a prop, object creation and deletion, materials, accepted and refused raw Python, a runaway script stopped by the timeout, a path-escaping script refused, Workbench and Cycles renders that come back to the agent as images, validation that fails a bad asset and passes a good one, versioned saves (v001, v002), FBX and GLB export (real binary files checked by header and length) with a manifest of measurements and hashes, refusal to overwrite an export, refusal to export a failing asset, reopening a project, and no listening socket.
 
 ## 5. Workspace

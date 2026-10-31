@@ -1,13 +1,19 @@
 """Preview renders: a camera framed on the whole asset, from named views, with simple fair lighting. Temporary objects are removed and the scene's own settings restored afterwards,
 so a preview never changes what gets saved or exported. Views are relative to the ASSET: front is the side that faces +Y."""
 from __future__ import annotations
-import math, time
+import ctypes.util, math, os, time
 from pathlib import Path
 
 VIEWS = {"front": (0, 1, 0.18), "back": (0, -1, 0.18), "right": (1, 0, 0.18), "left": (-1, 0, 0.18), "top": (0, 0, 1), "iso": (0.85, 0.95, 0.7), "iso_back": (-0.85, -0.95, 0.7), "eye": (0.0, 1, 0.04)}
 ORTHO = {"front", "back", "right", "left", "top"}
 ENGINES = {"cycles": "CYCLES", "workbench": "BLENDER_WORKBENCH", "eevee": "BLENDER_EEVEE"}
 TEMP = "__aro_preview_"
+
+
+def gl_available() -> bool:
+    """Workbench and EEVEE need an OpenGL context (libEGL; on a machine without a GPU, Mesa's software renderer). Without it Blender ABORTS the whole process, so ask first.
+    ARO_BLENDER_NO_GL=1 pretends it is missing (for tests)."""
+    return os.environ.get("ARO_BLENDER_NO_GL") != "1" and ctypes.util.find_library("EGL") is not None
 
 
 def _bounds(bpy, mathutils):
@@ -26,6 +32,8 @@ def preview(bpy, mathutils, out_path: Path, view: str = "iso", engine: str = "cy
             target: str | None = None) -> Path:
     if view not in VIEWS: raise ValueError(f"unknown view '{view}': {', '.join(VIEWS)}")
     if engine not in ENGINES: raise ValueError(f"unknown engine '{engine}': {', '.join(ENGINES)}")
+    if engine != "cycles" and not gl_available():
+        raise ValueError(f"the {engine} engine needs OpenGL (libEGL) and this machine has none: use engine 'cycles', or install libegl1 libgl1 libgl1-mesa-dri (software OpenGL, no GPU needed)")
     width, height, samples = max(64, min(int(width), 1920)), max(64, min(int(height), 1080)), max(1, min(int(samples), 256))
     sc = bpy.context.scene
     if target:
