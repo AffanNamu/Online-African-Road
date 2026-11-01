@@ -52,6 +52,7 @@ Six renders at 1280 x 720 (Cycles, 64 samples) from the camera set: `ref` (the r
 | gate | ornate steel with rich scrollwork, arched top | ornate with arched top, simplified scrolls | moderate | richer scroll pattern |
 | trees | dense detailed leaves, bright | leaf-card crowns, darker, jagged leaf edges | moderate | brighter, finer leaf atlas; real species when known |
 | sky and light | saturated blue with clouds, warm sun | saturated blue with clouds, warm sun (render setup, not a game feature) | close | the game's own lighting decides in Unity |
+| glass | transparent balustrade and windows | the balustrade reads as an opaque pale panel; window glass is a dark opaque pane | moderate: the kit has no transparent material yet | a transparent kit material (Blender export and Unity builder) |
 | far end | skyline with a mosque | a long street, no skyline | intentional | generic skyline later |
 | shrubs and hedges | lush, red flowers | leaf-card shrubs with red clusters | moderate | denser flowers |
 | materials | rich | flat colours plus two textures | **moderate to significant** | PBR texture set (normal, roughness) after the Unity import shows what matters |
