@@ -24,6 +24,12 @@
   "CITY_SPECIFIC": "<city>_",
   "LANDMARK": "lmk_<city>_"
  },
+ "regions": {
+  "ngn": "Northern Nigeria"
+ },
+ "cities": {
+  "kano": "Kano"
+ },
  "assets": [
   {
    "id": "aro_villa_2storey_hip_a",
@@ -551,7 +557,7 @@
    "name": "Broad-leaf street tree (form A)",
    "assetClass": "REGIONAL",
    "category": "vegetation",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -588,7 +594,7 @@
    "name": "Broad-leaf street tree (form B)",
    "assetClass": "REGIONAL",
    "category": "vegetation",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -910,7 +916,7 @@
    "name": "Rock-cut road slope",
    "assetClass": "REGIONAL",
    "category": "environment",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -945,7 +951,7 @@
    "name": "Rocky green hill backdrop",
    "assetClass": "REGIONAL",
    "category": "environment",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -982,7 +988,7 @@
    "name": "Scattered savanna tree",
    "assetClass": "REGIONAL",
    "category": "vegetation",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -1015,7 +1021,7 @@
    "name": "Arched panel with geometric lattice (facade kit)",
    "assetClass": "REGIONAL",
    "category": "buildings",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [
@@ -2709,7 +2715,7 @@
    "name": "Traditional Hausa compound with zaure, parapet and zankwaye (type A)",
    "assetClass": "REGIONAL",
    "category": "buildings",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [],
@@ -2742,7 +2748,7 @@
    "name": "Traditional Hausa compound, two-storey front block (type B)",
    "assetClass": "REGIONAL",
    "category": "buildings",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [],
@@ -2775,7 +2781,7 @@
    "name": "Traditional Hausa compound, small plot (type C)",
    "assetClass": "REGIONAL",
    "category": "buildings",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [],
@@ -2808,7 +2814,7 @@
    "name": "Hausa compound wall, parapet and gate set",
    "assetClass": "REGIONAL",
    "category": "buildings",
-   "region": "ng_north",
+   "region": "ngn",
    "city": null,
    "approvedCities": [],
    "concepts": [],

@@ -91,7 +91,7 @@ def build_registry():
     entries = []
     for a in M.ASSETS.values():
         blocked = "blockedBy" in a
-        region = "ng_north" if a["cls"] == M.R else None; city = "kano" if a["cls"] in (M.C, M.L) else None
+        region = "ngn" if a["cls"] == M.R else None; city = "kano" if a["cls"] in (M.C, M.L) else None
         e = dict(id=a["id"], name=a["name"], assetClass=a["cls"], category=a["category"], region=region, city=city, approvedCities=[] if a["cls"] in (M.G, M.R) else ["kano"],
                  concepts=a["refs"], districts=a["districts"], status="needs_concept" if blocked else "concept_approved", breakdownApproved=False,
                  blenderSource=None, export=None, unityPrefab=None, placements=[], validation=dict(blender=None, unityImport=None, visualReview=None), approvedBy=None,
@@ -100,7 +100,7 @@ def build_registry():
         if blocked: e["blockedBy"] = a["blockedBy"]
         entries.append(e)
     return dict(schemaVersion=1, note="Initial asset registry. Chain: visual concept -> Blender source -> production export -> Unity prefab -> city placement. Nothing is production-ready: no asset has a Blender source yet. 'concept_approved' means a concept was supplied as the compulsory design standard; the owner's approval of each asset breakdown is the next gate (breakdownApproved).",
-                statusVocabulary=M.STATUS_VOCAB, classes=[M.G, M.R, M.C, M.L], idPrefix={M.G: "aro_", M.R: "rg_<region>_", M.C: "<city>_", M.L: "lmk_<city>_"}, assets=entries)
+                statusVocabulary=M.STATUS_VOCAB, classes=[M.G, M.R, M.C, M.L], idPrefix={M.G: "aro_", M.R: "rg_<region>_", M.C: "<city>_", M.L: "lmk_<city>_"}, regions={"ngn": "Northern Nigeria"}, cities={"kano": "Kano"}, assets=entries)
 
 
 def matrix_md(m):
