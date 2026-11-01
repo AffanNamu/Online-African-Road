@@ -23,7 +23,7 @@ def world(sun_elev_deg=38.0, sun_rot_deg=200.0, strength=1.0, air=1.0, dust=1.2,
         cr = nt.nodes.new("ShaderNodeValToRGB"); cr.color_ramp.elements[0].position = 0.52; cr.color_ramp.elements[0].color = (0, 0, 0, 1); cr.color_ramp.elements[1].position = 0.68; cr.color_ramp.elements[1].color = (1, 1, 1, 1)
         nt.links.new(noise.outputs["Fac"], cr.inputs["Fac"]); mix = nt.nodes.new("ShaderNodeMix"); mix.data_type = "RGBA"; mix.inputs[7].default_value = (1.0, 1.0, 1.0, 1)
         nt.links.new(cr.outputs["Color"], mix.inputs[0]); nt.links.new(ramp.outputs["Color"], mix.inputs[6]); cl_col = mix.outputs[2]
-    bg2 = nt.nodes.new("ShaderNodeBackground"); bg2.inputs["Strength"].default_value = 3.6; nt.links.new(cl_col, bg2.inputs["Color"])
+    bg2 = nt.nodes.new("ShaderNodeBackground"); bg2.inputs["Strength"].default_value = 7.2   # camera-ray sky only; doubled when the review exposure dropped one stop, so the sky stays the saturated blue of the concept; nt.links.new(cl_col, bg2.inputs["Color"])
     lp = nt.nodes.new("ShaderNodeLightPath"); ms = nt.nodes.new("ShaderNodeMixShader"); nt.links.new(lp.outputs["Is Camera Ray"], ms.inputs[0]); nt.links.new(bg1.outputs["Background"], ms.inputs[1]); nt.links.new(bg2.outputs["Background"], ms.inputs[2])
     out = nt.nodes.new("ShaderNodeOutputWorld"); nt.links.new(ms.outputs["Shader"], out.inputs["Surface"])
 
