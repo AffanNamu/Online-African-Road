@@ -32,7 +32,7 @@ DOC = f"""# Kano vertical slice: review package, revision 2
 | # | Deliverable | Where | State |
 |---|---|---|---|
 | 1 | Reference provenance and usage-rights report | `docs/kano/REFERENCE_REGISTER.md`, `reference_register.json` | done: all five images classified; **no location established, rights unknown**; missing-reference list of nine areas |
-| 2 | Private asset repository structure and integration workflow | `docs/ASSET_REPO_PROPOSAL.md`, `tools/asset-repo-template/` | structure approved, template and validator tested (9 tests); **repository not created: the GitHub integration returned 403, the owner creates the empty repo** |
+| 2 | Private asset repository structure and integration workflow | `docs/ASSET_REPO_PROPOSAL.md`, `tools/asset-repo-template/` | **repository `AffanNamu/ARO-CONTENT` created by the owner (private, checked) and the text-only skeleton pushed**; template and validator tested (9 tests); its own validation workflow passed on the first push |
 | 3 | Verified Kano coordinate recommendation | `docs/kano/COORDINATES.md`, `kano_world_frame.json` | done; **no coordinate changed**; canonical anchor and transform recommended, impact documented |
 | 4 | Road-system limitations and future-improvement backlog | `docs/ROAD_ENGINE_BACKLOG.md`, `kano_workarounds.json` | done; **shared road engine untouched**; five Kano workarounds declared, all data-only and test-enforced |
 | 5 | Confirmed Unity texture-compression report | `docs/TEXTURE_BUDGET.md`, `texture_findings.json` | from a real Unity 6000.0.58f2 run in CI (cold import); **two real findings** |
@@ -121,7 +121,7 @@ The draft greybox (placeholder volumes generated from the game's own road model,
 
 ---
 ## 8. Decisions and blockers
-1. **Create the private repository** (the integration cannot): `AffanNamu/ARO-ASSETS`, private, empty; then push `tools/asset-repo-template/` (steps in `docs/ASSET_REPO_PROPOSAL.md`). Still open there: the artifact boundary for browser tests ((a) fold, (b) encrypt, recommended (b)), the Git LFS quota, written confirmation of asset ownership, and the read token and variable (yours to set).
+1. **Private repository:** `AffanNamu/ARO-CONTENT` exists, is private and holds the text-only skeleton and the metadata-only reference register (no image, no binary, no secret). Still open: the artifact boundary for browser tests ((a) fold, (b) encrypt, recommended (b)), the Git LFS quota, written confirmation of asset ownership, and the read token and variable (yours to set).
 2. **References (blocks all modelling):** establish the original source, location and rights of R-001 to R-005 if you can, and supply the nine missing-reference areas of the register.
 3. **Coordinates:** approve the canonical anchor and `K0` transform (no existing file changes) and decide whether world-map `lat/lon` means a pin or an anchor (a change to all eight pins and the live backend seed, authorised and migrated separately).
 4. **Texture findings (section 6.2):** two real issues in the existing project settings are reported for your decision; none was changed.

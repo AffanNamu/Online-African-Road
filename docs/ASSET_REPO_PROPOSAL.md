@@ -1,13 +1,12 @@
 # Private production asset repository: structure and integration workflow
 
-**Status (2026-11-01): APPROVED by the owner; the repository does not exist yet because this session cannot create one.** The GitHub integration answered the create request with `403 Resource not accessible by integration`, so the owner (or an account with that permission) creates the empty private repository; everything else is prepared and tested in `tools/asset-repo-template/` (text files only) and is one push away. No secret or variable is set by me, ever.
+**Status (2026-11-01): APPROVED by the owner. The repository exists: `AffanNamu/ARO-CONTENT` (private, created by the owner after this session's GitHub integration answered the create request with `403 Resource not accessible by integration`).** The text-only skeleton in `tools/asset-repo-template/` is pushed to it; no binary, no reference image, no secret and no variable is in it, and I never set secrets or variables.
 
 Owner decision, 2026-11-01: a private companion repository holds Blender source projects, FBX and GLB production exports, PBR textures, approved asset references, asset manifests, version records and production previews. **This (public) repository stays focused on game integration: asset ids, catalogue entries, route data, configuration, the Blender toolchain and code.** Nothing is published publicly by default.
 
-## 1. What to create (owner steps)
-1. On GitHub create **`AffanNamu/ARO-ASSETS`**, **Private**, empty (no README, licence or gitignore). Git LFS is available on every repository; the template declares which files it tracks.
-2. Push the template: from a clone of this repository, `cp -r tools/asset-repo-template/. ../ARO-ASSETS/ && cd ../ARO-ASSETS && git lfs install && git add -A && git commit -m "Initial structure" && git push`. (Or attach the new repository to a Claude session with push access and ask me to do it; the template has no binary and no secret.)
-3. Optional, when the game's CI should fetch it: add a **read-only fine-grained token** for that one repository as the Actions secret `ASSETS_READ_TOKEN` and the repository name as the variable `ASSETS_REPO` in the game repository. Both are the owner's to set; never paste a token in chat.
+## 1. Owner steps still open
+1. *(done)* The private repository `AffanNamu/ARO-CONTENT` was created empty by the owner (checked: `private: true`, no commits) and the skeleton pushed from `tools/asset-repo-template/` plus the metadata-only reference register.
+2. Optional, when the game's CI should fetch it: add a **read-only fine-grained token** for that one repository as the Actions secret `ASSETS_READ_TOKEN` and the repository name as the variable `ASSETS_REPO` in the game repository. Both are the owner's to set; never paste a token in chat.
 
 ## 2. Structure (as implemented in `tools/asset-repo-template/`)
 ```
@@ -34,7 +33,7 @@ The five supplied screenshots are **ChatGPT-provided visual research references*
 
 ## 4. How the two repositories meet (integration workflow)
 The seam already exists and is tested: **files appear under `Assets/ThirdParty/` at development or CI time**; that folder is git-ignored here, the safety gate fails if anything under it is ever tracked, and `BlenderAssetImportTests.AProductionPrefabKeptUnderThePrivateAssetPathIsFoundByTheGamesOwnLookup` proves the game's own `PropLibrary.ProductionPrefab` finds a prefab kept there.
-* **Per asset:** author in Blender (cloud, MCP toolchain) -> `validate_asset` -> `save_project` (a new `vNNN`) -> `export_asset` (refuses to overwrite or to export a failing asset) -> owner reviews renders -> owner approves -> **committed to `ARO-ASSETS`** (by a person, or by me once the owner attaches that repository with push access) -> a pull request **here** adds the catalogue entry and the placement rule (text only) -> CI fetches the assets, runs the Unity import tests and the build -> owner reviews in the build.
+* **Per asset:** author in Blender (cloud, MCP toolchain) -> `validate_asset` -> `save_project` (a new `vNNN`) -> `export_asset` (refuses to overwrite or to export a failing asset) -> owner reviews renders -> owner approves -> **committed to `ARO-CONTENT`** (by a person, or by me once the owner attaches that repository with push access) -> a pull request **here** adds the catalogue entry and the placement rule (text only) -> CI fetches the assets, runs the Unity import tests and the build -> owner reviews in the build.
 * **In CI** (skipped when `ASSETS_REPO` is unset, so forks and pull requests still build with generated placeholders; a production id with no prefab falls back to the generated box):
   ```yaml
   - uses: actions/checkout@v4
@@ -43,7 +42,7 @@ The seam already exists and is tested: **files appear under `Assets/ThirdParty/`
   - run: mkdir -p Assets/ThirdParty && cp -r _assets/unity Assets/ThirdParty/ARO
     if: ${{ vars.ASSETS_REPO != '' }}
   ```
-* **Development:** clone `ARO-ASSETS` anywhere and copy or symlink its `unity/` folder to `Assets/ThirdParty/ARO`.
+* **Development:** clone `ARO-CONTENT` anywhere and copy or symlink its `unity/` folder to `Assets/ThirdParty/ARO`.
 
 ## 5. What this does and does not protect
 It keeps **source files, high-resolution textures and references** out of the public repository. It does **not** hide the shipped game: the WebGL build contains the models and textures players see. The existing boundary in `ci.yml` stays: when `ASSETS_REPO` is set, **nothing built from private assets is uploaded as a build artifact** (artifacts of a public repository are readable by anyone signed in to GitHub).

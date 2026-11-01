@@ -1,4 +1,4 @@
-# ARO-ASSETS (private)
+# ARO-CONTENT (private)
 
 Production assets for **African Roads Online**: Blender sources, FBX/GLB exports, PBR textures, approved references, manifests, version records and previews.
 The game code, asset ids, catalogue entries, route data and the Blender toolchain live in the public repository `AffanNamu/Online-African-Road`. **This repository holds the binaries. It is private and stays private.**
