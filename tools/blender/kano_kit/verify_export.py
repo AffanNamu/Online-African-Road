@@ -61,7 +61,18 @@ def check_reimport(W: Path, version: str) -> list[dict]:
             mats = {s.material for o in meshes for s in o.material_slots if s.material}
             imgs = {n.image.name for m in mats if m.use_nodes for n in m.node_tree.nodes if n.type == "TEX_IMAGE" and n.image}
             lods = sorted(o.name for o in meshes if "_lod" in o.name.lower())
-            rows.append(dict(asset=aid, format=fmt, meshes=len(meshes), lods=len(lods), materials=len(mats), texture_images=len(imgs), ok=len(meshes) > 0 and len(mats) > 0))
+            # scale and geometry: the LOD0 bounding box of the re-imported file against the size the Blender validation measured (metres, Blender axes)
+            lod0 = [o for o in meshes if "_lod0" in o.name.lower()] or [o for o in meshes if not o.name.startswith("col_")]
+            lo = [1e9] * 3; hi = [-1e9] * 3
+            for o in lod0:
+                for c in o.bound_box:
+                    w = o.matrix_world @ Vector(c); lo = [min(a, b) for a, b in zip(lo, w)]; hi = [max(a, b) for a, b in zip(hi, w)]
+            dims = [round(h - l, 3) for h, l in zip(hi, lo)]
+            want = json.loads((W / "validation" / aid / f"{version}.json").read_text())["stats"]["size_m"]
+            dims_ok = all(abs(d - w) <= max(0.02, 0.01 * w) for d, w in zip(dims, want))
+            tris = sum(len(o.data.polygons) for o in lod0 if o.data)                    # polygons of LOD0 after import (quads and triangles; the validator counts triangles)
+            rows.append(dict(asset=aid, format=fmt, meshes=len(meshes), lods=len(lods), materials=len(mats), texture_images=len(imgs), size_reimported_m=dims, size_validated_m=want, size_ok=dims_ok,
+                             ok=len(meshes) > 0 and len(mats) > 0 and dims_ok))
     return rows
 
 
@@ -102,9 +113,11 @@ def compare(native: Path, other: Path) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--placements", required=True); ap.add_argument("--native", required=True); ap.add_argument("--out", required=True); ap.add_argument("--version", default="v002")
-    ap.add_argument("--samples", type=int, default=48); ap.add_argument("--exposure", type=float, default=-2.9); a = ap.parse_args()
+    ap.add_argument("--samples", type=int, default=48); ap.add_argument("--exposure", type=float, default=-2.9); ap.add_argument("--skip-render", action="store_true"); a = ap.parse_args()
     W = ws.default_root(); out = Path(a.out); out.mkdir(parents=True, exist_ok=True); report = {"version": a.version}
     report["textures"] = check_textures(W, a.version); report["reimport"] = check_reimport(W, a.version)
+    if a.skip_render:
+        (out / "verify_export_dimensions.json").write_text(json.dumps(report, indent=1)); bad = [r for r in report["reimport"] if not r["ok"]]; print("dimension and re-import failures:", [(r["asset"], r["format"], r["size_reimported_m"], r["size_validated_m"]) for r in bad] or "none"); return 1 if bad else 0
     placements = json.loads(Path(a.placements).read_text()); rebuild_from_exports(W, placements, a.version)
     R.world(36.0, 200.0); cam = R.camera((-3.2, -45.0, 1.7), (0.6, 60.0, 2.6), 28.0, "ref_cam"); bpy.context.scene.camera = cam
     img = out / "kano_residential_ref_from_exports.png"; R.render(str(img), 1280, 720, a.samples, exposure=a.exposure)
