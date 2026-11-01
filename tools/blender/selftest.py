@@ -165,6 +165,13 @@ async def main(keep: bool) -> int:
             check(fi["UpAxis"] == 1 and fi["UnitScaleFactor"] == 100.0 and {"bollard", "bollard_lod0", "bollard_body"} <= set(fi["models"]), "the FBX itself declares Y up, metre units and keeps the hierarchy", json.dumps({k: fi[k] for k in ("UpAxis", "UnitScaleFactor")}))
             ext = fi["geometry_extents"]["bollard_body"]; hgt = max(h - l for h, l in zip(ext["max"], ext["min"]))
             check(0.5 < hgt < 1.0, "the FBX geometry is in metres (the 0.72 m body measures between 0.5 and 1.0 in the file)", str(ext))
+            gj = json.loads(glb.read_bytes()[20:20 + struct.unpack("<I", glb.read_bytes()[12:16])[0]])
+            fac = {m_["name"]: m_["pbrMetallicRoughness"].get("baseColorFactor") for m_ in gj["materials"]}
+            lin_ = lambda c: (c / 12.92) if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+            want = [lin_(c) for c in (0.52, 0.51, 0.48)]
+            check(fac.get("M_concrete") and all(abs(a - b) < 1e-3 for a, b in zip(fac["M_concrete"][:3], want)), "the GLB carries the surface colour even though a noise break-up is wired in (linear, from the sRGB library value)", str(fac))
+            _, still, _, _ = await call(s, "execute_python", code="n = bpy.data.materials['M_concrete'].node_tree.nodes['Principled BSDF']\nresult = len(n.inputs['Base Color'].links)")
+            check(still["ok"] and still["result"] == 1, "the exporter put the noise break-up back: the Blender file keeps its look")
             man = json.loads((ws / "exports/fbx/bollard/v002/bollard.manifest.json").read_text())
             check(man["validation"]["passed"] and man["files"][0]["sha256"] and man["blender"].startswith("5.2"), "the manifest records the measurements and file hashes")
             r, _, _, texts = await call(s, "export_asset", kind="props", name="bollard", formats=["fbx"], version=2); check(r.isError and "already holds an export" in " ".join(texts), "exports never overwrite")

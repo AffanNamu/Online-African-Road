@@ -142,6 +142,7 @@ namespace ARO.Tests
             Assert.IsNotEmpty(good, "no FBX export variant imports correctly into Unity:\n" + string.Join("\n", results.Select(r => r.Label + ": " + string.Join(" | ", r.Faults.Take(3)))));
             var def = results.FirstOrDefault(r => r.Label == "FBX " + man.fbx_default_variant);
             Assert.NotNull(def, "the toolchain's default variant '" + man.fbx_default_variant + "' was not among the generated variants");
+            Assert.AreEqual(0, def.RotatedNodes, "the toolchain's default FBX settings leave a rotation on " + def.RotatedNodes + " node(s) below the root; a variant without any is preferred: [" + string.Join(", ", clean) + "]");
             Assert.IsEmpty(def.Faults, "the toolchain's default FBX settings (" + man.fbx_default_variant + ") import wrongly; correct variants: [" + string.Join(", ", good) + "]\n" + string.Join("\n", def.Faults));
         }
 
