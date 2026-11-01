@@ -1,0 +1,1003 @@
+{
+ "freeze": "kano_residential_section_a v002",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-01T21:58:41Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "90d20afdefce4c7831a8729a0776fda340a99654",
+  "producerCodeLastChangedIn": "bba95b2b813b53974dde1ca1f4b250ceb054b6e9",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 14,
+ "assets": [
+  {
+   "id": "kano_street_oneway_section_a",
+   "kind": "roads",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1518,
+     38
+    ],
+    "sizeM": [
+     66.0,
+     96.0,
+     0.15
+    ],
+    "materials": [
+     "M_asphalt",
+     "M_concrete",
+     "M_grass_green",
+     "M_kerb_black",
+     "M_kerb_white",
+     "M_paver_mix",
+     "M_road_white"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/kano_street_oneway_section_a.blend",
+     "bytes": 2819924,
+     "sha256": "aaf96278bdf385bc9d99dad54c0cb347ce3ac6302249e9e6faa9597f88905b27"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/project.json",
+     "bytes": 327,
+     "sha256": "dbdc0b1e598775be5b92f0d9a42a06d265d130c79c8a360d9fdc243ae81c53fc"
+    },
+    {
+     "path": "exports/fbx/kano_street_oneway_section_a/v002/kano_street_oneway_section_a.fbx",
+     "bytes": 68444,
+     "sha256": "ffe3683cce3324a99150c02e8454201ff8e1a6601301d28ca91e9d7d740a7c9f"
+    },
+    {
+     "path": "exports/glb/kano_street_oneway_section_a/v002/kano_street_oneway_section_a.glb",
+     "bytes": 2807116,
+     "sha256": "9607327745ef48c2c03aeb30c5b4aed3ca0bad94e7ce34661de7e3da1b4eb7a3"
+    },
+    {
+     "path": "exports/fbx/kano_street_oneway_section_a/v002/kano_street_oneway_section_a.manifest.json",
+     "bytes": 1697,
+     "sha256": "cc5d3b6ebeb593b770efdd2d2b1531ec44692302264aad0c0c0a2f3cd86dbeac"
+    },
+    {
+     "path": "validation/kano_street_oneway_section_a/v002.json",
+     "bytes": 647,
+     "sha256": "89c60e4c4884cee12c96b85ca3aa91251cf4a84618ceafb498f2b272d8726553"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_grass_BaseColor.png",
+     "bytes": 321972,
+     "sha256": "3dfce1805d72ff04bb9aba35cf9454490eb00f6b6eda2f80bd991c9b88f4aef5"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_grass_Normal.png",
+     "bytes": 522577,
+     "sha256": "a79a43acff0bd74592dbf140bebd295dd50bc94dc6810e4b969abca7de29d770"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/roads/kano_street_oneway_section_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_villa_2storey_hip_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     5454,
+     824,
+     58
+    ],
+    "sizeM": [
+     13.6,
+     12.9,
+     10.45
+    ],
+    "materials": [
+     "M_cladding_grey",
+     "M_frame_aluminium_dark",
+     "M_glass",
+     "M_glass_dark",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_metal_gate_black",
+     "M_paint_white",
+     "M_plaster_cream_light",
+     "M_roof_tile_charcoal",
+     "M_stone_travertine"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/aro_villa_2storey_hip_a.blend",
+     "bytes": 1477940,
+     "sha256": "6b76193eb9412600aed5c95da1b91f4ad48b982eccd9a9b5ab6215214a9eef6c"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/project.json",
+     "bytes": 236,
+     "sha256": "44db043a0cdab1c4353dbbf0d3d66154ad183a020d6031a4d864d71feb83fa15"
+    },
+    {
+     "path": "exports/fbx/aro_villa_2storey_hip_a/v002/aro_villa_2storey_hip_a.fbx",
+     "bytes": 181116,
+     "sha256": "898e86e78038ab7bc66671e2023bb48b54d4e1d7cbf3cffe14052e82506f75f9"
+    },
+    {
+     "path": "exports/glb/aro_villa_2storey_hip_a/v002/aro_villa_2storey_hip_a.glb",
+     "bytes": 1739756,
+     "sha256": "e5054268eb7f83d1b1eb566a0bba12ff4a3e9e04ba3c1bfab3566a87ecc2ebad"
+    },
+    {
+     "path": "exports/fbx/aro_villa_2storey_hip_a/v002/aro_villa_2storey_hip_a.manifest.json",
+     "bytes": 2781,
+     "sha256": "d610a56814fb7ea0cd51005fd52a09b435a0348539cf6cab8e3c223678e649de"
+    },
+    {
+     "path": "validation/aro_villa_2storey_hip_a/v002.json",
+     "bytes": 1251,
+     "sha256": "f098a3f7ac0a7595b615635fbfdc5ff8ce92ff8ba89fa78cdbd0590223331701"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_cladding_BaseColor.png",
+     "bytes": 6111,
+     "sha256": "f74a404b37feed3a6bc0820e9253dd4602f13f74fcc4536fa138f466229bfaba"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_cladding_Normal.png",
+     "bytes": 153193,
+     "sha256": "9df07359d5d74cb5b665cef46cc8f77007d7715072705a45d2424a752d89c2b7"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_plaster_BaseColor.png",
+     "bytes": 169970,
+     "sha256": "fcfe1d281c81d6020928bd0c071360e507f9c4f2cbf3ef2a1843e359f70d3c34"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_plaster_Normal.png",
+     "bytes": 283415,
+     "sha256": "b3d7b6521d11401845f8b1c047838f9796935590bbfd0fa2058b64bed4b16da9"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_rooftile_BaseColor.png",
+     "bytes": 61199,
+     "sha256": "42afbc4d6a1daf2168408e7271cfcac9f8d899d388327e94cfa6bcdcab443115"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_rooftile_Normal.png",
+     "bytes": 195946,
+     "sha256": "e445263332c32918d2778e6d1cd3df176daeb3e970352e57f0ff117dcb1acd76"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_travertine_BaseColor.png",
+     "bytes": 190398,
+     "sha256": "a07f544c57a074ed3cb4b4cb62a7ae69ec55fcfaeaaf67c4299bfb5010d5ae57"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_a/v002/T_kano_travertine_Normal.png",
+     "bytes": 218784,
+     "sha256": "32064456fac85d993998b0f482a5460e044f303e5610030116adfb1fc6d6d1b6"
+    }
+   ]
+  },
+  {
+   "id": "aro_villa_2storey_hip_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     4808,
+     774,
+     70
+    ],
+    "sizeM": [
+     16.48,
+     13.2,
+     9.114
+    ],
+    "materials": [
+     "M_cladding_grey",
+     "M_frame_aluminium_dark",
+     "M_glass_dark",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_metal_gate_black",
+     "M_paint_white",
+     "M_plaster_cream_light",
+     "M_roof_tile_charcoal",
+     "M_stone_travertine"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/aro_villa_2storey_hip_b.blend",
+     "bytes": 1469647,
+     "sha256": "7f4d45dc088cffbf7c05266a657658c927e199e81f0602d4b49c3e5b1dcfc798"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/project.json",
+     "bytes": 284,
+     "sha256": "0e80394cb0b45e61b221b8c6b78ec7e335c9494bdff6c985368107348d34a79e"
+    },
+    {
+     "path": "exports/fbx/aro_villa_2storey_hip_b/v002/aro_villa_2storey_hip_b.fbx",
+     "bytes": 168028,
+     "sha256": "0b05ed521d0116ece469e687e354db91a2ee6f468372c1daf0f0c21a3c131960"
+    },
+    {
+     "path": "exports/glb/aro_villa_2storey_hip_b/v002/aro_villa_2storey_hip_b.glb",
+     "bytes": 1692664,
+     "sha256": "9ec095023802ba03e98a72ee13f6cff61436883268033c6697d49961d6996aba"
+    },
+    {
+     "path": "exports/fbx/aro_villa_2storey_hip_b/v002/aro_villa_2storey_hip_b.manifest.json",
+     "bytes": 2764,
+     "sha256": "5bb3d9a1909a76d1f12c064a0dd28bcca1aeb1748d4dc18ac34fc06a70cb4013"
+    },
+    {
+     "path": "validation/aro_villa_2storey_hip_b/v002.json",
+     "bytes": 1236,
+     "sha256": "5f960da994abfd82c8574ade1f46163a77a1fd1ad4d4c0e92b1948743e0d02ae"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_cladding_BaseColor.png",
+     "bytes": 6111,
+     "sha256": "f74a404b37feed3a6bc0820e9253dd4602f13f74fcc4536fa138f466229bfaba"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_cladding_Normal.png",
+     "bytes": 153193,
+     "sha256": "9df07359d5d74cb5b665cef46cc8f77007d7715072705a45d2424a752d89c2b7"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_plaster_BaseColor.png",
+     "bytes": 169970,
+     "sha256": "fcfe1d281c81d6020928bd0c071360e507f9c4f2cbf3ef2a1843e359f70d3c34"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_plaster_Normal.png",
+     "bytes": 283415,
+     "sha256": "b3d7b6521d11401845f8b1c047838f9796935590bbfd0fa2058b64bed4b16da9"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_rooftile_BaseColor.png",
+     "bytes": 61199,
+     "sha256": "42afbc4d6a1daf2168408e7271cfcac9f8d899d388327e94cfa6bcdcab443115"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_rooftile_Normal.png",
+     "bytes": 195946,
+     "sha256": "e445263332c32918d2778e6d1cd3df176daeb3e970352e57f0ff117dcb1acd76"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_travertine_BaseColor.png",
+     "bytes": 190398,
+     "sha256": "a07f544c57a074ed3cb4b4cb62a7ae69ec55fcfaeaaf67c4299bfb5010d5ae57"
+    },
+    {
+     "path": "projects/buildings/aro_villa_2storey_hip_b/v002/T_kano_travertine_Normal.png",
+     "bytes": 218784,
+     "sha256": "32064456fac85d993998b0f482a5460e044f303e5610030116adfb1fc6d6d1b6"
+    }
+   ]
+  },
+  {
+   "id": "aro_wall_compound_panel_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     50
+    ],
+    "sizeM": [
+     4.25,
+     0.37,
+     2.4
+    ],
+    "materials": [
+     "M_cladding_grey",
+     "M_plaster_cream_light"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/aro_wall_compound_panel_a.blend",
+     "bytes": 701398,
+     "sha256": "dd0871391a5d9e58c44c03d6de972c1b13be2cb8750a9e03c20883606dc0cd17"
+    },
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/project.json",
+     "bytes": 242,
+     "sha256": "9d48dfd89d408e69eacde854d63d6d68dcbfbd62045faf6c86d0e884d007ac4b"
+    },
+    {
+     "path": "exports/fbx/aro_wall_compound_panel_a/v002/aro_wall_compound_panel_a.fbx",
+     "bytes": 28668,
+     "sha256": "136bd9d4780819a756956943a29c63392f35f46c0854d33d2c1185b645394672"
+    },
+    {
+     "path": "exports/glb/aro_wall_compound_panel_a/v002/aro_wall_compound_panel_a.glb",
+     "bytes": 620392,
+     "sha256": "5ae88eaf3ab164be20665e630c7f869a7d717a688164997ed764d973593a1564"
+    },
+    {
+     "path": "exports/fbx/aro_wall_compound_panel_a/v002/aro_wall_compound_panel_a.manifest.json",
+     "bytes": 2441,
+     "sha256": "c9471a3199acd35bd2460654d03b751468934c999ccd533c4a130791a47ea359"
+    },
+    {
+     "path": "validation/aro_wall_compound_panel_a/v002.json",
+     "bytes": 964,
+     "sha256": "55f3cf760d98ed2f9c1527f6e988ee3df9debe5dbf8011dd151e528a69823689"
+    },
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/T_kano_cladding_BaseColor.png",
+     "bytes": 6111,
+     "sha256": "f74a404b37feed3a6bc0820e9253dd4602f13f74fcc4536fa138f466229bfaba"
+    },
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/T_kano_cladding_Normal.png",
+     "bytes": 153193,
+     "sha256": "9df07359d5d74cb5b665cef46cc8f77007d7715072705a45d2424a752d89c2b7"
+    },
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/T_kano_plaster_BaseColor.png",
+     "bytes": 169970,
+     "sha256": "fcfe1d281c81d6020928bd0c071360e507f9c4f2cbf3ef2a1843e359f70d3c34"
+    },
+    {
+     "path": "projects/props/aro_wall_compound_panel_a/v002/T_kano_plaster_Normal.png",
+     "bytes": 283415,
+     "sha256": "b3d7b6521d11401845f8b1c047838f9796935590bbfd0fa2058b64bed4b16da9"
+    }
+   ]
+  },
+  {
+   "id": "aro_pier_stone_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     144,
+     34,
+     12
+    ],
+    "sizeM": [
+     0.68,
+     0.68,
+     2.75
+    ],
+    "materials": [
+     "M_plaster_cream_light",
+     "M_stone_travertine"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/aro_pier_stone_a.blend",
+     "bytes": 958485,
+     "sha256": "940020e730031bf4b5c7bc8713513d21e5d27c6905f748ccca0e645c085e0ac3"
+    },
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/project.json",
+     "bytes": 220,
+     "sha256": "7c72f6c47419b47848d29df877538905e8667eb40de1409c0a4bd434cb9e3c1f"
+    },
+    {
+     "path": "exports/fbx/aro_pier_stone_a/v002/aro_pier_stone_a.fbx",
+     "bytes": 37452,
+     "sha256": "82ff17330ab03d3109463984038f61088c01d7a96a42671dfbd41b508aa1a123"
+    },
+    {
+     "path": "exports/glb/aro_pier_stone_a/v002/aro_pier_stone_a.glb",
+     "bytes": 882052,
+     "sha256": "38e152e96b0312858079c0eb63f9000e819ec11f837dac35d946dd74acae9c36"
+    },
+    {
+     "path": "exports/fbx/aro_pier_stone_a/v002/aro_pier_stone_a.manifest.json",
+     "bytes": 2417,
+     "sha256": "5d9ee3d0d6a5e988ee6eb4abaa91e4afec5d5f3fb6203d966c11085bd4ac0bbb"
+    },
+    {
+     "path": "validation/aro_pier_stone_a/v002.json",
+     "bytes": 982,
+     "sha256": "829c914928cd16333eb1148de3fc091ceda69a3f7573cf652017a55684286bcd"
+    },
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/T_kano_plaster_BaseColor.png",
+     "bytes": 169970,
+     "sha256": "fcfe1d281c81d6020928bd0c071360e507f9c4f2cbf3ef2a1843e359f70d3c34"
+    },
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/T_kano_plaster_Normal.png",
+     "bytes": 283415,
+     "sha256": "b3d7b6521d11401845f8b1c047838f9796935590bbfd0fa2058b64bed4b16da9"
+    },
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/T_kano_travertine_BaseColor.png",
+     "bytes": 190398,
+     "sha256": "a07f544c57a074ed3cb4b4cb62a7ae69ec55fcfaeaaf67c4299bfb5010d5ae57"
+    },
+    {
+     "path": "projects/props/aro_pier_stone_a/v002/T_kano_travertine_Normal.png",
+     "bytes": 218784,
+     "sha256": "32064456fac85d993998b0f482a5460e044f303e5610030116adfb1fc6d6d1b6"
+    }
+   ]
+  },
+  {
+   "id": "aro_gate_ornate_steel_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2156,
+     500,
+     12
+    ],
+    "sizeM": [
+     4.011,
+     0.07,
+     2.339
+    ],
+    "materials": [
+     "M_metal_gate_black"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_gate_ornate_steel_a/v002/aro_gate_ornate_steel_a.blend",
+     "bytes": 127922,
+     "sha256": "be51ad8e202f9e094e5c4c59a40596f38d2f414af4d789da1be78e97a2f1883d"
+    },
+    {
+     "path": "projects/props/aro_gate_ornate_steel_a/v002/project.json",
+     "bytes": 255,
+     "sha256": "b86cb9dd3dd18b948a3464267da0b9a700121c0ee73bce3b36aaa25e1c349318"
+    },
+    {
+     "path": "exports/fbx/aro_gate_ornate_steel_a/v002/aro_gate_ornate_steel_a.fbx",
+     "bytes": 74348,
+     "sha256": "85d662586f2bd656324f52df4e268762723863f847271922ef773f49d7aeb57d"
+    },
+    {
+     "path": "exports/glb/aro_gate_ornate_steel_a/v002/aro_gate_ornate_steel_a.glb",
+     "bytes": 189952,
+     "sha256": "1c561a8382a30c50fda15a8a99b1116fcb3c317ee50343f1f39dfe8282b2a7c0"
+    },
+    {
+     "path": "exports/fbx/aro_gate_ornate_steel_a/v002/aro_gate_ornate_steel_a.manifest.json",
+     "bytes": 2476,
+     "sha256": "4e1ac77a163c06da8fbf9a1b8e10c8c87e7149ed2fe8502d3024fff5867c2c6e"
+    },
+    {
+     "path": "validation/aro_gate_ornate_steel_a/v002.json",
+     "bytes": 985,
+     "sha256": "bec448ddd3381edab451963175b69e1a185ff058189e1c896f3a320d6f7a80ba"
+    }
+   ]
+  },
+  {
+   "id": "aro_lantern_wall_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     106
+    ],
+    "sizeM": [
+     0.18,
+     0.185,
+     0.34
+    ],
+    "materials": [
+     "M_lantern_glow",
+     "M_metal_gate_black"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_lantern_wall_a/v002/aro_lantern_wall_a.blend",
+     "bytes": 93189,
+     "sha256": "5fbd95fe681d5a3d9f745d1ce1bc612a16ede28f25890e2c88856233ec8559d1"
+    },
+    {
+     "path": "projects/props/aro_lantern_wall_a/v002/project.json",
+     "bytes": 205,
+     "sha256": "b476707a77ceeb9746aa812b2b2f03d90f24ed710eacde5d3c9152ca54145419"
+    },
+    {
+     "path": "exports/fbx/aro_lantern_wall_a/v002/aro_lantern_wall_a.fbx",
+     "bytes": 20316,
+     "sha256": "68b0e761e59c7163b4d7ff2b5f4553fa9c94382d66de8f4d9a3eeb1255d9333b"
+    },
+    {
+     "path": "exports/glb/aro_lantern_wall_a/v002/aro_lantern_wall_a.glb",
+     "bytes": 9708,
+     "sha256": "151400f127e28375fde2801ad276817a1a5ae497446c088c55bc295d90db9aeb"
+    },
+    {
+     "path": "exports/fbx/aro_lantern_wall_a/v002/aro_lantern_wall_a.manifest.json",
+     "bytes": 2538,
+     "sha256": "c80de04c9fec4d023be227adba8d88d04aca275e3c38450390d5d67dec78d9b1"
+    },
+    {
+     "path": "validation/aro_lantern_wall_a/v002.json",
+     "bytes": 1105,
+     "sha256": "7e25cce161948fdf5df16e98a5848f4d3e33aa6fadeb673e008e6bb5f47c5298"
+    }
+   ]
+  },
+  {
+   "id": "aro_streetlight_single_arm_a",
+   "kind": "lights",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     256,
+     94,
+     22
+    ],
+    "sizeM": [
+     0.44,
+     3.22,
+     9.49
+    ],
+    "materials": [
+     "M_lantern_glow",
+     "M_metal_galvanised",
+     "M_metal_gate_black"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/lights/aro_streetlight_single_arm_a/v002/aro_streetlight_single_arm_a.blend",
+     "bytes": 101129,
+     "sha256": "ff34427306b96dde3ac4a5f0d83ef457399aa6dae7ab8db8c332bb1274a93017"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_single_arm_a/v002/project.json",
+     "bytes": 231,
+     "sha256": "96295a5cd8576a3e767de0f00386802f3030695b1f1502f65ba2563d87580733"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_single_arm_a/v002/aro_streetlight_single_arm_a.fbx",
+     "bytes": 37084,
+     "sha256": "537e4e9f7efea8018d0b4c445614457f96156501b9662ecb89f3eead4fea843d"
+    },
+    {
+     "path": "exports/glb/aro_streetlight_single_arm_a/v002/aro_streetlight_single_arm_a.glb",
+     "bytes": 25740,
+     "sha256": "834240e0d998bb29099c0f4db6ba0d8e5bf340da307e21daa300d15d58223875"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_single_arm_a/v002/aro_streetlight_single_arm_a.manifest.json",
+     "bytes": 2752,
+     "sha256": "4cda2b4fec4a670812006559edcdd9be4425ec02b7d0532d5bcbe17c12c10042"
+    },
+    {
+     "path": "validation/aro_streetlight_single_arm_a/v002.json",
+     "bytes": 1204,
+     "sha256": "175489e033569c9e4ce2d2f6bf1bb02e5ab23a2cc65e9c589f85fb351671ad55"
+    }
+   ]
+  },
+  {
+   "id": "aro_pole_electric_concrete_span_a",
+   "kind": "environments",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     918,
+     234,
+     34
+    ],
+    "sizeM": [
+     1.9,
+     30.221,
+     9.5
+    ],
+    "materials": [
+     "M_concrete",
+     "M_concrete_dark",
+     "M_insulator_brown",
+     "M_metal_galvanised",
+     "M_rubber"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_pole_electric_concrete_span_a/v002/aro_pole_electric_concrete_span_a.blend",
+     "bytes": 619553,
+     "sha256": "98eb20f19cfb1dc5ab7af4c83f461f3b15ec5752953db87874726f40d9332abc"
+    },
+    {
+     "path": "projects/environments/aro_pole_electric_concrete_span_a/v002/project.json",
+     "bytes": 308,
+     "sha256": "65fb8efcb176e23498b0257a0c78c22187bf22e73f0fca30a1455e5734092095"
+    },
+    {
+     "path": "exports/fbx/aro_pole_electric_concrete_span_a/v002/aro_pole_electric_concrete_span_a.fbx",
+     "bytes": 55836,
+     "sha256": "5b088af1a8e8b2fda48169f6544888753968d4f6eccaceb09a5d081edf2ad47f"
+    },
+    {
+     "path": "exports/glb/aro_pole_electric_concrete_span_a/v002/aro_pole_electric_concrete_span_a.glb",
+     "bytes": 597796,
+     "sha256": "69999432d327ef33a013e60047fa0fa8bdf8d8a0341f9e66b6a1c6779673b8c3"
+    },
+    {
+     "path": "exports/fbx/aro_pole_electric_concrete_span_a/v002/aro_pole_electric_concrete_span_a.manifest.json",
+     "bytes": 2718,
+     "sha256": "9d6d214c7ac738d1b406da4ba3e6366528490a9e7092d77e10c15e0ff53aa62f"
+    },
+    {
+     "path": "validation/aro_pole_electric_concrete_span_a/v002.json",
+     "bytes": 1114,
+     "sha256": "a658ea4855e7303347aaf56964a8c04c2fa5d1e02f621155c8d6bbc59211cc43"
+    },
+    {
+     "path": "projects/environments/aro_pole_electric_concrete_span_a/v002/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/environments/aro_pole_electric_concrete_span_a/v002/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "aro_sign_oneway_a",
+   "kind": "signs",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     357,
+     69,
+     24
+    ],
+    "sizeM": [
+     0.92,
+     0.13,
+     2.67
+    ],
+    "materials": [
+     "M_metal_galvanised",
+     "M_paint_white",
+     "M_sign_blue"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_sign_oneway_a/v002/aro_sign_oneway_a.blend",
+     "bytes": 103873,
+     "sha256": "bf521a463c5b876262b7fa6ea9999849400f68355aae318c58f4b1fcf1d9347c"
+    },
+    {
+     "path": "projects/signs/aro_sign_oneway_a/v002/project.json",
+     "bytes": 229,
+     "sha256": "84b81eefa71fdf4a97d0548b10a76d3f81884a8148bf88fac4d89a50298fb82e"
+    },
+    {
+     "path": "exports/fbx/aro_sign_oneway_a/v002/aro_sign_oneway_a.fbx",
+     "bytes": 38284,
+     "sha256": "695517f615e14fd7ad07b6afad8a5f96aea65a90ccb8fc93beb107c6952da245"
+    },
+    {
+     "path": "exports/glb/aro_sign_oneway_a/v002/aro_sign_oneway_a.glb",
+     "bytes": 41584,
+     "sha256": "cf50f5e60f66e966d7649f1fb9ffee03acc4a9517445df900eb5f04bc18392f0"
+    },
+    {
+     "path": "exports/fbx/aro_sign_oneway_a/v002/aro_sign_oneway_a.manifest.json",
+     "bytes": 2442,
+     "sha256": "40f3f399170c056249a8682553227178ca8840042bd263e390f407f288d4bc5c"
+    },
+    {
+     "path": "validation/aro_sign_oneway_a/v002.json",
+     "bytes": 997,
+     "sha256": "6c32cd40fcf0ce0297883f03b17388131c9cc6a424a0d217c1dd62f3324a7c87"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_a",
+   "kind": "vegetation",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2364,
+     213,
+     22
+    ],
+    "sizeM": [
+     7.105,
+     6.805,
+     8.598
+    ],
+    "materials": [
+     "M_bark",
+     "M_leaf_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_a/v002/rg_ngn_tree_street_broadleaf_a.blend",
+     "bytes": 835792,
+     "sha256": "3645f6e3936cccb947e3499a8d780df98fb477755d8f4f76b0932719bede89b8"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_a/v002/project.json",
+     "bytes": 293,
+     "sha256": "56e8da5f78ab3ea98ffe82e67309aa7faae735324422d1d5dc874bbc21b185c1"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_street_broadleaf_a/v002/rg_ngn_tree_street_broadleaf_a.fbx",
+     "bytes": 144092,
+     "sha256": "6f589e06fdf9d63849269c75dee7c71b67bb8e8eba6af2a50509c41cd2d593f5"
+    },
+    {
+     "path": "exports/glb/rg_ngn_tree_street_broadleaf_a/v002/rg_ngn_tree_street_broadleaf_a.glb",
+     "bytes": 848424,
+     "sha256": "846d879d0b6a9c53ad97c7c812fe1dfaa9c409644d52ddd1140ef213b4f92fd7"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_street_broadleaf_a/v002/rg_ngn_tree_street_broadleaf_a.manifest.json",
+     "bytes": 2602,
+     "sha256": "07ba1791d574baf7addde92f11aeb5f1919b9511ca722e50b095414f33a8cca4"
+    },
+    {
+     "path": "validation/rg_ngn_tree_street_broadleaf_a/v002.json",
+     "bytes": 1034,
+     "sha256": "8da900323766cea31b9203aa34823e365c0aafa73e89a7b2e2ff4ad9e7168a16"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_a/v002/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_a/v002/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_a/v002/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_b",
+   "kind": "vegetation",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2364,
+     213,
+     22
+    ],
+    "sizeM": [
+     5.792,
+     5.512,
+     9.456
+    ],
+    "materials": [
+     "M_bark",
+     "M_leaf_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_b/v002/rg_ngn_tree_street_broadleaf_b.blend",
+     "bytes": 836128,
+     "sha256": "174207b827ba6f735b3347513a3b6c5615e933e9e7b21a08fcf527efc4abdc30"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_b/v002/project.json",
+     "bytes": 228,
+     "sha256": "8bdce5e6fa89883dd9760328b6f311bf6e72b106fbf77a52bc5ceb8dd221aef5"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_street_broadleaf_b/v002/rg_ngn_tree_street_broadleaf_b.fbx",
+     "bytes": 144236,
+     "sha256": "a85efbbd9eb21c4ab2cd350d77709800044c54913a7a8567ee7a112da3444593"
+    },
+    {
+     "path": "exports/glb/rg_ngn_tree_street_broadleaf_b/v002/rg_ngn_tree_street_broadleaf_b.glb",
+     "bytes": 848108,
+     "sha256": "df466065e60a01564eeb0ee466cc32d3476378525b2e664ac22825704084a6e2"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_street_broadleaf_b/v002/rg_ngn_tree_street_broadleaf_b.manifest.json",
+     "bytes": 2608,
+     "sha256": "51661234b733867abb128816fd977bef901a9f9868cc038f1ff9504718fab9da"
+    },
+    {
+     "path": "validation/rg_ngn_tree_street_broadleaf_b/v002.json",
+     "bytes": 1037,
+     "sha256": "78cb0cad915b298035a322f9439c355cdc1bfc2c80eccb01de22f8916f6c9336"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_b/v002/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_b/v002/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_street_broadleaf_b/v002/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "aro_hedge_clipped_a",
+   "kind": "vegetation",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     328
+    ],
+    "sizeM": [
+     2.423,
+     0.987,
+     0.97
+    ],
+    "materials": [
+     "M_hedge_green",
+     "M_leaf_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/aro_hedge_clipped_a/v002/aro_hedge_clipped_a.blend",
+     "bytes": 410144,
+     "sha256": "04751774b6daddbd7baac57523810401cb44eedfed24f5bbe375c06c3ed742aa"
+    },
+    {
+     "path": "projects/vegetation/aro_hedge_clipped_a/v002/project.json",
+     "bytes": 223,
+     "sha256": "aa096441f839e730467913eb5022786b7700cf0bf190a0bed651c208269bebeb"
+    },
+    {
+     "path": "exports/fbx/aro_hedge_clipped_a/v002/aro_hedge_clipped_a.fbx",
+     "bytes": 36220,
+     "sha256": "4ec7f583233a1fe5b8f529ec6b2d5183bb049f3f5f35c8ad27d4e05a941d8e3c"
+    },
+    {
+     "path": "exports/glb/aro_hedge_clipped_a/v002/aro_hedge_clipped_a.glb",
+     "bytes": 333768,
+     "sha256": "18a28bf674b3816595ba4a365a171a9e40352f27bb9446343b565452b86d231b"
+    },
+    {
+     "path": "exports/fbx/aro_hedge_clipped_a/v002/aro_hedge_clipped_a.manifest.json",
+     "bytes": 2574,
+     "sha256": "20a4a536fcb6e33a547fb1896c7642f34866e64c0485b3971ef6705939662764"
+    },
+    {
+     "path": "validation/aro_hedge_clipped_a/v002.json",
+     "bytes": 1110,
+     "sha256": "3943ff82f79c4b732c38fae80220a84be1efbd577ad8daa61c6b7e0db9c87979"
+    },
+    {
+     "path": "projects/vegetation/aro_hedge_clipped_a/v002/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "aro_shrub_ixora_red_a",
+   "kind": "vegetation",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1176,
+     36
+    ],
+    "sizeM": [
+     1.332,
+     1.417,
+     1.064
+    ],
+    "materials": [
+     "M_flower_red",
+     "M_hedge_green",
+     "M_leaf_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/aro_shrub_ixora_red_a/v002/aro_shrub_ixora_red_a.blend",
+     "bytes": 439328,
+     "sha256": "406ce6984d0e2007698f17acb4292bd6db176739e9a5a95f0976031dbe82a70d"
+    },
+    {
+     "path": "projects/vegetation/aro_shrub_ixora_red_a/v002/project.json",
+     "bytes": 247,
+     "sha256": "651b0d1dd73f6ddd0483f4af47de7ad50478c13fce665c72e2abfb750ef6f7c9"
+    },
+    {
+     "path": "exports/fbx/aro_shrub_ixora_red_a/v002/aro_shrub_ixora_red_a.fbx",
+     "bytes": 80028,
+     "sha256": "0bb50f9631ae9762196f48ffd0c92224895af25704b75fd06603e2cecdf967f9"
+    },
+    {
+     "path": "exports/glb/aro_shrub_ixora_red_a/v002/aro_shrub_ixora_red_a.glb",
+     "bytes": 430148,
+     "sha256": "bc472ecc2cc8c5ec51cd575d94965e377a2920ad69aed43ac0fb34b562c65148"
+    },
+    {
+     "path": "exports/fbx/aro_shrub_ixora_red_a/v002/aro_shrub_ixora_red_a.manifest.json",
+     "bytes": 2498,
+     "sha256": "52b68466cce625838e9a6a66e6049da52f0c1c77b6212fdb59337ae326c73059"
+    },
+    {
+     "path": "validation/aro_shrub_ixora_red_a/v002.json",
+     "bytes": 1013,
+     "sha256": "d1b270cc2b63cc3e9164df6ad0f697513d687fd2fe178d5fccbcf725ce8ce0c3"
+    },
+    {
+     "path": "projects/vegetation/aro_shrub_ixora_red_a/v002/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}
