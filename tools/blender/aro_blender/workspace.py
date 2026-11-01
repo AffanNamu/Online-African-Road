@@ -72,6 +72,14 @@ def existing_version_dir(root: Path, kind: str, name: str, version: int | None) 
     return v, root / "projects" / kind / name / f"v{v:03d}"
 
 
+def unique_path(p: Path) -> Path:
+    """A path that does not exist yet: `p` itself, else `<stem>_2<suffix>`, `_3`, ... Two previews rendered in the same second must not overwrite each other."""
+    if not p.exists(): return p
+    n = 2
+    while (q := p.with_name(f"{p.stem}_{n}{p.suffix}")).exists(): n += 1
+    return q
+
+
 def export_dir(root: Path, fmt: str, name: str, version: int) -> Path:
     if fmt not in ("fbx", "glb", "unity"): raise WorkspaceError(f"unknown export format '{fmt}'")
     d = root / "exports" / fmt / name / f"v{version:03d}"

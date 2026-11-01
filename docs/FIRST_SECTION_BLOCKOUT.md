@@ -6,7 +6,7 @@ Status: **scaffold only.** The owner's instruction is explicit: no Northern Nige
 A properly modelled road; residential houses; compound walls and gates; shops and roadside structures; electricity poles; streetlights; trees and vegetation; environmental props; realistic materials and lighting. One coherent section, not a city.
 
 ## 2. The neutral layout scaffold (`tools/blender/scripts/section_massing.py`)
-Rendered through the MCP server (`render_preview`, Cycles, plan and isometric). Plain boxes and cylinders; **no style claim of any kind**. The scene is a layout diagram, not an asset (it is not validated or exported).
+Rendered through the MCP server (`render_preview`, Cycles): plan, isometric, and a street-level view from a caller-placed camera (`view="camera"`, `camera_location`, `look_at`, `lens_mm`: a person 8 m into the road looking along it is `[0, -8, 1.7]` -> `[0, 30, 2.4]` at 28 mm). Plain boxes and cylinders; **no style claim of any kind**. The scene is a layout diagram, not an asset (it is not validated or exported).
 
 | Parameter (m) | Scaffold value | Status |
 |---|---|---|

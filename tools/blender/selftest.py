@@ -3,6 +3,7 @@
 discovery, scene inspection, object creation, materials, raw-Python guarding, reviewed scripts, rendering (the image comes back through MCP), validation, versioned saving, export and
 the refusals (outside paths, overwrites, failing assets). Usage: python tools/blender/selftest.py [--keep]  (needs the packages in requirements.txt)."""
 from __future__ import annotations
+import base64
 import asyncio, json, os, shutil, struct, sys, tempfile
 from pathlib import Path
 from mcp import ClientSession
@@ -17,6 +18,38 @@ def check(ok: bool, what: str, detail: str = "") -> None:
     if ok: passed += 1; print("PASS ", what)
     else: failed += 1; failures.append(what); print("FAIL ", what, ("  -> " + detail) if detail else "")
 
+
+
+def png_pixels(data: bytes):
+    """Decodes an 8-bit non-interlaced RGB/RGBA PNG without any imaging library: returns (width, height, rows of bytes-per-pixel tuples flattened per row)."""
+    import struct, zlib
+    assert data[:8] == b"\x89PNG\r\n\x1a\n", "not a PNG"
+    pos, idat, w = 8, b"", None
+    while pos < len(data):
+        n, typ = struct.unpack(">I4s", data[pos:pos + 8]); body = data[pos + 8:pos + 8 + n]; pos += 12 + n
+        if typ == b"IHDR": w, h, depth, ctype, _, _, interlace = struct.unpack(">IIBBBBB", body); assert depth == 8 and ctype in (2, 6) and interlace == 0, (depth, ctype, interlace)
+        elif typ == b"IDAT": idat += body
+    bpp = 3 if ctype == 2 else 4; stride = w * bpp; raw = zlib.decompress(idat); rows, prev = [], bytearray(stride)
+    for y in range(h):
+        f = raw[y * (stride + 1)]; line = bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+        for i in range(stride):
+            a = line[i - bpp] if i >= bpp else 0; b = prev[i]; c = prev[i - bpp] if i >= bpp else 0
+            if f == 1: line[i] = (line[i] + a) & 255
+            elif f == 2: line[i] = (line[i] + b) & 255
+            elif f == 3: line[i] = (line[i] + ((a + b) >> 1)) & 255
+            elif f == 4:
+                p_ = a + b - c; pa, pb, pc = abs(p_ - a), abs(p_ - b), abs(p_ - c); line[i] = (line[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        rows.append(bytes(line)); prev = line
+    return w, h, (rows, bpp)
+
+
+def off_background(px, w: int, h: int, tolerance: int = 24) -> float:
+    """Fraction of pixels whose colour differs from the top-left pixel (the sky) by more than `tolerance` in any channel (render dithering is a few levels)."""
+    rows, bpp = px; ref = rows[0][:3]; off = 0
+    for row in rows:
+        for x in range(0, w * bpp, bpp):
+            if max(abs(row[x + k] - ref[k]) for k in range(3)) > tolerance: off += 1
+    return off / (w * h)
 
 async def call(s: ClientSession, _tool: str, **args):
     r = await s.call_tool(_tool, args)
@@ -113,6 +146,18 @@ async def main(keep: bool) -> int:
                 png = ws / meta["path"] if meta else None
                 check(meta and meta["ok"] and png.is_file() and png.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n", f"{eng} renders a PNG file", str(meta))
                 check(len(images) == 1 and len(images[0].data) > 1000, f"{eng} preview is returned to the agent as an image")
+            # a caller-placed camera (street level, a doorway): the pixels of a view of the bollard differ from the sky, a view of the empty sky is uniform, a bad camera is refused
+            cam = dict(view="camera", engine="cycles", width=320, height=180, samples=8, name="bollard", ground=False, lens_mm=35)
+            _, m1, i1, _ = await call(s, "render_preview", camera_location=[0, -3.5, 1.0], look_at=[0, 0, 0.6], **cam)
+            _, m2, i2, _ = await call(s, "render_preview", camera_location=[0, -3.5, 1.0], look_at=[0, -3.5, 40], **cam)
+            check(m1 and m2 and m1["ok"] and m2["ok"] and m1["view"] == "camera" and m1["path"] != m2["path"], "a caller-placed camera renders, and two renders in the same second get different files", str((m1, m2)))
+            if i1 and i2:
+                w1, h1, px1 = png_pixels(base64.b64decode(i1[0].data)); w2, h2, px2 = png_pixels(base64.b64decode(i2[0].data))
+                check((w1, h1) == (320, 180) and (w2, h2) == (320, 180), "the camera render has the requested size", f"{(w1, h1)} {(w2, h2)}")
+                f1, f2 = off_background(px1, w1, h1), off_background(px2, w2, h2)
+                check(f1 > 0.02 and f2 < 0.002, "a camera aimed at the bollard sees it, one aimed at the empty sky sees nothing else", f"{f1:.4f} vs {f2:.4f} of pixels off the sky colour")
+            else: check(False, "camera renders came back as images")
+            r3, _, _, t3 = await call(s, "render_preview", view="camera", engine="cycles", name="bollard"); check(r3.isError and "needs both camera_location and look_at" in " ".join(t3), "view 'camera' without a camera is refused")
             _, ins2, _, _ = await call(s, "inspect_scene"); check(not any(o["name"].startswith("__aro_") for o in ins2["objects"]), "preview leaves no temporary objects in the scene")
 
             # validation: a failing asset is refused, a good one passes

@@ -6,6 +6,7 @@ from pathlib import Path
 
 VIEWS = {"front": (0, -1, 0.18), "back": (0, 1, 0.18), "right": (-1, 0, 0.18), "left": (1, 0, 0.18), "top": (0, 0, 1), "iso": (-0.85, -0.95, 0.7), "iso_back": (0.85, 0.95, 0.7), "eye": (0.0, -1, 0.04)}
 ORTHO = {"front", "back", "right", "left", "top"}
+CAMERA_VIEW = "camera"          # a camera placed by the caller (street level, a doorway, a walk-through frame): needs camera_location and look_at
 ENGINES = {"cycles": "CYCLES", "workbench": "BLENDER_WORKBENCH", "eevee": "BLENDER_EEVEE"}
 TEMP = "__aro_preview_"
 
@@ -14,6 +15,23 @@ def gl_available() -> bool:
     """Workbench and EEVEE need an OpenGL context (libEGL; on a machine without a GPU, Mesa's software renderer). Without it Blender ABORTS the whole process, so ask first.
     ARO_BLENDER_NO_GL=1 pretends it is missing (for tests)."""
     return os.environ.get("ARO_BLENDER_NO_GL") != "1" and ctypes.util.find_library("EGL") is not None
+
+
+def parse_camera(camera_location, look_at, lens_mm=28.0):
+    """Validates a caller-placed camera BEFORE Blender is touched. Metres, Blender axes (Z up). Returns ((x, y, z), (x, y, z), lens_mm)."""
+    def vec(v, what):
+        if not isinstance(v, (list, tuple)) or len(v) != 3: raise ValueError(f"{what} must be three numbers [x, y, z] in metres")
+        try: out = tuple(float(c) for c in v)
+        except (TypeError, ValueError): raise ValueError(f"{what} must be three numbers [x, y, z] in metres") from None
+        if any(not math.isfinite(c) or abs(c) > 5000 for c in out): raise ValueError(f"{what} must be finite and within 5 km of the origin")
+        return out
+    if camera_location is None or look_at is None: raise ValueError("view 'camera' needs both camera_location and look_at")
+    loc, tgt = vec(camera_location, "camera_location"), vec(look_at, "look_at")
+    if math.dist(loc, tgt) < 0.05: raise ValueError("camera_location and look_at are the same point")
+    try: lens = float(lens_mm)
+    except (TypeError, ValueError): raise ValueError("lens_mm must be a number (10 to 200)") from None
+    if not (10.0 <= lens <= 200.0): raise ValueError("lens_mm must be between 10 and 200 (28 is a natural wide view, 50 a normal one)")
+    return loc, tgt, lens
 
 
 def _bounds(bpy, mathutils):
@@ -29,8 +47,9 @@ def _bounds(bpy, mathutils):
 
 
 def preview(bpy, mathutils, out_path: Path, view: str = "iso", engine: str = "cycles", width: int = 960, height: int = 540, samples: int = 32, ground: bool = True,
-            target: str | None = None) -> Path:
-    if view not in VIEWS: raise ValueError(f"unknown view '{view}': {', '.join(VIEWS)}")
+            target: str | None = None, camera_location=None, look_at=None, lens_mm: float = 28.0) -> Path:
+    if view != CAMERA_VIEW and view not in VIEWS: raise ValueError(f"unknown view '{view}': {', '.join(list(VIEWS) + [CAMERA_VIEW])}")
+    custom = parse_camera(camera_location, look_at, lens_mm) if view == CAMERA_VIEW else None
     if engine not in ENGINES: raise ValueError(f"unknown engine '{engine}': {', '.join(ENGINES)}")
     if engine != "cycles" and not gl_available():
         raise ValueError(f"the {engine} engine needs OpenGL (libEGL) and this machine has none: use engine 'cycles', or install libegl1 libgl1 libgl1-mesa-dri (software OpenGL, no GPU needed)")
@@ -72,10 +91,12 @@ def preview(bpy, mathutils, out_path: Path, view: str = "iso", engine: str = "cy
         if bg: bg.inputs["Color"].default_value = (0.62, 0.74, 0.92, 1.0); bg.inputs["Strength"].default_value = 0.9
         sc.world = w
         # camera
-        d = mathutils.Vector(VIEWS[view]).normalized()
+        d = mathutils.Vector(VIEWS[view] if custom is None else VIEWS["iso"]).normalized()
         cd = bpy.data.cameras.new(TEMP + "cam"); made_data.append(("cameras", cd)); cam = bpy.data.objects.new(TEMP + "cam", cd); sc.collection.objects.link(cam); made_objects.append(cam)
         aspect = width / height
-        if view in ORTHO:
+        if custom is not None:
+            cd.type = "PERSP"; cd.lens = custom[2]; cam.location = mathutils.Vector(custom[0])
+        elif view in ORTHO:
             cd.type = "ORTHO"
             if view == "top": ext_h, ext_w = size.y, size.x
             elif view in ("front", "back"): ext_h, ext_w = size.z, size.x
@@ -87,8 +108,9 @@ def preview(bpy, mathutils, out_path: Path, view: str = "iso", engine: str = "cy
             half = 18.0 / cd.lens                                                       # tangent of half the field of view across the sensor's long side (36 mm)
             fov = 2 * math.atan(half / aspect if aspect >= 1 else half * aspect)       # Blender fits the 36 mm sensor to the longer side: the narrower field is the shorter side
             cam.location = centre + d * (radius / math.sin(fov / 2) * 1.12 + (0 if view != "eye" else radius * 0.2))
-        cam.rotation_euler = (centre - cam.location).to_track_quat("-Z", "Y").to_euler()
-        cd.clip_start = 0.05; cd.clip_end = max(2000.0, radius * 40); sc.camera = cam
+        aim = mathutils.Vector(custom[1]) if custom is not None else centre
+        cam.rotation_euler = (aim - cam.location).to_track_quat("-Z", "Y").to_euler()
+        cd.clip_start = 0.05 if custom is None else 0.1; cd.clip_end = max(2000.0, radius * 40); sc.camera = cam
         # sun + optional ground
         ld = bpy.data.lights.new(TEMP + "sun", "SUN"); made_data.append(("lights", ld)); ld.energy = 3.2 if engine != "workbench" else 1.0; ld.angle = math.radians(4)
         lo_ = bpy.data.objects.new(TEMP + "sun", ld); sc.collection.objects.link(lo_); made_objects.append(lo_)

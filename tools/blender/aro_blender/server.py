@@ -153,12 +153,14 @@ def run_script(script: str, args: dict | None = None) -> str:
 
 @mcp.tool()
 def render_preview(view: str = "iso", engine: str = "cycles", width: int = 960, height: int = 540, samples: int = 32, name: str = "scratch", ground: bool = True,
-                   target: str | None = None) -> list:
-    """Renders the scene from a named view (front, back, left, right, top, iso, iso_back, eye) and returns the image so you can LOOK at it, plus its path. Engines: cycles (CPU, most faithful,
-    a few seconds), workbench (instant flat shading, good for blockout proportions), eevee (software GL here: slow). `target` frames one object and its children."""
+                   target: str | None = None, camera_location: list[float] | None = None, look_at: list[float] | None = None, lens_mm: float = 28.0) -> list:
+    """Renders the scene from a named view (front, back, left, right, top, iso, iso_back, eye: all framed on the whole scene) and returns the image so you can LOOK at it, plus its path.
+    View 'camera' places the camera yourself: camera_location and look_at in metres (Blender axes, Z up), lens_mm 10-200 (28 wide, 50 normal): use it for street-level and doorway views, e.g.
+    camera_location [0, -45, 1.7], look_at [0, 0, 2.5] is a person standing at the end of a road looking along it. Engines: cycles (CPU, most faithful, a few seconds), workbench
+    (instant flat shading, good for blockout proportions), eevee (software GL here: slow). `target` frames one object and its children."""
     ws.check_name("props", name)
-    p = ROOT / "renders" / name / f"{name}_{view}_{engine}_{time.strftime('%Y%m%dT%H%M%S', time.gmtime())}.png"; p.parent.mkdir(parents=True, exist_ok=True)
-    t = time.time(); out = render.preview(bpy, mathutils, p, view, engine, width, height, samples, ground, target)
+    p = ROOT / "renders" / name / f"{name}_{view}_{engine}_{time.strftime('%Y%m%dT%H%M%S', time.gmtime())}.png"; p.parent.mkdir(parents=True, exist_ok=True); p = ws.unique_path(p)
+    t = time.time(); out = render.preview(bpy, mathutils, p, view, engine, width, height, samples, ground, target, camera_location, look_at, lens_mm)
     return [Image(path=str(out)), _ok(path=str(out.relative_to(ROOT)), view=view, engine=engine, seconds=round(time.time() - t, 1), bytes=out.stat().st_size)]
 
 

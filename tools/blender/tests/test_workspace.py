@@ -61,3 +61,13 @@ def test_missing_versions_are_explained(root):
     with pytest.raises(ws.WorkspaceError): ws.existing_version_dir(root, "props", "none", None)
     ws.new_version_dir(root, "props", "x1")
     with pytest.raises(ws.WorkspaceError): ws.existing_version_dir(root, "props", "x1", 7)
+
+
+def test_unique_path_never_hands_out_an_existing_file(tmp_path):
+    a = tmp_path / "x_iso_cycles_20260101T000000.png"
+    assert ws.unique_path(a) == a
+    a.write_bytes(b"1")
+    b = ws.unique_path(a); assert b.name == "x_iso_cycles_20260101T000000_2.png"
+    b.write_bytes(b"2")
+    assert ws.unique_path(a).name == "x_iso_cycles_20260101T000000_3.png"
+    assert a.read_bytes() == b"1" and b.read_bytes() == b"2"
