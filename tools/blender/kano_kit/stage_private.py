@@ -36,8 +36,8 @@ OPEN_ISSUES = {
     "aro_lantern_wall_a": "simplified lantern",
 }
 NEW_ASSETS = {   # not in the first registry
-    "kano_street_oneway_section_a": dict(name="One-way residential street section, 96 m: asphalt with flush markings, painted kerbs, paver sidewalks, verge and plot ground", assetClass="CITY_SPECIFIC", category="environment", city="kano", region=None),
-    "aro_pole_electric_concrete_span_a": dict(name="Concrete electricity pole with cross-arm, insulators and a 30 m span of overhead conductors", assetClass="GLOBAL", category="environment", city=None, region=None),
+    "kano_street_oneway_section_a": dict(name="One-way residential street section, 96 m: asphalt with flush markings, painted kerbs, paver sidewalks, verge and plot ground", assetClass="CITY_SPECIFIC", category="environment", city="kano", region=None, library="road_asphalt"),
+    "aro_pole_electric_concrete_span_a": dict(name="Concrete electricity pole with cross-arm, insulators and a 30 m span of overhead conductors", assetClass="GLOBAL", category="environment", city=None, region=None, library="road_structure_signs_lighting"),
 }
 CONCEPTS = {"aro_pole_electric_concrete_span_a": []}   # no concept: owner request, M-06
 
@@ -64,57 +64,61 @@ def main() -> int:
     for exp_dir in sorted((W / "exports" / "fbx").iterdir()):
         aid = exp_dir.name
         if aid == "bollard" or (a.only and aid not in a.only.split(",")): continue
-        vers = sorted(p.name for p in exp_dir.iterdir() if p.is_dir()); v = vers[-1]; n = int(v[1:])
-        man = json.loads((exp_dir / v / f"{aid}.manifest.json").read_text()); kind = man["kind"]
-        proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"
-        if not proj.is_dir() or not val.is_file(): print("skip (no project or validation):", aid); continue
-        # blender sources and validation
-        d = C / "blender" / "projects" / kind / aid / v; d.mkdir(parents=True, exist_ok=True)
-        for f in proj.iterdir():
-            if f.is_file() and f.suffix.lower() != ".png": shutil.copy2(f, d / f.name)     # textures are packed in the .blend and kept once under unity/Textures/kano_kit
-        (C / "blender" / "validation" / aid).mkdir(parents=True, exist_ok=True); shutil.copy2(val, C / "blender" / "validation" / aid / f"{v}.json")
-        # unity models: fbx, glb, repository-schema manifest; textures once under unity/Textures/kano_kit
-        u = C / "unity" / "Models" / aid / v; u.mkdir(parents=True, exist_ok=True); files = []
-        for fmt in ("fbx", "glb"):
-            src = W / "exports" / fmt / aid / v / f"{aid}.{fmt}"; shutil.copy2(src, u / src.name); files.append({"path": src.name, "sha256": sha(u / src.name), "bytes": (u / src.name).stat().st_size})
-        tex = C / "unity" / "Textures" / "kano_kit"; tex.mkdir(parents=True, exist_ok=True)
-        for f in proj.glob("T_*.png"):
-            if not (tex / f.name).exists(): shutil.copy2(f, tex / f.name)
-        stats = json.loads(val.read_text())["stats"]; concepts = CONCEPTS.get(aid, [REF])
-        manifest = {"id": aid, "version": n, "kind": kind, "files": files, "source": {"blend": f"blender/projects/{kind}/{aid}/{v}/{aid}.blend", "script": "tools/blender/kano_kit (Online-African-Road, branch work/kano-residential)", "toolchain": "aro-blender on Blender " + man["blender"]},
-                    "madeBy": {"human": "the owner (direction and the concept R-006); modelling code written by Claude", "tools": ["Blender " + man["blender"] + " (bpy)", "tools/blender/kano_kit", "ChatGPT concept R-006 (design reference only)"]},
-                    "licence": {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE, "thirdParty": third_party(aid)},
-                    "references": concepts, "budgets": {"lodTriangles": stats["lod_triangles"]}, "catalogEntry": man.get("catalog_entry"), "approval": None}
-        (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
-        if f"| {aid} |" not in lic:
-            lic = lic.rstrip("\n") + f"\n| {aid} | {n} | Claude (code), owner (direction) | {', '.join(concepts) or '-'} | original geometry and procedural textures; design reference ChatGPT concept R-006; ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending, {now} |\n"
-        # registry
-        e = by_id.get(aid)
-        if e is None:
-            spec = NEW_ASSETS[aid]; e = {"id": aid, "name": spec["name"], "assetClass": spec["assetClass"], "category": spec["category"], "region": spec["region"], "city": spec["city"],
-                                         "approvedCities": ["kano"] if spec["city"] else [], "concepts": concepts, "districts": ["D06"], "status": "concept_approved", "breakdownApproved": False, "blenderSource": None, "export": None,
-                                         "unityPrefab": None, "placements": [], "validation": {"blender": None, "unityImport": None, "visualReview": None}, "approvedBy": None, "plannedBudget": {"lod0TrisMax": 8000 if kind == "roads" else 2500},
-                                         "engineDependencies": [], "flags": ""}
-            if not concepts: e["ownerRequest"] = "requested by the owner on 2026-11-01 (execution decision, section E: electricity poles and overhead wires); not in concept R-006; no Kano reference exists (M-06)"; e["flags"] = "no concept: owner-requested addition"
-            reg["assets"].append(e); by_id[aid] = e
-        e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"
-        e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN_ISSUES.get(aid, "")
-        e["placements"] = [{"scene": "kano_residential_section_a", "district": "D06", "count": sum(1 for i in json.loads(Path(a.placements).read_text())["items"] if i["asset"] == aid)}]
-        col = build_all.SPECS[aid]["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
-        e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}
-        e["lods"] = [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])]
-        e["materials"] = stats["materials"]; e["textures"] = sorted(f.stem for f in proj.glob("T_*.png"))
-        e["licence"] = {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE, "thirdParty": third_party(aid)}
-        e["unity"] = {"imported": False, "compiled": False, "prefab": None, "inGameVerified": False, "note": "the Unity builder compiles and its fixture test passes in the public CI; this asset has not been imported into Unity yet"}
-        pv = []
-        if a.previews:
-            for k in ("iso", "front"):
-                src = Path(a.previews) / f"{aid}_{k}.png"
-                if src.is_file():
-                    from PIL import Image
-                    dstp = C / "previews" / aid / v; dstp.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(dstp / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
-        e["previews"] = pv
-        staged.append((aid, v, stats["lod_triangles"]))
+        vers = sorted(p.name for p in exp_dir.iterdir() if p.is_dir())
+        for v in vers:                                                                  # every version is staged (the validator wants v001, v002, ... without gaps); the registry points at the latest
+            latest = v == vers[-1]; n = int(v[1:])
+            man = json.loads((exp_dir / v / f"{aid}.manifest.json").read_text()); kind = man["kind"]
+            proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"
+            if not proj.is_dir() or not val.is_file(): print("skip (no project or validation):", aid); continue
+            # blender sources and validation
+            d = C / "blender" / "projects" / kind / aid / v; d.mkdir(parents=True, exist_ok=True)
+            for f in proj.iterdir():
+                if f.is_file() and f.suffix.lower() != ".png": shutil.copy2(f, d / f.name)     # textures are packed in the .blend and kept once under unity/Textures/kano_kit
+            (C / "blender" / "validation" / aid).mkdir(parents=True, exist_ok=True); shutil.copy2(val, C / "blender" / "validation" / aid / f"{v}.json")
+            # unity models: fbx, glb, repository-schema manifest; textures once under unity/Textures/kano_kit
+            u = C / "unity" / "Models" / aid / v; u.mkdir(parents=True, exist_ok=True); files = []
+            for fmt in ("fbx", "glb"):
+                src = W / "exports" / fmt / aid / v / f"{aid}.{fmt}"; shutil.copy2(src, u / src.name); files.append({"path": src.name, "sha256": sha(u / src.name), "bytes": (u / src.name).stat().st_size})
+            tex = C / "unity" / "Textures" / "kano_kit"; tex.mkdir(parents=True, exist_ok=True)
+            for f in (proj.glob("T_*.png") if latest else []):                           # the shared kit textures come from the latest version only: Unity finds textures by name
+                shutil.copy2(f, tex / f.name)
+            stats = json.loads(val.read_text())["stats"]; concepts = CONCEPTS.get(aid, [REF])
+            manifest = {"id": aid, "version": n, "kind": kind, "files": files, "source": {"blend": f"blender/projects/{kind}/{aid}/{v}/{aid}.blend", "script": "tools/blender/kano_kit (Online-African-Road, branch work/kano-residential)", "toolchain": "aro-blender on Blender " + man["blender"]},
+                        "madeBy": {"human": "the owner (direction and the concept R-006); modelling code written by Claude", "tools": ["Blender " + man["blender"] + " (bpy)", "tools/blender/kano_kit", "ChatGPT concept R-006 (design reference only)"]},
+                        "licence": {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE, "thirdParty": third_party(aid)},
+                        "references": concepts, "budgets": {"lodTriangles": stats["lod_triangles"]}, "catalogEntry": man.get("catalog_entry"), "approval": None}
+            if not latest: manifest["superseded"] = "superseded by " + vers[-1] + ": the colour textures of this version were decoded twice (darker, more saturated: yellow plaster, red stone); never reviewed or approved"
+            (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
+            if not latest: continue
+            if f"| {aid} |" not in lic:
+                lic = lic.rstrip("\n") + f"\n| {aid} | {n} | Claude (code), owner (direction) | {', '.join(concepts) or '-'} | original geometry and procedural textures; design reference ChatGPT concept R-006; ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending, {now} |\n"
+            # registry
+            e = by_id.get(aid)
+            if e is None:
+                spec = NEW_ASSETS[aid]; e = {"id": aid, "name": spec["name"], "assetClass": spec["assetClass"], "category": spec["category"], "region": spec["region"], "city": spec["city"],
+                                             "library": spec["library"], "approvedCities": ["kano"] if spec["city"] else [], "concepts": concepts, "districts": ["D06"], "status": "concept_approved", "breakdownApproved": False, "blenderSource": None, "export": None,
+                                             "unityPrefab": None, "placements": [], "validation": {"blender": None, "unityImport": None, "visualReview": None}, "approvedBy": None, "plannedBudget": {"lod0TrisMax": 8000 if kind == "roads" else 2500},
+                                             "engineDependencies": [], "flags": ""}
+                if not concepts: e["ownerRequest"] = "requested by the owner on 2026-11-01 (execution decision, section E: electricity poles and overhead wires); not in concept R-006; no Kano reference exists (M-06)"; e["flags"] = "no concept: owner-requested addition"
+                reg["assets"].append(e); by_id[aid] = e
+            e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"
+            e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN_ISSUES.get(aid, "")
+            e["placements"] = [{"scene": "kano_residential_section_a", "district": "D06", "count": sum(1 for i in json.loads(Path(a.placements).read_text())["items"] if i["asset"] == aid)}]
+            col = build_all.SPECS[aid]["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
+            e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}
+            e["lods"] = [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])]
+            e["materials"] = stats["materials"]; e["textures"] = sorted(f.stem for f in proj.glob("T_*.png"))
+            e["licence"] = {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE, "thirdParty": third_party(aid)}
+            e["unity"] = {"imported": False, "compiled": False, "prefab": None, "inGameVerified": False, "note": "the Unity builder compiles and its fixture test passes in the public CI; this asset has not been imported into Unity yet"}
+            pv = []
+            if a.previews:
+                for k in ("iso", "front"):
+                    src = Path(a.previews) / f"{aid}_{k}.png"
+                    if src.is_file():
+                        from PIL import Image
+                        dstp = C / "previews" / aid / v; dstp.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(dstp / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
+            e["previews"] = pv
+            staged.append((aid, v, stats["lod_triangles"]))
     (C / "LICENSES.md").write_text(lic)
     (C / "unity" / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(W / "exports" / "unity" / "aro_materials.json", C / "unity" / "Materials" / "aro_materials.json")
     (C / "unity" / "placements").mkdir(parents=True, exist_ok=True); shutil.copy2(a.placements, C / "unity" / "placements" / "kano_residential_section_a.json")
@@ -124,7 +128,7 @@ def main() -> int:
     reg["note"] = reg["note"].split(" UPDATE")[0] + f" UPDATE {now}: the first residential street kit (14 assets) has Blender sources, exports and passed the toolchain's validation (`blender_validation_passed`). None has been imported into the running game by the private build, none is visually reviewed or approved."
     reg_path.write_text(json.dumps(reg, indent=1) + "\n")
     if a.renders and Path(a.renders).is_dir():
-        pv = C / "previews" / "kano_residential_section_a" / "v001"; pv.mkdir(parents=True, exist_ok=True)
+        pv = C / "previews" / "kano_residential_section_a" / staged[-1][1]; pv.mkdir(parents=True, exist_ok=True)
         from PIL import Image
         for f in Path(a.renders).glob("kano_residential_*.png"): Image.open(f).convert("RGB").save(pv / (f.stem + ".jpg"), "JPEG", quality=88, optimize=True)
     rel = {"release": "kano_residential_section_a", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender review renders are previews of Blender geometry, not proof of Unity behaviour."}
