@@ -23,14 +23,16 @@ function serve() {
   for (const view of views) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } }); const logs = [], errors = [];
     page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${QUERY}`);
+    const t0 = Date.now(); await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${QUERY}`);
     const has = re => logs.some(l => re.test(l));
     for (let i = 0; i < 240 && !has(/\[KanoReview\] (ready|no review prefab)/); i++) await page.waitForTimeout(1000);
     if (has(/no review prefab/)) { failures.push(`${view}: the build has no review prefab (the private assets were not in it)`); await page.close(); continue; }
     if (!has(/\[KanoReview\] ready/)) { failures.push(`${view}: the review scene never started`); await page.screenshot({ path: `${prefix}-${view}-failed.png` }); await page.close(); continue; }
+    const loadSeconds = (Date.now() - t0) / 1000;                       // page load to the game's own "ready" line (E0 measurement: loading)
     await page.waitForTimeout(12000);                                   // let streaming, LODs and the sky settle in software GL
     await page.screenshot({ path: `${prefix}-${view}.png` });
-    summary[view] = { perf: logs.filter(l => l.startsWith('[Perf]')).slice(-3), render: logs.filter(l => l.startsWith('[Render]')).slice(-2), review: logs.filter(l => l.startsWith('[KanoReview]')), errors };
+    const jsHeapMB = await page.evaluate(() => (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null));
+    summary[view] = { loadSeconds, jsHeapMB, budgetWarnings: logs.filter(l => l.includes('BUDGET EXCEEDED')).slice(-5), perf: logs.filter(l => l.startsWith('[Perf]') && !l.includes('BUDGET')).slice(-3), render: logs.filter(l => l.startsWith('[Render]')).slice(-2), review: logs.filter(l => l.startsWith('[KanoReview]')), errors };
     if (errors.length) failures.push(`${view}: page errors: ${errors.slice(0, 2).join(' | ')}`);
     console.log(`${view}: saved ${prefix}-${view}.png; ${JSON.stringify(summary[view].perf.slice(-1))}`);
     await page.close();

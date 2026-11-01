@@ -254,7 +254,7 @@ namespace ARO.Tests
 
         [Test] public void TheReviewCameraReproducesABlenderCameraFieldOfView()
         {
-            Assert.AreEqual(39.6f, ARO.World.KanoReviewScene.VerticalFov(28f, 16f / 9f), 0.1f, "28 mm on a 36 mm sensor at 16:9 is 39.6 degrees vertical");
+            Assert.AreEqual(39.76f, ARO.World.KanoReviewScene.VerticalFov(28f, 16f / 9f), 0.02f, "28 mm on a 36 mm sensor at 16:9 is 39.76 degrees vertical");
             Assert.Greater(ARO.World.KanoReviewScene.VerticalFov(24f, 16f / 9f), ARO.World.KanoReviewScene.VerticalFov(35f, 16f / 9f), "a wider lens must give a wider field of view");
         }
 

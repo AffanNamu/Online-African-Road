@@ -62,7 +62,7 @@ namespace ARO.World
             _cam.fieldOfView = VerticalFov(_lens, _cam.aspect > 0.1f ? _cam.aspect : 16f / 9f);
         }
 
-        /// <summary>The vertical field of view in degrees that reproduces a Blender camera with a 36 mm sensor (which fits the width) and this focal length, for this aspect ratio: 28 mm at 16:9 is 39.6 degrees.</summary>
+        /// <summary>The vertical field of view in degrees that reproduces a Blender camera with a 36 mm sensor (which fits the width) and this focal length, for this aspect ratio: 28 mm at 16:9 is 39.76 degrees.</summary>
         public static float VerticalFov(float lensMm, float aspect)
         {
             float hfov = 2f * Mathf.Atan(18f / lensMm);
