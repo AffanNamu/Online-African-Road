@@ -1,0 +1,61 @@
+# What do the real Unity importers do with this project's textures, per target? Runs ARO.Editor.TextureReport in the WebGL editor image with a COLD Library (no cache), so the numbers are what a clean import of the
+# current importer settings produces, not what an old cached import kept. Nothing is built or changed; the JSON is printed in the log and uploaded as an artifact (no private assets are involved).
+# Compare with the main build's Build Report: it listed the world-map texture at 6.0 MB (1672 x 944 RGBA32, no mipmaps) although its importer asks for DXT1 on WebGL.
+name: Texture report
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Assets/_Project/Scripts/Editor/TextureReport.cs'
+      - '.github/workflows/texture-report.yml'
+jobs:
+  report:
+    name: Texture formats and sizes per target (Unity 6, WebGL editor image)
+    runs-on: ubuntu-latest
+    if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
+    concurrency: { group: unity-license, cancel-in-progress: false }
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Derive Unity serial from the license file (masked)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          python3 - <<'PY'
+          import os, re, base64
+          lic = os.environ["UNITY_LICENSE"]
+          m = re.search(r'DeveloperData Value="([^"]+)"', lic)
+          serial = ""
+          if m:
+              s = re.search(rb"[A-Za-z0-9]{2}(?:-[A-Za-z0-9]{4}){5}", base64.b64decode(m.group(1)))
+              if s: serial = s.group(0).decode()
+          if not serial: raise SystemExit("UNITY_LICENSE has no serial-backed DeveloperData; see docs/BUILD.md")
+          print("::add-mask::" + serial); print("::add-mask::" + serial[:-5])
+          with open(os.environ["GITHUB_ENV"], "a") as f: f.write("UNITY_SERIAL=" + serial + "\n")
+          PY
+      - name: Docker Hub login (optional)
+        env: { DH_USER: "${{ secrets.DOCKERHUB_USERNAME }}", DH_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}" }
+        run: |
+          if [ -n "$DH_USER" ] && [ -n "$DH_TOKEN" ]; then echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin; else echo "no Docker Hub credentials; using anonymous pulls"; fi
+      - name: Pre-pull the Unity WebGL editor image (retry with backoff)
+        run: |
+          img=unityci/editor:ubuntu-6000.0.58f2-webgl-3; ok=0
+          for i in 1 2 3 4 5 6 7 8; do
+            if docker pull "$img"; then ok=1; break; fi
+            echo "pull of $img failed (attempt $i); sleeping $((i*30))s"; sleep $((i*30))
+          done
+          [ "$ok" = 1 ] || { echo "could not pull $img after retries"; exit 1; }
+      # No actions/cache for Library on purpose: a cold import shows what the current importer code really produces.
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          buildMethod: ARO.Editor.TextureReport.Run
+          versioning: None
+          allowDirtyBuild: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: texture-report, path: Builds/TextureReport, if-no-files-found: warn }
