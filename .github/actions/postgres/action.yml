@@ -18,8 +18,11 @@ runs:
         if [ -z "$image" ]; then echo "::error::INFRASTRUCTURE FAILURE: no registry could serve postgres:15 (three registries, three attempts each). No test ran; this is not a code failure."; exit 1; fi
         echo "using $image"
         docker run -d --name aro-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres "$image"
+        # Ready means "answers a query over TCP on localhost:5432", the way every test connects. Not `docker exec pg_isready`: that asks over the unix socket, which the image's
+        # TEMPORARY first-start server (socket only, no TCP) also answers, so it can report ready seconds before the real server exists (seen: "ready after 2s", then the next
+        # step failed with "the database system is starting up").
         for i in $(seq 1 60); do
-          if docker exec aro-postgres pg_isready -U postgres >/dev/null 2>&1; then echo "postgres ready after ${i}s"; exit 0; fi
+          if PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -tAc 'select 1' >/dev/null 2>&1; then echo "postgres ready after ${i}s (answered a query over TCP)"; exit 0; fi
           sleep 1
         done
         docker logs aro-postgres | tail -20; echo "::error::postgres did not become ready in 60 s"; exit 1
