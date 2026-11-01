@@ -1,7 +1,13 @@
-"""The ARO material library: named PBR (Principled) materials, created on demand, always called M_<key>.
-Values are first-pass estimates for West African roadside surfaces and are meant to be tuned against references and baked to textures (docs/BLENDER_PIPELINE.md);
-an optional `variation` adds a procedural colour break-up so large flat surfaces do not read as plastic. Nothing here uses the Standard shader or a custom shader."""
+"""The ARO material library: named PBR (Principled) materials, created on demand, always called M_<surface> (the shared-kit naming the owner approved).
+Colours below are sRGB (what you would type as a hex colour); they are converted to the linear values Blender and the exporters work with. First-pass estimates for West African
+roadside surfaces, meant to be tuned against references and baked to textures (docs/BLENDER_PIPELINE.md); an optional `variation` adds a procedural colour break-up in Blender so large flat
+surfaces do not read as plastic. The Principled node's own base colour is ALWAYS set to the surface colour, even when the break-up is wired in, because the FBX and glTF exporters read that value
+for a material with no image texture (an unset value exports as default grey). Nothing here uses the Standard shader or a custom shader."""
 from __future__ import annotations
+
+
+def srgb_to_linear(c: float) -> float:
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
 
 # key: (base colour sRGB 0-1, roughness, metallic, variation 0-1, note)
 LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] = {
@@ -52,19 +58,20 @@ def get(key: str, bpy):
     name = f"M_{key}"
     mat = bpy.data.materials.get(name)
     if mat: return mat
-    (r, g, b), rough, metal, var, _ = LIBRARY[key]
+    (sr, sg, sb), rough, metal, var, _ = LIBRARY[key]
+    r, g, b = srgb_to_linear(sr), srgb_to_linear(sg), srgb_to_linear(sb)
     mat = bpy.data.materials.new(name)
     try: mat.use_nodes = True
     except Exception: pass
     nt = mat.node_tree; bsdf = nt.nodes.get("Principled BSDF") or nt.nodes.new("ShaderNodeBsdfPrincipled")
     bsdf.inputs["Roughness"].default_value = rough; bsdf.inputs["Metallic"].default_value = metal
+    bsdf.inputs["Base Color"].default_value = (r, g, b, 1.0)          # always: this is the value the exporters read
     if var > 0.0:
         coord = nt.nodes.new("ShaderNodeTexCoord"); noise = nt.nodes.new("ShaderNodeTexNoise"); ramp = nt.nodes.new("ShaderNodeValToRGB")
         noise.inputs["Scale"].default_value = 6.0; noise.inputs["Detail"].default_value = 8.0; noise.inputs["Roughness"].default_value = 0.65
         dark = (r * (1 - 0.45 * var), g * (1 - 0.45 * var), b * (1 - 0.45 * var), 1.0); light = (min(1, r * (1 + 0.25 * var)), min(1, g * (1 + 0.25 * var)), min(1, b * (1 + 0.25 * var)), 1.0)
         ramp.color_ramp.elements[0].color = dark; ramp.color_ramp.elements[1].color = light
         nt.links.new(coord.outputs["Object"], noise.inputs["Vector"]); nt.links.new(noise.outputs["Fac"], ramp.inputs["Fac"]); nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
-    else:
-        bsdf.inputs["Base Color"].default_value = (r, g, b, 1.0)
-    mat.diffuse_color = (r, g, b, 1.0)          # viewport colour, so the solid-shaded preview shows the right hue
+    mat.diffuse_color = (r, g, b, 1.0)          # viewport colour (linear), so the solid-shaded preview shows the right hue
+    mat["aro_srgb"] = [sr, sg, sb]               # the authoring colour, kept for checks
     return mat

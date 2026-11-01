@@ -130,6 +130,10 @@ async def main(keep: bool) -> int:
             check(good["stats"]["lod_triangles"][0] > good["stats"]["lod_triangles"][1] == 12, "the LODs are measured per group and strictly decrease", str(good["stats"]["lod_triangles"]))
             ce = good["catalog_entry"]
             check(ce and ce["id"] == "bollard" and ce["category"] == "props" and abs(ce["heightM"] - 0.9) < 0.01 and ce["lodTriangles"] == good["stats"]["lod_triangles"] and ce["source"] == "Props/bollard", "a prop-catalogue entry is produced from the measurements", str(ce))
+            # the materials carry their colour where the exporters read it, as linear values converted from the sRGB the library is written in
+            _, col, _, _ = await call(s, "execute_python", code="n = bpy.data.materials['M_concrete'].node_tree.nodes['Principled BSDF']\nresult = [list(n.inputs['Base Color'].default_value)[:3], list(bpy.data.materials['M_concrete']['aro_srgb'])]")
+            lin, srgb = col["result"]
+            check(col["ok"] and all(abs(l - ((c / 12.92) if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4)) < 1e-4 for l, c in zip(lin, srgb)) and all(abs(l - c) > 0.01 for l, c in zip(lin, srgb)), "a library material's base colour is the sRGB colour converted to linear, and set even where a noise break-up is wired in", str(col))
             # LOD rules of the game: a LOD1 that is not under 10% of LOD0, or not lower at all, fails
             await call(s, "execute_python", code="o = bpy.data.objects['bollard_low']; mod = o.modifiers.new('s', 'SUBSURF'); mod.levels = 2; mod.subdivision_type = 'SIMPLE'")
             _, lodbad, _, _ = await call(s, "validate_asset", kind="props", asset_id="bollard")
@@ -142,6 +146,11 @@ async def main(keep: bool) -> int:
             _, hv, _, _ = await call(s, "validate_asset", kind="buildings", asset_id="bollard")
             check(hv["passed"] is False and any(f_["rule"] == "scale" for f_ in hv["findings"]), "the same object is wrong as a building (size range)")
 
+            await call(s, "new_scene")
+            _, cal, _, _ = await call(s, "run_script", script="calibration_marker.py")
+            _, calv, _, _ = await call(s, "validate_asset", kind="props", asset_id="aro_calibration")
+            check(cal["ok"] and calv["passed"] and calv["stats"]["lod_triangles"] == [252, 12] and calv["catalog_entry"]["collider"] == "box", "the calibration fixture builds and passes validation (the Unity import test imports it)", json.dumps(calv["findings"])[:300])
+            await call(s, "new_scene"); await call(s, "run_script", script="prop_bollard.py")
             # versioned save, export, refusals
             _, s1, _, _ = await call(s, "save_project", kind="props", name="bollard", notes="selftest"); check(s1 and s1["version"] == "v001", "the project is saved as v001")
             _, s2, _, _ = await call(s, "save_project", kind="props", name="bollard", notes="again"); check(s2 and s2["version"] == "v002", "saving again makes v002 and keeps v001")
@@ -151,6 +160,11 @@ async def main(keep: bool) -> int:
             fbx = ws / "exports/fbx/bollard/v002/bollard.fbx"; glb = ws / "exports/glb/bollard/v002/bollard.glb"
             check(fbx.is_file() and fbx.read_bytes()[:20] == b"Kaydara FBX Binary  ", "the FBX is a real binary FBX")
             check(glb.is_file() and glb.read_bytes()[:4] == b"glTF" and struct.unpack("<I", glb.read_bytes()[8:12])[0] == glb.stat().st_size, "the GLB is a real, complete glTF binary")
+            from aro_blender import fbxinfo
+            fi = fbxinfo.summary(fbx)
+            check(fi["UpAxis"] == 1 and fi["UnitScaleFactor"] == 100.0 and {"bollard", "bollard_lod0", "bollard_body"} <= set(fi["models"]), "the FBX itself declares Y up, metre units and keeps the hierarchy", json.dumps({k: fi[k] for k in ("UpAxis", "UnitScaleFactor")}))
+            ext = fi["geometry_extents"]["bollard_body"]; hgt = max(h - l for h, l in zip(ext["max"], ext["min"]))
+            check(0.5 < hgt < 1.0, "the FBX geometry is in metres (the 0.72 m body measures between 0.5 and 1.0 in the file)", str(ext))
             man = json.loads((ws / "exports/fbx/bollard/v002/bollard.manifest.json").read_text())
             check(man["validation"]["passed"] and man["files"][0]["sha256"] and man["blender"].startswith("5.2"), "the manifest records the measurements and file hashes")
             r, _, _, texts = await call(s, "export_asset", kind="props", name="bollard", formats=["fbx"], version=2); check(r.isError and "already holds an export" in " ".join(texts), "exports never overwrite")
