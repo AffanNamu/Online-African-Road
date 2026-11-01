@@ -60,10 +60,10 @@ def leaf_pixels(size=512, seed=21, per_cell=900):
     for ci in range(4):
         cx0, cy0 = (ci % 2) * cell, (ci // 2) * cell; img = np.zeros((cell, cell, 4)); base = np.array(greens[ci])
         ang = np.arctan2(yy - cell / 2, xx - cell / 2); rad = np.hypot(yy - cell / 2, xx - cell / 2)
-        edge = cell * 0.42 * (1 + 0.14 * np.sin(3 * ang + ci) + 0.10 * np.sin(7 * ang + 2 * ci) + 0.06 * np.sin(13 * ang))
-        blob = rad < edge * 0.80; img[blob, :3] = base * 0.62; img[blob, 3] = 1.0                       # dark fill so the cluster is dense
+        edge = cell * 0.42 * (1 + 0.24 * np.sin(3 * ang + ci) + 0.17 * np.sin(5 * ang + 2 * ci) + 0.12 * np.sin(9 * ang + ci) + 0.07 * np.sin(17 * ang))      # lobed, not a disc: the first pass read as round cabbage leaves
+        blob = rad < edge * 0.66; img[blob, :3] = base * 0.62; img[blob, 3] = 1.0                       # dark fill so the cluster is dense
         for _ in range(per_cell):
-            a = rnd.uniform(0, 2 * np.pi); r = (edge.mean() * 1.02) * np.sqrt(rnd.random()); lx, ly = cell / 2 + r * np.cos(a), cell / 2 + r * np.sin(a)
+            a = rnd.uniform(0, 2 * np.pi); e_a = cell * 0.42 * (1 + 0.24 * np.sin(3 * a + ci) + 0.17 * np.sin(5 * a + 2 * ci) + 0.12 * np.sin(9 * a + ci) + 0.07 * np.sin(17 * a)); r = e_a * 1.04 * np.sqrt(rnd.random()); lx, ly = cell / 2 + r * np.cos(a), cell / 2 + r * np.sin(a)
             la, lb = rnd.uniform(6.0, 10.5), rnd.uniform(2.4, 3.9); th = rnd.uniform(0, np.pi)
             x0, x1, y0, y1 = int(max(lx - la - 2, 0)), int(min(lx + la + 2, cell)), int(max(ly - la - 2, 0)), int(min(ly + la + 2, cell))
             if x1 <= x0 or y1 <= y0: continue
