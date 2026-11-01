@@ -37,8 +37,8 @@ photos = [
      "Flat plain and dust haze match Kano's setting; the location is not stated.",
      "Atmosphere: haze, flat horizon, dusty light.", "Texture or model source in any form. A watermarked image is someone's work: private reference only.", ["Watermarked", "Location unconfirmed", "Rights unconfirmed"]),
 ]
-views = [("overview", "Oblique overview from behind the entrance", "overview"), ("plan_A", "Plan: modern district (stations 450 to 830)", "plan_A_modern_district"), ("plan_B", "Plan: commercial spine (830 to 1240)", "plan_B_commercial_spine"),
-         ("plan_C", "Plan: old-neighbourhood edge (1240 to 1650)", "plan_C_old_neighbourhood"), ("v1", "Entrance, station 30: gantry, median lights, neem rows", "01_entrance_s030"),
+views = [("overview", "Oblique overview from behind the entrance", "overview"), ("plan_A", "Plan: modern district (stations 450 to 830)", "plan_a_modern_district"), ("plan_B", "Plan: commercial spine (830 to 1240)", "plan_b_commercial_spine"),
+         ("plan_C", "Plan: old-neighbourhood edge (1240 to 1650)", "plan_c_old_neighbourhood"), ("v1", "Entrance, station 30: gantry, median lights, neem rows", "01_entrance_s030"),
          ("v2", "Modern district, station 480", "02_modern_s480"), ("v3", "Approaching junction j1, station 590", "03_junction_j1_s590"), ("v4", "Commercial spine, station 870", "04_commercial_s870"),
          ("v5", "Damaged section, station 1,060", "05_damaged_s1060"), ("v6", "Old-neighbourhood edge, station 1,270", "06_old_s1270"), ("v7", "Approaching the mosque, station 1,380", "07_mosque_s1380"),
          ("v8", "Down mosque street (j5) from the main road", "08_mosque_street_j5")]
