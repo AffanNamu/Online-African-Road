@@ -1,0 +1,109 @@
+"""Stages the Kano residential street kit into a checkout of the PRIVATE asset repository (ARO-CONTENT), in the layout its README and validator define:
+  blender/projects/<kind>/<id>/vNNN/   the .blend, project.json and the texture sources
+  blender/validation/<id>/vNNN.json     the measured validation report of the toolchain
+  unity/Models/<id>/vNNN/              <id>.fbx, <id>.glb and <id>.manifest.json in the repository's manifest schema (files with SHA-256, source, makers, licence evidence, references, budgets)
+  unity/Textures/kano_kit/             the shared kit textures (once, not per asset)
+  unity/Materials/aro_materials.json    the material kit (colours, roughness, metallic, textures, cutout) for the Unity builder
+  unity/placements/kano_residential_section_a.json   the placements of the review scene (Blender axes)
+  previews/kano_residential_section_a/v001/            the Blender review renders
+  LICENSES.md                           one row per asset
+  registry/asset_registry.json          status, source, export and validation per asset
+Nothing is committed here: the caller reviews the diff. Usage:
+  PYTHONPATH=tools/blender ~/.aro/venv/bin/python -m kano_kit.stage_private --content <ARO-CONTENT checkout> --placements <json> --renders <dir>
+Status written to the registry is `blender_validation_passed` for an asset whose geometry and materials are modelled and whose validation report passed; nothing is marked Unity-verified or approved."""
+from __future__ import annotations
+import argparse, hashlib, json, shutil, sys, time
+from pathlib import Path
+from aro_blender import workspace as ws
+
+REF = "R-006"
+# what was modelled with what, for the registry: id -> (concepts, class, engine dependencies, open visual differences against the concept)
+OPEN_ISSUES = {
+    "aro_villa_2storey_hip_a": "first detailed pass; the concept's villas show richer cladding, arched details and landscaping than this model; compare in game before approval",
+    "aro_villa_2storey_hip_b": "second villa type with a gabled bay and garage wing: a design variation in the spirit of the concept (the concept shows two house types), not a copy of a concept house",
+    "aro_gate_ornate_steel_a": "ornament is simplified (square bars, spear tips, scroll rings); the concept's gate scrollwork is richer",
+    "rg_ngn_tree_street_broadleaf_a": "alpha-cut leaf cards from a procedural leaf atlas; the species is generic (the real Kano street trees are not established, M-07); needs the cutout kit material in Unity",
+    "rg_ngn_tree_street_broadleaf_b": "as form A, different seed and proportions",
+    "aro_pole_electric_concrete_span_a": "requested by the owner but NOT in the concept and no Kano reference exists (M-06): a generic concrete pole with a cross-arm, pin and spool insulators and conductors; needs review against a real reference",
+    "kano_street_oneway_section_a": "delivers the kerb (aro_kerb_painted_blackwhite_a), the paver sidewalk (aro_sidewalk_paver_a) and the straight arrow (aro_marking_arrow_straight_a) of the registry as parts of one 96 m mesh; the engine cannot yet build these as road elements (RB-04, RB-12, RB-17)",
+    "aro_streetlight_single_arm_a": "luminaire is a simplified cobra head",
+    "aro_sign_oneway_a": "regulatory sign with real lettering; the concept's sign post is a plain grey post",
+    "aro_hedge_clipped_a": "leaf-card hedge on an opaque core",
+    "aro_shrub_ixora_red_a": "species to confirm; flowers are low-poly clusters",
+    "aro_wall_compound_panel_a": "grey cladding panel is flat; no joint pattern yet",
+    "aro_pier_stone_a": "stone courses are stepped boxes; no stone texture yet",
+    "aro_lantern_wall_a": "simplified lantern",
+}
+NEW_ASSETS = {   # not in the first registry
+    "kano_street_oneway_section_a": dict(name="One-way residential street section, 96 m: asphalt with flush markings, painted kerbs, paver sidewalks, verge and plot ground", assetClass="CITY_SPECIFIC", category="environment", city="kano", region=None),
+    "aro_pole_electric_concrete_span_a": dict(name="Concrete electricity pole with cross-arm, insulators and a 30 m span of overhead conductors", assetClass="GLOBAL", category="environment", city=None, region=None),
+}
+CONCEPTS = {"aro_pole_electric_concrete_span_a": []}   # no concept: owner request, M-06
+
+
+def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--placements", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--only", default="")
+    a = ap.parse_args(); C = Path(a.content).resolve(); W = ws.default_root(); now = time.strftime("%Y-%m-%d", time.gmtime())
+    reg_path = C / "registry" / "asset_registry.json"; reg = json.loads(reg_path.read_text()); by_id = {x["id"]: x for x in reg["assets"]}
+    lic = (C / "LICENSES.md").read_text(); staged = []
+    for exp_dir in sorted((W / "exports" / "fbx").iterdir()):
+        aid = exp_dir.name
+        if aid == "bollard" or (a.only and aid not in a.only.split(",")): continue
+        vers = sorted(p.name for p in exp_dir.iterdir() if p.is_dir()); v = vers[-1]; n = int(v[1:])
+        man = json.loads((exp_dir / v / f"{aid}.manifest.json").read_text()); kind = man["kind"]
+        proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"
+        if not proj.is_dir() or not val.is_file(): print("skip (no project or validation):", aid); continue
+        # blender sources and validation
+        d = C / "blender" / "projects" / kind / aid / v; d.mkdir(parents=True, exist_ok=True)
+        for f in proj.iterdir():
+            if f.is_file(): shutil.copy2(f, d / f.name)
+        (C / "blender" / "validation" / aid).mkdir(parents=True, exist_ok=True); shutil.copy2(val, C / "blender" / "validation" / aid / f"{v}.json")
+        # unity models: fbx, glb, repository-schema manifest; textures once under unity/Textures/kano_kit
+        u = C / "unity" / "Models" / aid / v; u.mkdir(parents=True, exist_ok=True); files = []
+        for fmt in ("fbx", "glb"):
+            src = W / "exports" / fmt / aid / v / f"{aid}.{fmt}"; shutil.copy2(src, u / src.name); files.append({"path": src.name, "sha256": sha(u / src.name), "bytes": (u / src.name).stat().st_size})
+        tex = C / "unity" / "Textures" / "kano_kit"; tex.mkdir(parents=True, exist_ok=True)
+        for f in proj.glob("T_*.png"):
+            if not (tex / f.name).exists(): shutil.copy2(f, tex / f.name)
+        stats = json.loads(val.read_text())["stats"]; concepts = CONCEPTS.get(aid, [REF])
+        manifest = {"id": aid, "version": n, "kind": kind, "files": files, "source": {"blend": f"blender/projects/{kind}/{aid}/{v}/{aid}.blend", "script": "tools/blender/kano_kit (Online-African-Road, branch work/kano-residential)", "toolchain": "aro-blender on Blender " + man["blender"]},
+                    "madeBy": {"human": "the owner (direction and the concept R-006); modelling code written by Claude", "tools": ["Blender " + man["blender"] + " (bpy)", "tools/blender/kano_kit", "ChatGPT concept R-006 (design reference only)"]},
+                    "licence": {"kind": "owner-owned", "evidence": "Original geometry generated by code in this project; the design follows the ChatGPT-generated concept R-006 supplied by the owner as a private design reference; no photograph, third-party model or third-party texture is used. The owner's written confirmation of ownership is pending."},
+                    "references": concepts, "budgets": {"lodTriangles": stats["lod_triangles"]}, "catalogEntry": man.get("catalog_entry"), "approval": None}
+        (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
+        if f"| {aid} |" not in lic:
+            lic = lic.rstrip("\n") + f"\n| {aid} | {n} | Claude (code), owner (direction) | {', '.join(concepts) or '-'} | original geometry; design reference ChatGPT concept R-006; owner's ownership confirmation pending | pending, {now} |\n"
+        # registry
+        e = by_id.get(aid)
+        if e is None:
+            spec = NEW_ASSETS[aid]; e = {"id": aid, "name": spec["name"], "assetClass": spec["assetClass"], "category": spec["category"], "region": spec["region"], "city": spec["city"],
+                                         "approvedCities": ["kano"] if spec["city"] else [], "concepts": concepts, "districts": ["D06"], "status": "concept_approved", "breakdownApproved": False, "blenderSource": None, "export": None,
+                                         "unityPrefab": None, "placements": [], "validation": {"blender": None, "unityImport": None, "visualReview": None}, "approvedBy": None, "plannedBudget": {"lod0TrisMax": 8000 if kind == "roads" else 2500},
+                                         "engineDependencies": [], "flags": ""}
+            if not concepts: e["ownerRequest"] = "requested by the owner on 2026-11-01 (execution decision, section E: electricity poles and overhead wires); not in concept R-006; no Kano reference exists (M-06)"; e["flags"] = "no concept: owner-requested addition"
+            reg["assets"].append(e); by_id[aid] = e
+        e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"
+        e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN_ISSUES.get(aid, "")
+        e["placements"] = [{"scene": "kano_residential_section_a", "district": "D06", "count": sum(1 for i in json.loads(Path(a.placements).read_text())["items"] if i["asset"] == aid)}]
+        staged.append((aid, v, stats["lod_triangles"]))
+    (C / "LICENSES.md").write_text(lic)
+    (C / "unity" / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(W / "exports" / "unity" / "aro_materials.json", C / "unity" / "Materials" / "aro_materials.json")
+    (C / "unity" / "placements").mkdir(parents=True, exist_ok=True); shutil.copy2(a.placements, C / "unity" / "placements" / "kano_residential_section_a.json")
+    for x in reg["assets"]:                                                       # the three parts delivered inside the street section
+        if x["id"] in ("aro_kerb_painted_blackwhite_a", "aro_sidewalk_paver_a", "aro_marking_arrow_straight_a") and "kano_street_oneway_section_a" not in x["flags"]:
+            x["flags"] = (x["flags"] + " | " if x["flags"] else "") + "built as part of kano_street_oneway_section_a (no separate asset yet)"
+    reg["note"] = reg["note"].split(" UPDATE:")[0] + f" UPDATE {now}: the first residential street kit (14 assets) has Blender sources, exports and passed the toolchain's validation (`blender_validation_passed`). None has been imported into the running game, none is visually reviewed or approved."
+    reg_path.write_text(json.dumps(reg, indent=1) + "\n")
+    if a.renders and Path(a.renders).is_dir():
+        pv = C / "previews" / "kano_residential_section_a" / "v001"; pv.mkdir(parents=True, exist_ok=True)
+        for f in Path(a.renders).glob("kano_residential_*.png"): shutil.copy2(f, pv / f.name)
+    rel = {"release": "kano_residential_section_a", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender review renders are previews of Blender geometry, not proof of Unity behaviour."}
+    (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / "kano_residential_section_a.release.json").write_text(json.dumps(rel, indent=2))
+    print("staged", len(staged), "assets:", ", ".join(i for i, _, _ in staged)); return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -14,6 +14,8 @@ namespace ARO.Game
         public static bool WorldMap => Url != null && Url.Contains("smoke=worldmap");
         public static bool Dashboard => Url != null && Url.Contains("smoke=dashboard");
         public static bool Drive => Url != null && Url.Contains("smoke=drive");
+        /// <summary>"?smoke=kanostreet&view=ref|front|side|street1|street2|top": no sign-in, the Kano residential street review scene (only with the private assets in the build; see ARO.World.KanoReviewScene).</summary>
+        public static bool KanoStreet => Url != null && Url.Contains("smoke=kanostreet");
         /// <summary>"?smoke=drive&hold=1": once the truck has settled on the road it is frozen there, so screenshots from every camera are taken from the same place.</summary>
         public static bool Hold => Drive && Url.Contains("hold=1");
         /// <summary>"?smoke=drive&hold=1&probe=1": when the truck is frozen, log what is around it (renderers, ground heights) so a visual defect can be traced to a system instead of guessed at.</summary>

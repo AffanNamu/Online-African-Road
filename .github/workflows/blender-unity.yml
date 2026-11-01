@@ -10,6 +10,7 @@ on:
     paths:
       - 'tools/blender/**'
       - 'Assets/_Project/Scripts/Editor/BlenderImport/**'
+      - 'Assets/_Project/Scripts/World/KanoReviewScene.cs'
       - 'Assets/_Project/Scripts/NetCore/PropPrefabPlan.cs'
       - 'Assets/_Project/Tests/EditMode/BlenderAssetImportTests.cs'
       - '.github/workflows/blender-unity.yml'
@@ -29,6 +30,8 @@ jobs:
         run: pip install --no-input -r tools/blender/requirements.txt
       - name: Generate the calibration model with the toolchain (FBX in 8 export-setting variants, GLB, manifest)
         run: python tools/blender/make_fixtures.py --out Assets/ThirdParty/ARO_Calibration --require-glb
+      - name: Generate the generic kit fixture (textured and cutout materials, LODs, collision; no design in it)
+        run: python tools/blender/make_kit_fixture.py --out Assets/ThirdParty/ARO_KitFixture
       - name: Add glTFast to THIS job's manifest only (the committed Packages/manifest.json is not changed)
         run: |
           python3 - <<'PY'
@@ -87,4 +90,4 @@ jobs:
         # The Unity container runs as root and writes the kit materials it creates into the
         # workspace, so a plain rm fails with "Permission denied" (seen on run 41259509027,
         # after all four import tests had passed).
-        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta
+        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta

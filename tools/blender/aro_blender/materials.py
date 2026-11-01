@@ -41,6 +41,25 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "paint_red":         ((0.55, 0.05, 0.04), 0.6, 0.0, 0.2, "red paint, signs"),
     "paint_white":       ((0.85, 0.85, 0.83), 0.6, 0.0, 0.15, "white paint"),
     "sign_green":        ((0.04, 0.35, 0.18), 0.5, 0.0, 0.1, "highway direction sign"),
+    # --- added for the Kano residential street kit (concept R-006): sRGB read from the supplied concept by eye, to be tuned against in-game screenshots
+    "plaster_cream_light": ((0.86, 0.78, 0.64), 0.9, 0.0, 0.25, "pale cream sand-cement render, villa and compound walls"),
+    "cladding_grey":     ((0.43, 0.43, 0.45), 0.8, 0.0, 0.3, "dark grey stone-effect cladding panels"),
+    "stone_travertine":  ((0.64, 0.50, 0.39), 0.85, 0.0, 0.35, "tan stone cladding on gate piers"),
+    "roof_tile_charcoal": ((0.17, 0.17, 0.19), 0.7, 0.0, 0.3, "dark grey concrete roof tile"),
+    "frame_aluminium_dark": ((0.10, 0.10, 0.11), 0.4, 0.7, 0.1, "dark aluminium window and door frames"),
+    "glass_dark":        ((0.13, 0.18, 0.23), 0.05, 0.0, 0.0, "tinted window glass seen from outside"),
+    "kerb_black":        ((0.05, 0.05, 0.055), 0.8, 0.0, 0.2, "painted kerb block, black"),
+    "kerb_white":        ((0.84, 0.84, 0.82), 0.8, 0.0, 0.2, "painted kerb block, white"),
+    "paver_mix":         ((0.62, 0.48, 0.44), 0.85, 0.0, 0.0, "interlocking paver sidewalk (pink, grey, beige); the Blender file carries a texture"),
+    "grass_green":       ((0.20, 0.42, 0.10), 0.95, 0.0, 0.4, "green verge grass"),
+    "hedge_green":       ((0.10, 0.32, 0.07), 0.9, 0.0, 0.3, "clipped hedge"),
+    "leaf_green_light":  ((0.27, 0.48, 0.12), 0.75, 0.0, 0.0, "sunlit foliage"),
+    "leaf_green_dark":   ((0.07, 0.22, 0.05), 0.8, 0.0, 0.0, "shaded foliage"),
+    "flower_red":        ((0.72, 0.07, 0.05), 0.6, 0.0, 0.0, "red flowering shrub (ixora)"),
+    "sign_blue":         ((0.04, 0.17, 0.62), 0.5, 0.0, 0.0, "regulatory sign face, blue"),
+    "insulator_brown":   ((0.42, 0.22, 0.10), 0.35, 0.0, 0.0, "glazed porcelain insulator"),
+    "leaf_cutout":       ((0.20, 0.38, 0.10), 0.8, 0.0, 0.0, "foliage cards: an RGBA leaf-cluster texture, alpha clipped at 0.5, drawn on both sides (the kit material must be cutout)"),
+    "lantern_glow":      ((0.95, 0.76, 0.42), 0.4, 0.0, 0.0, "warm lantern glass"),
 }
 
 
@@ -48,9 +67,23 @@ def keys() -> list[str]:
     return sorted(LIBRARY)
 
 
+# Surfaces that carry an image on top of the flat colour: key -> (texture name, cutout alpha threshold or 0, two sided). The texture files are written next to the model at export time.
+TEXTURED: dict[str, tuple[str, float, bool]] = {
+    "paver_mix": ("T_kano_paver_BaseColor", 0.0, False),
+    "asphalt": ("T_kano_asphalt_BaseColor", 0.0, False),
+    "leaf_cutout": ("T_kano_leaves_BaseColor", 0.5, True),
+}
+
+
 def kit_json() -> dict:
-    """The material kit as data for the Unity side: the same sRGB colours, roughness and metallic the library uses in Blender, so the Unity materials (URP/Lit, GPU instancing on) and the Blender renders agree by construction."""
-    return {"schema": 1, "materials": [{"name": f"M_{k}", "base_color_srgb": list(v[0]), "roughness": v[1], "metallic": v[2], "note": v[4]} for k, v in sorted(LIBRARY.items())]}
+    """The material kit as data for the Unity side: the same sRGB colours, roughness and metallic the library uses in Blender, so the Unity materials (URP/Lit, GPU instancing on) and the Blender renders agree by construction.
+    A textured surface also names its base-colour texture, an alpha-clip threshold (foliage cards) and whether it is drawn on both sides."""
+    out = []
+    for k, v in sorted(LIBRARY.items()):
+        e = {"name": f"M_{k}", "base_color_srgb": list(v[0]), "roughness": v[1], "metallic": v[2], "note": v[4], "texture": "", "cutout": 0.0, "two_sided": False}
+        if k in TEXTURED: e["texture"], e["cutout"], e["two_sided"] = TEXTURED[k]
+        out.append(e)
+    return {"schema": 2, "materials": out}
 
 
 def describe() -> list[dict]:

@@ -11,6 +11,13 @@ namespace ARO.Editor
     public static class BuildScript
     {
         public static void BuildWebGL() => Build(BuildTarget.WebGL, "Builds/WebGL");
+        /// <summary>The Kano street review build (private assets present under Assets/ThirdParty/ARO): builds the prefabs and the review prefab, then the WebGL player.</summary>
+        public static void BuildKanoReviewWebGL()
+        {
+            foreach (var n in ARO.Editor.BlenderImport.KanoReviewBuilder.BuildReview()) Console.WriteLine("[KanoReviewBuilder] " + n);
+            Build(BuildTarget.WebGL, "Builds/WebGL");
+        }
+
         public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Builds/Windows/AfricanRoads.exe");
 
         /// <summary>

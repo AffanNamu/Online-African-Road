@@ -10,7 +10,7 @@ namespace ARO.Editor.BlenderImport
 {
     /// <summary>The material kit as the Blender toolchain writes it (aro_materials.json): the library's sRGB colours, roughness and metallic, one entry per surface.</summary>
     [Serializable] public sealed class MaterialKitFile { public int schema; public MaterialKitEntry[] materials; }
-    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; }
+    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; public string texture; public float cutout; public bool two_sided; }
 
     /// <summary>
     /// Turns a model imported from the Blender toolchain (FBX, or GLB through glTFast) into the structure the game needs from a production prop prefab (see PropPrefabPlan):
@@ -46,7 +46,27 @@ namespace ARO.Editor.BlenderImport
 
         public static Color KitColour(MaterialKitEntry e) => new Color(e.base_color_srgb[0], e.base_color_srgb[1], e.base_color_srgb[2], 1f);        // sRGB, as Unity's Inspector and Color properties expect
 
-        /// <summary>The kit material for an entry: the asset at folder/{name}.mat, created (URP/Lit, instancing on) if it does not exist yet.</summary>
+        /// <summary>The Texture2D asset with this file name (without extension) anywhere in the project, or null.</summary>
+        public static Texture2D FindTexture(string name)
+        {
+            foreach (var guid in AssetDatabase.FindAssets(name + " t:Texture2D"))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (Path.GetFileNameWithoutExtension(path) == name) return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+            }
+            return null;
+        }
+
+        /// <summary>Foliage cards need their alpha kept as coverage through the mip chain, or the crown thins out with distance.</summary>
+        static void ConfigureCutoutTexture(Texture2D tex, float cutoff)
+        {
+            var path = AssetDatabase.GetAssetPath(tex); var ti = AssetImporter.GetAtPath(path) as TextureImporter; if (ti == null) return;
+            if (ti.alphaIsTransparency && ti.mipMapsPreserveCoverage && Mathf.Abs(ti.alphaTestReferenceValue - cutoff) < 1e-4f) return;
+            ti.alphaIsTransparency = true; ti.mipmapEnabled = true; ti.mipMapsPreserveCoverage = true; ti.alphaTestReferenceValue = cutoff; ti.SaveAndReimport();
+        }
+
+        /// <summary>The kit material for an entry: the asset at folder/{name}.mat, created (URP/Lit, instancing on) if it does not exist yet. A textured entry gets its base-colour texture (found by name in the
+        /// project; flat colour if the texture is not there), a cutout entry is alpha-clipped at its threshold, a two-sided entry is drawn on both faces.</summary>
         public static Material KitMaterial(MaterialKitEntry e, string folder)
         {
             string path = folder.TrimEnd('/') + "/" + e.name + ".mat";
@@ -57,6 +77,14 @@ namespace ARO.Editor.BlenderImport
                 AssetDatabase.CreateAsset(m, path);
             }
             m.SetColor("_BaseColor", KitColour(e)); m.SetFloat("_Metallic", e.metallic); m.SetFloat("_Smoothness", 1f - e.roughness); m.enableInstancing = true;
+            var tex = string.IsNullOrEmpty(e.texture) ? null : FindTexture(e.texture);
+            if (tex != null) { m.SetTexture("_BaseMap", tex); m.SetColor("_BaseColor", Color.white); if (e.cutout > 0f) ConfigureCutoutTexture(tex, e.cutout); }
+            if (e.cutout > 0f)
+            {
+                m.SetFloat("_AlphaClip", 1f); m.SetFloat("_Cutoff", e.cutout); m.EnableKeyword("_ALPHATEST_ON"); m.SetOverrideTag("RenderType", "TransparentCutout");
+                m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+            }
+            m.SetFloat("_Cull", e.two_sided ? 0f : 2f);
             EditorUtility.SetDirty(m); return m;
         }
 

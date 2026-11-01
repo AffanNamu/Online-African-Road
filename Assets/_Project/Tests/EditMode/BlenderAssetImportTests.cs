@@ -184,6 +184,40 @@ namespace ARO.Tests
             finally { UnityEngine.Object.DestroyImmediate(built.Root); }
         }
 
+        const string KitDir = "Assets/ThirdParty/ARO_KitFixture/";
+
+        [Test] public void TexturedAndCutoutKitMaterialsSurviveTheBuilderWithTheirLodsAndCollision()
+        {
+            // A generic fixture (a paver patch, crossed foliage cards, a post; tools/blender/make_kit_fixture.py) proves what the Kano street kit relies on: a textured surface keeps its base-colour texture,
+            // a foliage material is an alpha-clipped two-sided cutout whose texture keeps coverage in the mip chain, and the LOD group and collision box are built as for any production prefab.
+            if (!File.Exists(KitDir + "aro_kit_fixture_a.fbx") || !File.Exists(KitDir + "aro_materials.json")) Assert.Ignore("no kit fixture");
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(KitDir + "aro_kit_fixture_a.fbx"); Assert.NotNull(model, "aro_kit_fixture_a.fbx did not import");
+            var def = JsonUtility.FromJson<ManifestWrap>(File.ReadAllText(KitDir + "aro_kit_fixture_a.manifest.json")).catalog_entry; Assert.NotNull(def, "the manifest carries no catalogue entry");
+            var kit = BlenderAssetBuilder.LoadKit(KitDir + "aro_materials.json");
+            var built = BlenderAssetBuilder.Build(model, def, kit, KitDir + "Materials");
+            try
+            {
+                Assert.IsEmpty(built.UnmatchedMaterials, "materials the kit does not know: " + string.Join(", ", built.UnmatchedMaterials));
+                var mats = built.Root.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).Where(m => m != null).Distinct().ToDictionary(m => m.name, m => m);
+                Assert.IsTrue(mats.ContainsKey("M_paver_mix") && mats.ContainsKey("M_leaf_cutout"), "materials found: " + string.Join(", ", mats.Keys));
+                var paver = mats["M_paver_mix"]; var leaf = mats["M_leaf_cutout"];
+                Assert.NotNull(paver.GetTexture("_BaseMap"), "the paver material lost its texture"); Assert.AreEqual("T_kano_paver_BaseColor", paver.GetTexture("_BaseMap").name);
+                Assert.AreEqual(0f, paver.GetFloat("_AlphaClip"), "pavers are opaque"); Assert.AreEqual(2f, paver.GetFloat("_Cull"), "pavers are one-sided");
+                Assert.NotNull(leaf.GetTexture("_BaseMap"), "the foliage material lost its texture"); Assert.AreEqual("T_kano_leaves_BaseColor", leaf.GetTexture("_BaseMap").name);
+                Assert.AreEqual(1f, leaf.GetFloat("_AlphaClip"), "foliage must be alpha clipped"); Assert.AreEqual(0.5f, leaf.GetFloat("_Cutoff"), 1e-4f); Assert.AreEqual(0f, leaf.GetFloat("_Cull"), "foliage is drawn on both faces");
+                Assert.IsTrue(leaf.IsKeywordEnabled("_ALPHATEST_ON"), "the alpha-test keyword is off"); Assert.AreEqual((int)UnityEngine.Rendering.RenderQueue.AlphaTest, leaf.renderQueue);
+                var ti = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(leaf.GetTexture("_BaseMap"))) as TextureImporter; Assert.NotNull(ti);
+                Assert.IsTrue(ti.alphaIsTransparency, "the foliage texture's alpha is not treated as transparency"); Assert.IsTrue(ti.mipMapsPreserveCoverage, "the foliage texture loses coverage in its mips");
+                Assert.IsTrue(paver.enableInstancing && leaf.enableInstancing, "kit materials are instanced");
+                var lg = built.Root.GetComponent<LODGroup>(); Assert.NotNull(lg); Assert.AreEqual(2, lg.lodCount, "two LODs expected");
+                Assert.Greater(built.Measure.LodTriangles[0], built.Measure.LodTriangles[1]); Assert.IsTrue(built.Measure.HasBoxCollider, "no collision box");
+                Assert.AreEqual(Quaternion.identity, built.Root.transform.localRotation); Assert.AreEqual(Vector3.one, built.Root.transform.localScale);
+                Debug.Log("[KitImport] textured and cutout materials, " + lg.lodCount + " LODs [" + string.Join(", ", built.Measure.LodTriangles) + "] triangles, box collider " + built.Measure.HasBoxCollider);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(built.Root); }
+        }
+
         [Test] public void AProductionPrefabKeptUnderThePrivateAssetPathIsFoundByTheGamesOwnLookup()
         {
             // The seam the private asset repository relies on: assets live under Assets/ThirdParty (git-ignored, put there at CI or development time) and the game finds Resources/Props/{id}.prefab

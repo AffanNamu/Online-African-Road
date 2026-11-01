@@ -42,6 +42,14 @@ namespace ARO.Game
                 Debug.Log("[Smoke] worldmap scenario: fixture data, no sign-in"); OpenWorldMap();
                 return;
             }
+            if (SmokeMode.KanoStreet)
+            {   // CI and review only: the Kano residential street in the running game, no account and no vehicle
+                await Task.Yield();
+                Debug.Log("[Smoke] kanostreet scenario: skipping sign-in");
+                _canvas.gameObject.SetActive(false); _hud.SetVisible(false);
+                ARO.World.KanoReviewScene.Begin(Application.absoluteURL);
+                return;
+            }
             if (SmokeMode.Drive)
             {
                 await Task.Yield();

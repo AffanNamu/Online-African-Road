@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using ARO.NetCore;
+using UnityEditor;
+using UnityEngine;
+
+namespace ARO.Editor.BlenderImport
+{
+    /// <summary>
+    /// Builds, from the exports of the Kano residential street kit (made by tools/blender/kano_kit and kept in the private asset repository), everything the game needs to show the street:
+    ///  1. a production prefab per asset id at Assets/ThirdParty/ARO/Resources/Props/{id}.prefab (identity root, LODGroup, BoxCollider, kit materials with textures and cutout), by BlenderAssetBuilder;
+    ///  2. the review prefab Resources/KanoReview/kano_residential_section_a.prefab: every placement of the Blender review scene (placements/kano_residential_section_a.json), converted from Blender axes
+    ///     to Unity axes, on a plain ground slab. The running game shows it with its own lighting, camera and post-processing (ARO.World.KanoReviewScene, "?smoke=kanostreet").
+    /// Files appear under Assets/ThirdParty/ARO at CI time (copied from the private repository's unity/ folder) and are never part of the public repository. Editor only; it changes no game system.
+    /// Blender axes (street along +Y, right +X, up +Z, asset front -Y) to Unity axes: position (x, y, z) becomes (-x, z, -y) and a yaw of t degrees becomes -t degrees, which is what the importers do to the models
+    /// (measured by the calibration import test: the Blender front -Y arrives as Unity +Z and the Blender right -X as Unity +X).
+    /// </summary>
+    public static class KanoReviewBuilder
+    {
+        public const string Root = "Assets/ThirdParty/ARO";
+        public const string PrefabFolder = Root + "/Resources/Props";
+        public const string ReviewFolder = Root + "/Resources/KanoReview";
+        public const string ReviewPrefabPath = ReviewFolder + "/kano_residential_section_a.prefab";
+        public const string PlacementsPath = Root + "/placements/kano_residential_section_a.json";
+        public const string KitPath = Root + "/Materials/aro_materials.json";
+
+        [Serializable] class Placement { public string asset; public float x, y, z, yawDeg, scale = 1f; public string tag; }
+        [Serializable] class PlacementFile { public string scene; public Placement[] items; }
+        [Serializable] class ManifestWrap { public PropDef catalog_entry; }
+
+        public static Vector3 FromBlender(float x, float y, float z) => new Vector3(-x, z, -y);
+
+        /// <summary>The newest exported FBX of an asset: Models/{id}/vNNN/{id}.fbx with the highest NNN, or Models/{id}/{id}.fbx.</summary>
+        public static string LatestFbx(string id)
+        {
+            string dir = Root + "/Models/" + id; if (!Directory.Exists(dir)) return null;
+            var versions = Directory.GetDirectories(dir).Select(d => Path.GetFileName(d)).Where(n => n.Length == 4 && n[0] == 'v').OrderBy(n => n, StringComparer.Ordinal).ToList();
+            for (int i = versions.Count - 1; i >= 0; i--) { string p = dir + "/" + versions[i] + "/" + id + ".fbx"; if (File.Exists(p)) return p; }
+            string flat = dir + "/" + id + ".fbx"; return File.Exists(flat) ? flat : null;
+        }
+
+        static PropDef DefFor(string fbxPath, string id)
+        {
+            string manifest = Path.ChangeExtension(fbxPath, null) + ".manifest.json";
+            if (File.Exists(manifest)) { var w = JsonUtility.FromJson<ManifestWrap>(File.ReadAllText(manifest)); if (w != null && w.catalog_entry != null && !string.IsNullOrEmpty(w.catalog_entry.id)) return w.catalog_entry; }
+            // roads and other assets without a prop-catalogue entry: seen from far, never a shadow caster
+            return new PropDef { id = id, category = "environment", status = "production", cullDistance = 600f, castShadow = false, collider = "none" };
+        }
+
+        /// <summary>Imports one asset's FBX, builds its production prefab and saves it under Resources/Props. Returns the saved prefab, or null with a message.</summary>
+        public static GameObject BuildPrefab(string id, MaterialKitFile kit, List<string> notes)
+        {
+            string fbx = LatestFbx(id); if (fbx == null) { notes.Add(id + ": no FBX under " + Root + "/Models"); return null; }
+            AssetDatabase.ImportAsset(fbx, ImportAssetOptions.ForceSynchronousImport);
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbx); if (model == null) { notes.Add(id + ": " + fbx + " did not import as a GameObject"); return null; }
+            var built = BlenderAssetBuilder.Build(model, DefFor(fbx, id), kit, Root + "/Materials");
+            foreach (var n in built.Notes) notes.Add(id + ": " + n);
+            foreach (var m in built.UnmatchedMaterials) notes.Add(id + ": material '" + m + "' is not in the kit");
+            Directory.CreateDirectory(PrefabFolder); string path = PrefabFolder + "/" + id + ".prefab";
+            var saved = PrefabUtility.SaveAsPrefabAsset(built.Root, path); UnityEngine.Object.DestroyImmediate(built.Root);
+            if (saved == null) notes.Add(id + ": the prefab was not saved");
+            else notes.Add(id + ": prefab " + path + " LOD triangles [" + string.Join(", ", built.Measure.LodTriangles) + "] materials " + built.Measure.MaterialCount + " collider " + built.Measure.HasBoxCollider);
+            return saved;
+        }
+
+        /// <summary>Builds the prefabs for every asset the placement file uses, then the review prefab. Returns the log lines.</summary>
+        public static List<string> BuildReview()
+        {
+            var notes = new List<string>();
+            if (!File.Exists(PlacementsPath)) { notes.Add("no placements file at " + PlacementsPath + ": nothing to build (the private assets are not in this checkout)"); return notes; }
+            var kit = File.Exists(KitPath) ? BlenderAssetBuilder.LoadKit(KitPath) : null; if (kit == null) notes.Add("no material kit at " + KitPath + ": the imported materials are kept");
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            var file = JsonUtility.FromJson<PlacementFile>(File.ReadAllText(PlacementsPath));
+            var prefabs = new Dictionary<string, GameObject>();
+            foreach (var id in file.items.Select(i => i.asset).Distinct()) prefabs[id] = BuildPrefab(id, kit, notes);
+
+            var root = new GameObject("kano_residential_section_a");
+            var ground = GameObject.CreatePrimitive(PrimitiveType.Cube); ground.name = "review_ground"; ground.transform.SetParent(root.transform, false);
+            ground.transform.localScale = new Vector3(3000f, 0.2f, 3000f); ground.transform.localPosition = new Vector3(0f, -0.1f - 0.03f, 300f);
+            if (kit != null) { var e = kit.materials.FirstOrDefault(x => x.name == "M_grass_green"); if (e != null) ground.GetComponent<MeshRenderer>().sharedMaterial = BlenderAssetBuilder.KitMaterial(e, Root + "/Materials"); }
+            int placed = 0, missing = 0;
+            foreach (var it in file.items)
+            {
+                if (!prefabs.TryGetValue(it.asset, out var prefab) || prefab == null) { missing++; continue; }
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, root.transform); go.name = it.asset;
+                go.transform.localPosition = FromBlender(it.x, it.y, it.z); go.transform.localRotation = Quaternion.Euler(0f, -it.yawDeg, 0f); go.transform.localScale = Vector3.one * (it.scale > 0f ? it.scale : 1f); placed++;
+            }
+            Directory.CreateDirectory(ReviewFolder);
+            var saved = PrefabUtility.SaveAsPrefabAsset(root, ReviewPrefabPath); UnityEngine.Object.DestroyImmediate(root); AssetDatabase.SaveAssets();
+            notes.Add("review prefab " + ReviewPrefabPath + ": " + placed + " placements, " + missing + " skipped (no prefab), saved " + (saved != null));
+            return notes;
+        }
+
+        /// <summary>Entry point for CI: builds the prefabs and the review prefab and prints what happened (the log lines start with [KanoReviewBuilder]).</summary>
+        public static void BuildReviewAndLog()
+        {
+            foreach (var n in BuildReview()) Console.WriteLine("[KanoReviewBuilder] " + n);
+        }
+    }
+}
