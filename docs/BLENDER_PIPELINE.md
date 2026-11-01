@@ -7,8 +7,8 @@ Status (2026-11-01): the toolchain exists and is tested (section 4), and **FBX a
 Pre-production checks the owner asked for, and where each stands:
 | Check | Result | Evidence |
 |---|---|---|
-| Full CI green | See section 4a | run ids listed there |
-| `aro-blender` discoverable and callable by the coding agent in a fresh process | **Discoverable: yes. Callable by an agent session: blocked on the owner's one-time approval.** | section 4a |
+| Full CI green | **Yes: all 8 jobs on 5456b46** | section 4a |
+| `aro-blender` discoverable and callable by the coding agent in a fresh process | **Discoverable: yes. Callable by an agent session: blocked on the owner's one-time approval.** | section 4b |
 | FBX and GLB import in Unity 6: orientation, scale, materials, collision, budget | **Passed 4/4 on a real Unity 6000.0.58f2 run**, after three runs that found and fixed real defects | section 8 |
 | Private asset repository and integration workflow | **Proposed, not created** (the owner asked for the proposal first) | `docs/ASSET_REPO_PROPOSAL.md`; the import path it relies on is tested (section 8) |
 | First roadside section | **Scaffold only; no detailed modelling** until the reference pack and approval | `docs/FIRST_SECTION_BLOCKOUT.md` |
@@ -50,7 +50,16 @@ Candidates inspected (PyPI metadata and the package source, read not run; GitHub
 * `tests/` (54 unit tests): path confinement, versioning, approval freeze, name rules, and the raw-Python guard against 31 hostile snippets.
 * `selftest.py` (55 checks) drives the server **over the real MCP protocol**: handshake, tool discovery, scene inspection with real triangle counts and dimensions, a reviewed script building a prop, object creation and deletion, materials, accepted and refused raw Python, a runaway script stopped by the timeout, a path-escaping script refused, Workbench and Cycles renders that come back to the agent as images, validation that fails a bad asset and passes a good one, versioned saves (v001, v002), FBX and GLB export (real binary files checked by header and length) with a manifest of measurements and hashes, refusal to overwrite an export, refusal to export a failing asset, reopening a project, and no listening socket, a GLB whose material colours survive, and a calibration model whose catalogue entry is measured.
 
-### 4a. MCP discoverability and callability (checked in a fresh process)
+### 4a. CI evidence for this stage
+| Run | Commit | Result |
+|---|---|---|
+| `ci.yml` run 41260241376 | 5456b46 | **all 8 jobs green**: backend over HTTP, network core, safety gate, **Blender toolchain (54 unit tests + 55 end-to-end checks)**, database migrations, Unity tests + WebGL build, browser smoke, lighting at four hours |
+| `blender-unity.yml` run 41260241387 | 5456b46 | **green, cleanup step included** (the previous run's job had failed only on that step) |
+| `blender-unity.yml` run 41259509027 | 9e9a078 | the measurement run of section 8: 4/4 tests passed; job red only from the root-owned-files cleanup, fixed in 5456b46 |
+| `ci.yml` run 41256294042 | 1c75c4c | all jobs green (earlier commit, before the FBX/GLB corrections) |
+The merge into `main` has the same tree as 5456b46.
+
+### 4b. MCP discoverability and callability (checked in a fresh process)
 * **Discoverable.** A fresh `claude mcp list` in the repository prints `aro-blender: bash tools/blender/run_server.sh - Pending approval (run `claude` to approve)`. The project file `.mcp.json` is read; Claude Code then requires the person to approve a project-scoped server before it connects.
 * **Callable.** `tools/blender/mcp_batch.py` starts the server with the same command as `.mcp.json` and calls tools over the real MCP protocol: `blender_info` returned `Blender 5.2.3 LTS`, Python 3.13.16, engines cycles/workbench/eevee, `transport stdio (no network listener)`; `workspace_info`, `new_scene`, `create_primitive` and `inspect_scene` ran. The `selftest` repeats this with 55 checks on every CI run.
 * **What is NOT yet shown:** a coding-agent session actually calling the tools through its own tool list. That needs the owner to approve the server once by running `claude` in the repository and accepting the prompt. I did not approve it myself: an attempt to write the approval into settings was blocked, correctly, because approving a server that executes code is the owner's decision. After approval, a new session should list the tools as `mcp__aro-blender__*`; that will be the final check.
@@ -100,7 +109,7 @@ The game already has the slot: a production prefab at `Resources/Props/{id}.pref
 | GLB | same orientation, sizes and material names; hues match; prefab URP/Lit |
 | Game lookup | a prefab saved under `Assets/ThirdParty/**/Resources/Props/{id}.prefab` is found by `PropLibrary.ProductionPrefab`, the call `ChunkStreamer.StageProps` makes |
 
-The run's **job** was nevertheless marked failed: the final cleanup step (`rm -rf` of the generated fixture) was refused with "Permission denied" because the Unity container runs as root and wrote the kit materials into the workspace. The tests had already passed and the results were uploaded. Fixed in the workflow (`sudo rm -rf`); confirmed by the next run (see 4a for run ids).
+The run's **job** was nevertheless marked failed: the final cleanup step (`rm -rf` of the generated fixture) was refused with "Permission denied" because the Unity container runs as root and wrote the kit materials into the workspace. The tests had already passed and the results were uploaded. Fixed in the workflow (`sudo rm -rf`); confirmed by the next run (section 4a).
 
 **Findings with consequences for the game (nothing changed, listed for the owner):**
 * `ChunkStreamer.StageProps` instantiates production prefabs for chunks within 2 rings (about 1 km) as separate objects: no per-chunk merge, no catalogue box collider, no distance culling, and it overwrites the instance's yaw and multiplies its scale. So every production prefab must carry its **own LODGroup with a culling threshold, its own BoxCollider, an identity root and instanced shared-kit materials**; the builder (`BlenderAssetBuilder`) does exactly this and the test asserts it.
@@ -112,7 +121,7 @@ The run's **job** was nevertheless marked failed: the final cleanup step (`rm -r
 2. **References for the first environment** (section 10 below): without them the houses would be generic.
 3. ~~Whether the `M_<surface>` shared-material scheme is accepted~~ **Decided 2026-11-01: accepted** (section 6).
 4. **Private companion repository**: decided in principle on 2026-11-01; the structure, LFS, read-token handling and the artifact boundary are proposed in `docs/ASSET_REPO_PROPOSAL.md` and await approval before anything is created.
-5. **Approve the `aro-blender` MCP server** in your own `claude` session (section 4a).
+5. **Approve the `aro-blender` MCP server** in your own `claude` session (section 4b).
 
 ## 10. First milestone: what is needed to start (Northern Nigerian residential roadside section)
 Provided by you, please, for this one section: (a) several photographs of the actual house types you want (front and side, with the roof, walls, gates and compound walls visible; Kano/Kaduna/Katsina/Sokoto style, flat or low-pitched roofs, parapets, decorative facades), (b) a photograph or two of the road with its shoulders, drains and verge, (c) shops/kiosks and roadside businesses, (d) the electricity poles and streetlights as they really look there, (e) typical trees and ground cover, (f) the lighting mood (time of day, dust, haze). Rights to use the images as references should be yours. I will then write down the proportions I read from each (width, height, storeys, parapet, door and window sizes, wall thickness) so you can correct my reading before any model is built, then block out, render, and wait for your review.
