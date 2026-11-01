@@ -56,7 +56,7 @@ def leaf_pixels(size=512, seed=21, per_cell=900):
     """A 2 x 2 atlas of foliage clusters (RGBA, background transparent). Each cell is an irregular blob densely covered by individual leaves (rotated ellipses with a lighter midrib and a dark rim),
     in four greens: sunlit, mid, shaded and mixed. The alpha is the leaf shape, so the card silhouette is leafy, not a quad."""
     rnd = np.random.default_rng(seed); out = np.zeros((size, size, 4)); cell = size // 2
-    greens = [(0.40, 0.58, 0.17), (0.29, 0.47, 0.13), (0.18, 0.34, 0.09), (0.34, 0.52, 0.14)]
+    greens = [(0.33, 0.55, 0.15), (0.24, 0.45, 0.12), (0.15, 0.31, 0.08), (0.28, 0.49, 0.13)]
     yy, xx = np.mgrid[0:cell, 0:cell].astype(float)
     for ci in range(4):
         cx0, cy0 = (ci % 2) * cell, (ci // 2) * cell; img = np.zeros((cell, cell, 4)); base = np.array(greens[ci])

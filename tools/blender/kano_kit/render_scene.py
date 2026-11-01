@@ -19,7 +19,7 @@ VIEWS = {
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--views", default="ref"); ap.add_argument("--w", type=int, default=1280); ap.add_argument("--h", type=int, default=720)
-    ap.add_argument("--samples", type=int, default=48); ap.add_argument("--sun", type=float, default=200.0); ap.add_argument("--elev", type=float, default=36.0); ap.add_argument("--exposure", type=float, default=-1.9)
+    ap.add_argument("--samples", type=int, default=48); ap.add_argument("--sun", type=float, default=200.0); ap.add_argument("--elev", type=float, default=36.0); ap.add_argument("--exposure", type=float, default=-2.9)   # was -1.9 while the textures were double-decoded (too dark); with correct colours the same sun needs about one stop less
     ap.add_argument("--placements", default="")
     a = ap.parse_args(); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P = build_all.build_scene()

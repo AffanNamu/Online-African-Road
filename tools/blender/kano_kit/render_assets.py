@@ -34,7 +34,7 @@ def main():
             for ob in list(bpy.data.objects):
                 if ob.type == "CAMERA": bpy.data.objects.remove(ob)
             R.camera(loc, (c.x, c.y, c.z), 34 if aid != "kano_street_oneway_section_a" else 28, f"cam_{name}")
-            R.render(str(out / f"{aid}_{name}.png"), 800, 450, a.samples, exposure=-1.9)
+            R.render(str(out / f"{aid}_{name}.png"), 800, 450, a.samples, exposure=-2.9)
         print("previewed", aid)
 
 
