@@ -84,4 +84,7 @@ jobs:
         with: { name: blender-import-results, path: "${{ steps.tests.outputs.artifactsPath }}", if-no-files-found: warn }
       - name: Remove the generated fixture (it is never part of a build or of the repository)
         if: always()
-        run: rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta
+        # The Unity container runs as root and writes the kit materials it creates into the
+        # workspace, so a plain rm fails with "Permission denied" (seen on run 41259509027,
+        # after all four import tests had passed).
+        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta
