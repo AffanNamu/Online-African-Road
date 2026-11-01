@@ -65,6 +65,22 @@ jobs:
       - name: Scan every tracked file
         run: python3 tools/check_repo_safety.py
 
+  blender:
+    name: Blender toolchain (headless Blender 5.2 + MCP server, end to end over the MCP protocol)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.13' }      # the bpy 5.2 wheel exists for Python 3.13 only
+      - name: Install Blender (the bpy wheel) and the MCP SDK
+        run: pip install --no-input -r tools/blender/requirements.txt
+      - name: Software OpenGL for the Workbench and EEVEE previews (no GPU on the runner; Cycles needs none)
+        run: sudo apt-get install -y -qq libegl1 libgl1 libgl1-mesa-dri libegl-mesa0
+      - name: Unit tests (path confinement, versioning, approval, the raw-Python guard)
+        run: cd tools/blender && PYTHONPATH=. python -m pytest -q tests
+      - name: End to end through a real MCP session (discover, build, inspect, guard, render, validate, save, export, refusals, no listening socket)
+        run: python tools/blender/selftest.py
+
   netcore:
     name: Network core logic (.NET unit tests)
     runs-on: ubuntu-latest

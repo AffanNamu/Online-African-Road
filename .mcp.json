@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aro-blender": {
+      "command": "bash",
+      "args": ["tools/blender/run_server.sh"]
+    }
+  }
+}
