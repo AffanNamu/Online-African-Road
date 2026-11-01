@@ -1,0 +1,82 @@
+{
+ "schemaVersion": 1,
+ "id": "kano-frame-k0",
+ "status": "PROPOSED (needs the owner's approval before any other data depends on it)",
+ "units": "metres",
+ "axes": "x east, z north, y up: the game's route axes",
+ "projection": "local tangent plane: x = (lon - lon0) * 111320 * cos(lat0), z = (lat - lat0) * 110700; error below 0.1% within 25 km",
+ "anchor": {
+  "name": "Kano city reference point",
+  "lat": 12.0,
+  "lon": 8.5167,
+  "source": "Wikipedia 'Kano (city)': 12°00'N 8°31'E (about +-1 km; to be replaced by a surveyed reference)"
+ },
+ "chunkLattice": {
+  "sizeM": 200,
+  "note": "All Kano authored coordinates are multiples of 200 m at chunk corners so neighbouring routes share the game's chunk lattice (ChunkStreamer.chunkSize)."
+ },
+ "slice": {
+  "routeId": "ng-kano-slice",
+  "startXZ": [
+   -2400.0,
+   -3200.0
+  ],
+  "approachBearingDeg": 36.0,
+  "fictional": true,
+  "note": "About 4 km south-west of the reference point on the Kaduna approach direction. A design choice, not a survey: no street here is a real street."
+ },
+ "qibla": {
+  "bearingDeg": 68.4,
+  "note": "Great-circle initial bearing Kano -> Mecca, computed from 12.0N 8.5167E and 21.4225N 39.8262E. Mosques in the slice orient their qibla wall to this, whatever the road does."
+ },
+ "worldMapDiscrepancy": {
+  "gameWorldMapKano": {
+   "lat": 12.0022,
+   "lon": 8.592
+  },
+  "referenceXZ_m": [
+   8199,
+   244
+  ],
+  "distanceKm": 8.2,
+  "note": "The world map's Kano longitude (8.592) is about 8 km east of the Wikipedia reference (8.5167). Not changed; the owner decides which is authoritative."
+ },
+ "reservedAnchors": [
+  {
+   "id": "dala_hill",
+   "name": "Dala Hill",
+   "kind": "landmark",
+   "lat": 12.0093,
+   "lon": 8.50697,
+   "xz_m": [
+    -1059,
+    1030
+   ],
+   "verified": "one source (coordinates 12°0'33.498\"N 8°30'25.106\"E); height reported as 534 m a.s.l. by most sources and 453.67 m by one; unresolved"
+  },
+  {
+   "id": "gidan_rumfa",
+   "name": "Gidan Rumfa (Emir's Palace)",
+   "kind": "landmark",
+   "lat": null,
+   "lon": null,
+   "verified": "location known to be in the old city beside the Central Mosque; coordinates NOT verified: needs a survey/map source"
+  },
+  {
+   "id": "kurmi_market",
+   "name": "Kurmi Market",
+   "kind": "landmark",
+   "lat": null,
+   "lon": null,
+   "verified": "in the old city near the palace; coordinates NOT verified"
+  },
+  {
+   "id": "kofar_mata_dye_pits",
+   "name": "Kofar Mata Dye Pits",
+   "kind": "landmark",
+   "lat": null,
+   "lon": null,
+   "verified": "in the old city near the city wall and palace; coordinates NOT verified"
+  }
+ ]
+}
