@@ -2,4 +2,4 @@
 bpy==5.2.3
 mcp>=1.26,<2
 pytest>=8
-pillow
+pillow>=10,<13
