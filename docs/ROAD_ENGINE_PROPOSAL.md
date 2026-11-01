@@ -1,6 +1,6 @@
 # Shared road engine: technical proposal for the Kano City work
 
-**Status (2026-11-01): PROPOSAL ONLY. Nothing in this document is implemented, and no engine file has been changed.** The owner asked for a proposal before any work on RB-12 to RB-17 (and the older RB items): which capabilities are missing, which districts really need them, the performance impact, whether the work can be incremental, and how multiplayer and road generation stay compatible. The backlog with the current behaviour of every item is `ROAD_ENGINE_BACKLOG.md`; the districts and phases are in `KANO_CITY_MASTER_PLAN.md`. Every statement about the engine below was read from the code (files named); every number is labelled measured, computed from the plan, or estimated.
+**Status (2026-11-01): PROPOSAL. E0 was approved by the owner on 2026-11-01 STRICTLY as a measurement-only stage (performance, draw calls, memory, loading, streaming; no change to gameplay, networking, vehicle systems or engine architecture). E1 to E6 are not approved and not started. No engine file has been changed.** The owner asked for a proposal before any work on RB-12 to RB-17 (and the older RB items): which capabilities are missing, which districts really need them, the performance impact, whether the work can be incremental, and how multiplayer and road generation stay compatible. The backlog with the current behaviour of every item is `ROAD_ENGINE_BACKLOG.md`; the districts and phases are in `KANO_CITY_MASTER_PLAN.md`. Every statement about the engine below was read from the code (files named); every number is labelled measured, computed from the plan, or estimated.
 
 ## 0. Summary of the recommendation
 
@@ -109,3 +109,13 @@ The decisive unknown is **real draw calls and frame time at district density in 
 2. Approve, defer or decline each of **E1 to E6** separately.
 3. Approve adding a **content fingerprint** to session creation (section 6).
 4. Confirm that **RB-14** hills stay out of Kano's urban landscape and are kept for a regional highway environment.
+
+## 9. E0 as approved: what is measured and where (added after the owner's approval)
+Measurement only. The instrumentation already in the game is used; nothing in the game's behaviour is changed.
+| Measure | How | Where it is recorded |
+|---|---|---|
+| visible triangles, draw estimate, renderers, chunks, texture MB, heap MB, frame time, budget warnings | the game's own `PerfProbe` `[Perf]` lines on `?smoke=` pages, per quality tier | `tools/webgl-kanoreview.js` writes the last lines per view into `<prefix>-summary.json`; the existing drive scenario (`webgl-drive.js`) already logs them for the Lagos-Ibadan route, which is the baseline of the existing game |
+| loading | seconds from page load to the review scene's "ready" line; WebGL build size | the same summary; the workflow log prints the build size |
+| memory | JS heap (Chromium) and the probe's heap and texture MB | the same summary |
+| streaming | chunks loaded and visible renderers while the review camera is moved between views | the per-view `[Perf]` lines |
+Limits stated up front: headless Chromium with software WebGL has no GPU, so frame time there is not a player's frame time; triangles, renderers, draw estimate, texture MB and heap are meaningful, frame time is not. Real draw calls on a GPU need a device measurement, which is the owner's to run or to allow. The first numbers will exist when the private review build has run (it needs the owner's Unity secrets in the private repository).
