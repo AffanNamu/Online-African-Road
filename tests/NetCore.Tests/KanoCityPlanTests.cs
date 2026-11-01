@@ -183,7 +183,7 @@ public class KanoCityPlanTests
     {
         var m = Load("kano/city/reference_asset_matrix.json"); var reg = Load("kano/reference_register.json"); var registry = Load("kano/city/asset_registry.json"); var backlog = Backlog();
         var concepts = reg.GetProperty("references").EnumerateArray().Where(r => r.GetProperty("kind").GetString() == "generated_concept").Select(r => r.GetProperty("id").GetString()).ToList();
-        Assert.Equal(10, concepts.Count);
+        Assert.Equal(18, concepts.Count);      // R-006 to R-015 plus the environment, season and road-condition references R-016 to R-023
         var refs = m.GetProperty("references").EnumerateArray().ToDictionary(r => r.GetProperty("ref").GetString());
         Assert.All(concepts, c => { Assert.True(refs.ContainsKey(c), c + " is missing from the matrix"); Assert.True(refs[c].GetProperty("assets").GetArrayLength() >= 4, c + " is broken into too few assets"); Assert.True(refs[c].GetProperty("comparisonChecklist").GetArrayLength() >= 3); });
         var prefix = new Dictionary<string, string> { ["GLOBAL"] = "aro_", ["REGIONAL"] = "rg_", ["CITY_SPECIFIC"] = "kano_", ["LANDMARK"] = "lmk_kano_" };

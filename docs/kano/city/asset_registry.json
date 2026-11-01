@@ -106,7 +106,10 @@
    "city": null,
    "approvedCities": [],
    "concepts": [
-    "R-006"
+    "R-006",
+    "R-016",
+    "R-017",
+    "R-018"
    ],
    "districts": [
     "D06"
@@ -139,7 +142,10 @@
    "city": null,
    "approvedCities": [],
    "concepts": [
-    "R-006"
+    "R-006",
+    "R-016",
+    "R-017",
+    "R-018"
    ],
    "districts": [
     "D06"
@@ -376,7 +382,9 @@
     "R-007",
     "R-008",
     "R-011",
-    "R-012"
+    "R-012",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D06",
@@ -414,7 +422,8 @@
    "approvedCities": [],
    "concepts": [
     "R-006",
-    "R-011"
+    "R-011",
+    "R-022"
    ],
    "districts": [
     "D06",
@@ -455,7 +464,8 @@
     "R-010",
     "R-013",
     "R-014",
-    "R-015"
+    "R-015",
+    "R-022"
    ],
    "districts": [
     "D06",
@@ -494,7 +504,8 @@
    "approvedCities": [],
    "concepts": [
     "R-006",
-    "R-010"
+    "R-010",
+    "R-022"
    ],
    "districts": [
     "D06",
@@ -564,7 +575,9 @@
     "R-006",
     "R-007",
     "R-008",
-    "R-012"
+    "R-012",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D06",
@@ -636,7 +649,9 @@
     "R-007",
     "R-008",
     "R-011",
-    "R-012"
+    "R-012",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D11",
@@ -674,7 +689,9 @@
    "concepts": [
     "R-007",
     "R-008",
-    "R-011"
+    "R-011",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D11",
@@ -813,7 +830,8 @@
    "approvedCities": [],
    "concepts": [
     "R-008",
-    "R-012"
+    "R-012",
+    "R-023"
    ],
    "districts": [
     "D11"
@@ -849,7 +867,9 @@
    "approvedCities": [],
    "concepts": [
     "R-008",
-    "R-012"
+    "R-012",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D11"
@@ -957,7 +977,8 @@
    "concepts": [
     "R-007",
     "R-008",
-    "R-012"
+    "R-012",
+    "R-023"
    ],
    "districts": [
     "D11"
@@ -1311,7 +1332,9 @@
    "approvedCities": [],
    "concepts": [
     "R-009",
-    "R-011"
+    "R-011",
+    "R-022",
+    "R-023"
    ],
    "districts": [
     "D09",
@@ -1387,7 +1410,9 @@
     "R-009",
     "R-013",
     "R-014",
-    "R-015"
+    "R-015",
+    "R-018",
+    "R-019"
    ],
    "districts": [
     "D09",
@@ -1885,7 +1910,8 @@
    "city": null,
    "approvedCities": [],
    "concepts": [
-    "R-010"
+    "R-010",
+    "R-022"
    ],
    "districts": [
     "D08"
@@ -1963,7 +1989,8 @@
    "approvedCities": [],
    "concepts": [
     "R-010",
-    "R-011"
+    "R-011",
+    "R-022"
    ],
    "districts": [
     "D08"
@@ -2709,6 +2736,1331 @@
     "RB-05"
    ],
    "flags": ""
+  },
+  {
+   "id": "aro_road_asphalt_cracked_a",
+   "name": "Cracked asphalt: crack-network and alligator-patch surface set (material, normal and decal sources)",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-06"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_road_pothole_set_a",
+   "name": "Pothole set: broken-edge holes with exposed substrate (visual layer; physical only as hazard sites)",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-06",
+    "RB-22"
+   ],
+   "flags": "visual only unless the owner approves physical hazard sites (docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md 5.3)"
+  },
+  {
+   "id": "aro_road_patch_set_a",
+   "name": "Patched asphalt set: repair patches of different age and colour",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-06"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_road_earth_compacted_a",
+   "name": "Compacted-earth road surface and edge profile",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-020"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-18"
+   ],
+   "flags": "soil colour for Kano and its surroundings is NOT established (M-15)"
+  },
+  {
+   "id": "aro_road_sand_loose_a",
+   "name": "Loose sandy and dusty road shoulder and surface",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-18"
+   ],
+   "flags": "soil colour NOT established (M-15)"
+  },
+  {
+   "id": "aro_road_mud_rutted_a",
+   "name": "Rutted mud road: ridged banks, deep wheel ruts and water-filled troughs",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-18",
+    "RB-19",
+    "RB-21"
+   ],
+   "flags": "rut depths are an eyeball reading of generated images, not data (M-15)"
+  },
+  {
+   "id": "aro_water_puddle_set_a",
+   "name": "Puddle set: shallow pools with reflection, ripple and edge for asphalt and earth",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-018",
+    "R-020",
+    "R-021"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-21"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_water_flood_sheet_a",
+   "name": "Flood sheet: turbid standing water over a carriageway with bow-wave and splash hooks",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-019"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-21",
+    "RB-22"
+   ],
+   "flags": "depth cannot be read from the image; flood sites and depths need sourced data (M-16)"
+  },
+  {
+   "id": "aro_drain_open_slab_a",
+   "name": "Open concrete roadside drain with slab sections",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-019"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-05"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_kerb_stone_grey_a",
+   "name": "Plain grey concrete kerb block module",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-04"
+   ],
+   "flags": "kerb treatment differs between the images (grey, black/yellow, black/white): road class or generator variation"
+  },
+  {
+   "id": "aro_dust_film_surface_a",
+   "name": "Dust-film surface layer (road, kerb, wall, vehicle, foliage; atmosphere stays separate)",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-20"
+   ],
+   "flags": "the orange cast is haze plus dust film, never baked into wall textures"
+  },
+  {
+   "id": "aro_fx_dust_trail_a",
+   "name": "Dust trail behind a moving vehicle",
+   "assetClass": "GLOBAL",
+   "category": "effects",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-23"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_fx_splash_wheel_a",
+   "name": "Wheel splash and bow wave on water",
+   "assetClass": "GLOBAL",
+   "category": "effects",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-018",
+    "R-019"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-23",
+    "RB-21"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_fx_mud_spray_a",
+   "name": "Mud spray and clods thrown by wheels",
+   "assetClass": "GLOBAL",
+   "category": "effects",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-23"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "rg_ngn_shop_row_roadside_a",
+   "name": "Roadside shop row: single-storey units, corrugated roofs, sign band slots, awnings",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017",
+    "R-018",
+    "R-019"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": "sign text is a data slot; 'KANO GENERAL STORE' is illustrative; real vernacular unverified (M-14)"
+  },
+  {
+   "id": "rg_ngn_stall_umbrella_a",
+   "name": "Market table stall with a large umbrella and produce",
+   "assetClass": "REGIONAL",
+   "category": "props",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017",
+    "R-018",
+    "R-019"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "goods and colours are variants of one model"
+  },
+  {
+   "id": "rg_ngn_stall_canopy_rough_a",
+   "name": "Rough roadside canopy stall: pole frame, sacking or tarpaulin roof, sacks of goods",
+   "assetClass": "REGIONAL",
+   "category": "props",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "vernacular unverified (M-14)"
+  },
+  {
+   "id": "rg_ngn_shed_market_corrugated_a",
+   "name": "Open market shed with a corrugated roof and goods",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "vernacular unverified (M-14)"
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_a",
+   "name": "Mud-brick house with rusted corrugated roof (type A)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "not established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14)"
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_b",
+   "name": "Mud-brick house with rusted corrugated roof (type B, with an open veranda)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above (M-14)"
+  },
+  {
+   "id": "rg_ngn_house_block_corrugated_a",
+   "name": "Rendered block house with a hipped corrugated roof and a roof water tank",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-018",
+    "R-021"
+   ],
+   "districts": [
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above (M-14)"
+  },
+  {
+   "id": "rg_ngn_roof_corrugated_rust_a",
+   "name": "Corrugated sheet roof module, fresh to rusted (kit)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-020",
+    "R-021"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above (M-14)"
+  },
+  {
+   "id": "rg_ngn_fence_woven_timber_a",
+   "name": "Woven timber fence module",
+   "assetClass": "REGIONAL",
+   "category": "props",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above (M-14)"
+  },
+  {
+   "id": "aro_gate_steel_plain_a",
+   "name": "Plain black steel double gate with a lattice panel",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017",
+    "R-018"
+   ],
+   "districts": [
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_tank_water_roof_a",
+   "name": "Roof water tank on a stand",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017",
+    "R-018",
+    "R-019",
+    "R-021"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "rg_ngn_pole_timber_span_a",
+   "name": "Timber utility pole with crossarms and multi-wire spans (cluster variant)",
+   "assetClass": "REGIONAL",
+   "category": "lights",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020",
+    "R-021"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "poles as installed in the region NOT established (M-06)"
+  },
+  {
+   "id": "rg_ngn_tree_large_shade_a",
+   "name": "Large spreading shade tree, dry and wet foliage variants",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-017",
+    "R-018",
+    "R-019",
+    "R-020",
+    "R-021"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-24"
+   ],
+   "flags": "species NOT established (M-07, M-17)"
+  },
+  {
+   "id": "rg_ngn_banana_plant_a",
+   "name": "Banana plant clump",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-24"
+   ],
+   "flags": "banana plants are not established for Kano (M-17)"
+  },
+  {
+   "id": "rg_ngn_grass_tall_verge_a",
+   "name": "Tall grass and weeds along an unpaved verge, dry and green variants",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016",
+    "R-020",
+    "R-021"
+   ],
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-24"
+   ],
+   "flags": "seasonal appearance NOT established (M-17)"
+  },
+  {
+   "id": "rg_ngn_bougainvillea_wall_a",
+   "name": "Bougainvillea trained over a compound wall",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-016"
+   ],
+   "districts": [
+    "D05",
+    "D07"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "species and colour per M-17"
+  },
+  {
+   "id": "rg_ngn_hill_wooded_backdrop_a",
+   "name": "Wooded hill backdrop with scattered rooftops",
+   "assetClass": "REGIONAL",
+   "category": "environment",
+   "region": "ngn",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-020"
+   ],
+   "districts": [],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-14"
+   ],
+   "flags": "hills conflict with decision C3 inside Kano city; regional rural backdrop only"
+  },
+  {
+   "id": "aro_tower_glass_stone_a",
+   "name": "Office tower: glass curtain wall with stone piers and a crowned top",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-022"
+   ],
+   "districts": [
+    "D05"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "names, crests and slogans are fictional identities to be replaced"
+  },
+  {
+   "id": "aro_plaza_stone_glass_a",
+   "name": "Stone-and-glass mid-rise office or plaza block",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-022",
+    "R-023"
+   ],
+   "districts": [
+    "D05",
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_banner_pole_a",
+   "name": "Pole banner on a streetlight bracket (graphic per instance)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-022"
+   ],
+   "districts": [
+    "D05"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": "crests and slogans in the image are generated and unverified"
+  },
+  {
+   "id": "aro_flyover_deck_pier_a",
+   "name": "Concrete flyover deck on piers with yellow-and-black bollard stripes",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-023"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-03"
+   ],
+   "flags": "grade separation: design inspiration only until the engine proposal's E5"
+  },
+  {
+   "id": "aro_shrub_flowering_pink_a",
+   "name": "Flowering shrub for planted medians (pink)",
+   "assetClass": "GLOBAL",
+   "category": "vegetation",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-023"
+   ],
+   "districts": [
+    "D11",
+    "D05"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "species to confirm"
+  },
+  {
+   "id": "aro_agave_a",
+   "name": "Agave / spiky ornamental for planted medians",
+   "assetClass": "GLOBAL",
+   "category": "vegetation",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-022"
+   ],
+   "districts": [
+    "D05"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "species to confirm"
   },
   {
    "id": "rg_ngn_hausa_compound_a",
