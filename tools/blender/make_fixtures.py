@@ -29,6 +29,7 @@ def main() -> int:
     m = json.loads(man.read_text()); m["fbx_declared"] = fbxinfo.summary(files[0]); m["fbx_default"] = exp.FBX_DEFAULT; m["fbx_default_variant"] = exp.variant_tag(exp.FBX_DEFAULT); m["fbx_variants"] = variants
     for tag, v in variants.items(): v["declared"] = {k: x for k, x in fbxinfo.summary(out / v["file"]).items() if k in ("UpAxis", "UpAxisSign", "FrontAxis", "FrontAxisSign", "CoordAxis", "CoordAxisSign", "UnitScaleFactor")}
     man.write_text(json.dumps(m, indent=2))
+    (out / "aro_materials.json").write_text(json.dumps(materials.kit_json(), indent=1))
     if a.require_glb: (out / "REQUIRE_GLB").write_text("the Unity test must import the GLB (glTFast is installed for it)\n")
     print("wrote", ", ".join(str(f.relative_to(out)) for f in files + [man]), f"and {len(variants)} FBX variants to", out)
     for tag, v in variants.items(): print(" ", tag, json.dumps(v["declared"]))

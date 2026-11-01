@@ -20,7 +20,7 @@ STATE = {"kind": None, "name": None, "version": None}
 
 mcp = FastMCP("aro-blender", instructions=(
     "Headless Blender 5.2 for African Roads Online. Build REAL 3D geometry (never photos on planes). The game's conventions (Assets/_Project/Art/README.md): 1 unit = 1 m, Z up, the asset's FRONT "
-    "faces +Y in Blender (it becomes +Z in Unity; right is +X), origin on the ground at the centre of the footprint, transforms applied, a root empty named exactly like the asset id (lower_snake_case), "
+    "faces -Y in Blender (Blender's own front-view convention, measured to arrive as +Z in Unity; its right is -X), origin on the ground at the centre of the footprint, transforms applied, a root empty named exactly like the asset id (lower_snake_case), "
     "LOD groups {id}_lod0 ... {id}_lod3 (empties holding that LOD's meshes; last LOD at most 10% of LOD0), materials from the library (list_materials), collision only as simple boxes named "
     "col_* (props/buildings) or one convex col_* mesh (vehicles). Triangle budgets are the game's: buildings 6000, vegetation 3000, signs 800, lights 1200, props 2500. Work in this order: new_scene, create parts, assign_material, render_preview (look at it), refine, validate_asset, save_project, export_asset. "
     "Never describe an asset as finished until validate_asset passes and you have looked at a render. Files only exist in the workspace."))

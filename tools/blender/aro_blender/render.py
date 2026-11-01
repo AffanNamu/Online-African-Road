@@ -1,10 +1,10 @@
 """Preview renders: a camera framed on the whole asset, from named views, with simple fair lighting. Temporary objects are removed and the scene's own settings restored afterwards,
-so a preview never changes what gets saved or exported. Views are relative to the ASSET: front is the side that faces +Y."""
+so a preview never changes what gets saved or exported. Views are relative to the ASSET: front is the side that faces -Y (the asset's right is -X), the convention that arrives in Unity as front +Z, right +X."""
 from __future__ import annotations
 import ctypes.util, math, os, time
 from pathlib import Path
 
-VIEWS = {"front": (0, 1, 0.18), "back": (0, -1, 0.18), "right": (1, 0, 0.18), "left": (-1, 0, 0.18), "top": (0, 0, 1), "iso": (0.85, 0.95, 0.7), "iso_back": (-0.85, -0.95, 0.7), "eye": (0.0, 1, 0.04)}
+VIEWS = {"front": (0, -1, 0.18), "back": (0, 1, 0.18), "right": (-1, 0, 0.18), "left": (1, 0, 0.18), "top": (0, 0, 1), "iso": (-0.85, -0.95, 0.7), "iso_back": (0.85, 0.95, 0.7), "eye": (0.0, -1, 0.04)}
 ORTHO = {"front", "back", "right", "left", "top"}
 ENGINES = {"cycles": "CYCLES", "workbench": "BLENDER_WORKBENCH", "eevee": "BLENDER_EEVEE"}
 TEMP = "__aro_preview_"

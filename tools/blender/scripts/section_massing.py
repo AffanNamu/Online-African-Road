@@ -1,7 +1,7 @@
 # Reviewed script: NEUTRAL LAYOUT MASSING for the first environment section (a residential roadside, one road section with plots on both sides).
 # This is NOT architecture. Every dimension below is a PLACEHOLDER chosen only so the composition can be read (road corridor, setbacks, plot rhythm, pole spacing). Houses, walls, gates, shops, poles and
 # trees are plain grey boxes and cylinders. The real proportions come from the reference pack, which the owner and I are still making; until then nothing here may be read as a Northern Nigerian
-# building, and nothing here is modelled in detail. args: any key of P below overrides it (metres).
+# building, and nothing here is modelled in detail. (Orientation convention: a Blender asset's front faces -Y; the road here simply runs along Y.) args: any key of P below overrides it (metres).
 P = {"road_len": 100.0, "carriageway": 7.3, "shoulder": 2.0, "drain": 1.0, "verge": 2.5,
      "plot_front": 20.0, "plot_depth": 30.0, "wall_h": 2.2, "wall_t": 0.25, "gate": 4.0,
      "house_w": 10.0, "house_d": 12.0, "house_h": 3.2, "setback": 6.0,

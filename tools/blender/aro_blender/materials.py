@@ -48,6 +48,11 @@ def keys() -> list[str]:
     return sorted(LIBRARY)
 
 
+def kit_json() -> dict:
+    """The material kit as data for the Unity side: the same sRGB colours, roughness and metallic the library uses in Blender, so the Unity materials (URP/Lit, GPU instancing on) and the Blender renders agree by construction."""
+    return {"schema": 1, "materials": [{"name": f"M_{k}", "base_color_srgb": list(v[0]), "roughness": v[1], "metallic": v[2], "note": v[4]} for k, v in sorted(LIBRARY.items())]}
+
+
 def describe() -> list[dict]:
     return [{"key": k, "name": f"M_{k}", "base_color": list(v[0]), "roughness": v[1], "metallic": v[2], "variation": v[3], "note": v[4]} for k, v in sorted(LIBRARY.items())]
 

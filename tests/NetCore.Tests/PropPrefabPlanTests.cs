@@ -50,6 +50,7 @@ public class PropPrefabPlanTests
         m = Good(); m.MaterialCount = 17; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("materials"));
         m = Good(); m.ShaderNames = new[] { "Standard" }; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("Universal Render Pipeline/Lit"));
         m = Good(); m.ShaderNames = new[] { "Shader Graphs/glTF-pbrMetallicRoughness" }; Assert.Empty(PropPrefabPlan.Check(Def(), m, 0.03f, false));       // GLB through glTFast uses its own shader graphs: interchange, not the game's material
+        m = Good(); m.AllMaterialsInstanced = false; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("GPU instancing"));
         m = Good(); m.HasBoxCollider = false; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("no BoxCollider"));
         m = Good(); m.ColliderSize = new[] { 30f, 1.5f, 6f }; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("larger than the model"));
         m = Good(); m.RenderersOnCollisionNodes = 1; Assert.Contains(PropPrefabPlan.Check(Def(), m), x => x.Contains("collision node"));

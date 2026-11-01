@@ -61,5 +61,5 @@ def export(bpy, out_dir: Path, name: str, fmt: str, fbx_options: dict | None = N
 def write_manifest(out_dir: Path, name: str, version: int, kind: str, files: list[Path], validation: dict, blender_version: str, project: str) -> Path:
     m = {"asset": name, "kind": kind, "version": f"v{version:03d}", "blender": blender_version, "source_project": project, "exported_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
          "files": [{"file": f.name, "bytes": f.stat().st_size, "sha256": _sha(f)} for f in files], "validation": validation, "catalog_entry": validation.get("catalog_entry"),
-         "orientation_convention": "Blender: front +Y, up +Z, right +X, 1 unit = 1 m -> Unity: front +Z, up +Y, right +X (Art README); FBX settings: " + json.dumps(FBX_DEFAULT) + " (chosen from the Unity calibration import)"}
+         "orientation_convention": "Blender: front -Y, up +Z, right -X, 1 unit = 1 m -> Unity: front +Z, up +Y, right +X (Art README); FBX settings: " + json.dumps(FBX_DEFAULT) + " (chosen from the Unity calibration import)"}
     p = out_dir / f"{name}.manifest.json"; p.write_text(json.dumps(m, indent=2)); return p

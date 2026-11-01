@@ -1,7 +1,7 @@
 """Scene operations behind the MCP tools: a clean scene, inspection with real numbers, primitives, transforms, materials.
-Conventions (docs/BLENDER_PIPELINE.md): 1 Blender unit = 1 metre; Z is up; an asset's FRONT faces +Y (its right is +X, so a left-hand-drive steering wheel sits at x < 0);
-the origin sits on the ground at the asset's centre; transforms are applied. The +Y-forward choice follows Blender's own FBX/glTF exporters and is confirmed or changed by the
-first Unity import test, not assumed."""
+Conventions (docs/BLENDER_PIPELINE.md): 1 Blender unit = 1 metre; Z is up; an asset's FRONT faces -Y (Blender's own front-view convention; its right is -X, so a left-hand-drive steering wheel sits at x > 0);
+the origin sits on the ground at the asset's centre; transforms are applied. The -Y-front choice is MEASURED, not assumed: the Unity import test (BlenderAssetImportTests) showed that both the FBX importer and glTFast mirror X, which puts a +Y-front asset facing -Z in Unity and a -Y-front
+asset facing +Z (docs/BLENDER_PIPELINE.md section 8)."""
 from __future__ import annotations
 import math
 from . import materials

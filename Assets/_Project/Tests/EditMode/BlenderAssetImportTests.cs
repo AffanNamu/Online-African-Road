@@ -38,7 +38,7 @@ namespace ARO.Tests
         {
             public string Label; public bool Imported; public GameObject Prefab;
             public readonly Dictionary<string, Vector3> Centre = new Dictionary<string, Vector3>();
-            public Vector3 BodySize; public readonly List<string> Faults = new List<string>(), Info = new List<string>();
+            public int RotatedNodes; public Vector3 BodySize; public readonly List<string> Faults = new List<string>(), Info = new List<string>();
             public readonly Dictionary<string, string> MaterialName = new Dictionary<string, string>(); public readonly Dictionary<string, Color> MaterialColour = new Dictionary<string, Color>();
         }
 
@@ -48,7 +48,7 @@ namespace ARO.Tests
         static Color BaseColour(Material m)
         {
             if (m == null) return Color.magenta;
-            foreach (var p in new[] { "_BaseColor", "baseColorFactor", "_Color" }) if (m.HasProperty(p)) return m.GetColor(p);
+            foreach (var p in new[] { "baseColorFactor", "_BaseColor", "_Color" }) if (m.HasProperty(p)) return m.GetColor(p);
             return Color.magenta;
         }
 
@@ -61,15 +61,19 @@ namespace ARO.Tests
             o.Imported = true;
             var imp = AssetImporter.GetAtPath(assetPath) as ModelImporter;
             if (imp != null) o.Info.Add($"ModelImporter: globalScale={imp.globalScale} useFileScale={imp.useFileScale} fileScale={imp.fileScale}");
-            var go = UnityEngine.Object.Instantiate(prefab); go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            var go = UnityEngine.Object.Instantiate(prefab);          // the importer's own root transform is kept: it may carry the axis conversion
+            var re = go.transform.localEulerAngles; o.Info.Add("imported root: local euler (" + re.x.ToString("0.#") + ", " + re.y.ToString("0.#") + ", " + re.z.ToString("0.#") + ") local scale " + Fmt(go.transform.localScale));
             try
             {
+                var rotated = new List<string>();
                 foreach (var t in go.GetComponentsInChildren<Transform>(true))
                 {
-                    float ang = Quaternion.Angle(t.localRotation, Quaternion.identity); var s = t.lossyScale;
-                    if (ang > 0.5f) o.Faults.Add($"node '{t.name}' has a local rotation of {ang:0.#} degrees (a clean import has none)");
-                    if (Mathf.Abs(s.x - 1f) > 0.001f || Mathf.Abs(s.y - 1f) > 0.001f || Mathf.Abs(s.z - 1f) > 0.001f) o.Faults.Add($"node '{t.name}' has a world scale of {s.x:0.###}, {s.y:0.###}, {s.z:0.###} (a clean import is 1)");
+                    var s = t.lossyScale;
+                    if (t != go.transform && Quaternion.Angle(t.localRotation, Quaternion.identity) > 0.5f) rotated.Add(t.name);
+                    if (Mathf.Abs(s.x - 1f) > 0.001f || Mathf.Abs(s.y - 1f) > 0.001f || Mathf.Abs(s.z - 1f) > 0.001f) o.Faults.Add("node '" + t.name + "' has a world scale of " + Fmt(s) + " (a clean import is 1)");
                 }
+                o.Info.Add("nodes below the root that carry a rotation: " + rotated.Count + (rotated.Count > 0 ? " (" + string.Join(", ", rotated.Take(4)) + (rotated.Count > 4 ? ", ..." : "") + ")" : ""));
+                o.RotatedNodes = rotated.Count;
                 foreach (var kv in Centres)
                 {
                     var t = BlenderAssetBuilder.Find(go.transform, kv.Key); var r = t != null ? t.GetComponent<Renderer>() : null;
@@ -133,7 +137,8 @@ namespace ARO.Tests
             var results = new List<Obs>(); foreach (var f in files) { var tag = Path.GetFileNameWithoutExtension(f).Replace("aro_calibration__", ""); results.Add(Observe("FBX " + tag, f.Replace('\\', '/'))); }
             foreach (var r in results) Debug.Log(Report(r));
             var good = results.Where(r => r.Imported && r.Faults.Count == 0).Select(r => r.Label).ToList();
-            Debug.Log($"[BlenderImport] summary: {good.Count} of {results.Count} FBX variants import correctly: {string.Join(", ", good)}; toolchain default: {man.fbx_default_variant}");
+            var clean = results.Where(r => r.Imported && r.Faults.Count == 0 && r.RotatedNodes == 0).Select(r => r.Label).ToList();
+            Debug.Log("[BlenderImport] summary: " + good.Count + " of " + results.Count + " FBX variants import correctly: " + string.Join(", ", good) + "; of those " + clean.Count + " also carry no rotation on any node: " + string.Join(", ", clean) + "; toolchain default: " + man.fbx_default_variant);
             Assert.IsNotEmpty(good, "no FBX export variant imports correctly into Unity:\n" + string.Join("\n", results.Select(r => r.Label + ": " + string.Join(" | ", r.Faults.Take(3)))));
             var def = results.FirstOrDefault(r => r.Label == "FBX " + man.fbx_default_variant);
             Assert.NotNull(def, "the toolchain's default variant '" + man.fbx_default_variant + "' was not among the generated variants");
@@ -146,22 +151,34 @@ namespace ARO.Tests
             var man = Manifest(); var def = man.catalog_entry; Assert.NotNull(def, "the manifest carries no catalogue entry");
             AssetDatabase.ImportAsset(Dir + "aro_calibration.fbx", ImportAssetOptions.ForceSynchronousImport);
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "aro_calibration.fbx"); Assert.NotNull(model, "aro_calibration.fbx did not import");
-            var built = BlenderAssetBuilder.Build(model, def);
+            var kit = BlenderAssetBuilder.LoadKit(Dir + "aro_materials.json");
+            var built = BlenderAssetBuilder.Build(model, def, kit, Dir + "Materials");
             try
             {
+                Assert.IsEmpty(built.UnmatchedMaterials, "materials the kit does not know: " + string.Join(", ", built.UnmatchedMaterials));
                 var errors = PropPrefabPlan.Check(def, built.Measure);
                 var m = built.Measure; var lg = built.Root.GetComponent<LODGroup>();
                 string box = m.ColliderSize.Length == 3 ? "(" + m.ColliderSize[0].ToString("0.###") + ", " + m.ColliderSize[1].ToString("0.###") + ", " + m.ColliderSize[2].ToString("0.###") + ")" : "";
                 Debug.Log("[BlenderImport] prefab: size (" + m.WidthM.ToString("0.###") + ", " + m.HeightM.ToString("0.###") + ", " + m.DepthM.ToString("0.###") + ") lodTriangles [" + string.Join(",", m.LodTriangles) + "] materials " + m.MaterialCount +
-                          " shaders [" + string.Join(", ", m.ShaderNames.Distinct()) + "] boxCollider " + m.HasBoxCollider + " " + box + " importerMadeLodGroup " + built.ImporterMadeLodGroup + " lodGroupLevels " + (lg != null ? lg.lodCount : 0));
+                          " shaders [" + string.Join(", ", m.ShaderNames.Distinct()) + "] instanced " + m.AllMaterialsInstanced + " boxCollider " + m.HasBoxCollider + " " + box + " lodGroupLevels " + (lg != null ? lg.lodCount : 0));
                 if (lg != null) { var l = lg.GetLODs(); Debug.Log("[BlenderImport] lod thresholds: " + string.Join(", ", l.Select(x => x.screenRelativeTransitionHeight.ToString("0.####")))); }
                 Assert.IsEmpty(errors, string.Join("\n", errors));
                 Assert.NotNull(lg, "no LODGroup"); Assert.AreEqual(def.lodTriangles.Length, lg.lodCount);
                 var expected = PropPrefabPlan.LodScreenHeights(def.lodTriangles.Length, Mathf.Max(m.WidthM, Mathf.Max(m.HeightM, m.DepthM)), def.cullDistance);
                 var got = lg.GetLODs(); for (int i = 0; i < expected.Length; i++) Assert.AreEqual(expected[i], got[i].screenRelativeTransitionHeight, 1e-4f, $"LOD{i} transition height");
                 var boxes = built.Root.GetComponentsInChildren<BoxCollider>(); Assert.AreEqual(1, boxes.Length, "one collision box expected");
-                var sz = BlenderAssetBuilder.WorldSize(boxes[0]); Assert.AreEqual(2f, sz.x, Tol); Assert.AreEqual(1.5f, sz.y, Tol); Assert.AreEqual(6f, sz.z, Tol);
-                Assert.AreEqual(0.75f, boxes[0].transform.TransformPoint(boxes[0].center).y, Tol, "the box sits on the ground");
+                var wb = BlenderAssetBuilder.WorldBox(boxes[0]); Debug.Log("[BlenderImport] collision box in world space: centre " + Fmt(wb.center) + " size " + Fmt(wb.size));
+                Assert.AreEqual(2f, wb.size.x, Tol); Assert.AreEqual(1.5f, wb.size.y, Tol); Assert.AreEqual(6f, wb.size.z, Tol); Assert.AreEqual(0.75f, wb.center.y, Tol, "the box sits on the ground");
+                Assert.AreEqual(0f, wb.center.x, Tol); Assert.AreEqual(0f, wb.center.z, Tol);
+                Assert.AreEqual(Quaternion.identity, built.Root.transform.localRotation, "the prefab root must have no rotation: the game overwrites it with the yaw"); Assert.AreEqual(Vector3.one, built.Root.transform.localScale);
+                // every part carries the kit's colour (sRGB, as Unity expects), not the importer's guess
+                foreach (var kv in MarkerMaterial)
+                {
+                    var t = BlenderAssetBuilder.Find(built.Root.transform, kv.Key); var r = t != null ? t.GetComponent<Renderer>() : null; Assert.NotNull(r, kv.Key);
+                    var entry = kit.materials.First(e => e.name == kv.Value); var c = r.sharedMaterial.GetColor("_BaseColor"); var want = BlenderAssetBuilder.KitColour(entry);
+                    Assert.AreEqual(kv.Value, r.sharedMaterial.name, kv.Key + " material"); Assert.AreEqual(want.r, c.r, 0.002f, kv.Key + " red"); Assert.AreEqual(want.g, c.g, 0.002f, kv.Key + " green"); Assert.AreEqual(want.b, c.b, 0.002f, kv.Key + " blue");
+                    Assert.AreEqual(1f - entry.roughness, r.sharedMaterial.GetFloat("_Smoothness"), 0.002f, kv.Key + " smoothness"); Assert.IsTrue(r.sharedMaterial.enableInstancing, kv.Key + " instancing");
+                }
             }
             finally { UnityEngine.Object.DestroyImmediate(built.Root); }
         }
@@ -204,10 +221,10 @@ namespace ARO.Tests
             }
             var o = Observe("GLB", Dir + "aro_calibration.glb"); Debug.Log(Report(o));
             Assert.IsEmpty(o.Faults, string.Join("\n", o.Faults));
-            var man = Manifest(); var built = BlenderAssetBuilder.Build(o.Prefab, man.catalog_entry);
+            var man = Manifest(); var kit = BlenderAssetBuilder.LoadKit(Dir + "aro_materials.json"); var built = BlenderAssetBuilder.Build(o.Prefab, man.catalog_entry, kit, Dir + "Materials");
             try
             {
-                var errors = PropPrefabPlan.Check(man.catalog_entry, built.Measure, 0.03f, requireUrpLit: false);          // glTFast materials are its own shader graphs: GLB is interchange, FBX is the game's route
+                var errors = PropPrefabPlan.Check(man.catalog_entry, built.Measure);
                 Debug.Log("[BlenderImport] GLB prefab: shaders [" + string.Join(", ", built.Measure.ShaderNames.Distinct()) + "] lodTriangles [" + string.Join(",", built.Measure.LodTriangles) + "]");
                 Assert.IsEmpty(errors, string.Join("\n", errors));
             }

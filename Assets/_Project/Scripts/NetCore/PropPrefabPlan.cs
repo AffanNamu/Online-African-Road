@@ -9,7 +9,7 @@ namespace ARO.NetCore
     {
         public float WidthM, HeightM, DepthM;                  // world-space bounds of LOD0 (X, Y, Z)
         public int[] LodTriangles = new int[0];                // triangles per LOD, from the imported meshes
-        public int MaterialCount; public string[] ShaderNames = new string[0];
+        public int MaterialCount; public string[] ShaderNames = new string[0]; public bool AllMaterialsInstanced = true;
         public bool HasBoxCollider; public float[] ColliderSize = new float[0];
         public int RenderersOnCollisionNodes;                  // renderers left on col_* nodes (should be none)
     }
@@ -57,6 +57,7 @@ namespace ARO.NetCore
             else for (int i = 0; i < want.Length; i++) if (m.LodTriangles[i] != want[i]) e.Add($"LOD{i} triangles: the catalogue says {want[i]}, the import has {m.LodTriangles[i]}");
             if (m.MaterialCount > 16) e.Add($"{m.MaterialCount} materials: each is a draw call per instance (the game does not batch production prefabs)");
             if (requireUrpLit) foreach (var s in m.ShaderNames.Distinct()) if (s != "Universal Render Pipeline/Lit") e.Add($"shader '{s}': production materials must be Universal Render Pipeline/Lit");
+            if (!m.AllMaterialsInstanced) e.Add("a material has GPU instancing off: the game does not batch production prefabs, so instancing is what lets many instances of one prop share draw calls");
             if (def.collider == "box")
             {
                 if (!m.HasBoxCollider) e.Add("the catalogue says collider 'box' but the prefab has no BoxCollider (the game adds colliders for placeholders only)");
