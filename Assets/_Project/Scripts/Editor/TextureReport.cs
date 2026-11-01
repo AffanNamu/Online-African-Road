@@ -27,13 +27,15 @@ namespace ARO.Editor
             public List<PlatformInfo> platforms = new List<PlatformInfo>();
         }
         [Serializable] public class KeyValue { public string key, value; }
+        [Serializable] public class Header { public string unityVersion, activeBuildTarget, colorSpace; public long textureCount, totalRuntimeBytesInEditor; }
+        [Serializable] public class Group { public string folder; public int count; public string formats; public long runtimeBytes; }
         [Serializable] public class QualityLevel { public string name; public int globalTextureMipmapLimit, anisotropicFiltering, streamingMipmapsActive; }
         [Serializable] public class Report
         {
             public string unityVersion, activeBuildTarget, activeBuildTargetGroup, colorSpace;
             public List<KeyValue> playerSettingsTextureRelated = new List<KeyValue>(), webglPlayerSettings = new List<KeyValue>(), editorUserBuildSettings = new List<KeyValue>();
             public List<QualityLevel> qualityLevels = new List<QualityLevel>();
-            public List<TextureInfo> textures = new List<TextureInfo>();
+            public List<TextureInfo> textures = new List<TextureInfo>(); public List<Group> groups = new List<Group>();
             public long totalRuntimeBytesInEditor, textureCount;
             public List<string> notes = new List<string>();
         }
@@ -42,10 +44,18 @@ namespace ARO.Editor
         {
             try
             {
-                var json = JsonUtility.ToJson(Build(), true);
+                var r = Build();
                 Directory.CreateDirectory("Builds/TextureReport");
-                File.WriteAllText("Builds/TextureReport/texture_report.json", json);
-                Console.WriteLine("TEXTURE_REPORT_BEGIN"); Console.WriteLine(json); Console.WriteLine("TEXTURE_REPORT_END");
+                File.WriteAllText("Builds/TextureReport/texture_report.json", JsonUtility.ToJson(r, true));
+                // One compact line per item: the pretty-printed JSON was cut off in the CI log after a few dozen textures.
+                Console.WriteLine("TEXTURE_REPORT_BEGIN");
+                Console.WriteLine("TR_HEADER " + JsonUtility.ToJson(new Header { unityVersion = r.unityVersion, activeBuildTarget = r.activeBuildTarget, colorSpace = r.colorSpace, textureCount = r.textureCount, totalRuntimeBytesInEditor = r.totalRuntimeBytesInEditor }));
+                foreach (var x in r.playerSettingsTextureRelated) Console.WriteLine("TR_PLAYER " + x.key + "=" + x.value);
+                foreach (var x in r.editorUserBuildSettings) Console.WriteLine("TR_EDITORBUILD " + x.key + "=" + x.value);
+                foreach (var t in r.textures) Console.WriteLine("TR_TEXTURE " + JsonUtility.ToJson(t));
+                foreach (var g in r.groups) Console.WriteLine("TR_GROUP " + JsonUtility.ToJson(g));
+                Console.WriteLine("TEXTURE_REPORT_END"); Console.Out.Flush();
+                System.Threading.Thread.Sleep(3000);
                 EditorApplication.Exit(0);
             }
             catch (Exception e) { Console.Error.WriteLine("[TextureReport] failed: " + e); EditorApplication.Exit(1); }
@@ -59,12 +69,6 @@ namespace ARO.Editor
                 activeBuildTargetGroup = BuildPipelineGroup().ToString(), colorSpace = PlayerSettings.colorSpace.ToString()
             };
             DumpPlayerSettings(r); DumpStatics(typeof(PlayerSettings.WebGL), r.webglPlayerSettings); DumpStatics(typeof(EditorUserBuildSettings), r.editorUserBuildSettings, "texture", "compress", "webgl", "codeoptimization", "development");
-            for (int i = 0; i < QualitySettings.names.Length; i++)
-            {
-                QualitySettings.SetQualityLevel(i, false);
-                r.qualityLevels.Add(new QualityLevel { name = QualitySettings.names[i], globalTextureMipmapLimit = QualitySettings.globalTextureMipmapLimit, anisotropicFiltering = (int)QualitySettings.anisotropicFiltering,
-                    streamingMipmapsActive = QualitySettings.streamingMipmapsActive ? 1 : 0 });
-            }
             foreach (var guid in AssetDatabase.FindAssets("t:Texture", new[] { "Assets" }))
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
@@ -81,6 +85,7 @@ namespace ARO.Editor
                 }
                 var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
                 if (tex != null) { t.importedFormat = tex.format.ToString(); t.importedWidth = tex.width; t.importedHeight = tex.height; t.importedMips = tex.mipmapCount; t.runtimeBytesInEditor = Profiler.GetRuntimeMemorySizeLong(tex); r.totalRuntimeBytesInEditor += t.runtimeBytesInEditor; }
+                if (path.StartsWith("Assets/_Project/Resources/Flags/")) { var gr = r.groups.FirstOrDefault(g => g.folder == "Resources/Flags") ?? NewGroup(r, "Resources/Flags"); gr.count++; gr.runtimeBytes += t.runtimeBytesInEditor; if (!gr.formats.Contains(t.importedFormat + " ")) gr.formats += t.importedFormat + " "; continue; }
                 r.textures.Add(t);
             }
             r.textureCount = r.textures.Count;
@@ -89,6 +94,7 @@ namespace ARO.Editor
             return r;
         }
 
+        static Group NewGroup(Report r, string folder) { var g = new Group { folder = folder, formats = "" }; r.groups.Add(g); return g; }
         static BuildTargetGroup BuildPipelineGroup() => BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget);
 
         static void DumpPlayerSettings(Report r)
