@@ -28,7 +28,7 @@ def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0)
         if lod < 2: p.path_tube([top - Vector((0, 0, 0.1)), mid, end], [0.085, 0.06, 0.035], 5 if lod == 0 else 4, "bark", caps=(False, True), smooth=True)
         ends.append(end)
     cz = th + (height - th) * 0.58; rz = (height - th) * 0.46; rx = crown_w / 2
-    n_cl, per, size = {0: (96, 5, (1.0, 1.6)), 1: (16, 3, (2.1, 3.0)), 2: (3, 2, (3.8, 4.6))}[lod]
+    n_cl, per, size = {0: (180, 6, (0.62, 1.0)), 1: (16, 3, (2.1, 3.0)), 2: (3, 2, (3.8, 4.6))}[lod]
     centre = Vector((top.x, top.y, cz)); pts = list(ends)
     while len(pts) < n_cl:
         v = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), rnd.gauss(0, 1))).normalized() * (0.35 + 0.65 * rnd.random() ** 0.5)       # inside an ellipsoid, biased to the surface
@@ -39,7 +39,7 @@ def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0)
             n = (out_ * 0.7 + Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-0.6, 1.0))) * 0.8).normalized()
             right = n.cross(Vector((0, 0, 1))); right = right if right.length > 0.1 else Vector((1, 0, 0)); up = n.cross(right)
             s_ = rnd.uniform(*size); qx, qy = rnd.choice((0, 0.5)), rnd.choice((0, 0.5))
-            p.card(c + Vector((rnd.uniform(-0.3, 0.3), rnd.uniform(-0.3, 0.3), rnd.uniform(-0.3, 0.3))), right, up, s_, s_, "leaf_cutout", (qx, qy), (qx + 0.5, qy + 0.5))
+            p.card(c + Vector((rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22))), right, up, s_, s_, "leaf_cutout", (qx, qy), (qx + 0.5, qy + 0.5))
     return p
 
 
@@ -51,13 +51,15 @@ def _cards_on(p, pts, normal, size, rnd, tilt=0.35):
 
 
 def hedge(lod: int = 0, length: float = 2.0) -> Part:
-    """A clipped hedge module 2.0 x 0.7 x 0.9 m: a dark opaque core (so nothing is see-through) wrapped in leaf cards on the top and both long sides and the ends."""
+    """A clipped hedge module 2.0 x 0.7 x 0.9 m: a dark opaque core (so nothing is see-through) wrapped in about 160 small leaf cards on the top, both long sides and the ends, so it reads as dense clipped foliage
+    and not as a block with a few big leaves."""
     p = Part("hedge"); L = length / 2; rnd = random.Random(5)
     p.box(-L + 0.02, -0.30, 0.0, L - 0.02, 0.30, 0.84, "hedge_green", skip=("bottom",))
     if lod == 0:
-        for sy in (-1, 1): _cards_on(p, [Vector((x, sy * 0.33, z)) for x in (-0.75, -0.25, 0.25, 0.75) for z in (0.40, 0.66)], (0, sy, 0.1), 0.56, rnd, 0.2)
-        _cards_on(p, [Vector((x, y, 0.86)) for x in (-0.75, -0.25, 0.25, 0.75) for y in (-0.15, 0.15)], (0, 0, 1), 0.62, rnd)
-        for sx in (-1, 1): _cards_on(p, [Vector((sx * (L + 0.0), 0, z)) for z in (0.4, 0.66)], (sx, 0, 0.1), 0.56, rnd, 0.2)
+        xs = [-0.92 + 0.23 * i for i in range(9)]
+        for sy in (-1, 1): _cards_on(p, [Vector((x + rnd.uniform(-0.05, 0.05), sy * 0.33, z)) for x in xs for z in (0.30, 0.42, 0.54, 0.66, 0.78)], (0, sy, 0.1), 0.34, rnd, 0.25)
+        _cards_on(p, [Vector((x + rnd.uniform(-0.05, 0.05), y, 0.87 + rnd.uniform(0, 0.03))) for x in xs for y in (-0.22, -0.11, 0.0, 0.11, 0.22)], (0, 0, 1), 0.36, rnd, 0.25)
+        for sx in (-1, 1): _cards_on(p, [Vector((sx * L, y, z)) for y in (-0.2, 0.0, 0.2) for z in (0.30, 0.44, 0.58, 0.72)], (sx, 0, 0.1), 0.34, rnd, 0.25)
     return p
 
 
@@ -67,9 +69,9 @@ def shrub_ixora(lod: int = 0) -> Part:
     p.tube((0, 0, 0.0), (0, 0, 0.30), 0.34, 0.30, 8, "hedge_green", caps=(False, False), smooth=False)
     p.blob((0, 0, 0.42), (0.42, 0.42, 0.34), "hedge_green", subdiv=2 if lod == 0 else 1, jitter=0.1, seed=3, faces_keys=lambda f: "hedge_green")
     if lod == 0:
-        for _ in range(26):
-            v = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), abs(rnd.gauss(0, 0.9)))).normalized(); c = Vector((v.x * 0.58, v.y * 0.58, 0.34 + v.z * 0.70)); _cards_on(p, [c], v, 0.50, rnd, 0.2)
-        for k in range(18):
-            a = rnd.uniform(0, 2 * math.pi); e = rnd.uniform(0.25, 1.25); r = 0.62 + 0.06 * rnd.random(); c = Vector((math.cos(a) * math.cos(e) * r * 1.0, math.sin(a) * math.cos(e) * r, 0.30 + math.sin(e) * r * 0.85))
-            p.blob(c, (0.10, 0.10, 0.07), "flower_red", subdiv=1, jitter=0.2, seed=50 + k)
+        for _ in range(80):
+            v = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), abs(rnd.gauss(0, 0.9)))).normalized(); c = Vector((v.x * 0.58, v.y * 0.58, 0.34 + v.z * 0.70)); _cards_on(p, [c], v, 0.32, rnd, 0.25)
+        for k in range(46):                          # ixora flowers grow in rounded clusters held out on the foliage dome
+            a = rnd.uniform(0, 2 * math.pi); e = rnd.uniform(0.2, 1.3); r = 0.60 + 0.08 * rnd.random(); c = Vector((math.cos(a) * math.cos(e) * r, math.sin(a) * math.cos(e) * r, 0.30 + math.sin(e) * r * 0.85))
+            p.blob(c, (0.085, 0.085, 0.06), "flower_red", subdiv=0, jitter=0.25, seed=50 + k)
     return p

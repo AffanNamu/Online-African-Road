@@ -16,7 +16,7 @@ def _to_image(name: str, rgb: np.ndarray):
 def paver_pixels(size=512, tile_m=2.0, seed=7):
     """Rectangular pavers 0.20 x 0.10 m laid in a herringbone-like running bond, each paver pink, rose-grey, beige or grey, with dark joints."""
     rnd = np.random.default_rng(seed); px_m = size / tile_m
-    pal = np.array([(0.68, 0.54, 0.52), (0.62, 0.48, 0.48), (0.72, 0.62, 0.56), (0.58, 0.55, 0.56), (0.66, 0.58, 0.56), (0.50, 0.49, 0.51), (0.74, 0.58, 0.58)])
+    pal = np.array([(0.64, 0.56, 0.54), (0.60, 0.52, 0.52), (0.68, 0.62, 0.58), (0.58, 0.56, 0.57), (0.64, 0.59, 0.57), (0.52, 0.51, 0.53), (0.67, 0.58, 0.58)])   # muted rose-grey: the first pass read red under the review sun
     w_b, h_b = int(0.20 * px_m), int(0.10 * px_m); img = np.zeros((size, size, 3)); joint = np.array((0.30, 0.28, 0.27))
     img[:] = joint; rows = size // h_b
     for r in range(rows):
@@ -51,20 +51,20 @@ def paver_material():  return textured_material("paver_mix", "T_kano_paver_BaseC
 def asphalt_material(): return textured_material("asphalt", "T_kano_asphalt_BaseColor", asphalt_pixels())
 
 
-def leaf_pixels(size=512, seed=21, per_cell=330):
+def leaf_pixels(size=512, seed=21, per_cell=900):
     """A 2 x 2 atlas of foliage clusters (RGBA, background transparent). Each cell is an irregular blob densely covered by individual leaves (rotated ellipses with a lighter midrib and a dark rim),
     in four greens: sunlit, mid, shaded and mixed. The alpha is the leaf shape, so the card silhouette is leafy, not a quad."""
     rnd = np.random.default_rng(seed); out = np.zeros((size, size, 4)); cell = size // 2
-    greens = [(0.50, 0.72, 0.18), (0.34, 0.60, 0.14), (0.20, 0.42, 0.10), (0.42, 0.66, 0.15)]
+    greens = [(0.42, 0.60, 0.17), (0.30, 0.50, 0.14), (0.19, 0.37, 0.10), (0.36, 0.55, 0.15)]
     yy, xx = np.mgrid[0:cell, 0:cell].astype(float)
     for ci in range(4):
         cx0, cy0 = (ci % 2) * cell, (ci // 2) * cell; img = np.zeros((cell, cell, 4)); base = np.array(greens[ci])
         ang = np.arctan2(yy - cell / 2, xx - cell / 2); rad = np.hypot(yy - cell / 2, xx - cell / 2)
         edge = cell * 0.42 * (1 + 0.14 * np.sin(3 * ang + ci) + 0.10 * np.sin(7 * ang + 2 * ci) + 0.06 * np.sin(13 * ang))
-        blob = rad < edge * 0.80; img[blob, :3] = base * 0.45; img[blob, 3] = 1.0                       # dark fill so the cluster is dense
+        blob = rad < edge * 0.80; img[blob, :3] = base * 0.62; img[blob, 3] = 1.0                       # dark fill so the cluster is dense
         for _ in range(per_cell):
             a = rnd.uniform(0, 2 * np.pi); r = (edge.mean() * 1.02) * np.sqrt(rnd.random()); lx, ly = cell / 2 + r * np.cos(a), cell / 2 + r * np.sin(a)
-            la, lb = rnd.uniform(10, 17), rnd.uniform(4.0, 6.2); th = rnd.uniform(0, np.pi)
+            la, lb = rnd.uniform(6.0, 10.5), rnd.uniform(2.4, 3.9); th = rnd.uniform(0, np.pi)
             x0, x1, y0, y1 = int(max(lx - la - 2, 0)), int(min(lx + la + 2, cell)), int(max(ly - la - 2, 0)), int(min(ly + la + 2, cell))
             if x1 <= x0 or y1 <= y0: continue
             gx, gy = xx[y0:y1, x0:x1] - lx, yy[y0:y1, x0:x1] - ly; u = gx * np.cos(th) + gy * np.sin(th); v = -gx * np.sin(th) + gy * np.cos(th)
@@ -126,13 +126,13 @@ def _normal_from_height(h, strength):
     return n * 0.5 + 0.5
 
 
-def plaster_maps(size=512, seed=31, tint=(0.88, 0.82, 0.71)):
+def plaster_maps(size=512, seed=31, tint=(0.91, 0.89, 0.84)):
     f = _fbm(size, 4, 4, seed); fine = _fbm(size, 64, 2, seed + 5) ; stain = _fbm(size, 2, 3, seed + 9)
     col = np.array(tint)[None, None, :] * (0.93 + 0.10 * f[..., None] + 0.04 * (fine[..., None] - 0.5) - 0.05 * stain[..., None])
     return np.clip(col, 0, 1), _normal_from_height(fine * 0.6 + f * 0.4, 1.6)
 
 
-def stone_maps(size=512, seed=41, base=(0.60, 0.52, 0.44), grey=False):
+def stone_maps(size=512, seed=41, base=(0.72, 0.67, 0.60), grey=False):
     """Stone cladding: a ledgestone pattern of stacked rectangular stones with grooves (grey) or travertine with horizontal veining and pores (tan)."""
     rnd = np.random.default_rng(seed); h = np.zeros((size, size)); col = np.zeros((size, size, 3)); b = np.array(base)
     if grey:
@@ -174,6 +174,15 @@ def bark_maps(size=512, seed=71, base=(0.24, 0.17, 0.12)):
     f = _fbm(size, 3, 3, seed); streak = _noise(size, 6, seed + 1)[:1, :] ; ridge = _fbm(size, 24, 3, seed + 3); ridge = ridge * 0.6 + 0.4 * np.tile(_noise(size, 14, seed + 5)[0:1, :], (size, 1))
     col = np.array(base)[None, None, :] * (0.7 + 0.5 * ridge[..., None]); col *= (0.9 + 0.2 * f)[..., None]
     return np.clip(col, 0, 1), _normal_from_height(ridge, 3.0)
+
+
+def grass_maps(size=512, seed=81, base=(0.23, 0.41, 0.11)):
+    """Lawn: broad patches of two greens (one a little yellower), fine blade noise and a few dry-grass flecks; the normal map is the blade noise."""
+    patch = _fbm(size, 5, 4, seed); blades = _fbm(size, 110, 2, seed + 2); fine = _noise(size, 200, seed + 4)
+    a = np.array(base); b = np.array((0.34, 0.47, 0.13))
+    col = (a[None, None, :] * (1 - patch[..., None]) + b[None, None, :] * patch[..., None]) * (0.78 + 0.34 * blades[..., None] + 0.12 * (fine[..., None] - 0.5))
+    col[fine > 0.93] = np.array((0.42, 0.40, 0.18))
+    return np.clip(col, 0, 1), _normal_from_height(blades * 0.7 + fine * 0.3, 2.2)
 
 
 def asphalt_normal(size=512, seed=3):
@@ -219,6 +228,7 @@ def apply_pbr(keys=None):
         "roof_tile_charcoal": ("T_kano_rooftile_BaseColor", "T_kano_rooftile_Normal", lambda: roof_tile_maps(), 0.5),
         "concrete": ("T_kano_concrete_BaseColor", "T_kano_concrete_Normal", lambda: concrete_maps(), 0.5),
         "bark": ("T_kano_bark_BaseColor", "T_kano_bark_Normal", lambda: bark_maps(), 0.5),
+        "grass_green": ("T_kano_grass_BaseColor", "T_kano_grass_Normal", lambda: grass_maps(), 0.5),
     }
     done = []
     for key, (bn, nn, gen, _s) in spec.items():
