@@ -7,12 +7,17 @@ from mathutils import Vector, Matrix
 from aro_blender import materials as AM
 
 
+# UV scale (texture repeats per metre) per kit material that carries an image: a 2 m tile is 0.5, a 4 m tile 0.25
+DEFAULT_UV = {"plaster_cream_light": 0.5, "stone_travertine": 1.0, "cladding_grey": 1.0, "roof_tile_charcoal": 0.5, "concrete": 0.5, "bark": 1.0, "asphalt": 0.25, "paver_mix": 0.5, "grass_green": 0.2}
+
+
 def V(p): return Vector(p)
 
 
 class Part:
     def __init__(self, name: str = "body"):
         self.name = name; self.bm = bmesh.new(); self.keys: list[str] = []
+        self.uv_scale = dict(DEFAULT_UV)
 
     # ---- materials / faces
     def mi(self, key: str) -> int:

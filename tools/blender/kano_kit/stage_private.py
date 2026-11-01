@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse, hashlib, json, shutil, sys, time
 from pathlib import Path
 from aro_blender import workspace as ws
+from . import build_all
 
 REF = "R-006"
 # what was modelled with what, for the registry: id -> (concepts, class, engine dependencies, open visual differences against the concept)
@@ -45,7 +46,7 @@ def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--placements", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--only", default="")
+    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--placements", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--previews", default=""); ap.add_argument("--only", default="")
     a = ap.parse_args(); C = Path(a.content).resolve(); W = ws.default_root(); now = time.strftime("%Y-%m-%d", time.gmtime())
     reg_path = C / "registry" / "asset_registry.json"; reg = json.loads(reg_path.read_text()); by_id = {x["id"]: x for x in reg["assets"]}
     lic = (C / "LICENSES.md").read_text(); staged = []
@@ -59,7 +60,7 @@ def main() -> int:
         # blender sources and validation
         d = C / "blender" / "projects" / kind / aid / v; d.mkdir(parents=True, exist_ok=True)
         for f in proj.iterdir():
-            if f.is_file(): shutil.copy2(f, d / f.name)
+            if f.is_file() and f.suffix.lower() != ".png": shutil.copy2(f, d / f.name)     # textures are packed in the .blend and kept once under unity/Textures/kano_kit
         (C / "blender" / "validation" / aid).mkdir(parents=True, exist_ok=True); shutil.copy2(val, C / "blender" / "validation" / aid / f"{v}.json")
         # unity models: fbx, glb, repository-schema manifest; textures once under unity/Textures/kano_kit
         u = C / "unity" / "Models" / aid / v; u.mkdir(parents=True, exist_ok=True); files = []
@@ -88,6 +89,20 @@ def main() -> int:
         e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"
         e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN_ISSUES.get(aid, "")
         e["placements"] = [{"scene": "kano_residential_section_a", "district": "D06", "count": sum(1 for i in json.loads(Path(a.placements).read_text())["items"] if i["asset"] == aid)}]
+        col = build_all.SPECS[aid]["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
+        e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}
+        e["lods"] = [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])]
+        e["materials"] = stats["materials"]; e["textures"] = sorted(f.stem for f in proj.glob("T_*.png"))
+        e["licence"] = {"kind": "owner-owned", "evidence": manifest["licence"]["evidence"], "thirdParty": []}
+        e["unity"] = {"imported": False, "compiled": False, "prefab": None, "inGameVerified": False, "note": "the Unity builder compiles and its fixture test passes in the public CI; this asset has not been imported into Unity yet"}
+        pv = []
+        if a.previews:
+            for k in ("iso", "front"):
+                src = Path(a.previews) / f"{aid}_{k}.png"
+                if src.is_file():
+                    from PIL import Image
+                    dstp = C / "previews" / aid / v; dstp.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(dstp / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
+        e["previews"] = pv
         staged.append((aid, v, stats["lod_triangles"]))
     (C / "LICENSES.md").write_text(lic)
     (C / "unity" / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(W / "exports" / "unity" / "aro_materials.json", C / "unity" / "Materials" / "aro_materials.json")
@@ -95,11 +110,12 @@ def main() -> int:
     for x in reg["assets"]:                                                       # the three parts delivered inside the street section
         if x["id"] in ("aro_kerb_painted_blackwhite_a", "aro_sidewalk_paver_a", "aro_marking_arrow_straight_a") and "kano_street_oneway_section_a" not in x["flags"]:
             x["flags"] = (x["flags"] + " | " if x["flags"] else "") + "built as part of kano_street_oneway_section_a (no separate asset yet)"
-    reg["note"] = reg["note"].split(" UPDATE:")[0] + f" UPDATE {now}: the first residential street kit (14 assets) has Blender sources, exports and passed the toolchain's validation (`blender_validation_passed`). None has been imported into the running game, none is visually reviewed or approved."
+    reg["note"] = reg["note"].split(" UPDATE")[0] + f" UPDATE {now}: the first residential street kit (14 assets) has Blender sources, exports and passed the toolchain's validation (`blender_validation_passed`). None has been imported into the running game by the private build, none is visually reviewed or approved."
     reg_path.write_text(json.dumps(reg, indent=1) + "\n")
     if a.renders and Path(a.renders).is_dir():
         pv = C / "previews" / "kano_residential_section_a" / "v001"; pv.mkdir(parents=True, exist_ok=True)
-        for f in Path(a.renders).glob("kano_residential_*.png"): shutil.copy2(f, pv / f.name)
+        from PIL import Image
+        for f in Path(a.renders).glob("kano_residential_*.png"): Image.open(f).convert("RGB").save(pv / (f.stem + ".jpg"), "JPEG", quality=88, optimize=True)
     rel = {"release": "kano_residential_section_a", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender review renders are previews of Blender geometry, not proof of Unity behaviour."}
     (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / "kano_residential_section_a.release.json").write_text(json.dumps(rel, indent=2))
     print("staged", len(staged), "assets:", ", ".join(i for i, _, _ in staged)); return 0

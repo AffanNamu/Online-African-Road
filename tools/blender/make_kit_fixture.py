@@ -24,7 +24,10 @@ def part(lod: int) -> geo.Part:
         for j in range(n):
             x0, x1, y0, y1 = -1 + 2 * i / n, -1 + 2 * (i + 1) / n, -1 + 2 * j / n, -1 + 2 * (j + 1) / n
             p.face_n([(x0, y0, 0.0), (x1, y0, 0.0), (x1, y1, 0.0), (x0, y1, 0.0)], "paver_mix", (0, 0, 1))
-    if lod == 0: p.tube((0, 0, 0), (0, 0, 1.6), 0.04, 0.04, 8, "metal_galvanised")
+    if lod == 0:
+        p.tube((0, 0, 0), (0, 0, 1.6), 0.04, 0.04, 8, "metal_galvanised")
+        p.face_n([(-1, 1.2, 0.2), (1, 1.2, 0.2), (1, 1.2, 1.2), (-1, 1.2, 1.2)], "glass", (0, -1, 0))            # transparent pane
+        p.face_n([(-1, 1.4, 0.2), (1, 1.4, 0.2), (1, 1.4, 1.2), (-1, 1.4, 1.2)], "plaster_cream_light", (0, -1, 0))   # textured wall with a normal map
     for yaw in ((0.0, 60.0, 120.0) if lod == 0 else (0.0,)):
         r = Vector((math.cos(math.radians(yaw)), math.sin(math.radians(yaw)), 0)); p.card((0, 0, 1.0), r, Vector((0, 0, 1)), 1.4, 1.4, "leaf_cutout", (0, 0), (0.5, 0.5))
     return p
@@ -34,6 +37,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); a = ap.parse_args(); out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=True)
     asset = geo.Asset(ID, "props"); textures.paver_material(); textures.leaf_material()
     for lv in (0, 1): asset.lod(lv, part(lv))
+    textures.apply_pbr(["plaster_cream_light"])
     asset.collision(-1, -1, 0, 1, 1, 1.6)
     res = validate.run(bpy, mathutils, "props", True, None, ID)
     if not res["passed"]: print(json.dumps(res, indent=1)); print("fixture failed validation: nothing written", file=sys.stderr); return 1

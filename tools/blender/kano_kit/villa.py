@@ -47,6 +47,18 @@ def facade(p, fr, W, H, openings, key_fn, reveal=0.16, lod=0, sills=True, split_
         if kind in ("door", "pair") or (u1 - u0) > 1.6: fbox(p, fr, (u0 + u1) / 2 - f / 2, (u0 + u1) / 2 + f / 2, v0 + f, v1 - f, w0, w1, FRAME)      # centre mullion / meeting stile
         if kind == "window" and (v1 - v0) > 1.5: fbox(p, fr, u0 + f, u1 - f, (v0 + v1) / 2 - 0.025, (v0 + v1) / 2 + 0.025, w0, w1, FRAME)             # transom
         p.face_n([fr.pt(u0 + f, v0 + f, -r + 0.05), fr.pt(u1 - f, v0 + f, -r + 0.05), fr.pt(u1 - f, v1 - f, -r + 0.05), fr.pt(u0 + f, v1 - f, -r + 0.05)], GLASS, fr.n)
+        d = r + 0.45                                                                                                                                         # the dark room behind the glass: a back wall and four returns
+        p.face_n([fr.pt(u0, v0, -d), fr.pt(u1, v0, -d), fr.pt(u1, v1, -d), fr.pt(u0, v1, -d)], "interior_dark", fr.n)
+        p.face_n([fr.pt(u0, v0, -r), fr.pt(u1, v0, -r), fr.pt(u1, v0, -d), fr.pt(u0, v0, -d)], "interior_dark", fr.v); p.face_n([fr.pt(u0, v1, -r), fr.pt(u1, v1, -r), fr.pt(u1, v1, -d), fr.pt(u0, v1, -d)], "interior_dark", -fr.v)
+        p.face_n([fr.pt(u0, v0, -r), fr.pt(u0, v1, -r), fr.pt(u0, v1, -d), fr.pt(u0, v0, -d)], "interior_dark", fr.u); p.face_n([fr.pt(u1, v0, -r), fr.pt(u1, v1, -r), fr.pt(u1, v1, -d), fr.pt(u1, v0, -d)], "interior_dark", -fr.u)
+        if kind == "window":                                                                                                                                 # raised cream architrave round the opening, a keystone over upper windows
+            a_ = 0.11; fbox(p, fr, u0 - a_, u0, v0 - 0.06, v1 + 0.10, 0.0, 0.035, CREAM); fbox(p, fr, u1, u1 + a_, v0 - 0.06, v1 + 0.10, 0.0, 0.035, CREAM)
+            fbox(p, fr, u0 - a_, u1 + a_, v1 + 0.08, v1 + 0.19, 0.0, 0.05, CREAM)
+            if v0 > 3.0: fbox(p, fr, (u0 + u1) / 2 - 0.13, (u0 + u1) / 2 + 0.13, v1 + 0.19, v1 + 0.34, 0.0, 0.065, STONE)
+            if v0 < 1.5:                                                                                                                                      # security grille: flat frame and vertical bars in the reveal, the way Nigerian windows are protected
+                gw0 = -r + 0.12; gw1 = gw0 + 0.014; n_b = max(3, int((u1 - u0) / 0.17))
+                for kk in range(1, n_b): x_ = u0 + kk * (u1 - u0) / n_b; fbox(p, fr, x_ - 0.007, x_ + 0.007, v0 + f, v1 - f, gw0, gw1, "metal_gate_black")
+                fbox(p, fr, u0 + f, u1 - f, v0 + f, v0 + f + 0.03, gw0, gw1, "metal_gate_black"); fbox(p, fr, u0 + f, u1 - f, v1 - f - 0.03, v1 - f, gw0, gw1, "metal_gate_black")
         if sills and kind == "window": fbox(p, fr, u0 - 0.07, u1 + 0.07, v0 - 0.06, v0, 0.0, 0.08, WHITE)                                                 # projecting sill
         if sills: fbox(p, fr, u0 - 0.05, u1 + 0.05, v1, v1 + 0.08, 0.0, 0.05, WHITE)                                                                       # lintel band
         if kind in ("door", "pair") and v0 < 0.05: fbox(p, fr, u0 - 0.1, u1 + 0.1, 0.0, 0.12, 0.0, 0.30, GREY)                                             # door step
@@ -101,6 +113,16 @@ def balcony(p, x0, x1, y_front, y_wall, z_slab, with_columns=True, lod=0):
     for (x, y) in [(x0, y_front), (x1, y_front), ((x0 + x1) / 2, y_front), (x0, y_wall - 0.02), (x1, y_wall - 0.02)]: p.tube((x, y, zt), (x, y, zb), 0.025, 0.025, 6, "metal_galvanised")
 
 
+def gable_dormer(p, cx, y_front):
+    """A small gabled dormer on the front roof slope: cream front and cheeks, a window with frame and glass, a tiled gable roof."""
+    w = 0.85; z0 = 7.70; z1 = 8.95; yb = y_front + 1.6
+    p.box(cx - w, y_front, z0, cx + w, y_front + 0.06, z1, CREAM, skip=("back", "bottom"))
+    for sx in (-1, 1): p.box(cx + sx * w - (0.03 if sx > 0 else 0.0), y_front, z0, cx + sx * w + (0.0 if sx > 0 else 0.03), yb, z1 - 0.1, CREAM, skip=("bottom",))
+    p.box(cx - 0.55, y_front - 0.03, z0 + 0.25, cx + 0.55, y_front + 0.02, z1 - 0.25, FRAME); p.face_n([(cx - 0.50, y_front - 0.035, z0 + 0.30), (cx + 0.50, y_front - 0.035, z0 + 0.30), (cx + 0.50, y_front - 0.035, z1 - 0.30), (cx - 0.50, y_front - 0.035, z1 - 0.30)], GLASS, (0, -1, 0))
+    p.box(cx - 0.04, y_front - 0.034, z0 + 0.3, cx + 0.04, y_front - 0.03, z1 - 0.3, FRAME)
+    gable_roof(p, cx - w - 0.2, cx + w + 0.2, y_front - 0.25, yb, z1, z1 + 0.75, 4)
+
+
 def villa_a(lod: int = 0) -> Part:
     """Villa type A: 12 x 10 m, ground floor 3.2 m plus 2.8 m, eave 6.9 m, ridge 9.4 m; columned porch with a balcony on the left, grey cladding band, two windows on the right."""
     p = Part("villa"); X0, X1, Y0, Y1 = -6.0, 6.0, -5.0, 5.0; H = 6.9
@@ -118,6 +140,17 @@ def villa_a(lod: int = 0) -> Part:
     if lod == 0:
         p.box(X0 - 0.04, Y0 - 0.05, 3.55, X1 + 0.04, Y0, 3.85, WHITE, skip=("bottom",))                         # string course at floor level (front)
         for cx in (X0 + 0.02, X1 - 0.02): p.tube((cx, Y0 - 0.12, 0.15), (cx, Y0 - 0.12, H - 0.05), 0.045, 0.045, 8, "metal_galvanised")   # downpipes
+    if lod == 0:
+        for sx in (X0, X1):                                                                                                                                  # quoins: alternating stone blocks up the two front corners
+            left = sx < 0
+            for k in range(12):
+                z0 = 0.4 + k * 0.54; w = 0.50 if k % 2 == 0 else 0.30
+                p.box(sx - 0.04 if left else sx - w, Y0 - 0.04, z0, sx + w if left else sx + 0.04, Y0, z0 + 0.50, STONE, skip=("bottom", "back"))       # on the front face
+                p.box(sx - 0.04 if left else sx, Y0, z0, sx if left else sx + 0.04, Y0 + w, z0 + 0.50, STONE, skip=("bottom", "right" if left else "left"))   # on the side face
+        p.box(X0 - 0.15, Y0 - 0.15, 6.52, X1 + 0.15, Y1 + 0.15, 6.60, CREAM, skip=("bottom",)); p.box(X0 - 0.26, Y0 - 0.26, 6.60, X1 + 0.26, Y1 + 0.26, 6.74, CREAM, skip=("bottom",))   # cornice under the eaves
+        gable_dormer(p, 3.0, -3.4)
+        p.box(-4.3, 1.1, 7.2, -3.5, 1.9, 10.3, STONE); p.box(-4.4, 1.0, 10.3, -3.4, 2.0, 10.45, CREAM)                                                      # chimney stack with cap
+        p.box(X1 + 0.0, -1.0, 4.2, X1 + 0.32, -0.2, 4.75, "paint_white", skip=("left",)); p.box(X1 + 0.32, -0.95, 4.28, X1 + 0.34, -0.25, 4.67, "metal_galvanised", skip=("left",))   # air-conditioner on the right wall
     balcony(p, -5.0, -0.8, -7.0, Y0, 3.55, True, lod)
     hip_roof(p, X0 - 0.7, X1 + 0.7, Y0 - 0.7, Y1 + 0.7, H, 9.4, 2.2, 18 if lod == 0 else 8, tiles=True)
     return p

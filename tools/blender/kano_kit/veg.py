@@ -28,7 +28,7 @@ def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0)
         if lod < 2: p.path_tube([top - Vector((0, 0, 0.1)), mid, end], [0.085, 0.06, 0.035], 5 if lod == 0 else 4, "bark", caps=(False, True), smooth=True)
         ends.append(end)
     cz = th + (height - th) * 0.58; rz = (height - th) * 0.46; rx = crown_w / 2
-    n_cl, per, size = {0: (62, 6, (1.3, 2.0)), 1: (16, 3, (2.1, 3.0)), 2: (3, 2, (3.8, 4.6))}[lod]
+    n_cl, per, size = {0: (96, 5, (1.0, 1.6)), 1: (16, 3, (2.1, 3.0)), 2: (3, 2, (3.8, 4.6))}[lod]
     centre = Vector((top.x, top.y, cz)); pts = list(ends)
     while len(pts) < n_cl:
         v = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), rnd.gauss(0, 1))).normalized() * (0.35 + 0.65 * rnd.random() ** 0.5)       # inside an ellipsoid, biased to the surface

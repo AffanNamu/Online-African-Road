@@ -210,12 +210,52 @@ namespace ARO.Tests
                 var ti = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(leaf.GetTexture("_BaseMap"))) as TextureImporter; Assert.NotNull(ti);
                 Assert.IsTrue(ti.alphaIsTransparency, "the foliage texture's alpha is not treated as transparency"); Assert.IsTrue(ti.mipMapsPreserveCoverage, "the foliage texture loses coverage in its mips");
                 Assert.IsTrue(paver.enableInstancing && leaf.enableInstancing, "kit materials are instanced");
+                Assert.IsTrue(mats.ContainsKey("M_glass"), "materials found: " + string.Join(", ", mats.Keys)); var glass = mats["M_glass"];
+                Assert.AreEqual(1f, glass.GetFloat("_Surface"), "glass must be a transparent surface"); Assert.AreEqual((int)UnityEngine.Rendering.RenderQueue.Transparent, glass.renderQueue); Assert.AreEqual(0.22f, glass.GetColor("_BaseColor").a, 0.01f, "glass opacity");
+                Assert.AreEqual(0f, glass.GetFloat("_ZWrite"), "transparent glass must not write depth");
+                var plaster = mats["M_plaster_cream_light"]; Assert.NotNull(plaster.GetTexture("_BaseMap"), "plaster lost its colour texture"); Assert.NotNull(plaster.GetTexture("_BumpMap"), "plaster lost its normal map"); Assert.IsTrue(plaster.IsKeywordEnabled("_NORMALMAP"));
+                var nti = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(plaster.GetTexture("_BumpMap"))) as TextureImporter; Assert.AreEqual(TextureImporterType.NormalMap, nti.textureType, "the normal map is not imported as a normal map");
                 var lg = built.Root.GetComponent<LODGroup>(); Assert.NotNull(lg); Assert.AreEqual(2, lg.lodCount, "two LODs expected");
                 Assert.Greater(built.Measure.LodTriangles[0], built.Measure.LodTriangles[1]); Assert.IsTrue(built.Measure.HasBoxCollider, "no collision box");
                 Assert.AreEqual(Quaternion.identity, built.Root.transform.localRotation); Assert.AreEqual(Vector3.one, built.Root.transform.localScale);
                 Debug.Log("[KitImport] textured and cutout materials, " + lg.lodCount + " LODs [" + string.Join(", ", built.Measure.LodTriangles) + "] triangles, box collider " + built.Measure.HasBoxCollider);
             }
             finally { UnityEngine.Object.DestroyImmediate(built.Root); }
+        }
+
+        [Test] public void TheReviewBuilderMakesProductionPrefabsAndAReviewPrefabFromExportsAndPlacements()
+        {
+            // The Kano street's Unity builder (KanoReviewBuilder) run on the generic fixture: an export under Assets/ThirdParty/ARO/Models, a material kit, a placement file in Blender axes. It must build the production
+            // prefab (LODGroup, collider), the review prefab with every placement converted from Blender axes to Unity axes ((x, y, z) -> (-x, z, -y), yaw -t), and skip a placement with no export instead of failing.
+            if (!File.Exists(KitDir + "aro_kit_fixture_a.fbx") || !File.Exists(KitDir + "aro_materials.json")) Assert.Ignore("no kit fixture");
+            string root = KanoReviewBuilder.Root, models = root + "/Models/aro_kit_fixture_a/v001";
+            try
+            {
+                Directory.CreateDirectory(models); Directory.CreateDirectory(root + "/Materials"); Directory.CreateDirectory(root + "/placements");
+                foreach (var f in Directory.GetFiles(KitDir)) if (!f.EndsWith(".meta")) File.Copy(f, models + "/" + Path.GetFileName(f), true);
+                File.Copy(KitDir + "aro_materials.json", KanoReviewBuilder.KitPath, true);
+                File.WriteAllText(KanoReviewBuilder.PlacementsPath, "{\"scene\":\"test\",\"items\":[" +
+                    "{\"asset\":\"aro_kit_fixture_a\",\"x\":2,\"y\":5,\"z\":0,\"yawDeg\":90,\"scale\":1,\"tag\":\"\"}," +
+                    "{\"asset\":\"aro_kit_fixture_a\",\"x\":-3,\"y\":10,\"z\":1,\"yawDeg\":-90,\"scale\":1,\"tag\":\"\"}," +
+                    "{\"asset\":\"no_such_asset_a\",\"x\":0,\"y\":0,\"z\":0,\"yawDeg\":0,\"scale\":1,\"tag\":\"\"}]}");
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                var notes = KanoReviewBuilder.BuildReview(); Debug.Log("[KanoReviewBuilder] " + string.Join(" | ", notes));
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(KanoReviewBuilder.PrefabFolder + "/aro_kit_fixture_a.prefab");
+                Assert.NotNull(prefab, "the production prefab was not saved: " + string.Join(" | ", notes)); Assert.NotNull(prefab.GetComponent<LODGroup>(), "no LODGroup"); Assert.IsTrue(prefab.GetComponentsInChildren<BoxCollider>(true).Length == 1, "no collision box");
+                var review = AssetDatabase.LoadAssetAtPath<GameObject>(KanoReviewBuilder.ReviewPrefabPath); Assert.NotNull(review, "the review prefab was not saved");
+                var placed = review.transform.Cast<Transform>().Where(t => t.name == "aro_kit_fixture_a").ToList(); Assert.AreEqual(2, placed.Count, "two placements expected, the third has no export");
+                Assert.IsTrue(review.transform.Cast<Transform>().Any(t => t.name == "review_ground"), "no review ground");
+                Assert.AreEqual(new Vector3(-2f, 0f, -5f), placed[0].localPosition); Assert.AreEqual(new Vector3(3f, 1f, -10f), placed[1].localPosition);
+                Assert.Less(Quaternion.Angle(placed[0].localRotation, Quaternion.Euler(0f, -90f, 0f)), 0.1f); Assert.Less(Quaternion.Angle(placed[1].localRotation, Quaternion.Euler(0f, 90f, 0f)), 0.1f);
+                Assert.IsTrue(notes.Any(n => n.Contains("no_such_asset_a")), "the missing export should be reported");
+            }
+            finally { AssetDatabase.DeleteAsset(root); }
+        }
+
+        [Test] public void TheReviewCameraReproducesABlenderCameraFieldOfView()
+        {
+            Assert.AreEqual(39.6f, ARO.World.KanoReviewScene.VerticalFov(28f, 16f / 9f), 0.1f, "28 mm on a 36 mm sensor at 16:9 is 39.6 degrees vertical");
+            Assert.Greater(ARO.World.KanoReviewScene.VerticalFov(24f, 16f / 9f), ARO.World.KanoReviewScene.VerticalFov(35f, 16f / 9f), "a wider lens must give a wider field of view");
         }
 
         [Test] public void AProductionPrefabKeptUnderThePrivateAssetPathIsFoundByTheGamesOwnLookup()

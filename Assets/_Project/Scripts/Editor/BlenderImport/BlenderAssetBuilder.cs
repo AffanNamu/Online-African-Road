@@ -10,7 +10,7 @@ namespace ARO.Editor.BlenderImport
 {
     /// <summary>The material kit as the Blender toolchain writes it (aro_materials.json): the library's sRGB colours, roughness and metallic, one entry per surface.</summary>
     [Serializable] public sealed class MaterialKitFile { public int schema; public MaterialKitEntry[] materials; }
-    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; public string texture; public float cutout; public bool two_sided; }
+    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; public string texture, normal; public float cutout, alpha = 1f; public bool two_sided; }
 
     /// <summary>
     /// Turns a model imported from the Blender toolchain (FBX, or GLB through glTFast) into the structure the game needs from a production prop prefab (see PropPrefabPlan):
@@ -65,6 +65,13 @@ namespace ARO.Editor.BlenderImport
             ti.alphaIsTransparency = true; ti.mipmapEnabled = true; ti.mipMapsPreserveCoverage = true; ti.alphaTestReferenceValue = cutoff; ti.SaveAndReimport();
         }
 
+        /// <summary>A normal map must be imported as one (not as colour), or the lighting is wrong.</summary>
+        static void ConfigureNormalTexture(Texture2D tex)
+        {
+            var path = AssetDatabase.GetAssetPath(tex); var ti = AssetImporter.GetAtPath(path) as TextureImporter; if (ti == null || ti.textureType == TextureImporterType.NormalMap) return;
+            ti.textureType = TextureImporterType.NormalMap; ti.SaveAndReimport();
+        }
+
         /// <summary>The kit material for an entry: the asset at folder/{name}.mat, created (URP/Lit, instancing on) if it does not exist yet. A textured entry gets its base-colour texture (found by name in the
         /// project; flat colour if the texture is not there), a cutout entry is alpha-clipped at its threshold, a two-sided entry is drawn on both faces.</summary>
         public static Material KitMaterial(MaterialKitEntry e, string folder)
@@ -85,6 +92,15 @@ namespace ARO.Editor.BlenderImport
                 m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
             }
             m.SetFloat("_Cull", e.two_sided ? 0f : 2f);
+            var nrm = string.IsNullOrEmpty(e.normal) ? null : FindTexture(e.normal);
+            if (nrm != null) { ConfigureNormalTexture(nrm); nrm = FindTexture(e.normal); m.SetTexture("_BumpMap", nrm); m.SetFloat("_BumpScale", 1f); m.EnableKeyword("_NORMALMAP"); }
+            if (e.alpha < 0.999f)
+            {   // glass: URP/Lit as a transparent, alpha-blended surface that does not write depth
+                m.SetFloat("_Surface", 1f); m.SetFloat("_Blend", 0f); m.SetOverrideTag("RenderType", "Transparent");
+                m.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha); m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha); m.SetFloat("_ZWrite", 0f);
+                m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT"); m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                var c = m.GetColor("_BaseColor"); c.a = e.alpha; m.SetColor("_BaseColor", c);
+            }
             EditorUtility.SetDirty(m); return m;
         }
 

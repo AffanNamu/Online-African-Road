@@ -59,8 +59,14 @@ namespace ARO.World
             if (_cam == null) _cam = Camera.main; if (_cam == null) return;
             _cam.transform.SetPositionAndRotation(_pos, _rot);
             // Blender's 36 mm sensor fits the width: horizontal field of view 2 atan(18 / lens); Unity wants the vertical one for the current aspect.
-            float hfov = 2f * Mathf.Atan(18f / _lens); float aspect = _cam.aspect > 0.1f ? _cam.aspect : 16f / 9f;
-            _cam.fieldOfView = 2f * Mathf.Atan(Mathf.Tan(hfov * 0.5f) / aspect) * Mathf.Rad2Deg;
+            _cam.fieldOfView = VerticalFov(_lens, _cam.aspect > 0.1f ? _cam.aspect : 16f / 9f);
+        }
+
+        /// <summary>The vertical field of view in degrees that reproduces a Blender camera with a 36 mm sensor (which fits the width) and this focal length, for this aspect ratio: 28 mm at 16:9 is 39.6 degrees.</summary>
+        public static float VerticalFov(float lensMm, float aspect)
+        {
+            float hfov = 2f * Mathf.Atan(18f / lensMm);
+            return 2f * Mathf.Atan(Mathf.Tan(hfov * 0.5f) / aspect) * Mathf.Rad2Deg;
         }
 
         void LateUpdate() { Apply(); }
