@@ -24,10 +24,15 @@ img = {k: jpg(R / f"kano_residential_{k}.png", k) for k, _, _ in views if (R / f
 concept = jpg(a.concept, "concept_r006", 1280)
 rows = "".join(f"<tr><td><code>{e(x['id'])}</code></td><td>{e(x['kind'])}</td><td>{x['stats']['lod_triangles']}</td><td>{x['stats']['size_m']}</td><td>{len(x['stats']['materials'])}</td><td>{'passed' if x['passed'] else 'FAILED'}</td></tr>" for x in report)
 cards = "".join(f'<figure><img src="{img[k]}" alt="{e(t)}"><figcaption><b>{e(t)}</b> {e(d)}</figcaption></figure>' for k, t, d in views[1:] if k in img)
-DIFF = [("villas", "plainer than the concept's; mostly hidden by trees and walls from the reference camera", "significant", "second detail pass: stone cladding, arches, richer balcony and landscaping"),
-        ("gate", "ornate with an arched top; scrollwork simpler than the concept's", "moderate", "richer scroll pattern"), ("trees", "leaf-card crowns, darker and with jagged leaf edges", "moderate", "brighter, finer leaf atlas; real species when known"),
-        ("paver sidewalk", "slightly more orange variation than the concept's pink and grey", "small", "tone the palette down"), ("materials", "flat colours plus two textures; no normal or roughness maps", "moderate to significant", "PBR set after the Unity import shows what matters"),
-        ("hedges and shrubs", "present, less lush than the concept's", "moderate", "denser leaf cards and flowers"), ("glass (balcony balustrade, windows)", "the balustrade reads as an opaque pale panel: the kit has no transparent material yet; window glass is a dark opaque pane", "moderate", "a transparent kit material in the Unity builder and Blender export"), ("far end", "a long street without the concept's skyline and mosque", "intentional", "a generic skyline later; the mosque is treated as generic until an authentic reference exists")]
+DIFF = [("villas", "now with quoins, architraves, grilles, cornice, dormer and chimney, but still simpler than the concept's richly clad villas; mostly hidden by trees and walls from the reference camera", "moderate to significant", "owner review of the detail list; arched details, stone feature walls, landscaping"),
+        ("gate", "ornate with an arched top; scrollwork simpler than the concept's", "moderate", "richer scroll pattern"),
+        ("trees", "leaf-card crowns, denser and brighter than before, still stylised and generic (species unknown)", "moderate", "real species when references exist; bark detail"),
+        ("colour", "plaster reads yellow-cream and the stone piers red-brown under Blender's warm sun; the concept is paler and more neutral", "moderate", "tune tints once the game's own lighting shows them"),
+        ("paver sidewalk", "more orange variation than the concept's pink and grey", "small", "tone the palette down"),
+        ("materials", "procedural base colour and normal maps (plaster, stone cladding, roof tile, paver, asphalt, bark); no roughness maps, no weathering", "moderate", "roughness and wear after the in-game review"),
+        ("glass", "balcony balustrade and windows are now transparent in Blender; not yet seen in Unity", "to verify", "the in-game review"),
+        ("hedges and shrubs", "present, less lush than the concept's", "moderate", "denser leaf cards and flowers"),
+        ("far end", "a long street without the concept's skyline and mosque", "intentional", "a generic skyline later; the mosque is treated as generic until an authentic reference exists")]
 drows = "".join(f"<tr><td>{e(a_)}</td><td>{e(b)}</td><td>{e(c)}</td><td>{e(d)}</td></tr>" for a_, b, c, d in DIFF)
 page = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kano Residential Street</title>
@@ -49,14 +54,14 @@ th,td {{ text-align:left; vertical-align:top; padding:7px 10px; border-bottom:1p
 <p class="no">African Roads Online · Kano · first Blender production milestone · 2026-11-01</p><h1>Kano residential street</h1>
 <p class="sub">The one-way residential street of concept R-006 as real Blender geometry: road with markings, kerbs, paver sidewalks, villas on both sides, compound walls, ornate gates, trees and shrubs, streetlights, a concrete electricity pole with overhead wires. 14 assets, 96 m, validated against the game's budgets.</p>
 <p class="private">PRIVATE REVIEW PAGE. It carries a thumbnail of the concept image, which is not cleared for redistribution. Do not share this page or its link.</p>
-<p class="status">Status: Blender validation passed. NOT yet imported into the running game, NOT visually approved. These are Blender renders, not Unity screenshots.</p>
+<p class="status">Status: Blender validation passed (quality pass 2). The Unity code compiles and its generic fixture tests run in CI; these 14 assets are NOT yet imported into the running game, NOT visually approved. These are Blender renders, not Unity screenshots.</p>
 <h2>Concept and Blender render, same camera</h2>
 <div class="pair"><figure><img src="{concept}" alt="Concept R-006"><figcaption><b>Concept R-006</b> (ChatGPT-generated; the visual design standard)</figcaption></figure>
 <figure><img src="{img.get('ref', '')}" alt="Blender render from the reference camera"><figcaption><b>Blender render</b>, reference camera (1.7 m, 28 mm). Cycles, real geometry.</figcaption></figure></div>
 <h2>Other views</h2><div class="gallery">{cards}</div>
 <h2>The 14 assets</h2><div class="panel"><table><thead><tr><th>Asset</th><th>Kind</th><th>LOD triangles</th><th>Size (m)</th><th>Materials</th><th>Validation</th></tr></thead><tbody>{rows}</tbody></table></div>
 <h2>What is still different from the concept</h2><div class="panel"><table><thead><tr><th>Element</th><th>Difference</th><th>Weight</th><th>Planned correction</th></tr></thead><tbody>{drows}</tbody></table></div>
-<h2>What is not done</h2><ul><li>Unity: the code that builds the prefabs and shows the street in the running game is written, but not yet run on these assets. The assets are private and need a private build (three Unity secrets in the private repository, set by the owner).</li>
+<h2>What is not done</h2><ul><li>Unity: the code that builds the prefabs and shows the street in the running game compiles in CI and is tested on a generic fixture, but has not been run on these assets. They are private and need a private build: the three Unity secrets in the private repository and the LFS host allowed (both the owner's).</li>
 <li>The electricity pole and wires are an addition you asked for; the concept has none and no Kano reference exists, so the design is generic.</li><li>No mosque: treated as a generic mosque until an authentic reference exists.</li>
 <li>The expected draw cost of the section is about 400 calls if nothing batches (an estimate): the game will tell, and the one-plot-one-mesh step stays required.</li></ul>
 </main></body></html>
