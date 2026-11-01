@@ -9,17 +9,20 @@ from __future__ import annotations
 import json, math, sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from make_reference_register import MISSING as REF_MISSING      # which missing reference each planned prefab depends on
+
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "kano"
 EXCLUSION = 3.0            # PropScatter.ExclusionMargin: a scatter pivot closer than this to a road formation is dropped
 
 # ------------------------------------------------------------------------------------------------------------------ frame
-LAT0, LON0 = 12.0000, 8.5167               # Kano city reference point (Wikipedia "Kano (city)": 12°00'N 8°31'E, about +-1 km)
+LAT0, LON0 = 12.00012, 8.51672             # canonical Kano city anchor: GeoNames id 2335204 (read offline from geonamescache 3.0.2); Wikipedia 12°00'N 8°31'E agrees to 13 m
 M_PER_DEG_LAT = 110_700.0                  # at 12 N (WGS84 meridian arc, rounded)
 M_PER_DEG_LON = 111_320.0 * math.cos(math.radians(LAT0))
 SLICE_START = (-2400.0, -3200.0)           # on the 200 m chunk lattice; about 4.0 km SW of the reference point (design choice, NOT a survey)
 BEARING = 36.0                             # the approach from Kaduna (SW) runs towards the city (NE); bearing from the great circle Kaduna -> Kano is about 36 deg
-QIBLA_BEARING = 68.4                       # great-circle initial bearing Kano -> Mecca (computed from 12.0N 8.5167E and 21.4225N 39.8262E)
+QIBLA_BEARING = 68.5                       # WGS84 geodesic initial azimuth Kano anchor -> Kaaba (21.4225N 39.8262E) = 68.46 deg (PROJ via pyproj 3.8.0)
 
 
 def to_xz(lat: float, lon: float) -> tuple[float, float]:
@@ -68,6 +71,12 @@ INVENTORY = [
     P("kano_date_palm_a", "vegetation", 5.0, 5.0, 12.0, [1500, 500, 120], collider="none", cull=340.0, tags=["tree"], refs="owner/reference to confirm"),
     P("kano_shrub_a", "vegetation", 2.0, 2.0, 1.4, [260, 100, 30], collider="none", cull=140.0, shadow=False, tags=["ground"], refs="dry-season shrubs / hedges"),
 ]
+for _p in INVENTORY:      # which reference gaps block this prefab (register ids), and whether it can be modelled yet
+    _p["referenceIds"] = [m["id"] for m in REF_MISSING if _p["id"] in m["drives"]]
+    _p["readyToModel"] = False
+    _p["readyReason"] = "blocked: no confirmed reference (" + ", ".join(_p["referenceIds"]) + ")"
+for _p in INVENTORY:      # every plot prefab is exported twice from one Blender source: with its front apron (used today) and without it (catalogued only when RB-04/RB-05 exist)
+    if "plot" in _p["tags"]: _p["noApronVariant"] = _p["id"] + "_noapron"
 INV = {p["id"]: p for p in INVENTORY}
 
 KIT_MODULES = [
@@ -276,28 +285,63 @@ def build_inventory() -> dict:
             "props": INVENTORY, "kitModules": KIT_MODULES}
 
 
+def build_workarounds() -> dict:
+    plots = [p["id"] for p in INVENTORY if "plot" in p["tags"]]
+    return {"schemaVersion": 1, "rule": "Every Kano-specific workaround for a missing shared-engine feature is declared here with the docs/ROAD_ENGINE_BACKLOG.md item that removes it and a DATA-ONLY removal path. KanoSliceTests fails if a placement is neither a declared workaround nor a declared set piece, or if a removal needs code.",
+            "workarounds": [
+                {"id": "W-01", "what": "A 4.5 m open front apron (drain slab, walkway, pole line) inside each plot prefab", "standsInFor": ["RB-04", "RB-05"], "affects": plots,
+                 "isolation": "the apron is the separate Blender kit module `kit_apron_drain`; each plot is exported twice from one source, with the apron and as `<id>_noapron`; the no-apron variants are catalogued only when the engine has kerb and drain strips",
+                 "removalPath": "in the route rules replace each plot prop id by its `_noapron` variant and move the offset 4.5 m towards the road (data only)", "dataOnly": True},
+                {"id": "W-02", "what": "Side-street plots as hand-placed set pieces (the scatter runs along the main road only)", "standsInFor": ["RB-08"], "placementIdPrefix": "side_",
+                 "removalPath": "delete the `side_*` placements and add scatter rules for the side corridors (data only)", "dataOnly": True},
+                {"id": "W-03", "what": "Median double streetlights as hand-placed set pieces (rule offsets only go outward from the formation edge)", "standsInFor": ["RB-09"], "placementIdPrefix": "median_light_",
+                 "removalPath": "replace the placements with a median rule (data only)", "dataOnly": True},
+                {"id": "W-04", "what": "The word KANO baked into the gantry sign prefab (production prefabs get no text)", "standsInFor": ["RB-07"], "placementIdPrefix": "gantry_",
+                 "removalPath": "point the placement at the text-bearing sign prefab; the placement already carries the text (data only)", "dataOnly": True},
+                {"id": "W-05", "what": "Staggered T-junctions at least 150 m apart instead of four-way crossings", "standsInFor": ["RB-02"], "junctionIds": [j[0] for j in JUNCTIONS],
+                 "removalPath": "replace a staggered pair by one four-way junction in the route data (data only)", "dataOnly": True}],
+            "setPieces": [h[0] for h in HEROES],
+            "notWorkarounds": ["Parked vehicles grouped into single meshes: a draw-call optimisation that stays valid under any engine.", "The existing 'damaged' and 'worn' surface classes: used as they are, nothing Kano-specific added (RB-06 is future work)."]}
+
+
 def build_frame() -> dict:
-    dala = to_xz(12 + 0 / 60 + 33.498 / 3600, 8 + 30 / 60 + 25.106 / 3600)
+    dala = to_xz(12 + 33.498 / 3600, 8 + 30 / 60 + 25.106 / 3600)
+    gr = to_xz(11 + 59 / 60 + 32 / 3600, 8 + 30 / 60 + 58 / 3600)
     wm = to_xz(12.0022, 8.592)
-    return {"schemaVersion": 1, "id": "kano-frame-k0", "status": "PROPOSED (needs the owner's approval before any other data depends on it)",
-            "units": "metres", "axes": "x east, z north, y up: the game's route axes", "projection": "local tangent plane: x = (lon - lon0) * 111320 * cos(lat0), z = (lat - lat0) * 110700; error below 0.1% within 25 km",
-            "anchor": {"name": "Kano city reference point", "lat": LAT0, "lon": LON0, "source": "Wikipedia 'Kano (city)': 12°00'N 8°31'E (about +-1 km; to be replaced by a surveyed reference)"},
-            "chunkLattice": {"sizeM": 200, "note": "All Kano authored coordinates are multiples of 200 m at chunk corners so neighbouring routes share the game's chunk lattice (ChunkStreamer.chunkSize)."},
-            "slice": {"routeId": "ng-kano-slice", "startXZ": list(SLICE_START), "approachBearingDeg": BEARING, "fictional": True,
-                      "note": "About 4 km south-west of the reference point on the Kaduna approach direction. A design choice, not a survey: no street here is a real street."},
-            "qibla": {"bearingDeg": QIBLA_BEARING, "note": "Great-circle initial bearing Kano -> Mecca, computed from 12.0N 8.5167E and 21.4225N 39.8262E. Mosques in the slice orient their qibla wall to this, whatever the road does."},
-            "worldMapDiscrepancy": {"gameWorldMapKano": {"lat": 12.0022, "lon": 8.592}, "referenceXZ_m": [round(wm[0]), round(wm[1])], "distanceKm": round(math.hypot(*wm) / 1000, 1),
-                                    "note": "The world map's Kano longitude (8.592) is about 8 km east of the Wikipedia reference (8.5167). Not changed; the owner decides which is authoritative."},
+    return {"schemaVersion": 2, "id": "kano-frame-k0", "status": "PROPOSED (nothing else depends on it until the owner approves; no existing file uses it)",
+            "units": "metres", "axes": "x east, z north, y up: the game's route axes",
+            "canonicalAnchor": {"id": "kano_city_anchor", "crs": "EPSG:4326 (WGS84)", "lat": LAT0, "lon": LON0,
+                                "source": "GeoNames id 2335204 (Kano), read offline from the geonamescache 3.0.2 dataset (the GeoNames web service is not reachable from this session)",
+                                "crossChecks": [{"source": "Wikipedia 'Kano (city)': 12°00'N 8°31'E", "offsetFromAnchorM": 13},
+                                                {"source": "OpenStreetMap city node as listed by Mapcarta (11.994N 8.522E; secondary listing, node 501540880)", "offsetFromAnchorM": 888}],
+                                "tolerance": "about 1 km: a city anchor is a place point, not a surveyed benchmark. All the historic landmarks lie within 1.5 km of it."},
+            "transformToUnity": {"name": "K0", "kind": "local tangent plane (equirectangular) at the anchor", "origin": [0, 0], "xFormula": "x = (lon - lon0) * 111320 * cos(lat0)", "zFormula": "z = (lat - lat0) * 110700",
+                                 "maxErrorAgainstWgs84Geodesic": {"1 km": "0.4 m", "5 km": "2.3 m", "10 km": "5.1 m", "25 km": "17.2 m (0.05%)"},
+                                 "beyondAbout25km": "do not extend K0: use UTM zone 32N (EPSG:32632; Kano at 8.5E is inside zone 32, 6E to 12E) or a per-corridor frame with explicit connectors",
+                                 "chunkLattice": {"sizeM": 200, "note": "Every authored coordinate is a multiple of 200 m at chunk corners so neighbouring routes share the game's chunk lattice (ChunkStreamer.chunkSize)."},
+                                 "scalePolicy": "City slices are 1:1. A compressed corridor (Lagos-Ibadan is compressed) declares its compression in meta and never shares a frame with 1:1 content."},
+            "slice": {"routeId": "ng-kano-slice", "startXZ": list(SLICE_START), "startLatLon": [round(LAT0 + SLICE_START[1] / M_PER_DEG_LAT, 5), round(LON0 + SLICE_START[0] / M_PER_DEG_LON, 5)], "approachBearingDeg": BEARING, "fictional": True,
+                      "note": "About 4 km south-west of the anchor on the Kaduna approach direction. A design choice, not a survey: no street here is a real street."},
+            "qibla": {"bearingDeg": QIBLA_BEARING, "note": "WGS84 geodesic initial azimuth from the anchor to the Kaaba (21.4225N 39.8262E): 68.46 degrees. Mosques in the slice orient their qibla wall to this, whatever the road does."},
+            "worldMapPin": {"gameValue": {"lat": 12.0022, "lon": 8.592}, "xzFromAnchor_m": [round(wm[0]), round(wm[1])], "distanceFromAnchorKm": 8.2, "bearingFromAnchorDeg": 88.4,
+                            "provenanceInRepository": "introduced with the whole world map on 2026-10-10 (commit 4973744) and the backend seed (a0d9b3f); no source is recorded anywhere. docs/WORLD_MAP.md calls city lat/lon 'authoritative' and only tests Lagos and Ibadan against the backend.",
+                            "whatItMatches": "a Kano point listed as 12.00218N 8.59196E, altitude 469 m (distancefromto.net), not the usual city reference; the sources describe it as a different location within the Kano area",
+                            "isItIsolated": "no: every game city pin differs from GeoNames by 1.7 to 10.8 km (Kano 8.2, Abuja 10.8, Lagos 8.0), so it is a convention of the pins, not a Kano slip",
+                            "action": "none taken; see docs/kano/COORDINATES.md"},
+            "worldMapDiscrepancy": {"gameWorldMapKano": {"lat": 12.0022, "lon": 8.592}, "referenceXZ_m": [round(wm[0]), round(wm[1])], "distanceKm": 8.2,
+                                    "note": "Kept for the test that the discrepancy stays recorded. Not changed; the owner decides."},
             "reservedAnchors": [
-                {"id": "dala_hill", "name": "Dala Hill", "kind": "landmark", "lat": round(12 + 33.498 / 3600, 5), "lon": round(8 + 30 / 60 + 25.106 / 3600, 5), "xz_m": [round(dala[0]), round(dala[1])], "verified": "one source (coordinates 12°0'33.498\"N 8°30'25.106\"E); height reported as 534 m a.s.l. by most sources and 453.67 m by one; unresolved"},
-                {"id": "gidan_rumfa", "name": "Gidan Rumfa (Emir's Palace)", "kind": "landmark", "lat": None, "lon": None, "verified": "location known to be in the old city beside the Central Mosque; coordinates NOT verified: needs a survey/map source"},
-                {"id": "kurmi_market", "name": "Kurmi Market", "kind": "landmark", "lat": None, "lon": None, "verified": "in the old city near the palace; coordinates NOT verified"},
-                {"id": "kofar_mata_dye_pits", "name": "Kofar Mata Dye Pits", "kind": "landmark", "lat": None, "lon": None, "verified": "in the old city near the city wall and palace; coordinates NOT verified"},
+                {"id": "dala_hill", "name": "Dala Hill", "kind": "landmark", "lat": round(12 + 33.498 / 3600, 5), "lon": round(8 + 30 / 60 + 25.106 / 3600, 5), "xz_m": [round(dala[0]), round(dala[1])],
+                 "verified": "ONE source (12°0'33.498\"N 8°30'25.106\"E); about 1.5 km from the city anchor; height disputed (534 m above sea level in most sources, 453.67 m in one)"},
+                {"id": "gidan_rumfa", "name": "Gidan Rumfa (Emir's Palace)", "kind": "landmark", "lat": round(11 + 59 / 60 + 32 / 3600, 5), "lon": round(8 + 30 / 60 + 58 / 3600, 5), "xz_m": [round(gr[0]), round(gr[1])],
+                 "verified": "three web listings agree within about 300 m (Wikipedia 11°59'32\"N 8°30'58\"E; Plizio 11.9933 8.5161; AroundUs 11.9923 8.5160); a heritage inventory gives 8.519E. Not surveyed: treat as +-300 m"},
+                {"id": "kurmi_market", "name": "Kurmi Market", "kind": "landmark", "lat": None, "lon": None, "verified": "in the old city; coordinates NOT verified"},
+                {"id": "kofar_mata_dye_pits", "name": "Kofar Mata Dye Pits", "kind": "landmark", "lat": None, "lon": None, "verified": "in the old city near the wall and palace; coordinates NOT verified"},
             ]}
 
 
 def main() -> int:
-    outputs = {"ng-kano-slice.route.draft.json": build_route(), "kano_asset_inventory.json": build_inventory(), "kano_world_frame.json": build_frame()}
+    outputs = {"ng-kano-slice.route.draft.json": build_route(), "kano_asset_inventory.json": build_inventory(), "kano_world_frame.json": build_frame(), "kano_workarounds.json": build_workarounds()}
     check = "--check" in sys.argv; bad = 0
     OUT.mkdir(parents=True, exist_ok=True)
     for name, data in outputs.items():

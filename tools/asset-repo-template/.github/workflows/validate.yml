@@ -1,0 +1,9 @@
+name: Validate asset repository
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }     # the checks need the manifests and the pointer files, not the binaries; hashes are verified by a job that fetches LFS when assets exist
+      - run: python3 tools/validate_repo.py .

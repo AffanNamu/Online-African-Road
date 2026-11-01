@@ -1,19 +1,48 @@
 {
- "schemaVersion": 1,
+ "schemaVersion": 2,
  "id": "kano-frame-k0",
- "status": "PROPOSED (needs the owner's approval before any other data depends on it)",
+ "status": "PROPOSED (nothing else depends on it until the owner approves; no existing file uses it)",
  "units": "metres",
  "axes": "x east, z north, y up: the game's route axes",
- "projection": "local tangent plane: x = (lon - lon0) * 111320 * cos(lat0), z = (lat - lat0) * 110700; error below 0.1% within 25 km",
- "anchor": {
-  "name": "Kano city reference point",
-  "lat": 12.0,
-  "lon": 8.5167,
-  "source": "Wikipedia 'Kano (city)': 12°00'N 8°31'E (about +-1 km; to be replaced by a surveyed reference)"
+ "canonicalAnchor": {
+  "id": "kano_city_anchor",
+  "crs": "EPSG:4326 (WGS84)",
+  "lat": 12.00012,
+  "lon": 8.51672,
+  "source": "GeoNames id 2335204 (Kano), read offline from the geonamescache 3.0.2 dataset (the GeoNames web service is not reachable from this session)",
+  "crossChecks": [
+   {
+    "source": "Wikipedia 'Kano (city)': 12°00'N 8°31'E",
+    "offsetFromAnchorM": 13
+   },
+   {
+    "source": "OpenStreetMap city node as listed by Mapcarta (11.994N 8.522E; secondary listing, node 501540880)",
+    "offsetFromAnchorM": 888
+   }
+  ],
+  "tolerance": "about 1 km: a city anchor is a place point, not a surveyed benchmark. All the historic landmarks lie within 1.5 km of it."
  },
- "chunkLattice": {
-  "sizeM": 200,
-  "note": "All Kano authored coordinates are multiples of 200 m at chunk corners so neighbouring routes share the game's chunk lattice (ChunkStreamer.chunkSize)."
+ "transformToUnity": {
+  "name": "K0",
+  "kind": "local tangent plane (equirectangular) at the anchor",
+  "origin": [
+   0,
+   0
+  ],
+  "xFormula": "x = (lon - lon0) * 111320 * cos(lat0)",
+  "zFormula": "z = (lat - lat0) * 110700",
+  "maxErrorAgainstWgs84Geodesic": {
+   "1 km": "0.4 m",
+   "5 km": "2.3 m",
+   "10 km": "5.1 m",
+   "25 km": "17.2 m (0.05%)"
+  },
+  "beyondAbout25km": "do not extend K0: use UTM zone 32N (EPSG:32632; Kano at 8.5E is inside zone 32, 6E to 12E) or a per-corridor frame with explicit connectors",
+  "chunkLattice": {
+   "sizeM": 200,
+   "note": "Every authored coordinate is a multiple of 200 m at chunk corners so neighbouring routes share the game's chunk lattice (ChunkStreamer.chunkSize)."
+  },
+  "scalePolicy": "City slices are 1:1. A compressed corridor (Lagos-Ibadan is compressed) declares its compression in meta and never shares a frame with 1:1 content."
  },
  "slice": {
   "routeId": "ng-kano-slice",
@@ -21,13 +50,33 @@
    -2400.0,
    -3200.0
   ],
+  "startLatLon": [
+   11.97121,
+   8.49468
+  ],
   "approachBearingDeg": 36.0,
   "fictional": true,
-  "note": "About 4 km south-west of the reference point on the Kaduna approach direction. A design choice, not a survey: no street here is a real street."
+  "note": "About 4 km south-west of the anchor on the Kaduna approach direction. A design choice, not a survey: no street here is a real street."
  },
  "qibla": {
-  "bearingDeg": 68.4,
-  "note": "Great-circle initial bearing Kano -> Mecca, computed from 12.0N 8.5167E and 21.4225N 39.8262E. Mosques in the slice orient their qibla wall to this, whatever the road does."
+  "bearingDeg": 68.5,
+  "note": "WGS84 geodesic initial azimuth from the anchor to the Kaaba (21.4225N 39.8262E): 68.46 degrees. Mosques in the slice orient their qibla wall to this, whatever the road does."
+ },
+ "worldMapPin": {
+  "gameValue": {
+   "lat": 12.0022,
+   "lon": 8.592
+  },
+  "xzFromAnchor_m": [
+   8197,
+   230
+  ],
+  "distanceFromAnchorKm": 8.2,
+  "bearingFromAnchorDeg": 88.4,
+  "provenanceInRepository": "introduced with the whole world map on 2026-10-10 (commit 4973744) and the backend seed (a0d9b3f); no source is recorded anywhere. docs/WORLD_MAP.md calls city lat/lon 'authoritative' and only tests Lagos and Ibadan against the backend.",
+  "whatItMatches": "a Kano point listed as 12.00218N 8.59196E, altitude 469 m (distancefromto.net), not the usual city reference; the sources describe it as a different location within the Kano area",
+  "isItIsolated": "no: every game city pin differs from GeoNames by 1.7 to 10.8 km (Kano 8.2, Abuja 10.8, Lagos 8.0), so it is a convention of the pins, not a Kano slip",
+  "action": "none taken; see docs/kano/COORDINATES.md"
  },
  "worldMapDiscrepancy": {
   "gameWorldMapKano": {
@@ -35,11 +84,11 @@
    "lon": 8.592
   },
   "referenceXZ_m": [
-   8199,
-   244
+   8197,
+   230
   ],
   "distanceKm": 8.2,
-  "note": "The world map's Kano longitude (8.592) is about 8 km east of the Wikipedia reference (8.5167). Not changed; the owner decides which is authoritative."
+  "note": "Kept for the test that the discrepancy stays recorded. Not changed; the owner decides."
  },
  "reservedAnchors": [
   {
@@ -49,18 +98,22 @@
    "lat": 12.0093,
    "lon": 8.50697,
    "xz_m": [
-    -1059,
-    1030
+    -1061,
+    1017
    ],
-   "verified": "one source (coordinates 12°0'33.498\"N 8°30'25.106\"E); height reported as 534 m a.s.l. by most sources and 453.67 m by one; unresolved"
+   "verified": "ONE source (12°0'33.498\"N 8°30'25.106\"E); about 1.5 km from the city anchor; height disputed (534 m above sea level in most sources, 453.67 m in one)"
   },
   {
    "id": "gidan_rumfa",
    "name": "Gidan Rumfa (Emir's Palace)",
    "kind": "landmark",
-   "lat": null,
-   "lon": null,
-   "verified": "location known to be in the old city beside the Central Mosque; coordinates NOT verified: needs a survey/map source"
+   "lat": 11.99222,
+   "lon": 8.51611,
+   "xz_m": [
+    -66,
+    -874
+   ],
+   "verified": "three web listings agree within about 300 m (Wikipedia 11°59'32\"N 8°30'58\"E; Plizio 11.9933 8.5161; AroundUs 11.9923 8.5160); a heritage inventory gives 8.519E. Not surveyed: treat as +-300 m"
   },
   {
    "id": "kurmi_market",
@@ -68,7 +121,7 @@
    "kind": "landmark",
    "lat": null,
    "lon": null,
-   "verified": "in the old city near the palace; coordinates NOT verified"
+   "verified": "in the old city; coordinates NOT verified"
   },
   {
    "id": "kofar_mata_dye_pits",
@@ -76,7 +129,7 @@
    "kind": "landmark",
    "lat": null,
    "lon": null,
-   "verified": "in the old city near the city wall and palace; coordinates NOT verified"
+   "verified": "in the old city near the wall and palace; coordinates NOT verified"
   }
  ]
 }

@@ -1,0 +1,87 @@
+{
+ "schemaVersion": 1,
+ "rule": "Every Kano-specific workaround for a missing shared-engine feature is declared here with the docs/ROAD_ENGINE_BACKLOG.md item that removes it and a DATA-ONLY removal path. KanoSliceTests fails if a placement is neither a declared workaround nor a declared set piece, or if a removal needs code.",
+ "workarounds": [
+  {
+   "id": "W-01",
+   "what": "A 4.5 m open front apron (drain slab, walkway, pole line) inside each plot prefab",
+   "standsInFor": [
+    "RB-04",
+    "RB-05"
+   ],
+   "affects": [
+    "kano_hausa_compound_a",
+    "kano_hausa_compound_b",
+    "kano_hausa_compound_c",
+    "kano_compound_modern_a",
+    "kano_compound_modern_b",
+    "kano_shop_row_a",
+    "kano_shop_row_b"
+   ],
+   "isolation": "the apron is the separate Blender kit module `kit_apron_drain`; each plot is exported twice from one source, with the apron and as `<id>_noapron`; the no-apron variants are catalogued only when the engine has kerb and drain strips",
+   "removalPath": "in the route rules replace each plot prop id by its `_noapron` variant and move the offset 4.5 m towards the road (data only)",
+   "dataOnly": true
+  },
+  {
+   "id": "W-02",
+   "what": "Side-street plots as hand-placed set pieces (the scatter runs along the main road only)",
+   "standsInFor": [
+    "RB-08"
+   ],
+   "placementIdPrefix": "side_",
+   "removalPath": "delete the `side_*` placements and add scatter rules for the side corridors (data only)",
+   "dataOnly": true
+  },
+  {
+   "id": "W-03",
+   "what": "Median double streetlights as hand-placed set pieces (rule offsets only go outward from the formation edge)",
+   "standsInFor": [
+    "RB-09"
+   ],
+   "placementIdPrefix": "median_light_",
+   "removalPath": "replace the placements with a median rule (data only)",
+   "dataOnly": true
+  },
+  {
+   "id": "W-04",
+   "what": "The word KANO baked into the gantry sign prefab (production prefabs get no text)",
+   "standsInFor": [
+    "RB-07"
+   ],
+   "placementIdPrefix": "gantry_",
+   "removalPath": "point the placement at the text-bearing sign prefab; the placement already carries the text (data only)",
+   "dataOnly": true
+  },
+  {
+   "id": "W-05",
+   "what": "Staggered T-junctions at least 150 m apart instead of four-way crossings",
+   "standsInFor": [
+    "RB-02"
+   ],
+   "junctionIds": [
+    "j1_modern_street",
+    "j2_plaza_street",
+    "j3_back_street",
+    "j4_market_lane",
+    "j5_mosque_street",
+    "j6_compound_lane"
+   ],
+   "removalPath": "replace a staggered pair by one four-way junction in the route data (data only)",
+   "dataOnly": true
+  }
+ ],
+ "setPieces": [
+  "plaza_1",
+  "midrise_1",
+  "midrise_2",
+  "apartments_1",
+  "fuel_1",
+  "busstop_1",
+  "busstop_2",
+  "mosque_1"
+ ],
+ "notWorkarounds": [
+  "Parked vehicles grouped into single meshes: a draw-call optimisation that stays valid under any engine.",
+  "The existing 'damaged' and 'worn' surface classes: used as they are, nothing Kano-specific added (RB-06 is future work)."
+ ]
+}

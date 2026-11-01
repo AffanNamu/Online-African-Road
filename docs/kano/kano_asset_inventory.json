@@ -24,7 +24,13 @@
     "traditional",
     "plot"
    ],
-   "referencesNeeded": "street-front elevation, zaure/gate, parapet with zankwaye, wall finish, roof edge"
+   "referencesNeeded": "street-front elevation, zaure/gate, parapet with zankwaye, wall finish, roof edge",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_a_noapron"
   },
   {
    "id": "kano_hausa_compound_b",
@@ -48,7 +54,13 @@
     "traditional",
     "plot"
    ],
-   "referencesNeeded": "two-storey front block (sources: traditional Hausa buildings seldom exceed two storeys)"
+   "referencesNeeded": "two-storey front block (sources: traditional Hausa buildings seldom exceed two storeys)",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_b_noapron"
   },
   {
    "id": "kano_hausa_compound_c",
@@ -72,7 +84,13 @@
     "traditional",
     "plot"
    ],
-   "referencesNeeded": "small single-storey compound"
+   "referencesNeeded": "small single-storey compound",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_c_noapron"
   },
   {
    "id": "kano_compound_modern_a",
@@ -96,7 +114,13 @@
     "modern",
     "plot"
    ],
-   "referencesNeeded": "walled bungalow/villa with gate: front, side, roof, finish"
+   "referencesNeeded": "walled bungalow/villa with gate: front, side, roof, finish",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)",
+   "noApronVariant": "kano_compound_modern_a_noapron"
   },
   {
    "id": "kano_compound_modern_b",
@@ -120,7 +144,13 @@
     "modern",
     "plot"
    ],
-   "referencesNeeded": "two-storey walled villa"
+   "referencesNeeded": "two-storey walled villa",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)",
+   "noApronVariant": "kano_compound_modern_b_noapron"
   },
   {
    "id": "kano_shop_row_a",
@@ -144,7 +174,14 @@
     "commercial",
     "plot"
    ],
-   "referencesNeeded": "single-storey shop row: frontage, shutters, signage, awning"
+   "referencesNeeded": "single-storey shop row: frontage, shutters, signage, awning",
+   "referenceIds": [
+    "M-02",
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02, M-04)",
+   "noApronVariant": "kano_shop_row_a_noapron"
   },
   {
    "id": "kano_shop_row_b",
@@ -168,7 +205,14 @@
     "commercial",
     "plot"
    ],
-   "referencesNeeded": "two-storey shop-and-flat block"
+   "referencesNeeded": "two-storey shop-and-flat block",
+   "referenceIds": [
+    "M-02",
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02, M-04)",
+   "noApronVariant": "kano_shop_row_b_noapron"
   },
   {
    "id": "kano_plaza_a",
@@ -192,7 +236,12 @@
     "commercial",
     "landmark"
    ],
-   "referencesNeeded": "three-storey commercial plaza"
+   "referencesNeeded": "three-storey commercial plaza",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
   },
   {
    "id": "kano_apartment_block_a",
@@ -215,7 +264,12 @@
    "tags": [
     "modern"
    ],
-   "referencesNeeded": "three-storey block (owner to confirm which city the supplied aerials 2 and 3 show before they are used)"
+   "referencesNeeded": "three-storey block (owner to confirm which city the supplied aerials 2 and 3 show before they are used)",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
   },
   {
    "id": "kano_midrise_a",
@@ -239,7 +293,12 @@
     "modern",
     "landmark"
    ],
-   "referencesNeeded": "six to eight storey office/hotel block"
+   "referencesNeeded": "six to eight storey office/hotel block",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
   },
   {
    "id": "kano_mosque_neighbourhood_a",
@@ -263,7 +322,12 @@
     "religious",
     "landmark"
    ],
-   "referencesNeeded": "a real neighbourhood mosque type: dome(s), minaret(s), ablution, wall, colours"
+   "referencesNeeded": "a real neighbourhood mosque type: dome(s), minaret(s), ablution, wall, colours",
+   "referenceIds": [
+    "M-03"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-03)"
   },
   {
    "id": "kano_filling_station_a",
@@ -286,7 +350,12 @@
    "tags": [
     "commercial"
    ],
-   "referencesNeeded": "forecourt, canopy, shop, signage"
+   "referencesNeeded": "forecourt, canopy, shop, signage",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
   },
   {
    "id": "kano_road_sign_small",
@@ -306,7 +375,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "regulatory/warning/direction sign types and mountings"
+   "referencesNeeded": "regulatory/warning/direction sign types and mountings",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_road_sign_gantry",
@@ -326,7 +400,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "overhead gantry as installed"
+   "referencesNeeded": "overhead gantry as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_billboard_a",
@@ -346,7 +425,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "billboard frame and mounting"
+   "referencesNeeded": "billboard frame and mounting",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
   },
   {
    "id": "kano_streetlight_single",
@@ -366,7 +450,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "pole material, arm, luminaire as installed"
+   "referencesNeeded": "pole material, arm, luminaire as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_streetlight_double_median",
@@ -386,7 +475,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "median-mounted double arm"
+   "referencesNeeded": "median-mounted double arm",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_utility_pole",
@@ -406,7 +500,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "pole material (concrete / timber / steel), crossarms, insulators"
+   "referencesNeeded": "pole material (concrete / timber / steel), crossarms, insulators",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_transformer_pole",
@@ -426,7 +525,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "pole-mounted transformer as installed"
+   "referencesNeeded": "pole-mounted transformer as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
   },
   {
    "id": "kano_kiosk_a",
@@ -446,7 +550,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "roadside kiosk"
+   "referencesNeeded": "roadside kiosk",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
   },
   {
    "id": "kano_market_stall_a",
@@ -466,7 +575,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "stall frame, umbrella/tarpaulin, goods"
+   "referencesNeeded": "stall frame, umbrella/tarpaulin, goods",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
   },
   {
    "id": "kano_bus_stop_a",
@@ -486,7 +600,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "roadside shelter/stop"
+   "referencesNeeded": "roadside shelter/stop",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
   },
   {
    "id": "kano_parked_group_a",
@@ -507,7 +626,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "common saloon car and motorcycles (generic, no brand)"
+   "referencesNeeded": "common saloon car and motorcycles (generic, no brand)",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
   },
   {
    "id": "kano_parked_group_b",
@@ -528,7 +652,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "motor tricycle taxis and a motorcycle"
+   "referencesNeeded": "motor tricycle taxis and a motorcycle",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
   },
   {
    "id": "kano_parked_minibus_a",
@@ -549,7 +678,12 @@
    ],
    "castShadow": true,
    "tags": [],
-   "referencesNeeded": "commercial minibus (generic, no brand)"
+   "referencesNeeded": "commercial minibus (generic, no brand)",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
   },
   {
    "id": "kano_neem_tree_a",
@@ -572,7 +706,12 @@
    "tags": [
     "tree"
    ],
-   "referencesNeeded": "owner/reference to confirm the species that line these roads (neem is commonly reported; not verified here)"
+   "referencesNeeded": "owner/reference to confirm the species that line these roads (neem is commonly reported; not verified here)",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
   },
   {
    "id": "kano_neem_tree_b",
@@ -595,7 +734,12 @@
    "tags": [
     "tree"
    ],
-   "referencesNeeded": "as above, second form"
+   "referencesNeeded": "as above, second form",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
   },
   {
    "id": "kano_date_palm_a",
@@ -617,7 +761,12 @@
    "tags": [
     "tree"
    ],
-   "referencesNeeded": "owner/reference to confirm"
+   "referencesNeeded": "owner/reference to confirm",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
   },
   {
    "id": "kano_shrub_a",
@@ -639,7 +788,12 @@
    "tags": [
     "ground"
    ],
-   "referencesNeeded": "dry-season shrubs / hedges"
+   "referencesNeeded": "dry-season shrubs / hedges",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
   }
  ],
  "kitModules": [

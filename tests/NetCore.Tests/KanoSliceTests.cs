@@ -69,6 +69,16 @@ public class KanoSliceTests
         var clash = inv.props.Where(p => existing.Contains(p.id)).Select(p => p.id).ToList();
         Assert.True(clash.Count == 0, "reusing an id would replace the placeholder in every route, Lagos-Ibadan included: " + string.Join(", ", clash));
         Assert.All(inv.props, p => Assert.StartsWith("kano_", p.id));
+        // every planned prefab names the reference gap(s) that block it, and none is marked ready while the register says the references are missing
+        var rawInv = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(KanoPath("kano_asset_inventory.json"))).GetProperty("props").EnumerateArray().ToList();
+        var register = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(KanoPath("reference_register.json"))).GetProperty("missingReferences").EnumerateArray().ToDictionary(e => e.GetProperty("id").GetString());
+        foreach (var rp in rawInv)
+        {
+            var ids = rp.GetProperty("referenceIds").EnumerateArray().Select(e => e.GetString()).ToList();
+            Assert.True(ids.Count > 0, rp.GetProperty("id").GetString() + " is planned with no reference slot in the register");
+            Assert.All(ids, i => Assert.True(register.ContainsKey(i), "unknown reference id " + i));
+            if (rp.GetProperty("readyToModel").GetBoolean()) Assert.All(ids, i => Assert.DoesNotContain("MISSING", register[i].GetProperty("status").GetString()));
+        }
         // every prop the route uses is planned: nothing refers to an id nobody will model
         var spec = Draft(); var used = spec.propRules.Select(r => r.prop).Concat(spec.props.Select(p => p.prop)).ToHashSet();
         Assert.True(used.All(u => inv.props.Any(p => p.id == u)), "route uses ids missing from the inventory: " + string.Join(", ", used.Where(u => inv.props.All(p => p.id != u))));
@@ -151,6 +161,34 @@ public class KanoSliceTests
             if (a.GetProperty("lat").ValueKind == JsonValueKind.Null) Assert.Contains("NOT verified", a.GetProperty("verified").GetString());    // no invented coordinates
         // the world map's Kano is about 8 km from the reference point: the file records the discrepancy rather than hiding it
         Assert.InRange(f.GetProperty("worldMapDiscrepancy").GetProperty("distanceKm").GetDouble(), 7.5, 9.0);
+    }
+
+    [Fact]
+    public void EveryWorkaroundIsDeclaredAndDataOnly()
+    {
+        var reg = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(KanoPath("kano_workarounds.json")));
+        var backlog = File.ReadAllText(Path.Combine(RepoRoot(), "docs", "ROAD_ENGINE_BACKLOG.md"));
+        var prefixes = new List<string>(); var spec = Draft(); var inv = Inventory();
+        foreach (var w in reg.GetProperty("workarounds").EnumerateArray())
+        {
+            Assert.True(w.GetProperty("dataOnly").GetBoolean(), w.GetProperty("id").GetString() + ": a workaround whose removal needs code is not allowed");
+            Assert.False(string.IsNullOrWhiteSpace(w.GetProperty("removalPath").GetString()));
+            foreach (var b in w.GetProperty("standsInFor").EnumerateArray()) Assert.Contains("| " + b.GetString() + " |", backlog);   // the backlog item that removes it exists
+            if (w.TryGetProperty("placementIdPrefix", out var pre))
+            {
+                prefixes.Add(pre.GetString());
+                Assert.True(spec.props.Any(p => p.id.StartsWith(pre.GetString())), w.GetProperty("id").GetString() + " is declared but nothing uses it (stale)");
+            }
+            if (w.TryGetProperty("junctionIds", out var js)) foreach (var j in js.EnumerateArray()) Assert.Contains(spec.junctions, x => x.id == j.GetString());
+        }
+        var setPieces = reg.GetProperty("setPieces").EnumerateArray().Select(e => e.GetString()).ToHashSet();
+        var undeclared = spec.props.Where(p => !prefixes.Any(pre => p.id.StartsWith(pre)) && !setPieces.Contains(p.id)).Select(p => p.id).ToList();
+        Assert.True(undeclared.Count == 0, "placements that are neither a declared workaround nor a declared set piece: " + string.Join(", ", undeclared));
+        // W-01: every plot prefab has its no-apron twin planned, so the apron can be dropped by renaming ids in the rules
+        var plots = inv.props.Where(p => p.tags != null && p.tags.Contains("plot")).ToList();
+        Assert.True(plots.Count >= 7);
+        var raw = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(KanoPath("kano_asset_inventory.json"))).GetProperty("props").EnumerateArray().ToDictionary(e => e.GetProperty("id").GetString());
+        Assert.All(plots, p => Assert.Equal(p.id + "_noapron", raw[p.id].GetProperty("noApronVariant").GetString()));
     }
 
     // ---- generated evidence: geometry for the Blender greybox, and the budget numbers the plan quotes
