@@ -27,6 +27,8 @@ kit_rows = "\n".join(f"| `{k['id']}` | {k['use']} | {k['referencesNeeded']} |" f
 
 DOC = f"""# Kano vertical slice: review package, revision 2
 
+> **SUPERSEDED IN SCOPE (2026-11-01).** The owner corrected the scope: the 1.65 km corridor described here is only a **road-system test corridor, now called TC-1**; it is **not** the city. The deliverable is Kano City. See **`KANO_CITY_MASTER_PLAN.md`** for the master plan, and `kano/city/` for the districts, road network, reference-to-asset matrix and asset registry. This package's findings on references, coordinates, texture compression and the engine backlog still stand and are referenced from the master plan.
+
 **Status (2026-11-01): PRE-PRODUCTION. Detailed modelling has NOT started and will not until the reference and coordinate questions are resolved and the final layout is approved.** Nothing here is a finished asset, road or playable Kano. The draft greybox of revision 1 is kept as a reviewable draft (`environments/kano_slice_greybox/v002` in the workspace; its renders are on the review page). This revision answers the owner's review decisions of 2026-11-01. **The Kano package is committed locally only; it is not pushed or merged** until the CI and asset-storage decisions are resolved.
 
 | # | Deliverable | Where | State |

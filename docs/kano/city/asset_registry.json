@@ -1,0 +1,3351 @@
+{
+ "schemaVersion": 1,
+ "note": "Initial asset registry. Chain: visual concept -> Blender source -> production export -> Unity prefab -> city placement. Nothing is production-ready: no asset has a Blender source yet. 'concept_approved' means a concept was supplied as the compulsory design standard; the owner's approval of each asset breakdown is the next gate (breakdownApproved).",
+ "statusVocabulary": [
+  "needs_concept",
+  "concept_approved",
+  "blockout_completed",
+  "detailed_modelling_completed",
+  "materials_completed",
+  "blender_validation_passed",
+  "unity_import_verified",
+  "in_game_visual_review_passed",
+  "production_approved"
+ ],
+ "classes": [
+  "GLOBAL",
+  "REGIONAL",
+  "CITY_SPECIFIC",
+  "LANDMARK"
+ ],
+ "idPrefix": {
+  "GLOBAL": "aro_",
+  "REGIONAL": "rg_<region>_",
+  "CITY_SPECIFIC": "<city>_",
+  "LANDMARK": "lmk_<city>_"
+ },
+ "assets": [
+  {
+   "id": "aro_villa_2storey_hip_a",
+   "name": "Two-storey villa, hipped dark-tile roof, balcony (type A)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_villa_2storey_hip_b",
+   "name": "Two-storey villa, hipped dark-tile roof, balcony (type B)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_wall_compound_panel_a",
+   "name": "Compound wall module: rendered cream with grey cladding panel",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_pier_stone_a",
+   "name": "Wall pier with stone cladding and coping",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_gate_ornate_steel_a",
+   "name": "Ornate black steel double gate",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_lantern_wall_a",
+   "name": "Wall-mounted lantern",
+   "assetClass": "GLOBAL",
+   "category": "lights",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_balcony_glass_a",
+   "name": "Balcony with glass balustrade (kit)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_roof_hip_darktile_a",
+   "name": "Hipped dark-tile roof (kit)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_streetlight_single_arm_a",
+   "name": "Single-arm streetlight",
+   "assetClass": "GLOBAL",
+   "category": "lights",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-011"
+   ],
+   "districts": [
+    "D06",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_sign_oneway_a",
+   "name": "One Way regulatory sign (blue square, arrow)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_kerb_painted_blackwhite_a",
+   "name": "Painted black-and-white kerb module",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-007",
+    "R-008",
+    "R-011",
+    "R-012"
+   ],
+   "districts": [
+    "D06",
+    "D08",
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-04"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_sidewalk_paver_a",
+   "name": "Interlocking-paver sidewalk module (pink and grey)",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-011"
+   ],
+   "districts": [
+    "D06",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-04"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_marking_arrow_straight_a",
+   "name": "Pavement arrow symbol",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-009",
+    "R-010",
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D06",
+    "D08",
+    "D09",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-12"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_hedge_clipped_a",
+   "name": "Clipped hedge strip",
+   "assetClass": "GLOBAL",
+   "category": "vegetation",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-010"
+   ],
+   "districts": [
+    "D06",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_shrub_ixora_red_a",
+   "name": "Red-flowering ornamental shrub",
+   "assetClass": "GLOBAL",
+   "category": "vegetation",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006"
+   ],
+   "districts": [
+    "D06"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "species to confirm"
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_a",
+   "name": "Broad-leaf street tree (form A)",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-007",
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D06",
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "the species that really line Kano streets are NOT established (M-07)"
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_b",
+   "name": "Broad-leaf street tree (form B)",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-006",
+    "R-007"
+   ],
+   "districts": [
+    "D06",
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above"
+  },
+  {
+   "id": "aro_streetlight_double_arm_median_a",
+   "name": "Double-arm streetlight for a median",
+   "assetClass": "GLOBAL",
+   "category": "lights",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007",
+    "R-008",
+    "R-011",
+    "R-012"
+   ],
+   "districts": [
+    "D11",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-09"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_median_planter_kerbed_a",
+   "name": "Kerbed planter median module with shrubs",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007",
+    "R-008",
+    "R-011"
+   ],
+   "districts": [
+    "D11",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-04",
+    "RB-17"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_median_barrier_jersey_a",
+   "name": "Concrete jersey-barrier median module",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_guardrail_wbeam_a",
+   "name": "W-beam guardrail with posts",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007",
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_sign_chevron_curve_a",
+   "name": "Curve chevron sign",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_gantry_truss_a",
+   "name": "Steel-truss overhead gantry spanning a dual carriageway",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_sign_panel_overhead_green_a",
+   "name": "Overhead green sign panel (text per instance)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": "text must come from verified route data (the concept's distances do not match the sources)"
+  },
+  {
+   "id": "aro_sign_km_marker_a",
+   "name": "Roadside distance sign (text per instance)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": "text must come from verified route data"
+  },
+  {
+   "id": "rg_ngn_terrain_rock_cutslope_a",
+   "name": "Rock-cut road slope",
+   "assetClass": "REGIONAL",
+   "category": "environment",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-14"
+   ],
+   "flags": "hilly terrain; not the flat plain at Kano"
+  },
+  {
+   "id": "rg_ngn_hill_rocky_backdrop_a",
+   "name": "Rocky green hill backdrop",
+   "assetClass": "REGIONAL",
+   "category": "environment",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007",
+    "R-008",
+    "R-012"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-14"
+   ],
+   "flags": "hilly terrain; not the flat plain at Kano"
+  },
+  {
+   "id": "rg_ngn_tree_savanna_scattered_a",
+   "name": "Scattered savanna tree",
+   "assetClass": "REGIONAL",
+   "category": "vegetation",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-007"
+   ],
+   "districts": [
+    "D11"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "species to confirm (M-07)"
+  },
+  {
+   "id": "rg_ngn_screen_geometric_arch_a",
+   "name": "Arched panel with geometric lattice (facade kit)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010"
+   ],
+   "districts": [
+    "D09",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "pattern is the concept's; a real Kano pattern needs a reference"
+  },
+  {
+   "id": "aro_bus_terminal_hall_a",
+   "name": "Terminal hall: glass facade, sign band, arched side panels",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009"
+   ],
+   "districts": [
+    "D09"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_canopy_bus_bay_solar_a",
+   "name": "Bus-bay canopy with solar roof and numbered posts",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009"
+   ],
+   "districts": [
+    "D09"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "kano_bus_terminal_a",
+   "name": "Kano bus terminal: assembled complex, livery and signage",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [
+    "R-009"
+   ],
+   "districts": [
+    "D09"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "the name is illustrative",
+   "composedOf": [
+    "aro_bus_terminal_hall_a",
+    "aro_canopy_bus_bay_solar_a",
+    "aro_guardhouse_a",
+    "aro_barrier_arm_gate_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_planter_island_kerbed_a",
+    "aro_sign_totem_service_a",
+    "aro_sign_building_band_a"
+   ]
+  },
+  {
+   "id": "aro_coach_a",
+   "name": "Parked coach (four liveries as material variants)",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009"
+   ],
+   "districts": [
+    "D09"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "close-range fidelity conflicts with the 2,500-triangle prop budget: owner decision"
+  },
+  {
+   "id": "aro_suv_parked_a",
+   "name": "Parked SUV (generic, no brand)",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009"
+   ],
+   "districts": [
+    "D09"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "same budget conflict as the coach"
+  },
+  {
+   "id": "aro_guardhouse_a",
+   "name": "Guardhouse with flat roof",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-011",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D09",
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_barrier_arm_gate_a",
+   "name": "Barrier-arm gate",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-014"
+   ],
+   "districts": [
+    "D09",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_wall_perimeter_pier_rail_a",
+   "name": "Perimeter wall with piers and black railing",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-011"
+   ],
+   "districts": [
+    "D09",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_planter_island_kerbed_a",
+   "name": "Kerbed landscaped island",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010",
+    "R-013"
+   ],
+   "districts": [
+    "D09",
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-13"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_kerb_painted_yellowblack_a",
+   "name": "Painted yellow-and-black kerb module",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D09",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-04"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_bollard_yellow_a",
+   "name": "Yellow safety bollard",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D09",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_bench_a",
+   "name": "Bench",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010"
+   ],
+   "districts": [
+    "D09",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_bin_a",
+   "name": "Litter bin",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_marking_zebra_crossing_a",
+   "name": "Zebra crossing",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010"
+   ],
+   "districts": [
+    "D09",
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-12"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_marking_bay_set_a",
+   "name": "Painted parking-bay set",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010",
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D09",
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-12",
+    "RB-13"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_sign_totem_service_a",
+   "name": "Totem sign with service list (text per instance)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010",
+    "R-013"
+   ],
+   "districts": [
+    "D09",
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_sign_building_band_a",
+   "name": "Building name band (text per instance)",
+   "assetClass": "GLOBAL",
+   "category": "signs",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-009",
+    "R-010",
+    "R-011",
+    "R-013",
+    "R-014"
+   ],
+   "districts": [
+    "D09",
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 800,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-07"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_hospital_block_glass_a",
+   "name": "Hospital central block with glass curtain and screens",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_hospital_wing_a",
+   "name": "Hospital wing with window bands",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_canopy_emergency_a",
+   "name": "Emergency entrance canopy (red)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_ambulance_a",
+   "name": "Parked ambulance",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "real-organisation livery: owner decision; prop budget conflict"
+  },
+  {
+   "id": "aro_covered_walkway_a",
+   "name": "Covered walkway",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_bollard_light_a",
+   "name": "Light bollard",
+   "assetClass": "GLOBAL",
+   "category": "lights",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_palm_ornamental_a",
+   "name": "Ornamental palm",
+   "assetClass": "GLOBAL",
+   "category": "vegetation",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 3000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "kano_hospital_a",
+   "name": "Hospital campus: assembled, with a fictional name",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [
+    "R-010"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "the concept's name resembles a real institution",
+   "composedOf": [
+    "aro_hospital_block_glass_a",
+    "aro_hospital_wing_a",
+    "aro_canopy_emergency_a",
+    "aro_covered_walkway_a",
+    "aro_planter_island_kerbed_a",
+    "aro_sign_totem_service_a",
+    "aro_bollard_light_a"
+   ]
+  },
+  {
+   "id": "aro_telecom_mast_a",
+   "name": "Lattice telecom mast",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-010",
+    "R-011"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_police_station_a",
+   "name": "Station block with entrance portico",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-011"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "the crest imitates a real force's emblem: owner decision"
+  },
+  {
+   "id": "kano_police_station_a",
+   "name": "Police station: assembled, with a local identity",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [
+    "R-011"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "as above",
+   "composedOf": [
+    "aro_police_station_a",
+    "aro_guardhouse_a",
+    "aro_gate_sliding_steel_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_flagpole_a"
+   ]
+  },
+  {
+   "id": "aro_police_pickup_a",
+   "name": "Police pickup (livery)",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-011"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "real-organisation livery: owner decision; prop budget conflict"
+  },
+  {
+   "id": "aro_gate_sliding_steel_a",
+   "name": "Sliding steel gate",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-011",
+    "R-014"
+   ],
+   "districts": [
+    "D08",
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_flagpole_a",
+   "name": "Flagpole with the national flag",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-011"
+   ],
+   "districts": [
+    "D08"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_fuel_canopy_truck_a",
+   "name": "Truck fuel canopy with numbered islands",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "generic colours; no real brand"
+  },
+  {
+   "id": "aro_fuel_pump_a",
+   "name": "Fuel pump",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_shop_restaurant_a",
+   "name": "Shop-and-restaurant building",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_service_garage_a",
+   "name": "Service garage with workshop bays",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_truck_tractor_a",
+   "name": "Tractor unit (several liveries)",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "prop budget conflict at close range"
+  },
+  {
+   "id": "aro_trailer_box_a",
+   "name": "Box trailer",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "prop budget conflict at close range"
+  },
+  {
+   "id": "aro_marking_truck_symbol_a",
+   "name": "Truck-parking symbol marking",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-12"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_speedhump_yellowblack_a",
+   "name": "Yellow-and-black speed hump",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-12"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "aro_warehouse_steel_large_a",
+   "name": "Large steel warehouse with six dock doors",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_dock_door_bay_a",
+   "name": "Loading-dock door bay with number (kit)",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_site_office_a",
+   "name": "Site office with glazed front",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-014"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_water_tower_a",
+   "name": "Elevated water tower",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-014"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_pallet_stack_a",
+   "name": "Pallet and box stack",
+   "assetClass": "GLOBAL",
+   "category": "props",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_wall_perimeter_plain_a",
+   "name": "Plain perimeter wall with piers",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-014"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_streetlight_pole_tall_yard_a",
+   "name": "Tall yard light with multi-head fixture",
+   "assetClass": "GLOBAL",
+   "category": "lights",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 1200,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": ""
+  },
+  {
+   "id": "aro_drain_grating_strip_a",
+   "name": "Drain grating strip across an entrance",
+   "assetClass": "GLOBAL",
+   "category": "environment",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [
+    "R-015"
+   ],
+   "districts": [
+    "D10"
+   ],
+   "status": "concept_approved",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-05"
+   ],
+   "flags": ""
+  },
+  {
+   "id": "rg_ngn_hausa_compound_a",
+   "name": "Traditional Hausa compound with zaure, parapet and zankwaye (type A)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-01)",
+   "blockedBy": "M-01"
+  },
+  {
+   "id": "rg_ngn_hausa_compound_b",
+   "name": "Traditional Hausa compound, two-storey front block (type B)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-01)",
+   "blockedBy": "M-01"
+  },
+  {
+   "id": "rg_ngn_hausa_compound_c",
+   "name": "Traditional Hausa compound, small plot (type C)",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-01)",
+   "blockedBy": "M-01"
+  },
+  {
+   "id": "rg_ngn_hausa_wall_gate_set_a",
+   "name": "Hausa compound wall, parapet and gate set",
+   "assetClass": "REGIONAL",
+   "category": "buildings",
+   "region": "ng_north",
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-01)",
+   "blockedBy": "M-01"
+  },
+  {
+   "id": "kano_old_city_lane_set_a",
+   "name": "Old-city lane set: surface, drains, wall faces",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "environment",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D03"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-17"
+   ],
+   "flags": "BLOCKED: no concept or verified reference yet (M-12)",
+   "blockedBy": "M-12"
+  },
+  {
+   "id": "kano_market_stall_set_a",
+   "name": "Traditional market stalls and shelters",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "props",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D03"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-04)",
+   "blockedBy": "M-04"
+  },
+  {
+   "id": "kano_shop_row_modern_a",
+   "name": "Modern shop row frontage",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D05"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-04)",
+   "blockedBy": "M-04"
+  },
+  {
+   "id": "kano_plaza_a",
+   "name": "Commercial plaza",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D05"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-02)",
+   "blockedBy": "M-02"
+  },
+  {
+   "id": "kano_midrise_a",
+   "name": "Mid-rise commercial or office block",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D05"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-02)",
+   "blockedBy": "M-02"
+  },
+  {
+   "id": "kano_neighbourhood_mosque_a",
+   "name": "Neighbourhood mosque oriented to the qibla",
+   "assetClass": "CITY_SPECIFIC",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D01",
+    "D06",
+    "D07"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-03)",
+   "blockedBy": "M-03"
+  },
+  {
+   "id": "aro_school_block_a",
+   "name": "School block with yard",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D08"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-10)",
+   "blockedBy": "M-10"
+  },
+  {
+   "id": "aro_government_building_a",
+   "name": "Government office building",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D08"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-10)",
+   "blockedBy": "M-10"
+  },
+  {
+   "id": "aro_hotel_a",
+   "name": "Hotel block with forecourt",
+   "assetClass": "GLOBAL",
+   "category": "buildings",
+   "region": null,
+   "city": null,
+   "approvedCities": [],
+   "concepts": [],
+   "districts": [
+    "D08"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-10)",
+   "blockedBy": "M-10"
+  },
+  {
+   "id": "lmk_kano_gidan_rumfa_complex",
+   "name": "Gidan Rumfa (Emir's Palace) complex and gate",
+   "assetClass": "LANDMARK",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D02"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-11)",
+   "blockedBy": "M-11"
+  },
+  {
+   "id": "lmk_kano_great_mosque",
+   "name": "Great Mosque of Kano",
+   "assetClass": "LANDMARK",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D02"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-11)",
+   "blockedBy": "M-11"
+  },
+  {
+   "id": "lmk_kano_kurmi_market_hall",
+   "name": "Kurmi Market",
+   "assetClass": "LANDMARK",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D03"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-11)",
+   "blockedBy": "M-11"
+  },
+  {
+   "id": "lmk_kano_kofar_mata_dye_pits",
+   "name": "Kofar Mata dye pits",
+   "assetClass": "LANDMARK",
+   "category": "environment",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D03"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-11)",
+   "blockedBy": "M-11"
+  },
+  {
+   "id": "lmk_kano_city_wall_gate_a",
+   "name": "City wall segment and gate",
+   "assetClass": "LANDMARK",
+   "category": "buildings",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D01"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 5000,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [],
+   "flags": "BLOCKED: no concept or verified reference yet (M-11)",
+   "blockedBy": "M-11"
+  },
+  {
+   "id": "lmk_kano_dala_hill_massif",
+   "name": "Dala Hill massif",
+   "assetClass": "LANDMARK",
+   "category": "environment",
+   "region": null,
+   "city": "kano",
+   "approvedCities": [
+    "kano"
+   ],
+   "concepts": [],
+   "districts": [
+    "D04"
+   ],
+   "status": "needs_concept",
+   "breakdownApproved": false,
+   "blenderSource": null,
+   "export": null,
+   "unityPrefab": null,
+   "placements": [],
+   "validation": {
+    "blender": null,
+    "unityImport": null,
+    "visualReview": null
+   },
+   "approvedBy": null,
+   "plannedBudget": {
+    "lod0TrisMax": 2500,
+    "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"
+   },
+   "engineDependencies": [
+    "RB-14"
+   ],
+   "flags": "BLOCKED: no concept or verified reference yet (R-001, M-11)",
+   "blockedBy": "R-001, M-11"
+  }
+ ]
+}

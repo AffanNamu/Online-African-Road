@@ -1,5 +1,7 @@
 # Kano vertical slice: review package, revision 2
 
+> **SUPERSEDED IN SCOPE (2026-11-01).** The owner corrected the scope: the 1.65 km corridor described here is only a **road-system test corridor, now called TC-1**; it is **not** the city. The deliverable is Kano City. See **`KANO_CITY_MASTER_PLAN.md`** for the master plan, and `kano/city/` for the districts, road network, reference-to-asset matrix and asset registry. This package's findings on references, coordinates, texture compression and the engine backlog still stand and are referenced from the master plan.
+
 **Status (2026-11-01): PRE-PRODUCTION. Detailed modelling has NOT started and will not until the reference and coordinate questions are resolved and the final layout is approved.** Nothing here is a finished asset, road or playable Kano. The draft greybox of revision 1 is kept as a reviewable draft (`environments/kano_slice_greybox/v002` in the workspace; its renders are on the review page). This revision answers the owner's review decisions of 2026-11-01. **The Kano package is committed locally only; it is not pushed or merged** until the CI and asset-storage decisions are resolved.
 
 | # | Deliverable | Where | State |
@@ -25,6 +27,16 @@ The owner clarified that the five images were **researched and supplied by ChatG
 | R-003 | Modern residential district | Contemporary residential layouts, building heights, roofs, greenery and street arrangements. | not established | rights unknown |
 | R-004 | Large urban junction and roundabout | Urban junction and roundabout design reference. Do not implement a roundabout until the shared road system supports it. | not established | rights unknown |
 | R-005 | Large highway interchange | Highway interchange reference. Future road-infrastructure inspiration, not immediate implementation. | not established | rights unknown |
+| R-006 | Gated modern residential street, one-way | Visual reference for modern residential districts. | not established | rights unknown |
+| R-007 | Curved dual-carriageway expressway through hills | Expressway design reference. | not established | rights unknown |
+| R-008 | A2 expressway with overhead gantry (planter median) | A2 gantry reference. | not established | rights unknown |
+| R-009 | Kano Central Bus Terminal | Transport terminal reference. | not established | rights unknown |
+| R-010 | Specialist hospital campus | Hospital reference. | not established | rights unknown |
+| R-011 | Metropolitan police station beside a divided arterial | Police station reference. | not established | rights unknown |
+| R-012 | A2 expressway with overhead gantry (concrete median barrier) | A2 gantry variant reference. | not established | rights unknown |
+| R-013 | Truck fuel and service centre | Truck fuel and service reference. | not established | rights unknown |
+| R-014 | Warehouse and logistics yard (aerial) | Warehouse yard reference (aerial). | not established | rights unknown |
+| R-015 | Warehouse and logistics yard (ground level) | Warehouse yard reference (ground level). | not established | rights unknown |
 
 * **Original source of every image: unknown** (the screenshots carry no page address or credit). R-005 carries a photographer's watermark ("NUUMAN ASHAKA"); a web search found no portfolio or profile for that name.
 * **Allowed uses:** private reference only (palette, density, rhythm, layout ideas), pending the owner's decision. **Public documentation: no.** **Production redistribution: no** (never a texture, decal, reference plane or part of any build). The images are not stored in either repository; a SHA-256 identifies each. The review page that shows them is private and must not be shared.
@@ -36,14 +48,18 @@ Each entry in `reference_register.json` lists the shots needed, the prefabs and 
 | Id | Area | Status |
 |---|---|---|
 | M-01 | Traditional Hausa compounds and gates | MISSING (no usable reference; R-001 is too distant) |
-| M-02 | Modern Kano buildings | PARTIAL IDEAS ONLY (R-003 for contemporary residential massing once its location is established; nothing confirmed as Kano) |
-| M-03 | Mosques | PARTIAL IDEA (R-004 shows one mosque type, location not established) |
-| M-04 | Commercial streets and markets | MISSING |
-| M-05 | Road surfaces and drainage | MISSING |
-| M-06 | Electricity poles and streetlights | MISSING |
-| M-07 | Northern Nigerian trees and vegetation | MISSING |
-| M-08 | Local vehicles and roadside activity | MISSING |
+| M-02 | Modern Kano buildings | CONCEPTS SUPPLIED for modern villas, hospital, police station, fuel/service and warehouses (R-006, R-010, R-011, R-013 to R-015: generated, not Kano-verified); Kano-specific modern buildings still need real references |
+| M-03 | Mosques | PARTIAL: a generated skyline mosque recurs in R-006/R-008/R-009/R-010/R-012 (owner to say whether it stands for the Central Mosque); R-004 shows one real-looking mosque type, location not established; no real Kano mosque reference |
+| M-04 | Commercial streets and markets | MISSING for traditional markets and streets; modern commercial frontage is not covered by any concept |
+| M-05 | Road surfaces and drainage | CONCEPTS SUPPLIED for road surfaces, kerbs, paver sidewalks, markings and drains (R-006, R-007, R-011, R-013, R-015: generated); real Kano surfaces, patches, cracks and drains still MISSING |
+| M-06 | Electricity poles and streetlights | CONCEPTS SUPPLIED for streetlights and median double-arm lights (R-006 to R-008, R-011, R-012); poles, transformers and cables as installed in Kano still MISSING |
+| M-07 | Northern Nigerian trees and vegetation | CONCEPT ONLY (broad-leaf street trees, ixora and hedges in R-006, R-007); the species that really line Kano roads are MISSING |
+| M-08 | Local vehicles and roadside activity | CONCEPTS SUPPLIED for coaches, trucks, an ambulance, police pickups and SUVs (R-009, R-010, R-011, R-013 to R-015); motor tricycles, motorcycles and minibuses as seen in Kano still MISSING |
 | M-09 | Light and atmosphere | PARTIAL (R-005 for haze, location not established) |
+| M-10 | Schools, government buildings, hotels | MISSING |
+| M-11 | Landmark references: palace gate, Great Mosque, Kurmi Market, Kofar Mata dye pits, city wall and gates, Dala Hill | MISSING |
+| M-12 | Old-city lanes and traditional residential streets | MISSING |
+| M-13 | Interchanges, flyovers and roundabouts | INSPIRATION ONLY (R-004, R-005); nothing buildable yet |
 
 **Verified facts about Kano** (Gidan Rumfa, Kurmi Market, Dala Hill, Kofar Mata, the walls, Hausa building features, Harmattan) with sources, and what was searched for and not found, are in revision 1 of this document's research section, preserved in `docs/kano/RESEARCH.md`.
 

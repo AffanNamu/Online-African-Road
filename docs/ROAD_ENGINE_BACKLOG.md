@@ -1,6 +1,6 @@
 # Shared road engine: limitations found and the future-improvement backlog
 
-**Decision (owner, 2026-11-01):** the first Kano vertical slice preserves the current road-generation architecture. The shared road engine (`RouteSpec`, `RouteModel`, `RoadSpline`, `RoadCrossSection`, `RoadGeometry`, `PropScatter`, `ChunkStreamer`) is **not modified** for Kano. The items below are recorded as future shared-engine improvements. No permanent Kano-specific workaround may block them: every workaround the slice uses is declared in `docs/kano/kano_workarounds.json`, is data only, and names the backlog item that removes it (a test enforces this).
+**Decision (owner, 2026-11-01):** the first Kano vertical slice (now called the **road-system test corridor TC-1**) preserves the current road-generation architecture. The shared road engine (`RouteSpec`, `RouteModel`, `RoadSpline`, `RoadCrossSection`, `RoadGeometry`, `PropScatter`, `ChunkStreamer`) is **not modified** for Kano. The items below are recorded as future shared-engine improvements. No permanent Kano-specific workaround may block them: every workaround the slice uses is declared in `docs/kano/kano_workarounds.json`, is data only, and names the backlog item that removes it (a test enforces this).
 
 All limits below were read from the code, not assumed. File references are to the current `main`.
 
@@ -17,6 +17,12 @@ All limits below were read from the code, not assumed. File references are to th
 | RB-09 | **Median and near-edge furniture** | rule offsets are measured outward from the formation edge and anything within 3 m of a formation is dropped (`PropScatter.ExclusionMargin`) | 11 median double streetlights as hand-placed set pieces (W-03) | replace with a median rule (data only) |
 | RB-10 | **Production-prefab streaming** | production prefabs are instantiated for chunks within 2 rings, not batched, with no box collider from the catalogue and no distance culling (`ChunkStreamer.StageProps`), and instance yaw and scale are overwritten | each prefab carries its own `LODGroup`, `BoxCollider`, identity root and instanced materials (built and tested by `BlenderAssetBuilder`) | none: this is the correct shape under either streamer |
 | RB-11 | **Junction mouth geometry** | mouths are square, no fillets or corner radii (`docs/ROUTE_DATA.md`) | none | none |
+| RB-12 | **Pavement symbols, crossings, stop lines, bay lines** | markings are dashed or solid lines along the road only (`RoadCrossSection.MarkingLine`); no arrows, zebra crossings, stop bars or painted bays | none (not in TC-1); needed by R-006 (arrows), R-009 and R-010 (zebra crossings, bays), R-013 to R-015 (truck symbols) | none |
+| RB-13 | **Off-road paved areas** (parking lots, forecourts, terminal aprons, truck yards, gate approaches) | the only ground is terrain with a zone material; roads are corridor ribbons | none | per-site asphalt aprons baked into site prefabs would be a workaround and must be declared when used |
+| RB-14 | **Terrain authoring**: rock-cut slopes, hills, local relief | terrain is noise plus a trend plane with cut and fill (`TerrainSpec`) | none | n/a |
+| RB-15 | **City-density streaming**: per-chunk merged meshes baked offline, hierarchical LOD, impostors, instancing | production prefabs are instantiated one by one for chunks within 2 rings, no batching (RB-10 describes the contract each prefab already follows) | TC-1 has about 300 placed prefabs; a city district has thousands (section 6 of `docs/KANO_CITY_MASTER_PLAN.md` computes it) | n/a |
+| RB-16 | **Road network graph** (the foundation of RB-01 to RB-03) | one main spline plus straight stubs; traffic, minimap and projection follow the main polyline only | none | n/a |
+| RB-17 | **Road class and cross-section catalogue** (expressway, arterial, collector, local, lane) with planter medians, sidewalks, kerbs and lighting as data | six profiles in the route data; a concrete jersey median is the only median | none | n/a |
 
 ## Why each matters to the final game (and what proper work involves)
 * **RB-01, RB-02, RB-03 (road topology).** The road model is a single main spline with straight side stubs; traffic, the minimap and projection use the main polyline only. Roundabouts, four-way crossings and flyovers need the model to hold a **graph** of road segments (nodes, edges, junction types with radii and priority), a generator for junction surfaces, and traffic/projection that understand more than one corridor. This is the largest item and the one the shared architecture was not designed for; it should be designed as its own milestone with its own tests, starting with RB-02 (four-way), then RB-01, then RB-03.
@@ -25,6 +31,12 @@ All limits below were read from the code, not assumed. File references are to th
 * **RB-07 (sign text).** Extend the label path to production prefabs that declare a text anchor, or give sign prefabs a text mesh child driven by `PropInstance.Text`.
 * **RB-08, RB-09 (scatter coverage).** Make `PropScatter` iterate every corridor and add median and near-edge placement modes with their own exclusion rules.
 * **RB-10, RB-11.** Recorded for completeness: RB-10 describes the contract every production prefab already follows; a per-chunk merge of production props would be an engine change needing its own approval and measurement.
+
+* **RB-12.** Pavement symbols (arrows, zebra crossings, stop bars, painted bays, truck symbols) are a decal or mesh layer placed by data, authored per road class; they depend on RB-16/RB-17 for where crossings and stop lines belong.
+* **RB-13.** Lots, forecourts and yards need a polygon-surface primitive (material, kerb edge, drainage falls, collision) that roads and buildings can attach to; without it every site prefab must carry its own asphalt apron.
+* **RB-14.** Rock cuts and hills are terrain features (a sculpted mesh or heightfield patch with a material) placed by data, not noise.
+* **RB-15.** At city density the unbatched production-prefab model cannot hold the budgets: the master plan computes, per quality tier, what a driver in a district would see and what a baked chunk-merge and an LOD ladder must achieve. It needs an offline bake step (a toolchain stage that merges a chunk's prefabs by atlas), hierarchical LOD for distant districts, and impostors or skyline meshes beyond the draw distance.
+* **RB-16 and RB-17.** The master plan is a road graph with classes: nodes (T, four-way, roundabout, interchange, gate, gateway), edges (class, lanes, median, sidewalks, surface), and traffic, minimap and projection that understand it. RB-17 is its cross-section catalogue.
 
 ## Rules for any Kano work until these exist
 1. No change to the files listed at the top of this document for Kano's sake.
