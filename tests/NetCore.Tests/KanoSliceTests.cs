@@ -289,6 +289,36 @@ public class KanoSliceTests
     [Fact] public void TheGreyboxGeometryFileIsTheGamesOwnOutput() => CheckGenerated("kano_slice_geometry.json", GeometryJson());
     [Fact] public void TheBudgetNumbersInThePlanAreTheGamesOwnOutput() => CheckGenerated("kano_slice_stats.json", StatsJson());
 
+    // Texture bytes of a block-compressed texture with a full mip chain. The five constants below are what a REAL Unity 6 import produced on the WebGL target (TextureReport run 41277975374).
+    static long BlockMipBytes(int w, int h, int blockBytes, int bw = 4, int bh = 4)
+    {
+        long sum = 0; int n = (int)Math.Floor(Math.Log(Math.Max(w, h), 2)) + 1;
+        for (int i = 0; i < n; i++) { sum += (long)((Math.Max(1, w) + bw - 1) / bw) * ((Math.Max(1, h) + bh - 1) / bh) * blockBytes; w /= 2; h /= 2; }
+        return sum;
+    }
+
+    [Fact]
+    public void TheTextureBudgetArithmeticReproducesUnitysOwnProbeNumbers()
+    {
+        const int Dxt1 = 8, Dxt5 = 16;
+        Assert.Equal(2796216, BlockMipBytes(2048, 2048, Dxt1));     // 2048 opaque albedo, DXT1
+        Assert.Equal(1398128, BlockMipBytes(1024, 1024, Dxt5));     // 1024 alpha / normal map, DXT5
+        Assert.Equal(699064, BlockMipBytes(1024, 1024, Dxt1));      // 1024 ORM, DXT1
+        Assert.Equal(349544, BlockMipBytes(1024, 512, Dxt1));       // power-of-two with npotScale None stays DXT1
+        Assert.Equal(1398120, BlockMipBytes(2048, 1024, Dxt1));     // the 1672 x 944 world map with default settings: resized and DXT1
+        const double MiB = 1048576.0;
+        double building = BlockMipBytes(2048, 2048, Dxt1) + BlockMipBytes(1024, 1024, Dxt5) + BlockMipBytes(1024, 1024, Dxt1);
+        double prop = BlockMipBytes(1024, 1024, Dxt1) + BlockMipBytes(512, 512, Dxt5) + BlockMipBytes(512, 512, Dxt1);
+        double veg = BlockMipBytes(1024, 1024, Dxt5) + BlockMipBytes(512, 512, Dxt5);
+        double plan = (6 * building + 4 * prop + 2 * veg) / MiB;
+        Assert.InRange(plan, 35.95, 36.05);                         // the 36.0 MiB quoted in docs/TEXTURE_BUDGET.md
+        const double measuredDrivingBaselineMb = 8.4;               // [Perf] textureMB, medium tier, real WebGL player in CI
+        Assert.True(plan + measuredDrivingBaselineMb <= PerfBudget.Desktop.MaxTextureMb * 0.5, "textures exceed half of the desktop budget");
+        Assert.True(plan + measuredDrivingBaselineMb <= PerfBudget.Mobile.MaxTextureMb * 0.5, "textures exceed half of the mobile budget (if the target compresses)");
+        var f = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(KanoPath("texture_findings.json")));
+        Assert.Contains("36.0 MiB", f.GetProperty("summary").GetString());
+    }
+
     [Fact]
     public void TheSliceStaysInsideTheBudgetEnvelopeItClaimsOnEveryTier()
     {

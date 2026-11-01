@@ -35,11 +35,11 @@ DOC = f"""# Kano vertical slice: review package, revision 2
 | 2 | Private asset repository structure and integration workflow | `docs/ASSET_REPO_PROPOSAL.md`, `tools/asset-repo-template/` | **repository `AffanNamu/ARO-CONTENT` created by the owner (private, checked) and the text-only skeleton pushed**; template and validator tested (9 tests); its own validation workflow passed on the first push |
 | 3 | Verified Kano coordinate recommendation | `docs/kano/COORDINATES.md`, `kano_world_frame.json` | done; **no coordinate changed**; canonical anchor and transform recommended, impact documented |
 | 4 | Road-system limitations and future-improvement backlog | `docs/ROAD_ENGINE_BACKLOG.md`, `kano_workarounds.json` | done; **shared road engine untouched**; five Kano workarounds declared, all data-only and test-enforced |
-| 5 | Confirmed Unity texture-compression report | `docs/TEXTURE_BUDGET.md`, `texture_findings.json` | from a real Unity 6000.0.58f2 run in CI (cold import); **two real findings** |
+| 5 | Confirmed Unity texture-compression report | `docs/TEXTURE_BUDGET.md`, `texture_findings.json` | from a real Unity 6000.0.58f2 run in CI (cold import); **four findings: one defect (the world map ships uncompressed), one setting (Gamma colour space), two risks** |
 | 6 | Final greybox review renders and layout | the review page (layout diagram, plans, eight street views) | layout unchanged by the decisions; shown with annotations |
 | 7 | Updated asset inventory and production budgets | sections 4 and 6 below | regenerated; per-prefab reference blockers; budgets from the real settings |
 
-Evidence files (all in `docs/kano/`, regenerated and checked by `tests/NetCore.Tests/KanoSliceTests.cs`, 9 tests, which passes with the rest of the core suite): the route draft, the inventory, the world frame, the workaround register, the reference register, the generated geometry and statistics. Generators: `tools/kano/*.py`. Renders and the supplied images are **not** committed (binary files stay out of the public repository).
+Evidence files (all in `docs/kano/`, regenerated and checked by `tests/NetCore.Tests/KanoSliceTests.cs`, 10 tests, which passes with the rest of the core suite): the route draft, the inventory, the world frame, the workaround register, the reference register, the generated geometry and statistics. Generators: `tools/kano/*.py`. Renders and the supplied images are **not** committed (binary files stay out of the public repository).
 
 ---
 ## 1. References: classification and what is missing
@@ -124,7 +124,7 @@ The draft greybox (placeholder volumes generated from the game's own road model,
 1. **Private repository:** `AffanNamu/ARO-CONTENT` exists, is private and holds the text-only skeleton and the metadata-only reference register (no image, no binary, no secret). Still open: the artifact boundary for browser tests ((a) fold, (b) encrypt, recommended (b)), the Git LFS quota, written confirmation of asset ownership, and the read token and variable (yours to set).
 2. **References (blocks all modelling):** establish the original source, location and rights of R-001 to R-005 if you can, and supply the nine missing-reference areas of the register.
 3. **Coordinates:** approve the canonical anchor and `K0` transform (no existing file changes) and decide whether world-map `lat/lon` means a pin or an anchor (a change to all eight pins and the live backend seed, authorised and migrated separately).
-4. **Texture findings (section 6.2):** two real issues in the existing project settings are reported for your decision; none was changed.
+4. **Texture findings (section 6.2):** four findings in the existing project (a defect, a setting, two risks) are reported for your decision; none was changed.
 5. **CI and branches:** the Kano package stays local until you resolve the above and say so. The camera branch is verified independently (see the report in the conversation); the texture-report branch (`work/texture-report`) is separate and contains only a report tool and its workflow.
 6. **Network access (optional):** to read OpenStreetMap, Wikidata or the GeoNames API directly for coordinate verification, add `nominatim.openstreetmap.org`, `www.wikidata.org` and `api.geonames.org` to the environment's allowed domains.
 """
