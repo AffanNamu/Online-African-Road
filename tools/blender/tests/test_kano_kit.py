@@ -27,3 +27,18 @@ def test_the_street_section_matches_its_documented_cross_section():
     from kano_kit import street
     assert (street.KERB_IN, street.KERB_OUT, street.WALK_OUT, street.VERGE_OUT, street.WALL_X, street.LEN) == (3.5, 3.7, 6.1, 7.3, 7.4, 96.0)
     assert round(street.KERB_IN * 2, 3) == 7.0
+
+
+def test_colour_textures_keep_their_srgb_values_through_blender_and_the_png_export(tmp_path):
+    """Regression: base-colour textures were converted to linear before being stored in an 8-bit image, which Blender saves as given, so every exported PNG was double-decoded (darker, more saturated:
+    yellow plaster, red stone). An sRGB value must come out of the saved PNG unchanged; a normal map vector too."""
+    import numpy as np
+    from PIL import Image
+    from kano_kit import textures
+    rgb = np.full((8, 8, 3), (0.88, 0.83, 0.74)); img = textures._save("T_test_colour", rgb)
+    img.filepath_raw = str(tmp_path / "c.png"); img.file_format = "PNG"; img.save()
+    got = np.asarray(Image.open(tmp_path / "c.png").convert("RGB"))[0, 0] / 255.0
+    assert np.allclose(got, (0.88, 0.83, 0.74), atol=0.01), got
+    nrm = textures._save("T_test_normal", np.full((8, 8, 3), (0.5, 0.5, 1.0)), True)
+    nrm.filepath_raw = str(tmp_path / "n.png"); nrm.file_format = "PNG"; nrm.save()
+    assert np.allclose(np.asarray(Image.open(tmp_path / "n.png").convert("RGB"))[0, 0] / 255.0, (0.5, 0.5, 1.0), atol=0.01)

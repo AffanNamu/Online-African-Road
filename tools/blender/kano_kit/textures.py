@@ -8,15 +8,16 @@ from aro_blender import materials as AM
 
 def _to_image(name: str, rgb: np.ndarray):
     h, w, _ = rgb.shape; img = bpy.data.images.new(name, w, h, alpha=False)
-    lin = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)          # the image is sRGB colour data: Blender stores linear floats
-    px = np.concatenate([lin, np.ones((h, w, 1))], axis=2).astype(np.float32); img.pixels.foreach_set(px.ravel()); img.pack(); img.colorspace_settings.name = "sRGB"; img.filepath_raw = f"//{name}.png"; img.file_format = "PNG"
+    # An 8-bit image created from Python stores and saves the values it is given AS THEY ARE (checked: 0.5 is saved as byte 128). The first version converted sRGB to linear here, which double-decoded
+    # every base-colour texture (darker and more saturated: the plaster read yellow, the stone red) in the renders AND in the exported PNGs that Unity reads. Colour data is therefore set as sRGB.
+    px = np.concatenate([rgb, np.ones((h, w, 1))], axis=2).astype(np.float32); img.pixels.foreach_set(px.ravel()); img.pack(); img.colorspace_settings.name = "sRGB"; img.filepath_raw = f"//{name}.png"; img.file_format = "PNG"
     return img
 
 
 def paver_pixels(size=512, tile_m=2.0, seed=7):
     """Rectangular pavers 0.20 x 0.10 m laid in a herringbone-like running bond, each paver pink, rose-grey, beige or grey, with dark joints."""
     rnd = np.random.default_rng(seed); px_m = size / tile_m
-    pal = np.array([(0.64, 0.56, 0.54), (0.60, 0.52, 0.52), (0.68, 0.62, 0.58), (0.58, 0.56, 0.57), (0.64, 0.59, 0.57), (0.52, 0.51, 0.53), (0.67, 0.58, 0.58)])   # muted rose-grey: the first pass read red under the review sun
+    pal = np.array([(0.70, 0.60, 0.58), (0.62, 0.55, 0.55), (0.74, 0.68, 0.62), (0.60, 0.58, 0.59), (0.68, 0.62, 0.60), (0.54, 0.53, 0.55), (0.72, 0.62, 0.62)])   # pale pink, rose-grey, beige and grey as in the concept
     w_b, h_b = int(0.20 * px_m), int(0.10 * px_m); img = np.zeros((size, size, 3)); joint = np.array((0.30, 0.28, 0.27))
     img[:] = joint; rows = size // h_b
     for r in range(rows):
@@ -29,11 +30,11 @@ def paver_pixels(size=512, tile_m=2.0, seed=7):
 
 
 def asphalt_pixels(size=512, seed=3):
-    rnd = np.random.default_rng(seed); base = np.full((size, size, 3), 0.075)
+    rnd = np.random.default_rng(seed); base = np.full((size, size, 3), 0.21)
     blot = rnd.normal(0, 1, (size // 16, size // 16)); blot = np.kron(blot, np.ones((16, 16))); k = np.ones(9) / 9.0
     for ax in (0, 1): blot = np.apply_along_axis(lambda m: np.convolve(np.r_[m[-8:], m, m[:8]], k, mode="same")[8:-8], ax, blot)
     img = base + 0.02 * blot[..., None] + rnd.normal(0, 0.018, (size, size, 1)); sp = rnd.random((size, size)) > 0.985; img[sp] += 0.10
-    return np.clip(img, 0.02, 0.4)
+    return np.clip(img, 0.08, 0.5)
 
 
 def textured_material(key: str, image_name: str, pixels: np.ndarray, uv_scale: float = 1.0):
@@ -55,7 +56,7 @@ def leaf_pixels(size=512, seed=21, per_cell=900):
     """A 2 x 2 atlas of foliage clusters (RGBA, background transparent). Each cell is an irregular blob densely covered by individual leaves (rotated ellipses with a lighter midrib and a dark rim),
     in four greens: sunlit, mid, shaded and mixed. The alpha is the leaf shape, so the card silhouette is leafy, not a quad."""
     rnd = np.random.default_rng(seed); out = np.zeros((size, size, 4)); cell = size // 2
-    greens = [(0.42, 0.60, 0.17), (0.30, 0.50, 0.14), (0.19, 0.37, 0.10), (0.36, 0.55, 0.15)]
+    greens = [(0.40, 0.58, 0.17), (0.29, 0.47, 0.13), (0.18, 0.34, 0.09), (0.34, 0.52, 0.14)]
     yy, xx = np.mgrid[0:cell, 0:cell].astype(float)
     for ci in range(4):
         cx0, cy0 = (ci % 2) * cell, (ci // 2) * cell; img = np.zeros((cell, cell, 4)); base = np.array(greens[ci])
@@ -85,7 +86,7 @@ def leaf_material():
     px = leaf_pixels(); name = "T_kano_leaves_BaseColor"; img = bpy.data.images.get(name)
     if img is None:
         h, w, _ = px.shape; img = bpy.data.images.new(name, w, h, alpha=True); rgb = px[..., :3]
-        lin = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4); data = np.concatenate([lin, px[..., 3:4]], axis=2).astype(np.float32)
+        data = np.concatenate([rgb, px[..., 3:4]], axis=2).astype(np.float32)               # sRGB values as they are (see _to_image)
         img.pixels.foreach_set(data.ravel()); img.alpha_mode = "STRAIGHT"; img.pack(); img.filepath_raw = f"//{name}.png"; img.file_format = "PNG"
     uv = nt.nodes.new("ShaderNodeUVMap"); tex = nt.nodes.new("ShaderNodeTexImage"); tex.image = img; tex.interpolation = "Linear"; tex.extension = "CLIP"
     nt.links.new(uv.outputs["UV"], tex.inputs["Vector"]); nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"]); nt.links.new(tex.outputs["Alpha"], bsdf.inputs["Alpha"])
@@ -126,13 +127,13 @@ def _normal_from_height(h, strength):
     return n * 0.5 + 0.5
 
 
-def plaster_maps(size=512, seed=31, tint=(0.91, 0.89, 0.84)):
+def plaster_maps(size=512, seed=31, tint=(0.88, 0.83, 0.74)):
     f = _fbm(size, 4, 4, seed); fine = _fbm(size, 64, 2, seed + 5) ; stain = _fbm(size, 2, 3, seed + 9)
     col = np.array(tint)[None, None, :] * (0.93 + 0.10 * f[..., None] + 0.04 * (fine[..., None] - 0.5) - 0.05 * stain[..., None])
     return np.clip(col, 0, 1), _normal_from_height(fine * 0.6 + f * 0.4, 1.6)
 
 
-def stone_maps(size=512, seed=41, base=(0.72, 0.67, 0.60), grey=False):
+def stone_maps(size=512, seed=41, base=(0.70, 0.63, 0.54), grey=False):
     """Stone cladding: a ledgestone pattern of stacked rectangular stones with grooves (grey) or travertine with horizontal veining and pores (tan)."""
     rnd = np.random.default_rng(seed); h = np.zeros((size, size)); col = np.zeros((size, size, 3)); b = np.array(base)
     if grey:
@@ -176,10 +177,10 @@ def bark_maps(size=512, seed=71, base=(0.24, 0.17, 0.12)):
     return np.clip(col, 0, 1), _normal_from_height(ridge, 3.0)
 
 
-def grass_maps(size=512, seed=81, base=(0.23, 0.41, 0.11)):
+def grass_maps(size=512, seed=81, base=(0.20, 0.38, 0.10)):
     """Lawn: broad patches of two greens (one a little yellower), fine blade noise and a few dry-grass flecks; the normal map is the blade noise."""
     patch = _fbm(size, 5, 4, seed); blades = _fbm(size, 110, 2, seed + 2); fine = _noise(size, 200, seed + 4)
-    a = np.array(base); b = np.array((0.34, 0.47, 0.13))
+    a = np.array(base); b = np.array((0.31, 0.45, 0.13))
     col = (a[None, None, :] * (1 - patch[..., None]) + b[None, None, :] * patch[..., None]) * (0.78 + 0.34 * blades[..., None] + 0.12 * (fine[..., None] - 0.5))
     col[fine > 0.93] = np.array((0.42, 0.40, 0.18))
     return np.clip(col, 0, 1), _normal_from_height(blades * 0.7 + fine * 0.3, 2.2)
@@ -203,7 +204,7 @@ def _save(name, rgb, linear_data=False):
     h, w, _ = rgb.shape; img = bpy.data.images.get(name)
     if img: return img
     img = bpy.data.images.new(name, w, h, alpha=False)
-    data = rgb if linear_data else np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
+    data = rgb                                                                             # raw for both: colour maps hold sRGB values, normal maps hold their vectors (see _to_image)
     px = np.concatenate([data, np.ones((h, w, 1))], axis=2).astype(np.float32); img.pixels.foreach_set(px.ravel()); img.pack(); img.filepath_raw = f"//{name}.png"; img.file_format = "PNG"
     img.colorspace_settings.name = "Non-Color" if linear_data else "sRGB"; return img
 
