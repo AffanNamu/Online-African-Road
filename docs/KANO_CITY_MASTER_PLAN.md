@@ -455,7 +455,7 @@ The plan needs these to move beyond the five districts. Each should be a labelle
 | Reference-to-asset matrix | `docs/kano/city/REFERENCE_ASSET_MATRIX.md`, `reference_asset_matrix.json` |
 | Asset registry | `docs/kano/city/asset_registry.json`; canonical copy in the private repository |
 | Statistics (computed by the tests) | `docs/kano/city/city_stats.json` |
-| Diagrams | `docs/kano/city/img/` (`tools/kano/city_diagrams.py`) |
+| Diagrams | `docs/kano/city/img/` (`tools/kano/city_diagrams.py`); **the PNG files are not committed** (this repository routes `*.png` through Git LFS and the LFS verify step is blocked by the cloud network policy; the generator's own rule is that diagrams stay out of the public repository): regenerate them with `python3 tools/kano/city_diagrams.py --out docs/kano/city/img`, so the image links in this document are empty until then |
 | Reference register | `docs/kano/REFERENCE_REGISTER.md` |
 | Engine backlog | `docs/ROAD_ENGINE_BACKLOG.md` |
 | Coordinates | `docs/kano/COORDINATES.md` |
