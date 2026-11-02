@@ -35,6 +35,15 @@ OPEN_ISSUES = {
     "aro_pier_stone_a": "stone courses are stepped boxes with a travertine texture; tint paler and less red in v002",
     "aro_lantern_wall_a": "simplified lantern",
 }
+PALETTE_NOTE = "v003: overlapping coplanar faces separated; flat colours folded into the shared palette materials (kano_paint, kano_metal, kano_glass: one roughness and metallic per family); geometry otherwise as v002"
+OPEN_V3 = {
+    "aro_villa_2storey_hip_a": "v003: richer facade (stone-clad entrance with a round-arched fanlight, round columns, pilasters, proud grey cladding panels with joints, pediments over the ground windows, wall lanterns, a warmly lit window), 7 materials instead of 11, overlaps separated; still differs from R-006 (landscaping and ornament, roof and glass simplification); compare in game before approval",
+    "aro_villa_2storey_hip_b": "v003: arched fanlight over the stone-clad entrance, pilasters at the bay corners, an oculus in the gable, pediments, quoins, cladding panels on the garage wing, a warmly lit window, 7 materials instead of 10, overlaps separated; still differs from R-006; compare in game before approval",
+    "rg_ngn_tree_street_broadleaf_a": "v003: bark, leaf cards in ONE vegetation atlas material (kano_veg; the v002 leaf atlas unchanged, the bark normal map not carried over); species generic (M-07); needs the cutout kit material in Unity",
+    "rg_ngn_tree_street_broadleaf_b": "v003: as form A",
+    "aro_hedge_clipped_a": "v003: body, leaf cards in ONE vegetation atlas material (kano_veg); needs the cutout kit material in Unity",
+    "aro_shrub_ixora_red_a": "v003: body, leaf cards and flowers in ONE vegetation atlas material (kano_veg); needs the cutout kit material in Unity",
+}
 NEW_ASSETS = {   # not in the first registry
     "kano_street_oneway_section_a": dict(name="One-way residential street section, 96 m: asphalt with flush markings, painted kerbs, paver sidewalks, verge and plot ground", assetClass="CITY_SPECIFIC", category="environment", city="kano", region=None, library="road_asphalt"),
     "aro_pole_electric_concrete_span_a": dict(name="Concrete electricity pole with cross-arm, insulators and a 30 m span of overhead conductors", assetClass="GLOBAL", category="environment", city=None, region=None, library="road_structure_signs_lighting"),
@@ -54,6 +63,13 @@ def third_party(aid: str) -> list:
 
 
 def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def with_open(flags: str, text: str) -> str:
+    """The registry `flags` with its OPEN segment REPLACED by `text` (re-staging must not stack the same segment again)."""
+    base = (flags or "").split(" | OPEN: ")[0]
+    if base.startswith("OPEN: "): base = ""
+    return (base + " | " if base else "") + "OPEN: " + text
 
 
 def main() -> int:
@@ -87,7 +103,9 @@ def main() -> int:
                         "madeBy": {"human": "the owner (direction and the concept R-006); modelling code written by Claude", "tools": ["Blender " + man["blender"] + " (bpy)", "tools/blender/kano_kit", "ChatGPT concept R-006 (design reference only)"]},
                         "licence": {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE, "thirdParty": third_party(aid)},
                         "references": concepts, "budgets": {"lodTriangles": stats["lod_triangles"]}, "catalogEntry": man.get("catalog_entry"), "approval": None}
-            if not latest: manifest["superseded"] = "superseded by " + vers[-1] + ": the colour textures of this version were decoded twice (darker, more saturated: yellow plaster, red stone); never reviewed or approved"
+            if not latest:
+                manifest["superseded"] = ("superseded by " + vers[-1] + ": the colour textures of this version were decoded twice (darker, more saturated: yellow plaster, red stone); never reviewed or approved" if n == 1 else
+                                          "superseded by " + vers[-1] + " (owner-approved v003 scope: richer villa facades, fewer materials, overlaps corrected). THIS VERSION IS FROZEN: it stays as the original in-game review candidate and is never edited; its manifest hashes are in the game repository (docs/kano/KANO_RESIDENTIAL_v002.freeze.json); awaiting the owner's visual and performance approval")
             (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
             if not latest: continue
             if f"| {aid} |" not in lic:
@@ -102,7 +120,7 @@ def main() -> int:
                 if not concepts: e["ownerRequest"] = "requested by the owner on 2026-11-01 (execution decision, section E: electricity poles and overhead wires); not in concept R-006; no Kano reference exists (M-06)"; e["flags"] = "no concept: owner-requested addition"
                 reg["assets"].append(e); by_id[aid] = e
             e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"
-            e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN_ISSUES.get(aid, "")
+            e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"; e["flags"] = with_open(e.get("flags", ""), OPEN_V3.get(aid, PALETTE_NOTE) if n >= 3 else OPEN_ISSUES.get(aid, ""))
             e["placements"] = [{"scene": "kano_residential_section_a", "district": "D06", "count": sum(1 for i in json.loads(Path(a.placements).read_text())["items"] if i["asset"] == aid)}]
             col = build_all.SPECS[aid]["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
             e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}

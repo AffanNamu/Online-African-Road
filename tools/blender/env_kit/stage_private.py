@@ -63,6 +63,13 @@ def new_entry(aid: str) -> dict:
     return e
 
 
+def with_open(flags: str, text: str) -> str:
+    """The registry `flags` with its OPEN segment REPLACED by `text` (re-staging must not stack the same segment again)."""
+    base = (flags or "").split(" | OPEN: ")[0]
+    if base.startswith("OPEN: "): base = ""
+    return (base + " | " if base else "") + "OPEN: " + text
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--report", required=True); a = ap.parse_args()
     C = Path(a.content).resolve(); W = ws.default_root(); now = time.strftime("%Y-%m-%d", time.gmtime()); rep = {r["id"]: r for r in json.loads(Path(a.report).read_text())}
@@ -94,7 +101,7 @@ def main() -> int:
             if not e.get("concepts") and not e.get("ownerRequest"):
                 e["ownerRequest"] = "requested by the owner on 2026-11-02 (traditional Kano residential architecture and Hausa compounds, environmental content scope); no real reference exists yet (M-01), so the asset is designed from the documented qualitative features only (docs/kano/RESEARCH.md)"; e.pop("blockedBy", None)
             e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"; e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"
-            e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN.get(aid, ""); col = sp["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
+            e["flags"] = with_open(e.get("flags", ""), OPEN.get(aid, "")); col = sp["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
             e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}
             e["lods"] = [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])]; e["materials"] = stats["materials"]; e["textures"] = sorted(f.stem for f in proj.glob("T_*.png"))
             e["licence"] = {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE.replace("concept R-006", "references " + ", ".join(concepts)), "thirdParty": list(TOOLS)}
