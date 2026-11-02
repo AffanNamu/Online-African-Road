@@ -1,0 +1,708 @@
+{
+ "version": "v003",
+ "textures": [
+  {
+   "texture": "T_kano_cladding_BaseColor",
+   "file": "projects/buildings/aro_villa_2storey_hip_a/v003/T_kano_cladding_BaseColor.png",
+   "exported_mean": [
+    0.397,
+    0.397,
+    0.416
+   ],
+   "intended_mean": [
+    0.397,
+    0.397,
+    0.416
+   ],
+   "max_error": 0.0004,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_plaster_BaseColor",
+   "file": "projects/buildings/aro_villa_2storey_hip_a/v003/T_kano_plaster_BaseColor.png",
+   "exported_mean": [
+    0.835,
+    0.787,
+    0.702
+   ],
+   "intended_mean": [
+    0.835,
+    0.787,
+    0.702
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_rooftile_BaseColor",
+   "file": "projects/buildings/aro_villa_2storey_hip_a/v003/T_kano_rooftile_BaseColor.png",
+   "exported_mean": [
+    0.153,
+    0.153,
+    0.171
+   ],
+   "intended_mean": [
+    0.153,
+    0.153,
+    0.171
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_travertine_BaseColor",
+   "file": "projects/buildings/aro_villa_2storey_hip_a/v003/T_kano_travertine_BaseColor.png",
+   "exported_mean": [
+    0.658,
+    0.592,
+    0.508
+   ],
+   "intended_mean": [
+    0.658,
+    0.592,
+    0.508
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_concrete_BaseColor",
+   "file": "projects/environments/aro_pole_electric_concrete_span_a/v003/T_kano_concrete_BaseColor.png",
+   "exported_mean": [
+    0.512,
+    0.503,
+    0.473
+   ],
+   "intended_mean": [
+    0.512,
+    0.503,
+    0.473
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_asphalt_BaseColor",
+   "file": "projects/roads/kano_street_oneway_section_a/v003/T_kano_asphalt_BaseColor.png",
+   "exported_mean": [
+    0.212,
+    0.212,
+    0.212
+   ],
+   "intended_mean": [
+    0.212,
+    0.212,
+    0.212
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_grass_BaseColor",
+   "file": "projects/roads/kano_street_oneway_section_a/v003/T_kano_grass_BaseColor.png",
+   "exported_mean": [
+    0.243,
+    0.393,
+    0.11
+   ],
+   "intended_mean": [
+    0.243,
+    0.393,
+    0.11
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_paver_BaseColor",
+   "file": "projects/roads/kano_street_oneway_section_a/v003/T_kano_paver_BaseColor.png",
+   "exported_mean": [
+    0.598,
+    0.546,
+    0.539
+   ],
+   "intended_mean": [
+    0.598,
+    0.546,
+    0.539
+   ],
+   "max_error": 0.0,
+   "ok": true
+  },
+  {
+   "texture": "T_kano_vegatlas_BaseColor",
+   "file": "projects/vegetation/aro_hedge_clipped_a/v003/T_kano_vegatlas_BaseColor.png",
+   "exported_mean": [
+    0.097,
+    0.14,
+    0.049
+   ],
+   "intended_mean": null,
+   "max_error": null,
+   "ok": true,
+   "note": "leaf atlas (RGBA): colour checked in the render comparison"
+  }
+ ],
+ "reimport": [
+  {
+   "asset": "kano_street_oneway_section_a",
+   "format": "glb",
+   "meshes": 2,
+   "lods": 2,
+   "materials": 5,
+   "texture_images": 9,
+   "size_reimported_m": [
+    66.0,
+    96.0,
+    0.15
+   ],
+   "size_validated_m": [
+    66.0,
+    96.0,
+    0.15
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "kano_street_oneway_section_a",
+   "format": "fbx",
+   "meshes": 2,
+   "lods": 2,
+   "materials": 5,
+   "texture_images": 10,
+   "size_reimported_m": [
+    66.0,
+    96.0,
+    0.15
+   ],
+   "size_validated_m": [
+    66.0,
+    96.0,
+    0.15
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_villa_2storey_hip_a",
+   "format": "glb",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 7,
+   "texture_images": 11,
+   "size_reimported_m": [
+    13.6,
+    12.9,
+    10.45
+   ],
+   "size_validated_m": [
+    13.6,
+    12.9,
+    10.45
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_villa_2storey_hip_a",
+   "format": "fbx",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 7,
+   "texture_images": 14,
+   "size_reimported_m": [
+    13.6,
+    12.9,
+    10.45
+   ],
+   "size_validated_m": [
+    13.6,
+    12.9,
+    10.45
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_villa_2storey_hip_b",
+   "format": "glb",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 7,
+   "texture_images": 11,
+   "size_reimported_m": [
+    16.48,
+    13.2,
+    9.114
+   ],
+   "size_validated_m": [
+    16.48,
+    13.2,
+    9.114
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_villa_2storey_hip_b",
+   "format": "fbx",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 7,
+   "texture_images": 14,
+   "size_reimported_m": [
+    16.48,
+    13.2,
+    9.114
+   ],
+   "size_validated_m": [
+    16.48,
+    13.2,
+    9.114
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_wall_compound_panel_a",
+   "format": "glb",
+   "meshes": 2,
+   "lods": 1,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    4.25,
+    0.37,
+    2.4
+   ],
+   "size_validated_m": [
+    4.25,
+    0.37,
+    2.4
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_wall_compound_panel_a",
+   "format": "fbx",
+   "meshes": 2,
+   "lods": 1,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    4.25,
+    0.37,
+    2.4
+   ],
+   "size_validated_m": [
+    4.25,
+    0.37,
+    2.4
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_pier_stone_a",
+   "format": "glb",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    0.68,
+    0.68,
+    2.75
+   ],
+   "size_validated_m": [
+    0.68,
+    0.68,
+    2.75
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_pier_stone_a",
+   "format": "fbx",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    0.68,
+    0.68,
+    2.75
+   ],
+   "size_validated_m": [
+    0.68,
+    0.68,
+    2.75
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_gate_ornate_steel_a",
+   "format": "glb",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 1,
+   "size_reimported_m": [
+    4.011,
+    0.07,
+    2.339
+   ],
+   "size_validated_m": [
+    4.011,
+    0.07,
+    2.339
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_gate_ornate_steel_a",
+   "format": "fbx",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 2,
+   "size_reimported_m": [
+    4.011,
+    0.07,
+    2.339
+   ],
+   "size_validated_m": [
+    4.011,
+    0.07,
+    2.339
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_lantern_wall_a",
+   "format": "glb",
+   "meshes": 1,
+   "lods": 1,
+   "materials": 2,
+   "texture_images": 2,
+   "size_reimported_m": [
+    0.18,
+    0.185,
+    0.34
+   ],
+   "size_validated_m": [
+    0.18,
+    0.185,
+    0.34
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_lantern_wall_a",
+   "format": "fbx",
+   "meshes": 1,
+   "lods": 1,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    0.18,
+    0.185,
+    0.34
+   ],
+   "size_validated_m": [
+    0.18,
+    0.185,
+    0.34
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_streetlight_single_arm_a",
+   "format": "glb",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 2,
+   "size_reimported_m": [
+    0.44,
+    3.22,
+    9.49
+   ],
+   "size_validated_m": [
+    0.44,
+    3.22,
+    9.49
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_streetlight_single_arm_a",
+   "format": "fbx",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    0.44,
+    3.22,
+    9.49
+   ],
+   "size_validated_m": [
+    0.44,
+    3.22,
+    9.49
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_pole_electric_concrete_span_a",
+   "format": "glb",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 3,
+   "texture_images": 4,
+   "size_reimported_m": [
+    1.9,
+    30.221,
+    9.5
+   ],
+   "size_validated_m": [
+    1.9,
+    30.221,
+    9.5
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_pole_electric_concrete_span_a",
+   "format": "fbx",
+   "meshes": 4,
+   "lods": 3,
+   "materials": 3,
+   "texture_images": 6,
+   "size_reimported_m": [
+    1.9,
+    30.221,
+    9.5
+   ],
+   "size_validated_m": [
+    1.9,
+    30.221,
+    9.5
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_sign_oneway_a",
+   "format": "glb",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 2,
+   "size_reimported_m": [
+    0.92,
+    0.143,
+    2.67
+   ],
+   "size_validated_m": [
+    0.92,
+    0.143,
+    2.67
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_sign_oneway_a",
+   "format": "fbx",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 2,
+   "texture_images": 4,
+   "size_reimported_m": [
+    0.92,
+    0.143,
+    2.67
+   ],
+   "size_validated_m": [
+    0.92,
+    0.143,
+    2.67
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "rg_ngn_tree_street_broadleaf_a",
+   "format": "glb",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 1,
+   "size_reimported_m": [
+    7.105,
+    6.805,
+    8.598
+   ],
+   "size_validated_m": [
+    7.105,
+    6.805,
+    8.598
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "rg_ngn_tree_street_broadleaf_a",
+   "format": "fbx",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 2,
+   "size_reimported_m": [
+    7.105,
+    6.805,
+    8.598
+   ],
+   "size_validated_m": [
+    7.105,
+    6.805,
+    8.598
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "rg_ngn_tree_street_broadleaf_b",
+   "format": "glb",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 1,
+   "size_reimported_m": [
+    5.792,
+    5.512,
+    9.456
+   ],
+   "size_validated_m": [
+    5.792,
+    5.512,
+    9.456
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "rg_ngn_tree_street_broadleaf_b",
+   "format": "fbx",
+   "meshes": 3,
+   "lods": 3,
+   "materials": 1,
+   "texture_images": 2,
+   "size_reimported_m": [
+    5.792,
+    5.512,
+    9.456
+   ],
+   "size_validated_m": [
+    5.792,
+    5.512,
+    9.456
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_hedge_clipped_a",
+   "format": "glb",
+   "meshes": 1,
+   "lods": 1,
+   "materials": 1,
+   "texture_images": 1,
+   "size_reimported_m": [
+    2.423,
+    0.987,
+    0.97
+   ],
+   "size_validated_m": [
+    2.423,
+    0.987,
+    0.97
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_hedge_clipped_a",
+   "format": "fbx",
+   "meshes": 1,
+   "lods": 1,
+   "materials": 1,
+   "texture_images": 2,
+   "size_reimported_m": [
+    2.423,
+    0.987,
+    0.97
+   ],
+   "size_validated_m": [
+    2.423,
+    0.987,
+    0.97
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_shrub_ixora_red_a",
+   "format": "glb",
+   "meshes": 2,
+   "lods": 2,
+   "materials": 1,
+   "texture_images": 1,
+   "size_reimported_m": [
+    1.332,
+    1.417,
+    1.064
+   ],
+   "size_validated_m": [
+    1.332,
+    1.417,
+    1.064
+   ],
+   "size_ok": true,
+   "ok": true
+  },
+  {
+   "asset": "aro_shrub_ixora_red_a",
+   "format": "fbx",
+   "meshes": 2,
+   "lods": 2,
+   "materials": 1,
+   "texture_images": 2,
+   "size_reimported_m": [
+    1.332,
+    1.417,
+    1.064
+   ],
+   "size_validated_m": [
+    1.332,
+    1.417,
+    1.064
+   ],
+   "size_ok": true,
+   "ok": true
+  }
+ ]
+}
