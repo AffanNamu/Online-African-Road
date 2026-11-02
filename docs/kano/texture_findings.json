@@ -1,0 +1,63 @@
+{
+ "summary": "Measured with a real Unity 6 cold import (docs/TEXTURE_BUDGET.md). WebGL and Windows pick DXT1/DXT5 automatically, there is no build-wide override, the default maximum is 2048, the project is in **Gamma** colour space, and Android/iOS have overrides but no build entry point. The game uses 22.3 MiB of texture memory in the WebGL import and measures 5.6 MB (low) / 8.4 MB (medium) while driving. Verified sizes: a 2048 opaque albedo is 2.67 MiB (DXT1), a 1024 normal map 1.33 MiB (DXT5). The Kano plan (6 building atlases, 4 street-prop atlases, 2 vegetation atlases) is **36.0 MiB**, about 44 MB with the driving baseline: 15% of the desktop budget and 30% of the mobile budget, **if the target compresses** (unverified on phones). Four findings in the existing project: a defect (the world map ships uncompressed, 6.0 MiB instead of 1.3, because of npotScale = None on a non-power-of-two image), a setting (Gamma, not Linear, colour space) and two risks (S3TC support on phones is unverified; Android and iOS have no build entry point).",
+ "findings": [
+  {
+   "title": "World map is not compressed.",
+   "detail": "RGB24 with mips, 6.0 MiB, although its importer asks for DXT1. Cause proven: npotScale None on a non-power-of-two image drops compression (default settings give DXT1 at 2048x1024, 1.33 MiB). Not fixed; shared UI code."
+  },
+  {
+   "title": "Colour space is Gamma, not Linear.",
+   "detail": "Blender-authored PBR will look different; judge colour in Unity. Changing it is a shared lighting decision."
+  },
+  {
+   "title": "WebGL uses DXT (S3TC) by default.",
+   "detail": "Whether phones support it is not known; the mobile 150 MB budget is unvalidated until a probe runs on a device."
+  },
+  {
+   "title": "Android and iOS are declared, not buildable.",
+   "detail": "The mobile budget and ASTC overrides exist, but BuildScript has only WebGL and Windows."
+  }
+ ],
+ "settingsTable": [
+  [
+   "Unity",
+   "6000.0.58f2"
+  ],
+  [
+   "Build entry points",
+   "WebGL (built in CI), Windows 64 (not built in CI); none for Android or iOS"
+  ],
+  [
+   "Colour space",
+   "Gamma"
+  ],
+  [
+   "Texture override for the build",
+   "none"
+  ],
+  [
+   "Default max size",
+   "2048"
+  ],
+  [
+   "Automatic format (opaque / alpha)",
+   "WebGL and Windows DXT1 / DXT5; Android ETC / ETC2; iOS ASTC 6x6"
+  ],
+  [
+   "WebGL memory",
+   "32 MB initial, 2048 MB maximum"
+  ],
+  [
+   "Textures imported (WebGL)",
+   "210 assets, 22.3 MiB with mips"
+  ],
+  [
+   "Measured while driving",
+   "5.6 MB low, 8.4 MB medium"
+  ],
+  [
+   "Kano texture plan",
+   "36.0 MiB (about 44 MB with the baseline)"
+  ]
+ ]
+}

@@ -1,0 +1,1165 @@
+{
+ "schemaVersion": 1,
+ "generatedFor": "docs/KANO_VERTICAL_SLICE.md",
+ "rule": "Metadata only. No image is stored in this repository. Do not claim any reference shows Kano unless its original location is established.",
+ "references": [
+  {
+   "id": "R-001",
+   "label": "Dense traditional settlement around a rocky hill",
+   "ownerInterpretation": "Visual reference for the Dala Hill environment, subject to geographical verification.",
+   "observed": "Oblique aerial; dense low-rise fabric; flat or low-pitched roofs with corrugated sheet and roof tanks; tan and ochre walls; irregular lanes; a quarried outcrop with a reddish-brown face; few trees.",
+   "actualLocation": "NOT ESTABLISHED. Consistent in character with the Dala Hill area as described in the brief; nothing in the image proves it.",
+   "verificationNeeded": "the originating page or photographer; a map comparison of the outcrop and street pattern against Dala Hill (12.0093N 8.5070E, one source)",
+   "usableFor": "environment mood, roofscape and density; the outcrop as a landmark silhouette",
+   "notUsableFor": "building proportions (too distant); any claim that it shows Kano",
+   "kind": "research_screenshot",
+   "classification": "ChatGPT-provided visual research reference (screenshot forwarded by the project owner). Not an original photograph by the project owner, not a verified image of any named place, not a production asset.",
+   "file": {
+    "sha256": "dd807c5b1822e6c21c43ac460f19d6804904a434acc9a00a773b87b3115d0c28",
+    "bytes": 914168,
+    "pixels": "864x563",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Researched and supplied by ChatGPT; the project owner took screenshots and forwarded them to Claude on 2026-11-01. The owner did not source or photograph them.",
+   "originalSource": "UNKNOWN. The screenshots carry no page address, caption or credit (except R-005's watermark), and none was provided with them.",
+   "rights": "UNKNOWN. Treated as all rights reserved by whoever made them.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "Acceptable as a private visual study aid only (palette, density, rhythm, layout ideas), pending the owner's decision. No tracing, no copying of buildings.",
+    "publicDocumentation": "NO. Do not embed, link as hosted copies, or publish in any public repository, document, release note or social post. The review page that shows them is private and must not be shared.",
+    "productionRedistribution": "NO. Never a texture, decal, reference plane, baked source or any part of a build or a private-repository production asset."
+   }
+  },
+  {
+   "id": "R-002",
+   "label": "Modern residential district (phone screenshot of R-003)",
+   "ownerInterpretation": "Essentially the same image as R-003: contemporary residential layouts, building heights, roofs, greenery and street arrangements.",
+   "observed": "The same aerial as R-003 shown in a photo viewer (close and menu buttons visible at the top; large black bands).",
+   "actualLocation": "NOT ESTABLISHED.",
+   "verificationNeeded": "see R-003",
+   "usableFor": "duplicate of R-003; kept only so the screenshot can be identified",
+   "notUsableFor": "anything beyond R-003",
+   "kind": "research_screenshot",
+   "classification": "ChatGPT-provided visual research reference (screenshot forwarded by the project owner). Not an original photograph by the project owner, not a verified image of any named place, not a production asset.",
+   "file": {
+    "sha256": "a84720102622a8d6cc3d22cc0c05fec6c8691643f520ddc4a8638d46448fdff1",
+    "bytes": 933161,
+    "pixels": "864x1728",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Researched and supplied by ChatGPT; the project owner took screenshots and forwarded them to Claude on 2026-11-01. The owner did not source or photograph them.",
+   "originalSource": "UNKNOWN. The screenshots carry no page address, caption or credit (except R-005's watermark), and none was provided with them.",
+   "rights": "UNKNOWN. Treated as all rights reserved by whoever made them.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "Acceptable as a private visual study aid only (palette, density, rhythm, layout ideas), pending the owner's decision. No tracing, no copying of buildings.",
+    "publicDocumentation": "NO. Do not embed, link as hosted copies, or publish in any public repository, document, release note or social post. The review page that shows them is private and must not be shared.",
+    "productionRedistribution": "NO. Never a texture, decal, reference plane, baked source or any part of a build or a private-repository production asset."
+   }
+  },
+  {
+   "id": "R-003",
+   "label": "Modern residential district",
+   "ownerInterpretation": "Contemporary residential layouts, building heights, roofs, greenery and street arrangements.",
+   "observed": "Two to four storey buildings with hipped or low-pitched roofs in red, brown, cream, white and green; walled plots; mature trees and palms; a wide street with parked cars; a line of hills on the horizon.",
+   "actualLocation": "NOT ESTABLISHED. A distant line of hills is visible; the sources found describe Kano as a nearly flat plain, so the hills are a reason to check, not a conclusion.",
+   "verificationNeeded": "the originating page or photographer; identify the hills and street pattern on a map",
+   "usableFor": "contemporary residential massing, heights, roof shapes, greenery, street arrangement",
+   "notUsableFor": "evidence of what Kano looks like until the location is established",
+   "kind": "research_screenshot",
+   "classification": "ChatGPT-provided visual research reference (screenshot forwarded by the project owner). Not an original photograph by the project owner, not a verified image of any named place, not a production asset.",
+   "file": {
+    "sha256": "9077fcdf3eaab52bb1568a9947a4fb043f61e732b3051821cabd79078af6b99f",
+    "bytes": 1006325,
+    "pixels": "864x637",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Researched and supplied by ChatGPT; the project owner took screenshots and forwarded them to Claude on 2026-11-01. The owner did not source or photograph them.",
+   "originalSource": "UNKNOWN. The screenshots carry no page address, caption or credit (except R-005's watermark), and none was provided with them.",
+   "rights": "UNKNOWN. Treated as all rights reserved by whoever made them.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "Acceptable as a private visual study aid only (palette, density, rhythm, layout ideas), pending the owner's decision. No tracing, no copying of buildings.",
+    "publicDocumentation": "NO. Do not embed, link as hosted copies, or publish in any public repository, document, release note or social post. The review page that shows them is private and must not be shared.",
+    "productionRedistribution": "NO. Never a texture, decal, reference plane, baked source or any part of a build or a private-repository production asset."
+   }
+  },
+  {
+   "id": "R-004",
+   "label": "Large urban junction and roundabout",
+   "ownerInterpretation": "Urban junction and roundabout design reference. Do not implement a roundabout until the shared road system supports it.",
+   "observed": "Elevated multi-lane road with curving ramps; a landscaped roundabout with a fountain; a mosque with two minarets and a green dome; mixed mid-rise buildings; streetlights along the road edges.",
+   "actualLocation": "NOT ESTABLISHED.",
+   "verificationNeeded": "the originating page or photographer",
+   "usableFor": "future road-infrastructure design inspiration (backlog items for roundabouts and flyovers); mosque type as one example",
+   "notUsableFor": "anything implemented now; any claim that it shows Kano",
+   "kind": "research_screenshot",
+   "classification": "ChatGPT-provided visual research reference (screenshot forwarded by the project owner). Not an original photograph by the project owner, not a verified image of any named place, not a production asset.",
+   "file": {
+    "sha256": "335930e58b478f66e0e584fbb5c69a64a8fa7e34d2e0cb58507a293c4a342973",
+    "bytes": 1274879,
+    "pixels": "864x690",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Researched and supplied by ChatGPT; the project owner took screenshots and forwarded them to Claude on 2026-11-01. The owner did not source or photograph them.",
+   "originalSource": "UNKNOWN. The screenshots carry no page address, caption or credit (except R-005's watermark), and none was provided with them.",
+   "rights": "UNKNOWN. Treated as all rights reserved by whoever made them.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "Acceptable as a private visual study aid only (palette, density, rhythm, layout ideas), pending the owner's decision. No tracing, no copying of buildings.",
+    "publicDocumentation": "NO. Do not embed, link as hosted copies, or publish in any public repository, document, release note or social post. The review page that shows them is private and must not be shared.",
+    "productionRedistribution": "NO. Never a texture, decal, reference plane, baked source or any part of a build or a private-repository production asset."
+   }
+  },
+  {
+   "id": "R-005",
+   "label": "Large highway interchange",
+   "ownerInterpretation": "Highway interchange reference. Future road-infrastructure inspiration, not immediate implementation.",
+   "observed": "Grade-separated interchange with several loops over a flat, hazy city; a tall tower at the right edge. A watermark reading 'NUUMAN ASHAKA' with a ring logo is on the image.",
+   "actualLocation": "NOT ESTABLISHED. Flat plain and haze are consistent with Kano's setting; nothing proves it.",
+   "verificationNeeded": "the photographer's own page (a web search for the watermark name found no portfolio or profile, 2026-11-01); the originating page",
+   "usableFor": "future interchange inspiration; atmosphere (haze, flat horizon)",
+   "notUsableFor": "textures or models in any form: the watermark shows it is someone's identified work",
+   "kind": "research_screenshot",
+   "classification": "ChatGPT-provided visual research reference (screenshot forwarded by the project owner). Not an original photograph by the project owner, not a verified image of any named place, not a production asset.",
+   "file": {
+    "sha256": "8433a1b706be9de879fcd120bd89e50ef21da78c67926b1d7c1ab40a1fc62c75",
+    "bytes": 945355,
+    "pixels": "864x506",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Researched and supplied by ChatGPT; the project owner took screenshots and forwarded them to Claude on 2026-11-01. The owner did not source or photograph them.",
+   "originalSource": "UNKNOWN. The screenshots carry no page address, caption or credit (except R-005's watermark), and none was provided with them.",
+   "rights": "UNKNOWN. Treated as all rights reserved by whoever made them.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "Acceptable as a private visual study aid only (palette, density, rhythm, layout ideas), pending the owner's decision. No tracing, no copying of buildings.",
+    "publicDocumentation": "NO. Do not embed, link as hosted copies, or publish in any public repository, document, release note or social post. The review page that shows them is private and must not be shared.",
+    "productionRedistribution": "NO. Never a texture, decal, reference plane, baked source or any part of a build or a private-repository production asset."
+   }
+  },
+  {
+   "id": "R-006",
+   "kind": "generated_concept",
+   "label": "Gated modern residential street, one-way",
+   "ownerInterpretation": "Visual reference for modern residential districts.",
+   "observed": "Two-storey villas with dark hipped tile roofs, cream rendered compound walls with grey cladding panels and stone piers, black ornate steel gates, wall lanterns, a first-floor balcony with glass balustrade; black-and-white painted kerbs; paved sidewalks (pink and grey interlocking pavers); grass strips with red flowering shrubs and clipped hedges; broad-leaf street trees; single-arm streetlights; a blue 'One Way' sign; painted arrows and dashed lane lines; the twin-minaret mosque in the distance.",
+   "visualRequirements": [
+    "one-way carriageway of about two lanes",
+    "painted black/white kerbs and paver sidewalks both sides",
+    "continuous compound walls with piers and gates",
+    "single-arm streetlights on the sidewalk edge",
+    "street trees in grass strips",
+    "pavement arrow symbols"
+   ],
+   "flags": [
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "modern residential districts: villas, compound walls and gates, sidewalks, kerbs, streetlights, trees, signs",
+   "notUsableFor": "any Hausa or traditional design",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "a227f80c6521618508992b0adadf0e1a802f64b8c0dff30b9afb75d3f60c1c46",
+    "bytes": 2760150,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-007",
+   "kind": "generated_concept",
+   "label": "Curved dual-carriageway expressway through hills",
+   "ownerInterpretation": "Expressway design reference.",
+   "observed": "Dual carriageway with separate directional roadways, three lanes each way, a planted central median with black-and-white kerbs, yellow edge lines, W-beam guardrails, double-arm streetlights on the median, yellow chevron curve signs, a rock-cut slope, rocky green hills and scattered trees.",
+   "visualRequirements": [
+    "three lanes per direction, planted kerbed median",
+    "yellow edge lines, white dashed lane lines",
+    "W-beam guardrail with black/white kerb base",
+    "double-arm median streetlights",
+    "chevron curve signs",
+    "rock-cut slope and rocky green hills"
+   ],
+   "flags": [
+    "The green rocky hills do not match the flat plain the sources describe at Kano; they suit the hillier country on the Kaduna side of the route."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "expressway road design, median planter, lighting, signs, guardrails",
+   "notUsableFor": "terrain inside Kano city",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "8a261283383040d00d4b02590b3be7a163aeb90f0d2b139d1ec300eb2f401ee9",
+    "bytes": 2628821,
+    "pixels": "1671x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-008",
+   "kind": "generated_concept",
+   "label": "A2 expressway with overhead gantry (planter median)",
+   "ownerInterpretation": "A2 gantry reference.",
+   "observed": "Overhead steel-truss gantry with a green panel 'Kano - Zaria - Kaduna', a yellow 'A2 Express Route' badge, arrows and distances; a roadside green distance sign; dual carriageway with planter median and double-arm lights; the twin-minaret mosque and rocky hills in the distance.",
+   "visualRequirements": [
+    "steel truss gantry spanning the carriageway",
+    "green overhead panel with route badge, arrows and distances",
+    "roadside distance sign",
+    "planter median with double-arm lights",
+    "guardrails with black/white kerb"
+   ],
+   "flags": [
+    "The sign's distances (Zaria 138 km, Kaduna 262 km) and the label 'A2 Express Route' do not match what web sources give: Kano to Zaria about 155 to 165 km by road, Kano to Kaduna about 230 km (sources range 232 to 272 km); 'A2' is the right federal designation for the Abuja-Kaduna-Zaria-Kano highway but 'Express Route' is not an established designation. Sign text must come from verified route data.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "gantry and sign design, expressway composition",
+   "notUsableFor": "the sign's text as written",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "55726ae9a48468d466f8af92e9bc8a4983d21a341f6dab1abe2c30fd991d5c02",
+    "bytes": 2671369,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-009",
+   "kind": "generated_concept",
+   "label": "Kano Central Bus Terminal",
+   "ownerInterpretation": "Transport terminal reference.",
+   "observed": "Terminal building with a glass facade between two arched panels carrying a geometric lattice, a dark sign band, a side list of services; bus bays under solar-panel canopies with numbered markers (A1, A2, A3), coaches in white-blue, red, green and yellow, a landscaped island with black/yellow kerb, a guardhouse with a barrier arm, a perimeter wall with piers and railing, parked SUVs; dusk lighting; the twin-minaret mosque in the distance.",
+   "visualRequirements": [
+    "terminal building with geometric-lattice arched panels",
+    "canopied bays with solar roofs and bay markers",
+    "coaches in several liveries",
+    "guardhouse, barrier gate, perimeter wall with piers and railing",
+    "landscaped island, parking bays, road arrows and zebra crossing"
+   ],
+   "flags": [
+    "The name 'Kano Central Bus Terminal' is illustrative; a real terminal of that name is not verified.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "transport hub: building, canopies, vehicles, gate, apron markings",
+   "notUsableFor": "any claim that this is the real terminal",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "2dc5fa9c2f1406847e6eeb745622653979fbd37dce173a60a035775b2570547a",
+    "bytes": 2636672,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-010",
+   "kind": "generated_concept",
+   "label": "Specialist hospital campus",
+   "ownerInterpretation": "Hospital reference.",
+   "observed": "A multi-wing hospital with a glass central block, vertical geometric screens, a 'Main Entrance' canopy, a red 'Emergency' canopy with an ambulance, directional signage totem and facade sign lists, parking with disabled bays, a central landscaped island, covered walkway, light bollards, streetlights and a telecom mast; the twin-minaret mosque in the distance.",
+   "visualRequirements": [
+    "central glass block with geometric screens and wings",
+    "emergency canopy and ambulance bay",
+    "signage totem and facade directory",
+    "parking lots with disabled bays and markings",
+    "landscaped island, benches, bins, light bollards"
+   ],
+   "flags": [
+    "The name 'Aminu Kano Specialist Hospital' resembles a real institution (Aminu Kano Teaching Hospital); use a fictional name unless the owner decides otherwise.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "institutional corridor: hospital campus",
+   "notUsableFor": "a real institution's identity",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "da5cde85887cf5c6edb19693c5e8f672093f4d3ea8fc50c58974acb7c63aa922",
+    "bytes": 2738607,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-011",
+   "kind": "generated_concept",
+   "label": "Metropolitan police station beside a divided arterial",
+   "ownerInterpretation": "Police station reference.",
+   "observed": "A blue-and-cream station block with a crest, flagpoles with Nigerian flags, a guardhouse marked POLICE, a sliding steel gate and boundary wall with blue piers, police pickup trucks, telecom masts; a four-lane divided arterial with a planted median, streetlights and paver sidewalks.",
+   "visualRequirements": [
+    "station building and guardhouse",
+    "gate, boundary wall with blue piers and railing",
+    "flagpoles with national flags",
+    "divided arterial with planted median and paver sidewalks",
+    "police vehicles"
+   ],
+   "flags": [
+    "The crest imitates the Nigeria Police Force emblem, a real official mark; reproduce it only if the owner decides to, otherwise use a generic crest or text only.",
+    "Police livery on vehicles is also a real-organisation depiction: owner decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "civic buildings beside arterials; arterial road design",
+   "notUsableFor": "reproducing a real force's emblem without the owner's decision",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "99ecd9c3e1d6e7338cdd9fe55aceae90bf8b0bbf9a759a43094de768fa3902d8",
+    "bytes": 2680674,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-012",
+   "kind": "generated_concept",
+   "label": "A2 expressway with overhead gantry (concrete median barrier)",
+   "ownerInterpretation": "A2 gantry variant reference.",
+   "observed": "Same scene as R-008 with a concrete jersey barrier median on the right and a W-beam guardrail with black/white kerb on the left; the gantry, signs, mosque and hills as in R-008.",
+   "visualRequirements": [
+    "steel truss gantry",
+    "concrete median barrier",
+    "guardrail with black/white kerb",
+    "double-arm lights on the median line"
+   ],
+   "flags": [
+    "The sign's distances (Zaria 138 km, Kaduna 262 km) and the label 'A2 Express Route' do not match what web sources give: Kano to Zaria about 155 to 165 km by road, Kano to Kaduna about 230 km (sources range 232 to 272 km); 'A2' is the right federal designation for the Abuja-Kaduna-Zaria-Kano highway but 'Express Route' is not an established designation. Sign text must come from verified route data.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "gantry and barrier variant; jersey-barrier median",
+   "notUsableFor": "the sign's text as written",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "73f0197c6d8502649359c5b403f3143e6a0b59581757918f67a99afc424e0339",
+    "bytes": 2582214,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-013",
+   "kind": "generated_concept",
+   "label": "Truck fuel and service centre",
+   "ownerInterpretation": "Truck fuel and service reference.",
+   "observed": "A green-and-yellow canopy over numbered fuel islands, a 'Shop & Restaurant' building, a 'Service Garage' with workshop bays and a service list, truck parking with painted truck symbols, a totem sign, black-and-yellow kerbs and speed humps, perimeter wall, streetlights; several heavy trucks in different liveries.",
+   "visualRequirements": [
+    "fuel canopy with numbered pumps",
+    "shop-and-restaurant building and service garage",
+    "truck parking bays with painted symbols",
+    "yellow/black kerbs and speed humps",
+    "heavy trucks in several liveries"
+   ],
+   "flags": [
+    "The brand colours and the name are generic; no real fuel brand is verified."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "logistics zone and highway services",
+   "notUsableFor": "a real brand",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "e8e0e60f602d1634581e9682bf048128b2dce0fc18586f3682d3d4862b487042",
+    "bytes": 2552584,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-014",
+   "kind": "generated_concept",
+   "label": "Warehouse and logistics yard (aerial)",
+   "ownerInterpretation": "Warehouse yard reference (aerial).",
+   "observed": "A large blue-roofed steel warehouse with six numbered loading docks, trucks at the docks, a site office, guardhouse with barrier and sliding gate, a perimeter wall, a truck-parking field with painted bays, a water tower and a small fuel canopy at the back.",
+   "visualRequirements": [
+    "large steel warehouse with six dock doors",
+    "site office, guardhouse, barrier and sliding gate",
+    "truck-parking field with painted bays",
+    "water tower, fuel canopy, perimeter wall",
+    "yard lighting"
+   ],
+   "flags": [],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "industrial and logistics zone layout and buildings",
+   "notUsableFor": "-",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "30d5984e67b1203f3a1b830e5d7f7d7a655e82793796f493a75c824844802176",
+    "bytes": 2774547,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-015",
+   "kind": "generated_concept",
+   "label": "Warehouse and logistics yard (ground level)",
+   "ownerInterpretation": "Warehouse yard reference (ground level).",
+   "observed": "The same yard from the gate: the warehouse with numbered docks, a guardhouse with an air-conditioner, a yellow/black speed hump and a drain grating across the entrance, a painted truck-parking bay, trucks in several liveries and the fuel canopy beyond.",
+   "visualRequirements": [
+    "dock doors with numbers and yellow bollards",
+    "guardhouse with air-conditioner unit",
+    "speed hump and drain grating across the entrance",
+    "painted bay symbols"
+   ],
+   "flags": [],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "warehouse details at driver's eye level",
+   "notUsableFor": "-",
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "b050cd641e3b4683fede45400369dc6b1e142e7a28380d8de7d9209be197f277",
+    "bytes": 2484056,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-016",
+   "kind": "generated_concept",
+   "label": "Dry season street (hot and dusty): cracked and potholed asphalt, roadside shops",
+   "ownerInterpretation": "Dry season (hot and dusty): the baseline for a poorly maintained urban road in the dry season.",
+   "observed": "A two-lane asphalt street under hard sun: dashed white centre line and white edge lines; the surface is map-cracked with two potholes about a metre wide showing pale earth beneath; grey concrete kerb blocks, then bare ochre earth and a concrete open drain with a slab on the right; on the left a row of single-storey shops with corrugated roofs and awnings, a hand-painted sign band, a red umbrella over a produce table, people in robes and caps; utility poles with sagging multi-wire spans; a mosque with a teal dome and minaret behind; a large broad-leaf tree; a cream compound wall with an ochre base band, stone-capped piers and a black steel gate with magenta bougainvillea over it; a red-roofed house with a black roof water tank; a tarpaulin truck raising a dust cloud; a sedan and vans.",
+   "visualRequirements": [
+    "asphalt with network cracking, alligator patches and two potholes with broken edges and exposed substrate",
+    "grey concrete kerb blocks, ochre earth strip and an open concrete drain with a slab beside the road",
+    "shop row with corrugated roofs, awnings, a sign band, a produce table and a red umbrella",
+    "sagging multi-wire overhead spans on timber/concrete poles",
+    "compound wall with a base band, capped piers, steel gate and bougainvillea",
+    "roof water tanks",
+    "dust raised behind a moving truck",
+    "hard sun, deep shadows, clear blue sky"
+   ],
+   "flags": [
+    "The image carries a season banner drawn over it: an interface overlay, not scene content, and not evidence of a location.",
+    "The sign reads 'KANO GENERAL STORE': illustrative text, not a verified shop.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "dry-season road and roadside condition: cracked and potholed asphalt, kerbs, drain, shop row, utility poles, compound wall; the dry-season state of the world",
+   "notUsableFor": "any claim that this is a real Kano street; the sign text; vehicle marks",
+   "elementClasses": {
+    "designRequirement": [
+     "crack and pothole patterns, drain, kerb, shop row, wires, compound wall, dust, hard sun"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the shop row, the compound and the street composition"
+    ],
+    "possibleActualLandmark": [
+     "the teal-dome mosque (treated as generic)"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "fe604d8efb16c7c22099bc3ebc3cda6e3b3e419abb708d6a8b14ff76c0d06c69",
+    "bytes": 3044099,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-017",
+   "kind": "generated_concept",
+   "label": "Harmattan season (dusty and hazy)",
+   "ownerInterpretation": "Harmattan (dusty and hazy): an atmosphere and surface-layer state applied to the same world.",
+   "observed": "The same street composition as R-016 under dense orange-brown haze: the sun is not visible, distant buildings and the mosque fade within a few hundred metres, every surface carries a tan dust film (the road, the kerbs, the truck, the car, the walls), faded lane markings, drifted dust on the road edge, vehicles with headlights on, a tarpaulin truck raising dust, stalls and people in robes.",
+   "visualRequirements": [
+    "dense warm haze as atmosphere: visibility of a few hundred metres, flat low-contrast light, no visible sun disc",
+    "dust film on road, kerbs, walls, vehicles and vegetation (a surface layer, not a recoloured texture)",
+    "faded markings and dust drifting along the road edge",
+    "headlights on in daytime",
+    "the underlying geometry and materials are the same as the dry-season street"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The orange cast is the haze and the dust film, not the colour of the buildings: baking it into wall textures would make the same street wrong in every other season."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "the Harmattan state of the world: haze colour and density, sun attenuation, dust on surfaces, vehicle lights on",
+   "notUsableFor": "wall, road or vehicle base colours (the tint is atmosphere); any claim about real Harmattan visibility figures",
+   "elementClasses": {
+    "designRequirement": [
+     "haze colour and density, dust film on surfaces, faded markings, lights on"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the street composition"
+    ],
+    "possibleActualLandmark": [
+     "the mosque (generic)"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "235ceb673fea69d28d7c013ea451c1ce9824b60e438e02c25cb45eeda3360504",
+    "bytes": 2391623,
+    "pixels": "1671x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-018",
+   "kind": "generated_concept",
+   "label": "Rainy season (heavy rain): wet asphalt, reflections, splash",
+   "ownerInterpretation": "Rainy season (heavy rain): the wet-asphalt target.",
+   "observed": "The same street composition as R-016 in heavy rain: dark storm cloud, visible rain streaks, wet asphalt with strong specular reflections of headlights, brake lights and shopfronts, a splash wave at the front wheels of the sedan, puddles with ripples, black-and-yellow painted kerbs, a wet earth-coloured verge, glossy wet foliage, stall umbrellas in several colours, people under shelter, vehicles with lights on, the truck's red brake lights reflecting in the road.",
+   "visualRequirements": [
+    "wet asphalt: darker, glossy, reflecting lights and the sky",
+    "rain streaks and splash at the tyres",
+    "puddles with ripples on the carriageway",
+    "black-and-yellow painted kerbs",
+    "glossy wet foliage and wet walls (every surface responds to rain, not only the road)",
+    "storm sky, low light, lights on"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "the rainy state of the world: wet response on all surface classes, reflections, puddles, splash, storm lighting",
+   "notUsableFor": "vehicle marks; any statement about how fast roads dry",
+   "elementClasses": {
+    "designRequirement": [
+     "wet surface response everywhere, reflections, puddles, splash, rain, storm light"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the street composition"
+    ],
+    "possibleActualLandmark": [
+     "the mosque (generic)"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "63853b1d65768a158f465f7f00eea0e8f0c60244d4e01445a48dd55346d5f37e",
+    "bytes": 3327275,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-019",
+   "kind": "generated_concept",
+   "label": "Flooded road (heavy-rain aftermath)",
+   "ownerInterpretation": "Flooded road (heavy-rain aftermath): the flood target.",
+   "observed": "A street whose whole carriageway is under opaque brown water: a minibus pushing a brown bow wave, cars following with headlights on, a tarpaulin truck with a hand-painted geometric body on the right, traders and customers on the raised walkway beside a black-and-yellow kerb, a mosque with a teal dome and minarets, a multi-colour umbrella stall, tall trees in full green leaf, utility poles with wires, stormy sky; the water reflects the sky and the vehicles' lights.",
+   "visualRequirements": [
+    "standing water over the full carriageway, turbid brown, with reflections and ripples",
+    "bow wave and spray around wheels",
+    "the kerb and walkway standing above the water line",
+    "vehicles driving slowly through, lights on",
+    "lush green vegetation after rain",
+    "decorated (hand-painted) truck body panels"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The water depth cannot be read from the image (the vehicles' wheel arches are mostly hidden): do not take a depth from it."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "flood state: water plane over the road with reflections, bow wave, kerb above the water; traders on a raised walkway",
+   "notUsableFor": "depths, flow speeds or any real flooding location",
+   "elementClasses": {
+    "designRequirement": [
+     "water plane over the carriageway, bow wave, reflections, kerb above water, green foliage"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the street, the stall and the truck's painted livery"
+    ],
+    "possibleActualLandmark": [
+     "the mosque (generic)"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "6b1fd9419bc3a868da03bb63c99ea7e93d4b2f7e3df8fba5ac6e01c7c2d0e395",
+    "bytes": 2886156,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-020",
+   "kind": "generated_concept",
+   "label": "Muddy unpaved road after rain (village)",
+   "ownerInterpretation": "Muddy road (after rain): the rural unpaved-road target.",
+   "observed": "A wide unpaved red-brown earth road with deep ruts and long puddles reflecting the sky, mud thrown up by an SUV and a tarpaulin truck coated in mud, a yellow minibus ahead; on the left a mud-brick house with a rusty corrugated roof and a rough canopy stall where a woman sells produce, banana plants and tall grass at the verge, a goat; on the right a house with a corrugated roof, a woven timber fence; timber utility poles with a few wires; wooded hills and scattered rooftops in the distance; broken cloud.",
+   "visualRequirements": [
+    "unpaved road: red-brown clay with deep wheel ruts, ridged mud banks and long puddles",
+    "mud-brick houses with rusted corrugated roofs, a woven timber fence, a rough canopy stall",
+    "banana plants, tall grass and a goat at the verge (vegetation greener in the rains)",
+    "mud on vehicles and splash from wheels",
+    "timber poles with sparse wires",
+    "distant hills and trees"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The SUV's spare-wheel cover reads 'PRADO' and the truck tailgate reads 'MERCEDES-BENZ': real vehicle makes/models. The plate reads 'KANO 982XF': a generated mark; a real Nigerian plate format has not been verified. None is reproduced without an owner decision.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "Authenticity: red laterite mud, banana plants and green hills read as plausible for northern Nigeria in the rainy season, but no verified source says they describe rural Kano State. Treat the scene as northern Nigerian regional rural; do not label assets 'Kano' on this basis."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "unpaved wet road: ruts, puddles, mud, village frontage in the rainy season; the rural wet state of the world",
+   "notUsableFor": "any claim that this is a real Kano road; vehicle marks and plates",
+   "elementClasses": {
+    "designRequirement": [
+     "rutted clay road, puddles, mud on vehicles, mud-brick and corrugated houses, banana plants, timber poles"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the village frontage and the stall"
+    ],
+    "possibleActualLandmark": []
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "6fe7cbb03d48d8ac5823b1278ab6c5be857cefbfefee743307e917900cafa893",
+    "bytes": 3128945,
+    "pixels": "1671x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-021",
+   "kind": "generated_concept",
+   "label": "Muddy unpaved road after heavy rain (market village)",
+   "ownerInterpretation": "Muddy road (after heavy rain): the extreme rainy-season unpaved road and market village target.",
+   "observed": "A heavily rutted unpaved road: large ridges and clods of red clay, wide shallow orange-brown pools reflecting the sky between them, a tarpaulin truck and a pick-up churning the mud, a second truck ahead; on both sides single-storey mud-brick and block buildings with rusty corrugated roofs, open sheds with sacks of goods, a blue tarpaulin awning, people standing beside the road, green weeds along the edge, tall trees; a thicket of timber poles with several wires; a small tower and rooftops on a rise in the distance; dark cloud.",
+   "visualRequirements": [
+    "extreme ruts: clods and ridged mud banks 20 to 40 cm high with water in the troughs",
+    "orange-brown puddles with sky reflection",
+    "mud-brick and block shop frontage with corrugated roofs, sacks of goods, tarpaulin awnings",
+    "timber utility poles in clusters with multi-wire spans",
+    "weeds and tall trees along the verge"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "The rut and clod depths are an eyeball reading of a generated image (20 to 40 cm), not data. The small tower in the distance cannot be identified (minaret, church or water tower)."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "worst-case unpaved road state; market-village frontage: shops, sheds, awnings, goods; timber poles",
+   "notUsableFor": "any claim that this is a real place; depths as measurements",
+   "elementClasses": {
+    "designRequirement": [
+     "deep ruts and mud ridges, orange puddles, shed and shop frontage, awnings, timber pole clusters"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the village market frontage"
+    ],
+    "possibleActualLandmark": []
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "1618246b06f4c9ca16f0a5555cb5a25819456c9d614942d453bfa1a0487d401f",
+    "bytes": 3487092,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-022",
+   "kind": "generated_concept",
+   "label": "Modern boulevard in the city centre",
+   "ownerInterpretation": "Modern Kano boulevard: the modern urban counterpart to the dry and rainy village scenes.",
+   "observed": "A broad divided boulevard in clear weather: a one-way carriageway of about four lanes with white dashed lane lines, a yellow edge line and white arrows, separated from the opposite carriageway by a planted median with black-and-white painted kerbs, palms, agave, flowering shrubs and clipped hedges; double-arm streetlights carrying blue banners; a green overhead direction gantry; glass-and-stone towers and plazas on both sides behind black railings with stone piers; paver sidewalks; street trees; a tall telecom mast; blue sky with cumulus.",
+   "visualRequirements": [
+    "divided boulevard: four lanes, yellow edge line, white arrows, planted median with painted kerb blocks",
+    "double-arm streetlights with pole banners",
+    "overhead gantry with green sign panels",
+    "glass-and-stone towers set back behind railings with stone piers",
+    "paver sidewalk and street trees",
+    "telecom mast on the skyline"
+   ],
+   "flags": [
+    "Names, crests and slogans are generated and unverified: 'Kano State Tower' with a coat-of-arms crest on the glass, 'Kano Investment Centre', 'Kano Plaza', the banner slogan 'Our City Our Pride'. Treat as fictional identities; the crest may imitate a real state emblem and must be replaced.",
+    "The gantry text 'Kano City Centre / Government House / Ramat Square' names or resembles real places: sign text must come from verified route data (RB-07).",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "the modern boulevard: median, kerbs, lighting with banners, gantry, towers and plazas, planting, sidewalks",
+   "notUsableFor": "any named building or crest; the sign text as written; real organisations",
+   "elementClasses": {
+    "designRequirement": [
+     "divided boulevard layout, kerbs, median planting, banner lights, towers, gantry"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the towers, plazas and their names and crests"
+    ],
+    "possibleActualLandmark": [
+     "'Government House' and 'Ramat Square' on the sign (names that resemble real places)"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "b053a00dea32484db438aba606a718cdc153e10ad423a4ebaf106183ec51765a",
+    "bytes": 2647013,
+    "pixels": "1671x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  },
+  {
+   "id": "R-023",
+   "kind": "generated_concept",
+   "label": "Modern divided highway with a flyover",
+   "ownerInterpretation": "Modern divided highway with a flyover: the modern regional-highway counterpart.",
+   "observed": "A six-lane divided highway (three lanes each way) with a narrow planted median with black-and-white kerbs and flowering shrubs, yellow edge lines, double-arm streetlights on green-based poles, an overhead gantry with green panels reading 'Kaduna A2', 'Kano City Centre' and 'Bompai R/Market', a concrete flyover deck on piers with yellow-and-black bollard stripes crossing over the road, a mosque with two minarets, a green dome and a smaller blue dome, a rocky hill with radio masts, compound walls with railings and capped piers, a stone-and-glass building and a timber utility pole with wires.",
+   "visualRequirements": [
+    "divided highway of three lanes per direction with a narrow planted kerbed median",
+    "concrete flyover deck on piers crossing the carriageway (grade separation)",
+    "overhead gantry with green panels",
+    "double-arm streetlights on green-based poles",
+    "compound walls with railings and capped piers",
+    "stone-and-glass office building",
+    "rocky hill with masts as a regional backdrop"
+   ],
+   "flags": [
+    "The flyover crossing over the carriageway is grade separation, which the road engine cannot build (RB-03): the flyover is a design inspiration only until the engine proposal's E5 is approved.",
+    "Sign text ('Kaduna A2', 'Kano City Centre', 'Bompai R/Market') names real places or routes: take sign text only from verified route data (RB-07).",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene. Text in the image that names Kano or other places is illustrative, not evidence that such a place looks like this.",
+   "verificationNeeded": "owner approval of the asset breakdown; verification of any real-world fact, name or mark in the image before it is baked into an asset",
+   "usableFor": "modern highway road design and roadside: median, lights, gantry, walls, buildings; flyover as future grade separation",
+   "notUsableFor": "implementing the flyover now; the sign text as written",
+   "elementClasses": {
+    "designRequirement": [
+     "highway cross-section, median, lighting, gantry, flyover deck on piers, walls"
+    ],
+    "verifiedGeographicalFact": [],
+    "fictionalArchitecturalConcept": [
+     "the building, the mosque form and the hill"
+    ],
+    "possibleActualLandmark": [
+     "the mosque (generic); 'Bompai' and the A2 route name on the sign"
+    ]
+   },
+   "classification": "ChatGPT-generated visual concept reference (CONCEPT: not a photograph of an actual location). Supplied by the owner on 2026-11-01 as the COMPULSORY visual design standard for the game: a design specification to be reproduced as genuine 3D geometry.",
+   "file": {
+    "sha256": "32c5160bc979a7b20e21b3750fd07c1974c4ca80269f6047e534953f0747f130",
+    "bytes": 2706495,
+    "pixels": "1672x941",
+    "note": "the image as received; NOT stored in any repository"
+   },
+   "receivedVia": "Generated by ChatGPT specifically to communicate how the game must look; supplied to Claude by the project owner on 2026-11-01.",
+   "originalSource": "Generated imagery (ChatGPT). There is no photographer and no place: the scenes are idealised and some carry real-world names, signs and marks (see each entry's flags).",
+   "rights": "Generated for the owner as a design specification. The copyright and licensing status of AI-generated imagery varies by jurisdiction and is the owner's to determine; nothing here is legal advice. Treated as private design specifications.",
+   "storedInRepository": false,
+   "uses": {
+    "privateReference": "YES: the owner's compulsory design standard. Reproduce the design as genuine 3D geometry; compare in-game screenshots against it.",
+    "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
+    "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
+   }
+  }
+ ],
+ "missingReferences": [
+  {
+   "id": "M-01",
+   "area": "Traditional Hausa compounds and gates",
+   "drives": [
+    "kano_hausa_compound_a",
+    "kano_hausa_compound_b",
+    "kano_hausa_compound_c",
+    "kit_zaure_entrance",
+    "kit_wall_plain",
+    "kit_wall_decorated",
+    "kit_gate_pier",
+    "kit_gate_leaf",
+    "kit_flat_roof_parapet",
+    "kit_openings"
+   ],
+   "need": "At least three distinct Kano compounds: the street front with the zaure and its door, the compound wall and its top (parapet, zankwaye), gates (leaves, piers), roof edge and roof furniture, windows, wall finish and wear. For each: a front, a side, a close detail, and something for scale (a person or a door). Heights and thicknesses of walls and parapets.",
+   "status": "MISSING (no usable reference; R-001 is too distant)"
+  },
+  {
+   "id": "M-02",
+   "area": "Modern Kano buildings",
+   "drives": [
+    "kano_compound_modern_a",
+    "kano_compound_modern_b",
+    "kano_shop_row_a",
+    "kano_shop_row_b",
+    "kano_plaza_a",
+    "kano_apartment_block_a",
+    "kano_midrise_a",
+    "kano_filling_station_a",
+    "kit_storey_modern",
+    "kit_shopfront"
+   ],
+   "need": "Walled bungalows and villas with gates, shop rows and shop-and-flat blocks, a commercial plaza, an apartment block, a mid-rise block, a filling station, each shown as they are in Kano.",
+   "status": "CONCEPTS SUPPLIED for modern villas, hospital, police station, fuel/service and warehouses (R-006, R-010, R-011, R-013 to R-015: generated, not Kano-verified); Kano-specific modern buildings still need real references"
+  },
+  {
+   "id": "M-03",
+   "area": "Mosques",
+   "drives": [
+    "kano_mosque_neighbourhood_a",
+    "kit_dome_minaret"
+   ],
+   "need": "A real Kano neighbourhood mosque (not the Great Mosque): dome(s), minaret(s), prayer-hall walls, ablution block, boundary wall, colours and finishes; front, side and detail.",
+   "status": "PARTIAL: a generated skyline mosque recurs in R-006/R-008/R-009/R-010/R-012 (owner to say whether it stands for the Central Mosque); R-004 shows one real-looking mosque type, location not established; no real Kano mosque reference"
+  },
+  {
+   "id": "M-04",
+   "area": "Commercial streets and markets",
+   "drives": [
+    "kano_shop_row_a",
+    "kano_shop_row_b",
+    "kano_kiosk_a",
+    "kano_market_stall_a",
+    "kano_bus_stop_a",
+    "kano_billboard_a"
+   ],
+   "need": "Shopfronts with shutters and sign bands, kiosks, market stalls (frames, tarpaulins, goods), bus stops, street-level views of a commercial street with its activity.",
+   "status": "CONCEPTS SUPPLIED for roadside shop rows, stalls and market-village frontage in dry, harmattan, rainy and flooded states (R-016 to R-021: generated, not Kano-verified); real traditional markets and streets still MISSING"
+  },
+  {
+   "id": "M-05",
+   "area": "Road surfaces and drainage",
+   "drives": [
+    "kit_apron_drain",
+    "road surface-condition plan (future engine layer)"
+   ],
+   "need": "New, patched, cracked and damaged asphalt; edges and shoulders; open drains and their slabs; kerbs and sidewalks if present; road markings; how roads meet compound entrances. Close ground-level views with a scale object.",
+   "status": "CONCEPTS SUPPLIED for road surfaces, kerbs, paver sidewalks, markings and drains (R-006, R-007, R-011, R-013, R-015, R-016 to R-023: generated, including cracked and potholed asphalt, an open drain, and wet and flooded roads); real Kano surfaces, patches, cracks and drains still MISSING"
+  },
+  {
+   "id": "M-06",
+   "area": "Electricity poles and streetlights",
+   "drives": [
+    "kano_utility_pole",
+    "kano_transformer_pole",
+    "kano_streetlight_single",
+    "kano_streetlight_double_median",
+    "kit_pole_fittings",
+    "kano_road_sign_small",
+    "kano_road_sign_gantry"
+   ],
+   "need": "Poles as installed (material, height, crossarms, insulators, cables, transformer), streetlights (pole, arm, luminaire, median double-arm), road signs and gantries.",
+   "status": "CONCEPTS SUPPLIED for streetlights and median double-arm lights (R-006 to R-008, R-011, R-012); poles, transformers and cables as installed in Kano still MISSING"
+  },
+  {
+   "id": "M-07",
+   "area": "Northern Nigerian trees and vegetation",
+   "drives": [
+    "kano_neem_tree_a",
+    "kano_neem_tree_b",
+    "kano_date_palm_a",
+    "kano_shrub_a"
+   ],
+   "need": "The species that actually line Kano roads and compounds (the typical street tree is NOT established by the sources found), their size and form, dry-season foliage, ground colour and cover.",
+   "status": "CONCEPT ONLY (broad-leaf street trees, ixora and hedges in R-006, R-007); the species that really line Kano roads are MISSING"
+  },
+  {
+   "id": "M-08",
+   "area": "Local vehicles and roadside activity",
+   "drives": [
+    "kano_parked_group_a",
+    "kano_parked_group_b",
+    "kano_parked_minibus_a"
+   ],
+   "need": "Common cars, minibuses, motor tricycle taxis and motorcycles as parked along roads (generic shapes, no brands), and roadside activity (traders, loading, waiting).",
+   "status": "CONCEPTS SUPPLIED for coaches, trucks, an ambulance, police pickups and SUVs (R-009, R-010, R-011, R-013 to R-015); motor tricycles, motorcycles and minibuses as seen in Kano still MISSING"
+  },
+  {
+   "id": "M-09",
+   "area": "Light and atmosphere",
+   "drives": [
+    "lighting reference for review renders"
+   ],
+   "need": "Harmattan haze, dusty light, sky colour and shadow softness at several times of day.",
+   "status": "PARTIAL (R-005 for haze, location not established); CONCEPTS SUPPLIED for Harmattan haze, storm and rain lighting and flood light (R-017, R-018, R-019: generated); measured visibility, colour and sun data for real Harmattan days still MISSING"
+  },
+  {
+   "id": "M-10",
+   "area": "Schools, government buildings, hotels",
+   "drives": [
+    "civic and hospitality buildings of district D08"
+   ],
+   "need": "One or more concept or real references each for a school, a government building and a hotel (front, side, detail, scale).",
+   "status": "MISSING"
+  },
+  {
+   "id": "M-11",
+   "area": "Landmark references: palace gate, Great Mosque, Kurmi Market, Kofar Mata dye pits, city wall and gates, Dala Hill",
+   "drives": [
+    "lmk_kano_* landmark assets"
+   ],
+   "need": "Real, rights-cleared photographs or measured drawings of each landmark (a landmark is never invented).",
+   "status": "MISSING"
+  },
+  {
+   "id": "M-12",
+   "area": "Old-city lanes and traditional residential streets",
+   "drives": [
+    "traditional district road and lane design"
+   ],
+   "need": "Street-level references of lane width, surface, drainage, wall faces and gate frequency in traditional Kano neighbourhoods.",
+   "status": "MISSING"
+  },
+  {
+   "id": "M-13",
+   "area": "Interchanges, flyovers and roundabouts",
+   "drives": [
+    "future road-engine items RB-01, RB-03"
+   ],
+   "need": "References for the grade-separated junctions the owner wants (R-004 and R-005 are inspiration only).",
+   "status": "INSPIRATION ONLY (R-004, R-005, and the flyover of R-023); nothing buildable yet"
+  },
+  {
+   "id": "M-14",
+   "area": "Traditional and rural village architecture and settlement form",
+   "drives": [
+    "rg_ngn_house_mudbrick_a",
+    "rg_ngn_house_mudbrick_b",
+    "rg_ngn_house_block_corrugated_a",
+    "rg_ngn_wall_compound_mud_a",
+    "rg_ngn_fence_woven_timber_a",
+    "rg_ngn_shed_market_corrugated_a"
+   ],
+   "need": "Real photographs or measured drawings of mud-brick and rendered houses, compound walls and entrances, roof forms (flat with parapet, corrugated sheet), granaries, fences, market sheds and village layout (plot size, lane width, spacing), with a scale object, for northern Nigerian villages and for Kano's traditional neighbourhoods.",
+   "status": "CONCEPTS SUPPLIED (R-016 to R-021: generated); no real reference; what is Hausa-traditional and what is common vernacular is NOT established"
+  },
+  {
+   "id": "M-15",
+   "area": "Unpaved road surfaces (compacted earth, loose sand, mud) and their drainage",
+   "drives": [
+    "aro_road_earth_compacted_a",
+    "aro_road_sand_loose_a",
+    "aro_road_mud_rutted_a",
+    "aro_drain_open_slab_a",
+    "aro_culvert_pipe_a"
+   ],
+   "need": "Close and mid-range photographs of unpaved roads in dry, dusty and wet conditions with a scale object: soil colour by area, rut depth and width, crown and camber, edge erosion, puddle size, how drains and culverts meet the road.",
+   "status": "CONCEPTS SUPPLIED (R-020, R-021: generated, rut depths an eyeball reading); no real reference; soil colour for Kano and its surroundings NOT established"
+  },
+  {
+   "id": "M-16",
+   "area": "Climate and season data: rainy season, Harmattan, flooding",
+   "drives": [
+    "the seasonal system (calendar, haze density and colour, rain intensity, flood sites)"
+   ],
+   "need": "Verified climate data for Kano: the months of the rainy season, the Harmattan and the transitions; typical and extreme visibility in Harmattan haze and in heavy rain; rainfall intensities; where and how deeply roads flood. Source and date for each number.",
+   "status": "MISSING (no climate source has been read yet; the proposals in docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md use placeholder values that must be replaced by sourced ones)"
+  },
+  {
+   "id": "M-17",
+   "area": "Seasonal vegetation and ground cover",
+   "drives": [
+    "rg_ngn_tree_neem_seasonal_a",
+    "rg_ngn_grass_ground_seasonal_a",
+    "rg_ngn_bougainvillea_wall_a",
+    "rg_ngn_banana_plant_a"
+   ],
+   "need": "How the real street trees, shrubs, grasses and soil look in the dry season, in Harmattan and in the rains (leaf density and colour, bare ground), for the species that actually grow along Kano roads and compounds (see M-07).",
+   "status": "CONCEPTS SUPPLIED (R-016 to R-021: broad-leaf trees, bougainvillea, banana plants, grass; generated); species and seasonal appearance NOT established"
+  },
+  {
+   "id": "M-18",
+   "area": "Traction and braking data for tuning rainy-season physics",
+   "drives": [
+    "per-surface grip and braking targets (docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md section 5.1)"
+   ],
+   "need": "Published friction and stopping-distance ranges for dry and wet asphalt, compacted earth, loose sand, mud and standing water, for trucks, buses and vans; then play-test targets agreed by the owner. This is tuning data, not a visual reference.",
+   "status": "MISSING (the assessment quotes textbook ranges only, and says so)"
+  }
+ ],
+ "sourcing": {
+  "acceptableProvenance": [
+   "Photographs taken by the project owner or by a person who grants written permission for private reference (and for redistribution if they will be shown publicly).",
+   "Licensed or commissioned photographs, with the licence kept in the private asset repository's LICENSES.md.",
+   "Openly licensed images (for example Wikimedia Commons), only after reading each file's own licence page; the licence and attribution are recorded per file. Not every Commons file is freely reusable.",
+   "Archival collections (for example the MIT Dome photographs of Gidan Rumfa, the Smithsonian Eliot Elisofon archive): their terms are not established; treat as private study references until the holder's terms are read.",
+   "Generated concept images are allowed to supplement real photographs but must be labelled 'CONCEPT: not a photograph of an actual Kano location' in the register and wherever they are shown."
+  ],
+  "neverAcceptable": [
+   "Copying or tracing a protected image into a texture, decal or model.",
+   "Presenting a generated or non-Kano image as a photograph of a Kano location."
+  ]
+ }
+}

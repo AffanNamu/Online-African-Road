@@ -1,0 +1,2249 @@
+{
+ "schemaVersion": 1,
+ "id": "ksa-1",
+ "name": "Kano study area KSA-1: master plan (draft for owner approval)",
+ "status": "PLAN ONLY. Nothing here is modelled, surveyed or read by the game. Districts, roads and plots are INDICATIVE FICTIONAL placements except where a landmark position is marked VERIFIED.",
+ "frame": "kano-frame-k0 (docs/kano/kano_world_frame.json)",
+ "studyArea": {
+  "xzMin": [
+   -5000.0,
+   -5000.0
+  ],
+  "xzMax": [
+   5000.0,
+   5000.0
+  ],
+  "areaKm2": 100.0,
+  "chunks": 2500
+ },
+ "oldCity": {
+  "centre": [
+   0.0,
+   -200.0
+  ],
+  "semiAxesM": [
+   2300.0,
+   2100.0
+  ],
+  "status": "INDICATIVE: an ellipse whose perimeter (13.8 km) matches the 14 km UNESCO figure (Daily Trust says 17 km); the real wall line is not surveyed here"
+ },
+ "ringRoad": {
+  "radiusM": 3300.0,
+  "centre": [
+   0.0,
+   -200.0
+  ],
+  "status": "INDICATIVE"
+ },
+ "roadTestCorridor": {
+  "id": "TC-1",
+  "note": "The 1.65 km corridor of revision 1 is kept only as the road-system test corridor TC-1 (docs/kano/ng-kano-slice.route.draft.json); it is not the city."
+ },
+ "districts": [
+  {
+   "id": "D11",
+   "name": "A2 expressway gateway",
+   "kind": "gateway",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 1,
+   "polygon": [
+    [
+     -4830.0,
+     -4800
+    ],
+    [
+     -3870.0,
+     -4800
+    ],
+    [
+     -3800,
+     -4730.0
+    ],
+    [
+     -3800,
+     -3870.0
+    ],
+    [
+     -3870.0,
+     -3800
+    ],
+    [
+     -4830.0,
+     -3800
+    ],
+    [
+     -4900,
+     -3870.0
+    ],
+    [
+     -4900,
+     -4730.0
+    ]
+   ],
+   "requires": [
+    "R-007",
+    "R-008",
+    "R-012"
+   ],
+   "notes": "The city entrance on the Kaduna-Zaria-Kano highway: gantry, divided expressway, curve, interchange approach. The only direction fixed by data is the approach from the south-west (the great-circle bearing Kaduna to Kano).",
+   "areaHa": 109.0,
+   "netAreaHa": 109.0,
+   "plots": 54,
+   "densityPlotsPerHa": 0.5,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D10",
+   "name": "Industrial and logistics zone",
+   "kind": "industrial",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 1,
+   "polygon": [
+    [
+     -3630.0,
+     -3800
+    ],
+    [
+     -2770.0,
+     -3800
+    ],
+    [
+     -2700,
+     -3730.0
+    ],
+    [
+     -2700,
+     -2870.0
+    ],
+    [
+     -2770.0,
+     -2800
+    ],
+    [
+     -3630.0,
+     -2800
+    ],
+    [
+     -3700,
+     -2870.0
+    ],
+    [
+     -3700,
+     -3730.0
+    ]
+   ],
+   "requires": [
+    "R-013",
+    "R-014",
+    "R-015"
+   ],
+   "notes": "Warehouses, truck stops and fuel and service centres on the expressway and ring road.",
+   "areaHa": 99.0,
+   "netAreaHa": 99.0,
+   "plots": 148,
+   "densityPlotsPerHa": 1.5,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D09",
+   "name": "Transport hub",
+   "kind": "transport",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 1,
+   "polygon": [
+    [
+     -2230.0,
+     -2400
+    ],
+    [
+     -1370.0,
+     -2400
+    ],
+    [
+     -1300,
+     -2330.0
+    ],
+    [
+     -1300,
+     -1770.0
+    ],
+    [
+     -1370.0,
+     -1700
+    ],
+    [
+     -2230.0,
+     -1700
+    ],
+    [
+     -2300,
+     -1770.0
+    ],
+    [
+     -2300,
+     -2330.0
+    ]
+   ],
+   "requires": [
+    "R-009"
+   ],
+   "notes": "Central bus terminal with canopied bays, apron, gatehouse and perimeter wall near the south-west gate.",
+   "areaHa": 69.0,
+   "netAreaHa": 69.0,
+   "plots": 138,
+   "densityPlotsPerHa": 2.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D08",
+   "name": "Institutional corridor",
+   "kind": "institutional",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 1,
+   "polygon": [
+    [
+     -330.0,
+     2400
+    ],
+    [
+     930.0,
+     2400
+    ],
+    [
+     1000,
+     2470.0
+    ],
+    [
+     1000,
+     3530.0
+    ],
+    [
+     930.0,
+     3600
+    ],
+    [
+     -330.0,
+     3600
+    ],
+    [
+     -400,
+     3530.0
+    ],
+    [
+     -400,
+     2470.0
+    ]
+   ],
+   "requires": [
+    "R-010",
+    "R-011"
+   ],
+   "notes": "Hospital campus and police station on a divided arterial (concept references exist); schools, government buildings and a hotel follow in phase 2 (M-10).",
+   "areaHa": 167.0,
+   "netAreaHa": 167.0,
+   "plots": 501,
+   "densityPlotsPerHa": 3.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D06",
+   "name": "Modern residential estate",
+   "kind": "modern_residential",
+   "geography": "FICTIONAL",
+   "fidelity": "A",
+   "phase": 1,
+   "polygon": [
+    [
+     1070.0,
+     1700
+    ],
+    [
+     2230.0,
+     1700
+    ],
+    [
+     2300,
+     1770.0
+    ],
+    [
+     2300,
+     2830.0
+    ],
+    [
+     2230.0,
+     2900
+    ],
+    [
+     1070.0,
+     2900
+    ],
+    [
+     1000,
+     2830.0
+    ],
+    [
+     1000,
+     1770.0
+    ]
+   ],
+   "requires": [
+    "R-006"
+   ],
+   "notes": "Gated villas, compound walls and gates, one-way loop streets, paver sidewalks, painted kerbs, trees and streetlights (R-006).",
+   "areaHa": 155.0,
+   "netAreaHa": 155.0,
+   "plots": 1860,
+   "densityPlotsPerHa": 12.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D05",
+   "name": "Commercial belt",
+   "kind": "commercial",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 2,
+   "polygon": [
+    [
+     2470.0,
+     500
+    ],
+    [
+     3530.0,
+     500
+    ],
+    [
+     3600,
+     570.0
+    ],
+    [
+     3600,
+     1630.0
+    ],
+    [
+     3530.0,
+     1700
+    ],
+    [
+     2470.0,
+     1700
+    ],
+    [
+     2400,
+     1630.0
+    ],
+    [
+     2400,
+     570.0
+    ]
+   ],
+   "requires": [
+    "M-02",
+    "M-04"
+   ],
+   "notes": "Major shopping streets, wholesale and small shops, busy intersections. Modern commercial frontage is not covered by any concept yet.",
+   "areaHa": 143.0,
+   "netAreaHa": 143.0,
+   "plots": 3575,
+   "densityPlotsPerHa": 25.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D01",
+   "name": "Old city hero sector",
+   "kind": "traditional",
+   "geography": "REAL_ANCHORED",
+   "fidelity": "A",
+   "phase": 3,
+   "polygon": [
+    [
+     -830.0,
+     -1600
+    ],
+    [
+     630.0,
+     -1600
+    ],
+    [
+     700,
+     -1530.0
+    ],
+    [
+     700,
+     -70.0
+    ],
+    [
+     630.0,
+     0
+    ],
+    [
+     -830.0,
+     0
+    ],
+    [
+     -900,
+     -70.0
+    ],
+    [
+     -900,
+     -1530.0
+    ]
+   ],
+   "requires": [
+    "M-01",
+    "M-12"
+   ],
+   "notes": "Traditional Hausa compound fabric around the palace precinct. BLOCKED: no authentic reference exists yet; nothing is invented.",
+   "areaHa": 255.0,
+   "netAreaHa": 182.5,
+   "plots": 7300,
+   "densityPlotsPerHa": 40.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D02",
+   "name": "Palace and Central Mosque precinct",
+   "kind": "landmark",
+   "geography": "REAL_ANCHORED",
+   "fidelity": "A",
+   "phase": 4,
+   "polygon": [
+    [
+     -330.0,
+     -1250
+    ],
+    [
+     230.0,
+     -1250
+    ],
+    [
+     300,
+     -1180.0
+    ],
+    [
+     300,
+     -570.0
+    ],
+    [
+     230.0,
+     -500
+    ],
+    [
+     -330.0,
+     -500
+    ],
+    [
+     -400,
+     -570.0
+    ],
+    [
+     -400,
+     -1180.0
+    ]
+   ],
+   "parent": "D01",
+   "requires": [
+    "M-11"
+   ],
+   "notes": "Gidan Rumfa (verified coordinate, about 33 acres) with the Great Mosque on its north side. BLOCKED on landmark references.",
+   "areaHa": 51.5,
+   "netAreaHa": 51.5,
+   "plots": 52,
+   "densityPlotsPerHa": 1.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D03",
+   "name": "Kurmi market quarter",
+   "kind": "market",
+   "geography": "INDICATIVE",
+   "fidelity": "A",
+   "phase": 3,
+   "polygon": [
+    [
+     -810.0,
+     -1450
+    ],
+    [
+     -550.0,
+     -1450
+    ],
+    [
+     -480,
+     -1380.0
+    ],
+    [
+     -480,
+     -970.0
+    ],
+    [
+     -550.0,
+     -900
+    ],
+    [
+     -810.0,
+     -900
+    ],
+    [
+     -880,
+     -970.0
+    ],
+    [
+     -880,
+     -1380.0
+    ]
+   ],
+   "parent": "D01",
+   "requires": [
+    "M-04",
+    "M-11"
+   ],
+   "notes": "The historic market and its lanes. Position is an UNVERIFIED placeholder near the palace. BLOCKED on references.",
+   "areaHa": 21.0,
+   "netAreaHa": 21.0,
+   "plots": 1260,
+   "densityPlotsPerHa": 60.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D04",
+   "name": "Dala Hill district",
+   "kind": "traditional",
+   "geography": "REAL_ANCHORED",
+   "fidelity": "A",
+   "phase": 4,
+   "polygon": [
+    [
+     -1430.0,
+     700
+    ],
+    [
+     -670.0,
+     700
+    ],
+    [
+     -600,
+     770.0
+    ],
+    [
+     -600,
+     1430.0
+    ],
+    [
+     -670.0,
+     1500
+    ],
+    [
+     -1430.0,
+     1500
+    ],
+    [
+     -1500,
+     1430.0
+    ],
+    [
+     -1500,
+     770.0
+    ]
+   ],
+   "requires": [
+    "R-001",
+    "M-11"
+   ],
+   "notes": "Dala Hill (one sourced coordinate; height disputed) and the dense settlement around it. R-001 is the only visual reference, location unconfirmed.",
+   "areaHa": 71.0,
+   "netAreaHa": 71.0,
+   "plots": 2485,
+   "densityPlotsPerHa": 35.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  },
+  {
+   "id": "D07",
+   "name": "Traditional residential suburb",
+   "kind": "traditional",
+   "geography": "FICTIONAL",
+   "fidelity": "A",
+   "phase": 3,
+   "polygon": [
+    [
+     -3830.0,
+     -1100
+    ],
+    [
+     -2770.0,
+     -1100
+    ],
+    [
+     -2700,
+     -1030.0
+    ],
+    [
+     -2700,
+     30.0
+    ],
+    [
+     -2770.0,
+     100
+    ],
+    [
+     -3830.0,
+     100
+    ],
+    [
+     -3900,
+     30.0
+    ],
+    [
+     -3900,
+     -1030.0
+    ]
+   ],
+   "requires": [
+    "M-01",
+    "M-12"
+   ],
+   "notes": "Hausa compound neighbourhoods outside the wall. BLOCKED: no authentic reference yet.",
+   "areaHa": 143.0,
+   "netAreaHa": 143.0,
+   "plots": 4290,
+   "densityPlotsPerHa": 30.0,
+   "densityNote": "PLANNING ASSUMPTION, to be replaced by reference measurement"
+  }
+ ],
+ "fillerZones": [
+  {
+   "id": "F-OLD",
+   "name": "Old-city filler fabric",
+   "zone": "Z-B",
+   "where": "inside the old-city ellipse, outside the hero sector",
+   "character": "traditional compound fabric (BLOCKED on references, M-01)",
+   "densityPlotsPerHa": 40.0
+  },
+  {
+   "id": "F-MID",
+   "name": "Mixed urban filler",
+   "zone": "Z-B",
+   "where": "between the wall and the ring road, outside hero districts",
+   "character": "modern residential, commercial frontage and institutional plots",
+   "densityPlotsPerHa": 12.0
+  },
+  {
+   "id": "F-OUT",
+   "name": "Peri-urban fringe",
+   "zone": "Z-C",
+   "where": "beyond the ring road to the edge of the study area",
+   "character": "low-density plots, farmland and scrub, terrain tint, baked skyline and impostors",
+   "densityPlotsPerHa": 2.0
+  }
+ ],
+ "landmarks": [
+  {
+   "id": "gidan_rumfa",
+   "name": "Gidan Rumfa (Emir's Palace)",
+   "district": "D02",
+   "xz": [
+    -66.0,
+    -874.0
+   ],
+   "position": "VERIFIED within about 300 m (three web listings agree; not surveyed)",
+   "frame_id": "gidan_rumfa",
+   "reference": "M-11",
+   "verified": true,
+   "frameXz": [
+    -66,
+    -874
+   ]
+  },
+  {
+   "id": "dala_hill",
+   "name": "Dala Hill",
+   "district": "D04",
+   "xz": [
+    -1061.0,
+    1017.0
+   ],
+   "position": "VERIFIED from ONE source; height disputed (534 m or 453.67 m above sea level)",
+   "frame_id": "dala_hill",
+   "reference": "R-001, M-11",
+   "verified": true,
+   "frameXz": [
+    -1061,
+    1017
+   ]
+  },
+  {
+   "id": "great_mosque",
+   "name": "Great Mosque of Kano",
+   "district": "D02",
+   "xz": [
+    -70.0,
+    -640.0
+   ],
+   "position": "UNVERIFIED PLACEHOLDER: sources say it stands north of the palace",
+   "frame_id": null,
+   "reference": "M-11",
+   "verified": false
+  },
+  {
+   "id": "kurmi_market",
+   "name": "Kurmi Market",
+   "district": "D03",
+   "xz": [
+    -680.0,
+    -1180.0
+   ],
+   "position": "UNVERIFIED PLACEHOLDER: in the old city near the palace",
+   "frame_id": null,
+   "reference": "M-04, M-11",
+   "verified": false
+  },
+  {
+   "id": "kofar_mata_dye_pits",
+   "name": "Kofar Mata Dye Pits",
+   "district": "D03",
+   "xz": [
+    -860.0,
+    -1050.0
+   ],
+   "position": "UNVERIFIED PLACEHOLDER: old city, near the wall and the palace",
+   "frame_id": null,
+   "reference": "M-11",
+   "verified": false
+  }
+ ],
+ "fidelityZones": [
+  {
+   "id": "Z-A",
+   "name": "Hero districts",
+   "rule": "hand-authored layout and hero buildings; full prefab LOD0 and LOD1",
+   "districts": "D01 to D11"
+  },
+  {
+   "id": "Z-B",
+   "name": "Filler fabric",
+   "rule": "inside the ring road but outside hero districts: generated from the kit by rules (plots, streets), prefab LOD1 and baked blocks only",
+   "districts": "rest of the ring"
+  },
+  {
+   "id": "Z-C",
+   "name": "Distant city",
+   "rule": "beyond the ring road: terrain tint, baked skyline and impostors only; haze limits the view",
+   "districts": "outside the ring"
+  }
+ ],
+ "roadClasses": {
+  "expressway": {
+   "lanesPerDirection": 3,
+   "laneWidthM": 3.65,
+   "median": "planted, kerbed, about 4 m, double-arm lights (R-007, R-008); or concrete jersey barrier (R-012)",
+   "sidewalks": false,
+   "edge": "W-beam guardrail on a black/white kerb base",
+   "speedKmh": 100,
+   "refs": [
+    "R-007",
+    "R-008",
+    "R-012"
+   ],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "RB-04",
+    "RB-09"
+   ],
+   "supportedToday": "partial: lanes, markings, jersey median and guardrail yes; planted median, painted kerbs, median lights no"
+  },
+  "arterial_ring": {
+   "lanesPerDirection": 2,
+   "laneWidthM": 3.5,
+   "median": "planted, kerbed, about 3 m, double-arm lights (R-011)",
+   "sidewalks": true,
+   "edge": "paver sidewalk and painted kerb",
+   "speedKmh": 70,
+   "refs": [
+    "R-011"
+   ],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "RB-04",
+    "RB-09",
+    "RB-12"
+   ],
+   "supportedToday": "partial"
+  },
+  "arterial": {
+   "lanesPerDirection": 2,
+   "laneWidthM": 3.5,
+   "median": "none or planted, by section",
+   "sidewalks": true,
+   "edge": "paver sidewalk and painted kerb",
+   "speedKmh": 60,
+   "refs": [
+    "R-011"
+   ],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "RB-04",
+    "RB-12"
+   ],
+   "supportedToday": "partial"
+  },
+  "collector": {
+   "lanesPerDirection": 1,
+   "laneWidthM": 3.5,
+   "median": "none",
+   "sidewalks": true,
+   "edge": "paver sidewalk and painted kerb",
+   "speedKmh": 40,
+   "refs": [
+    "R-006"
+   ],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "RB-04"
+   ],
+   "supportedToday": "partial: a junction stub off one main road, 150 m apart, no network"
+  },
+  "local": {
+   "lanesPerDirection": 1,
+   "laneWidthM": 3.5,
+   "median": "none (one-way loops use two lanes, R-006)",
+   "sidewalks": true,
+   "edge": "paver sidewalk, painted kerb, grass strip",
+   "speedKmh": 30,
+   "refs": [
+    "R-006"
+   ],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "RB-04",
+    "RB-12"
+   ],
+   "supportedToday": "partial"
+  },
+  "lane": {
+   "lanesPerDirection": 1,
+   "laneWidthM": 3.0,
+   "median": "none",
+   "sidewalks": false,
+   "edge": "wall faces; no reference",
+   "speedKmh": 15,
+   "refs": [],
+   "needs": [
+    "RB-16",
+    "RB-17",
+    "M-12 (no reference yet)"
+   ],
+   "supportedToday": "partial; width and surface unknown until M-12"
+  }
+ },
+ "nodeTypes": {
+  "terminal": {
+   "rb": [],
+   "today": "supported (road end)"
+  },
+  "gateway": {
+   "rb": [
+    "RB-07"
+   ],
+   "today": "prop only: a gantry set piece; its text needs RB-07"
+  },
+  "T": {
+   "rb": [],
+   "today": "supported with limits: undivided road, at least 150 m between junctions, straight stub"
+  },
+  "cross4": {
+   "rb": [
+    "RB-02",
+    "RB-16"
+   ],
+   "today": "not supported"
+  },
+  "roundabout": {
+   "rb": [
+    "RB-01",
+    "RB-16"
+   ],
+   "today": "not supported"
+  },
+  "interchange": {
+   "rb": [
+    "RB-03",
+    "RB-16"
+   ],
+   "today": "not supported"
+  },
+  "gate_cross": {
+   "rb": [
+    "RB-02",
+    "RB-16"
+   ],
+   "today": "not supported (a four-way crossing at an old-city gate)"
+  }
+ },
+ "nodes": [
+  {
+   "id": "RR0",
+   "xz": [
+    3300.0,
+    -200.0
+   ],
+   "type": "roundabout",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR22.5",
+   "xz": [
+    3048.8,
+    1062.9
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR45",
+   "xz": [
+    2333.5,
+    2133.5
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR67.5",
+   "xz": [
+    1262.9,
+    2848.8
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR90",
+   "xz": [
+    0.0,
+    3100.0
+   ],
+   "type": "roundabout",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR112.5",
+   "xz": [
+    -1262.9,
+    2848.8
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR135",
+   "xz": [
+    -2333.5,
+    2133.5
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR157.5",
+   "xz": [
+    -3048.8,
+    1062.9
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR180",
+   "xz": [
+    -3300.0,
+    -200.0
+   ],
+   "type": "roundabout",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR202.5",
+   "xz": [
+    -3048.8,
+    -1462.9
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR225",
+   "xz": [
+    -2333.5,
+    -2533.5
+   ],
+   "type": "interchange",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR247.5",
+   "xz": [
+    -1262.9,
+    -3248.8
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR270",
+   "xz": [
+    -0.0,
+    -3500.0
+   ],
+   "type": "roundabout",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR292.5",
+   "xz": [
+    1262.9,
+    -3248.8
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR315",
+   "xz": [
+    2333.5,
+    -2533.5
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "RR337.5",
+   "xz": [
+    3048.8,
+    -1462.9
+   ],
+   "type": "T",
+   "note": "outer ring road junction"
+  },
+  {
+   "id": "G0",
+   "xz": [
+    2300.0,
+    -200.0
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G45",
+   "xz": [
+    1626.3,
+    1284.9
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G90",
+   "xz": [
+    0.0,
+    1900.0
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G135",
+   "xz": [
+    -1626.3,
+    1284.9
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G180",
+   "xz": [
+    -2300.0,
+    -200.0
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G225",
+   "xz": [
+    -1626.3,
+    -1684.9
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G270",
+   "xz": [
+    -0.0,
+    -2300.0
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "G315",
+   "xz": [
+    1626.3,
+    -1684.9
+   ],
+   "type": "gate_cross",
+   "note": "old-city gate crossing (indicative position)"
+  },
+  {
+   "id": "MA0",
+   "xz": [
+    2800.0,
+    -200.0
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA45",
+   "xz": [
+    1979.9,
+    1709.2
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA90",
+   "xz": [
+    0.0,
+    2500.0
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA135",
+   "xz": [
+    -1979.9,
+    1709.2
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA180",
+   "xz": [
+    -2800.0,
+    -200.0
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA225",
+   "xz": [
+    -1979.9,
+    -2109.2
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA270",
+   "xz": [
+    -0.0,
+    -2900.0
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MA315",
+   "xz": [
+    1979.9,
+    -2109.2
+   ],
+   "type": "cross4",
+   "note": "radial arterial crossing the middle ring"
+  },
+  {
+   "id": "MM22.5",
+   "xz": [
+    2586.9,
+    833.2
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM67.5",
+   "xz": [
+    1071.5,
+    2294.5
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM112.5",
+   "xz": [
+    -1071.5,
+    2294.5
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM157.5",
+   "xz": [
+    -2586.9,
+    833.2
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM202.5",
+   "xz": [
+    -2586.9,
+    -1233.2
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM247.5",
+   "xz": [
+    -1071.5,
+    -2694.5
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM292.5",
+   "xz": [
+    1071.5,
+    -2694.5
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "MM337.5",
+   "xz": [
+    2586.9,
+    -1233.2
+   ],
+   "type": "T",
+   "note": "middle ring junction with a sub-radial"
+  },
+  {
+   "id": "X_T1",
+   "xz": [
+    -4900,
+    -4700
+   ],
+   "type": "terminal",
+   "note": "A2 highway enters the study area from the south-west"
+  },
+  {
+   "id": "X_GW",
+   "xz": [
+    -4130.1,
+    -4050.1
+   ],
+   "type": "gateway",
+   "note": "gantry and city entrance (D11)"
+  },
+  {
+   "id": "X_LOG",
+   "xz": [
+    -3308.8,
+    -3356.8
+   ],
+   "type": "T",
+   "note": "service-road junction for the logistics zone (D10)"
+  },
+  {
+   "id": "AN_D11",
+   "xz": [
+    -4350.0,
+    -4300.0
+   ],
+   "type": "T",
+   "note": "district access (D11)"
+  },
+  {
+   "id": "AN_D10",
+   "xz": [
+    -3200.0,
+    -3300.0
+   ],
+   "type": "T",
+   "note": "district access (D10)"
+  },
+  {
+   "id": "AN_D09",
+   "xz": [
+    -1800.0,
+    -2050.0
+   ],
+   "type": "T",
+   "note": "district access (D09)"
+  },
+  {
+   "id": "AN_D08",
+   "xz": [
+    300.0,
+    3000.0
+   ],
+   "type": "T",
+   "note": "district access (D08)"
+  },
+  {
+   "id": "AN_D06",
+   "xz": [
+    1650.0,
+    2300.0
+   ],
+   "type": "T",
+   "note": "district access (D06)"
+  },
+  {
+   "id": "AN_D05",
+   "xz": [
+    3000.0,
+    1100.0
+   ],
+   "type": "T",
+   "note": "district access (D05)"
+  },
+  {
+   "id": "AN_D01",
+   "xz": [
+    -100.0,
+    -800.0
+   ],
+   "type": "T",
+   "note": "district access (D01)"
+  },
+  {
+   "id": "AN_D02",
+   "xz": [
+    -50.0,
+    -875.0
+   ],
+   "type": "T",
+   "note": "district access (D02)"
+  },
+  {
+   "id": "AN_D03",
+   "xz": [
+    -680.0,
+    -1175.0
+   ],
+   "type": "T",
+   "note": "district access (D03)"
+  },
+  {
+   "id": "AN_D04",
+   "xz": [
+    -1050.0,
+    1100.0
+   ],
+   "type": "T",
+   "note": "district access (D04)"
+  },
+  {
+   "id": "AN_D07",
+   "xz": [
+    -3300.0,
+    -500.0
+   ],
+   "type": "T",
+   "note": "district access (D07)"
+  }
+ ],
+ "edges": [
+  {
+   "id": "E01",
+   "a": "RR0",
+   "b": "RR22.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E02",
+   "a": "RR22.5",
+   "b": "RR45",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E03",
+   "a": "RR45",
+   "b": "RR67.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E04",
+   "a": "RR67.5",
+   "b": "RR90",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E05",
+   "a": "RR90",
+   "b": "RR112.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E06",
+   "a": "RR112.5",
+   "b": "RR135",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E07",
+   "a": "RR135",
+   "b": "RR157.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E08",
+   "a": "RR157.5",
+   "b": "RR180",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E09",
+   "a": "RR180",
+   "b": "RR202.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E10",
+   "a": "RR202.5",
+   "b": "RR225",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E11",
+   "a": "RR225",
+   "b": "RR247.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E12",
+   "a": "RR247.5",
+   "b": "RR270",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E13",
+   "a": "RR270",
+   "b": "RR292.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E14",
+   "a": "RR292.5",
+   "b": "RR315",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E15",
+   "a": "RR315",
+   "b": "RR337.5",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E16",
+   "a": "RR337.5",
+   "b": "RR0",
+   "cls": "arterial_ring",
+   "lengthM": 1287.6,
+   "name": "outer ring road"
+  },
+  {
+   "id": "E17",
+   "a": "G0",
+   "b": "G45",
+   "cls": "collector",
+   "lengthM": 1630.6,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E18",
+   "a": "G45",
+   "b": "G90",
+   "cls": "collector",
+   "lengthM": 1738.7,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E19",
+   "a": "G90",
+   "b": "G135",
+   "cls": "collector",
+   "lengthM": 1738.7,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E20",
+   "a": "G135",
+   "b": "G180",
+   "cls": "collector",
+   "lengthM": 1630.6,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E21",
+   "a": "G180",
+   "b": "G225",
+   "cls": "collector",
+   "lengthM": 1630.6,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E22",
+   "a": "G225",
+   "b": "G270",
+   "cls": "collector",
+   "lengthM": 1738.7,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E23",
+   "a": "G270",
+   "b": "G315",
+   "cls": "collector",
+   "lengthM": 1738.7,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E24",
+   "a": "G315",
+   "b": "G0",
+   "cls": "collector",
+   "lengthM": 1630.6,
+   "name": "inner ring along the wall"
+  },
+  {
+   "id": "E25",
+   "a": "RR0",
+   "b": "MA0",
+   "cls": "arterial",
+   "lengthM": 500.0,
+   "name": "radial arterial 0 deg"
+  },
+  {
+   "id": "E26",
+   "a": "MA0",
+   "b": "G0",
+   "cls": "arterial",
+   "lengthM": 500.0,
+   "name": "radial arterial 0 deg"
+  },
+  {
+   "id": "E27",
+   "a": "RR45",
+   "b": "MA45",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 45 deg"
+  },
+  {
+   "id": "E28",
+   "a": "MA45",
+   "b": "G45",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 45 deg"
+  },
+  {
+   "id": "E29",
+   "a": "RR90",
+   "b": "MA90",
+   "cls": "arterial",
+   "lengthM": 600.0,
+   "name": "radial arterial 90 deg"
+  },
+  {
+   "id": "E30",
+   "a": "MA90",
+   "b": "G90",
+   "cls": "arterial",
+   "lengthM": 600.0,
+   "name": "radial arterial 90 deg"
+  },
+  {
+   "id": "E31",
+   "a": "RR135",
+   "b": "MA135",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 135 deg"
+  },
+  {
+   "id": "E32",
+   "a": "MA135",
+   "b": "G135",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 135 deg"
+  },
+  {
+   "id": "E33",
+   "a": "RR180",
+   "b": "MA180",
+   "cls": "arterial",
+   "lengthM": 500.0,
+   "name": "radial arterial 180 deg"
+  },
+  {
+   "id": "E34",
+   "a": "MA180",
+   "b": "G180",
+   "cls": "arterial",
+   "lengthM": 500.0,
+   "name": "radial arterial 180 deg"
+  },
+  {
+   "id": "E35",
+   "a": "RR225",
+   "b": "MA225",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 225 deg"
+  },
+  {
+   "id": "E36",
+   "a": "MA225",
+   "b": "G225",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 225 deg"
+  },
+  {
+   "id": "E37",
+   "a": "RR270",
+   "b": "MA270",
+   "cls": "arterial",
+   "lengthM": 600.0,
+   "name": "radial arterial 270 deg"
+  },
+  {
+   "id": "E38",
+   "a": "MA270",
+   "b": "G270",
+   "cls": "arterial",
+   "lengthM": 600.0,
+   "name": "radial arterial 270 deg"
+  },
+  {
+   "id": "E39",
+   "a": "RR315",
+   "b": "MA315",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 315 deg"
+  },
+  {
+   "id": "E40",
+   "a": "MA315",
+   "b": "G315",
+   "cls": "arterial",
+   "lengthM": 552.3,
+   "name": "radial arterial 315 deg"
+  },
+  {
+   "id": "E41",
+   "a": "MA0",
+   "b": "MM22.5",
+   "cls": "collector",
+   "lengthM": 1054.9,
+   "name": "middle ring"
+  },
+  {
+   "id": "E42",
+   "a": "MM22.5",
+   "b": "MA45",
+   "cls": "collector",
+   "lengthM": 1065.8,
+   "name": "middle ring"
+  },
+  {
+   "id": "E43",
+   "a": "RR22.5",
+   "b": "MM22.5",
+   "cls": "collector",
+   "lengthM": 515.9,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E44",
+   "a": "MA45",
+   "b": "MM67.5",
+   "cls": "collector",
+   "lengthM": 1080.6,
+   "name": "middle ring"
+  },
+  {
+   "id": "E45",
+   "a": "MM67.5",
+   "b": "MA90",
+   "cls": "collector",
+   "lengthM": 1091.0,
+   "name": "middle ring"
+  },
+  {
+   "id": "E46",
+   "a": "RR67.5",
+   "b": "MM67.5",
+   "cls": "collector",
+   "lengthM": 586.4,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E47",
+   "a": "MA90",
+   "b": "MM112.5",
+   "cls": "collector",
+   "lengthM": 1091.0,
+   "name": "middle ring"
+  },
+  {
+   "id": "E48",
+   "a": "MM112.5",
+   "b": "MA135",
+   "cls": "collector",
+   "lengthM": 1080.6,
+   "name": "middle ring"
+  },
+  {
+   "id": "E49",
+   "a": "RR112.5",
+   "b": "MM112.5",
+   "cls": "collector",
+   "lengthM": 586.4,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E50",
+   "a": "MA135",
+   "b": "MM157.5",
+   "cls": "collector",
+   "lengthM": 1065.8,
+   "name": "middle ring"
+  },
+  {
+   "id": "E51",
+   "a": "MM157.5",
+   "b": "MA180",
+   "cls": "collector",
+   "lengthM": 1054.9,
+   "name": "middle ring"
+  },
+  {
+   "id": "E52",
+   "a": "RR157.5",
+   "b": "MM157.5",
+   "cls": "collector",
+   "lengthM": 515.9,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E53",
+   "a": "MA180",
+   "b": "MM202.5",
+   "cls": "collector",
+   "lengthM": 1054.9,
+   "name": "middle ring"
+  },
+  {
+   "id": "E54",
+   "a": "MM202.5",
+   "b": "MA225",
+   "cls": "collector",
+   "lengthM": 1065.8,
+   "name": "middle ring"
+  },
+  {
+   "id": "E55",
+   "a": "RR202.5",
+   "b": "MM202.5",
+   "cls": "collector",
+   "lengthM": 515.9,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E56",
+   "a": "MA225",
+   "b": "MM247.5",
+   "cls": "collector",
+   "lengthM": 1080.6,
+   "name": "middle ring"
+  },
+  {
+   "id": "E57",
+   "a": "MM247.5",
+   "b": "MA270",
+   "cls": "collector",
+   "lengthM": 1091.0,
+   "name": "middle ring"
+  },
+  {
+   "id": "E58",
+   "a": "RR247.5",
+   "b": "MM247.5",
+   "cls": "collector",
+   "lengthM": 586.4,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E59",
+   "a": "MA270",
+   "b": "MM292.5",
+   "cls": "collector",
+   "lengthM": 1091.0,
+   "name": "middle ring"
+  },
+  {
+   "id": "E60",
+   "a": "MM292.5",
+   "b": "MA315",
+   "cls": "collector",
+   "lengthM": 1080.6,
+   "name": "middle ring"
+  },
+  {
+   "id": "E61",
+   "a": "RR292.5",
+   "b": "MM292.5",
+   "cls": "collector",
+   "lengthM": 586.4,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E62",
+   "a": "MA315",
+   "b": "MM337.5",
+   "cls": "collector",
+   "lengthM": 1065.8,
+   "name": "middle ring"
+  },
+  {
+   "id": "E63",
+   "a": "MM337.5",
+   "b": "MA0",
+   "cls": "collector",
+   "lengthM": 1054.9,
+   "name": "middle ring"
+  },
+  {
+   "id": "E64",
+   "a": "RR337.5",
+   "b": "MM337.5",
+   "cls": "collector",
+   "lengthM": 515.9,
+   "name": "sub-radial"
+  },
+  {
+   "id": "E65",
+   "a": "X_T1",
+   "b": "X_GW",
+   "cls": "expressway",
+   "lengthM": 1007.5,
+   "name": "A2 highway"
+  },
+  {
+   "id": "E66",
+   "a": "X_GW",
+   "b": "X_LOG",
+   "cls": "expressway",
+   "lengthM": 1074.8,
+   "name": "A2 highway"
+  },
+  {
+   "id": "E67",
+   "a": "X_LOG",
+   "b": "RR225",
+   "cls": "expressway",
+   "lengthM": 1276.3,
+   "name": "A2 highway"
+  },
+  {
+   "id": "E68",
+   "a": "AN_D11",
+   "b": "X_GW",
+   "cls": "collector",
+   "lengthM": 332.9,
+   "name": "collector to D11"
+  },
+  {
+   "id": "E69",
+   "a": "AN_D10",
+   "b": "X_LOG",
+   "cls": "collector",
+   "lengthM": 122.7,
+   "name": "collector to D10"
+  },
+  {
+   "id": "E70",
+   "a": "AN_D09",
+   "b": "MA225",
+   "cls": "collector",
+   "lengthM": 189.4,
+   "name": "collector to D09"
+  },
+  {
+   "id": "E71",
+   "a": "AN_D08",
+   "b": "RR90",
+   "cls": "collector",
+   "lengthM": 316.2,
+   "name": "collector to D08"
+  },
+  {
+   "id": "E72",
+   "a": "AN_D06",
+   "b": "MM67.5",
+   "cls": "collector",
+   "lengthM": 578.5,
+   "name": "collector to D06"
+  },
+  {
+   "id": "E73",
+   "a": "AN_D05",
+   "b": "RR22.5",
+   "cls": "collector",
+   "lengthM": 61.3,
+   "name": "collector to D05"
+  },
+  {
+   "id": "E74",
+   "a": "AN_D04",
+   "b": "G135",
+   "cls": "collector",
+   "lengthM": 605.2,
+   "name": "collector to D04"
+  },
+  {
+   "id": "E75",
+   "a": "AN_D07",
+   "b": "RR180",
+   "cls": "collector",
+   "lengthM": 300.0,
+   "name": "collector to D07"
+  },
+  {
+   "id": "E76",
+   "a": "AN_D01",
+   "b": "G270",
+   "cls": "collector",
+   "lengthM": 1503.3,
+   "name": "collector from the south gate"
+  },
+  {
+   "id": "E77",
+   "a": "AN_D01",
+   "b": "G225",
+   "cls": "collector",
+   "lengthM": 1764.3,
+   "name": "collector from the south-west gate"
+  },
+  {
+   "id": "E78",
+   "a": "AN_D02",
+   "b": "AN_D01",
+   "cls": "local",
+   "lengthM": 90.1,
+   "name": "palace forecourt street"
+  },
+  {
+   "id": "E79",
+   "a": "AN_D03",
+   "b": "AN_D01",
+   "cls": "lane",
+   "lengthM": 690.7,
+   "name": "market lanes"
+  },
+  {
+   "id": "E80",
+   "a": "AN_D06",
+   "b": "AN_D05",
+   "cls": "collector",
+   "lengthM": 1806.2,
+   "name": "east collector"
+  },
+  {
+   "id": "E81",
+   "a": "AN_D06",
+   "b": "AN_D08",
+   "cls": "collector",
+   "lengthM": 1520.7,
+   "name": "north collector"
+  },
+  {
+   "id": "E82",
+   "a": "AN_D09",
+   "b": "AN_D10",
+   "cls": "collector",
+   "lengthM": 1876.8,
+   "name": "logistics link"
+  },
+  {
+   "id": "E83",
+   "a": "AN_D04",
+   "b": "AN_D07",
+   "cls": "collector",
+   "lengthM": 2760.9,
+   "name": "west collector"
+  }
+ ],
+ "layouts": {
+  "D06": {
+   "title": "Modern residential estate (R-006)",
+   "size": [
+    1300,
+    1200
+   ],
+   "note": "Perimeter collector, one-way loop local streets, blocks of 140 x 80 m with six plots of about 22 x 32 m on each long side."
+  },
+  "D08": {
+   "title": "Institutional corridor (R-010, R-011)",
+   "size": [
+    1400,
+    1200
+   ],
+   "note": "Divided arterial through the centre; hospital campus on one side, police station and future school, government building and hotel on the other."
+  },
+  "D09": {
+   "title": "Transport hub (R-009)",
+   "size": [
+    1000,
+    700
+   ],
+   "note": "Terminal building, canopied bays, apron with a landscaped island, gatehouse and barrier, parking, perimeter wall."
+  },
+  "D10": {
+   "title": "Industrial and logistics zone (R-013 to R-015)",
+   "size": [
+    1000,
+    1000
+   ],
+   "note": "Warehouse with six docks, yard, truck-parking field, gatehouse, a truck fuel and service centre, perimeter wall; expressway frontage."
+  },
+  "D11": {
+   "title": "A2 expressway gateway (R-007, R-008, R-012)",
+   "size": [
+    1100,
+    1000
+   ],
+   "note": "Gantry across the divided carriageway, planted median with double-arm lights, a curve with chevron signs and guardrails, and the approach to the interchange."
+  }
+ },
+ "streaming": {
+  "assumptions": {
+   "frustumFraction": 0.3,
+   "mergedAtlasesPerChunk": 2,
+   "chunkHa": 4.0,
+   "occlusionCredit": 0.0,
+   "note": "The camera sees a fraction of the circle around the player; the model counts that fraction and gives no credit for occlusion. Plot densities are PLANNING ASSUMPTIONS to be replaced by reference measurement."
+  },
+  "bandEdgesM": [
+   0,
+   60,
+   150,
+   350,
+   800,
+   1500
+  ],
+  "capsTrisPerPlot": [
+   5000,
+   1500,
+   120,
+   12,
+   3
+  ],
+  "bandProduct": [
+   "prefab LOD0",
+   "prefab LOD1",
+   "baked block mesh (atlas)",
+   "baked block mesh, coarse",
+   "impostor or skyline mesh"
+  ],
+  "individualBands": [
+   true,
+   true,
+   false,
+   false,
+   false
+  ],
+  "tierRadiusScale": {
+   "low": 0.6,
+   "medium": 1.0,
+   "high": 1.0
+  },
+  "targets": {
+   "triangleShare": 0.45,
+   "drawShare": 0.6
+  },
+  "currentEngine": {
+   "productionRing": 2,
+   "chunkM": 200,
+   "note": "ChunkStreamer instantiates production prefabs one by one for chunks within 2 rings (a 5 x 5 chunk square, 100 ha), with no batching: the model counts one draw per plot in view."
+  }
+ },
+ "phases": [
+  {
+   "id": "P0",
+   "name": "Foundations (no modelling)",
+   "districts": [],
+   "entry": "this master plan reviewed and approved by the owner",
+   "exit": "asset registry live in the private repository; reference-comparison harness defined; engine roadmap items RB-15, RB-16 and RB-17 designed and approved or declined; reference gaps and coordinate decisions closed",
+   "engine": [
+    "RB-15",
+    "RB-16",
+    "RB-17"
+   ],
+   "note": "Everything that does not need the engine or a missing reference can start the moment P0 exits."
+  },
+  {
+   "id": "P1a",
+   "name": "Gateway and civic assets (engine-independent)",
+   "districts": [
+    "D11",
+    "D10",
+    "D09",
+    "D08",
+    "D06"
+   ],
+   "entry": "P0 exit; the asset breakdown of each concept approved",
+   "exit": "every concept-backed asset of the matrix reaches unity_import_verified in a test scene, with the in-game screenshot compared against its concept",
+   "engine": [],
+   "note": "Buildings, kit modules, props and vehicles import and render in the existing engine; placement uses a test scene, not the city network."
+  },
+  {
+   "id": "P1b",
+   "name": "Gateway and civic districts in the game",
+   "districts": [
+    "D11",
+    "D10",
+    "D09",
+    "D08",
+    "D06"
+   ],
+   "entry": "P1a exit and the shared-engine items approved",
+   "exit": "the five districts are drivable, compared against their concepts in game screenshots, and measured against the tier budgets",
+   "engine": [
+    "RB-01",
+    "RB-02",
+    "RB-03",
+    "RB-04",
+    "RB-07",
+    "RB-09",
+    "RB-12",
+    "RB-13",
+    "RB-15",
+    "RB-16",
+    "RB-17"
+   ],
+   "note": "Blocked until the engine delivers a road network, kerbs and sidewalks, pavement symbols, off-road areas and city-density streaming."
+  },
+  {
+   "id": "P2",
+   "name": "Commercial belt and civic completion",
+   "districts": [
+    "D05",
+    "D08"
+   ],
+   "entry": "concepts for modern commercial frontage, schools, government buildings and hotels (M-02, M-04, M-10)",
+   "exit": "D05 and the rest of D08 as P1b",
+   "engine": [],
+   "note": "Needs new concepts first."
+  },
+  {
+   "id": "P3",
+   "name": "Traditional districts",
+   "districts": [
+    "D01",
+    "D03",
+    "D07"
+   ],
+   "entry": "authentic references for Hausa compounds, old-city lanes and markets (M-01, M-04, M-12)",
+   "exit": "as P1b; hero sector first",
+   "engine": [
+    "RB-17"
+   ],
+   "note": "BLOCKED: nothing is invented without references."
+  },
+  {
+   "id": "P4",
+   "name": "Landmarks",
+   "districts": [
+    "D02",
+    "D04"
+   ],
+   "entry": "rights-cleared real references or measured drawings for each landmark (M-11)",
+   "exit": "each landmark reviewed against its source",
+   "engine": [
+    "RB-14"
+   ],
+   "note": "A landmark is never invented; positions of unverified landmarks are fixed from sources first."
+  },
+  {
+   "id": "P5",
+   "name": "Expansion",
+   "districts": [],
+   "entry": "the pipeline and library proven on Kano",
+   "exit": "further Kano sectors, the Kaduna-Kano corridor (compressed, anchored at both cities) and the next cities, reusing the registry before creating assets",
+   "engine": [
+    "RB-15",
+    "RB-16"
+   ],
+   "note": "Each new city checks the registry for GLOBAL and REGIONAL assets first."
+  }
+ ]
+}

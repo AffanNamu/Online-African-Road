@@ -1,0 +1,4999 @@
+{
+ "schemaVersion": 1,
+ "rule": "A reference is a design specification to reproduce in genuine 3D, not an image to place on a plane. Deviations from a concept must be explained to the owner first.",
+ "references": [
+  {
+   "ref": "R-006",
+   "scene": "Gated modern residential street, one-way",
+   "districts": [
+    "D06"
+   ],
+   "visualRequirements": [
+    "one-way carriageway of about two lanes",
+    "painted black/white kerbs and paver sidewalks both sides",
+    "continuous compound walls with piers and gates",
+    "single-arm streetlights on the sidewalk edge",
+    "street trees in grass strips",
+    "pavement arrow symbols"
+   ],
+   "flags": [
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "referenceCamera": "eye-level, 1.7 m, looking down the street from the kerb line, 28 mm",
+   "comparisonChecklist": [
+    "house heights and roof shape",
+    "wall height, pier spacing and gate width",
+    "kerb stripe and paver pattern",
+    "streetlight height and spacing",
+    "tree size and spacing",
+    "lane count, arrows, one-way sign"
+   ],
+   "assets": [
+    {
+     "id": "aro_villa_2storey_hip_a",
+     "name": "Two-storey villa, hipped dark-tile roof, balcony (type A)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_villa_2storey_hip_b",
+     "name": "Two-storey villa, hipped dark-tile roof, balcony (type B)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_wall_compound_panel_a",
+     "name": "Compound wall module: rendered cream with grey cladding panel",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_pier_stone_a",
+     "name": "Wall pier with stone cladding and coping",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_gate_ornate_steel_a",
+     "name": "Ornate black steel double gate",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_lantern_wall_a",
+     "name": "Wall-mounted lantern",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_balcony_glass_a",
+     "name": "Balcony with glass balustrade (kit)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_roof_hip_darktile_a",
+     "name": "Hipped dark-tile roof (kit)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_streetlight_single_arm_a",
+     "name": "Single-arm streetlight",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011"
+     ]
+    },
+    {
+     "id": "aro_sign_oneway_a",
+     "name": "One Way regulatory sign (blue square, arrow)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sidewalk_paver_a",
+     "name": "Interlocking-paver sidewalk module (pink and grey)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_hedge_clipped_a",
+     "name": "Clipped hedge strip",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_shrub_ixora_red_a",
+     "name": "Red-flowering ornamental shrub",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "species to confirm",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_b",
+     "name": "Broad-leaf street tree (form B)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "as above",
+     "alsoUsedBy": [
+      "R-007"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_villa_2storey_hip_a",
+    "aro_villa_2storey_hip_b",
+    "aro_wall_compound_panel_a",
+    "aro_pier_stone_a",
+    "aro_gate_ornate_steel_a",
+    "aro_lantern_wall_a",
+    "aro_balcony_glass_a",
+    "aro_roof_hip_darktile_a",
+    "aro_streetlight_single_arm_a",
+    "aro_sign_oneway_a",
+    "aro_kerb_painted_blackwhite_a",
+    "aro_sidewalk_paver_a",
+    "aro_marking_arrow_straight_a",
+    "aro_hedge_clipped_a",
+    "aro_shrub_ixora_red_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "rg_ngn_tree_street_broadleaf_b"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-007",
+   "scene": "Curved dual-carriageway expressway",
+   "districts": [
+    "D11"
+   ],
+   "visualRequirements": [
+    "three lanes per direction, planted kerbed median",
+    "yellow edge lines, white dashed lane lines",
+    "W-beam guardrail with black/white kerb base",
+    "double-arm median streetlights",
+    "chevron curve signs",
+    "rock-cut slope and rocky green hills"
+   ],
+   "flags": [
+    "The green rocky hills do not match the flat plain the sources describe at Kano; they suit the hillier country on the Kaduna side of the route."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, on the left carriageway through the bend, 28 mm",
+   "comparisonChecklist": [
+    "lanes per direction and widths",
+    "median width, kerb pattern, planting",
+    "guardrail and kerb base",
+    "double-arm light spacing",
+    "chevron signs",
+    "cut slope and hill backdrop"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-006",
+      "R-008",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_b",
+     "name": "Broad-leaf street tree (form B)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "as above",
+     "alsoUsedBy": [
+      "R-006"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_median_planter_kerbed_a",
+     "name": "Kerbed planter median module with shrubs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04",
+      "RB-17"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-008",
+      "R-011",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_guardrail_wbeam_a",
+     "name": "W-beam guardrail with posts",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-008",
+      "R-012"
+     ]
+    },
+    {
+     "id": "aro_sign_chevron_curve_a",
+     "name": "Curve chevron sign",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_terrain_rock_cutslope_a",
+     "name": "Rock-cut road slope",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hilly terrain; not the flat plain at Kano",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_hill_rocky_backdrop_a",
+     "name": "Rocky green hill backdrop",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hilly terrain; not the flat plain at Kano",
+     "alsoUsedBy": [
+      "R-008",
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_savanna_scattered_a",
+     "name": "Scattered savanna tree",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "species to confirm (M-07)",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_blackwhite_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "rg_ngn_tree_street_broadleaf_b",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_planter_kerbed_a",
+    "aro_guardrail_wbeam_a",
+    "aro_sign_chevron_curve_a",
+    "rg_ngn_terrain_rock_cutslope_a",
+    "rg_ngn_hill_rocky_backdrop_a",
+    "rg_ngn_tree_savanna_scattered_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-14",
+     "title": "Terrain authoring"
+    },
+    {
+     "rb": "RB-17",
+     "title": "Road class catalogue"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-008",
+   "scene": "A2 gantry, planter median",
+   "districts": [
+    "D11"
+   ],
+   "visualRequirements": [
+    "steel truss gantry spanning the carriageway",
+    "green overhead panel with route badge, arrows and distances",
+    "roadside distance sign",
+    "planter median with double-arm lights",
+    "guardrails with black/white kerb"
+   ],
+   "flags": [
+    "The sign's distances (Zaria 138 km, Kaduna 262 km) and the label 'A2 Express Route' do not match what web sources give: Kano to Zaria about 155 to 165 km by road, Kano to Kaduna about 230 km (sources range 232 to 272 km); 'A2' is the right federal designation for the Abuja-Kaduna-Zaria-Kano highway but 'Express Route' is not an established designation. Sign text must come from verified route data.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, 80 m before the gantry, 28 mm",
+   "comparisonChecklist": [
+    "gantry span and height",
+    "sign proportions and text layout",
+    "median and lights",
+    "distance sign"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-011",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-011",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_median_planter_kerbed_a",
+     "name": "Kerbed planter median module with shrubs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04",
+      "RB-17"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-011",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_guardrail_wbeam_a",
+     "name": "W-beam guardrail with posts",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-012"
+     ]
+    },
+    {
+     "id": "aro_gantry_truss_a",
+     "name": "Steel-truss overhead gantry spanning a dual carriageway",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_panel_overhead_green_a",
+     "name": "Overhead green sign panel (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data (the concept's distances do not match the sources)",
+     "alsoUsedBy": [
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_km_marker_a",
+     "name": "Roadside distance sign (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data",
+     "alsoUsedBy": [
+      "R-012"
+     ]
+    },
+    {
+     "id": "rg_ngn_hill_rocky_backdrop_a",
+     "name": "Rocky green hill backdrop",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hilly terrain; not the flat plain at Kano",
+     "alsoUsedBy": [
+      "R-007",
+      "R-012",
+      "R-023"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_blackwhite_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_planter_kerbed_a",
+    "aro_guardrail_wbeam_a",
+    "aro_gantry_truss_a",
+    "aro_sign_panel_overhead_green_a",
+    "aro_sign_km_marker_a",
+    "rg_ngn_hill_rocky_backdrop_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-14",
+     "title": "Terrain authoring"
+    },
+    {
+     "rb": "RB-17",
+     "title": "Road class catalogue"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-009",
+   "scene": "Bus terminal",
+   "districts": [
+    "D09"
+   ],
+   "visualRequirements": [
+    "terminal building with geometric-lattice arched panels",
+    "canopied bays with solar roofs and bay markers",
+    "coaches in several liveries",
+    "guardhouse, barrier gate, perimeter wall with piers and railing",
+    "landscaped island, parking bays, road arrows and zebra crossing"
+   ],
+   "flags": [
+    "The name 'Kano Central Bus Terminal' is illustrative; a real terminal of that name is not verified.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "referenceCamera": "aerial three-quarter view from the gate, 35 mm",
+   "comparisonChecklist": [
+    "building massing and facade panels",
+    "canopy bays and numbering",
+    "apron markings and island",
+    "gatehouse, barrier and wall",
+    "vehicle liveries"
+   ],
+   "assets": [
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-010",
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-022"
+     ]
+    },
+    {
+     "id": "rg_ngn_screen_geometric_arch_a",
+     "name": "Arched panel with geometric lattice (facade kit)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "pattern is the concept's; a real Kano pattern needs a reference",
+     "alsoUsedBy": [
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_bus_terminal_hall_a",
+     "name": "Terminal hall: glass facade, sign band, arched side panels",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_canopy_bus_bay_solar_a",
+     "name": "Bus-bay canopy with solar roof and numbered posts",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "kano_bus_terminal_a",
+     "name": "Kano bus terminal: assembled complex, livery and signage",
+     "cls": "CITY_SPECIFIC",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "the name is illustrative",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_coach_a",
+     "name": "Parked coach (four liveries as material variants)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "close-range fidelity conflicts with the 2,500-triangle prop budget: owner decision",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_suv_parked_a",
+     "name": "Parked SUV (generic, no brand)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "same budget conflict as the coach",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_guardhouse_a",
+     "name": "Guardhouse with flat roof",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_barrier_arm_gate_a",
+     "name": "Barrier-arm gate",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_pier_rail_a",
+     "name": "Perimeter wall with piers and black railing",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_planter_island_kerbed_a",
+     "name": "Kerbed landscaped island",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_bollard_yellow_a",
+     "name": "Yellow safety bollard",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_bench_a",
+     "name": "Bench",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_marking_zebra_crossing_a",
+     "name": "Zebra crossing",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_marking_bay_set_a",
+     "name": "Painted parking-bay set",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12",
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-013",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_sign_totem_service_a",
+     "name": "Totem sign with service list (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_sign_building_band_a",
+     "name": "Building name band (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-011",
+      "R-013",
+      "R-014"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_marking_arrow_straight_a",
+    "rg_ngn_screen_geometric_arch_a",
+    "aro_bus_terminal_hall_a",
+    "aro_canopy_bus_bay_solar_a",
+    "aro_coach_a",
+    "aro_suv_parked_a",
+    "aro_guardhouse_a",
+    "aro_barrier_arm_gate_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_planter_island_kerbed_a",
+    "aro_kerb_painted_yellowblack_a",
+    "aro_bollard_yellow_a",
+    "aro_bench_a",
+    "aro_marking_zebra_crossing_a",
+    "aro_marking_bay_set_a",
+    "aro_sign_totem_service_a",
+    "aro_sign_building_band_a"
+   ],
+   "cityComponents": [
+    "kano_bus_terminal_a"
+   ],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-13",
+     "title": "Off-road paved areas"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-010",
+   "scene": "Hospital campus",
+   "districts": [
+    "D08"
+   ],
+   "visualRequirements": [
+    "central glass block with geometric screens and wings",
+    "emergency canopy and ambulance bay",
+    "signage totem and facade directory",
+    "parking lots with disabled bays and markings",
+    "landscaped island, benches, bins, light bollards"
+   ],
+   "flags": [
+    "The name 'Aminu Kano Specialist Hospital' resembles a real institution (Aminu Kano Teaching Hospital); use a fictional name unless the owner decides otherwise.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "referenceCamera": "aerial three-quarter view from the main road, 35 mm",
+   "comparisonChecklist": [
+    "block and wing massing",
+    "emergency canopy and ambulance bay",
+    "signage totem",
+    "parking, markings and island",
+    "lighting and planting"
+   ],
+   "assets": [
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-009",
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_hedge_clipped_a",
+     "name": "Clipped hedge strip",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-022"
+     ]
+    },
+    {
+     "id": "rg_ngn_screen_geometric_arch_a",
+     "name": "Arched panel with geometric lattice (facade kit)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "pattern is the concept's; a real Kano pattern needs a reference",
+     "alsoUsedBy": [
+      "R-009"
+     ]
+    },
+    {
+     "id": "aro_planter_island_kerbed_a",
+     "name": "Kerbed landscaped island",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_bench_a",
+     "name": "Bench",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009"
+     ]
+    },
+    {
+     "id": "aro_bin_a",
+     "name": "Litter bin",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_marking_zebra_crossing_a",
+     "name": "Zebra crossing",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009"
+     ]
+    },
+    {
+     "id": "aro_marking_bay_set_a",
+     "name": "Painted parking-bay set",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12",
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_sign_totem_service_a",
+     "name": "Totem sign with service list (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_sign_building_band_a",
+     "name": "Building name band (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-011",
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_hospital_block_glass_a",
+     "name": "Hospital central block with glass curtain and screens",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_hospital_wing_a",
+     "name": "Hospital wing with window bands",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_canopy_emergency_a",
+     "name": "Emergency entrance canopy (red)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_ambulance_a",
+     "name": "Parked ambulance",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "real-organisation livery: owner decision; prop budget conflict",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_covered_walkway_a",
+     "name": "Covered walkway",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_bollard_light_a",
+     "name": "Light bollard",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_palm_ornamental_a",
+     "name": "Ornamental palm",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-022"
+     ]
+    },
+    {
+     "id": "kano_hospital_a",
+     "name": "Hospital campus: assembled, with a fictional name",
+     "cls": "CITY_SPECIFIC",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "the concept's name resembles a real institution",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_telecom_mast_a",
+     "name": "Lattice telecom mast",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011",
+      "R-022"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_marking_arrow_straight_a",
+    "aro_hedge_clipped_a",
+    "rg_ngn_screen_geometric_arch_a",
+    "aro_planter_island_kerbed_a",
+    "aro_bench_a",
+    "aro_bin_a",
+    "aro_marking_zebra_crossing_a",
+    "aro_marking_bay_set_a",
+    "aro_sign_totem_service_a",
+    "aro_sign_building_band_a",
+    "aro_hospital_block_glass_a",
+    "aro_hospital_wing_a",
+    "aro_canopy_emergency_a",
+    "aro_ambulance_a",
+    "aro_covered_walkway_a",
+    "aro_bollard_light_a",
+    "aro_palm_ornamental_a",
+    "aro_telecom_mast_a"
+   ],
+   "cityComponents": [
+    "kano_hospital_a"
+   ],
+   "engineGaps": [
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-13",
+     "title": "Off-road paved areas"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-011",
+   "scene": "Police station beside a divided arterial",
+   "districts": [
+    "D08"
+   ],
+   "visualRequirements": [
+    "station building and guardhouse",
+    "gate, boundary wall with blue piers and railing",
+    "flagpoles with national flags",
+    "divided arterial with planted median and paver sidewalks",
+    "police vehicles"
+   ],
+   "flags": [
+    "The crest imitates the Nigeria Police Force emblem, a real official mark; reproduce it only if the owner decides to, otherwise use a generic crest or text only.",
+    "Police livery on vehicles is also a real-organisation depiction: owner decision."
+   ],
+   "referenceCamera": "elevated three-quarter view along the arterial, 35 mm",
+   "comparisonChecklist": [
+    "station massing and portico",
+    "gate, wall and guardhouse",
+    "flagpoles",
+    "arterial cross-section and median",
+    "streetlights and sidewalk"
+   ],
+   "assets": [
+    {
+     "id": "aro_streetlight_single_arm_a",
+     "name": "Single-arm streetlight",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sidewalk_paver_a",
+     "name": "Interlocking-paver sidewalk module (pink and grey)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-012",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_median_planter_kerbed_a",
+     "name": "Kerbed planter median module with shrubs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04",
+      "RB-17"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_guardhouse_a",
+     "name": "Guardhouse with flat roof",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_pier_rail_a",
+     "name": "Perimeter wall with piers and black railing",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_building_band_a",
+     "name": "Building name band (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_telecom_mast_a",
+     "name": "Lattice telecom mast",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_police_station_a",
+     "name": "Station block with entrance portico",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "the crest imitates a real force's emblem: owner decision",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "kano_police_station_a",
+     "name": "Police station: assembled, with a local identity",
+     "cls": "CITY_SPECIFIC",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_police_pickup_a",
+     "name": "Police pickup (livery)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "real-organisation livery: owner decision; prop budget conflict",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_gate_sliding_steel_a",
+     "name": "Sliding steel gate",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_flagpole_a",
+     "name": "Flagpole with the national flag",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_streetlight_single_arm_a",
+    "aro_kerb_painted_blackwhite_a",
+    "aro_sidewalk_paver_a",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_planter_kerbed_a",
+    "aro_guardhouse_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_sign_building_band_a",
+    "aro_telecom_mast_a",
+    "aro_police_station_a",
+    "aro_police_pickup_a",
+    "aro_gate_sliding_steel_a",
+    "aro_flagpole_a"
+   ],
+   "cityComponents": [
+    "kano_police_station_a"
+   ],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-17",
+     "title": "Road class catalogue"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-012",
+   "scene": "A2 gantry, concrete median barrier",
+   "districts": [
+    "D11"
+   ],
+   "visualRequirements": [
+    "steel truss gantry",
+    "concrete median barrier",
+    "guardrail with black/white kerb",
+    "double-arm lights on the median line"
+   ],
+   "flags": [
+    "The sign's distances (Zaria 138 km, Kaduna 262 km) and the label 'A2 Express Route' do not match what web sources give: Kano to Zaria about 155 to 165 km by road, Kano to Kaduna about 230 km (sources range 232 to 272 km); 'A2' is the right federal designation for the Abuja-Kaduna-Zaria-Kano highway but 'Express Route' is not an established designation. Sign text must come from verified route data.",
+    "A white mosque with two minarets and a teal dome recurs in the distance of R-006, R-008, R-009, R-010, R-012: it reads as a designated landmark. Whether it stands for the real Kano Central Mosque (a verified LANDMARK with its own design) or is a generic skyline mosque is the owner's decision."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, 80 m before the gantry, 28 mm",
+   "comparisonChecklist": [
+    "jersey-barrier median",
+    "guardrail with kerb base",
+    "gantry and sign layout"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_median_barrier_jersey_a",
+     "name": "Concrete jersey-barrier median module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_guardrail_wbeam_a",
+     "name": "W-beam guardrail with posts",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008"
+     ]
+    },
+    {
+     "id": "aro_gantry_truss_a",
+     "name": "Steel-truss overhead gantry spanning a dual carriageway",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-008",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_panel_overhead_green_a",
+     "name": "Overhead green sign panel (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data (the concept's distances do not match the sources)",
+     "alsoUsedBy": [
+      "R-008",
+      "R-022",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_km_marker_a",
+     "name": "Roadside distance sign (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data",
+     "alsoUsedBy": [
+      "R-008"
+     ]
+    },
+    {
+     "id": "rg_ngn_hill_rocky_backdrop_a",
+     "name": "Rocky green hill backdrop",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hilly terrain; not the flat plain at Kano",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-023"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_blackwhite_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_barrier_jersey_a",
+    "aro_guardrail_wbeam_a",
+    "aro_gantry_truss_a",
+    "aro_sign_panel_overhead_green_a",
+    "aro_sign_km_marker_a",
+    "rg_ngn_hill_rocky_backdrop_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-14",
+     "title": "Terrain authoring"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-013",
+   "scene": "Truck fuel and service centre",
+   "districts": [
+    "D10"
+   ],
+   "visualRequirements": [
+    "fuel canopy with numbered pumps",
+    "shop-and-restaurant building and service garage",
+    "truck parking bays with painted symbols",
+    "yellow/black kerbs and speed humps",
+    "heavy trucks in several liveries"
+   ],
+   "flags": [
+    "The brand colours and the name are generic; no real fuel brand is verified."
+   ],
+   "referenceCamera": "aerial three-quarter view from the entrance, 35 mm",
+   "comparisonChecklist": [
+    "canopy and island numbering",
+    "shop and garage massing",
+    "truck-parking bays and symbols",
+    "kerbs and speed humps",
+    "truck liveries"
+   ],
+   "assets": [
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-009",
+      "R-010",
+      "R-014",
+      "R-015",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_planter_island_kerbed_a",
+     "name": "Kerbed landscaped island",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-014",
+      "R-015",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_bollard_yellow_a",
+     "name": "Yellow safety bollard",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_marking_bay_set_a",
+     "name": "Painted parking-bay set",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12",
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_sign_totem_service_a",
+     "name": "Totem sign with service list (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_sign_building_band_a",
+     "name": "Building name band (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-011",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_fuel_canopy_truck_a",
+     "name": "Truck fuel canopy with numbered islands",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "generic colours; no real brand",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_fuel_pump_a",
+     "name": "Fuel pump",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_shop_restaurant_a",
+     "name": "Shop-and-restaurant building",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_service_garage_a",
+     "name": "Service garage with workshop bays",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_truck_tractor_a",
+     "name": "Tractor unit (several liveries)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_trailer_box_a",
+     "name": "Box trailer",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_marking_truck_symbol_a",
+     "name": "Truck-parking symbol marking",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_speedhump_yellowblack_a",
+     "name": "Yellow-and-black speed hump",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_plain_a",
+     "name": "Plain perimeter wall with piers",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_streetlight_pole_tall_yard_a",
+     "name": "Tall yard light with multi-head fixture",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014",
+      "R-015"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_marking_arrow_straight_a",
+    "aro_planter_island_kerbed_a",
+    "aro_kerb_painted_yellowblack_a",
+    "aro_bollard_yellow_a",
+    "aro_marking_bay_set_a",
+    "aro_sign_totem_service_a",
+    "aro_sign_building_band_a",
+    "aro_fuel_canopy_truck_a",
+    "aro_fuel_pump_a",
+    "aro_shop_restaurant_a",
+    "aro_service_garage_a",
+    "aro_truck_tractor_a",
+    "aro_trailer_box_a",
+    "aro_marking_truck_symbol_a",
+    "aro_speedhump_yellowblack_a",
+    "aro_wall_perimeter_plain_a",
+    "aro_streetlight_pole_tall_yard_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-13",
+     "title": "Off-road paved areas"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-014",
+   "scene": "Warehouse and logistics yard, aerial",
+   "districts": [
+    "D10"
+   ],
+   "visualRequirements": [
+    "large steel warehouse with six dock doors",
+    "site office, guardhouse, barrier and sliding gate",
+    "truck-parking field with painted bays",
+    "water tower, fuel canopy, perimeter wall",
+    "yard lighting"
+   ],
+   "flags": [],
+   "referenceCamera": "aerial three-quarter view from the gate, 35 mm",
+   "comparisonChecklist": [
+    "warehouse massing and six docks",
+    "office, guardhouse, gate",
+    "truck-parking field",
+    "water tower and fuel canopy",
+    "perimeter wall"
+   ],
+   "assets": [
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-015",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_guardhouse_a",
+     "name": "Guardhouse with flat roof",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-011",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_barrier_arm_gate_a",
+     "name": "Barrier-arm gate",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-015",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_bollard_yellow_a",
+     "name": "Yellow safety bollard",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_marking_bay_set_a",
+     "name": "Painted parking-bay set",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12",
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_sign_building_band_a",
+     "name": "Building name band (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-011",
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_gate_sliding_steel_a",
+     "name": "Sliding steel gate",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-011"
+     ]
+    },
+    {
+     "id": "aro_truck_tractor_a",
+     "name": "Tractor unit (several liveries)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-013",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_trailer_box_a",
+     "name": "Box trailer",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-013",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_marking_truck_symbol_a",
+     "name": "Truck-parking symbol marking",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_warehouse_steel_large_a",
+     "name": "Large steel warehouse with six dock doors",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_dock_door_bay_a",
+     "name": "Loading-dock door bay with number (kit)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_site_office_a",
+     "name": "Site office with glazed front",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_water_tower_a",
+     "name": "Elevated water tower",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_pallet_stack_a",
+     "name": "Pallet and box stack",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_plain_a",
+     "name": "Plain perimeter wall with piers",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_streetlight_pole_tall_yard_a",
+     "name": "Tall yard light with multi-head fixture",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-015"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_marking_arrow_straight_a",
+    "aro_guardhouse_a",
+    "aro_barrier_arm_gate_a",
+    "aro_kerb_painted_yellowblack_a",
+    "aro_bollard_yellow_a",
+    "aro_marking_bay_set_a",
+    "aro_sign_building_band_a",
+    "aro_gate_sliding_steel_a",
+    "aro_truck_tractor_a",
+    "aro_trailer_box_a",
+    "aro_marking_truck_symbol_a",
+    "aro_warehouse_steel_large_a",
+    "aro_dock_door_bay_a",
+    "aro_site_office_a",
+    "aro_water_tower_a",
+    "aro_pallet_stack_a",
+    "aro_wall_perimeter_plain_a",
+    "aro_streetlight_pole_tall_yard_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-13",
+     "title": "Off-road paved areas"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-015",
+   "scene": "Warehouse yard, ground level",
+   "districts": [
+    "D10"
+   ],
+   "visualRequirements": [
+    "dock doors with numbers and yellow bollards",
+    "guardhouse with air-conditioner unit",
+    "speed hump and drain grating across the entrance",
+    "painted bay symbols"
+   ],
+   "flags": [],
+   "referenceCamera": "driver's eye, 1.4 m, at the gate, 28 mm",
+   "comparisonChecklist": [
+    "dock doors and numbers",
+    "guardhouse and air-conditioner",
+    "speed hump and drain grating",
+    "painted bay"
+   ],
+   "assets": [
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-014",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_guardhouse_a",
+     "name": "Guardhouse with flat roof",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-011",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-014",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_bollard_yellow_a",
+     "name": "Yellow safety bollard",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_marking_bay_set_a",
+     "name": "Painted parking-bay set",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12",
+      "RB-13"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_truck_tractor_a",
+     "name": "Tractor unit (several liveries)",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_trailer_box_a",
+     "name": "Box trailer",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "prop budget conflict at close range",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_marking_truck_symbol_a",
+     "name": "Truck-parking symbol marking",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_speedhump_yellowblack_a",
+     "name": "Yellow-and-black speed hump",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013"
+     ]
+    },
+    {
+     "id": "aro_warehouse_steel_large_a",
+     "name": "Large steel warehouse with six dock doors",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_dock_door_bay_a",
+     "name": "Loading-dock door bay with number (kit)",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_pallet_stack_a",
+     "name": "Pallet and box stack",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_streetlight_pole_tall_yard_a",
+     "name": "Tall yard light with multi-head fixture",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-013",
+      "R-014"
+     ]
+    },
+    {
+     "id": "aro_drain_grating_strip_a",
+     "name": "Drain grating strip across an entrance",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-05"
+     ],
+     "flags": "",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_marking_arrow_straight_a",
+    "aro_guardhouse_a",
+    "aro_kerb_painted_yellowblack_a",
+    "aro_bollard_yellow_a",
+    "aro_marking_bay_set_a",
+    "aro_truck_tractor_a",
+    "aro_trailer_box_a",
+    "aro_marking_truck_symbol_a",
+    "aro_speedhump_yellowblack_a",
+    "aro_warehouse_steel_large_a",
+    "aro_dock_door_bay_a",
+    "aro_pallet_stack_a",
+    "aro_streetlight_pole_tall_yard_a",
+    "aro_drain_grating_strip_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-05",
+     "title": "Drainage infrastructure"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-13",
+     "title": "Off-road paved areas"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-016",
+   "scene": "Dry season street: cracked and potholed asphalt, shops",
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "visualRequirements": [
+    "asphalt with network cracking, alligator patches and two potholes with broken edges and exposed substrate",
+    "grey concrete kerb blocks, ochre earth strip and an open concrete drain with a slab beside the road",
+    "shop row with corrugated roofs, awnings, a sign band, a produce table and a red umbrella",
+    "sagging multi-wire overhead spans on timber/concrete poles",
+    "compound wall with a base band, capped piers, steel gate and bougainvillea",
+    "roof water tanks",
+    "dust raised behind a moving truck",
+    "hard sun, deep shadows, clear blue sky"
+   ],
+   "flags": [
+    "The image carries a season banner drawn over it: an interface overlay, not scene content, and not evidence of a location.",
+    "The sign reads 'KANO GENERAL STORE': illustrative text, not a verified shop.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, in the left lane looking down the street, 28 mm",
+   "comparisonChecklist": [
+    "crack network, pothole size and broken edges",
+    "kerb, earth strip and open drain with slab",
+    "shop row, sign band, awnings and umbrella stall",
+    "pole height and sagging wire spans",
+    "compound wall base band, piers and gate",
+    "dust trail behind the truck",
+    "hard sun and shadow length"
+   ],
+   "assets": [
+    {
+     "id": "aro_wall_compound_panel_a",
+     "name": "Compound wall module: rendered cream with grey cladding panel",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_pier_stone_a",
+     "name": "Wall pier with stone cladding and coping",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_road_asphalt_cracked_a",
+     "name": "Cracked asphalt: crack-network and alligator-patch surface set (material, normal and decal sources)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-06"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_road_pothole_set_a",
+     "name": "Pothole set: broken-edge holes with exposed substrate (visual layer; physical only as hazard sites)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-06",
+      "RB-22"
+     ],
+     "flags": "visual only unless the owner approves physical hazard sites (docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md 5.3)",
+     "alsoUsedBy": [
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_road_patch_set_a",
+     "name": "Patched asphalt set: repair patches of different age and colour",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-06"
+     ],
+     "flags": "",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_road_earth_compacted_a",
+     "name": "Compacted-earth road surface and edge profile",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18"
+     ],
+     "flags": "soil colour for Kano and its surroundings is NOT established (M-15)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "aro_road_sand_loose_a",
+     "name": "Loose sandy and dusty road shoulder and surface",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18"
+     ],
+     "flags": "soil colour NOT established (M-15)",
+     "alsoUsedBy": [
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_drain_open_slab_a",
+     "name": "Open concrete roadside drain with slab sections",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-05"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_kerb_stone_grey_a",
+     "name": "Plain grey concrete kerb block module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "kerb treatment differs between the images (grey, black/yellow, black/white): road class or generator variation",
+     "alsoUsedBy": [
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_fx_dust_trail_a",
+     "name": "Dust trail behind a moving vehicle",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-017"
+     ]
+    },
+    {
+     "id": "rg_ngn_shop_row_roadside_a",
+     "name": "Roadside shop row: single-storey units, corrugated roofs, sign band slots, awnings",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "sign text is a data slot; 'KANO GENERAL STORE' is illustrative; real vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-017",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_umbrella_a",
+     "name": "Market table stall with a large umbrella and produce",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "goods and colours are variants of one model",
+     "alsoUsedBy": [
+      "R-017",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_block_corrugated_a",
+     "name": "Rendered block house with a hipped corrugated roof and a roof water tank",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-018",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_roof_corrugated_rust_a",
+     "name": "Corrugated sheet roof module, fresh to rusted (kit)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-020",
+      "R-021"
+     ]
+    },
+    {
+     "id": "aro_gate_steel_plain_a",
+     "name": "Plain black steel double gate with a lattice panel",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_tank_water_roof_a",
+     "name": "Roof water tank on a stand",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-017",
+      "R-018",
+      "R-019",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-017",
+      "R-018",
+      "R-019",
+      "R-020",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_grass_tall_verge_a",
+     "name": "Tall grass and weeds along an unpaved verge, dry and green variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "seasonal appearance NOT established (M-17)",
+     "alsoUsedBy": [
+      "R-020",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_bougainvillea_wall_a",
+     "name": "Bougainvillea trained over a compound wall",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "species and colour per M-17",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_wall_compound_panel_a",
+    "aro_pier_stone_a",
+    "aro_road_asphalt_cracked_a",
+    "aro_road_pothole_set_a",
+    "aro_road_patch_set_a",
+    "aro_road_earth_compacted_a",
+    "aro_road_sand_loose_a",
+    "aro_drain_open_slab_a",
+    "aro_kerb_stone_grey_a",
+    "aro_fx_dust_trail_a",
+    "rg_ngn_shop_row_roadside_a",
+    "rg_ngn_stall_umbrella_a",
+    "rg_ngn_house_block_corrugated_a",
+    "rg_ngn_roof_corrugated_rust_a",
+    "aro_gate_steel_plain_a",
+    "aro_tank_water_roof_a",
+    "rg_ngn_tree_large_shade_a",
+    "rg_ngn_grass_tall_verge_a",
+    "rg_ngn_bougainvillea_wall_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-05",
+     "title": "Drainage infrastructure"
+    },
+    {
+     "rb": "RB-06",
+     "title": "Patched asphalt, cracks, surface-condition layers"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-18",
+     "title": "Unpaved road surfaces (earth, sand, mud)"
+    },
+    {
+     "rb": "RB-22",
+     "title": "Surface hazard sites (potholes, flood sections)"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-017",
+   "scene": "Harmattan: dusty haze over the same street",
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "visualRequirements": [
+    "dense warm haze as atmosphere: visibility of a few hundred metres, flat low-contrast light, no visible sun disc",
+    "dust film on road, kerbs, walls, vehicles and vegetation (a surface layer, not a recoloured texture)",
+    "faded markings and dust drifting along the road edge",
+    "headlights on in daytime",
+    "the underlying geometry and materials are the same as the dry-season street"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The orange cast is the haze and the dust film, not the colour of the buildings: baking it into wall textures would make the same street wrong in every other season."
+   ],
+   "referenceCamera": "as R-016",
+   "comparisonChecklist": [
+    "haze colour and visibility distance",
+    "dust film on every surface class",
+    "faded markings and dust drift",
+    "no visible sun disc, flat light",
+    "lights on"
+   ],
+   "assets": [
+    {
+     "id": "aro_wall_compound_panel_a",
+     "name": "Compound wall module: rendered cream with grey cladding panel",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-016",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_pier_stone_a",
+     "name": "Wall pier with stone cladding and coping",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-016",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_road_asphalt_cracked_a",
+     "name": "Cracked asphalt: crack-network and alligator-patch surface set (material, normal and decal sources)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-06"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_road_pothole_set_a",
+     "name": "Pothole set: broken-edge holes with exposed substrate (visual layer; physical only as hazard sites)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-06",
+      "RB-22"
+     ],
+     "flags": "visual only unless the owner approves physical hazard sites (docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md 5.3)",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_road_sand_loose_a",
+     "name": "Loose sandy and dusty road shoulder and surface",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18"
+     ],
+     "flags": "soil colour NOT established (M-15)",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_kerb_stone_grey_a",
+     "name": "Plain grey concrete kerb block module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "kerb treatment differs between the images (grey, black/yellow, black/white): road class or generator variation",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_dust_film_surface_a",
+     "name": "Dust-film surface layer (road, kerb, wall, vehicle, foliage; atmosphere stays separate)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-20"
+     ],
+     "flags": "the orange cast is haze plus dust film, never baked into wall textures",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_fx_dust_trail_a",
+     "name": "Dust trail behind a moving vehicle",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "rg_ngn_shop_row_roadside_a",
+     "name": "Roadside shop row: single-storey units, corrugated roofs, sign band slots, awnings",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "sign text is a data slot; 'KANO GENERAL STORE' is illustrative; real vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_umbrella_a",
+     "name": "Market table stall with a large umbrella and produce",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "goods and colours are variants of one model",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_gate_steel_plain_a",
+     "name": "Plain black steel double gate with a lattice panel",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_tank_water_roof_a",
+     "name": "Roof water tank on a stand",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018",
+      "R-019",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018",
+      "R-019",
+      "R-020",
+      "R-021"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_wall_compound_panel_a",
+    "aro_pier_stone_a",
+    "aro_road_asphalt_cracked_a",
+    "aro_road_pothole_set_a",
+    "aro_road_sand_loose_a",
+    "aro_kerb_stone_grey_a",
+    "aro_dust_film_surface_a",
+    "aro_fx_dust_trail_a",
+    "rg_ngn_shop_row_roadside_a",
+    "rg_ngn_stall_umbrella_a",
+    "aro_gate_steel_plain_a",
+    "aro_tank_water_roof_a",
+    "rg_ngn_tree_large_shade_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-06",
+     "title": "Patched asphalt, cracks, surface-condition layers"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-18",
+     "title": "Unpaved road surfaces (earth, sand, mud)"
+    },
+    {
+     "rb": "RB-20",
+     "title": "Weather and season state"
+    },
+    {
+     "rb": "RB-22",
+     "title": "Surface hazard sites (potholes, flood sections)"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-018",
+   "scene": "Rainy season: heavy rain on wet asphalt",
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "visualRequirements": [
+    "wet asphalt: darker, glossy, reflecting lights and the sky",
+    "rain streaks and splash at the tyres",
+    "puddles with ripples on the carriageway",
+    "black-and-yellow painted kerbs",
+    "glossy wet foliage and wet walls (every surface responds to rain, not only the road)",
+    "storm sky, low light, lights on"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "R-016, R-017 and R-018 appear to show the SAME street (mosque and shop row on the left, tarpaulin truck, large tree and compound wall with gate on the right) in three conditions, and R-019 a similar scene flooded. The right reading is one world under different seasonal and weather states, not four streets.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks."
+   ],
+   "referenceCamera": "as R-016",
+   "comparisonChecklist": [
+    "wet asphalt darkness and reflections of lights",
+    "rain streaks and tyre splash",
+    "puddles with ripples",
+    "wet response of foliage, walls, kerbs and verge",
+    "storm sky and light level"
+   ],
+   "assets": [
+    {
+     "id": "aro_wall_compound_panel_a",
+     "name": "Compound wall module: rendered cream with grey cladding panel",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-016",
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_pier_stone_a",
+     "name": "Wall pier with stone cladding and coping",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-016",
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-019"
+     ]
+    },
+    {
+     "id": "aro_water_puddle_set_a",
+     "name": "Puddle set: shallow pools with reflection, ripple and edge for asphalt and earth",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-21"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-020",
+      "R-021"
+     ]
+    },
+    {
+     "id": "aro_fx_splash_wheel_a",
+     "name": "Wheel splash and bow wave on water",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23",
+      "RB-21"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_shop_row_roadside_a",
+     "name": "Roadside shop row: single-storey units, corrugated roofs, sign band slots, awnings",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "sign text is a data slot; 'KANO GENERAL STORE' is illustrative; real vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_umbrella_a",
+     "name": "Market table stall with a large umbrella and produce",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "goods and colours are variants of one model",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_block_corrugated_a",
+     "name": "Rendered block house with a hipped corrugated roof and a roof water tank",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-021"
+     ]
+    },
+    {
+     "id": "aro_gate_steel_plain_a",
+     "name": "Plain black steel double gate with a lattice panel",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017"
+     ]
+    },
+    {
+     "id": "aro_tank_water_roof_a",
+     "name": "Roof water tank on a stand",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-019",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-019",
+      "R-020",
+      "R-021"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_wall_compound_panel_a",
+    "aro_pier_stone_a",
+    "aro_kerb_painted_yellowblack_a",
+    "aro_water_puddle_set_a",
+    "aro_fx_splash_wheel_a",
+    "rg_ngn_shop_row_roadside_a",
+    "rg_ngn_stall_umbrella_a",
+    "rg_ngn_house_block_corrugated_a",
+    "aro_gate_steel_plain_a",
+    "aro_tank_water_roof_a",
+    "rg_ngn_tree_large_shade_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-21",
+     "title": "Water: puddles, standing water, flood sites"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-019",
+   "scene": "Flooded road after heavy rain",
+   "districts": [
+    "D03",
+    "D05",
+    "D07"
+   ],
+   "visualRequirements": [
+    "standing water over the full carriageway, turbid brown, with reflections and ripples",
+    "bow wave and spray around wheels",
+    "the kerb and walkway standing above the water line",
+    "vehicles driving slowly through, lights on",
+    "lush green vegetation after rain",
+    "decorated (hand-painted) truck body panels"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The water depth cannot be read from the image (the vehicles' wheel arches are mostly hidden): do not take a depth from it."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, looking down the street, 28 mm",
+   "comparisonChecklist": [
+    "water plane over the carriageway: colour, turbidity, reflections",
+    "bow wave and spray at the minibus",
+    "kerb and walkway above the water line",
+    "vehicles slow through the water"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_yellowblack_a",
+     "name": "Painted yellow-and-black kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-013",
+      "R-014",
+      "R-015",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_water_flood_sheet_a",
+     "name": "Flood sheet: turbid standing water over a carriageway with bow-wave and splash hooks",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-21",
+      "RB-22"
+     ],
+     "flags": "depth cannot be read from the image; flood sites and depths need sourced data (M-16)",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_drain_open_slab_a",
+     "name": "Open concrete roadside drain with slab sections",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-05"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_fx_splash_wheel_a",
+     "name": "Wheel splash and bow wave on water",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23",
+      "RB-21"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-018"
+     ]
+    },
+    {
+     "id": "rg_ngn_shop_row_roadside_a",
+     "name": "Roadside shop row: single-storey units, corrugated roofs, sign band slots, awnings",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "sign text is a data slot; 'KANO GENERAL STORE' is illustrative; real vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_umbrella_a",
+     "name": "Market table stall with a large umbrella and produce",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "goods and colours are variants of one model",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018"
+     ]
+    },
+    {
+     "id": "aro_tank_water_roof_a",
+     "name": "Roof water tank on a stand",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018",
+      "R-020",
+      "R-021"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_yellowblack_a",
+    "aro_water_flood_sheet_a",
+    "aro_drain_open_slab_a",
+    "aro_fx_splash_wheel_a",
+    "rg_ngn_shop_row_roadside_a",
+    "rg_ngn_stall_umbrella_a",
+    "aro_tank_water_roof_a",
+    "rg_ngn_tree_large_shade_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-05",
+     "title": "Drainage infrastructure"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-21",
+     "title": "Water: puddles, standing water, flood sites"
+    },
+    {
+     "rb": "RB-22",
+     "title": "Surface hazard sites (potholes, flood sections)"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-020",
+   "scene": "Muddy unpaved village road after rain",
+   "districts": [],
+   "visualRequirements": [
+    "unpaved road: red-brown clay with deep wheel ruts, ridged mud banks and long puddles",
+    "mud-brick houses with rusted corrugated roofs, a woven timber fence, a rough canopy stall",
+    "banana plants, tall grass and a goat at the verge (vegetation greener in the rains)",
+    "mud on vehicles and splash from wheels",
+    "timber poles with sparse wires",
+    "distant hills and trees"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "The SUV's spare-wheel cover reads 'PRADO' and the truck tailgate reads 'MERCEDES-BENZ': real vehicle makes/models. The plate reads 'KANO 982XF': a generated mark; a real Nigerian plate format has not been verified. None is reproduced without an owner decision.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "Authenticity: red laterite mud, banana plants and green hills read as plausible for northern Nigeria in the rainy season, but no verified source says they describe rural Kano State. Treat the scene as northern Nigerian regional rural; do not label assets 'Kano' on this basis."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, in the rut, 28 mm",
+   "comparisonChecklist": [
+    "rut depth and width, mud bank shape",
+    "puddle size and sky reflection",
+    "mud-brick and corrugated frontage, canopy stall",
+    "banana plants and tall grass at the verge",
+    "mud on the truck and SUV",
+    "timber poles and wires"
+   ],
+   "assets": [
+    {
+     "id": "aro_road_earth_compacted_a",
+     "name": "Compacted-earth road surface and edge profile",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18"
+     ],
+     "flags": "soil colour for Kano and its surroundings is NOT established (M-15)",
+     "alsoUsedBy": [
+      "R-016"
+     ]
+    },
+    {
+     "id": "aro_road_mud_rutted_a",
+     "name": "Rutted mud road: ridged banks, deep wheel ruts and water-filled troughs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18",
+      "RB-19",
+      "RB-21"
+     ],
+     "flags": "rut depths are an eyeball reading of generated images, not data (M-15)",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "aro_water_puddle_set_a",
+     "name": "Puddle set: shallow pools with reflection, ripple and edge for asphalt and earth",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-21"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-018",
+      "R-021"
+     ]
+    },
+    {
+     "id": "aro_fx_mud_spray_a",
+     "name": "Mud spray and clods thrown by wheels",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_canopy_rough_a",
+     "name": "Rough roadside canopy stall: pole frame, sacking or tarpaulin roof, sacks of goods",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_mudbrick_a",
+     "name": "Mud-brick house with rusted corrugated roof (type A)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "not established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14)",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_mudbrick_b",
+     "name": "Mud-brick house with rusted corrugated roof (type B, with an open veranda)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_roof_corrugated_rust_a",
+     "name": "Corrugated sheet roof module, fresh to rusted (kit)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_fence_woven_timber_a",
+     "name": "Woven timber fence module",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_pole_timber_span_a",
+     "name": "Timber utility pole with crossarms and multi-wire spans (cluster variant)",
+     "cls": "REGIONAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "poles as installed in the region NOT established (M-06)",
+     "alsoUsedBy": [
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018",
+      "R-019",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_banana_plant_a",
+     "name": "Banana plant clump",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "banana plants are not established for Kano (M-17)",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_grass_tall_verge_a",
+     "name": "Tall grass and weeds along an unpaved verge, dry and green variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "seasonal appearance NOT established (M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-021"
+     ]
+    },
+    {
+     "id": "rg_ngn_hill_wooded_backdrop_a",
+     "name": "Wooded hill backdrop with scattered rooftops",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hills conflict with decision C3 inside Kano city; regional rural backdrop only",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_road_earth_compacted_a",
+    "aro_road_mud_rutted_a",
+    "aro_water_puddle_set_a",
+    "aro_fx_mud_spray_a",
+    "rg_ngn_stall_canopy_rough_a",
+    "rg_ngn_house_mudbrick_a",
+    "rg_ngn_house_mudbrick_b",
+    "rg_ngn_roof_corrugated_rust_a",
+    "rg_ngn_fence_woven_timber_a",
+    "rg_ngn_pole_timber_span_a",
+    "rg_ngn_tree_large_shade_a",
+    "rg_ngn_banana_plant_a",
+    "rg_ngn_grass_tall_verge_a",
+    "rg_ngn_hill_wooded_backdrop_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-14",
+     "title": "Terrain authoring"
+    },
+    {
+     "rb": "RB-18",
+     "title": "Unpaved road surfaces (earth, sand, mud)"
+    },
+    {
+     "rb": "RB-19",
+     "title": "Per-surface and per-condition wheel grip"
+    },
+    {
+     "rb": "RB-21",
+     "title": "Water: puddles, standing water, flood sites"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-021",
+   "scene": "Muddy unpaved road after heavy rain (market village)",
+   "districts": [],
+   "visualRequirements": [
+    "extreme ruts: clods and ridged mud banks 20 to 40 cm high with water in the troughs",
+    "orange-brown puddles with sky reflection",
+    "mud-brick and block shop frontage with corrugated roofs, sacks of goods, tarpaulin awnings",
+    "timber utility poles in clusters with multi-wire spans",
+    "weeds and tall trees along the verge"
+   ],
+   "flags": [
+    "The image carries a season banner and a 'Kano, Nigeria' location pin drawn over it: interface overlays, not scene content, and not evidence of a location.",
+    "Real vehicle brand marks appear in the image (a manufacturer emblem on a car grille and van front). Vehicles are not part of the environment asset set; if vehicles are built later, use generic shapes unless the owner decides to reproduce real marks.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "The rut and clod depths are an eyeball reading of a generated image (20 to 40 cm), not data. The small tower in the distance cannot be identified (minaret, church or water tower)."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, in the rut, 28 mm",
+   "comparisonChecklist": [
+    "ridged clods and deep troughs with water",
+    "shed and shop frontage, sacks and awnings",
+    "timber pole clusters",
+    "weeds and tall trees along the verge"
+   ],
+   "assets": [
+    {
+     "id": "aro_road_mud_rutted_a",
+     "name": "Rutted mud road: ridged banks, deep wheel ruts and water-filled troughs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-18",
+      "RB-19",
+      "RB-21"
+     ],
+     "flags": "rut depths are an eyeball reading of generated images, not data (M-15)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "aro_water_puddle_set_a",
+     "name": "Puddle set: shallow pools with reflection, ripple and edge for asphalt and earth",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-21"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-018",
+      "R-020"
+     ]
+    },
+    {
+     "id": "aro_fx_mud_spray_a",
+     "name": "Mud spray and clods thrown by wheels",
+     "cls": "GLOBAL",
+     "category": "effects",
+     "engineDeps": [
+      "RB-23"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_stall_canopy_rough_a",
+     "name": "Rough roadside canopy stall: pole frame, sacking or tarpaulin roof, sacks of goods",
+     "cls": "REGIONAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "vernacular unverified (M-14)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_shed_market_corrugated_a",
+     "name": "Open market shed with a corrugated roof and goods",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "vernacular unverified (M-14)",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "rg_ngn_house_mudbrick_a",
+     "name": "Mud-brick house with rusted corrugated roof (type A)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "not established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_mudbrick_b",
+     "name": "Mud-brick house with rusted corrugated roof (type B, with an open veranda)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_house_block_corrugated_a",
+     "name": "Rendered block house with a hipped corrugated roof and a roof water tank",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-018"
+     ]
+    },
+    {
+     "id": "rg_ngn_roof_corrugated_rust_a",
+     "name": "Corrugated sheet roof module, fresh to rusted (kit)",
+     "cls": "REGIONAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "as above (M-14)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-020"
+     ]
+    },
+    {
+     "id": "aro_tank_water_roof_a",
+     "name": "Roof water tank on a stand",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018",
+      "R-019"
+     ]
+    },
+    {
+     "id": "rg_ngn_pole_timber_span_a",
+     "name": "Timber utility pole with crossarms and multi-wire spans (cluster variant)",
+     "cls": "REGIONAL",
+     "category": "lights",
+     "engineDeps": [],
+     "flags": "poles as installed in the region NOT established (M-06)",
+     "alsoUsedBy": [
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_large_shade_a",
+     "name": "Large spreading shade tree, dry and wet foliage variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "species NOT established (M-07, M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-017",
+      "R-018",
+      "R-019",
+      "R-020"
+     ]
+    },
+    {
+     "id": "rg_ngn_grass_tall_verge_a",
+     "name": "Tall grass and weeds along an unpaved verge, dry and green variants",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [
+      "RB-24"
+     ],
+     "flags": "seasonal appearance NOT established (M-17)",
+     "alsoUsedBy": [
+      "R-016",
+      "R-020"
+     ]
+    }
+   ],
+   "reusableComponents": [
+    "aro_road_mud_rutted_a",
+    "aro_water_puddle_set_a",
+    "aro_fx_mud_spray_a",
+    "rg_ngn_stall_canopy_rough_a",
+    "rg_ngn_shed_market_corrugated_a",
+    "rg_ngn_house_mudbrick_a",
+    "rg_ngn_house_mudbrick_b",
+    "rg_ngn_house_block_corrugated_a",
+    "rg_ngn_roof_corrugated_rust_a",
+    "aro_tank_water_roof_a",
+    "rg_ngn_pole_timber_span_a",
+    "rg_ngn_tree_large_shade_a",
+    "rg_ngn_grass_tall_verge_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-18",
+     "title": "Unpaved road surfaces (earth, sand, mud)"
+    },
+    {
+     "rb": "RB-19",
+     "title": "Per-surface and per-condition wheel grip"
+    },
+    {
+     "rb": "RB-21",
+     "title": "Water: puddles, standing water, flood sites"
+    },
+    {
+     "rb": "RB-23",
+     "title": "Vehicle weather and surface feedback"
+    },
+    {
+     "rb": "RB-24",
+     "title": "Seasonal vegetation and ground"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-022",
+   "scene": "Modern boulevard in the city centre",
+   "districts": [
+    "D05"
+   ],
+   "visualRequirements": [
+    "divided boulevard: four lanes, yellow edge line, white arrows, planted median with painted kerb blocks",
+    "double-arm streetlights with pole banners",
+    "overhead gantry with green sign panels",
+    "glass-and-stone towers set back behind railings with stone piers",
+    "paver sidewalk and street trees",
+    "telecom mast on the skyline"
+   ],
+   "flags": [
+    "Names, crests and slogans are generated and unverified: 'Kano State Tower' with a coat-of-arms crest on the glass, 'Kano Investment Centre', 'Kano Plaza', the banner slogan 'Our City Our Pride'. Treat as fictional identities; the crest may imitate a real state emblem and must be replaced.",
+    "The gantry text 'Kano City Centre / Government House / Ramat Square' names or resembles real places: sign text must come from verified route data (RB-07).",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, left of centre, 28 mm",
+   "comparisonChecklist": [
+    "lane count, yellow edge line and arrows",
+    "median width, black/white kerb, planting",
+    "banner streetlight spacing and height",
+    "gantry and sign proportions",
+    "tower massing, setback and railings",
+    "paver sidewalk and tree spacing"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sidewalk_paver_a",
+     "name": "Interlocking-paver sidewalk module (pink and grey)",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-011"
+     ]
+    },
+    {
+     "id": "aro_marking_arrow_straight_a",
+     "name": "Pavement arrow symbol",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-12"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-009",
+      "R-010",
+      "R-013",
+      "R-014",
+      "R-015"
+     ]
+    },
+    {
+     "id": "aro_hedge_clipped_a",
+     "name": "Clipped hedge strip",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-010"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_median_planter_kerbed_a",
+     "name": "Kerbed planter median module with shrubs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04",
+      "RB-17"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_sign_panel_overhead_green_a",
+     "name": "Overhead green sign panel (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data (the concept's distances do not match the sources)",
+     "alsoUsedBy": [
+      "R-008",
+      "R-012",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_pier_rail_a",
+     "name": "Perimeter wall with piers and black railing",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-011",
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_palm_ornamental_a",
+     "name": "Ornamental palm",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010"
+     ]
+    },
+    {
+     "id": "aro_telecom_mast_a",
+     "name": "Lattice telecom mast",
+     "cls": "GLOBAL",
+     "category": "props",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-010",
+      "R-011"
+     ]
+    },
+    {
+     "id": "aro_tower_glass_stone_a",
+     "name": "Office tower: glass curtain wall with stone piers and a crowned top",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "names, crests and slogans are fictional identities to be replaced",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_plaza_stone_glass_a",
+     "name": "Stone-and-glass mid-rise office or plaza block",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-023"
+     ]
+    },
+    {
+     "id": "aro_banner_pole_a",
+     "name": "Pole banner on a streetlight bracket (graphic per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "crests and slogans in the image are generated and unverified",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_agave_a",
+     "name": "Agave / spiky ornamental for planted medians",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "species to confirm",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_blackwhite_a",
+    "aro_sidewalk_paver_a",
+    "aro_marking_arrow_straight_a",
+    "aro_hedge_clipped_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_planter_kerbed_a",
+    "aro_sign_panel_overhead_green_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_palm_ornamental_a",
+    "aro_telecom_mast_a",
+    "aro_tower_glass_stone_a",
+    "aro_plaza_stone_glass_a",
+    "aro_banner_pole_a",
+    "aro_agave_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-12",
+     "title": "Pavement symbols, crossings, bay lines"
+    },
+    {
+     "rb": "RB-17",
+     "title": "Road class catalogue"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  },
+  {
+   "ref": "R-023",
+   "scene": "Modern divided highway with a flyover",
+   "districts": [
+    "D11"
+   ],
+   "visualRequirements": [
+    "divided highway of three lanes per direction with a narrow planted kerbed median",
+    "concrete flyover deck on piers crossing the carriageway (grade separation)",
+    "overhead gantry with green panels",
+    "double-arm streetlights on green-based poles",
+    "compound walls with railings and capped piers",
+    "stone-and-glass office building",
+    "rocky hill with masts as a regional backdrop"
+   ],
+   "flags": [
+    "The flyover crossing over the carriageway is grade separation, which the road engine cannot build (RB-03): the flyover is a design inspiration only until the engine proposal's E5 is approved.",
+    "Sign text ('Kaduna A2', 'Kano City Centre', 'Bompai R/Market') names real places or routes: take sign text only from verified route data (RB-07).",
+    "A mosque with a teal or green dome and minarets recurs (R-016 to R-019, R-023). As in the earlier set it is treated as a GENERIC skyline mosque, not the Kano Central Mosque (owner decision C1), unless an authentic reference says otherwise.",
+    "Hills are shown (R-020, R-023). Owner decision C3: no dramatic hills in Kano's urban landscape without justification; the rural and regional-highway scenes keep them only as a regional (northern Nigeria) backdrop, not as a claim about Kano city.",
+    "Kerb treatment differs between the images (plain grey stone in R-016 and R-017, black-and-yellow paint in R-018 and R-019, black-and-white paint in R-022 and R-023): they are different road classes or generator variation, not one verified rule."
+   ],
+   "referenceCamera": "driver's eye, 1.4 m, on the left carriageway, 28 mm",
+   "comparisonChecklist": [
+    "three lanes per direction and widths",
+    "narrow kerbed median and planting",
+    "flyover deck height, piers and bollard stripes",
+    "gantry panels",
+    "streetlights on green-based poles",
+    "walls, railings and building"
+   ],
+   "assets": [
+    {
+     "id": "aro_kerb_painted_blackwhite_a",
+     "name": "Painted black-and-white kerb module",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-022"
+     ]
+    },
+    {
+     "id": "rg_ngn_tree_street_broadleaf_a",
+     "name": "Broad-leaf street tree (form A)",
+     "cls": "REGIONAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "the species that really line Kano streets are NOT established (M-07)",
+     "alsoUsedBy": [
+      "R-006",
+      "R-007",
+      "R-008",
+      "R-012",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_streetlight_double_arm_median_a",
+     "name": "Double-arm streetlight for a median",
+     "cls": "GLOBAL",
+     "category": "lights",
+     "engineDeps": [
+      "RB-09"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-012",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_median_planter_kerbed_a",
+     "name": "Kerbed planter median module with shrubs",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-04",
+      "RB-17"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-011",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_gantry_truss_a",
+     "name": "Steel-truss overhead gantry spanning a dual carriageway",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-008",
+      "R-012"
+     ]
+    },
+    {
+     "id": "aro_sign_panel_overhead_green_a",
+     "name": "Overhead green sign panel (text per instance)",
+     "cls": "GLOBAL",
+     "category": "signs",
+     "engineDeps": [
+      "RB-07"
+     ],
+     "flags": "text must come from verified route data (the concept's distances do not match the sources)",
+     "alsoUsedBy": [
+      "R-008",
+      "R-012",
+      "R-022"
+     ]
+    },
+    {
+     "id": "rg_ngn_hill_rocky_backdrop_a",
+     "name": "Rocky green hill backdrop",
+     "cls": "REGIONAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-14"
+     ],
+     "flags": "hilly terrain; not the flat plain at Kano",
+     "alsoUsedBy": [
+      "R-007",
+      "R-008",
+      "R-012"
+     ]
+    },
+    {
+     "id": "aro_wall_perimeter_pier_rail_a",
+     "name": "Perimeter wall with piers and black railing",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-009",
+      "R-011",
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_plaza_stone_glass_a",
+     "name": "Stone-and-glass mid-rise office or plaza block",
+     "cls": "GLOBAL",
+     "category": "buildings",
+     "engineDeps": [],
+     "flags": "",
+     "alsoUsedBy": [
+      "R-022"
+     ]
+    },
+    {
+     "id": "aro_flyover_deck_pier_a",
+     "name": "Concrete flyover deck on piers with yellow-and-black bollard stripes",
+     "cls": "GLOBAL",
+     "category": "environment",
+     "engineDeps": [
+      "RB-03"
+     ],
+     "flags": "grade separation: design inspiration only until the engine proposal's E5",
+     "alsoUsedBy": []
+    },
+    {
+     "id": "aro_shrub_flowering_pink_a",
+     "name": "Flowering shrub for planted medians (pink)",
+     "cls": "GLOBAL",
+     "category": "vegetation",
+     "engineDeps": [],
+     "flags": "species to confirm",
+     "alsoUsedBy": []
+    }
+   ],
+   "reusableComponents": [
+    "aro_kerb_painted_blackwhite_a",
+    "rg_ngn_tree_street_broadleaf_a",
+    "aro_streetlight_double_arm_median_a",
+    "aro_median_planter_kerbed_a",
+    "aro_gantry_truss_a",
+    "aro_sign_panel_overhead_green_a",
+    "rg_ngn_hill_rocky_backdrop_a",
+    "aro_wall_perimeter_pier_rail_a",
+    "aro_plaza_stone_glass_a",
+    "aro_flyover_deck_pier_a",
+    "aro_shrub_flowering_pink_a"
+   ],
+   "cityComponents": [],
+   "engineGaps": [
+    {
+     "rb": "RB-03",
+     "title": "Flyovers and interchanges"
+    },
+    {
+     "rb": "RB-04",
+     "title": "Sidewalks and kerbs"
+    },
+    {
+     "rb": "RB-07",
+     "title": "Text-bearing production road signs"
+    },
+    {
+     "rb": "RB-09",
+     "title": "Median and near-edge furniture"
+    },
+    {
+     "rb": "RB-14",
+     "title": "Terrain authoring"
+    },
+    {
+     "rb": "RB-17",
+     "title": "Road class catalogue"
+    }
+   ],
+   "blenderTasks": [
+    "write the concept down as a table of proportions, materials and details; the owner corrects it",
+    "blockout from reusable kit modules; render at the reference camera and compare",
+    "detail modelling: real walls, roofs, openings, structure and ornament (no image planes)",
+    "UV unwrap and PBR material set (shared M_<surface> names; atlas per family)",
+    "LOD chain (prefab LOD0 and LOD1; merged tiers come from the baker) and collision (box or convex, never the render mesh)",
+    "validate_asset against the game's budgets",
+    "save a versioned .blend and export FBX and GLB with a manifest"
+   ],
+   "unityTasks": [
+    "Unity import test (orientation, scale, materials, collision, LOD thresholds)",
+    "prefab build (identity root, own LODGroup and BoxCollider, shared-kit materials)",
+    "catalogue entry and placement data",
+    "in-game screenshot from the reference camera and side-by-side comparison; deviations recorded",
+    "performance measurement ([Perf] draw calls, triangles, texture memory)"
+   ]
+  }
+ ],
+ "blockedAssets": [
+  {
+   "id": "rg_ngn_hausa_compound_a",
+   "name": "Traditional Hausa compound with zaure, parapet and zankwaye (type A)",
+   "cls": "REGIONAL",
+   "category": "buildings",
+   "blockedBy": "M-01",
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "rg_ngn_hausa_compound_b",
+   "name": "Traditional Hausa compound, two-storey front block (type B)",
+   "cls": "REGIONAL",
+   "category": "buildings",
+   "blockedBy": "M-01",
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "rg_ngn_hausa_compound_c",
+   "name": "Traditional Hausa compound, small plot (type C)",
+   "cls": "REGIONAL",
+   "category": "buildings",
+   "blockedBy": "M-01",
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "rg_ngn_hausa_wall_gate_set_a",
+   "name": "Hausa compound wall, parapet and gate set",
+   "cls": "REGIONAL",
+   "category": "buildings",
+   "blockedBy": "M-01",
+   "districts": [
+    "D01",
+    "D07"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "kano_old_city_lane_set_a",
+   "name": "Old-city lane set: surface, drains, wall faces",
+   "cls": "CITY_SPECIFIC",
+   "category": "environment",
+   "blockedBy": "M-12",
+   "districts": [
+    "D01",
+    "D03"
+   ],
+   "engineDeps": [
+    "RB-17"
+   ]
+  },
+  {
+   "id": "kano_market_stall_set_a",
+   "name": "Traditional market stalls and shelters",
+   "cls": "CITY_SPECIFIC",
+   "category": "props",
+   "blockedBy": "M-04",
+   "districts": [
+    "D03"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "kano_shop_row_modern_a",
+   "name": "Modern shop row frontage",
+   "cls": "CITY_SPECIFIC",
+   "category": "buildings",
+   "blockedBy": "M-04",
+   "districts": [
+    "D05"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "kano_plaza_a",
+   "name": "Commercial plaza",
+   "cls": "CITY_SPECIFIC",
+   "category": "buildings",
+   "blockedBy": "M-02",
+   "districts": [
+    "D05"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "kano_midrise_a",
+   "name": "Mid-rise commercial or office block",
+   "cls": "CITY_SPECIFIC",
+   "category": "buildings",
+   "blockedBy": "M-02",
+   "districts": [
+    "D05"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "kano_neighbourhood_mosque_a",
+   "name": "Neighbourhood mosque oriented to the qibla",
+   "cls": "CITY_SPECIFIC",
+   "category": "buildings",
+   "blockedBy": "M-03",
+   "districts": [
+    "D01",
+    "D06",
+    "D07"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "aro_school_block_a",
+   "name": "School block with yard",
+   "cls": "GLOBAL",
+   "category": "buildings",
+   "blockedBy": "M-10",
+   "districts": [
+    "D08"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "aro_government_building_a",
+   "name": "Government office building",
+   "cls": "GLOBAL",
+   "category": "buildings",
+   "blockedBy": "M-10",
+   "districts": [
+    "D08"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "aro_hotel_a",
+   "name": "Hotel block with forecourt",
+   "cls": "GLOBAL",
+   "category": "buildings",
+   "blockedBy": "M-10",
+   "districts": [
+    "D08"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_gidan_rumfa_complex",
+   "name": "Gidan Rumfa (Emir's Palace) complex and gate",
+   "cls": "LANDMARK",
+   "category": "buildings",
+   "blockedBy": "M-11",
+   "districts": [
+    "D02"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_great_mosque",
+   "name": "Great Mosque of Kano",
+   "cls": "LANDMARK",
+   "category": "buildings",
+   "blockedBy": "M-11",
+   "districts": [
+    "D02"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_kurmi_market_hall",
+   "name": "Kurmi Market",
+   "cls": "LANDMARK",
+   "category": "buildings",
+   "blockedBy": "M-11",
+   "districts": [
+    "D03"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_kofar_mata_dye_pits",
+   "name": "Kofar Mata dye pits",
+   "cls": "LANDMARK",
+   "category": "environment",
+   "blockedBy": "M-11",
+   "districts": [
+    "D03"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_city_wall_gate_a",
+   "name": "City wall segment and gate",
+   "cls": "LANDMARK",
+   "category": "buildings",
+   "blockedBy": "M-11",
+   "districts": [
+    "D01"
+   ],
+   "engineDeps": []
+  },
+  {
+   "id": "lmk_kano_dala_hill_massif",
+   "name": "Dala Hill massif",
+   "cls": "LANDMARK",
+   "category": "environment",
+   "blockedBy": "R-001, M-11",
+   "districts": [
+    "D04"
+   ],
+   "engineDeps": [
+    "RB-14"
+   ]
+  }
+ ],
+ "counts": {
+  "assets": 132,
+  "byClass": {
+   "GLOBAL": 92,
+   "REGIONAL": 25,
+   "CITY_SPECIFIC": 9,
+   "LANDMARK": 6
+  },
+  "conceptBacked": 113,
+  "blocked": 19
+ },
+ "statusVocabulary": [
+  "needs_concept",
+  "concept_approved",
+  "blockout_completed",
+  "detailed_modelling_completed",
+  "materials_completed",
+  "blender_validation_passed",
+  "unity_import_verified",
+  "in_game_visual_review_passed",
+  "production_approved"
+ ]
+}

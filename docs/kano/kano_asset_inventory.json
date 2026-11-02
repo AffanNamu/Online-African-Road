@@ -1,0 +1,861 @@
+{
+ "schemaVersion": 1,
+ "note": "PLANNED prefabs for the Kano vertical slice. Catalogue-shaped so the game's own PropCatalogValidator can check the budgets. Nothing here exists yet; every dimension is a placeholder envelope. Ids are NEW (kano_*) on purpose: a production prefab replaces the placeholder of the SAME id in every route, so reusing 'utility_pole' would also change Lagos-Ibadan.",
+ "props": [
+  {
+   "id": "kano_hausa_compound_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_hausa_compound_a",
+   "collider": "box",
+   "heightM": 5.2,
+   "widthM": 18,
+   "depthM": 26,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    5400,
+    1700,
+    480,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "traditional",
+    "plot"
+   ],
+   "referencesNeeded": "street-front elevation, zaure/gate, parapet with zankwaye, wall finish, roof edge",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_a_noapron"
+  },
+  {
+   "id": "kano_hausa_compound_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_hausa_compound_b",
+   "collider": "box",
+   "heightM": 7.4,
+   "widthM": 20,
+   "depthM": 28,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    5600,
+    1800,
+    500,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "traditional",
+    "plot"
+   ],
+   "referencesNeeded": "two-storey front block (sources: traditional Hausa buildings seldom exceed two storeys)",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_b_noapron"
+  },
+  {
+   "id": "kano_hausa_compound_c",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_hausa_compound_c",
+   "collider": "box",
+   "heightM": 4.6,
+   "widthM": 13,
+   "depthM": 21,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    4300,
+    1400,
+    400,
+    90
+   ],
+   "castShadow": true,
+   "tags": [
+    "traditional",
+    "plot"
+   ],
+   "referencesNeeded": "small single-storey compound",
+   "referenceIds": [
+    "M-01"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-01)",
+   "noApronVariant": "kano_hausa_compound_c_noapron"
+  },
+  {
+   "id": "kano_compound_modern_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_compound_modern_a",
+   "collider": "box",
+   "heightM": 6.2,
+   "widthM": 20,
+   "depthM": 30,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    5800,
+    1900,
+    520,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "modern",
+    "plot"
+   ],
+   "referencesNeeded": "walled bungalow/villa with gate: front, side, roof, finish",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)",
+   "noApronVariant": "kano_compound_modern_a_noapron"
+  },
+  {
+   "id": "kano_compound_modern_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_compound_modern_b",
+   "collider": "box",
+   "heightM": 8.6,
+   "widthM": 20,
+   "depthM": 30,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    5900,
+    1900,
+    520,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "modern",
+    "plot"
+   ],
+   "referencesNeeded": "two-storey walled villa",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)",
+   "noApronVariant": "kano_compound_modern_b_noapron"
+  },
+  {
+   "id": "kano_shop_row_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_shop_row_a",
+   "collider": "box",
+   "heightM": 4.2,
+   "widthM": 18,
+   "depthM": 12,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    3300,
+    1100,
+    320,
+    80
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "plot"
+   ],
+   "referencesNeeded": "single-storey shop row: frontage, shutters, signage, awning",
+   "referenceIds": [
+    "M-02",
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02, M-04)",
+   "noApronVariant": "kano_shop_row_a_noapron"
+  },
+  {
+   "id": "kano_shop_row_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_shop_row_b",
+   "collider": "box",
+   "heightM": 7.4,
+   "widthM": 20,
+   "depthM": 13.5,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    4700,
+    1500,
+    420,
+    90
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "plot"
+   ],
+   "referencesNeeded": "two-storey shop-and-flat block",
+   "referenceIds": [
+    "M-02",
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02, M-04)",
+   "noApronVariant": "kano_shop_row_b_noapron"
+  },
+  {
+   "id": "kano_plaza_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_plaza_a",
+   "collider": "box",
+   "heightM": 13.0,
+   "widthM": 30,
+   "depthM": 26,
+   "cullDistance": 450.0,
+   "lodTriangles": [
+    5900,
+    1900,
+    520,
+    110
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "landmark"
+   ],
+   "referencesNeeded": "three-storey commercial plaza",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
+  },
+  {
+   "id": "kano_apartment_block_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_apartment_block_a",
+   "collider": "box",
+   "heightM": 10.5,
+   "widthM": 22,
+   "depthM": 20,
+   "cullDistance": 420.0,
+   "lodTriangles": [
+    5300,
+    1700,
+    480,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "modern"
+   ],
+   "referencesNeeded": "three-storey block (owner to confirm which city the supplied aerials 2 and 3 show before they are used)",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
+  },
+  {
+   "id": "kano_midrise_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_midrise_a",
+   "collider": "box",
+   "heightM": 24.0,
+   "widthM": 26,
+   "depthM": 24,
+   "cullDistance": 650.0,
+   "lodTriangles": [
+    5900,
+    1900,
+    540,
+    110
+   ],
+   "castShadow": true,
+   "tags": [
+    "modern",
+    "landmark"
+   ],
+   "referencesNeeded": "six to eight storey office/hotel block",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
+  },
+  {
+   "id": "kano_mosque_neighbourhood_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references. Front (+Z) is the qibla wall.",
+   "source": "dev:kano_mosque_neighbourhood_a",
+   "collider": "box",
+   "heightM": 24.0,
+   "widthM": 30,
+   "depthM": 34,
+   "cullDistance": 650.0,
+   "lodTriangles": [
+    5900,
+    1900,
+    540,
+    110
+   ],
+   "castShadow": true,
+   "tags": [
+    "religious",
+    "landmark"
+   ],
+   "referencesNeeded": "a real neighbourhood mosque type: dome(s), minaret(s), ablution, wall, colours",
+   "referenceIds": [
+    "M-03"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-03)"
+  },
+  {
+   "id": "kano_filling_station_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_filling_station_a",
+   "collider": "box",
+   "heightM": 7.0,
+   "widthM": 28,
+   "depthM": 30,
+   "cullDistance": 420.0,
+   "lodTriangles": [
+    4800,
+    1600,
+    450,
+    100
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial"
+   ],
+   "referencesNeeded": "forecourt, canopy, shop, signage",
+   "referenceIds": [
+    "M-02"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-02)"
+  },
+  {
+   "id": "kano_road_sign_small",
+   "category": "signs",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_road_sign_small",
+   "collider": "box",
+   "heightM": 3.2,
+   "widthM": 1.2,
+   "depthM": 0.3,
+   "cullDistance": 200.0,
+   "lodTriangles": [
+    420,
+    140,
+    40
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "regulatory/warning/direction sign types and mountings",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_road_sign_gantry",
+   "category": "signs",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references. Spans the carriageway: no collider over the road.",
+   "source": "dev:kano_road_sign_gantry",
+   "collider": "none",
+   "heightM": 6.5,
+   "widthM": 16.0,
+   "depthM": 1.2,
+   "cullDistance": 450.0,
+   "lodTriangles": [
+    780,
+    260,
+    80
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "overhead gantry as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_billboard_a",
+   "category": "signs",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_billboard_a",
+   "collider": "box",
+   "heightM": 9.0,
+   "widthM": 12.0,
+   "depthM": 0.8,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    700,
+    240,
+    60
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "billboard frame and mounting",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
+  },
+  {
+   "id": "kano_streetlight_single",
+   "category": "lights",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_streetlight_single",
+   "collider": "box",
+   "heightM": 9.0,
+   "widthM": 2.4,
+   "depthM": 0.5,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    560,
+    200,
+    60
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "pole material, arm, luminaire as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_streetlight_double_median",
+   "category": "lights",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_streetlight_double_median",
+   "collider": "box",
+   "heightM": 10.0,
+   "widthM": 4.0,
+   "depthM": 0.5,
+   "cullDistance": 320.0,
+   "lodTriangles": [
+    820,
+    280,
+    70
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "median-mounted double arm",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_utility_pole",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_utility_pole",
+   "collider": "box",
+   "heightM": 9.5,
+   "widthM": 1.6,
+   "depthM": 0.5,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    380,
+    140,
+    40
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "pole material (concrete / timber / steel), crossarms, insulators",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_transformer_pole",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_transformer_pole",
+   "collider": "box",
+   "heightM": 9.5,
+   "widthM": 2.0,
+   "depthM": 1.4,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    900,
+    300,
+    70
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "pole-mounted transformer as installed",
+   "referenceIds": [
+    "M-06"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-06)"
+  },
+  {
+   "id": "kano_kiosk_a",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_kiosk_a",
+   "collider": "box",
+   "heightM": 2.6,
+   "widthM": 3.0,
+   "depthM": 3.0,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    900,
+    300,
+    80
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "roadside kiosk",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
+  },
+  {
+   "id": "kano_market_stall_a",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_market_stall_a",
+   "collider": "box",
+   "heightM": 2.6,
+   "widthM": 3.5,
+   "depthM": 3.0,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    1000,
+    340,
+    90
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "stall frame, umbrella/tarpaulin, goods",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
+  },
+  {
+   "id": "kano_bus_stop_a",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_bus_stop_a",
+   "collider": "box",
+   "heightM": 3.0,
+   "widthM": 6.0,
+   "depthM": 3.0,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    1500,
+    500,
+    120
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "roadside shelter/stop",
+   "referenceIds": [
+    "M-04"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-04)"
+  },
+  {
+   "id": "kano_parked_group_a",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references. ONE mesh: a saloon car and two motorcycles. Grouped because every separate parked vehicle is a draw call (see the budget test).",
+   "source": "dev:kano_parked_group_a",
+   "collider": "box",
+   "heightM": 1.7,
+   "widthM": 7.0,
+   "depthM": 4.0,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    2300,
+    800,
+    260,
+    70
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "common saloon car and motorcycles (generic, no brand)",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
+  },
+  {
+   "id": "kano_parked_group_b",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references. ONE mesh: two motor tricycle taxis and a motorcycle.",
+   "source": "dev:kano_parked_group_b",
+   "collider": "box",
+   "heightM": 1.8,
+   "widthM": 6.5,
+   "depthM": 4.0,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    2300,
+    800,
+    260,
+    70
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "motor tricycle taxis and a motorcycle",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
+  },
+  {
+   "id": "kano_parked_minibus_a",
+   "category": "props",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_parked_minibus_a",
+   "collider": "box",
+   "heightM": 2.3,
+   "widthM": 1.9,
+   "depthM": 5.2,
+   "cullDistance": 240.0,
+   "lodTriangles": [
+    2100,
+    700,
+    200,
+    60
+   ],
+   "castShadow": true,
+   "tags": [],
+   "referencesNeeded": "commercial minibus (generic, no brand)",
+   "referenceIds": [
+    "M-08"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-08)"
+  },
+  {
+   "id": "kano_neem_tree_a",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_neem_tree_a",
+   "collider": "none",
+   "heightM": 9.0,
+   "widthM": 8.0,
+   "depthM": 8.0,
+   "cullDistance": 320.0,
+   "lodTriangles": [
+    1800,
+    600,
+    160,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "tree"
+   ],
+   "referencesNeeded": "owner/reference to confirm the species that line these roads (neem is commonly reported; not verified here)",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
+  },
+  {
+   "id": "kano_neem_tree_b",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_neem_tree_b",
+   "collider": "none",
+   "heightM": 11.0,
+   "widthM": 9.0,
+   "depthM": 9.0,
+   "cullDistance": 340.0,
+   "lodTriangles": [
+    2100,
+    700,
+    180,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "tree"
+   ],
+   "referencesNeeded": "as above, second form",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
+  },
+  {
+   "id": "kano_date_palm_a",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_date_palm_a",
+   "collider": "none",
+   "heightM": 12.0,
+   "widthM": 5.0,
+   "depthM": 5.0,
+   "cullDistance": 340.0,
+   "lodTriangles": [
+    1500,
+    500,
+    120
+   ],
+   "castShadow": true,
+   "tags": [
+    "tree"
+   ],
+   "referencesNeeded": "owner/reference to confirm",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
+  },
+  {
+   "id": "kano_shrub_a",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "PLANNED, NOT MODELLED. Envelope dimensions are placeholders until set from owner-confirmed references.",
+   "source": "dev:kano_shrub_a",
+   "collider": "none",
+   "heightM": 1.4,
+   "widthM": 2.0,
+   "depthM": 2.0,
+   "cullDistance": 140.0,
+   "lodTriangles": [
+    260,
+    100,
+    30
+   ],
+   "castShadow": false,
+   "tags": [
+    "ground"
+   ],
+   "referencesNeeded": "dry-season shrubs / hedges",
+   "referenceIds": [
+    "M-07"
+   ],
+   "readyToModel": false,
+   "readyReason": "blocked: no confirmed reference (M-07)"
+  }
+ ],
+ "kitModules": [
+  {
+   "id": "kit_wall_plain",
+   "use": "compound walls (plain rendered)",
+   "referencesNeeded": "wall height, thickness, finish, coping"
+  },
+  {
+   "id": "kit_wall_decorated",
+   "use": "wall-top treatment",
+   "referencesNeeded": "parapet profile, zankwaye pinnacles (verified feature of Hausa buildings)"
+  },
+  {
+   "id": "kit_gate_pier",
+   "use": "gate piers",
+   "referencesNeeded": "pier section, cap"
+  },
+  {
+   "id": "kit_gate_leaf",
+   "use": "metal gate leaves (several patterns)",
+   "referencesNeeded": "gate patterns as installed"
+  },
+  {
+   "id": "kit_zaure_entrance",
+   "use": "street-front entrance room of a traditional compound",
+   "referencesNeeded": "zaure elevation and opening sizes"
+  },
+  {
+   "id": "kit_flat_roof_parapet",
+   "use": "flat roofs with parapets, water tanks",
+   "referencesNeeded": "parapet height, roof furniture"
+  },
+  {
+   "id": "kit_openings",
+   "use": "doors, windows, shutters, security bars",
+   "referencesNeeded": "opening sizes and styles"
+  },
+  {
+   "id": "kit_shopfront",
+   "use": "shop fronts with roll shutters and sign band",
+   "referencesNeeded": "shopfront types"
+  },
+  {
+   "id": "kit_storey_modern",
+   "use": "modern storeys, balconies, stairs",
+   "referencesNeeded": "modern facade types"
+  },
+  {
+   "id": "kit_dome_minaret",
+   "use": "mosque dome, minaret, ablution block",
+   "referencesNeeded": "mosque type"
+  },
+  {
+   "id": "kit_apron_drain",
+   "use": "frontage apron: concrete drain slab, walkway, steps",
+   "referencesNeeded": "drain and apron as built"
+  },
+  {
+   "id": "kit_pole_fittings",
+   "use": "crossarms, insulators, cables, lamp arms",
+   "referencesNeeded": "installed fittings"
+  }
+ ]
+}
