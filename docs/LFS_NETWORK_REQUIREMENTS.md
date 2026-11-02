@@ -23,8 +23,8 @@ Branches waiting, all containing LFS **pointers** only (the binaries are in the 
 | Branch | Content |
 |---|---|
 | `assets/kano-residential-v2` | residential kit v001 and v002 (137 pointers) |
-| `assets/kano-residential-v3` | the same plus v003 (created when v003 is staged; v002 stays as it is) |
-| `assets/environment-kit-v1` | environmental kit E1 to E3 (186 pointers) |
+| `assets/kano-residential-v3` | the same plus v003 (211 pointers; created 2026-11-03; the v001 and v002 package files are byte-for-byte untouched in it) |
+| `assets/environment-kit-v1` | environmental kit E1 to E3, with the Unity import proof (186 pointers) |
 `assets/kano-residential-v001` (superseded plain blobs, from before the LFS rule) is **kept** until its replacement is pushed AND independently verified, and is deleted only on the owner's say-so; `backup/kano-slice-2026-11-01` and `backup/environment-kit-2026-11-02` (text) stay.
 1. `git push -u origin assets/kano-residential-v2 assets/kano-residential-v3 assets/environment-kit-v1`
 2. Verify every object through a **fresh clone**, one branch at a time:
@@ -36,3 +36,4 @@ Branches waiting, all containing LFS **pointers** only (the binaries are in the 
 * Nothing is committed to the public game repository except text: code, tests, frozen hash manifests and documents.
 * The frozen v002 manifests (`docs/kano/KANO_RESIDENTIAL_v002.*`) and the environmental freeze manifests are never edited; a correction is a new version.
 * Until the objects are registered, what is preserved is: the code that regenerates them (the residential v002 outputs were rebuilt from the code and compared: every texture and GLB byte-identical to the frozen manifest), the frozen hashes, and text backups in the private repository.
+* Text-only snapshots of the registry state are already in the private repository: `backup/environment-kit-2026-11-02` and `backup/kano-residential-v3-2026-11-03` (pushed; no binaries).
