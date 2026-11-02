@@ -58,6 +58,8 @@ def new_version_dir(root: Path, kind: str, name: str) -> tuple[int, Path]:
     """Creates the next version folder and returns (number, path). Never reuses a number."""
     check_name(kind, name)
     v = (max(versions(root, kind, name), default=0)) + 1
+    floor = int(os.environ.get("ARO_VERSION_FLOOR") or 0)             # optional: the first version folder of an asset in a FRESH workspace gets this number (rebuilding a historical version with its historical label: docs/AGENT_HANDOVER.md)
+    v = max(v, floor)
     d = root / "projects" / kind / name / f"v{v:03d}"
     d.mkdir(parents=True, exist_ok=False)
     return v, d

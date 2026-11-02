@@ -1,0 +1,192 @@
+# AGENT HANDOVER: African Roads Online (ARO), Kano content production
+
+**Written 2026-11-03 for an agent that starts from nothing (a new cloud, no memory of the previous sessions).** Everything the previous agent knew that is not obvious from the code is here. Read sections 1 to 3 first (10 minutes), then section 5 to see where work stopped, then section 6 to prepare the machine. **Do not trust a statement here over the repository when they differ: check the repository, then correct this file.**
+
+Contents: 1 Project and owner · 2 Non-negotiable rules · 3 State of the world · 4 What is done · 5 Where work stopped and what to do next · 6 Setting up a new machine · 7 Restoring what only existed in the old container · 8 How the pipeline works (code map) · 9 The Unity review mechanism (CI) · 10 Tests · 11 Measurements so far · 12 Decisions waiting for the owner · 13 Pitfalls and lessons · 14 Glossary · 15 Command cheat sheet.
+
+---
+## 1. The project and the owner
+* **African Roads Online (ARO)**: a realistic 3D African driving simulator (Unity 6000.0.58f2, URP, WebGL build; Supabase backend; first corridor Lagos to Ibadan). The current effort is **Kano city content**: a believable northern-Nigerian residential street, then roadside, village, market and Hausa-quarter environments, all produced as **real 3D assets in Blender** (never images on planes) and verified in the real game.
+* **Repositories**
+  * `AffanNamu/Online-African-Road` (public): the game (Unity project, C#, SQL), CI, tools, **the Blender toolchain (`tools/blender`)**, frozen hash manifests and all documents. **Code only, no binary assets.**
+  * `AffanNamu/ARO-CONTENT` (private): the asset registry, reference register, licence records, text backups, and (once the network allows) the Blender sources/exports as **Git LFS** objects.
+  * ARO 3D Studio is a **separate project: never touch it.**
+* **The owner** writes informal English, decides everything of substance, reviews visually, and approves nothing without looking at actual in-game pictures. They want: honest status ("a Blender render is not completion"), tangible results over scripts, no endless subjective tweaking, no surprise changes to the live game.
+* **Commit trailers** (end every commit message):
+  ```
+  Co-Authored-By: Claude <noreply@anthropic.com>
+  Claude-Session: <the session URL of the harness, if it gives one>
+  ```
+  No pull requests unless the owner asks. Branch used for the work: `work/kano-residential` (merged by fast-forward to `main` at the owner's request on 2026-11-03; the harness may also name a branch such as `claude/...`: follow the instruction of the session you are in).
+
+## 2. Non-negotiable rules (from the owner, accumulated)
+1. **Do not modify**: live gameplay, Supabase (configuration or data), driving physics, road generation, weather system, vehicle behaviour, production configuration. **No engine work** (including the proposals RB-15 batching and RB-18 to RB-25: rainy season, flooding, mud grip, seasonal weather, water shader...) **without a separate technical proposal and the owner's explicit approval.** Do not describe mud, flooding, seasonal weather or rainy-season physics as implemented: they are **not**.
+2. **Secrets**: never ask the owner to paste connection strings, passwords, keys or backups into chat. Never print or retrieve secret values. Unity secrets (`UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`, repo variable `UNITY_CI_ENABLED`, Supabase values) **already exist and work in the game repository's Actions settings**: do not ask for a new Unity setup, do not duplicate or replace them. They do **not** exist in ARO-CONTENT (by design).
+3. **Frozen versions are never edited.** v002 (residential kit) and v003 each have a frozen manifest (`docs/kano/*.freeze.json`, SHA-256 of every file + the commit of the producing code). A correction is a **new version**. Do not delete v001, do not modify v002's files, manifests or hashes.
+4. **Never rewrite shared history, never force-push.** Never skip, disable, weaken or quarantine a test or threshold to get green. Report pass/fail honestly; no false completion claims. A render or an import success is **not** completion.
+5. **Three separate proofs, none equals approval**: (a) Blender validation, (b) Unity import, (c) in-game visual review by the owner. Status vocabulary (registry): `needs_concept, concept_approved, blockout_completed, detailed_modelling_completed, materials_completed, blender_validation_passed, unity_import_verified, in_game_visual_review_passed, production_approved`. **Only the owner (a person) sets `production_approved`.** At the time of writing **nothing is approved** (neither v002 nor v003 nor any environmental asset).
+6. **References**: the owner's generated concept images (ChatGPT) are the compulsory visual standard but are **private design references**: never used as textures, never redistributed, never claimed to be verified images of Kano. Names, logos, plates, brands and text drawn in them are unverified. **Do not invent architecture or landmarks without references**; where none exists (Hausa compounds: gap M-01) the asset is a clearly flagged design interpretation of documented qualitative features (`docs/kano/RESEARCH.md` in the planning branch).
+7. **Asset classification**: every asset is GLOBAL (`aro_`), REGIONAL (`rg_<region>_`, e.g. `rg_ngn_`), CITY_SPECIFIC (`<city>_`) or LANDMARK (`lmk_<city>_`). Reuse assets without making cities identical.
+8. **Private repository and LFS**: binaries go to ARO-CONTENT **as Git LFS objects only** (never plain blobs). Do not bypass the network policy (no tunnels, no custom transfer agents, no `lfs.allowincompletepush`, no skipping the LFS verify call). Do not bypass the block on the Actions secrets API either. Keep every existing backup and branch: **`assets/kano-residential-v001` (superseded plain blobs, on the remote) is deleted only on the owner's say-so.**
+9. **Review artifacts stay private-ish**: the review job's one artifact (screenshots) is readable by signed-in GitHub users for its retention (default 7 days); nothing else (no concept image, no binary asset) is ever published.
+10. Never send the owner's email to an unrelated service. Do not merge unrelated branches. `work/kano-slice` (planning) stays **local** by owner decision (backed up as text patches, section 7).
+11. Do not keep making subjective material or foliage adjustments indefinitely: if the result meets the agreed standard, freeze it as a version and let the owner review.
+
+## 3. State of the world (2026-11-03)
+**Game repo `main` = `90fde61`** (fast-forward of `work/kano-residential`). CI runs on it were in progress when this was written (`gh run list --branch main`); the previous full CI on the same code was green except two long browser jobs that had not finished: **check them first** (section 5, step 1).
+| Thing | Where | State |
+|---|---|---|
+| Residential kit v002 (14 assets) | code `tools/blender/kano_kit/build_all.py` + modules; frozen manifest `docs/kano/KANO_RESIDENTIAL_v002.freeze.json` | frozen original review candidate; Blender-validated; imported in Unity (run 41391901470); **awaiting the owner's visual + performance approval** |
+| Residential kit v003 (14 assets + 5 merged-frontage prototype assets) | code `kano_kit/build3.py`, `villa3.py`, `palette.py`, `veg3.py`, `coplanar.py`, `frontage.py`; frozen manifest `docs/kano/KANO_RESIDENTIAL_v003.freeze.json` (19 assets, 202 hashes) | owner-approved scope (richer villa facades, 55 to 37 materials, no coplanar overlaps, regression tests); Blender-validated; Unity-imported and measured (runs 41476407715, 41489466501); **awaiting the owner's in-game visual review; not approved** |
+| Environmental kit (26 assets: E1 13, E2 3, E3 10; five E1/E2 assets have a corrected v002) | code `tools/blender/env_kit/`; frozen manifests `ENVIRONMENT_KIT_E1_E2_v001.freeze.json`, `ENVIRONMENT_KIT_E3.freeze.json` | Blender-validated; **all 26 imported by the real Unity importer** (registry status `unity_import_verified` in the local private-repo branch); six review scenes driven in the game; **in-game review by the owner not done; not approved** |
+| Complete environments (6 scenes: Hausa quarter, village, market street, dry and wet) | `tools/blender/env_kit/scenes.py` | review compositions only (not game content; wet = static meshes, no simulation) |
+| Review pictures | GitHub Actions artifacts `kano-review-in-game` of runs **41489466501** (expires **2026-11-09 18:14 UTC**) and **41476407715** (expires **2026-11-09 16:50 UTC**); older run 41450050093 (v002, expires 2026-11-09 13:28 UTC) | the owner downloads them from the run page; the previous agent could **not** (artifact downloads were blocked by the cloud's proxy), so **no agent has looked at the in-game pictures** |
+| Planning branch `work/kano-slice` (master plan, reference register R-001..R-023, matrix, backlog RB-18..RB-25) | local only in the old container; **text backup**: ARO-CONTENT branch `backup/kano-slice-2026-11-01` (10 patches) | restore with section 7.1 |
+| Asset binaries (.blend, FBX, GLB, textures, previews) | old container only (`/root/ARO-BLENDER-WORKSPACE`, 329 MB, and local LFS pointers in `/home/user/aro-content`) | **will be lost when that container is reclaimed; regenerable from code** (section 7.2) |
+| ARO-CONTENT branches on the remote | `main`, `docs/unity-review-setup`, `docs/environment-library`, `backup/kano-slice-2026-11-01`, `backup/environment-kit-2026-11-02`, `backup/kano-residential-v3-2026-11-03`, `assets/kano-residential-v001` (superseded plain blobs, keep), `review/secrets-probe` (throwaway) | pushed |
+| ARO-CONTENT branches only in the old container (LFS pointers) | `assets/kano-residential-v2` (v001+v002, 137 pointers), `assets/kano-residential-v3` (+v003, 211), `assets/environment-kit-v1` (E1 to E3, 186) | **cannot be pushed**: the cloud's network policy blocks `lfs.github.com` (and `github-cloud.githubusercontent.com` for downloads); see `docs/LFS_NETWORK_REQUIREMENTS.md`; text snapshots of their registries are in the `backup/...` branches above |
+
+## 4. What is done (with the document that proves it)
+| Milestone | Documents |
+|---|---|
+| Infrastructure investigated (Unity credentials exist in the game repo; exact LFS blocker; local run = static server) | `docs/INFRASTRUCTURE_INVESTIGATION_2026-11-02.md`, `docs/LFS_NETWORK_REQUIREMENTS.md` |
+| Residential street kit v001 to v002 (colour-cast root cause found and fixed: double sRGB decode), export verification, freeze | `docs/KANO_RESIDENTIAL_MILESTONE.md` (sections 1 to 13) |
+| In-game review pipeline inside the existing game workflow, no new credentials | `.github/workflows/blender-unity.yml`, `tools/webgl-kanoreview.js`, `Assets/_Project/Scripts/World/KanoReviewScene.cs`, `KanoReviewStats.cs`, `Assets/_Project/Scripts/Editor/BlenderImport/KanoReviewBuilder.cs` |
+| Environment systems assessment (what the engine can and cannot do for mud, rain, seasons; **read-only**) | `docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md` |
+| Environmental kit E1/E2/E3 (26 assets), library handover (generated) | `docs/ENVIRONMENT_KIT_E1_E2.md`, `docs/ENVIRONMENT_KIT_E3.md`, `docs/ENVIRONMENT_LIBRARY_HANDOVER.md` |
+| Draw-call investigation (kit = 99.9% of the review scene's draws; merged frontages -30%; shadow pass 44% of engine draws) | `docs/DRAW_CALL_INVESTIGATION_2026-11-02.md` |
+| Engine batching **proposal only** (nothing implemented, needs approval) | `docs/ENGINE_BATCHING_PROPOSAL_RB15.md` |
+| Residential v003 (facades, materials, coplanar fix, regression tests, own freeze) | `docs/KANO_RESIDENTIAL_V003.md` |
+| v003 measured in Unity; environment scenes; low tier | `docs/PERFORMANCE_REPORT_V003.md`, `docs/ENVIRONMENT_SCENES.md`, `docs/kano/KANO_REVIEW_RUN_*_numbers.json`, `docs/kano/KANO_UNITY_IMPORT_run_*.json` |
+
+## 5. Where work stopped, and what to do next (in order)
+1. **Check CI on `main`** (`gh run list --branch main --limit 6`). Expected: `CI` (8 jobs incl. "Unity tests + WebGL build", "WebGL build boots in a browser", "Lighting at four hours") and `Blender import into Unity` (import tests only). If something is red, **diagnose from the job log** (`gh api repos/AffanNamu/Online-African-Road/actions/jobs/<id>/logs`) and fix with a normal commit; never weaken a test. The last fully green CI before the final pushes was run 41476407884 (commit `956aaed`); c582261 had everything green except two browser jobs still running at the time.
+2. **Do not start new content until the owner has reviewed the pictures.** Ask the owner (or read their message) for the verdict on: v002 vs v003, the villa facades, the environment scenes. If the new cloud lets you download artifacts (allow `productionresultssa1.blob.core.windows.net`, or any host `gh run download` is redirected to), **look at the 24 + 26 pictures yourself** and report what you see honestly.
+3. **LFS**: the moment `lfs.github.com` (and `github-cloud.githubusercontent.com`) are reachable, follow `docs/LFS_NETWORK_REQUIREMENTS.md`: push `assets/kano-residential-v2`, `-v3`, `assets/environment-kit-v1`, then verify **every object through a fresh clone** with `python3 tools/verify_asset_clone.py ...`. If the old container is gone, first restore the branches (section 7.2), then push. Only then may anything be called preserved.
+4. **Decisions waiting for the owner** (section 12): merged frontages as production placement; small-item shadow policy; lower-detail kit tier for mobile (measured 447 and 415 draws against a 150 budget); engine batching proposal.
+5. **After the owner's verdict**, the likely work is: v004 corrections (anything they dislike in the pictures; the known open differences from R-006 are in `docs/KANO_RESIDENTIAL_V003.md` section 3 and the registry `flags`); a villa LOD1 with fewer materials (estimated -30 to -40 draws on the reference view, not applied); a mobile-tier variant of the kit; further environmental batches. **Every new asset needs a registered reference or an explicit `needs_concept`/owner-request flag; every new version needs its own freeze, validation, Unity import, screenshots and performance report** (the pattern of `docs/KANO_RESIDENTIAL_V003.md`).
+6. **Known loose ends**: (a) the first v003 review run is shown as *failed* on GitHub only because of a since-fixed bug in the review driver (low-tier variant); the repeat run 41489466501 is green; (b) `ENVIRONMENT_KIT_E1_E2_v001` hashes of the five assets later corrected to v002 can only be reproduced from the commit recorded in that manifest (the builders now separate coplanar faces), see 7.2; (c) per-pixel comparison of merged vs standard pictures exists only as numbers (0.12 to 0.18 of 255 mean difference); (d) the combined measurement (kit plus the game's road, terrain, traffic and vehicle in one view) was never made: the report adds a measured baseline instead (upper bound 434 draws on the reference view with merged frontages vs a 400 budget).
+
+## 6. Setting up a new machine (what to install, in order)
+The previous agent worked in a Linux container (Debian/Ubuntu-like, 4 cores, 15 GB RAM, **no GPU**, no GUI). Blender is used **only as the `bpy` Python module**; Unity runs **only in GitHub Actions** (never locally).
+| Tool | Version used | Why | How |
+|---|---|---|---|
+| Python | **3.13.x exactly** (the `bpy` 5.2 wheel exists for cp313 only) | the whole toolchain | system package or `uv`/`pyenv` |
+| `bpy` | **5.2.3** (pinned) | Blender as a module (modelling, validation, FBX/GLB export, Cycles renders on CPU) | `bash tools/blender/setup.sh` (creates `~/.aro/venv`, installs `tools/blender/requirements.txt`: `bpy==5.2.3`, `mcp>=1.26,<2`, `pytest>=8`, `pillow>=10,<13`; numpy comes with bpy) |
+| apt libs for software OpenGL (EEVEE/Workbench previews; Cycles does not need them) | n/a | previews | `apt-get install -y libegl1 libgl1 libgl1-mesa-dri` |
+| git, **git-lfs** | 2.43 / 3.4.1 | repos, LFS pointers | apt |
+| `gh` (GitHub CLI), authenticated | 2.89 | read run logs/artifact metadata, list runs, cancel runs | `gh auth login` (or a token with repo + actions read); the old cloud injected credentials through its proxy |
+| .NET SDK | **8.0.x** | the pure C# logic tests (`tests/NetCore.Tests`, `LangVersion 9` = Unity 6's C#) | apt/Microsoft feed |
+| Node.js | 22.x | the Playwright review driver (normally run **in CI**, not locally) | nvm/apt |
+| Playwright + Chromium | `playwright@1.49.1` | `tools/webgl-*.js` (software GL via SwiftShader) | `npm install --no-save playwright@1.49.1 && npx playwright install --with-deps chromium` |
+| PyYAML (optional) | any | `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/blender-unity.yml'))"` lint before pushing a workflow | pip |
+| **Not needed / not available**: Unity editor, Blender GUI, a GPU. Unity activation uses the game repo's Actions secrets (already set). |
+**Network allow-list the cloud must grant** (the old cloud blocked the last three groups; ask the owner to allow them in the cloud environment's *Network access* settings): `github.com`, `api.github.com`, `codeload.github.com`; `pypi.org`, `files.pythonhosted.org` (the `bpy` wheel); `registry.npmjs.org` and the Playwright CDN; **for LFS**: `lfs.github.com`, `github-cloud.s3.amazonaws.com` (uploads, worked already), `github-cloud.githubusercontent.com` (downloads for the fresh-clone check); **optional but valuable**: `productionresultssa1.blob.core.windows.net` (GitHub artifact downloads: lets an agent look at the in-game screenshots).
+**Directories and variables**: asset workspace = `$ARO_WORKSPACE` or `~/ARO-BLENDER-WORKSPACE` (append-only version folders `projects/<kind>/<id>/vNNN`, `exports/{fbx,glb,unity}`, `validation/<id>/vNNN.json`); `ARO_VERSION_FLOOR=N` (new, 2026-11-03) makes the first version folder of an asset in a **fresh** workspace `vN` so a historical version can be rebuilt with its historical label; `ARO_VENV` (setup.sh) overrides `~/.aro/venv`. Always run toolchain commands **from `tools/blender`** with `PYTHONPATH=.`.
+**Bootstrap**
+```bash
+git clone https://github.com/AffanNamu/Online-African-Road.git && cd Online-African-Road && git checkout main
+git clone https://github.com/AffanNamu/ARO-CONTENT.git ../aro-content          # private; needs access
+bash tools/blender/setup.sh                                                       # ~1-2 min
+cd tools/blender && PYTHONPATH=. ~/.aro/venv/bin/python -m pytest tests -q        # expect: 172 passed, ~100 s
+cd ../../tests/NetCore.Tests && dotnet test                                       # expect: 1085 passed
+cd ../.. && python3 -m pytest tools/test_review_numbers.py tools/test_unity_import_report.py tools/test_verify_asset_clone.py -q   # 9 passed
+python3 tools/check_repo_safety.py && python3 tools/test_repo_safety.py           # secrets/licence/third-party gate
+cd ../aro-content && python3 tools/validate_repo.py && python3 -m pytest tests -q # asset repo checks, 52 passed
+```
+
+## 7. Restoring what only existed in the old container
+### 7.1 The planning branch `work/kano-slice` (master plan, references, matrix, backlog)
+It contains `docs/kano/` (RESEARCH.md, REFERENCE_REGISTER.md, DECISIONS_2026-11-01.md, COORDINATES.md, city plan...), `docs/KANO_CITY_MASTER_PLAN.md`, `docs/ROAD_ENGINE_BACKLOG.md` (RB-01..RB-25), `docs/ROAD_ENGINE_PROPOSAL.md`, `docs/KANO_VERTICAL_SLICE.md`, the asset matrix/registry generators (`tools/kano/`) and their tests. Owner decision: **it is not pushed to the public repo**; its 10 commits are saved as text patches in the private repo (branch `backup/kano-slice-2026-11-01`, folder `manifests/backups/kano-slice-2026-11-01/`, with `SHA256SUMS`). **Tested on 2026-11-03: all 10 apply cleanly onto current `main`.**
+```bash
+cd Online-African-Road && git checkout -b work/kano-slice main
+git -C ../aro-content show backup/kano-slice-2026-11-01 --stat >/dev/null            # (branch exists on the remote)
+mkdir -p /tmp/slice && for f in $(git -C ../aro-content ls-tree -r --name-only backup/kano-slice-2026-11-01 | grep 'kano-slice-2026-11-01/.*patch$'); do git -C ../aro-content show backup/kano-slice-2026-11-01:$f > /tmp/slice/$(basename $f); done
+git -c user.name=agent -c user.email=agent@example.invalid am --3way /tmp/slice/*.patch
+```
+The residential code before it was merged (`kano-residential-code-2026-11-01`) is also backed up there, but it is superseded by the pushed `work/kano-residential`/`main`.
+### 7.2 The asset binaries (regenerate; they were verified reproducible)
+Nothing irreplaceable is lost with the old container: **the textures and GLB exports are rebuilt byte for byte from the code** (verified locally and in CI for v002 (42/42 textures, 14/14 GLB) and v003 (88/88, 19/19)); the `.blend` and FBX files are rebuilt with identical geometry but not identical bytes (Blender embeds paths/times; geometry compared by re-import). The only binaries without a code path are the **superseded residential v001** files: they are on the remote as plain blobs in `assets/kano-residential-v001` (keep).
+```bash
+export ARO_WORKSPACE=$HOME/aro-ws; cd tools/blender; V=~/.aro/venv/bin/python
+# residential v002 (original candidate) with its historical label v002:
+ARO_VERSION_FLOOR=2 PYTHONPATH=. $V -m kano_kit.build_all
+PYTHONPATH=. $V -m kano_kit.verify_freeze --freeze ../../docs/kano/KANO_RESIDENTIAL_v002.freeze.json --workspace $ARO_WORKSPACE      # textures+GLB must say "identical N of N"
+# residential v003 (+ 5 frontage prototypes; these are v001 in the workspace by history):
+ARO_VERSION_FLOOR=3 PYTHONPATH=. $V -m kano_kit.build3            # frontage assets then get v003 too in a fresh workspace; the freeze lists them as v001: build them with --only/floor 1 separately if you need exact labels
+PYTHONPATH=. $V -m kano_kit.verify_freeze --freeze ../../docs/kano/KANO_RESIDENTIAL_v003.freeze.json --workspace $ARO_WORKSPACE --map v003=v001   # only meaningful in a workspace where v003 is labelled v001 (the CI case)
+# environmental kit (current code = the corrected versions):
+PYTHONPATH=. $V -m env_kit.build_env
+```
+**To rebuild a frozen version exactly, check out the commit recorded in its manifest** (`gameRepository.producerCodeLastChangedIn`): e.g. the original E1/E2 v001 assets (before the coplanar separation) need commit `8d24ff48` of the game repo. A fresh workspace labels the first build `v001`; `kano_kit.verify_freeze --map vNNN=v001` compares across labels.
+Restaging into the private repo (what produced the local LFS branches): from `../aro-content` on a branch cut from `assets/kano-residential-v001`/`main`:
+```bash
+PYTHONPATH=. $V -m kano_kit.stage_private --content ../../../aro-content --placements <placements.json> --previews <dir with <id>_iso.png and <id>_front.png> --only <ids> [--release-name kano_residential_section_a_v003]
+PYTHONPATH=. $V -m env_kit.stage_private --content ../../../aro-content --previews <dir> --report <env build report json>
+python3 tools/unity_import_report.py apply docs/kano/KANO_UNITY_IMPORT_run_41489466501.json ../aro-content     # sets unity_import_verified where Unity's figures equal Blender's
+cd ../aro-content && python3 tools/make_library_index.py && python3 tools/validate_repo.py
+```
+(Placements: `python -m kano_kit.stage_unity --out <dir>` writes `placements/kano_residential_section_a.json`.) The staging tools never rewrite an older version's package manifest (v002 is frozen) and replace, not stack, the registry `OPEN:` segment.
+
+## 8. How the pipeline works (code map)
+`tools/blender/` (Python; run with `bpy`):
+* `aro_blender/` the toolchain core: `workspace.py` (append-only versions), `validate.py` (budgets: buildings 6000, vegetation 3000, props/environments 2500, roads 8000, signs 800, lights 1200 LOD0 triangles; last LOD <= 10% of LOD0; ground at z = 0 +- 0.02; names; UVs; closed correctly wound shells), `export.py` (FBX+GLB+manifest), `materials.py` (**the material LIBRARY, TEXTURED map, ALPHA map, `kit_json()` consumed by Unity**), `server.py` (stdio MCP server), `safety.py`, `render.py`.
+* `kano_kit/` residential kit: `geo.py` (Part/bmesh helpers, `uv_world`, Asset with LODs), builders `street.py walls.py villa.py lights.py veg.py` (**v002, do not edit**: a test pins their geometry), `assemble.py` (placements of the review street), `build_all.py` (produce(): validate+save+export), `textures.py` (procedural PBR; sRGB values stored as given), **v003**: `villa3.py build3.py palette.py veg3.py coplanar.py frontage.py`, tools: `freeze.py` (hash manifests; `--kit kano|env|v3`), `verify_export.py`, `verify_freeze.py`, `stage_unity.py` (Unity staging layout + placements + env scenes), `stage_private.py` (ARO-CONTENT layout/registry), `render_assets.py`, `render_ref.py`.
+* `env_kit/` environmental kit: `build_env.py` (26 SPECS; `separate=True` resolves coplanar overlaps), builders `surfaces.py roadside.py buildings.py hausa.py commerce.py rural.py veg_dry.py veg_wet.py`, `textures.py`, `scenes.py` (6 review environments), `layout.py`, `render_env.py`, `render_scene.py` (Blender views of scenes), `stage_private.py`, `handover.py` (generates `docs/ENVIRONMENT_LIBRARY_HANDOVER.md`), `verify_export.py`.
+* `tests/` pytest suites (172 tests) including `test_v3_regression.py` (no coplanar/degenerate/duplicate faces; material counts; v002 geometry hashes in `v002_geometry_hashes.json`), `test_env_scenes.py` (layout checks), `test_frontage.py` (merged frontage = individual pieces face for face).
+Unity side (`Assets/_Project/Scripts/`): `Editor/BlenderImport/BlenderAssetBuilder.cs` (FBX to production prefab: LODGroup, kit materials URP/Lit with texture/cutout/alpha, colliders), `KanoReviewBuilder.cs` (review prefabs from placement JSON, env scenes with cameras), `World/KanoReviewScene.cs` (`?smoke=kanostreet&view=..&scene=..&variant=merged&shadows=off|small&quality=low`), `World/KanoReviewStats.cs` + `NetCore/DrawBreakdown.cs` (draw-call split per asset; unit-tested), `World/PerfProbe.cs` and `NetCore/WorldPolicy.cs` (`PerfBudget`: desktop 400 draws/1M tris/300 MB textures/120 MB build; mobile 150/250k/150/80). Engine files are **not to be changed** (rule 1).
+**Versioning model**: asset id stays; versions v001, v002, v003 are folders; `validation/<id>/vNNN.json`; the registry points at the latest; frozen manifests pin each frozen version.
+**Material model (v003)**: textured tiling surfaces (plaster, cladding, travertine, roof tile, concrete, asphalt, paver, grass) stay separate; flat colours are folded into three palette materials `kano_paint/kano_metal/kano_glass` (a face's UV is its cell centre); vegetation uses one cutout atlas `kano_veg`. **A material = a draw call per instance: the game batches nothing.**
+
+## 9. The Unity review mechanism (the only way Unity is used)
+* Workflow `.github/workflows/blender-unity.yml` ("Blender import into Unity"). A push whose **head commit message contains `[kano-review]`** (v003 kit; `[kano-review-v2]` = v002 kit) or a manual `workflow_dispatch` (inputs `review`, `kit` = v3|v2, `retention_days` = default 7) additionally: builds the kit **and the 26 environmental assets from the code** in a fresh workspace, compares the build with the frozen manifest (`verify_freeze`, report only), stages everything under the git-ignored `Assets/ThirdParty/ARO`, builds the game with `ARO.Editor.BuildScript.BuildKanoReviewWebGL` (**no backend baked in, nothing deployed, nothing committed**), drives it in headless Chromium and uploads the screenshots as artifact `kano-review-in-game`. Without the marker the job only runs the import tests.
+* **Shared Unity licence queue**: group `unity-license` (one running, one pending; a newer pending job **cancels** an older pending one). Push a `[kano-review]` commit **only when no Unity job is running or pending** (`gh run list`), otherwise the main `CI` workflow's Unity job can cancel your review run. A full review run takes about 60 to 70 minutes; CI about 75 minutes.
+* Driver view grammar (`tools/webgl-kanoreview.js`, argument of the workflow step): `view[@scene][:variant]`, views `ref front side street1 street2 top` (street) and `drive aerial` (scenes `env_<place>_<season>`), variants `merged`, `noshadow` (`shadows=off`), `shadowsmall` (review-only policy), `low` (quality tier low). Output: pictures + `kanoreview-summary.json`; numbers go to the public log (**no picture is ever written to the log**).
+* Reading results (no artifact download needed): `JID=$(gh api repos/AffanNamu/Online-African-Road/actions/runs/<run>/jobs --jq '.jobs[0].id'); gh api repos/AffanNamu/Online-African-Road/actions/jobs/$JID/logs > job.log`, then `python3 tools/review_numbers.py extract job.log out.json --run <id> --commit <sha>` and `python3 tools/review_numbers.py compare before.json after.json` (markdown tables); `python3 tools/unity_import_report.py extract job.log report.json --run <id> --commit <sha>` (per-asset import proof: LOD triangles, materials).
+* Game CI `ci.yml`: database tests, .NET tests, Blender toolchain (pytest), Unity EditMode tests + WebGL build (`game-ci/unity-builder@v4`, Unity 6000.0.58f2, serial recovered from `UNITY_LICENSE`), browser smoke, lighting. Other workflows (`supabase-*`, `backend-smoke`, `unity-license-*`) are manual only: **do not run them**.
+
+## 10. Tests (all must stay green; counts as of 2026-11-03)
+`tools/blender` pytest **172** (bpy needed) · `tests/NetCore.Tests` **1085** · `tools/test_review_numbers.py + test_unity_import_report.py + test_verify_asset_clone.py` **9** · `tools/test_repo_safety.py` · `tools/check_repo_safety.py` (scans tracked files for secrets, licences, build output, third-party asset paths) · ARO-CONTENT: `tools/validate_repo.py` and `pytest tests` **52** · Unity EditMode/WebGL tests only in CI. A change to a v002 builder fails `test_the_frozen_v002_builders_still_produce_the_recorded_geometry`: that is the guard, not a nuisance.
+
+## 11. Measurements so far (Unity, software GL, tier medium, hour 15:30; deterministic: a repeat run gave identical numbers)
+Draw calls (the game's estimate; budget desktop 400): v002 standard 690/650/654/618 (ref/street1/side/street2); **v003 standard 550/521/521/495**; **v003 merged frontages 340/321/323/305**; low tier (mobile budget 150) 447 and 415; the shadow pass is 44% of engine draws (988 with shadows, 553 without; 682 with a small-item policy); game scene baseline in CI 42 to 94 estimated draws, 138 to 198 engine draws; environment scenes alone 150 to 274 draws. Prefabs: 45 imported, every LOD triangle count and material count equals the Blender validation; no page error; no magenta (error shader) pixel in any picture. **Frame times from software GL are meaningless and must never be quoted as performance.** Details: `docs/PERFORMANCE_REPORT_V003.md`.
+
+## 12. Decisions waiting for the owner (do not decide for them)
+(1) accept or reject the visual result of v002/v003 from the pictures; (2) are merged plot frontages (-30..40% draws, bake plot layouts, lose reuse) the production placement; (3) shadow policy (small items cast no shadow: -31% engine draws, visible change); (4) a lower-detail kit tier for mobile and/or the engine batching proposal (`docs/ENGINE_BATCHING_PROPOSAL_RB15.md`: stage 1 content, stage 2 shadow policy, stage 3 instancing via `BatchRendererGroup`, only if needed); (5) allow the LFS hosts so the private branches can be pushed and verified; (6) what to do with `assets/kano-residential-v001` once its replacement is verified (keep until told); (7) the engine proposals RB-18 to RB-25 (mud grip, flooding, water, seasonal weather): **not started, not approved**.
+
+## 13. Pitfalls and lessons (each cost time once)
+* **Frozen is frozen**: the staging tool once rewrote older manifests; it now skips existing ones. Any new tool that writes into a version folder must be idempotent and never touch older versions.
+* **Coplanar overlaps**: two boxes sharing a wall plane over an area render black in Cycles and z-fight in games; use `kano_kit.coplanar.separate` (3 mm) or avoid by construction; v002 has known ones (held as a ceiling in tests), v003/env have none.
+* **Version labels in a fresh workspace** are `v001`; use `ARO_VERSION_FLOOR` or `verify_freeze --map`.
+* **Playwright `page.evaluate` takes one argument**: wrap several values in an object (bug fixed twice).
+* **Unity C# cannot be compiled locally**: type-check new Unity-facing code against stubs (`dotnet build` with a tiny fake `UnityEngine`) and keep logic in pure `NetCore` classes with xunit tests (`DrawBreakdown`).
+* **Never push a `[kano-review]` commit while another Unity job is pending** (section 9). Docs-only pushes do not trigger `ci.yml` (it ignores `docs/**` and `*.md`).
+* **Registry hygiene**: re-staging used to stack `OPEN:` segments in `flags`; fixed (`with_open`).
+* **GitHub artifact downloads, `lfs.github.com` and the Actions secrets API were blocked** in the old cloud (egress proxy 403): do not look for ways around; report and ask the owner to allow hosts.
+* **Honest reporting**: say what was measured vs estimated vs not done; say what you have **not seen**; never call an import "verified in the game".
+* The harness of the old cloud blocked foreground `sleep`; waits were `until`-loops with a timeout under 10 minutes, and background jobs were killed after 30 minutes. Adapt to your harness.
+
+## 14. Glossary
+`R-001..R-023` registered reference images (R-006 = gated modern residential street, the standard for the residential kit; R-016..R-021 = dry, Harmattan, rain, flood, mud, market-village scenes; stored as text descriptions in ARO-CONTENT `references/REFERENCE_REGISTER.md`; **the images themselves are not in any repo**) · `M-01..M-18` research/reference **gaps** (M-01 Hausa compounds have no real reference; M-04/M-12 markets/old city; M-07/M-17 species and seasonal looks; M-14 vernacular; M-15 soil colours) · `RB-01..RB-25` road-engine backlog (RB-10 prefabs instantiated unbatched; RB-15 batching; RB-18..RB-25 mud/flood/water/seasons: not approved) · `E0` measurement stage (approved as measurement only) · `E1/E2/E3` environmental kit batches · `v002/v003` residential kit versions · `kit` = the set of assets built by one builder family · `frontage` = merged plot-side wall assets (prototype for draw-call reduction) · `palette materials` `kano_paint/kano_metal/kano_glass` · `kano_veg` vegetation atlas · `separate` the coplanar fix · `import proof` = `unity_import_verified` (Unity's LOD triangles/material count equal Blender's) · `review scene` the far-away stage built from placement JSON at (6000, 0, 6000).
+
+## 15. Command cheat sheet
+```bash
+# status of everything
+gh run list --limit 8 --json databaseId,name,status,conclusion,headSha --jq '.[] | "\(.databaseId) \(.name) \(.status) \(.conclusion) \(.headSha[0:7])"'
+gh api repos/AffanNamu/Online-African-Road/actions/runs/<id>/artifacts --jq '.artifacts[]|"\(.name) \(.expires_at)"'
+# build, validate, export
+cd tools/blender && PYTHONPATH=. ~/.aro/venv/bin/python -m kano_kit.build3 [--only id,id] [--no-export]
+PYTHONPATH=. ~/.aro/venv/bin/python -m env_kit.build_env [--only id] [--report f.json]
+# previews (CPU Cycles, ~1 min per asset)
+PYTHONPATH=. ~/.aro/venv/bin/python -m kano_kit.render_assets --v3 --out DIR [--only id]
+PYTHONPATH=. ~/.aro/venv/bin/python -m env_kit.render_env --out DIR ;  ...  -m env_kit.render_scene --out DIR   # scenes from exported GLBs
+# freeze + verify
+... -m kano_kit.freeze --kit v3 --label "..." --out docs/kano/NEW.freeze.json   (commit the producing code FIRST: the manifest records the commit)
+... -m kano_kit.verify_export --placements x.json --native x.json --out DIR --version v003 --skip-render
+... -m kano_kit.coplanar --kit all        # lists overlapping coplanar faces per asset
+# generated documents
+... -m env_kit.handover --registry ../aro-content/registry/asset_registry.json --out ../../docs/ENVIRONMENT_LIBRARY_HANDOVER.md
+# LFS (after the owner allows the hosts)
+git -C ../aro-content push -u origin assets/kano-residential-v2 assets/kano-residential-v3 assets/environment-kit-v1
+python3 tools/verify_asset_clone.py --repo https://github.com/AffanNamu/ARO-CONTENT.git --branch assets/kano-residential-v3 --freeze docs/kano/KANO_RESIDENTIAL_v002.freeze.json docs/kano/KANO_RESIDENTIAL_v003.freeze.json
+```

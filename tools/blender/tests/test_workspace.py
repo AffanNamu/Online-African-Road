@@ -71,3 +71,10 @@ def test_unique_path_never_hands_out_an_existing_file(tmp_path):
     b.write_bytes(b"2")
     assert ws.unique_path(a).name == "x_iso_cycles_20260101T000000_3.png"
     assert a.read_bytes() == b"1" and b.read_bytes() == b"2"
+
+
+def test_version_floor_labels_the_first_version_of_a_fresh_workspace(tmp_path, monkeypatch):
+    monkeypatch.setenv("ARO_VERSION_FLOOR", "3")
+    assert ws.new_version_dir(tmp_path, "props", "bollard")[0] == 3
+    assert ws.new_version_dir(tmp_path, "props", "bollard")[0] == 4                      # later versions continue after the highest
+    monkeypatch.delenv("ARO_VERSION_FLOOR"); assert ws.new_version_dir(tmp_path, "props", "other")[0] == 1
