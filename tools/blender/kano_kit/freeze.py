@@ -9,7 +9,8 @@ from pathlib import Path
 from aro_blender import workspace as ws
 from . import build_all
 
-PRODUCERS = ["tools/blender/aro_blender", "tools/blender/kano_kit/geo.py", "tools/blender/kano_kit/street.py", "tools/blender/kano_kit/walls.py", "tools/blender/kano_kit/villa.py", "tools/blender/kano_kit/lights.py",
+PRODUCERS = ["tools/blender/kano_kit/villa3.py", "tools/blender/kano_kit/palette.py", "tools/blender/kano_kit/veg3.py", "tools/blender/kano_kit/coplanar.py", "tools/blender/kano_kit/build3.py", "tools/blender/kano_kit/frontage.py",
+             "tools/blender/aro_blender", "tools/blender/kano_kit/geo.py", "tools/blender/kano_kit/street.py", "tools/blender/kano_kit/walls.py", "tools/blender/kano_kit/villa.py", "tools/blender/kano_kit/lights.py",
              "tools/blender/kano_kit/veg.py", "tools/blender/kano_kit/textures.py", "tools/blender/kano_kit/assemble.py", "tools/blender/kano_kit/build_all.py", "tools/blender/env_kit"]
 
 
@@ -22,13 +23,16 @@ def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--version", default="", help="one version label for every asset; omitted: the LATEST version of each asset"); ap.add_argument("--out", required=True); ap.add_argument("--renders", default="")
-    ap.add_argument("--kit", default="kano", choices=["kano", "env"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
+    ap.add_argument("--kit", default="kano", choices=["kano", "env", "v3"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
     repo = Path(__file__).resolve().parents[3]; W = ws.default_root(); only = set(a.only.split(",")) if a.only else None
     producers_commit = git(repo, "log", "-1", "--format=%H", "--", *PRODUCERS); head = git(repo, "rev-parse", "HEAD"); dirty = bool(git(repo, "status", "--porcelain", "--", "tools/blender"))
     assets = []; all_pass = True
     if a.kit == "env":
         from env_kit import build_env
         specs = build_env.SPECS
+    elif a.kit == "v3":
+        from . import build3
+        specs = {**build3.SPECS, **build3.FRONTAGE}
     else: specs = build_all.SPECS
     for aid, sp in specs.items():
         if only is not None and aid not in only: continue

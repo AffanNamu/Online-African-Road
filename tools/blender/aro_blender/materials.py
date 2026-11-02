@@ -92,6 +92,14 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "banana_stem":       ((0.52, 0.56, 0.30), 0.8, 0.0, 0.0, "banana pseudostem: pale green with dry brown sheaths at the base"),
     "banana_fruit":      ((0.46, 0.58, 0.20), 0.55, 0.0, 0.0, "green bananas"),
     "flower_bougainvillea": ((0.78, 0.12, 0.45), 0.7, 0.0, 0.0, "bougainvillea bracts: magenta"),
+    # ---- residential kit v003 (2026-11-03): shared PALETTE materials. Flat-colour surfaces that used to be separate materials (white paint, dark interiors, kerb paint, aluminium, galvanised and black steel, window
+    # and balcony glass) become cells of one small texture each, so a villa needs 7 materials instead of 11 and every asset that uses them shares the same three. A cell is a constant colour (the faces carry a fixed
+    # UV at the cell centre), so nothing blurs or tiles. Roughness and metallic are one value per material (a compromise inside each family); glass alpha is the cell alpha times the material alpha.
+    "interior_warm":     ((0.62, 0.42, 0.22), 0.9, 0.0, 0.0, "a warmly lit room seen through glass (v003 facades: the reference shows lit interiors)"),
+    "kano_veg":          ((0.16, 0.30, 0.08), 0.8, 0.0, 0.0, "vegetation atlas (v003): leaf-cluster atlas, bark cell and flat colour cells (hedge green, flower red) in ONE alpha-clipped, two-sided material, so a tree, shrub or hedge is one draw call"),
+    "kano_paint":        ((0.80, 0.80, 0.78), 0.70, 0.0, 0.0, "palette of non-metal flat colours: white paint, dark interiors, lantern glow, kerb black and white, road white, sign blue, insulator brown, dark concrete, rubber"),
+    "kano_metal":        ((0.40, 0.40, 0.42), 0.45, 0.8, 0.0, "palette of metals: dark aluminium frames, galvanised steel, black painted steel, blue painted steel"),
+    "kano_glass":        ((0.30, 0.40, 0.45), 0.05, 0.0, 0.0, "palette of glass: tinted window glass and pale balcony glass; alpha is the cell alpha (1.0 and 0.52) times the material alpha 0.42"),
 }
 
 
@@ -114,6 +122,10 @@ TEXTURED: dict[str, dict] = {
     # environmental kit
     "leaf_dry_cutout": {"texture": "T_env_leavesdry_BaseColor", "cutout": 0.5, "two_sided": True},
     "grass_blade_cutout": {"texture": "T_env_grassblades_BaseColor", "cutout": 0.5, "two_sided": True},
+    "kano_veg": {"texture": "T_kano_vegatlas_BaseColor", "cutout": 0.5, "two_sided": True},
+    "kano_paint": {"texture": "T_kano_paint_Palette"},
+    "kano_metal": {"texture": "T_kano_metal_Palette"},
+    "kano_glass": {"texture": "T_kano_glass_Palette"},
     "leaf_wet_cutout": {"texture": "T_env_leaveswet_BaseColor", "cutout": 0.5, "two_sided": True},
     "grass_blade_wet_cutout": {"texture": "T_env_grassbladeswet_BaseColor", "cutout": 0.5, "two_sided": True},
     "banana_leaf_cutout": {"texture": "T_env_bananaleaf_BaseColor", "cutout": 0.5, "two_sided": True},
@@ -130,7 +142,7 @@ TEXTURED: dict[str, dict] = {
     "water_rain": {"texture": "T_env_waterrain_BaseColor", "normal": "T_env_water_Normal"},
 }
 # Transparent surfaces: key -> opacity (1 = opaque). Drawn as alpha-blended in Blender and as a transparent URP/Lit in Unity.
-ALPHA: dict[str, float] = {"glass": 0.22, "glass_dark": 0.42, "water_brown": 0.66, "water_rain": 0.55}
+ALPHA: dict[str, float] = {"glass": 0.22, "glass_dark": 0.42, "kano_glass": 0.42, "water_brown": 0.66, "water_rain": 0.55}
 
 
 def kit_json() -> dict:

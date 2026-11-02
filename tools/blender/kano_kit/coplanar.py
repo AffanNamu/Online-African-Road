@@ -36,6 +36,21 @@ def overlaps(part) -> list[tuple]:
     return out
 
 
+def degenerate_faces(part, min_area: float = 1e-7) -> list[int]:
+    """Indices of faces with (almost) zero area: invisible, they cost triangles and can break normals and exporters."""
+    return [f.index for f in part.bm.faces if f.calc_area() < min_area]
+
+
+def duplicate_faces(part) -> int:
+    """The number of faces that have exactly the same corner positions (rounded to 0.1 mm) as another face, whatever their order: the same surface built twice."""
+    seen: dict = {}; dup = 0
+    for f in part.bm.faces:
+        k = tuple(sorted(tuple(round(c, 4) for c in v.co) for v in f.verts))
+        if k in seen: dup += 1
+        seen[k] = True
+    return dup
+
+
 def separate(part, eps: float = 0.003) -> int:
     """Resolves overlapping coplanar faces in place: of two overlapping same-plane faces the one created LATER (the detail, as the builders add details after the body) is moved `eps` metres along its normal, a third
     one 2 * eps, and so on. The moved face is a few millimetres proud of the one beneath it, so the two no longer fight for the same pixels; 3 mm is more than the depth buffer can confuse out to about

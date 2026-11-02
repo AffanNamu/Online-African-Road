@@ -17,14 +17,17 @@ def bounds(objs):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--only", default=""); ap.add_argument("--samples", type=int, default=32); ap.add_argument("--exposure", type=float, default=-3.5); a = ap.parse_args(); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    for aid, sp in build_all.SPECS.items():
+    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--only", default=""); ap.add_argument("--samples", type=int, default=32); ap.add_argument("--exposure", type=float, default=-3.5); ap.add_argument("--v3", action="store_true", help="render the v003 builders (kano_kit.build3) instead of the v002 ones"); a = ap.parse_args(); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    specs = build_all.SPECS
+    if a.v3: from . import build3; specs = build3.SPECS
+    for aid, sp in specs.items():
         if a.only and aid not in a.only.split(","): continue
         asset = geo.Asset(aid, sp["kind"])
         if sp["textured"]: textures.paver_material(); textures.asphalt_material()
-        if aid.startswith(("rg_ngn_tree", "aro_hedge", "aro_shrub")): textures.leaf_material()
+        if aid.startswith(("rg_ngn_tree", "aro_hedge", "aro_shrub")) and not a.v3: textures.leaf_material()
         for lv, fn in sorted(sp["lods"].items()): asset.lod(lv, fn())
         textures.apply_pbr()
+        if a.v3: build3.apply_all()
         for lv, o in asset.lods.items():
             if lv > 0: o.hide_render = True
         lo, hi = bounds([asset.lods[0]]); c = (lo + hi) / 2; size = hi - lo; d = max(size.x, size.y, size.z) * (1.55 if aid != "kano_street_oneway_section_a" else 0.55) * (0.45 if aid == "aro_pole_electric_concrete_span_a" else 1.0)   # the 30 m span is thin: a closer camera so the pole and conductors are visible

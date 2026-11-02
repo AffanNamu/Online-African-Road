@@ -13,6 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       review: { description: "also build the real Kano residential kit and show it in the running game (the same as a [kano-review] commit)", type: boolean, default: false }
+      kit: { description: "which residential kit the review builds from the code: v3 (default) or v2 (the frozen candidate; a commit message with [kano-review-v2] does the same)", type: string, default: "v3" }
       retention_days: { description: "days the review artifact (screenshots and summary) is kept", type: string, default: "7" }
   push:
     paths:
@@ -22,6 +23,7 @@ on:
       - 'Assets/_Project/Scripts/World/KanoReviewStats.cs'
       - 'Assets/_Project/Scripts/NetCore/DrawBreakdown.cs'
       - 'tools/webgl-kanoreview.js'
+      - 'docs/kano/KANO_RESIDENTIAL_v003.freeze.json'
       - 'Assets/_Project/Scripts/NetCore/PropPrefabPlan.cs'
       - 'Assets/_Project/Tests/EditMode/BlenderAssetImportTests.cs'
       - '.github/workflows/blender-unity.yml'
@@ -37,9 +39,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Review gate (a [kano-review] commit message, or a manual run with review set)
         id: gate
-        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}" }
+        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}", KIT: "${{ inputs.kit }}" }
         run: |
-          case "$MSG" in *"[kano-review]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
+          kit=v3; [ "$KIT" = "v2" ] && kit=v2; case "$MSG" in *"[kano-review-v2]"*) kit=v2;; esac; echo "kit=$kit" >> "$GITHUB_OUTPUT"
+          case "$MSG" in *"[kano-review]"*|*"[kano-review-v2]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
       - uses: actions/setup-python@v5
         with: { python-version: '3.13' }
       - name: Install Blender (the bpy wheel) and the MCP SDK
@@ -107,10 +110,24 @@ jobs:
       - name: Review - remove the test fixtures so that only the real kit is built
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta Assets/ThirdParty/ARO Assets/ThirdParty/ARO.meta Builds
-      - name: Review - build the 14 residential kit assets from the code (toolchain validation must pass for every one)
+      - name: Review - build the residential kit assets from the code (toolchain validation must pass for every one)
         if: ${{ steps.gate.outputs.on == 'true' }}
-        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender, KIT: "${{ steps.gate.outputs.kit }}" }
         run: |
+          if [ "$KIT" = "v3" ]; then
+            python -m kano_kit.build3 --report "$RUNNER_TEMP/kit_report3.json"
+            python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "kit_report3.json")))
+          bad = [x["id"] for x in r if not x["passed"]]
+          for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"), "materials", len(x["stats"].get("materials", [])))
+          print(f"{len(r)} v003 assets built (14 kit + 5 merged-frontage prototype); failed validation: {bad or 'none'}")
+          sys.exit(1 if bad or len(r) != 19 else 0)
+          PY
+            echo "--- is what the review builds exactly the frozen v003? (report only; the fresh workspace labels it v001)"
+            python -m kano_kit.verify_freeze --freeze docs/kano/KANO_RESIDENTIAL_v003.freeze.json --workspace "$ARO_WORKSPACE" --map v003=v001 || true
+            exit 0
+          fi
           python -m kano_kit.build_all --report "$RUNNER_TEMP/kit_report.json"
           python3 - <<'PY'
           import json, os, sys
@@ -129,6 +146,19 @@ jobs:
           for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"))
           print(f"{len(r)} prototype assets built; failed validation: {bad or 'none'}")
           sys.exit(1 if bad or len(r) != 5 else 0)
+          PY
+      - name: Review - build the 26 environmental kit assets from the code (toolchain validation must pass for every one)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        run: |
+          python -m env_kit.build_env --report "$RUNNER_TEMP/env_report.json"
+          python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "env_report.json")))
+          bad = [x["id"] for x in r if not x["passed"]]
+          for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"), "materials", len(x["stats"].get("materials", [])))
+          print(f"{len(r)} environmental assets built; failed validation: {bad or 'none'}")
+          sys.exit(1 if bad or len(r) != 26 else 0)
           PY
       - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
         if: ${{ steps.gate.outputs.on == 'true' }}
@@ -164,7 +194,7 @@ jobs:
         run: |
           sudo chown -R "$USER" Builds || true; mkdir -p kano-review
           echo "WebGL build size (E0): $(du -sm Builds/WebGL | cut -f1) MB on disk"; ls -l Builds/WebGL/Build | awk '{print $5, $9}'
-          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top,ref:merged,street1:merged,ref:noshadow" || { echo "review script reported failures"; exit 1; }
+          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top,ref:merged,street1:merged,side:merged,street2:merged,ref:noshadow,ref:shadowsmall,ref:low,street1:low,drive@env_hausa_quarter_dry,aerial@env_hausa_quarter_dry,drive@env_hausa_quarter_wet,aerial@env_hausa_quarter_wet,drive@env_village_dry,aerial@env_village_dry,drive@env_village_wet,aerial@env_village_wet,drive@env_market_street_dry,aerial@env_market_street_dry,drive@env_market_street_wet,aerial@env_market_street_wet" || { echo "review script reported failures"; exit 1; }
         shell: bash {0}
       - name: Review - the numbers (no pictures are written to this public log)
         if: ${{ always() && steps.gate.outputs.on == 'true' }}

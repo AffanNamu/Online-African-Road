@@ -32,10 +32,10 @@ spec("aro_shrub_ixora_red_a", "vegetation", {0: lambda: veg.shrub_ixora(0), 1: l
 ROOT = None
 
 
-def produce(sp: dict, do_export: bool = True, extra_pbr=None) -> dict:
+def produce(sp: dict, do_export: bool = True, extra_pbr=None, leaf: bool = True) -> dict:
     a = geo.Asset(sp["id"], sp["kind"])
     if sp["textured"]: textures.paver_material(); textures.asphalt_material()
-    if sp["id"].startswith(("rg_ngn_tree", "aro_hedge", "aro_shrub")): textures.leaf_material()
+    if leaf and sp["id"].startswith(("rg_ngn_tree", "aro_hedge", "aro_shrub")): textures.leaf_material()                  # v003 vegetation uses its own atlas (kano_kit.veg3) and passes leaf=False
     for lv, fn in sorted(sp["lods"].items()): a.lod(lv, fn())
     textures.apply_pbr()                                                                         # base colour and normal maps for every kit surface that has them
     if extra_pbr: extra_pbr()                                                                    # another kit's texture sets (the environmental kit passes its own)

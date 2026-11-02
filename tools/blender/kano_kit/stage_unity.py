@@ -50,9 +50,13 @@ def main() -> int:
     frame = "street along +Y, right +X, metres, Blender axes"
     placements = {"scene": "kano_residential_section_a", "frame": frame, "items": P.items}
     merged = {"scene": "kano_residential_section_a_merged", "frame": frame, "note": "draw-call prototype: each plot side's wall panels, piers and gate-pier lanterns as one frontage asset (kano_kit/frontage.py); the frozen v002 assets are unchanged", "items": frontage.merged_items(P.items)}
-    ids = set(build_all.SPECS) | set(frontage.SPECS)
-    staged = stage(ws.default_root(), Path(a.out), placements, ids=ids, extra_placements={"kano_residential_section_a_merged": merged})
-    print(f"staged {len(staged)} assets into {a.out}: " + ", ".join(f"{k} {v}" for k, v in staged.items())); print(f"{len(P.items)} placements, {len(merged['items'])} in the merged variant")
+    ids = set(build_all.SPECS) | set(frontage.SPECS); extra = {"kano_residential_section_a_merged": merged}
+    from env_kit import scenes as SC, layout as LAY                                         # the complete environments (three places, dry and wet): placements, cameras and the assets they use
+    env_ids = {i for i in SC.asset_ids() if i not in build_all.SPECS}; lay = LAY.load(sorted(SC.asset_ids()))
+    for sc in SC.all_scenes(lay): j = sc.as_json(); extra[j["scene"]] = j
+    ids |= env_ids
+    staged = stage(ws.default_root(), Path(a.out), placements, ids=ids, extra_placements=extra)
+    print(f"staged {len(staged)} assets into {a.out}: " + ", ".join(f"{k} {v}" for k, v in staged.items())); print(f"{len(P.items)} placements, {len(merged['items'])} in the merged variant, {len(extra) - 1} more placement files: {sorted(extra)}")
     return 0 if len(staged) == len(ids) else 1
 
 

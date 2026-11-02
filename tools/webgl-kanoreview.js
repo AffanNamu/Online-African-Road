@@ -2,8 +2,8 @@
 // Opens the WebGL build with ?smoke=kanostreet&view=<v>&hour=15.5&quality=<tier> (the game's own lighting, camera rig, tone mapping and quality tier; no account, no vehicle), waits for the game's
 // "[KanoReview] ready" line, lets the frame settle and saves <prefix>-<label>.png at 1280x720. Fails if the page logs a script error or if the build has no review prefab (the private assets were not in it).
 // The game's own [Perf] and [Render] lines are copied to <prefix>-summary.json so frame time, draw calls and triangles come from the game, not from this script.
-// A view entry is "view" or "view:variant". Variants: "merged" (the merged-frontage placements, &variant=merged: a content-side draw-call prototype) and "noshadow" (&shadows=off, the game's test-only switch
-// that removes the shadow pass, to isolate its share of the engine's draw calls).
+// A view entry is "view", "view:variant", "view@scene" or "view@scene:variant" (a scene is a complete environment with its own cameras, e.g. drive@env_village_wet). Variants: "merged" (the merged-frontage placements, &variant=merged: a content-side draw-call prototype), "noshadow" (&shadows=off, the game's test-only switch
+// that removes the shadow pass, to isolate its share of the engine's draw calls), "shadowsmall" (&shadows=small: small and thin kit assets cast no shadow, review-only, to measure a shadow policy) and "low" (quality tier low, the mobile budget).
 // For every picture the script also measures, in a blank browser page and without writing anything else: the mean colour, the fraction of magenta pixels (the colour of Unity's error shader), the fraction of
 // near-black pixels, and, for a "view:merged" picture, its difference from the "view" picture (mean absolute difference per channel, fraction of pixels that differ by more than 24 in the sum of channels).
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const dir = path.resolve(process.argv[2] || 'Builds/WebGL'), prefix = process.argv[3] || 'kanoreview', views = (process.argv[4] || 'ref,front,side,street1,street2,top').split(',');
 const QUERY = process.env.REVIEW_QUERY || '&hour=15.5&quality=high';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.ico': 'image/x-icon', '.gz': 'application/octet-stream', '.data': 'application/octet-stream' };
-const VARIANT_QUERY = { merged: '&variant=merged', noshadow: '&shadows=off' };
+const VARIANT_QUERY = { merged: '&variant=merged', noshadow: '&shadows=off', shadowsmall: '&shadows=small', low: '' };      // 'low' forces quality tier low (the mobile budget)
 function serve() {
   return new Promise(resolve => {
     const s = http.createServer((req, res) => {
@@ -49,13 +49,13 @@ async function imageDiff(page, a64, b64) {
   const QUALITIES = process.env.REVIEW_QUERY ? [null] : (process.env.REVIEW_QUALITIES || 'medium,low').split(',');   // a heavy street in SOFTWARE GL can need minutes per frame: try the better tier first, fall back to a lighter one
   const BASE = process.env.REVIEW_BASE || '&hour=15.5';
   for (const entry of views) {
-    const [view, variant] = entry.split(':'); const label = variant ? `${view}-${variant}` : view; let done = false;
+    const [left, variant] = entry.split(':'); const [view, scene] = left.split('@'); const label = (scene ? scene + '-' : '') + view + (variant ? '-' + variant : ''); let done = false;      // entry: view[@scene][:variant]
     if (variant && !VARIANT_QUERY[variant]) { failures.push(`${entry}: unknown variant '${variant}'`); continue; }
-    for (const q of QUALITIES) {
+    for (const q of (variant === 'low' ? ['low'] : QUALITIES)) {
       const page = await browser.newPage({ viewport: { width: 1280, height: 720 } }); page.setDefaultTimeout(300000); const logs = [], errors = [];
       page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
       const query = (q === null ? QUERY : `${BASE}&quality=${q}`) + (variant ? VARIANT_QUERY[variant] : '');
-      const t0 = Date.now(); await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${query}`);
+      const t0 = Date.now(); await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${scene ? '&scene=' + scene : ''}${query}`);
       const has = re => logs.some(l => re.test(l));
       for (let i = 0; i < 300 && !has(/\[KanoReview\] (ready|no review prefab)/); i++) await page.waitForTimeout(1000);
       if (has(/no review prefab/)) { failures.push(`${entry}: the build has no review prefab (the assets, or the ${variant || 'standard'} variant, were not in it)`); await page.close(); done = true; break; }

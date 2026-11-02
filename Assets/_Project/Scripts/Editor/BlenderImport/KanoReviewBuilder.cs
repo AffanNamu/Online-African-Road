@@ -30,7 +30,9 @@ namespace ARO.Editor.BlenderImport
         public const string KitPath = Root + "/Materials/aro_materials.json";
 
         [Serializable] class Placement { public string asset; public float x, y, z, yawDeg, scale = 1f; public string tag; }
-        [Serializable] class PlacementFile { public string scene; public Placement[] items; }
+        [Serializable] class ViewDef { public string name; public float[] loc; public float[] look; public float lens; }
+        [Serializable] class ViewsOut { public ViewDef[] views; }
+        [Serializable] class PlacementFile { public string scene; public string ground; public ViewDef[] views; public Placement[] items; }
         [Serializable] class ManifestWrap { public PropDef catalog_entry; }
 
         public static Vector3 FromBlender(float x, float y, float z) => new Vector3(-x, z, -y);
@@ -77,6 +79,8 @@ namespace ARO.Editor.BlenderImport
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             var variants = new List<(string placements, string prefab)> { (PlacementsPath, ReviewPrefabPath) };
             if (File.Exists(MergedPlacementsPath)) variants.Add((MergedPlacementsPath, MergedReviewPrefabPath));
+            foreach (var envFile in Directory.GetFiles(Root + "/placements", "env_*.json").OrderBy(f => f, StringComparer.Ordinal))                  // complete environments (env_kit.scenes): one review prefab each, with its own cameras
+                variants.Add((envFile.Replace('\\', '/'), ReviewFolder + "/" + Path.GetFileNameWithoutExtension(envFile) + ".prefab"));
             var prefabs = new Dictionary<string, GameObject>();
             foreach (var (placements, prefabPath) in variants)
             {
@@ -92,7 +96,8 @@ namespace ARO.Editor.BlenderImport
             var root = new GameObject("kano_residential_section_a");
             var ground = GameObject.CreatePrimitive(PrimitiveType.Cube); ground.name = "review_ground"; ground.transform.SetParent(root.transform, false);
             ground.transform.localScale = new Vector3(3000f, 0.2f, 3000f); ground.transform.localPosition = new Vector3(0f, -0.1f - 0.03f, 300f);
-            if (kit != null) { var e = kit.materials.FirstOrDefault(x => x.name == "M_grass_green"); if (e != null) ground.GetComponent<MeshRenderer>().sharedMaterial = BlenderAssetBuilder.KitMaterial(e, Root + "/Materials"); }
+            string groundKey = string.IsNullOrEmpty(file.ground) ? "grass_green" : file.ground;
+            if (kit != null) { var e = kit.materials.FirstOrDefault(x => x.name == "M_" + groundKey); if (e != null) ground.GetComponent<MeshRenderer>().sharedMaterial = BlenderAssetBuilder.KitMaterial(e, Root + "/Materials"); }
             int placed = 0, missing = 0;
             foreach (var it in file.items)
             {
@@ -102,7 +107,12 @@ namespace ARO.Editor.BlenderImport
             }
             Directory.CreateDirectory(ReviewFolder);
             var saved = PrefabUtility.SaveAsPrefabAsset(root, prefabPath); UnityEngine.Object.DestroyImmediate(root); AssetDatabase.SaveAssets();
-            notes.Add("review prefab " + prefabPath + ": " + placed + " placements, " + missing + " skipped (no prefab), saved " + (saved != null));
+            if (file.views != null && file.views.Length > 0)                                                                                     // the cameras of an environment scene travel with its prefab as a Resources text file
+            {
+                string vp = prefabPath.Substring(0, prefabPath.Length - ".prefab".Length) + "_views.json";
+                File.WriteAllText(vp, JsonUtility.ToJson(new ViewsOut { views = file.views })); AssetDatabase.ImportAsset(vp, ImportAssetOptions.ForceSynchronousImport);
+            }
+            notes.Add("review prefab " + prefabPath + ": " + placed + " placements, " + missing + " skipped (no prefab), saved " + (saved != null) + (file.views != null ? ", " + file.views.Length + " views" : ""));
         }
 
         /// <summary>Entry point for CI: builds the prefabs and the review prefab and prints what happened (the log lines start with [KanoReviewBuilder]).</summary>

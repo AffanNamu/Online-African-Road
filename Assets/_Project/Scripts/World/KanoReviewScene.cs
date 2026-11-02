@@ -19,6 +19,8 @@ namespace ARO.World
         public static readonly Vector3 Origin = new Vector3(6000f, 0f, 6000f);
 
         struct View { public Vector3 Loc, Look; public float LensMm; public View(float lx, float ly, float lz, float tx, float ty, float tz, float lens) { Loc = new Vector3(lx, ly, lz); Look = new Vector3(tx, ty, tz); LensMm = lens; } }
+        [Serializable] public class ViewEntry { public string name; public float[] loc; public float[] look; public float lens; }
+        [Serializable] public class ViewsFile { public ViewEntry[] views; }
 
         static readonly Dictionary<string, View> Views = new Dictionary<string, View>
         {
@@ -30,6 +32,25 @@ namespace ARO.World
             { "top", new View(0f, 0f, 95f, 0f, 0.5f, 0f, 50f) },
         };
 
+        /// <summary>Review-only "&amp;shadows=small": the small, low or thin kit assets (lanterns, hedges, shrubs, piers, wall panels, streetlights, poles, signs, gates and the merged frontages) cast no shadow, to MEASURE what such a
+        /// shadow policy would save (engine draws and triangles in the [Perf] line). It changes the renderers in this scene only, never the assets or the catalogue.</summary>
+        static readonly HashSet<string> SmallCasters = new HashSet<string>
+        {
+            "aro_lantern_wall_a", "aro_hedge_clipped_a", "aro_shrub_ixora_red_a", "aro_pier_stone_a", "aro_wall_compound_panel_a", "aro_streetlight_single_arm_a", "aro_pole_electric_concrete_span_a", "aro_sign_oneway_a",
+            "aro_gate_ornate_steel_a", "aro_frontage_l2_a", "aro_frontage_l3_a", "aro_frontage_r1_a", "aro_frontage_r2_a", "aro_frontage_far_run_a"
+        };
+
+        static int ApplySmallShadowPolicy(Transform root)
+        {
+            int n = 0;
+            foreach (Transform child in root)
+            {
+                if (!SmallCasters.Contains(child.name)) continue;
+                foreach (var r in child.GetComponentsInChildren<Renderer>(true)) { r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; n++; }
+            }
+            return n;
+        }
+
         Camera _cam; Vector3 _pos; Quaternion _rot; float _lens; string _view = "ref";
 
         static Vector3 ToUnity(Vector3 b) => new Vector3(-b.x, b.z, -b.y);
@@ -37,17 +58,27 @@ namespace ARO.World
         /// <summary>Starts the scene when the page asked for it. Returns false (and logs why) when the review prefab is not in this build.</summary>
         public static bool Begin(string url)
         {
-            string variant = Query(url, "variant", ""), path = variant == "merged" ? MergedPrefabPath : PrefabPath;
+            string sceneName = Query(url, "scene", ""), variant = Query(url, "variant", ""), path = sceneName != "" ? "KanoReview/" + sceneName : variant == "merged" ? MergedPrefabPath : PrefabPath;
             var prefab = Resources.Load<GameObject>(path);
             if (prefab == null) { Debug.Log("[KanoReview] no review prefab at Resources/" + path + ": the private assets are not part of this build, nothing to show"); return false; }
             var s = new GameObject("KanoReviewScene").AddComponent<KanoReviewScene>(); s._view = Query(url, "view", "ref");
-            if (!Views.ContainsKey(s._view)) { Debug.Log("[KanoReview] unknown view '" + s._view + "', using ref"); s._view = "ref"; }
+            var views = Views;
+            if (sceneName != "")                                                                                                           // an environment scene brings its own cameras (Resources/KanoReview/<scene>_views.json, written by the editor builder)
+            {
+                var ta = Resources.Load<TextAsset>(path + "_views"); var vf = ta != null ? JsonUtility.FromJson<ViewsFile>(ta.text) : null;
+                views = new Dictionary<string, View>();
+                if (vf != null && vf.views != null) foreach (var e in vf.views) if (e.loc != null && e.look != null && e.loc.Length == 3 && e.look.Length == 3) views[e.name] = new View(e.loc[0], e.loc[1], e.loc[2], e.look[0], e.look[1], e.look[2], e.lens);
+                if (views.Count == 0) { Debug.Log("[KanoReview] no review prefab at Resources/" + path + ": no cameras for scene '" + sceneName + "'"); return false; }
+                if (!views.ContainsKey(s._view)) { foreach (var kv in views) { s._view = kv.Key; break; } }
+            }
+            if (!views.ContainsKey(s._view)) { Debug.Log("[KanoReview] unknown view '" + s._view + "', using ref"); s._view = "ref"; }
             var inst = Instantiate(prefab, Origin, Quaternion.identity); inst.name = "kano_residential_section_a";
             s.gameObject.AddComponent<KanoReviewStats>().Root = inst.transform;
-            s._cam = Camera.main; var v = Views[s._view];
+            if (Query(url, "shadows", "") == "small") Debug.Log("[KanoReview] shadow policy small: " + ApplySmallShadowPolicy(inst.transform) + " renderers no longer cast shadows");
+            s._cam = Camera.main; var v = views[s._view];
             s._pos = Origin + ToUnity(v.Loc); s._rot = Quaternion.LookRotation(ToUnity(v.Look) - ToUnity(v.Loc), Vector3.up); s._lens = v.LensMm;
             s.Apply();
-            Debug.Log("[KanoReview] ready view=" + s._view + " variant=" + (variant == "" ? "standard" : variant) + " camera=" + s._pos + " lens=" + s._lens + " mm");
+            Debug.Log("[KanoReview] ready view=" + s._view + " scene=" + (sceneName == "" ? "street" : sceneName) + " variant=" + (variant == "" ? "standard" : variant) + " camera=" + s._pos + " lens=" + s._lens + " mm");
             return true;
         }
 
