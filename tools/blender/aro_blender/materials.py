@@ -82,6 +82,8 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "produce_orange":    ((0.92, 0.52, 0.12), 0.5, 0.0, 0.0, "oranges"),
     "produce_yam":       ((0.80, 0.66, 0.48), 0.8, 0.0, 0.0, "yams and onions"),
     "shutter_steel":     ((0.30, 0.38, 0.42), 0.6, 0.6, 0.0, "blue-grey steel roller shutter"),
+    "leaf_dry_cutout":   ((0.42, 0.42, 0.18), 0.8, 0.0, 0.0, "dry-season foliage cards: dusty olive and yellow-green leaf clusters with some bare gaps, alpha clipped at 0.5, two-sided"),
+    "grass_blade_cutout": ((0.62, 0.55, 0.28), 0.9, 0.0, 0.0, "dry grass blade cards: straw and brown blades, alpha clipped at 0.5, two-sided"),
 }
 
 
@@ -102,6 +104,8 @@ TEXTURED: dict[str, dict] = {
     "bark": {"texture": "T_kano_bark_BaseColor", "normal": "T_kano_bark_Normal"},
     "grass_green": {"texture": "T_kano_grass_BaseColor", "normal": "T_kano_grass_Normal"},
     # environmental kit
+    "leaf_dry_cutout": {"texture": "T_env_leavesdry_BaseColor", "cutout": 0.5, "two_sided": True},
+    "grass_blade_cutout": {"texture": "T_env_grassblades_BaseColor", "cutout": 0.5, "two_sided": True},
     "mud_wet": {"texture": "T_env_mudwet_BaseColor", "normal": "T_env_mudwet_Normal"},
     "mud_crest": {"texture": "T_env_mudcrest_BaseColor", "normal": "T_env_mudcrest_Normal"},
     "earth_compacted": {"texture": "T_env_earth_BaseColor", "normal": "T_env_earth_Normal"},

@@ -110,6 +110,37 @@ def water_color(rgb, size=SIZE, seed=191):
     f = _fbm(size, 5, 3, seed); col = np.array(rgb)[None, None, :] * (0.9 + 0.2 * f[..., None]); return np.clip(col, 0, 1)
 
 
+def grassblade_pixels(size=SIZE, seed=201):
+    """An RGBA atlas of dry grass blades (alpha = blade shape): about 46 tapered, slightly curved blades growing from the bottom edge in straw, tan and brown-green."""
+    rnd = np.random.default_rng(seed); out = np.zeros((size, size, 4)); yy, xx = np.mgrid[0:size, 0:size].astype(float); v = 1 - yy / size           # v = 0 at the bottom edge
+    pal = [(0.72, 0.62, 0.30), (0.62, 0.52, 0.24), (0.50, 0.46, 0.20), (0.78, 0.70, 0.40), (0.42, 0.40, 0.16)]
+    for _ in range(46):
+        x0 = rnd.uniform(0.06, 0.94) * size; lean = rnd.uniform(-0.22, 0.22) * size; hgt = rnd.uniform(0.55, 0.98); w0 = rnd.uniform(5, 11); col = np.array(pal[rnd.integers(0, len(pal))]) * rnd.uniform(0.85, 1.1)
+        t = v / hgt; cx = x0 + lean * t ** 1.7; width = w0 * (1 - t) ** 0.8 + 0.8; m = (t >= 0) & (t <= 1) & (np.abs(xx - cx) < width)
+        shade = (0.8 + 0.35 * np.clip(1 - np.abs(xx - cx) / np.maximum(width, 1), 0, 1) + 0.15 * t)[..., None]; out[m, :3] = np.clip(col[None, :] * shade[m], 0, 1); out[m, 3] = 1.0
+    return out
+
+
+def cutout_material(key: str, image_name: str, px: np.ndarray):
+    """The kit material M_<key> with an RGBA image wired into base colour and alpha (alpha-clipped cards, drawn on both sides), like kano_kit.textures.leaf_material but for any key and image."""
+    from aro_blender import materials as AM
+    m = AM.get(key, bpy); nt = m.node_tree; bsdf = nt.nodes["Principled BSDF"]
+    for n in list(nt.nodes):
+        if n.type in ("TEX_NOISE", "VALTORGB", "TEX_COORD", "TEX_IMAGE", "UVMAP"): nt.nodes.remove(n)
+    img = bpy.data.images.get(image_name)
+    if img is None:
+        h, w, _ = px.shape; img = bpy.data.images.new(image_name, w, h, alpha=True); data = np.concatenate([px[..., :3], px[..., 3:4]], axis=2).astype(np.float32)
+        img.pixels.foreach_set(data.ravel()); img.alpha_mode = "STRAIGHT"; img.pack(); img.filepath_raw = f"//{image_name}.png"; img.file_format = "PNG"
+    uv = nt.nodes.new("ShaderNodeUVMap"); tex = nt.nodes.new("ShaderNodeTexImage"); tex.image = img; tex.interpolation = "Linear"; tex.extension = "CLIP"
+    nt.links.new(uv.outputs["UV"], tex.inputs["Vector"]); nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"]); nt.links.new(tex.outputs["Alpha"], bsdf.inputs["Alpha"])
+    try: m.surface_render_method = "DITHERED"
+    except Exception: pass
+    return m
+
+
+DRY_LEAF = [(0.52, 0.52, 0.20), (0.44, 0.46, 0.17), (0.34, 0.36, 0.13), (0.58, 0.54, 0.24)]       # dusty olive and yellow-green: a tree in the dry season with dust on its leaves
+
+
 def apply_env_pbr(keys=None) -> list[str]:
     """Wires the environmental texture sets into whichever of the kit materials exist in the file (the same way kano_kit.textures.apply_pbr does for the residential kit)."""
     spec = {
@@ -126,6 +157,8 @@ def apply_env_pbr(keys=None) -> list[str]:
         "water_rain": ("T_env_waterrain_BaseColor", "T_env_water_Normal", lambda: (water_color((0.30, 0.34, 0.36), seed=193), water_normal())),
     }
     done = []
+    if bpy.data.materials.get("M_leaf_dry_cutout") is not None and (not keys or "leaf_dry_cutout" in keys): cutout_material("leaf_dry_cutout", "T_env_leavesdry_BaseColor", KT.leaf_pixels(seed=33, greens=DRY_LEAF)); done.append("leaf_dry_cutout")
+    if bpy.data.materials.get("M_grass_blade_cutout") is not None and (not keys or "grass_blade_cutout" in keys): cutout_material("grass_blade_cutout", "T_env_grassblades_BaseColor", grassblade_pixels()); done.append("grass_blade_cutout")
     for key, (bn, nn, gen) in spec.items():
         if bpy.data.materials.get(f"M_{key}") is None or (keys and key not in keys): continue
         base, nrm = gen(); pbr_material(key, bn, base, nn, nrm); done.append(key)

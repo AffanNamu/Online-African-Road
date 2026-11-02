@@ -13,7 +13,7 @@ def _tone(c: Vector, rnd: random.Random) -> str:
     return LEAF[2] if h > 0.35 else LEAF[0] if h < -0.15 else LEAF[1]
 
 
-def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0) -> Part:
+def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0, cards=None, leaf_key: str = "leaf_cutout") -> Part:
     """Street tree: flared trunk to ~2.7 m, five scaffold branches and a crown of alpha-cut leaf cards (a 2 x 2 atlas of leafy clusters in four greens), cards crossed at random angles inside
     a crown ellipsoid. LOD1 has fewer, larger cards; LOD2 a handful of big ones. The cards are two-sided cutouts: the kit material M_leaf_cutout carries the texture."""
     rnd = random.Random(seed); p = Part("tree"); seg = 7 if lod == 0 else 5
@@ -29,6 +29,7 @@ def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0)
         ends.append(end)
     cz = th + (height - th) * 0.58; rz = (height - th) * 0.46; rx = crown_w / 2
     n_cl, per, size = {0: (180, 6, (0.62, 1.0)), 1: (16, 3, (2.1, 3.0)), 2: (3, 2, (3.8, 4.6))}[lod]
+    if cards and lod == 0: n_cl, per, size = cards                                          # e.g. a sparser, larger-leaved dry-season crown
     centre = Vector((top.x, top.y, cz)); pts = list(ends)
     while len(pts) < n_cl:
         v = Vector((rnd.gauss(0, 1), rnd.gauss(0, 1), rnd.gauss(0, 1))).normalized() * (0.35 + 0.65 * rnd.random() ** 0.5)       # inside an ellipsoid, biased to the surface
@@ -39,7 +40,7 @@ def tree(seed: int = 1, height: float = 8.0, crown_w: float = 6.0, lod: int = 0)
             n = (out_ * 0.7 + Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-0.6, 1.0))) * 0.8).normalized()
             right = n.cross(Vector((0, 0, 1))); right = right if right.length > 0.1 else Vector((1, 0, 0)); up = n.cross(right)
             s_ = rnd.uniform(*size); qx, qy = rnd.choice((0, 0.5)), rnd.choice((0, 0.5))
-            p.card(c + Vector((rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22))), right, up, s_, s_, "leaf_cutout", (qx, qy), (qx + 0.5, qy + 0.5))
+            p.card(c + Vector((rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22), rnd.uniform(-0.22, 0.22))), right, up, s_, s_, leaf_key, (qx, qy), (qx + 0.5, qy + 0.5))
     return p
 
 

@@ -28,5 +28,5 @@ def test_every_environmental_material_is_declared_in_the_kit_and_every_texture_e
         r = KB.produce(sp, do_export=False, extra_pbr=ET.apply_env_pbr); used |= set(r["stats"]["materials"])
     names = {f"M_{k}" for k in AM.LIBRARY}
     assert {m for m in used if m not in names} == set(), "an asset uses a material that is not in the kit"
-    gen = {"mud_wet", "mud_crest", "earth_compacted", "sand_dusty", "asphalt_cracked", "roof_zinc_rust", "mud_brick", "plaster_weathered", "timber_weathered", "water_brown", "water_rain"}
+    gen = {"mud_wet", "mud_crest", "earth_compacted", "sand_dusty", "asphalt_cracked", "roof_zinc_rust", "mud_brick", "plaster_weathered", "timber_weathered", "water_brown", "water_rain", "leaf_dry_cutout", "grass_blade_cutout"}   # the last two are alpha-clipped cutouts made by cutout_material
     assert {k for k in AM.TEXTURED if "T_env_" in AM.TEXTURED[k]["texture"]} == gen

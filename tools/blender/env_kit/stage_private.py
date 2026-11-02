@@ -23,6 +23,9 @@ OPEN = {
     "rg_ngn_stall_canopy_rough_a": "vernacular not verified (M-14); tarpaulin sag is modelled, not simulated",
     "rg_ngn_fence_woven_timber_a": "reads as a lattice of rods and stakes more than a woven fence; weave simplified (sinusoidal rods); not verified against real fences (M-14)",
     "rg_ngn_shop_row_roadside_a": "vernacular not verified (M-14); sign bands are blank (text is a data slot, RB-07); roof corrugation is a normal map on a flat sheet and the rust reads pale in the preview light; no interior beyond shelves seen through the openings",
+    "rg_ngn_hausa_compound_a": "NO real reference exists (M-01): designed from the documented qualitative features only (zaure, thick tapering tubali walls, flat roofs with high parapets, zankwaye, relief motifs); every proportion is a design choice, not a measurement; must be checked against real photographs and drawings before approval; no landmark is depicted; walls need per-segment colliders in the engine (none yet)",
+    "rg_ngn_tree_large_shade_a": "species NOT established (M-07, M-17); dry-season dusty foliage only (the wet-season variant is not built); alpha-clipped cards need the cutout kit material in Unity",
+    "rg_ngn_grass_tall_verge_a": "dry grass only (green variant not built); seasonal appearance NOT established (M-17); alpha-clipped cards need the cutout kit material in Unity",
     "rg_ngn_house_mudbrick_a": "NOT established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14); brick courses are a texture on flat walls; the wall colour reads like fired red brick rather than duller sun-dried mud and needs tuning",
 }
 
@@ -54,6 +57,8 @@ def main() -> int:
             (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
             if not latest: continue
             if f"| {aid} |" not in lic: lic = lic.rstrip("\n") + f"\n| {aid} | {n} | Claude (code), owner (direction) | {', '.join(concepts)} | original geometry and procedural textures; design references ChatGPT {', '.join(concepts)}; ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending |"
+            if not e.get("concepts") and not e.get("ownerRequest"):
+                e["ownerRequest"] = "requested by the owner on 2026-11-02 (traditional Kano residential architecture and Hausa compounds, environmental content scope); no real reference exists yet (M-01), so the asset is designed from the documented qualitative features only (docs/kano/RESEARCH.md)"; e.pop("blockedBy", None)
             e["status"] = "blender_validation_passed"; e["blenderSource"] = manifest["source"]["blend"]; e["export"] = f"unity/Models/{aid}/{v}/{aid}.fbx"; e["validation"]["blender"] = f"blender/validation/{aid}/{v}.json"
             e["flags"] = (e.get("flags", "") + " | " if e.get("flags") else "") + "OPEN: " + OPEN.get(aid, ""); col = sp["col"]; e["dimensions"] = stats["size_m"]; e["lodTriangles"] = stats["lod_triangles"]
             e["collision"] = {"type": "box", "size": [round(col[3] - col[0], 3), round(col[4] - col[1], 3), round(col[5] - col[2], 3)]} if col else {"type": "none"}

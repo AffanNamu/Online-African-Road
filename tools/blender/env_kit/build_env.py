@@ -5,7 +5,7 @@ import argparse, json, sys
 from pathlib import Path
 from aro_blender import workspace as ws
 from kano_kit import build_all as KB
-from . import surfaces as S, roadside as R, buildings as B, textures as ET
+from . import surfaces as S, roadside as R, buildings as B, hausa as H, veg_dry as VD, textures as ET
 
 SPECS: dict = {}
 DATUM: dict = {}                       # asset id -> metres the nominal surface sits above the asset's z = 0 (ground patches only)
@@ -37,6 +37,10 @@ spec("rg_ngn_stall_canopy_rough_a", "props", {0: R.stall_canopy_rough, 1: R.stal
 spec("rg_ngn_fence_woven_timber_a", "props", {0: R.fence_woven_timber, 1: R.fence_woven_timber}, note="3 m woven timber fence module (R-020)")
 spec("rg_ngn_shop_row_roadside_a", "buildings", {0: B.shop_row_roadside, 1: B.shop_row_roadside}, col=(-7.9, -3.25, 0, 7.9, 3.5, 3.4), note="roadside row of three shops with awning, roller shutters in three states, sign bands (R-016 to R-019)")
 spec("rg_ngn_house_mudbrick_a", "buildings", {0: B.mudbrick_house, 1: B.mudbrick_house}, col=(-4.5, -3.8, 0, 4.5, 3.8, 4.4), note="mud-brick house with rusted corrugated gable roof (R-020, R-021)")
+
+spec("rg_ngn_hausa_compound_a", "buildings", {0: H.hausa_compound_a, 1: H.hausa_compound_a}, note="Hausa-style walled compound 20 x 16 m built from the documented qualitative features (zaure, parapets, zankwaye, relief); proportions are design choices, NOT verified (M-01)")
+spec("rg_ngn_tree_large_shade_a", "vegetation", {0: VD.tree_large_shade, 1: VD.tree_large_shade, 2: VD.tree_large_shade}, note="large spreading shade tree with sparse dusty dry-season foliage (R-016 to R-021 show such trees; species NOT established, M-07, M-17)")
+spec("rg_ngn_grass_tall_verge_a", "vegetation", {0: VD.grass_clump}, note="clump of dry grass blade cards (R-016, R-020, R-021; seasonal appearance not established, M-17)")
 
 
 def main() -> int:
