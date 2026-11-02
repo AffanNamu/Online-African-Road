@@ -61,6 +61,27 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "leaf_cutout":       ((0.16, 0.30, 0.08), 0.8, 0.0, 0.0, "foliage cards: an RGBA leaf-cluster texture, alpha clipped at 0.5, drawn on both sides (the kit material must be cutout)"),
     "interior_dark":     ((0.09, 0.085, 0.08), 0.9, 0.0, 0.0, "the dark room seen through window glass"),
     "lantern_glow":      ((0.95, 0.76, 0.42), 0.4, 0.0, 0.0, "warm lantern glass"),
+    # ---- environmental kit (2026-11-02): unpaved and damaged roads, water, roadside and village materials. Colours are first-pass sRGB estimates read from the generated references
+    # R-016 to R-023 by eye; soil and mud colour for Kano and its surroundings is NOT established (reference gap M-15) and must be checked against real photographs before approval.
+    "mud_wet":           ((0.34, 0.19, 0.12), 0.30, 0.0, 0.0, "wet red-brown clay mud in wheel ruts"),
+    "mud_crest":         ((0.52, 0.33, 0.20), 0.88, 0.0, 0.0, "drier mud on ruts' ridges, banks and clods"),
+    "earth_compacted":   ((0.60, 0.42, 0.27), 0.95, 0.0, 0.0, "compacted laterite earth road surface"),
+    "sand_dusty":        ((0.76, 0.64, 0.46), 0.97, 0.0, 0.0, "loose dusty sand"),
+    "asphalt_cracked":   ((0.24, 0.24, 0.25), 0.88, 0.0, 0.0, "dry cracked asphalt with a texture of crack networks"),
+    "asphalt_patch":     ((0.14, 0.14, 0.15), 0.90, 0.0, 0.0, "fresh dark repair patch"),
+    "pothole_earth":     ((0.58, 0.44, 0.30), 0.95, 0.0, 0.0, "exposed earth and stone base in a pothole"),
+    "water_brown":       ((0.31, 0.21, 0.13), 0.04, 0.0, 0.0, "turbid brown flood or puddle water over earth"),
+    "water_rain":        ((0.30, 0.34, 0.36), 0.04, 0.0, 0.0, "grey rain water over asphalt"),
+    "plaster_weathered": ((0.80, 0.70, 0.55), 0.92, 0.0, 0.0, "weathered, stained sand-cement render"),
+    "timber_weathered":  ((0.40, 0.30, 0.20), 0.9, 0.0, 0.0, "grey-brown weathered timber"),
+    "tarp_olive":        ((0.30, 0.32, 0.22), 0.7, 0.0, 0.0, "olive tarpaulin"),
+    "fabric_red":        ((0.74, 0.12, 0.10), 0.8, 0.0, 0.0, "red umbrella fabric"),
+    "fabric_white":      ((0.88, 0.86, 0.80), 0.8, 0.0, 0.0, "off-white umbrella fabric"),
+    "burlap":            ((0.64, 0.54, 0.38), 0.95, 0.0, 0.0, "sacking"),
+    "produce_tomato":    ((0.80, 0.16, 0.08), 0.5, 0.0, 0.0, "tomatoes"),
+    "produce_orange":    ((0.92, 0.52, 0.12), 0.5, 0.0, 0.0, "oranges"),
+    "produce_yam":       ((0.80, 0.66, 0.48), 0.8, 0.0, 0.0, "yams and onions"),
+    "shutter_steel":     ((0.30, 0.38, 0.42), 0.6, 0.6, 0.0, "blue-grey steel roller shutter"),
 }
 
 
@@ -80,9 +101,21 @@ TEXTURED: dict[str, dict] = {
     "concrete": {"texture": "T_kano_concrete_BaseColor", "normal": "T_kano_concrete_Normal"},
     "bark": {"texture": "T_kano_bark_BaseColor", "normal": "T_kano_bark_Normal"},
     "grass_green": {"texture": "T_kano_grass_BaseColor", "normal": "T_kano_grass_Normal"},
+    # environmental kit
+    "mud_wet": {"texture": "T_env_mudwet_BaseColor", "normal": "T_env_mudwet_Normal"},
+    "mud_crest": {"texture": "T_env_mudcrest_BaseColor", "normal": "T_env_mudcrest_Normal"},
+    "earth_compacted": {"texture": "T_env_earth_BaseColor", "normal": "T_env_earth_Normal"},
+    "sand_dusty": {"texture": "T_env_sand_BaseColor", "normal": "T_env_sand_Normal"},
+    "asphalt_cracked": {"texture": "T_env_asphaltcracked_BaseColor", "normal": "T_env_asphaltcracked_Normal"},
+    "roof_zinc_rust": {"texture": "T_env_rustsheet_BaseColor", "normal": "T_env_rustsheet_Normal"},
+    "mud_brick": {"texture": "T_env_mudbrick_BaseColor", "normal": "T_env_mudbrick_Normal"},
+    "plaster_weathered": {"texture": "T_env_plasterweathered_BaseColor", "normal": "T_env_plasterweathered_Normal"},
+    "timber_weathered": {"texture": "T_env_timber_BaseColor", "normal": "T_env_timber_Normal"},
+    "water_brown": {"texture": "T_env_waterbrown_BaseColor", "normal": "T_env_water_Normal"},
+    "water_rain": {"texture": "T_env_waterrain_BaseColor", "normal": "T_env_water_Normal"},
 }
 # Transparent surfaces: key -> opacity (1 = opaque). Drawn as alpha-blended in Blender and as a transparent URP/Lit in Unity.
-ALPHA: dict[str, float] = {"glass": 0.22, "glass_dark": 0.42}
+ALPHA: dict[str, float] = {"glass": 0.22, "glass_dark": 0.42, "water_brown": 0.66, "water_rain": 0.55}
 
 
 def kit_json() -> dict:

@@ -29,6 +29,11 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Review gate (a [kano-review] commit message, or a manual run with review set)
+        id: gate
+        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}" }
+        run: |
+          case "$MSG" in *"[kano-review]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
       - uses: actions/setup-python@v5
         with: { python-version: '3.13' }
       - name: Install Blender (the bpy wheel) and the MCP SDK
@@ -67,6 +72,7 @@ jobs:
         run: |
           if [ -n "$DH_USER" ] && [ -n "$DH_TOKEN" ]; then echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin; else echo "no Docker Hub credentials; using anonymous pulls"; fi
       - name: Pre-pull the Unity editor image (retry with backoff)
+        if: ${{ steps.gate.outputs.on != 'true' }}
         run: |
           img=unityci/editor:ubuntu-6000.0.58f2-base-3; ok=0
           for i in 1 2 3 4 5 6 7 8; do
@@ -79,6 +85,7 @@ jobs:
           path: Library
           key: Library-blender-import-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
       - uses: game-ci/unity-test-runner@v4
+        if: ${{ steps.gate.outputs.on != 'true' }}                      # a review run skips the import tests (they pass on every normal run) and goes straight to the real kit
         id: tests
         env:
           UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
@@ -88,14 +95,9 @@ jobs:
           testMode: editmode
           customParameters: -testFilter ARO.Tests.BlenderAssetImportTests
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ always() && steps.gate.outputs.on != 'true' }}
         with: { name: blender-import-results, path: "${{ steps.tests.outputs.artifactsPath }}", if-no-files-found: warn }
       # ------------------------------------------------------------------------------------------------ the real kit in the running game (opt-in)
-      - name: Review gate (a [kano-review] commit message, or a manual run with review set)
-        id: gate
-        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}" }
-        run: |
-          case "$MSG" in *"[kano-review]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
       - name: Review - remove the test fixtures so that only the real kit is built
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta Assets/ThirdParty/ARO Assets/ThirdParty/ARO.meta Builds

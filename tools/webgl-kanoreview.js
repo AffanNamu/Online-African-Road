@@ -20,22 +20,32 @@ function serve() {
 (async () => {
   const failures = [], summary = {}; const server = await serve(); const port = server.address().port;
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--no-sandbox'] });
+  const QUALITIES = process.env.REVIEW_QUERY ? [null] : (process.env.REVIEW_QUALITIES || 'medium,low').split(',');   // a heavy street in SOFTWARE GL can need minutes per frame: try the better tier first, fall back to a lighter one
+  const BASE = process.env.REVIEW_BASE || '&hour=15.5';
   for (const view of views) {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 720 } }); const logs = [], errors = [];
-    page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
-    const t0 = Date.now(); await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${QUERY}`);
-    const has = re => logs.some(l => re.test(l));
-    for (let i = 0; i < 240 && !has(/\[KanoReview\] (ready|no review prefab)/); i++) await page.waitForTimeout(1000);
-    if (has(/no review prefab/)) { failures.push(`${view}: the build has no review prefab (the private assets were not in it)`); await page.close(); continue; }
-    if (!has(/\[KanoReview\] ready/)) { failures.push(`${view}: the review scene never started`); await page.screenshot({ path: `${prefix}-${view}-failed.png` }); await page.close(); continue; }
-    const loadSeconds = (Date.now() - t0) / 1000;                       // page load to the game's own "ready" line (E0 measurement: loading)
-    await page.waitForTimeout(12000);                                   // let streaming, LODs and the sky settle in software GL
-    await page.screenshot({ path: `${prefix}-${view}.png` });
-    const jsHeapMB = await page.evaluate(() => (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null));
-    summary[view] = { loadSeconds, jsHeapMB, budgetWarnings: logs.filter(l => l.includes('BUDGET EXCEEDED')).slice(-5), perf: logs.filter(l => l.startsWith('[Perf]') && !l.includes('BUDGET')).slice(-3), render: logs.filter(l => l.startsWith('[Render]')).slice(-2), review: logs.filter(l => l.startsWith('[KanoReview]')), errors };
-    if (errors.length) failures.push(`${view}: page errors: ${errors.slice(0, 2).join(' | ')}`);
-    console.log(`${view}: saved ${prefix}-${view}.png; ${JSON.stringify(summary[view].perf.slice(-1))}`);
-    await page.close();
+    let done = false;
+    for (const q of QUALITIES) {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 720 } }); page.setDefaultTimeout(300000); const logs = [], errors = [];
+      page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
+      const query = q === null ? QUERY : `${BASE}&quality=${q}`;
+      const t0 = Date.now(); await page.goto(`http://127.0.0.1:${port}/index.html?smoke=kanostreet&view=${view}${query}`);
+      const has = re => logs.some(l => re.test(l));
+      for (let i = 0; i < 300 && !has(/\[KanoReview\] (ready|no review prefab)/); i++) await page.waitForTimeout(1000);
+      if (has(/no review prefab/)) { failures.push(`${view}: the build has no review prefab (the assets were not in it)`); await page.close(); done = true; break; }
+      if (!has(/\[KanoReview\] ready/)) { failures.push(`${view} (${q}): the review scene never started`); await page.close(); continue; }
+      const loadSeconds = (Date.now() - t0) / 1000;                     // page load to the game's own "ready" line (E0 measurement: loading)
+      await page.waitForTimeout(12000);                                 // let streaming, LODs and the sky settle in software GL
+      const perf = () => logs.filter(l => l.startsWith('[Perf]') && !l.includes('BUDGET')).slice(-3);
+      try { await page.screenshot({ path: `${prefix}-${view}.png`, timeout: 300000 }); }
+      catch (e) { summary[`${view}@${q}`] = { failed: String(e).split('\n')[0].slice(0, 200), loadSeconds, perf: perf() }; fs.writeFileSync(`${prefix}-summary.json`, JSON.stringify(summary, null, 1)); console.log(`${view}@${q}: screenshot failed: ${summary[`${view}@${q}`].failed}`); await page.close(); continue; }
+      const jsHeapMB = await page.evaluate(() => (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null));
+      summary[view] = { quality: q === null ? 'as given' : q, loadSeconds, jsHeapMB, budgetWarnings: logs.filter(l => l.includes('BUDGET EXCEEDED')).slice(-5), perf: perf(), render: logs.filter(l => l.startsWith('[Render]')).slice(-2), review: logs.filter(l => l.startsWith('[KanoReview]')), errors };
+      fs.writeFileSync(`${prefix}-summary.json`, JSON.stringify(summary, null, 1));
+      if (errors.length) failures.push(`${view}: page errors: ${errors.slice(0, 2).join(' | ')}`);
+      console.log(`${view}@${q}: saved ${prefix}-${view}.png; ${JSON.stringify(summary[view].perf.slice(-1))}`);
+      await page.close(); done = true; break;
+    }
+    if (!done) failures.push(`${view}: no screenshot at any quality (${QUALITIES.join(',')})`);
   }
   await browser.close(); server.close(); fs.writeFileSync(`${prefix}-summary.json`, JSON.stringify(summary, null, 1));
   if (failures.length) { console.error('FAILURES:\n' + failures.join('\n')); process.exit(1); }

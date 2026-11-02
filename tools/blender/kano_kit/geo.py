@@ -8,7 +8,8 @@ from aro_blender import materials as AM
 
 
 # UV scale (texture repeats per metre) per kit material that carries an image: a 2 m tile is 0.5, a 4 m tile 0.25
-DEFAULT_UV = {"plaster_cream_light": 0.5, "stone_travertine": 1.0, "cladding_grey": 1.0, "roof_tile_charcoal": 0.5, "concrete": 0.5, "bark": 1.0, "asphalt": 0.25, "paver_mix": 0.5, "grass_green": 0.2}
+DEFAULT_UV = {"plaster_cream_light": 0.5, "stone_travertine": 1.0, "cladding_grey": 1.0, "roof_tile_charcoal": 0.5, "concrete": 0.5, "bark": 1.0, "asphalt": 0.25, "paver_mix": 0.5, "grass_green": 0.2,
+              "mud_wet": 0.4, "mud_crest": 0.4, "earth_compacted": 0.4, "sand_dusty": 0.3, "asphalt_cracked": 0.25, "roof_zinc_rust": 0.5, "mud_brick": 0.5, "plaster_weathered": 0.4, "timber_weathered": 0.8, "water_brown": 0.3, "water_rain": 0.3}
 
 
 def V(p): return Vector(p)
