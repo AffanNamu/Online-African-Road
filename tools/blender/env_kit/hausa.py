@@ -87,3 +87,76 @@ def hausa_compound_a(lod: int = 0) -> Part:
     for x in (-0.8, 3.6): p.box(x - 0.3, by0 - 0.04, 1.0, x + 0.3, by0 + 0.02, 1.8, DK)
     _flat_roof(p, bx0, by0, bx1, by1, bh)
     return p
+
+
+def hausa_compound_b(lod: int = 0) -> Part:
+    """A second Hausa-style compound type, 14 x 12 m: the entrance building (zaure) stands at the right-hand end of the street frontage with a flat-lintelled doorway, a long room along the back wall and a shorter room
+    along the left wall, an earth courtyard, a parapet with zankwaye on the wall and on every roof. A DESIGN VARIATION of compound A built from the same documented qualitative features: no real reference exists
+    (M-01), every proportion is a design choice."""
+    p = Part("compound"); X = 7.0; Y = 6.0; t = 0.45; H = 2.8
+    if lod >= 1:
+        for (a, b, c, d) in ((-X, -Y, 1.0, -Y + t), (5.0, -Y, X, -Y + t), (-X, -Y, -X + t, Y), (X - t, -Y, X, Y), (-X, Y - t, X, Y)): p.box(a, b, 0.0, c, d, H + 0.45, PL)
+        p.box(1.0, -Y, 0.0, 5.0, -3.2, 3.3, PL); p.box(-6.55, 2.8, 0.0, 3.5, 5.55, 2.6, PL); p.box(-6.55, -2.2, 0.0, -3.5, 2.8, 2.6, PL)
+        return p
+    p.box(-X + t, -Y + t, 0.0, X - t, Y - t, 0.05, ER)
+    def wall(x0, y0, x1, y1, sx, sy):
+        p.box(x0, y0, 0.0, x1, y1, 0.55, MB); p.box(x0 + (0.03 if sx else 0), y0 + (0.03 if sy else 0), 0.55, x1 - (0.03 if sx else 0), y1 - (0.03 if sy else 0), H, PL)
+    wall(-X, -Y, 1.0, -Y + t, 0, 1); wall(5.0, -Y, X, -Y + t, 0, 1); wall(-X, -Y, -X + t, Y, 1, 0); wall(X - t, -Y, X, Y, 1, 0); wall(-X, Y - t, X, Y, 0, 1)
+    p.box(-X, -Y - 0.02, H, 1.0, -Y + 0.2, H + 0.42, PL); p.box(5.0, -Y - 0.02, H, X, -Y + 0.2, H + 0.42, PL); p.box(-X - 0.02, -Y, H, -X + 0.2, Y, H + 0.42, PL); p.box(X - 0.2, -Y, H, X + 0.02, Y, H + 0.42, PL); p.box(-X, Y - 0.2, H, X, Y + 0.02, H + 0.42, PL)
+    for k in range(6):
+        x = -X + 0.3 + k * 2.2
+        if x < 0.8: _zank(p, x, -Y + 0.1, H + 0.42)
+    for k in range(6): _zank(p, -X + 0.1, -Y + 1.2 + k * 2.0, H + 0.42); _zank(p, X - 0.1, -Y + 1.2 + k * 2.0, H + 0.42)
+    for k in range(6): _zank(p, -X + 1.0 + k * 2.4, Y - 0.1, H + 0.42)
+    # zaure: a 4 x 2.8 m entrance building, a doorway 2 m wide with a flat lintel and a relief frame, the passage through it, a flat roof with parapet and a band of relief
+    zx0, zx1, zy0, zy1, zh = 1.0, 5.0, -Y, -3.2, 3.3; dx0, dx1, dz = 2.0, 4.0, 2.35
+    p.box(zx0, zy0, 0.0, dx0, zy0 + t, zh, PL); p.box(dx1, zy0, 0.0, zx1, zy0 + t, zh, PL); p.box(dx0, zy0, dz, dx1, zy0 + t, zh, PL)
+    p.box(zx0, zy0 + t, 0.0, zx0 + t, zy1, zh, PL); p.box(zx1 - t, zy0 + t, 0.0, zx1, zy1, zh, PL); p.box(zx0, zy1 - t, 0.0, dx0, zy1, zh, PL); p.box(dx1, zy1 - t, 0.0, zx1, zy1, zh, PL)
+    p.box(dx0 + 0.0, zy0 + t - 0.02, 0.0, dx1, zy0 + t, dz, DK, skip=("bottom", "back", "left", "right", "top"))                  # the dark passage seen through the doorway
+    p.box(dx0, zy0 + t, 0.0, dx1, zy1, 0.04, ER)
+    for (a, b) in ((dx0 - 0.14, dx0), (dx1, dx1 + 0.14)): p.box(a, zy0 - 0.05, 0.0, b, zy0 + 0.02, dz + 0.14, PL)                       # frame jambs standing proud of the face
+    p.box(dx0 - 0.14, zy0 - 0.05, dz, dx1 + 0.14, zy0 + 0.02, dz + 0.14, PL)
+    for k in range(5): _diamond(p, 1.3 + k * 0.85 if not (dx0 - 0.2 < 1.3 + k * 0.85 < dx1 + 0.2) else 4.7, zy0, 2.95)
+    p.box(zx0, zy0 - 0.04, 0.55, zx1, zy0 + 0.02, 0.62, PL)
+    _flat_roof(p, zx0, zy0, zx1, zy1, zh)
+    # a long room along the back wall (door + window) and a short room along the left wall
+    bx0, bx1, by0, by1, bh = -X + t, 3.5, 2.8, Y - t, 2.6
+    p.box(bx0, by0, 0.0, bx1, by1, bh, PL)
+    for x in (-4.5, 0.0): p.box(x - 0.5, by0 - 0.04, 0.0, x + 0.5, by0 + 0.02, 2.0, DK); p.box(x - 0.58, by0 - 0.05, 2.0, x + 0.58, by0 + 0.03, 2.1, PL)
+    p.box(1.9 - 0.3, by0 - 0.04, 1.0, 1.9 + 0.3, by0 + 0.02, 1.8, DK)
+    _flat_roof(p, bx0, by0, bx1, by1, bh, parapet_h=0.45)
+    lx0, lx1, ly0, ly1 = -X + t, -3.5, -2.2, 2.8
+    p.box(lx0, ly0, 0.0, lx1, ly1, bh, PL)
+    for y in (-0.2, 1.7): p.box(lx1 - 0.04, y - 0.5, 0.0, lx1 + 0.02, y + 0.5, 2.0, DK); p.box(lx1 - 0.05, y - 0.58, 2.0, lx1 + 0.03, y + 0.58, 2.1, PL)
+    _flat_roof(p, lx0, ly0, lx1, ly1, bh, parapet_h=0.45)
+    return p
+
+
+def hausa_wall_gate_set_a(lod: int = 0) -> Part:
+    """A street frontage of a Hausa-style compound, 16 m long and 3 m high: two wall runs (a mud-brick plinth band, plastered upper wall, a parapet lip, zankwaye every 2.4 m, bands of raised diamonds) either side of
+    an entrance block 4.4 m wide and 3.6 m high, 1.4 m deep, with a recessed doorway with a flat lintel, a proud relief frame, two closed plank door leaves and zankwaye along its parapet. A DESIGN INTERPRETATION of the
+    documented qualitative features: no real reference exists (M-01), every proportion is a design choice. The street side is -Y; the origin is the centre of the frontage on the ground."""
+    p = Part("wallgate"); X = 8.0; t = 0.45; H = 2.9; ex = 2.2; eh = 3.6; dx = 0.85; dz = 2.35
+    if lod >= 1:
+        p.box(-X, -t / 2, 0.0, -ex, t / 2, H + 0.4, PL); p.box(ex, -t / 2, 0.0, X, t / 2, H + 0.4, PL); p.box(-ex, -0.7, 0.0, ex, 0.7, eh, PL); return p
+    for (x0, x1, sgn) in ((-X, -ex, -1), (ex, X, 1)):
+        p.box(x0, -t / 2, 0.0, x1, t / 2, 0.55, MB); p.box(x0 + 0.03, -t / 2 + 0.03, 0.55, x1 - 0.03, t / 2 - 0.03, H, PL)
+        p.box(x0, -t / 2 - 0.12, H, x1, t / 2 + 0.12, H + 0.40, PL)                                                              # parapet lip, proud both sides
+        p.box(x0, -t / 2 - 0.04, 0.55, x1, -t / 2 + 0.01, 0.62, PL); p.box(x0, -t / 2 - 0.04, 2.55, x1, -t / 2 + 0.01, 2.62, PL)   # two raised bands
+        n = int((x1 - x0) / 2.4)
+        for k in range(n + 1):
+            xz = x0 + 0.25 + k * (x1 - x0 - 0.5) / n; _zank(p, xz, 0.0, H + 0.40)
+        for k in range(5): _diamond(p, x0 + 0.6 + k * (x1 - x0 - 1.2) / 4, -t / 2, 1.6)
+    # entrance block: a deeper body with the recessed doorway, a frame, door leaves, a parapet and zankwaye
+    p.box(-ex, -0.7, 0.0, -dx, 0.7, eh, PL); p.box(dx, -0.7, 0.0, ex, 0.7, eh, PL); p.box(-dx, -0.7, dz, dx, 0.7, eh, PL)
+    p.box(-ex, -0.7, 0.0, ex, -0.65, 0.55, MB)
+    p.box(-dx, 0.0, 0.0, dx, 0.7, 0.04, ER); p.box(-dx, 0.05, 0.0, dx, 0.7 - 0.02, dz, DK, skip=("bottom", "front", "left", "right", "top"))
+    for sx in (-1, 1): p.box(sx * dx - (0.0 if sx > 0 else 0.16), -0.76, 0.0, sx * dx + (0.16 if sx > 0 else 0.0), -0.64, dz + 0.16, PL)       # proud relief frame jambs
+    p.box(-dx - 0.16, -0.76, dz, dx + 0.16, -0.64, dz + 0.16, PL)
+    for sx in (-1, 1): p.box(sx * dx / 2 - dx / 2 + (0.02 if sx > 0 else 0.0), -0.12, 0.04, sx * dx / 2 + dx / 2 - (0.02 if sx < 0 else 0.0), -0.04, dz - 0.04, WD)    # two closed plank leaves, set back inside the doorway
+    p.box(-ex - 0.04, -0.78, eh, ex + 0.04, 0.78, eh + 0.42, PL)
+    for k in range(6): _zank(p, -ex + 0.3 + k * (2 * ex - 0.6) / 5, -0.62, eh + 0.42)
+    for k in range(5): _zank(p, -ex + 0.3 + k * (2 * ex - 0.6) / 4, 0.62, eh + 0.42)
+    for sx in (-1, 1): p.box(sx * (ex + 0.12) - 0.12, -0.78, 0.0, sx * (ex + 0.12) + 0.12, 0.78, H + 0.10, PL)                                  # pilasters where the wall meets the block
+    for k in range(5): _diamond(p, -1.9 + k * 0.95, -0.7, 3.05 if abs(-1.9 + k * 0.95) > dx + 0.3 else 2.95)
+    return p

@@ -110,14 +110,38 @@ def water_color(rgb, size=SIZE, seed=191):
     f = _fbm(size, 5, 3, seed); col = np.array(rgb)[None, None, :] * (0.9 + 0.2 * f[..., None]); return np.clip(col, 0, 1)
 
 
-def grassblade_pixels(size=SIZE, seed=201):
-    """An RGBA atlas of dry grass blades (alpha = blade shape): about 46 tapered, slightly curved blades growing from the bottom edge in straw, tan and brown-green."""
+DRY_BLADES = [(0.72, 0.62, 0.30), (0.62, 0.52, 0.24), (0.50, 0.46, 0.20), (0.78, 0.70, 0.40), (0.42, 0.40, 0.16)]
+WET_BLADES = [(0.30, 0.52, 0.14), (0.22, 0.44, 0.10), (0.38, 0.58, 0.18), (0.18, 0.36, 0.09), (0.46, 0.60, 0.22)]
+WET_LEAF = [(0.22, 0.46, 0.13), (0.17, 0.38, 0.10), (0.12, 0.29, 0.07), (0.26, 0.50, 0.15)]               # saturated greens after rain
+
+
+def grassblade_pixels(size=SIZE, seed=201, pal=None):
+    """An RGBA atlas of grass blades (alpha = blade shape): about 46 tapered, slightly curved blades growing from the bottom edge. The default palette is dry (straw, tan, brown-green); WET_BLADES is green."""
     rnd = np.random.default_rng(seed); out = np.zeros((size, size, 4)); yy, xx = np.mgrid[0:size, 0:size].astype(float); v = 1 - yy / size           # v = 0 at the bottom edge
-    pal = [(0.72, 0.62, 0.30), (0.62, 0.52, 0.24), (0.50, 0.46, 0.20), (0.78, 0.70, 0.40), (0.42, 0.40, 0.16)]
+    pal = pal or DRY_BLADES
     for _ in range(46):
         x0 = rnd.uniform(0.06, 0.94) * size; lean = rnd.uniform(-0.22, 0.22) * size; hgt = rnd.uniform(0.55, 0.98); w0 = rnd.uniform(5, 11); col = np.array(pal[rnd.integers(0, len(pal))]) * rnd.uniform(0.85, 1.1)
         t = v / hgt; cx = x0 + lean * t ** 1.7; width = w0 * (1 - t) ** 0.8 + 0.8; m = (t >= 0) & (t <= 1) & (np.abs(xx - cx) < width)
         shade = (0.8 + 0.35 * np.clip(1 - np.abs(xx - cx) / np.maximum(width, 1), 0, 1) + 0.15 * t)[..., None]; out[m, :3] = np.clip(col[None, :] * shade[m], 0, 1); out[m, 3] = 1.0
+    return out
+
+
+def bananaleaf_pixels(size=SIZE, seed=211):
+    """An RGBA banana leaf blade for a strip whose u runs across the leaf and v from its base (0, bottom edge) to its tip (1, top edge): a long blade, widest at one third of its length, a pale midrib down the
+    middle, lateral veins and the characteristic tears: narrow splits running from the edge inward along the lateral veins, deeper towards the tip. Alpha is the blade shape."""
+    rnd = np.random.default_rng(seed); yy, xx = np.mgrid[0:size, 0:size].astype(float); u = xx / size; v = 1 - yy / size
+    half = 0.485 * np.sin(np.pi * np.clip(v, 0, 1) ** 0.62) ** 0.9 + 0.012                                  # half width as a function of the position along the blade
+    d = np.abs(u - 0.5); inside = (d < half) & (v > 0.0) & (v < 0.995)
+    for _ in range(22):                                                                                     # tears: from the edge inward, along a lateral vein (the veins run slightly towards the tip)
+        v0 = rnd.uniform(0.18, 0.96); depth = rnd.uniform(0.35, 0.80) * (0.5 + 0.7 * v0); side = rnd.choice((-1, 1)); w = 0.0035
+        slope = 0.22; vv = v0 + slope * (d - 0.5 * half)
+        cut = (np.abs(v - vv) < w) & (np.sign(u - 0.5) == side) & (d > half * (1 - depth) * 0.9)
+        inside &= ~cut
+    base = np.array((0.27, 0.48, 0.13)); light = np.array((0.52, 0.66, 0.26)); rib = np.array((0.74, 0.80, 0.46))
+    fine = _fbm(size, 8, 3, seed + 1); vein = 0.5 + 0.5 * np.sin((v - 0.22 * d) * 150)
+    col = base[None, None, :] * (0.82 + 0.35 * fine[..., None]) * (0.93 + 0.12 * vein[..., None]); col = col * (1 - np.clip(d / np.maximum(half, 0.02), 0, 1) ** 2 * 0.25)[..., None] + light[None, None, :] * (0.18 * np.clip(1 - d / 0.25, 0, 1))[..., None]
+    ribm = d < (0.014 * (1.15 - 0.8 * v)); col[ribm] = rib * 0.95
+    out = np.zeros((size, size, 4)); out[..., :3] = np.clip(col, 0, 1); out[..., 3] = inside.astype(float)
     return out
 
 
@@ -157,8 +181,12 @@ def apply_env_pbr(keys=None) -> list[str]:
         "water_rain": ("T_env_waterrain_BaseColor", "T_env_water_Normal", lambda: (water_color((0.30, 0.34, 0.36), seed=193), water_normal())),
     }
     done = []
+    if bpy.data.materials.get("M_leaf_cutout") is not None: KT.leaf_material(); done.append("leaf_cutout")                       # the residential leaf atlas, for assets that mix both kits (the bougainvillea)
     if bpy.data.materials.get("M_leaf_dry_cutout") is not None and (not keys or "leaf_dry_cutout" in keys): cutout_material("leaf_dry_cutout", "T_env_leavesdry_BaseColor", KT.leaf_pixels(seed=33, greens=DRY_LEAF)); done.append("leaf_dry_cutout")
     if bpy.data.materials.get("M_grass_blade_cutout") is not None and (not keys or "grass_blade_cutout" in keys): cutout_material("grass_blade_cutout", "T_env_grassblades_BaseColor", grassblade_pixels()); done.append("grass_blade_cutout")
+    if bpy.data.materials.get("M_leaf_wet_cutout") is not None and (not keys or "leaf_wet_cutout" in keys): cutout_material("leaf_wet_cutout", "T_env_leaveswet_BaseColor", KT.leaf_pixels(seed=35, greens=WET_LEAF)); done.append("leaf_wet_cutout")
+    if bpy.data.materials.get("M_grass_blade_wet_cutout") is not None and (not keys or "grass_blade_wet_cutout" in keys): cutout_material("grass_blade_wet_cutout", "T_env_grassbladeswet_BaseColor", grassblade_pixels(seed=203, pal=WET_BLADES)); done.append("grass_blade_wet_cutout")
+    if bpy.data.materials.get("M_banana_leaf_cutout") is not None and (not keys or "banana_leaf_cutout" in keys): cutout_material("banana_leaf_cutout", "T_env_bananaleaf_BaseColor", bananaleaf_pixels()); done.append("banana_leaf_cutout")
     for key, (bn, nn, gen) in spec.items():
         if bpy.data.materials.get(f"M_{key}") is None or (keys and key not in keys): continue
         base, nrm = gen(); pbr_material(key, bn, base, nn, nrm); done.append(key)

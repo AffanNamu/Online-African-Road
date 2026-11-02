@@ -26,8 +26,41 @@ OPEN = {
     "rg_ngn_hausa_compound_a": "NO real reference exists (M-01): designed from the documented qualitative features only (zaure, thick tapering tubali walls, flat roofs with high parapets, zankwaye, relief motifs); every proportion is a design choice, not a measurement; must be checked against real photographs and drawings before approval; no landmark is depicted; walls need per-segment colliders in the engine (none yet)",
     "rg_ngn_tree_large_shade_a": "species NOT established (M-07, M-17); dry-season dusty foliage only (the wet-season variant is not built); alpha-clipped cards need the cutout kit material in Unity",
     "rg_ngn_grass_tall_verge_a": "dry grass only (green variant not built); seasonal appearance NOT established (M-17); alpha-clipped cards need the cutout kit material in Unity",
+    "rg_ngn_shed_market_corrugated_a": "first pass: vernacular NOT verified against real references (M-14); real Kano markets (Kurmi, Sabon Gari) have no reference (M-04, M-12) and are NOT depicted; produce and sacks are low-polygon; rafters and purlins are modelled but the roof is a flat corrugated texture; 9 materials (draw calls per instance)",
+    "rg_ngn_kiosk_lockup_a": "NEW registry entry (no kiosk was planned before): a design interpretation of one shop unit of R-016 to R-021, NOT a verified kiosk form (M-14); the sign band is blank (text is a data slot, RB-07); 9 materials (draw calls per instance)",
+    "rg_ngn_house_mudbrick_b": "NOT established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14); brick courses are a texture on flat walls; the lean-to veranda is a design choice; the wall colour needs tuning against real mud brick",
+    "rg_ngn_house_block_corrugated_a": "vernacular NOT verified (M-14); block walls are a flat weathered-render texture; the hipped roof is a design choice (R-016, R-018, R-021 show corrugated roofs on block buildings but not this plan); burglar bars are modelled rods",
+    "rg_ngn_hausa_compound_b": "NO real reference exists (M-01): designed from the documented qualitative features only; every proportion and the plan are design choices, not measurements; a design VARIATION of compound A (zaure at the end of the frontage); must be checked against real photographs and drawings before approval; no landmark is depicted",
+    "rg_ngn_hausa_wall_gate_set_a": "NO real reference exists (M-01): a design interpretation of the documented qualitative features (thick tapering walls, parapet with zankwaye, relief, a recessed entrance); proportions are design choices; the doorway is flat-lintelled by choice (arched forms exist in the first compound); must be checked against real photographs before approval; no landmark or real gate (M-12) is depicted",
+    "rg_ngn_banana_plant_a": "banana plants are not established for Kano (M-17); leaf blades are alpha-clipped strips with a texture (torn edges are in the texture, not the geometry); the bunch is a few low-polygon fingers; cutout kit material needed in Unity",
+    "rg_ngn_bougainvillea_wall_a": "species and growth habit as read from R-016 only; bracts are low-polygon blobs and leaf cards; the wall piece is a plain plastered length, not the capped-pier compound wall of the residential kit; cutout kit material needed in Unity",
+    "rg_ngn_tree_large_shade_wet_a": "wet-season dress of the same tree as the dry-season asset; species and seasonal colour NOT established (M-07, M-17); switching between the two dresses by season is engine work (RB-24), not done; alpha-clipped cards need the cutout kit material in Unity",
+    "rg_ngn_grass_tall_wet_a": "green dress of the grass; seasonal appearance NOT established (M-17); switching by season is engine work (RB-24), not done; alpha-clipped cards need the cutout kit material in Unity",
     "rg_ngn_house_mudbrick_a": "NOT established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14); brick courses are a texture on flat walls; the wall colour reads like fired red brick rather than duller sun-dried mud and needs tuning",
 }
+
+
+# registry entries for assets that were not planned before they were built (created at staging, with the same shape as the planned ones)
+NEW_ENTRIES = {
+    "rg_ngn_kiosk_lockup_a": dict(name="Roadside lock-up kiosk with serving hatch", assetClass="REGIONAL", category="props", region="ngn", concepts=["R-016", "R-021"], library="markets_roadside_businesses", districts=[],
+                                  flags="a kiosk was not in the plan; this is one unit of the shop type shown in R-016 to R-021; vernacular not established (M-14)", engineDependencies=["RB-07"]),
+    "rg_ngn_tree_large_shade_wet_a": dict(name="Large spreading shade tree, wet-season dress", assetClass="REGIONAL", category="vegetation", region="ngn", concepts=["R-019", "R-020"], library="vegetation_foliage", districts=[],
+                                          flags="wet-season variant of rg_ngn_tree_large_shade_a; species not established (M-07, M-17)", seasonVariantOf="rg_ngn_tree_large_shade_a", season="wet", engineDependencies=["RB-24"]),
+    "rg_ngn_grass_tall_wet_a": dict(name="Tall green grass after rain", assetClass="REGIONAL", category="vegetation", region="ngn", concepts=["R-019", "R-020"], library="vegetation_foliage", districts=[],
+                                    flags="wet-season variant of rg_ngn_grass_tall_verge_a; seasonal appearance not established (M-17)", seasonVariantOf="rg_ngn_grass_tall_verge_a", season="wet", engineDependencies=["RB-24"]),
+}
+CEILING = {"props": 2500, "vegetation": 3000, "buildings": 6000}
+
+
+def new_entry(aid: str) -> dict:
+    n = NEW_ENTRIES[aid]; e = {"id": aid, "name": n["name"], "assetClass": n["assetClass"], "category": n["category"], "region": n["region"], "city": None, "approvedCities": [], "concepts": n["concepts"], "districts": n["districts"],
+                               "status": "concept_approved", "breakdownApproved": False, "blenderSource": None, "export": None, "unityPrefab": None, "placements": [], "validation": {"blender": None, "unityImport": None, "visualReview": None},
+                               "approvedBy": None, "plannedBudget": {"lod0TrisMax": CEILING[n["category"]], "note": "catalogue ceiling for the category; the LOD ladder of the master plan applies"}, "engineDependencies": n["engineDependencies"],
+                               "flags": n["flags"], "library": n["library"]}
+    for k in ("seasonVariantOf", "season"):
+        if k in n: e[k] = n[k]
+    if "season" in n: e["seasonVariants"] = [n["season"]]
+    return e
 
 
 def main() -> int:
@@ -36,6 +69,7 @@ def main() -> int:
     reg_path = C / "registry" / "asset_registry.json"; reg = json.loads(reg_path.read_text()); by_id = {x["id"]: x for x in reg["assets"]}; lic = (C / "LICENSES.md").read_text(); staged = []
     for aid, sp in BE.SPECS.items():
         e = by_id.get(aid)
+        if e is None and aid in NEW_ENTRIES: e = new_entry(aid); reg["assets"].append(e); by_id[aid] = e; print("new registry entry:", aid)
         if e is None: print("not in the registry:", aid); return 1
         kind = sp["kind"]; vers = sorted(p.name for p in (W / "exports" / "fbx" / aid).iterdir() if p.is_dir())
         for v in vers:
@@ -75,8 +109,8 @@ def main() -> int:
             e["previews"] = pv; staged.append((aid, v, stats["lod_triangles"]))
     (C / "LICENSES.md").write_text(lic); (C / "unity" / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(W / "exports" / "unity" / "aro_materials.json", C / "unity" / "Materials" / "aro_materials.json")
     reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n")
-    rel = {"release": "environment_kit_e1", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender previews are previews of Blender geometry, not proof of Unity behaviour. Not imported into Unity; nothing here changes the game's physics, road generation or weather."}
-    (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / "environment_kit_e1.release.json").write_text(json.dumps(rel, indent=2))
+    rel = {"release": "environment_kit_e1_e3", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender previews are previews of Blender geometry, not proof of Unity behaviour. Not imported into Unity; nothing here changes the game's physics, road generation or weather."}
+    (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / "environment_kit_e1_e3.release.json").write_text(json.dumps(rel, indent=2))
     print("staged", len(staged), "assets:", ", ".join(i for i, _, _ in staged)); return 0
 
 

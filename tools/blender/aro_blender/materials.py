@@ -84,6 +84,14 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "shutter_steel":     ((0.30, 0.38, 0.42), 0.6, 0.6, 0.0, "blue-grey steel roller shutter"),
     "leaf_dry_cutout":   ((0.42, 0.42, 0.18), 0.8, 0.0, 0.0, "dry-season foliage cards: dusty olive and yellow-green leaf clusters with some bare gaps, alpha clipped at 0.5, two-sided"),
     "grass_blade_cutout": ((0.62, 0.55, 0.28), 0.9, 0.0, 0.0, "dry grass blade cards: straw and brown blades, alpha clipped at 0.5, two-sided"),
+    # ---- environmental kit batch E3 (2026-11-02): wet-season vegetation, banana, bougainvillea. Colours are first-pass estimates read from R-019 (lush green vegetation after rain), R-020 (banana plants, tall grass)
+    # and R-016 (bougainvillea); the species and their real seasonal colours for Kano are NOT established (M-07, M-17).
+    "leaf_wet_cutout":   ((0.20, 0.42, 0.12), 0.7, 0.0, 0.0, "wet-season foliage cards: saturated mid and dark greens, dense clusters, alpha clipped at 0.5, two-sided"),
+    "grass_blade_wet_cutout": ((0.28, 0.48, 0.15), 0.8, 0.0, 0.0, "green grass blade cards after rain: fresh green and yellow-green blades, alpha clipped at 0.5, two-sided"),
+    "banana_leaf_cutout": ((0.30, 0.50, 0.14), 0.6, 0.0, 0.0, "banana leaf blade: long green blade with a pale midrib and torn edges, alpha clipped at 0.5, two-sided"),
+    "banana_stem":       ((0.52, 0.56, 0.30), 0.8, 0.0, 0.0, "banana pseudostem: pale green with dry brown sheaths at the base"),
+    "banana_fruit":      ((0.46, 0.58, 0.20), 0.55, 0.0, 0.0, "green bananas"),
+    "flower_bougainvillea": ((0.78, 0.12, 0.45), 0.7, 0.0, 0.0, "bougainvillea bracts: magenta"),
 }
 
 
@@ -106,6 +114,9 @@ TEXTURED: dict[str, dict] = {
     # environmental kit
     "leaf_dry_cutout": {"texture": "T_env_leavesdry_BaseColor", "cutout": 0.5, "two_sided": True},
     "grass_blade_cutout": {"texture": "T_env_grassblades_BaseColor", "cutout": 0.5, "two_sided": True},
+    "leaf_wet_cutout": {"texture": "T_env_leaveswet_BaseColor", "cutout": 0.5, "two_sided": True},
+    "grass_blade_wet_cutout": {"texture": "T_env_grassbladeswet_BaseColor", "cutout": 0.5, "two_sided": True},
+    "banana_leaf_cutout": {"texture": "T_env_bananaleaf_BaseColor", "cutout": 0.5, "two_sided": True},
     "mud_wet": {"texture": "T_env_mudwet_BaseColor", "normal": "T_env_mudwet_Normal"},
     "mud_crest": {"texture": "T_env_mudcrest_BaseColor", "normal": "T_env_mudcrest_Normal"},
     "earth_compacted": {"texture": "T_env_earth_BaseColor", "normal": "T_env_earth_Normal"},
