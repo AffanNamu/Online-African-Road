@@ -1,0 +1,1214 @@
+{
+ "freeze": "environment_kit_e1_e2 v001",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-02T05:31:16Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "42452d5264fcbd55b54651eb353952b4aaa1ecff",
+  "producerCodeLastChangedIn": "8d24ff48db1e46731b0acff7952aa06adb995c6a",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 16,
+ "assets": [
+  {
+   "id": "aro_road_mud_rutted_a",
+   "kind": "roads",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     6480,
+     600
+    ],
+    "sizeM": [
+     8.0,
+     24.0,
+     0.562
+    ],
+    "materials": [
+     "M_mud_crest",
+     "M_mud_wet"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/aro_road_mud_rutted_a.blend",
+     "bytes": 878918,
+     "sha256": "9d601682f9c5c0d05383b87d44327ca8fbc33a6e637ef54357c7de9697387efb"
+    },
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/project.json",
+     "bytes": 377,
+     "sha256": "bb0e4b6921546aab010aa22fda836f3e876ba56b39dc05b0c004a2339aff23f3"
+    },
+    {
+     "path": "exports/fbx/aro_road_mud_rutted_a/v001/aro_road_mud_rutted_a.fbx",
+     "bytes": 172428,
+     "sha256": "a3f519d9128a80c766714f5a9871feb4454e86c9b32c5a7e23667807c13021fb"
+    },
+    {
+     "path": "exports/glb/aro_road_mud_rutted_a/v001/aro_road_mud_rutted_a.glb",
+     "bytes": 883664,
+     "sha256": "45af688fdf223e0900b129fc30913a00e77ebcc87176f1a4913200b14fe3f0f1"
+    },
+    {
+     "path": "exports/fbx/aro_road_mud_rutted_a/v001/aro_road_mud_rutted_a.manifest.json",
+     "bytes": 1543,
+     "sha256": "e921043315aaab23b267511633b0f8ee9f92d0c92752b1de4daef3daba5e9091"
+    },
+    {
+     "path": "validation/aro_road_mud_rutted_a/v001.json",
+     "bytes": 538,
+     "sha256": "a9fcdebbc4a999503b1dff85775f933545b05de0a4af5ea0b0572c6b718eb42b"
+    },
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/T_env_mudwet_BaseColor.png",
+     "bytes": 176931,
+     "sha256": "308ef4bdbe21518c28b1202af691bb9cf85a8c3a62ae85decc26d027a9ecbdbd"
+    },
+    {
+     "path": "projects/roads/aro_road_mud_rutted_a/v001/T_env_mudwet_Normal.png",
+     "bytes": 162750,
+     "sha256": "14f9a00795efee10bcdfd6476fd590d4a99cfcf1846f72bab0a341645df793a9"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_earth_compacted_a",
+   "kind": "roads",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     6480,
+     600
+    ],
+    "sizeM": [
+     8.0,
+     24.0,
+     0.194
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_sand_dusty"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/aro_road_earth_compacted_a.blend",
+     "bytes": 1411641,
+     "sha256": "589fa5c41e95b23b6650bea8f85f84ee79b8f753e4b3a6d3718870b8d282dff8"
+    },
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/project.json",
+     "bytes": 320,
+     "sha256": "d43adbceff14bc49a3f16cdd2eb8e808048f7680e5b72e27e565a0675265b0eb"
+    },
+    {
+     "path": "exports/fbx/aro_road_earth_compacted_a/v001/aro_road_earth_compacted_a.fbx",
+     "bytes": 171772,
+     "sha256": "e1a3f20d7af63aa9100147cc727f4267319a53aab4c5f7031ed6aa3d914cf73c"
+    },
+    {
+     "path": "exports/glb/aro_road_earth_compacted_a/v001/aro_road_earth_compacted_a.glb",
+     "bytes": 1395652,
+     "sha256": "a66fec4c04cd5fab1e2cefca9e0e44464e1d36739b1b0c43f60cf6dd2b7d3220"
+    },
+    {
+     "path": "exports/fbx/aro_road_earth_compacted_a/v001/aro_road_earth_compacted_a.manifest.json",
+     "bytes": 1578,
+     "sha256": "43add8b65f3764a0a0f5b1f7df0cc0ab3b2e4aa30a33c938db12506490df0d3f"
+    },
+    {
+     "path": "validation/aro_road_earth_compacted_a/v001.json",
+     "bytes": 547,
+     "sha256": "d527b5a8012bdfe5be907eca05fd57f52219d4f43e9191f792f0b5904d96d94c"
+    },
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/T_env_sand_BaseColor.png",
+     "bytes": 274354,
+     "sha256": "af03b9d2adbe2d9dc49cbd9658c0fdfd8031007b33bb20a159bac0e411e0e1d3"
+    },
+    {
+     "path": "projects/roads/aro_road_earth_compacted_a/v001/T_env_sand_Normal.png",
+     "bytes": 335723,
+     "sha256": "16ac7d535fc21bd61f4e57ce9bb07cb768f26ef92d6624d33837a5c2a7d1d5e0"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sand_loose_a",
+   "kind": "roads",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     6480,
+     600
+    ],
+    "sizeM": [
+     8.0,
+     24.0,
+     0.289
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_sand_dusty"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/aro_road_sand_loose_a.blend",
+     "bytes": 1414157,
+     "sha256": "9bb6815e705e03aef6f463e1bbbacf4568d6c4a2172d5a39129a2496e19d486c"
+    },
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/project.json",
+     "bytes": 284,
+     "sha256": "3e3d740823dcd8e89b5bf758554e62d7b28d13b68a14828c66a900676ea60916"
+    },
+    {
+     "path": "exports/fbx/aro_road_sand_loose_a/v001/aro_road_sand_loose_a.fbx",
+     "bytes": 175836,
+     "sha256": "cf2be502f247de52559b91f1f425fc052f10e23456b7c5db24d86a54429e01ad"
+    },
+    {
+     "path": "exports/glb/aro_road_sand_loose_a/v001/aro_road_sand_loose_a.glb",
+     "bytes": 1413672,
+     "sha256": "0c175aebe40bffddb66714cc80e5d242590908579b0b665c816a4b5d87e165c4"
+    },
+    {
+     "path": "exports/fbx/aro_road_sand_loose_a/v001/aro_road_sand_loose_a.manifest.json",
+     "bytes": 1553,
+     "sha256": "de942cac6c588fa36aa75e1181a4116ef9575f6c902d2e17c3542463a475ff4e"
+    },
+    {
+     "path": "validation/aro_road_sand_loose_a/v001.json",
+     "bytes": 547,
+     "sha256": "afc61f317389b83323f1fb0f8cb7930074cccbd2a69df7f41a7f08d92580124e"
+    },
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/T_env_sand_BaseColor.png",
+     "bytes": 274354,
+     "sha256": "af03b9d2adbe2d9dc49cbd9658c0fdfd8031007b33bb20a159bac0e411e0e1d3"
+    },
+    {
+     "path": "projects/roads/aro_road_sand_loose_a/v001/T_env_sand_Normal.png",
+     "bytes": 335723,
+     "sha256": "16ac7d535fc21bd61f4e57ce9bb07cb768f26ef92d6624d33837a5c2a7d1d5e0"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_asphalt_cracked_a",
+   "kind": "roads",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     5376,
+     384
+    ],
+    "sizeM": [
+     7.0,
+     24.0,
+     0.067
+    ],
+    "materials": [
+     "M_asphalt_cracked",
+     "M_asphalt_patch",
+     "M_pothole_earth"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/aro_road_asphalt_cracked_a/v001/aro_road_asphalt_cracked_a.blend",
+     "bytes": 960141,
+     "sha256": "def16f535c3f47cc03db2d41625fe5c89a8a08d57337656302ac91e979dfff4e"
+    },
+    {
+     "path": "projects/roads/aro_road_asphalt_cracked_a/v001/project.json",
+     "bytes": 316,
+     "sha256": "a75dabbdc9f635d6f6ee4de77ab1fed4318089b8a8d66d6370e32aba3dab113b"
+    },
+    {
+     "path": "exports/fbx/aro_road_asphalt_cracked_a/v001/aro_road_asphalt_cracked_a.fbx",
+     "bytes": 136812,
+     "sha256": "557e071d70a777fc30ba65558430ba4e86efb1cd8cc45f393489496849299e63"
+    },
+    {
+     "path": "exports/glb/aro_road_asphalt_cracked_a/v001/aro_road_asphalt_cracked_a.glb",
+     "bytes": 944704,
+     "sha256": "7995b7b7e278cdb7710ff343896f66d1ab5a7b1a054d481fdee4fe4573766f65"
+    },
+    {
+     "path": "exports/fbx/aro_road_asphalt_cracked_a/v001/aro_road_asphalt_cracked_a.manifest.json",
+     "bytes": 1607,
+     "sha256": "818e59d7692b0ee039ffcf36d5d8767de53e196ad84ada148136847e5c66163e"
+    },
+    {
+     "path": "validation/aro_road_asphalt_cracked_a/v001.json",
+     "bytes": 575,
+     "sha256": "69074dee2e2220b864fe25bd71faf5d883af48e4b456a48fcf27db225cc435da"
+    },
+    {
+     "path": "projects/roads/aro_road_asphalt_cracked_a/v001/T_env_asphaltcracked_BaseColor.png",
+     "bytes": 244367,
+     "sha256": "225a09d3766272ea8d5c12b7a559b602b7d9bf96f79d7b0d35b211f43275a88a"
+    },
+    {
+     "path": "projects/roads/aro_road_asphalt_cracked_a/v001/T_env_asphaltcracked_Normal.png",
+     "bytes": 550813,
+     "sha256": "0b7d27d32f97f1603fd1ddc86bcbc81e5640f25085d8a5bd669d2ff0d5a2d67f"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_pothole_set_a",
+   "kind": "roads",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     6048,
+     360
+    ],
+    "sizeM": [
+     7.0,
+     12.0,
+     0.202
+    ],
+    "materials": [
+     "M_asphalt_cracked",
+     "M_pothole_earth"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/roads/aro_road_pothole_set_a/v001/aro_road_pothole_set_a.blend",
+     "bytes": 970953,
+     "sha256": "c7bb268ec60df4fe577f2f6fdbb9901f65a9972e944a42e2252a8a7de79cf9e8"
+    },
+    {
+     "path": "projects/roads/aro_road_pothole_set_a/v001/project.json",
+     "bytes": 316,
+     "sha256": "4c5f61a909128e6f0e1a3f7e92fca846984773665742808bb059b5aacd06c713"
+    },
+    {
+     "path": "exports/fbx/aro_road_pothole_set_a/v001/aro_road_pothole_set_a.fbx",
+     "bytes": 156092,
+     "sha256": "59f5889320373a7e46d8bb45ce73eec75762f582a34639e7f562140d61799575"
+    },
+    {
+     "path": "exports/glb/aro_road_pothole_set_a/v001/aro_road_pothole_set_a.glb",
+     "bytes": 952852,
+     "sha256": "2d77e4b550149e4451acab442da27aca3cda8c5ea262c8ffaddc743d7225efb1"
+    },
+    {
+     "path": "exports/fbx/aro_road_pothole_set_a/v001/aro_road_pothole_set_a.manifest.json",
+     "bytes": 1558,
+     "sha256": "4e540439f2edd54b5a8cf33ffe0697e70ceb6f35513910896ede7137e37e1c7d"
+    },
+    {
+     "path": "validation/aro_road_pothole_set_a/v001.json",
+     "bytes": 548,
+     "sha256": "47e0d391884691d9d847d44b19ec3d2286d4498258e37af0c450cb67b5b71b86"
+    },
+    {
+     "path": "projects/roads/aro_road_pothole_set_a/v001/T_env_asphaltcracked_BaseColor.png",
+     "bytes": 244367,
+     "sha256": "225a09d3766272ea8d5c12b7a559b602b7d9bf96f79d7b0d35b211f43275a88a"
+    },
+    {
+     "path": "projects/roads/aro_road_pothole_set_a/v001/T_env_asphaltcracked_Normal.png",
+     "bytes": 550813,
+     "sha256": "0b7d27d32f97f1603fd1ddc86bcbc81e5640f25085d8a5bd669d2ff0d5a2d67f"
+    }
+   ]
+  },
+  {
+   "id": "aro_water_puddle_set_a",
+   "kind": "environments",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     168
+    ],
+    "sizeM": [
+     7.549,
+     7.745,
+     0.004
+    ],
+    "materials": [
+     "M_water_brown",
+     "M_water_rain"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v001/aro_water_puddle_set_a.blend",
+     "bytes": 358684,
+     "sha256": "8ee70640427b0819c20d6c4a0c4ed3ea1eb892b36cb2fd7b7dfc9488f5eea862"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v001/project.json",
+     "bytes": 335,
+     "sha256": "ece11ed148d2056566306bddab9b24d5985bc7344f4bb9ee7013791ab5b54543"
+    },
+    {
+     "path": "exports/fbx/aro_water_puddle_set_a/v001/aro_water_puddle_set_a.fbx",
+     "bytes": 34220,
+     "sha256": "1e5027a3a59cb9c49687e406118c991a7404ecec9a21cbdbb948b4831dca75d4"
+    },
+    {
+     "path": "exports/glb/aro_water_puddle_set_a/v001/aro_water_puddle_set_a.glb",
+     "bytes": 280000,
+     "sha256": "b345dea75168bb030674aaeb1f55ef20370a4f84e0f5f8aab9eed6c7ef8eec9a"
+    },
+    {
+     "path": "exports/fbx/aro_water_puddle_set_a/v001/aro_water_puddle_set_a.manifest.json",
+     "bytes": 2453,
+     "sha256": "b965eef143cc42a31654a8d1562f36560cbc13410b06a9b4588151e9ee12b373"
+    },
+    {
+     "path": "validation/aro_water_puddle_set_a/v001.json",
+     "bytes": 972,
+     "sha256": "9f7c8e6ec3a1d275ee2af1629e8281e77709b468fd00f0237a76793a523e1241"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v001/T_env_water_Normal.png",
+     "bytes": 153851,
+     "sha256": "b5243341218f9365bb93ad06fc30b880a3fd83be5cf20e34eb0e33c926035a86"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v001/T_env_waterbrown_BaseColor.png",
+     "bytes": 45764,
+     "sha256": "4d75d8eb24a1107aa96788ec3e954dd8007f52949d6839f44b7c778dfc793aaf"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v001/T_env_waterrain_BaseColor.png",
+     "bytes": 60907,
+     "sha256": "f49172f35ff1cf92afed4777daab3b044a3e2ca43e48ea8a4a6e7677f0d70549"
+    }
+   ]
+  },
+  {
+   "id": "aro_water_flood_sheet_a",
+   "kind": "environments",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     640,
+     42
+    ],
+    "sizeM": [
+     12.5,
+     7.5,
+     0.01
+    ],
+    "materials": [
+     "M_water_brown"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_water_flood_sheet_a/v001/aro_water_flood_sheet_a.blend",
+     "bytes": 300017,
+     "sha256": "6d5faaba27c544776e8f8c0429156d8d67d643c4a63c63201cb31fbf1ed75ba9"
+    },
+    {
+     "path": "projects/environments/aro_water_flood_sheet_a/v001/project.json",
+     "bytes": 327,
+     "sha256": "8e6bc2fdf6a985716c760315aa20dadfaafd6ed03bc5a311412183a35c3cec03"
+    },
+    {
+     "path": "exports/fbx/aro_water_flood_sheet_a/v001/aro_water_flood_sheet_a.fbx",
+     "bytes": 39564,
+     "sha256": "93abd8daaff13db3cad6da348ad85a2e5dad66b3cf67c41e7b9f0ddd49bf0a39"
+    },
+    {
+     "path": "exports/glb/aro_water_flood_sheet_a/v001/aro_water_flood_sheet_a.glb",
+     "bytes": 218908,
+     "sha256": "223ef2bf531c8f0fe00e6feb8f85d6f7987a44bf841bb72c4028df0f1e3cd4f8"
+    },
+    {
+     "path": "exports/fbx/aro_water_flood_sheet_a/v001/aro_water_flood_sheet_a.manifest.json",
+     "bytes": 2462,
+     "sha256": "ee4251da6c9cf13cdf28e3a543520bfac7bcc7438705428d23b8f0029c072658"
+    },
+    {
+     "path": "validation/aro_water_flood_sheet_a/v001.json",
+     "bytes": 961,
+     "sha256": "703482bcc3a0be5beb8814fded5b2ba196186d1c21a5b3adfe7d39bf10a1c0e1"
+    },
+    {
+     "path": "projects/environments/aro_water_flood_sheet_a/v001/T_env_water_Normal.png",
+     "bytes": 153851,
+     "sha256": "b5243341218f9365bb93ad06fc30b880a3fd83be5cf20e34eb0e33c926035a86"
+    },
+    {
+     "path": "projects/environments/aro_water_flood_sheet_a/v001/T_env_waterbrown_BaseColor.png",
+     "bytes": 45764,
+     "sha256": "4d75d8eb24a1107aa96788ec3e954dd8007f52949d6839f44b7c778dfc793aaf"
+    }
+   ]
+  },
+  {
+   "id": "aro_drain_open_slab_a",
+   "kind": "environments",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     282,
+     12
+    ],
+    "sizeM": [
+     1.1,
+     6.0,
+     0.95
+    ],
+    "materials": [
+     "M_concrete",
+     "M_metal_galvanised",
+     "M_mud_crest",
+     "M_pothole_earth"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/aro_drain_open_slab_a.blend",
+     "bytes": 965180,
+     "sha256": "76dd6aa02b16dcf36ca6f9cc2b8a2a88c7a8808dc7258a5b678997b69e7a9db8"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/project.json",
+     "bytes": 345,
+     "sha256": "1f1db0f77b8aab252eb273e522d999eac6f9734d825b0de236b9cbc768a4b759"
+    },
+    {
+     "path": "exports/fbx/aro_drain_open_slab_a/v001/aro_drain_open_slab_a.fbx",
+     "bytes": 39452,
+     "sha256": "89d3b7c0a844653719f75ac5d081acdf44b74e88e0488d3c39005f65004c7e30"
+    },
+    {
+     "path": "exports/glb/aro_drain_open_slab_a/v001/aro_drain_open_slab_a.glb",
+     "bytes": 892188,
+     "sha256": "8afa300ea440aa4fdb70797f47d5821af80c52819f5cf50c7b0b9ba34cfe4bb3"
+    },
+    {
+     "path": "exports/fbx/aro_drain_open_slab_a/v001/aro_drain_open_slab_a.manifest.json",
+     "bytes": 2516,
+     "sha256": "5dc840a83b73a08c3ae4116f0b81eb77f2c2f4ece01c73aae3c1875789f70599"
+    },
+    {
+     "path": "validation/aro_drain_open_slab_a/v001.json",
+     "bytes": 1026,
+     "sha256": "dce122ef884b260154b6bea6bb40b9404205b2357660a26d2fb96031fc7deca0"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_stall_umbrella_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1122,
+     52
+    ],
+    "sizeM": [
+     2.615,
+     2.615,
+     2.58
+    ],
+    "materials": [
+     "M_concrete",
+     "M_fabric_red",
+     "M_fabric_white",
+     "M_metal_galvanised",
+     "M_produce_orange",
+     "M_produce_tomato",
+     "M_produce_yam",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/rg_ngn_stall_umbrella_a.blend",
+     "bytes": 1347122,
+     "sha256": "7a2912fe35a315df4ce8658e3445016d353b0d3dd9a68fea69cb5d3990265725"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/project.json",
+     "bytes": 283,
+     "sha256": "af979688d760fca7d6cee3a712ba811f8a7fe33acfac66bdfe1cedb78690048c"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_stall_umbrella_a/v001/rg_ngn_stall_umbrella_a.fbx",
+     "bytes": 81084,
+     "sha256": "ffbae8c7f6c8c355b558f501b7e34585b0405ca5351ef934b443bb9375ba75fa"
+    },
+    {
+     "path": "exports/glb/rg_ngn_stall_umbrella_a/v001/rg_ngn_stall_umbrella_a.glb",
+     "bytes": 1333072,
+     "sha256": "1c1333d1ee278f686bff9211f20deb825670a243945ca4ff802a19adeea92d0d"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_stall_umbrella_a/v001/rg_ngn_stall_umbrella_a.manifest.json",
+     "bytes": 2795,
+     "sha256": "341dda5d8a7db055f52fdc31a1f6a91df98fbd56c20e59d82c4648aa45d131a8"
+    },
+    {
+     "path": "validation/rg_ngn_stall_umbrella_a/v001.json",
+     "bytes": 1292,
+     "sha256": "add56caf23442481bc63c07cc4a7a92c74bcde6a8cc14dd5438dcfe7c7392b60"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_umbrella_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_stall_canopy_rough_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     700,
+     40
+    ],
+    "sizeM": [
+     3.6,
+     2.814,
+     2.39
+    ],
+    "materials": [
+     "M_burlap",
+     "M_produce_orange",
+     "M_produce_tomato",
+     "M_produce_yam",
+     "M_tarp_olive",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_stall_canopy_rough_a/v001/rg_ngn_stall_canopy_rough_a.blend",
+     "bytes": 819400,
+     "sha256": "7225ccb9e755908f0f74480e3b1802ed1f1f378c613201937fb5c77a68b35b52"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_canopy_rough_a/v001/project.json",
+     "bytes": 292,
+     "sha256": "2bb20c5820afd7582ac6b6cfb4964cbe719b518565b058286208f297846ceec5"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_stall_canopy_rough_a/v001/rg_ngn_stall_canopy_rough_a.fbx",
+     "bytes": 56668,
+     "sha256": "bdb2ce6968891f943c032ae3ec7b8f8508b13c7b2f474ebda7033e59a4ada348"
+    },
+    {
+     "path": "exports/glb/rg_ngn_stall_canopy_rough_a/v001/rg_ngn_stall_canopy_rough_a.glb",
+     "bytes": 774424,
+     "sha256": "4a9f00ff66280a4f5189da789380f0a550de85e471101bdbd854fc0e5040ee32"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_stall_canopy_rough_a/v001/rg_ngn_stall_canopy_rough_a.manifest.json",
+     "bytes": 2598,
+     "sha256": "de6ca11d7a4288acd35349871ed215483a39650102f719600cf2d935c32f8f40"
+    },
+    {
+     "path": "validation/rg_ngn_stall_canopy_rough_a/v001.json",
+     "bytes": 1082,
+     "sha256": "20ff908485e51ff58d29cd5183a0f46668e338876e338be9939522c0d7a1395f"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_canopy_rough_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/props/rg_ngn_stall_canopy_rough_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_fence_woven_timber_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1174,
+     76
+    ],
+    "sizeM": [
+     3.087,
+     0.142,
+     1.45
+    ],
+    "materials": [
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_fence_woven_timber_a/v001/rg_ngn_fence_woven_timber_a.blend",
+     "bytes": 811897,
+     "sha256": "ab0d0bb7ce1b9cebaf05ea9604ac84861afc6a487e6f7a9bc64160c06494e26f"
+    },
+    {
+     "path": "projects/props/rg_ngn_fence_woven_timber_a/v001/project.json",
+     "bytes": 239,
+     "sha256": "2213cf56f2ffdf003643c82c86c1d323366bb75b98c3a0a3a30823e4676e9889"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_fence_woven_timber_a/v001/rg_ngn_fence_woven_timber_a.fbx",
+     "bytes": 45612,
+     "sha256": "48f4c97dfd6f005f0a1d5f2afaf5909fed0563d5ce9e273ff056da8e1c2ea2b6"
+    },
+    {
+     "path": "exports/glb/rg_ngn_fence_woven_timber_a/v001/rg_ngn_fence_woven_timber_a.glb",
+     "bytes": 791552,
+     "sha256": "37ae8dbf1bfb0d9e55f54f442a8f34c609569258a768ffdd718dd06a689154a7"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_fence_woven_timber_a/v001/rg_ngn_fence_woven_timber_a.manifest.json",
+     "bytes": 2481,
+     "sha256": "4ed533c5f7b74c676382c6ab4de4e60f6a320a3e0e9d03145470213bee2cfc8f"
+    },
+    {
+     "path": "validation/rg_ngn_fence_woven_timber_a/v001.json",
+     "bytes": 973,
+     "sha256": "66b7218ce0e74a547572e1932b59558a583490fa897f5493d4849f781d66f261"
+    },
+    {
+     "path": "projects/props/rg_ngn_fence_woven_timber_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/props/rg_ngn_fence_woven_timber_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_shop_row_roadside_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1304,
+     28
+    ],
+    "sizeM": [
+     15.8,
+     6.77,
+     3.4
+    ],
+    "materials": [
+     "M_concrete",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_paint_red",
+     "M_paint_white",
+     "M_plaster_ochre",
+     "M_plaster_weathered",
+     "M_plaster_white",
+     "M_roof_zinc_rust",
+     "M_shutter_steel",
+     "M_sign_blue",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/rg_ngn_shop_row_roadside_a.blend",
+     "bytes": 2351422,
+     "sha256": "f1536b5882b65112eb3a5153915f9b2d6d7299e45604d21ac6499d44450c439e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/project.json",
+     "bytes": 306,
+     "sha256": "8987be88573a872759c18dd60996bc0f47bc4429e1529e333ff60d3cb9fc10cf"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shop_row_roadside_a/v001/rg_ngn_shop_row_roadside_a.fbx",
+     "bytes": 72972,
+     "sha256": "e0bb1bdec67a03ded5c8aa14ab22538231ebef4e97780f0676adbd64d280a07e"
+    },
+    {
+     "path": "exports/glb/rg_ngn_shop_row_roadside_a/v001/rg_ngn_shop_row_roadside_a.glb",
+     "bytes": 2324964,
+     "sha256": "5f025b2cddc6a65687cdeb24bf3e648f8de687208879f8a7f3ca6582714ec5e7"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shop_row_roadside_a/v001/rg_ngn_shop_row_roadside_a.manifest.json",
+     "bytes": 2777,
+     "sha256": "6fe94714d4dab1f1d7016dc5b56c374db1fd4f25e5e212214da03cdd882e09d2"
+    },
+    {
+     "path": "validation/rg_ngn_shop_row_roadside_a/v001.json",
+     "bytes": 1239,
+     "sha256": "d3cf807def576ce631020e792ab4fb2dc97b53d4f89d072eee886da10ed89d3d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     582,
+     38
+    ],
+    "sizeM": [
+     8.84,
+     7.92,
+     4.46
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_roof_zinc_rust",
+     "M_timber_weathered",
+     "M_wood_door"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/rg_ngn_house_mudbrick_a.blend",
+     "bytes": 2656598,
+     "sha256": "7692c7813ba31fdc13f6c211daa3942da32f35329472125dc0a75a3a8462e234"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/project.json",
+     "bytes": 266,
+     "sha256": "a37d94625a099f9085df3b355fb4b0b646f359242a38a76d5343ba13cf6948f4"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_a/v001/rg_ngn_house_mudbrick_a.fbx",
+     "bytes": 56972,
+     "sha256": "58a0f61154a5a88f1d72fc8ce196caf5ddfc85946fb9ce4082965e5baec31097"
+    },
+    {
+     "path": "exports/glb/rg_ngn_house_mudbrick_a/v001/rg_ngn_house_mudbrick_a.glb",
+     "bytes": 2597804,
+     "sha256": "de6c17268bc13041af9904652d5d11120c10b694b7092a8993eca00317c1e67c"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_a/v001/rg_ngn_house_mudbrick_a.manifest.json",
+     "bytes": 2639,
+     "sha256": "cb5240aa5935e9082ee898747c4a8c4afe38be1db0b36bc2406c3586962a50c8"
+    },
+    {
+     "path": "validation/rg_ngn_house_mudbrick_a/v001.json",
+     "bytes": 1133,
+     "sha256": "af521ca6164240b1abea1077676f86074ab347c3ebe7a6cf79fae1a1ff582ce2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_compound_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2406,
+     108
+    ],
+    "sizeM": [
+     20.14,
+     16.18,
+     7.21
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_plaster_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/rg_ngn_hausa_compound_a.blend",
+     "bytes": 2062192,
+     "sha256": "ec0b4e3caec817111bc1b4124547c5958777123a5f45616cc7da497c9b562876"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/project.json",
+     "bytes": 375,
+     "sha256": "b0019136be0b88b5a45f61de1fcf62d5646cf1f3fa9fb4ed0b188f8c5f8e38f1"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_a/v001/rg_ngn_hausa_compound_a.fbx",
+     "bytes": 85404,
+     "sha256": "12d1000950123e938d9ebc757363c4890f5c538afd8d58d689be5c1d3d83a19a"
+    },
+    {
+     "path": "exports/glb/rg_ngn_hausa_compound_a/v001/rg_ngn_hausa_compound_a.glb",
+     "bytes": 2099376,
+     "sha256": "0a06c6b4ec04db6f7344b284f8af00a3294141cd0b56bc08538eafb383aeebcf"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_a/v001/rg_ngn_hausa_compound_a.manifest.json",
+     "bytes": 2575,
+     "sha256": "afeb4c3e06aead19899391ed83f3fe3b7a43143280f8fab3d3f4e0e539afbfe2"
+    },
+    {
+     "path": "validation/rg_ngn_hausa_compound_a/v001.json",
+     "bytes": 1071,
+     "sha256": "3e0dfa82b6f137e2775a5b5f454b1c7d5ecf2cfdf67499bf2c2350fcd5e773d8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_large_shade_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1404,
+     213,
+     22
+    ],
+    "sizeM": [
+     11.763,
+     11.414,
+     11.868
+    ],
+    "materials": [
+     "M_bark",
+     "M_leaf_dry_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/rg_ngn_tree_large_shade_a.blend",
+     "bytes": 1113693,
+     "sha256": "6bea1c06b93aebde9ccc467cc4e67b3407772f7f2d001916cec26c170b72179c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/project.json",
+     "bytes": 338,
+     "sha256": "2e4a79061313b2d86160c3a51ee6f6eef174237b922eb79ba6d1d45069c46aa4"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_large_shade_a/v001/rg_ngn_tree_large_shade_a.fbx",
+     "bytes": 101612,
+     "sha256": "ff9e30ffb248f402050059dfce0b4fc55894d0253fcfe2d3c84c6f4a9f4a2470"
+    },
+    {
+     "path": "exports/glb/rg_ngn_tree_large_shade_a/v001/rg_ngn_tree_large_shade_a.glb",
+     "bytes": 778848,
+     "sha256": "6d8e2a44fbd30d2a7dcd4e5d498e016e504f308ae1dd1e2848fcc7437a1b5994"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_large_shade_a/v001/rg_ngn_tree_large_shade_a.manifest.json",
+     "bytes": 2567,
+     "sha256": "fa392389533f6ffc222453587a4d10b1f686eb1868499951b025e484a453cba1"
+    },
+    {
+     "path": "validation/rg_ngn_tree_large_shade_a/v001.json",
+     "bytes": 1033,
+     "sha256": "5b30e5ed6d6dc518ba3fe80e766096e5e1644da2cde284d72b4d00621e65f123"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/T_env_leavesdry_BaseColor.png",
+     "bytes": 306052,
+     "sha256": "d13f4d6c94344209bf56a4f3e1a01d00c9128e638c4f3eec086d8294e101ab89"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_a/v001/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_grass_tall_verge_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     44
+    ],
+    "sizeM": [
+     1.043,
+     1.132,
+     1.291
+    ],
+    "materials": [
+     "M_grass_blade_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_verge_a/v001/rg_ngn_grass_tall_verge_a.blend",
+     "bytes": 236422,
+     "sha256": "47e6966249068dd6ce908832e7e437d2d5f99b867671b45b420092a8efdde215"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_verge_a/v001/project.json",
+     "bytes": 300,
+     "sha256": "dfce478b07a9f63f84bf5b60a1835724aa77e7c36b16e4817b0fbb07e853c7ac"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_grass_tall_verge_a/v001/rg_ngn_grass_tall_verge_a.fbx",
+     "bytes": 23500,
+     "sha256": "2d002872b176f6a824023292fe02e46747e3cd9ca9451fc27cc77fd0ce15c2a2"
+    },
+    {
+     "path": "exports/glb/rg_ngn_grass_tall_verge_a/v001/rg_ngn_grass_tall_verge_a.glb",
+     "bytes": 150252,
+     "sha256": "5e20126625ff7e337df6ef8d7956f6bdf10dc8d11cdefa93b1379e8fb19c75cf"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_grass_tall_verge_a/v001/rg_ngn_grass_tall_verge_a.manifest.json",
+     "bytes": 2620,
+     "sha256": "29bca00cbcb608b100abe68c0392525f8f3d9e6d7ec2c45f3171c5f213e0c43d"
+    },
+    {
+     "path": "validation/rg_ngn_grass_tall_verge_a/v001.json",
+     "bytes": 1111,
+     "sha256": "23f743238dbab2f3de8cdd5b81c38d8da5c922abe7edb17e952a853a6adbe903"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_verge_a/v001/T_env_grassblades_BaseColor.png",
+     "bytes": 145529,
+     "sha256": "d9076ba47319a030b7d3106e4bd7b654571056284f7ac2a40c45aecf3ee3e05e"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}
