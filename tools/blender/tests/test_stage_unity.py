@@ -37,3 +37,15 @@ def test_a_missing_export_is_an_error_not_a_silent_gap(tmp_path):
 def test_only_the_requested_assets_are_staged(tmp_path):
     W = make_ws(tmp_path); out = tmp_path / "ARO"
     assert S.stage(W, out, {"items": []}, ids={"rg_b"}) == {"rg_b": "v002"} and not (out / "Models" / "aro_a").exists()
+
+
+def test_extra_placement_files_are_written_next_to_the_main_one(tmp_path):
+    W = make_ws(tmp_path); out = tmp_path / "ARO"
+    S.stage(W, out, {"items": [{"asset": "aro_a"}]}, extra_placements={"kano_residential_section_a_merged": {"items": [{"asset": "rg_b"}]}})
+    assert json.loads((out / "placements" / "kano_residential_section_a.json").read_text())["items"][0]["asset"] == "aro_a"
+    assert json.loads((out / "placements" / "kano_residential_section_a_merged.json").read_text())["items"][0]["asset"] == "rg_b"
+
+
+def test_without_extra_placements_only_the_main_file_exists(tmp_path):
+    W = make_ws(tmp_path); out = tmp_path / "ARO"; S.stage(W, out, {"items": []})
+    assert sorted(p.name for p in (out / "placements").iterdir()) == ["kano_residential_section_a.json"]

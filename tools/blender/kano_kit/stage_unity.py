@@ -17,8 +17,9 @@ def latest(dirs) -> str:
     return vs[-1]
 
 
-def stage(W: Path, out: Path, placements: dict, ids=None) -> dict:
-    """Copies the latest FBX, manifest and textures of every asset into `out`; returns what was staged. `ids` defaults to every asset that has an FBX export in the workspace."""
+def stage(W: Path, out: Path, placements: dict, ids=None, extra_placements=None) -> dict:
+    """Copies the latest FBX, manifest and textures of every asset into `out`; returns what was staged. `ids` defaults to every asset that has an FBX export in the workspace.
+    `extra_placements` ({file stem: placements dict}) writes further placement files next to the main one (the merged-frontage variant of the review scene)."""
     fbx_root = W / "exports" / "fbx"; staged = {}
     for adir in sorted(fbx_root.iterdir()):
         aid = adir.name
@@ -37,18 +38,22 @@ def stage(W: Path, out: Path, placements: dict, ids=None) -> dict:
     if not mats.is_file(): raise SystemExit(f"{mats} is missing (build_all writes it)")
     (out / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(mats, out / "Materials" / "aro_materials.json")
     (out / "placements").mkdir(parents=True, exist_ok=True); (out / "placements" / "kano_residential_section_a.json").write_text(json.dumps(placements, indent=1))
+    for stem, extra in (extra_placements or {}).items(): (out / "placements" / f"{stem}.json").write_text(json.dumps(extra, indent=1))
     return staged
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); a = ap.parse_args()
     from aro_blender import workspace as ws
-    from . import build_all
+    from . import build_all, frontage
     P = build_all.build_scene()                                                             # the same arrangement the review renders use (no render is made here)
-    placements = {"scene": "kano_residential_section_a", "frame": "street along +Y, right +X, metres, Blender axes", "items": P.items}
-    staged = stage(ws.default_root(), Path(a.out), placements, ids=set(build_all.SPECS))
-    print(f"staged {len(staged)} assets into {a.out}: " + ", ".join(f"{k} {v}" for k, v in staged.items())); print(f"{len(P.items)} placements")
-    return 0 if len(staged) == len(build_all.SPECS) else 1
+    frame = "street along +Y, right +X, metres, Blender axes"
+    placements = {"scene": "kano_residential_section_a", "frame": frame, "items": P.items}
+    merged = {"scene": "kano_residential_section_a_merged", "frame": frame, "note": "draw-call prototype: each plot side's wall panels, piers and gate-pier lanterns as one frontage asset (kano_kit/frontage.py); the frozen v002 assets are unchanged", "items": frontage.merged_items(P.items)}
+    ids = set(build_all.SPECS) | set(frontage.SPECS)
+    staged = stage(ws.default_root(), Path(a.out), placements, ids=ids, extra_placements={"kano_residential_section_a_merged": merged})
+    print(f"staged {len(staged)} assets into {a.out}: " + ", ".join(f"{k} {v}" for k, v in staged.items())); print(f"{len(P.items)} placements, {len(merged['items'])} in the merged variant")
+    return 0 if len(staged) == len(ids) else 1
 
 
 if __name__ == "__main__":

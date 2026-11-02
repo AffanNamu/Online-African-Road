@@ -5,17 +5,23 @@
 # This is the same seam the private asset repository will use: files appear under Assets/ThirdParty at CI time and are not part of the public repository.
 # REVIEW (only when the commit message contains [kano-review], or a manual run sets review): after the import tests the job also builds the 14 residential kit assets FROM THE CODE with the toolchain (validated),
 # stages them under Assets/ThirdParty/ARO, builds the game with ARO.Editor.BuildScript.BuildKanoReviewWebGL (no backend is baked in: no -supabaseUrl/-supabaseAnonKey, nothing live is touched), drives the WebGL
-# build in headless Chromium (?smoke=kanostreet) and keeps the screenshots as a one-day artifact. The assets exist only inside the job; no picture or build is written to the log or uploaded beyond that artifact.
+# build in headless Chromium (?smoke=kanostreet) and keeps the screenshots as an artifact (default 7 days; the manual input retention_days overrides it). The assets exist only inside the job; no picture or build is
+# written to the log or uploaded beyond that artifact. The review also builds the five merged-frontage PROTOTYPE assets (kano_kit/frontage.py, a content-side draw-call experiment; the frozen v002 assets are
+# unchanged) and shows the street with them as the "merged" variant, and the game's own draw-call numbers are split into kit and rest (KanoReviewStats).
 name: Blender import into Unity
 on:
   workflow_dispatch:
     inputs:
       review: { description: "also build the real Kano residential kit and show it in the running game (the same as a [kano-review] commit)", type: boolean, default: false }
+      retention_days: { description: "days the review artifact (screenshots and summary) is kept", type: string, default: "7" }
   push:
     paths:
       - 'tools/blender/**'
       - 'Assets/_Project/Scripts/Editor/BlenderImport/**'
       - 'Assets/_Project/Scripts/World/KanoReviewScene.cs'
+      - 'Assets/_Project/Scripts/World/KanoReviewStats.cs'
+      - 'Assets/_Project/Scripts/NetCore/DrawBreakdown.cs'
+      - 'tools/webgl-kanoreview.js'
       - 'Assets/_Project/Scripts/NetCore/PropPrefabPlan.cs'
       - 'Assets/_Project/Tests/EditMode/BlenderAssetImportTests.cs'
       - '.github/workflows/blender-unity.yml'
@@ -114,6 +120,16 @@ jobs:
           print(f"{len(r)} assets built; failed validation: {bad or 'none'}")
           sys.exit(1 if bad or len(r) != 14 else 0)
           PY
+          # the merged-frontage prototype (new assets; the 14 above are the frozen v002 code and are not changed by it)
+          python -m kano_kit.frontage --report "$RUNNER_TEMP/frontage_report.json"
+          python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "frontage_report.json")))
+          bad = [x["id"] for x in r if not x["passed"]]
+          for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"))
+          print(f"{len(r)} prototype assets built; failed validation: {bad or 'none'}")
+          sys.exit(1 if bad or len(r) != 5 else 0)
+          PY
       - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
@@ -148,7 +164,7 @@ jobs:
         run: |
           sudo chown -R "$USER" Builds || true; mkdir -p kano-review
           echo "WebGL build size (E0): $(du -sm Builds/WebGL | cut -f1) MB on disk"; ls -l Builds/WebGL/Build | awk '{print $5, $9}'
-          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top" || { echo "review script reported failures"; exit 1; }
+          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top,ref:merged,street1:merged,ref:noshadow" || { echo "review script reported failures"; exit 1; }
         shell: bash {0}
       - name: Review - the numbers (no pictures are written to this public log)
         if: ${{ always() && steps.gate.outputs.on == 'true' }}
@@ -157,7 +173,7 @@ jobs:
           ls -la kano-review || true
       - uses: actions/upload-artifact@v4
         if: ${{ always() && steps.gate.outputs.on == 'true' }}
-        with: { name: kano-review-in-game, path: kano-review, retention-days: 1, if-no-files-found: warn }
+        with: { name: kano-review-in-game, path: kano-review, retention-days: "${{ inputs.retention_days || 7 }}", if-no-files-found: warn }
       - name: Remove the generated fixture (it is never part of a build or of the repository)
         if: always()
         # The Unity container runs as root and writes the kit materials it creates into the

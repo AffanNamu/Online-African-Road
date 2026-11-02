@@ -13,6 +13,8 @@ namespace ARO.World
     public sealed class KanoReviewScene : MonoBehaviour
     {
         public const string PrefabPath = "KanoReview/kano_residential_section_a";
+        /// <summary>The same street with each plot's wall panels, piers and gate-pier lanterns merged into one frontage mesh (content-side draw-call prototype, "&amp;variant=merged"); built only when the merged placements exist.</summary>
+        public const string MergedPrefabPath = "KanoReview/kano_residential_section_a_merged";
         /// <summary>Far from the route so the chunk streamer's terrain never overlaps the review ground.</summary>
         public static readonly Vector3 Origin = new Vector3(6000f, 0f, 6000f);
 
@@ -35,15 +37,17 @@ namespace ARO.World
         /// <summary>Starts the scene when the page asked for it. Returns false (and logs why) when the review prefab is not in this build.</summary>
         public static bool Begin(string url)
         {
-            var prefab = Resources.Load<GameObject>(PrefabPath);
-            if (prefab == null) { Debug.Log("[KanoReview] no review prefab at Resources/" + PrefabPath + ": the private assets are not part of this build, nothing to show"); return false; }
+            string variant = Query(url, "variant", ""), path = variant == "merged" ? MergedPrefabPath : PrefabPath;
+            var prefab = Resources.Load<GameObject>(path);
+            if (prefab == null) { Debug.Log("[KanoReview] no review prefab at Resources/" + path + ": the private assets are not part of this build, nothing to show"); return false; }
             var s = new GameObject("KanoReviewScene").AddComponent<KanoReviewScene>(); s._view = Query(url, "view", "ref");
             if (!Views.ContainsKey(s._view)) { Debug.Log("[KanoReview] unknown view '" + s._view + "', using ref"); s._view = "ref"; }
             var inst = Instantiate(prefab, Origin, Quaternion.identity); inst.name = "kano_residential_section_a";
+            s.gameObject.AddComponent<KanoReviewStats>().Root = inst.transform;
             s._cam = Camera.main; var v = Views[s._view];
             s._pos = Origin + ToUnity(v.Loc); s._rot = Quaternion.LookRotation(ToUnity(v.Look) - ToUnity(v.Loc), Vector3.up); s._lens = v.LensMm;
             s.Apply();
-            Debug.Log("[KanoReview] ready view=" + s._view + " camera=" + s._pos + " lens=" + s._lens + " mm");
+            Debug.Log("[KanoReview] ready view=" + s._view + " variant=" + (variant == "" ? "standard" : variant) + " camera=" + s._pos + " lens=" + s._lens + " mm");
             return true;
         }
 

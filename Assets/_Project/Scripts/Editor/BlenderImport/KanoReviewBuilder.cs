@@ -24,6 +24,9 @@ namespace ARO.Editor.BlenderImport
         public const string ReviewFolder = Root + "/Resources/KanoReview";
         public const string ReviewPrefabPath = ReviewFolder + "/kano_residential_section_a.prefab";
         public const string PlacementsPath = Root + "/placements/kano_residential_section_a.json";
+        /// <summary>Optional: the same street with each plot's wall panels, piers and gate-pier lanterns replaced by one merged frontage asset (a content-side draw-call prototype; see kano_kit/frontage.py).</summary>
+        public const string MergedPlacementsPath = Root + "/placements/kano_residential_section_a_merged.json";
+        public const string MergedReviewPrefabPath = ReviewFolder + "/kano_residential_section_a_merged.prefab";
         public const string KitPath = Root + "/Materials/aro_materials.json";
 
         [Serializable] class Placement { public string asset; public float x, y, z, yawDeg, scale = 1f; public string tag; }
@@ -65,17 +68,27 @@ namespace ARO.Editor.BlenderImport
             return saved;
         }
 
-        /// <summary>Builds the prefabs for every asset the placement file uses, then the review prefab. Returns the log lines.</summary>
+        /// <summary>Builds the prefabs for every asset the placement files use, then the review prefab (and the merged variant when its placements exist). Returns the log lines.</summary>
         public static List<string> BuildReview()
         {
             var notes = new List<string>();
             if (!File.Exists(PlacementsPath)) { notes.Add("no placements file at " + PlacementsPath + ": nothing to build (the private assets are not in this checkout)"); return notes; }
             var kit = File.Exists(KitPath) ? BlenderAssetBuilder.LoadKit(KitPath) : null; if (kit == null) notes.Add("no material kit at " + KitPath + ": the imported materials are kept");
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-            var file = JsonUtility.FromJson<PlacementFile>(File.ReadAllText(PlacementsPath));
+            var variants = new List<(string placements, string prefab)> { (PlacementsPath, ReviewPrefabPath) };
+            if (File.Exists(MergedPlacementsPath)) variants.Add((MergedPlacementsPath, MergedReviewPrefabPath));
             var prefabs = new Dictionary<string, GameObject>();
-            foreach (var id in file.items.Select(i => i.asset).Distinct()) prefabs[id] = BuildPrefab(id, kit, notes);
+            foreach (var (placements, prefabPath) in variants)
+            {
+                var file = JsonUtility.FromJson<PlacementFile>(File.ReadAllText(placements));
+                foreach (var id in file.items.Select(i => i.asset).Distinct()) if (!prefabs.ContainsKey(id)) prefabs[id] = BuildPrefab(id, kit, notes);
+                BuildReviewPrefab(file, prefabPath, prefabs, kit, notes);
+            }
+            return notes;
+        }
 
+        static void BuildReviewPrefab(PlacementFile file, string prefabPath, Dictionary<string, GameObject> prefabs, MaterialKitFile kit, List<string> notes)
+        {
             var root = new GameObject("kano_residential_section_a");
             var ground = GameObject.CreatePrimitive(PrimitiveType.Cube); ground.name = "review_ground"; ground.transform.SetParent(root.transform, false);
             ground.transform.localScale = new Vector3(3000f, 0.2f, 3000f); ground.transform.localPosition = new Vector3(0f, -0.1f - 0.03f, 300f);
@@ -88,9 +101,8 @@ namespace ARO.Editor.BlenderImport
                 go.transform.localPosition = FromBlender(it.x, it.y, it.z); go.transform.localRotation = Quaternion.Euler(0f, -it.yawDeg, 0f); go.transform.localScale = Vector3.one * (it.scale > 0f ? it.scale : 1f); placed++;
             }
             Directory.CreateDirectory(ReviewFolder);
-            var saved = PrefabUtility.SaveAsPrefabAsset(root, ReviewPrefabPath); UnityEngine.Object.DestroyImmediate(root); AssetDatabase.SaveAssets();
-            notes.Add("review prefab " + ReviewPrefabPath + ": " + placed + " placements, " + missing + " skipped (no prefab), saved " + (saved != null));
-            return notes;
+            var saved = PrefabUtility.SaveAsPrefabAsset(root, prefabPath); UnityEngine.Object.DestroyImmediate(root); AssetDatabase.SaveAssets();
+            notes.Add("review prefab " + prefabPath + ": " + placed + " placements, " + missing + " skipped (no prefab), saved " + (saved != null));
         }
 
         /// <summary>Entry point for CI: builds the prefabs and the review prefab and prints what happened (the log lines start with [KanoReviewBuilder]).</summary>
