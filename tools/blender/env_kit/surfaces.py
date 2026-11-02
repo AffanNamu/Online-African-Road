@@ -150,7 +150,7 @@ def puddle_set(lod=0):
         ph = rnd.uniform(0, 6.28, 3); pts = []
         for k in range(seg):
             th = 2 * math.pi * k / seg; r = R * (1 + 0.28 * math.sin(3 * th + ph[0]) + 0.14 * math.sin(5 * th + ph[1]) + 0.07 * math.sin(9 * th + ph[2])); pts.append((cx + r * math.cos(th), cy + r * math.sin(th), 0.01))
-        for k in range(seg): p.face([(cx, cy, 0.01), pts[k], pts[(k + 1) % seg]], key)
+        for k in range(seg): p.face([(cx, cy, 0.014), pts[k], pts[(k + 1) % seg]], key)               # the centre stands 4 mm proud of the rim: a shallow meniscus, and the sheet has a real thickness
     p.datum = 0.01                                                                          # the water plane sits 1 cm above the ground it lies on
     return p
 

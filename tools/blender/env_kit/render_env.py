@@ -29,7 +29,7 @@ def main():
         if surface:
             views = (("iso", (c.x - 0.45 * d, c.y - 0.62 * d, c.z + 0.55 * d), (c.x, c.y, c.z), 30), ("front", (c.x, lo.y + 0.6, lo.z + 1.5), (c.x, c.y + d * 0.3, lo.z + 0.2), 28))      # oblique from above; driver height along the patch
         else:
-            k = 1.55 * (0.8 if aid.startswith("aro_drain") else 1.0)
+            k = 1.55 * (0.8 if aid.startswith("aro_drain") else 0.62 if aid.startswith("rg_ngn_shop_row") else 0.85 if aid.startswith("rg_ngn_house") else 1.0)
             views = (("iso", (c.x - 0.85 * d * k, c.y - 1.05 * d * k, c.z + 0.35 * d * k), (c.x, c.y, c.z), 34), ("front", (c.x, c.y - 1.5 * d * k, c.z + 0.05 * d * k), (c.x, c.y, c.z), 34))
         for name, loc, tgt, lens in views:
             for ob in list(bpy.data.objects):

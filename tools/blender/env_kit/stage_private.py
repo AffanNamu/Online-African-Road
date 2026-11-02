@@ -21,9 +21,9 @@ OPEN = {
     "aro_drain_open_slab_a": "channel bottom at z = 0, road surface at 0.85 m (asset to be placed 0.85 m lower); the engine has no drain element yet (RB-05); rebar stubs rise to 0.95 m",
     "rg_ngn_stall_umbrella_a": "vernacular and goods not verified against real references (M-14); produce is low-polygon",
     "rg_ngn_stall_canopy_rough_a": "vernacular not verified (M-14); tarpaulin sag is modelled, not simulated",
-    "rg_ngn_fence_woven_timber_a": "weave pattern simplified (sinusoidal rods); not verified against real fences (M-14)",
-    "rg_ngn_shop_row_roadside_a": "vernacular not verified (M-14); sign bands are blank (text is a data slot, RB-07); roof corrugation is a normal map on a flat sheet; no interior beyond shelves seen through the openings",
-    "rg_ngn_house_mudbrick_a": "NOT established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14); brick courses are a texture on flat walls",
+    "rg_ngn_fence_woven_timber_a": "reads as a lattice of rods and stakes more than a woven fence; weave simplified (sinusoidal rods); not verified against real fences (M-14)",
+    "rg_ngn_shop_row_roadside_a": "vernacular not verified (M-14); sign bands are blank (text is a data slot, RB-07); roof corrugation is a normal map on a flat sheet and the rust reads pale in the preview light; no interior beyond shelves seen through the openings",
+    "rg_ngn_house_mudbrick_a": "NOT established as Hausa-traditional or as common vernacular; treated as northern Nigerian regional rural (M-14); brick courses are a texture on flat walls; the wall colour reads like fired red brick rather than duller sun-dried mud and needs tuning",
 }
 
 
