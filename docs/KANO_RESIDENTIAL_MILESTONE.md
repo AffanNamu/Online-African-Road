@@ -199,7 +199,34 @@ Run: `blender-unity.yml`, run 41391901470 (commit `dcafeb0`, marker `[kano-revie
 
 ### 11.3 Materials and textures: what is and is not established
 * **Established by numbers and logs:** the textures and materials import, nothing logs an error, the six views render without a script error, and the scene holds 112 textures (20.9 MB).
-* **NOT established by me: that the materials look right.** The six pictures (`kanoreview-ref|front|side|street1|street2|top.png`, 1280 x 720) are only in the one-day artifact `kano-review-in-game` of the run (5.3 MB, expires 2026-11-03 05:51 UTC); this environment cannot download artifacts, so **I have not seen them**. Whether the plaster, stone, roof tiles, asphalt, leaves and grass render with the right colour and texture is for a person to judge from those pictures. Anything wrong goes into v003 (a new version; v002 is not edited).
+* **NOT established by me: that the materials look right.** The six pictures (`kanoreview-ref|front|side|street1|street2|top.png`, 1280 x 720) are only in the one-day artifact `kano-review-in-game` of the run (5.3 MB, expires 2026-11-03 05:51 UTC); this environment cannot download artifacts, so **I have not seen them**. Whether the plaster, stone, roof tiles, asphalt, leaves and grass render with the right colour and texture is for a person to judge from those pictures. Anything wrong goes into v003 (a new version; v002 is not edited). *Update: the exact files, camera names and a second, seven-day artifact are in section 12; the draw-call decomposition is in `DRAW_CALL_INVESTIGATION_2026-11-02.md`.*
 
 ### 11.4 What this run did not do
 Mud, flooding, rainy-season or seasonal behaviour: none of it exists in the game or was built into this review (section 6 of `docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md`). No driving physics, road generation, weather, vehicle behaviour or production configuration was touched.
+
+## 12. The review pictures: exact files, view names and cameras (owner request of 2026-11-02)
+**Where they are.** The pictures are artifacts of the review runs; this environment cannot download artifacts, so I have **not seen them**, and the numbers in section 11 and below are the game's own log lines. A signed-in GitHub user opens the run page, scrolls to *Artifacts* and downloads `kano-review-in-game` (a zip).
+| Run | Artifact | Size | Expires | Files |
+|---|---|---|---|---|
+| [41391901470](https://github.com/AffanNamu/Online-African-Road/actions/runs/41391901470) (first review) | `kano-review-in-game` | 5.3 MB | **2026-11-03 05:51 UTC** (one-day retention) | the six standard views and the summary |
+| [41450050093](https://github.com/AffanNamu/Online-African-Road/actions/runs/41450050093) (draw-call investigation) | `kano-review-in-game` | 7.9 MB | **2026-11-09 13:28 UTC** (seven-day retention, set because the owner asked to keep it available) | the six standard views, the merged-frontage and shadow-off diagnostics, and the summary |
+The second run is marked *failed* only because the review driver's last measurement step (the per-pixel difference of the merged pictures) had a bug, found and fixed afterwards; all nine screenshots were taken and uploaded and every game-side step succeeded. If the owner wants the pictures kept longer than seven days, a review run with the manual input `retention_days` set (up to the repository's maximum) does it; I will not extend it without being asked, because the artifact of a public repository is readable by signed-in GitHub users.
+
+**Both runs show the frozen v002 content.** A fresh rebuild from the code of the assets (14 of 14) was compared with the frozen v002 manifest: all 42 textures and all 14 GLB exports are **byte-identical**, the validation figures (LOD triangles and sizes) are identical for 14 of 14, and the 14 rebuilt FBX files re-import with exactly the same vertices (to 0.1 mm) and material names as the frozen FBX files (the FBX bytes differ only in embedded paths and times).
+
+| File (`kanoreview-<name>.png`) | View name | What it shows | Blender camera: position to target, lens | Unity camera (from the game's log) |
+|---|---|---|---|---|
+| `kanoreview-ref.png` | `ref` | the reference camera of concept R-006: eye level 1.7 m at the left kerb line, looking along the street | (-3.2, -45, 1.7) to (0.6, 60, 2.6), 28 mm | (6003.20, 1.70, 6045.00) |
+| `kanoreview-front.png` | `front` | from the left sidewalk facing the right-hand frontages | (-5.2, 10, 2.1) to (16, 10, 3.6), 30 mm | (6005.20, 2.10, 5990.00) |
+| `kanoreview-side.png` | `side` | along the street from beyond the section start, 4.6 m up | (0, -62, 4.6) to (0, 0, 4.0), 24 mm | (6000.00, 4.60, 6062.00) |
+| `kanoreview-street1.png` | `street1` | a pedestrian on the right sidewalk | (4.3, -30, 1.6) to (-6, -4, 1.6), 28 mm | (5995.70, 1.60, 6030.00) |
+| `kanoreview-street2.png` | `street2` | the driver's eye in the left lane | (-1.7, -20, 1.2) to (5, 10, 1.5), 28 mm | (6001.70, 1.20, 6020.00) |
+| `kanoreview-top.png` | `top` | straight down from 95 m | (0, 0, 95) to (0, 0.5, 0), 50 mm | (6000.00, 95.00, 6000.00) |
+| `kanoreview-ref-merged.png` (second run only) | `ref` with `variant=merged` | the reference view with the merged-frontage prototype | as `ref` | as `ref` |
+| `kanoreview-street1-merged.png` (second run only) | `street1` with `variant=merged` | the street1 view with the merged-frontage prototype | as `street1` | as `street1` |
+| `kanoreview-ref-noshadow.png` (second run only) | `ref` with `shadows=off` | the reference view without the shadow pass (to measure its share) | as `ref` | as `ref` |
+Blender axes: street along +Y, right +X, up +Z, metres; the Unity camera is the game's own, converted (x, y, z becomes -x, z, -y) and placed at the review origin (6000, 0, 6000). All pictures: 1280 x 720, quality tier `medium`, 15:30 hour, the game's own lighting, sky and tone mapping, software GL.
+
+**Objective checks made on the nine pictures of the second run** (measured in a browser canvas; they are not a judgement of looks): **no magenta pixels at all** (the colour of Unity's error shader) in any of them; 0.3% to 2.4% near-black pixels (dark interiors and shadows); mean channel values between 38 and 91 of 255, nothing flat or blank. The standard pictures' mean colours: ref 53.3 / 62.4 / 60.9, front 69.0 / 77.8 / 72.0, side 74.2 / 90.6 / 90.3, street1 63.2 / 71.3 / 69.3, street2 56.2 / 64.8 / 63.8, top 44.7 / 60.1 / 38.4.
+
+**Known risk to look for in the pictures: z-fighting on the villas.** A new check (`kano_kit.coplanar`) found overlapping coplanar faces in the frozen v002 villas (62 pairs on villa A, 69 on villa B, largest 0.6 m2: white trim against cream plaster and frames against frames), the ornate gate (6), the wall lantern (1) and the One Way sign (16). Where two faces share a plane they fight for the pixels and flicker in a game. v002 was not touched; a corrected v003 (same separation as the environmental kit) would be built only after the owner's review of v002. Details in `ENVIRONMENT_KIT_E3.md`.

@@ -34,14 +34,14 @@ async function imageStats(page, b64) {
   }, b64);
 }
 async function imageDiff(page, a64, b64) {
-  return page.evaluate(async (pa, pb) => {
+  return page.evaluate(async ({ pa, pb }) => {                       // Playwright passes ONE argument to the page function: wrap two values in an object
     const load = async s => { const i = new Image(); i.src = 'data:image/png;base64,' + s; await i.decode(); const c = document.createElement('canvas'); c.width = i.width; c.height = i.height; const x = c.getContext('2d'); x.drawImage(i, 0, 0); return x.getImageData(0, 0, c.width, c.height).data; };
     const A = await load(pa), B = await load(pb); if (A.length !== B.length) return { error: 'sizes differ' };
     let sum = 0, over = 0; const n = A.length / 4;
     for (let i = 0; i < A.length; i += 4) { const dr = Math.abs(A[i] - B[i]), dg = Math.abs(A[i + 1] - B[i + 1]), db = Math.abs(A[i + 2] - B[i + 2]); sum += dr + dg + db; if (dr + dg + db > 24) over++; }
     const f = v => Math.round(v * 1000) / 1000;
     return { meanAbsDifferencePerChannel: f(sum / (3 * n)), fractionOver24: f(over / n) };
-  }, a64, b64);
+  }, { pa: a64, pb: b64 });
 }
 (async () => {
   const failures = [], summary = {}, shots = {}; const server = await serve(); const port = server.address().port;

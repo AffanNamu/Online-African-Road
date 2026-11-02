@@ -106,7 +106,8 @@ def main() -> int:
                 for k in ("iso", "front"):
                     src = Path(a.previews) / f"{aid}_{k}.png"
                     if src.is_file(): dstp = C / "previews" / aid / v; dstp.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(dstp / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
-            e["previews"] = pv; staged.append((aid, v, stats["lod_triangles"]))
+            if pv or "previews" not in e: e["previews"] = pv                                  # no new picture: keep the ones already registered
+            staged.append((aid, v, stats["lod_triangles"]))
     (C / "LICENSES.md").write_text(lic); (C / "unity" / "Materials").mkdir(parents=True, exist_ok=True); shutil.copy2(W / "exports" / "unity" / "aro_materials.json", C / "unity" / "Materials" / "aro_materials.json")
     reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n")
     rel = {"release": "environment_kit_e1_e3", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender previews are previews of Blender geometry, not proof of Unity behaviour. Not imported into Unity; nothing here changes the game's physics, road generation or weather."}

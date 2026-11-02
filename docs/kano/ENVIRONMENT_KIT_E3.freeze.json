@@ -1,0 +1,1341 @@
+{
+ "freeze": "environment_kit_e3: 10 new assets (v001) and the corrected v002 of five E1/E2 assets (coplanar overlaps separated)",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-02T13:22:33Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "50c1a8ad322dbf4d78f93112620de0e6945dc359",
+  "producerCodeLastChangedIn": "50c1a8ad322dbf4d78f93112620de0e6945dc359",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 15,
+ "assets": [
+  {
+   "id": "aro_water_puddle_set_a",
+   "kind": "environments",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     168
+    ],
+    "sizeM": [
+     7.549,
+     7.745,
+     0.007
+    ],
+    "materials": [
+     "M_water_brown",
+     "M_water_rain"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v002/aro_water_puddle_set_a.blend",
+     "bytes": 359226,
+     "sha256": "66e9eb6d3110e47a72edb856c5393a7fd12a34cfd0e3f89371203d0a5ac3a84e"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v002/project.json",
+     "bytes": 335,
+     "sha256": "25df975dcc71691d634e6ec9a885eb8b7d73379c67287cacae3f92609a104a50"
+    },
+    {
+     "path": "exports/fbx/aro_water_puddle_set_a/v002/aro_water_puddle_set_a.fbx",
+     "bytes": 34684,
+     "sha256": "2e06d83f80aa8a307d9ba1b25c492f9b1503a4cd19ac919bf754f58c682d97b1"
+    },
+    {
+     "path": "exports/glb/aro_water_puddle_set_a/v002/aro_water_puddle_set_a.glb",
+     "bytes": 280000,
+     "sha256": "e949a52dee28823f1b70a9a0d7939b58a9ed39c0aeaa669949f3892e84525cf1"
+    },
+    {
+     "path": "exports/fbx/aro_water_puddle_set_a/v002/aro_water_puddle_set_a.manifest.json",
+     "bytes": 2455,
+     "sha256": "42b4b711bcbc083a4ea73522cf228d3d02bc191e5b4f9007981ceca77bb7f914"
+    },
+    {
+     "path": "validation/aro_water_puddle_set_a/v002.json",
+     "bytes": 973,
+     "sha256": "14c32358a722627d6a188fa785c7b8f21554c1916ad02afec191c19552c5da00"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v002/T_env_water_Normal.png",
+     "bytes": 153851,
+     "sha256": "b5243341218f9365bb93ad06fc30b880a3fd83be5cf20e34eb0e33c926035a86"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v002/T_env_waterbrown_BaseColor.png",
+     "bytes": 45764,
+     "sha256": "4d75d8eb24a1107aa96788ec3e954dd8007f52949d6839f44b7c778dfc793aaf"
+    },
+    {
+     "path": "projects/environments/aro_water_puddle_set_a/v002/T_env_waterrain_BaseColor.png",
+     "bytes": 60907,
+     "sha256": "f49172f35ff1cf92afed4777daab3b044a3e2ca43e48ea8a4a6e7677f0d70549"
+    }
+   ]
+  },
+  {
+   "id": "aro_drain_open_slab_a",
+   "kind": "environments",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     282,
+     12
+    ],
+    "sizeM": [
+     1.1,
+     6.0,
+     0.95
+    ],
+    "materials": [
+     "M_concrete",
+     "M_metal_galvanised",
+     "M_mud_crest",
+     "M_pothole_earth"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/aro_drain_open_slab_a.blend",
+     "bytes": 965214,
+     "sha256": "d34da8d98714dbfe84d034933d5664284a941e1f0087f31fdfb4610cc00af075"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/project.json",
+     "bytes": 345,
+     "sha256": "c7f3e4bce5c1059077754a6713c7ae4ba7131abd0651aaa76b01928436c75a6d"
+    },
+    {
+     "path": "exports/fbx/aro_drain_open_slab_a/v002/aro_drain_open_slab_a.fbx",
+     "bytes": 39468,
+     "sha256": "ade7bd5a083947f95b14d99fd431cbd38607e028bc3db20d352c57e07603981e"
+    },
+    {
+     "path": "exports/glb/aro_drain_open_slab_a/v002/aro_drain_open_slab_a.glb",
+     "bytes": 892188,
+     "sha256": "4754681d4e94f477376f8f562600fcee4e992f673504123f1fbfb71fd6b81d28"
+    },
+    {
+     "path": "exports/fbx/aro_drain_open_slab_a/v002/aro_drain_open_slab_a.manifest.json",
+     "bytes": 2516,
+     "sha256": "9bca006658f9224083fc05b025d6bda28ad3bb6ed0f6418e3de80a32229085aa"
+    },
+    {
+     "path": "validation/aro_drain_open_slab_a/v002.json",
+     "bytes": 1026,
+     "sha256": "dce122ef884b260154b6bea6bb40b9404205b2357660a26d2fb96031fc7deca0"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/environments/aro_drain_open_slab_a/v002/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_shop_row_roadside_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1304,
+     28
+    ],
+    "sizeM": [
+     15.806,
+     6.77,
+     3.403
+    ],
+    "materials": [
+     "M_concrete",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_paint_red",
+     "M_paint_white",
+     "M_plaster_ochre",
+     "M_plaster_weathered",
+     "M_plaster_white",
+     "M_roof_zinc_rust",
+     "M_shutter_steel",
+     "M_sign_blue",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/rg_ngn_shop_row_roadside_a.blend",
+     "bytes": 2351487,
+     "sha256": "935da1437b9edd67993159fd6c6ff3022b37a41f66806a7f9316f8b602d38cfe"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/project.json",
+     "bytes": 306,
+     "sha256": "ca3a9cdfd3ce9b2ce12a3967aac8ed1ede84a1e67fe49c2276982238ee800cb9"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shop_row_roadside_a/v002/rg_ngn_shop_row_roadside_a.fbx",
+     "bytes": 73196,
+     "sha256": "67e232d97aba9b73b4e1384a0fa552b5b5cc3b5b1e57c94bad2070a1f8c46e8c"
+    },
+    {
+     "path": "exports/glb/rg_ngn_shop_row_roadside_a/v002/rg_ngn_shop_row_roadside_a.glb",
+     "bytes": 2325048,
+     "sha256": "23e63a7b02d9245eceb55ff616b3952f86c227ba74a4940a634f7effbc926a6b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shop_row_roadside_a/v002/rg_ngn_shop_row_roadside_a.manifest.json",
+     "bytes": 2789,
+     "sha256": "db957460f726eaee35db73773a6bd7101e1d1dee34994dba4440e9d89c1437c4"
+    },
+    {
+     "path": "validation/rg_ngn_shop_row_roadside_a/v002.json",
+     "bytes": 1250,
+     "sha256": "e69aea5a78f19ea4ed3bc98635dff02ed59806fed0d5656c957ebeb6baee17e5"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shop_row_roadside_a/v002/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     582,
+     38
+    ],
+    "sizeM": [
+     8.84,
+     7.92,
+     4.46
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_roof_zinc_rust",
+     "M_timber_weathered",
+     "M_wood_door"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/rg_ngn_house_mudbrick_a.blend",
+     "bytes": 2656741,
+     "sha256": "c6f26a4bbf95406070ae90988511e560db1f660bbdf080c5e2bc8127cbf34ab5"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/project.json",
+     "bytes": 266,
+     "sha256": "f6b313c73b56020a1e175d1f89b43ada45c74ae9bf9ac0338afcd489040ec021"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_a/v002/rg_ngn_house_mudbrick_a.fbx",
+     "bytes": 57036,
+     "sha256": "a6b80277207b9974889b1f3be51d9e4bf91fe7dfbffb9f34d8b5a7ff9971877e"
+    },
+    {
+     "path": "exports/glb/rg_ngn_house_mudbrick_a/v002/rg_ngn_house_mudbrick_a.glb",
+     "bytes": 2597808,
+     "sha256": "e3ba00c9f65e37b7ce45b0a52d6814a234fa539028b92479ca97eab37c037770"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_a/v002/rg_ngn_house_mudbrick_a.manifest.json",
+     "bytes": 2639,
+     "sha256": "14b7f72272fead9afa30fe78871fdb85055a41798b78b0e15f0c99ab114ee7d0"
+    },
+    {
+     "path": "validation/rg_ngn_house_mudbrick_a/v002.json",
+     "bytes": 1133,
+     "sha256": "af521ca6164240b1abea1077676f86074ab347c3ebe7a6cf79fae1a1ff582ce2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_a/v002/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_compound_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2406,
+     108
+    ],
+    "sizeM": [
+     20.14,
+     16.18,
+     7.21
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_plaster_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/rg_ngn_hausa_compound_a.blend",
+     "bytes": 2063153,
+     "sha256": "d5dd69500185f18a977efd3c007c4e32f4d100dbaa39aeafbef0abcafaac23ff"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/project.json",
+     "bytes": 375,
+     "sha256": "eff36b9631034c95d76216f55277ec4e0c45ef8c54737b1458f64c9a4daa3717"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_a/v002/rg_ngn_hausa_compound_a.fbx",
+     "bytes": 85980,
+     "sha256": "c04adc7daa3cba7042eb04eaee266845d57d0a0746966c2e8c6495ad4fc5df60"
+    },
+    {
+     "path": "exports/glb/rg_ngn_hausa_compound_a/v002/rg_ngn_hausa_compound_a.glb",
+     "bytes": 2099504,
+     "sha256": "6238575e17e50839d795fadc4e115d9dc44d8433f15bd81519caab74227d6b00"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_a/v002/rg_ngn_hausa_compound_a.manifest.json",
+     "bytes": 2575,
+     "sha256": "50bd96502355be18c190513d498f1086e855730e2efd77f47c5ddb159c04ecc7"
+    },
+    {
+     "path": "validation/rg_ngn_hausa_compound_a/v002.json",
+     "bytes": 1071,
+     "sha256": "3e0dfa82b6f137e2775a5b5f454b1c7d5ecf2cfdf67499bf2c2350fcd5e773d8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_a/v002/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_shed_market_corrugated_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2708,
+     92
+    ],
+    "sizeM": [
+     15.4,
+     9.44,
+     4.36
+    ],
+    "materials": [
+     "M_burlap",
+     "M_concrete",
+     "M_metal_galvanised",
+     "M_produce_orange",
+     "M_produce_tomato",
+     "M_produce_yam",
+     "M_roof_zinc_rust",
+     "M_tarp_olive",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/rg_ngn_shed_market_corrugated_a.blend",
+     "bytes": 1849023,
+     "sha256": "0f837586e759b3d52feb2a2c2a7ecfe33a78ea99b2e32c94c15eea87fec3ef72"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/project.json",
+     "bytes": 404,
+     "sha256": "cd5418000418261c85305541273bf54de9bb8e720835607eef486dad4936d52e"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shed_market_corrugated_a/v001/rg_ngn_shed_market_corrugated_a.fbx",
+     "bytes": 138188,
+     "sha256": "043e58cb9edf3141a76e5826fa822b53490ce0dffd91c6227ccd42ba1606f9f1"
+    },
+    {
+     "path": "exports/glb/rg_ngn_shed_market_corrugated_a/v001/rg_ngn_shed_market_corrugated_a.glb",
+     "bytes": 1937564,
+     "sha256": "56eff2720bbcbc92cb0efec2d704741c31850e7591aba9e2cdcb04234581136f"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_shed_market_corrugated_a/v001/rg_ngn_shed_market_corrugated_a.manifest.json",
+     "bytes": 2753,
+     "sha256": "a5ec893be548c90381082a161181b3e961e443bb9efa7cd8d9921719592e80cc"
+    },
+    {
+     "path": "validation/rg_ngn_shed_market_corrugated_a/v001.json",
+     "bytes": 1179,
+     "sha256": "2b5e470d7bb8208f3f8793e486022a3a4a26da6c23c9124883ea9feb9aa7db59"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_shed_market_corrugated_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_kiosk_lockup_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     906,
+     28
+    ],
+    "sizeM": [
+     4.12,
+     3.346,
+     2.643
+    ],
+    "materials": [
+     "M_concrete",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_paint_red",
+     "M_plaster_weathered",
+     "M_produce_orange",
+     "M_roof_zinc_rust",
+     "M_shutter_steel",
+     "M_timber_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/rg_ngn_kiosk_lockup_a.blend",
+     "bytes": 2347919,
+     "sha256": "bcee3b9a9dbd9e61f62873e11b170063ff477ce005911a5c75cd0aae0eb8e254"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/project.json",
+     "bytes": 367,
+     "sha256": "081e8f3f8abb259c6873a6aa70334d293d93048e96c8dd366e7f9041773f9201"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_kiosk_lockup_a/v001/rg_ngn_kiosk_lockup_a.fbx",
+     "bytes": 75404,
+     "sha256": "08c99e971e4177f7c58d1e8187d3e8b5c784f1eb6a8d29c91217574d9b08c49a"
+    },
+    {
+     "path": "exports/glb/rg_ngn_kiosk_lockup_a/v001/rg_ngn_kiosk_lockup_a.glb",
+     "bytes": 2314008,
+     "sha256": "57699fcd4b1d09956a17ef8d24324bd923eb5206f6c7714b2cded0d54a3e7263"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_kiosk_lockup_a/v001/rg_ngn_kiosk_lockup_a.manifest.json",
+     "bytes": 2802,
+     "sha256": "3336d9d59596ba8efd141ae9a820a9e853edc111e780913486800b566ecd3fa0"
+    },
+    {
+     "path": "validation/rg_ngn_kiosk_lockup_a/v001.json",
+     "bytes": 1314,
+     "sha256": "f3369aed6ff04867470489587f358d93ab9035e3f9fc03ed873ce52083aeadc8"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/rg_ngn_kiosk_lockup_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     776,
+     30
+    ],
+    "sizeM": [
+     10.84,
+     7.49,
+     3.96
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_roof_zinc_rust",
+     "M_timber_weathered",
+     "M_wood_door"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/rg_ngn_house_mudbrick_b.blend",
+     "bytes": 2660374,
+     "sha256": "dbff6f0f151938590101b9b6b830c66a11e32c397402b4b3980dbf59e2147e73"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/project.json",
+     "bytes": 321,
+     "sha256": "9beb5d1181187e25c6ac731d57e1acd35a61769ffeeb7d3c4d6f59feb39b9c97"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_b/v001/rg_ngn_house_mudbrick_b.fbx",
+     "bytes": 60908,
+     "sha256": "69b0b89ad5dafb794e070642f99a7fbacf2dda4af6be25698a1cb7312af27edd"
+    },
+    {
+     "path": "exports/glb/rg_ngn_house_mudbrick_b/v001/rg_ngn_house_mudbrick_b.glb",
+     "bytes": 2609940,
+     "sha256": "b53f3eaf9c6405694b4243f6abb6b83433e322044fd3681eaf56d09de02bde39"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_mudbrick_b/v001/rg_ngn_house_mudbrick_b.manifest.json",
+     "bytes": 2643,
+     "sha256": "abdfee37cf39dabed7eb55a1a801f693f877366b31a2caca3025a3f18bfa81e0"
+    },
+    {
+     "path": "validation/rg_ngn_house_mudbrick_b/v001.json",
+     "bytes": 1136,
+     "sha256": "2525b86b4fe549528fb91948abbe764d57e904a23b06473018628259fb6300e6"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_mudbrick_b/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_house_block_corrugated_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1022,
+     34
+    ],
+    "sizeM": [
+     10.24,
+     7.24,
+     4.26
+    ],
+    "materials": [
+     "M_concrete",
+     "M_interior_dark",
+     "M_metal_galvanised",
+     "M_metal_gate_black",
+     "M_plaster_weathered",
+     "M_roof_zinc_rust",
+     "M_timber_weathered",
+     "M_wood_door"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/rg_ngn_house_block_corrugated_a.blend",
+     "bytes": 2340579,
+     "sha256": "61a612b6b90f68d9650a3f068e0de44f2bcc4409d7cf376d85fd92a65026e5a9"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/project.json",
+     "bytes": 310,
+     "sha256": "e55a227b5f1946c96899759fd45cdb1d7716480983a7d1af9b9a18f451d95165"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_block_corrugated_a/v001/rg_ngn_house_block_corrugated_a.fbx",
+     "bytes": 62620,
+     "sha256": "6497e49771f45b88259760028773c79c11ab34a686c57284766b28559d2a5993"
+    },
+    {
+     "path": "exports/glb/rg_ngn_house_block_corrugated_a/v001/rg_ngn_house_block_corrugated_a.glb",
+     "bytes": 2305412,
+     "sha256": "08be752e32dc9270c4da88885ad17b9a312456de7f3f19a79138d2974e980278"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_house_block_corrugated_a/v001/rg_ngn_house_block_corrugated_a.manifest.json",
+     "bytes": 2743,
+     "sha256": "6eb19c6c3acb30073c2c7137051b33d2ecce3d7d44e3a363958071de5e3641a0"
+    },
+    {
+     "path": "validation/rg_ngn_house_block_corrugated_a/v001.json",
+     "bytes": 1171,
+     "sha256": "15ca110ee1307305dd0b0b41150a7f9e96d2284d726107e98b8211691c062c6c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_rustsheet_BaseColor.png",
+     "bytes": 205215,
+     "sha256": "6fc3df8f81875b4d0b8fae1c0cf3a415c918b617f057dc5e1e857e79709ac861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_rustsheet_Normal.png",
+     "bytes": 256580,
+     "sha256": "e69acba2bdc3e99d650837acd52524af36edd8ee6dc31b84ff0e3203e9dcb76e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_timber_BaseColor.png",
+     "bytes": 273512,
+     "sha256": "9ff76e1df15025c58158598f5d0d2fbe6be868c9fa4d5e835e35e56984568a06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_env_timber_Normal.png",
+     "bytes": 430425,
+     "sha256": "1d34b28cbf65ce56239984836705761d954ec54cd958cfed3f9071e583d45021"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_house_block_corrugated_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_compound_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1998,
+     96
+    ],
+    "sizeM": [
+     14.14,
+     12.18,
+     4.59
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_mud_brick",
+     "M_mud_crest",
+     "M_plaster_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/rg_ngn_hausa_compound_b.blend",
+     "bytes": 2051774,
+     "sha256": "6854a4705c1b77718a18f8d4ea8c3dd5e4fd8ac74c217a76a2a7fb092a52ab61"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/project.json",
+     "bytes": 390,
+     "sha256": "b52b03602b0f618756cd6997b28c811c3cc6de9536a8f39b9b8dba60ad9de868"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_b/v001/rg_ngn_hausa_compound_b.fbx",
+     "bytes": 77292,
+     "sha256": "0ae2f7457cae6f3b4517dafafd7128874e3857f163fff4ff94f4090c2fd23b06"
+    },
+    {
+     "path": "exports/glb/rg_ngn_hausa_compound_b/v001/rg_ngn_hausa_compound_b.glb",
+     "bytes": 2070476,
+     "sha256": "6d4e48fd11477a12fa79756ad25f62cb8e8349ba28ab215499c8769643033464"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_compound_b/v001/rg_ngn_hausa_compound_b.manifest.json",
+     "bytes": 2570,
+     "sha256": "3f72e0e035c3758bfbe98a781707e508190d7c1221500df52ae9707dd9523c58"
+    },
+    {
+     "path": "validation/rg_ngn_hausa_compound_b/v001.json",
+     "bytes": 1067,
+     "sha256": "3996aa9bd051fd83e817152e4fa22d8dd3e9e850e16db3bd57635cf678542149"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_mudcrest_BaseColor.png",
+     "bytes": 178557,
+     "sha256": "4320e59cda89032468a970279ff0f2af9ab9aaacfc064999e1ce60c58a9c3466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_mudcrest_Normal.png",
+     "bytes": 174747,
+     "sha256": "c05b2a91b3e0294cca09630a169ce0ac52d02e330572e9f35b53ba5a5cd761a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_compound_b/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_wall_gate_set_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     934,
+     36
+    ],
+    "sizeM": [
+     16.0,
+     1.62,
+     4.69
+    ],
+    "materials": [
+     "M_earth_compacted",
+     "M_interior_dark",
+     "M_mud_brick",
+     "M_plaster_weathered",
+     "M_wood_door"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/rg_ngn_hausa_wall_gate_set_a.blend",
+     "bytes": 1684356,
+     "sha256": "a9bf4b13e2e7974a4cb3dfe02a6df678023c3f2ada5d204e0f089285f367d1ea"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/project.json",
+     "bytes": 395,
+     "sha256": "ea8babef0ce409b8bb3132ed3d5123ac7be009adc5938fc8396b42f7900f3a53"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_wall_gate_set_a/v001/rg_ngn_hausa_wall_gate_set_a.fbx",
+     "bytes": 54284,
+     "sha256": "f0fc472cd6bc97241603defca4f633652dc82dff1dcec21caef8ed4826cf532a"
+    },
+    {
+     "path": "exports/glb/rg_ngn_hausa_wall_gate_set_a/v001/rg_ngn_hausa_wall_gate_set_a.glb",
+     "bytes": 1639692,
+     "sha256": "e8ad52a0e6708810da80c7c14480cbfad0eafb5d018ee620c3ae58db44759723"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_hausa_wall_gate_set_a/v001/rg_ngn_hausa_wall_gate_set_a.manifest.json",
+     "bytes": 2613,
+     "sha256": "61049fb2923eced221bd905f53c836c2b263c2ee03ab5c8ab4236cfbcce79a11"
+    },
+    {
+     "path": "validation/rg_ngn_hausa_wall_gate_set_a/v001.json",
+     "bytes": 1073,
+     "sha256": "27f585b0bd75f28e89c5ef79da17bc351f76cdce73bc6312f4b601cff191ed73"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_earth_BaseColor.png",
+     "bytes": 202699,
+     "sha256": "9e943fe2e6370ae1fe2cb9279cd1b4186a5b2614f20bcf84d7a1e71fce8534c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_earth_Normal.png",
+     "bytes": 411731,
+     "sha256": "0486e8055df20efa344c9656015c1481846c0183214f4598b677a832d2013794"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_mudbrick_BaseColor.png",
+     "bytes": 187390,
+     "sha256": "7ceb5df34f01afda39fc423422dac9f0721329ba488b203be8689bd1d17e099d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_mudbrick_Normal.png",
+     "bytes": 220759,
+     "sha256": "8a6e66d066e63299f14e2b78a28d94004b3a22dd7aceac23ebd687484b1b9bfb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_hausa_wall_gate_set_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_banana_plant_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1385,
+     362,
+     78
+    ],
+    "sizeM": [
+     4.357,
+     3.974,
+     3.475
+    ],
+    "materials": [
+     "M_banana_fruit",
+     "M_banana_leaf_cutout",
+     "M_banana_stem",
+     "M_bark"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_banana_plant_a/v001/rg_ngn_banana_plant_a.blend",
+     "bytes": 704502,
+     "sha256": "e1e2cc12b6dd88286bfb1e8e6225a92403b1ab9e9362874fa66e2e4a914672b0"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_banana_plant_a/v001/project.json",
+     "bytes": 342,
+     "sha256": "74b0000b464533a0da126b48bedfb631e640de04b2e39d6cc84583891085836b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_banana_plant_a/v001/rg_ngn_banana_plant_a.fbx",
+     "bytes": 99052,
+     "sha256": "81b886aed54ff20859a502c6c2a3636ef4f1cb3e26b9261802adae6fdab023a7"
+    },
+    {
+     "path": "exports/glb/rg_ngn_banana_plant_a/v001/rg_ngn_banana_plant_a.glb",
+     "bytes": 727160,
+     "sha256": "d1a71b0ac81c79d44b4d848fdbef7b9b576496cecc6a9411a35d0f10039d54fa"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_banana_plant_a/v001/rg_ngn_banana_plant_a.manifest.json",
+     "bytes": 2562,
+     "sha256": "67075def263652d9bc2207fc0e26d3279333d1ee1f51c8cad8247962db604fb5"
+    },
+    {
+     "path": "validation/rg_ngn_banana_plant_a/v001.json",
+     "bytes": 1060,
+     "sha256": "b716c81d0745f5daf2b710b8fd888b37c4e8eba21f123576cd76ee3e703bc878"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_banana_plant_a/v001/T_env_bananaleaf_BaseColor.png",
+     "bytes": 209649,
+     "sha256": "2e39e9bdfdb22c13ae15070e1b57ada2323764d2b0e5a2b73a02d0b3e4944fe4"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_banana_plant_a/v001/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_banana_plant_a/v001/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_bougainvillea_wall_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1206,
+     106,
+     32
+    ],
+    "sizeM": [
+     4.5,
+     1.539,
+     2.632
+    ],
+    "materials": [
+     "M_bark",
+     "M_concrete",
+     "M_flower_bougainvillea",
+     "M_leaf_cutout",
+     "M_plaster_weathered"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/rg_ngn_bougainvillea_wall_a.blend",
+     "bytes": 1857246,
+     "sha256": "a0d4a22bf52b39ccd9d60715e8e8908b092853dd71de0f4d079c6a6d8d11a268"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/project.json",
+     "bytes": 310,
+     "sha256": "9957c91a4bc858a2003d7698cab0c44a6a41919eb70c3acd0f66e97d9850febf"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_bougainvillea_wall_a/v001/rg_ngn_bougainvillea_wall_a.fbx",
+     "bytes": 96636,
+     "sha256": "2b1cb1c3803abe8f1c1ee96b3b5ca29e375a98dfe4e4786ed54a91160b75fc91"
+    },
+    {
+     "path": "exports/glb/rg_ngn_bougainvillea_wall_a/v001/rg_ngn_bougainvillea_wall_a.glb",
+     "bytes": 1855400,
+     "sha256": "c46ec29eb41592144417d25d6816fad2e07d68acf26bcde52c643718ca0ef755"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_bougainvillea_wall_a/v001/rg_ngn_bougainvillea_wall_a.manifest.json",
+     "bytes": 2831,
+     "sha256": "1af8a654f269afc24d656a98d3212a7806a583de60c32bed9a80f948c54808d1"
+    },
+    {
+     "path": "validation/rg_ngn_bougainvillea_wall_a/v001.json",
+     "bytes": 1267,
+     "sha256": "132e885159a71f36f55beea066a83a2f890f45b97421fd7511644b048297cddb"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_env_plasterweathered_BaseColor.png",
+     "bytes": 200316,
+     "sha256": "426fa81ce02dea96cc1955f28c0b21d3a1618f02a8b4d2ca9f5904a7c0cecdb8"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_env_plasterweathered_Normal.png",
+     "bytes": 343469,
+     "sha256": "f371703495c6a6db5a961f3231bf140f715559e837304c639d007f8139159f63"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_bougainvillea_wall_a/v001/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_large_shade_wet_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2244,
+     213,
+     22
+    ],
+    "sizeM": [
+     12.271,
+     11.26,
+     11.992
+    ],
+    "materials": [
+     "M_bark",
+     "M_leaf_wet_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/rg_ngn_tree_large_shade_wet_a.blend",
+     "bytes": 1132240,
+     "sha256": "a8737a4151f9692c7393605a1a8e694f2dde0e222028aea001a70a30c49d87e5"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/project.json",
+     "bytes": 377,
+     "sha256": "069eb459c9c6a55315d9dd7cf7d0795f7d51851c3a6d3cbfd634efc259e8efb4"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_large_shade_wet_a/v001/rg_ngn_tree_large_shade_wet_a.fbx",
+     "bytes": 138716,
+     "sha256": "e870a8d41c732ccb3708a04f87bc3e7c5eb92479c5b750ef3d714dfc6145fbcc"
+    },
+    {
+     "path": "exports/glb/rg_ngn_tree_large_shade_wet_a/v001/rg_ngn_tree_large_shade_wet_a.glb",
+     "bytes": 831908,
+     "sha256": "ba36954d82ae08191ed5ff7c96cc3f4178633ae0a16d60b08c8ce7d9f937e7f6"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_tree_large_shade_wet_a/v001/rg_ngn_tree_large_shade_wet_a.manifest.json",
+     "bytes": 2610,
+     "sha256": "1407a64c3798314c23c0e6e3935216c8cb9e5d9aac83a9e3ba07486cb3f78efd"
+    },
+    {
+     "path": "validation/rg_ngn_tree_large_shade_wet_a/v001.json",
+     "bytes": 1044,
+     "sha256": "a3b40f9f4d41e7548d6d1fe5aeae8e73b2c6b9a38cbcda14a94bcd9c39320a0b"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/T_env_leaveswet_BaseColor.png",
+     "bytes": 300270,
+     "sha256": "c1bcec982edc344043e593897e13bce16511ee881d162b6090c09178bb04e48a"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/T_kano_bark_BaseColor.png",
+     "bytes": 147659,
+     "sha256": "3ce2af615de842a0dfc8588de8e741b90bbc2641d2a8dc0e5ceddc40e5ffdb1c"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/T_kano_bark_Normal.png",
+     "bytes": 211775,
+     "sha256": "adff8b422ebd16db7510104536c567de518e8af0c048fa5520eed372313b84ec"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_tree_large_shade_wet_a/v001/T_kano_leaves_BaseColor.png",
+     "bytes": 308288,
+     "sha256": "7bb60fa8571d3f4cba3989d1faf4f6b0d97dba48e584790723dc34431a19f30a"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_grass_tall_wet_a",
+   "kind": "vegetation",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     60
+    ],
+    "sizeM": [
+     1.343,
+     1.398,
+     1.588
+    ],
+    "materials": [
+     "M_grass_blade_wet_cutout"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_wet_a/v001/rg_ngn_grass_tall_wet_a.blend",
+     "bytes": 241758,
+     "sha256": "7ffd2c2d6640bf55eb239615925e985a6086cb913a58a4fc85c84b6248101458"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_wet_a/v001/project.json",
+     "bytes": 308,
+     "sha256": "ccaf3eb5826fa54744485da81e68e6be6d49f7e1ad6d837cb18315832f06c953"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_grass_tall_wet_a/v001/rg_ngn_grass_tall_wet_a.fbx",
+     "bytes": 24172,
+     "sha256": "31759a8d857acf3e2017802317c3dcc627690f4abd6b74968cb573788c5566d3"
+    },
+    {
+     "path": "exports/glb/rg_ngn_grass_tall_wet_a/v001/rg_ngn_grass_tall_wet_a.glb",
+     "bytes": 156160,
+     "sha256": "1c77b1fa49f16a091eeb4f2c2927a3e6789d561f157395e37f45b055f3f38fa6"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_grass_tall_wet_a/v001/rg_ngn_grass_tall_wet_a.manifest.json",
+     "bytes": 2602,
+     "sha256": "f5273c5d113fabcafb2a15931c6510fd4cc2985926ed88983ce33e2ba573f1bf"
+    },
+    {
+     "path": "validation/rg_ngn_grass_tall_wet_a/v001.json",
+     "bytes": 1110,
+     "sha256": "1020c4dcdb66516bdb5398b4a803832f970dbc840fca959bcba93ff116627d55"
+    },
+    {
+     "path": "projects/vegetation/rg_ngn_grass_tall_wet_a/v001/T_env_grassbladeswet_BaseColor.png",
+     "bytes": 150319,
+     "sha256": "4a448368f9dab18990621e66481f48b88716e58dfa0952c64a6fd2d4078aedfc"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}

@@ -1,0 +1,336 @@
+{
+ "run": 41450050093,
+ "commit": "0eb8d2c5dae3cc39e9eab8eebf5303da523bdec6",
+ "workflow": "blender-unity.yml ([kano-review])",
+ "renderer": "headless Chromium, SwiftShader software GL, quality tier medium, hour 15.5, 1280x720",
+ "note": "The game's own [Perf] and [KanoReview] lines, copied from the job log. Frame times are CPU software rasterisation on a CI virtual machine and say nothing about a player's GPU. The two 'differenceFromStandard' measurements are absent because the review driver had a bug (Playwright evaluate takes one argument); fixed, to be measured by the next review run. The pictures themselves are in the run's artifact kano-review-in-game, not here.",
+ "views": {
+  "ref": {
+   "quality": "medium",
+   "loadSeconds": 5.166,
+   "jsHeapMB": 257,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 690 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 690 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=112 textureMB=20.9 heapMB=4.6 avgFrameMs=1102.5 engineDraws=1271 engineTris=374545 setPass=37 terrainTris=32278 roadTris=2176 propTris=224 props=9 pending=95 buildMs=229 worstStageMs=28\n",
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=1020.8 engineDraws=1271 engineTris=374545 setPass=37 terrainTris=34198 roadTris=2176 propTris=224 props=9 pending=89 buildMs=255 worstStageMs=28\n",
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=112 textureMB=20.9 heapMB=5.2 avgFrameMs=879.0 engineDraws=1271 engineTris=374545 setPass=37 terrainTris=37078 roadTris=2176 propTris=224 props=9 pending=82 buildMs=290 worstStageMs=28\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=690 kitShare=99.9%",
+    "kit": "[KanoReview] draws kit renderers=251 draws=689 tris=180777 distinctMaterials=27 distinctMeshes=21 distinctMeshMaterialPairs=75",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=167/27/46998, aro_wall_compound_panel_a=164/82/4100, aro_pier_stone_a=72/36/4194, rg_ngn_tree_street_broadleaf_a=62/31/43170, aro_shrub_ixora_red_a=42/14/16464, aro_villa_2storey_hip_b=40/4/19232, aro_hedge_clipped_a=28/14/4592, aro_lantern_wall_a=28/14/1484, kano_street_oneway_section_a=28/4/6072, aro_pole_electric_concrete_span_a=18/4/2304, rg_ngn_tree_street_broadleaf_b=16/8/18912, aro_streetlight_single_arm_a=14/5/1118, aro_gate_ornate_steel_a=7/7/11780, aro_sign_oneway_a=3/1/357",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=27/27"
+   },
+   "review": [
+    "[KanoReview] ready view=ref variant=standard camera=(6003.20, 1.70, 6045.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     53.317,
+     62.446,
+     60.853
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.008
+   }
+  },
+  "front": {
+   "quality": "medium",
+   "loadSeconds": 4.044,
+   "jsHeapMB": 257,
+   "budgetWarnings": [],
+   "perf": [
+    "[Perf] tier=medium visibleTris=40154 drawEstimate=107 visibleRenderers=30 chunks=49 textures=112 textureMB=20.9 heapMB=4.6 avgFrameMs=574.0 engineDraws=189 engineTris=77500 setPass=15 terrainTris=32278 roadTris=2176 propTris=224 props=9 pending=95 buildMs=257 worstStageMs=35\n",
+    "[Perf] tier=medium visibleTris=40154 drawEstimate=107 visibleRenderers=30 chunks=49 textures=112 textureMB=20.9 heapMB=4.6 avgFrameMs=558.8 engineDraws=189 engineTris=77500 setPass=15 terrainTris=36118 roadTris=2176 propTris=224 props=9 pending=83 buildMs=308 worstStageMs=35\n",
+    "[Perf] tier=medium visibleTris=40154 drawEstimate=107 visibleRenderers=30 chunks=49 textures=112 textureMB=20.9 heapMB=5.0 avgFrameMs=562.8 engineDraws=189 engineTris=77500 setPass=15 terrainTris=40918 roadTris=2176 propTris=224 props=9 pending=68 buildMs=395 worstStageMs=37\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=107 kitShare=99.1%",
+    "kit": "[KanoReview] draws kit renderers=29 draws=106 tris=40142 distinctMaterials=26 distinctMeshes=13 distinctMeshMaterialPairs=52",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=22/2/10908, aro_villa_2storey_hip_b=20/2/9616, aro_pier_stone_a=10/5/720, aro_pole_electric_concrete_span_a=10/2/1836, aro_wall_compound_panel_a=8/4/200, kano_street_oneway_section_a=7/1/1518, aro_shrub_ixora_red_a=6/2/2352, aro_streetlight_single_arm_a=6/2/512, rg_ngn_tree_street_broadleaf_a=6/3/7092, aro_hedge_clipped_a=4/2/656, aro_lantern_wall_a=4/2/212, rg_ngn_tree_street_broadleaf_b=2/1/2364, aro_gate_ornate_steel_a=1/1/2156",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=26/26"
+   },
+   "review": [
+    "[KanoReview] ready view=front variant=standard camera=(6005.20, 2.10, 5990.00) lens=30 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     68.994,
+     77.772,
+     71.993
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.024
+   }
+  },
+  "side": {
+   "quality": "medium",
+   "loadSeconds": 4.048,
+   "jsHeapMB": 257,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 654 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 654 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=157589 drawEstimate=654 visibleRenderers=248 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=677.3 engineDraws=1267 engineTris=352543 setPass=27 terrainTris=31318 roadTris=2176 propTris=224 props=9 pending=98 buildMs=221 worstStageMs=25\n",
+    "[Perf] tier=medium visibleTris=157589 drawEstimate=654 visibleRenderers=248 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=660.1 engineDraws=1267 engineTris=352543 setPass=27 terrainTris=35158 roadTris=2176 propTris=224 props=9 pending=88 buildMs=252 worstStageMs=25\n",
+    "[Perf] tier=medium visibleTris=157589 drawEstimate=654 visibleRenderers=248 chunks=49 textures=112 textureMB=20.9 heapMB=4.2 avgFrameMs=669.2 engineDraws=1267 engineTris=352543 setPass=27 terrainTris=38038 roadTris=2176 propTris=224 props=9 pending=79 buildMs=280 worstStageMs=25\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=654 kitShare=99.8%",
+    "kit": "[KanoReview] draws kit renderers=247 draws=653 tris=157577 distinctMaterials=27 distinctMeshes=22 distinctMeshMaterialPairs=77",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=134/24/30636, aro_wall_compound_panel_a=132/66/3300, aro_pier_stone_a=84/42/3848, rg_ngn_tree_street_broadleaf_a=64/32/36166, aro_shrub_ixora_red_a=48/16/18816, aro_villa_2storey_hip_b=40/4/19232, aro_hedge_clipped_a=32/16/5248, aro_lantern_wall_a=32/16/1696, kano_street_oneway_section_a=28/4/6072, aro_pole_electric_concrete_span_a=17/4/1620, rg_ngn_tree_street_broadleaf_b=16/8/18912, aro_streetlight_single_arm_a=15/6/1050, aro_gate_ornate_steel_a=8/8/10624, aro_sign_oneway_a=3/1/357",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=27/27"
+   },
+   "review": [
+    "[KanoReview] ready view=side variant=standard camera=(6000.00, 4.60, 6062.00) lens=24 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     74.206,
+     90.594,
+     90.289
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.005
+   }
+  },
+  "street1": {
+   "quality": "medium",
+   "loadSeconds": 4.04,
+   "jsHeapMB": 257,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 650 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 650 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=170644 drawEstimate=650 visibleRenderers=233 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=902.4 engineDraws=1242 engineTris=378218 setPass=35 terrainTris=35158 roadTris=2176 propTris=224 props=9 pending=88 buildMs=237 worstStageMs=27\n",
+    "[Perf] tier=medium visibleTris=170644 drawEstimate=650 visibleRenderers=233 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=909.2 engineDraws=1242 engineTris=378218 setPass=35 terrainTris=38038 roadTris=2176 propTris=224 props=9 pending=77 buildMs=269 worstStageMs=27\n",
+    "[Perf] tier=medium visibleTris=170644 drawEstimate=650 visibleRenderers=233 chunks=49 textures=112 textureMB=20.9 heapMB=5.2 avgFrameMs=1106.0 engineDraws=1242 engineTris=378218 setPass=35 terrainTris=40918 roadTris=2176 propTris=224 props=9 pending=70 buildMs=298 worstStageMs=27\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=650 kitShare=99.8%",
+    "kit": "[KanoReview] draws kit renderers=232 draws=649 tris=170632 distinctMaterials=26 distinctMeshes=18 distinctMeshMaterialPairs=69",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=173/27/48530, aro_wall_compound_panel_a=164/82/4100, rg_ngn_tree_street_broadleaf_a=60/30/40806, aro_pier_stone_a=58/29/3956, aro_shrub_ixora_red_a=36/12/14112, aro_villa_2storey_hip_b=30/3/14424, kano_street_oneway_section_a=28/4/6072, aro_lantern_wall_a=24/12/1272, aro_hedge_clipped_a=22/11/3608, aro_pole_electric_concrete_span_a=19/4/2988, aro_streetlight_single_arm_a=15/5/1280, rg_ngn_tree_street_broadleaf_b=14/7/16548, aro_gate_ornate_steel_a=6/6/12936",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=26/26"
+   },
+   "review": [
+    "[KanoReview] ready view=street1 variant=standard camera=(5995.70, 1.60, 6030.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     63.169,
+     71.287,
+     69.316
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.009
+   }
+  },
+  "street2": {
+   "quality": "medium",
+   "loadSeconds": 4.04,
+   "jsHeapMB": 273,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 618 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 618 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=167496 drawEstimate=618 visibleRenderers=219 chunks=49 textures=112 textureMB=20.9 heapMB=4.4 avgFrameMs=830.4 engineDraws=1156 engineTris=357966 setPass=37 terrainTris=35158 roadTris=2176 propTris=224 props=9 pending=86 buildMs=237 worstStageMs=23\n",
+    "[Perf] tier=medium visibleTris=167496 drawEstimate=618 visibleRenderers=219 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=832.8 engineDraws=1156 engineTris=357966 setPass=37 terrainTris=38038 roadTris=2176 propTris=224 props=9 pending=77 buildMs=268 worstStageMs=23\n",
+    "[Perf] tier=medium visibleTris=167496 drawEstimate=618 visibleRenderers=219 chunks=49 textures=112 textureMB=20.9 heapMB=4.2 avgFrameMs=989.6 engineDraws=1156 engineTris=357966 setPass=37 terrainTris=40918 roadTris=2176 propTris=224 props=9 pending=68 buildMs=299 worstStageMs=23\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=618 kitShare=99.8%",
+    "kit": "[KanoReview] draws kit renderers=218 draws=617 tris=167484 distinctMaterials=26 distinctMeshes=17 distinctMeshMaterialPairs=67",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=172/26/52336, aro_wall_compound_panel_a=166/83/4150, rg_ngn_tree_street_broadleaf_a=60/30/45108, aro_pier_stone_a=50/25/3600, aro_shrub_ixora_red_a=30/10/11760, aro_villa_2storey_hip_b=30/3/14424, kano_street_oneway_section_a=28/4/6072, aro_hedge_clipped_a=20/10/3280, aro_lantern_wall_a=20/10/1060, aro_pole_electric_concrete_span_a=14/3/2070, aro_streetlight_single_arm_a=12/4/1024, rg_ngn_tree_street_broadleaf_b=10/5/11820, aro_gate_ornate_steel_a=5/5/10780",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=26/26"
+   },
+   "review": [
+    "[KanoReview] ready view=street2 variant=standard camera=(6001.70, 1.20, 6020.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     56.228,
+     64.79,
+     63.78
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.012
+   }
+  },
+  "top": {
+   "quality": "medium",
+   "loadSeconds": 4.046,
+   "jsHeapMB": 273,
+   "budgetWarnings": [],
+   "perf": [
+    "[Perf] tier=medium visibleTris=116804 drawEstimate=331 visibleRenderers=118 chunks=49 textures=112 textureMB=20.9 heapMB=4.2 avgFrameMs=496.2 engineDraws=518 engineTris=184040 setPass=12 terrainTris=35158 roadTris=2176 propTris=224 props=9 pending=88 buildMs=217 worstStageMs=22\n",
+    "[Perf] tier=medium visibleTris=116804 drawEstimate=331 visibleRenderers=118 chunks=49 textures=112 textureMB=20.9 heapMB=4.7 avgFrameMs=496.8 engineDraws=518 engineTris=184040 setPass=12 terrainTris=39958 roadTris=2176 propTris=224 props=9 pending=73 buildMs=270 worstStageMs=22\n",
+    "[Perf] tier=medium visibleTris=116804 drawEstimate=331 visibleRenderers=118 chunks=49 textures=112 textureMB=20.9 heapMB=5.0 avgFrameMs=495.1 engineDraws=518 engineTris=184040 setPass=12 terrainTris=43776 roadTris=3264 propTris=256 props=11 pending=58 buildMs=316 worstStageMs=22\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=331 kitShare=99.7%",
+    "kit": "[KanoReview] draws kit renderers=117 draws=330 tris=116792 distinctMaterials=26 distinctMeshes=13 distinctMeshMaterialPairs=52",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=55/5/27270, aro_pier_stone_a=52/26/3744, aro_wall_compound_panel_a=44/22/1100, aro_shrub_ixora_red_a=36/12/14112, aro_villa_2storey_hip_b=30/3/14424, aro_lantern_wall_a=24/12/1272, aro_pole_electric_concrete_span_a=20/4/3672, aro_hedge_clipped_a=16/8/2624, rg_ngn_tree_street_broadleaf_a=16/8/18912, aro_streetlight_single_arm_a=12/4/1024, rg_ngn_tree_street_broadleaf_b=12/6/14184, kano_street_oneway_section_a=7/1/1518, aro_gate_ornate_steel_a=6/6/12936",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=26/26"
+   },
+   "review": [
+    "[KanoReview] ready view=top variant=standard camera=(6000.00, 95.00, 6000.00) lens=50 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     44.715,
+     60.078,
+     38.442
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.003
+   }
+  },
+  "ref-merged": {
+   "quality": "medium",
+   "loadSeconds": 4.034,
+   "jsHeapMB": 242,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 480 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 480 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=179139 drawEstimate=480 visibleRenderers=140 chunks=49 textures=112 textureMB=20.9 heapMB=5.2 avgFrameMs=885.8 engineDraws=897 engineTris=375813 setPass=37 terrainTris=34198 roadTris=2176 propTris=224 props=9 pending=91 buildMs=229 worstStageMs=38\n",
+    "[Perf] tier=medium visibleTris=179139 drawEstimate=480 visibleRenderers=140 chunks=49 textures=112 textureMB=20.9 heapMB=4.8 avgFrameMs=903.4 engineDraws=897 engineTris=375813 setPass=37 terrainTris=36118 roadTris=2176 propTris=224 props=9 pending=83 buildMs=263 worstStageMs=38\n",
+    "[Perf] tier=medium visibleTris=179139 drawEstimate=480 visibleRenderers=140 chunks=49 textures=112 textureMB=20.9 heapMB=4.3 avgFrameMs=1106.8 engineDraws=897 engineTris=375813 setPass=37 terrainTris=38038 roadTris=2176 propTris=224 props=9 pending=77 buildMs=284 worstStageMs=38\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=480 kitShare=99.8%",
+    "kit": "[KanoReview] draws kit renderers=139 draws=479 tris=179127 distinctMaterials=27 distinctMeshes=25 distinctMeshMaterialPairs=100",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=167/27/46998, rg_ngn_tree_street_broadleaf_a=62/31/43170, aro_shrub_ixora_red_a=42/14/16464, aro_villa_2storey_hip_b=40/4/19232, aro_hedge_clipped_a=28/14/4592, kano_street_oneway_section_a=28/4/6072, aro_pole_electric_concrete_span_a=18/4/2304, rg_ngn_tree_street_broadleaf_b=16/8/18912, aro_streetlight_single_arm_a=14/5/1118, aro_frontage_far_run_a=10/10/600, aro_frontage_l2_a=10/2/1466, aro_frontage_l3_a=10/2/2264, aro_frontage_r1_a=10/2/1466, aro_frontage_r2_a=10/2/2264, aro_gate_ornate_steel_a=7/7/11780, aro_pier_stone_a=4/2/68, aro_sign_oneway_a=3/1/357",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=27/27"
+   },
+   "review": [
+    "[KanoReview] ready view=ref variant=merged camera=(6003.20, 1.70, 6045.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     53.355,
+     62.477,
+     60.872
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.008
+   }
+  },
+  "street1-merged": {
+   "quality": "medium",
+   "loadSeconds": 4.054,
+   "jsHeapMB": 242,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 450 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 450 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=168896 drawEstimate=450 visibleRenderers=130 chunks=49 textures=112 textureMB=20.9 heapMB=4.4 avgFrameMs=904.2 engineDraws=876 engineTris=379864 setPass=35 terrainTris=32278 roadTris=2176 propTris=224 props=9 pending=97 buildMs=235 worstStageMs=25\n",
+    "[Perf] tier=medium visibleTris=168896 drawEstimate=450 visibleRenderers=130 chunks=49 textures=112 textureMB=20.9 heapMB=4.1 avgFrameMs=893.4 engineDraws=876 engineTris=379864 setPass=35 terrainTris=34198 roadTris=2176 propTris=224 props=9 pending=89 buildMs=265 worstStageMs=25\n",
+    "[Perf] tier=medium visibleTris=168896 drawEstimate=450 visibleRenderers=130 chunks=49 textures=112 textureMB=20.9 heapMB=4.8 avgFrameMs=1129.5 engineDraws=876 engineTris=379864 setPass=35 terrainTris=36118 roadTris=2176 propTris=224 props=9 pending=83 buildMs=286 worstStageMs=25\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=450 kitShare=99.8%",
+    "kit": "[KanoReview] draws kit renderers=129 draws=449 tris=168884 distinctMaterials=26 distinctMeshes=20 distinctMeshMaterialPairs=84",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=173/27/48530, rg_ngn_tree_street_broadleaf_a=60/30/40806, aro_shrub_ixora_red_a=36/12/14112, aro_villa_2storey_hip_b=30/3/14424, kano_street_oneway_section_a=28/4/6072, aro_hedge_clipped_a=22/11/3608, aro_pole_electric_concrete_span_a=19/4/2988, aro_streetlight_single_arm_a=15/5/1280, rg_ngn_tree_street_broadleaf_b=14/7/16548, aro_frontage_far_run_a=12/12/720, aro_frontage_l2_a=10/2/2264, aro_frontage_r1_a=10/2/2264, aro_gate_ornate_steel_a=6/6/12936, aro_frontage_l3_a=5/1/1132, aro_frontage_r2_a=5/1/1132, aro_pier_stone_a=4/2/68",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=26/26"
+   },
+   "review": [
+    "[KanoReview] ready view=street1 variant=merged camera=(5995.70, 1.60, 6030.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     63.201,
+     71.31,
+     69.33
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.009
+   }
+  },
+  "ref-noshadow": {
+   "quality": "medium",
+   "loadSeconds": 4.462,
+   "jsHeapMB": 257,
+   "budgetWarnings": [
+    "[Perf] BUDGET EXCEEDED: draw calls 690 > 400 (budget desktop-webgl)\n",
+    "[Perf] BUDGET EXCEEDED: draw calls 690 > 400 (budget desktop-webgl)\n"
+   ],
+   "perf": [
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=111 textureMB=12.9 heapMB=4.1 avgFrameMs=656.0 engineDraws=693 engineTris=182471 setPass=33 terrainTris=38038 roadTris=2176 propTris=224 props=9 pending=79 buildMs=313 worstStageMs=45\n",
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=111 textureMB=12.9 heapMB=4.2 avgFrameMs=748.1 engineDraws=693 engineTris=182471 setPass=33 terrainTris=40918 roadTris=2176 propTris=224 props=9 pending=68 buildMs=357 worstStageMs=45\n",
+    "[Perf] tier=medium visibleTris=180789 drawEstimate=690 visibleRenderers=252 chunks=49 textures=111 textureMB=12.9 heapMB=4.4 avgFrameMs=673.2 engineDraws=693 engineTris=182471 setPass=33 terrainTris=44736 roadTris=3264 propTris=256 props=11 pending=57 buildMs=399 worstStageMs=45\n"
+   ],
+   "draws": {
+    "total": "[KanoReview] draws total=690 kitShare=99.9%",
+    "kit": "[KanoReview] draws kit renderers=251 draws=689 tris=180777 distinctMaterials=27 distinctMeshes=21 distinctMeshMaterialPairs=75",
+    "ground": "[KanoReview] draws ground renderers=1 draws=1 tris=12 distinctMaterials=1 distinctMeshes=1 distinctMeshMaterialPairs=1",
+    "rest": "[KanoReview] draws rest renderers=0 draws=0 tris=0 distinctMaterials=0 distinctMeshes=0 distinctMeshMaterialPairs=0",
+    "byAsset": "[KanoReview] draws byAsset (draws/renderers/tris) aro_villa_2storey_hip_a=167/27/46998, aro_wall_compound_panel_a=164/82/4100, aro_pier_stone_a=72/36/4194, rg_ngn_tree_street_broadleaf_a=62/31/43170, aro_shrub_ixora_red_a=42/14/16464, aro_villa_2storey_hip_b=40/4/19232, aro_hedge_clipped_a=28/14/4592, aro_lantern_wall_a=28/14/1484, kano_street_oneway_section_a=28/4/6072, aro_pole_electric_concrete_span_a=18/4/2304, rg_ngn_tree_street_broadleaf_b=16/8/18912, aro_streetlight_single_arm_a=14/5/1118, aro_gate_ornate_steel_a=7/7/11780, aro_sign_oneway_a=3/1/357",
+    "instancing": "[KanoReview] draws kitMaterialsInstancingOn=27/27"
+   },
+   "review": [
+    "[KanoReview] ready view=ref variant=standard camera=(6003.20, 1.70, 6045.00) lens=28 mm\n"
+   ],
+   "errors": [],
+   "image": {
+    "width": 1280,
+    "height": 720,
+    "meanRGB": [
+     65.763,
+     75.234,
+     71.022
+    ],
+    "magentaFraction": 0,
+    "nearBlackFraction": 0.008
+   }
+  }
+ }
+}

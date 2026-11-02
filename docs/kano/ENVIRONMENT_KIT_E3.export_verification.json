@@ -1,0 +1,1198 @@
+[
+ {
+  "asset": "aro_road_mud_rutted_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.562
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.562
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_mud_rutted_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.562
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.562
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_earth_compacted_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.194
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.194
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_earth_compacted_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.194
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.194
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_sand_loose_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.289
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.289
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_sand_loose_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.0,
+   24.0,
+   0.289
+  ],
+  "size_validated_m": [
+   8.0,
+   24.0,
+   0.289
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_asphalt_cracked_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 3,
+  "materials_expected": 3,
+  "texture_images": 2,
+  "size_reimported_m": [
+   7.0,
+   24.0,
+   0.067
+  ],
+  "size_validated_m": [
+   7.0,
+   24.0,
+   0.067
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_asphalt_cracked_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 3,
+  "materials_expected": 3,
+  "texture_images": 2,
+  "size_reimported_m": [
+   7.0,
+   24.0,
+   0.067
+  ],
+  "size_validated_m": [
+   7.0,
+   24.0,
+   0.067
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_pothole_set_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 2,
+  "size_reimported_m": [
+   7.0,
+   12.0,
+   0.202
+  ],
+  "size_validated_m": [
+   7.0,
+   12.0,
+   0.202
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_pothole_set_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 2,
+  "size_reimported_m": [
+   7.0,
+   12.0,
+   0.202
+  ],
+  "size_validated_m": [
+   7.0,
+   12.0,
+   0.202
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_puddle_set_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 3,
+  "size_reimported_m": [
+   7.549,
+   7.745,
+   0.007
+  ],
+  "size_validated_m": [
+   7.549,
+   7.745,
+   0.007
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_puddle_set_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 3,
+  "size_reimported_m": [
+   7.549,
+   7.745,
+   0.007
+  ],
+  "size_validated_m": [
+   7.549,
+   7.745,
+   0.007
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_flood_sheet_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   12.5,
+   7.5,
+   0.01
+  ],
+  "size_validated_m": [
+   12.5,
+   7.5,
+   0.01
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_flood_sheet_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   12.5,
+   7.5,
+   0.01
+  ],
+  "size_validated_m": [
+   12.5,
+   7.5,
+   0.01
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_drain_open_slab_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 4,
+  "materials_expected": 4,
+  "texture_images": 4,
+  "size_reimported_m": [
+   1.1,
+   6.0,
+   0.95
+  ],
+  "size_validated_m": [
+   1.1,
+   6.0,
+   0.95
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_drain_open_slab_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 4,
+  "materials_expected": 4,
+  "texture_images": 4,
+  "size_reimported_m": [
+   1.1,
+   6.0,
+   0.95
+  ],
+  "size_validated_m": [
+   1.1,
+   6.0,
+   0.95
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_stall_umbrella_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 4,
+  "size_reimported_m": [
+   2.615,
+   2.615,
+   2.58
+  ],
+  "size_validated_m": [
+   2.615,
+   2.615,
+   2.58
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_stall_umbrella_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 4,
+  "size_reimported_m": [
+   2.615,
+   2.615,
+   2.58
+  ],
+  "size_validated_m": [
+   2.615,
+   2.615,
+   2.58
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_stall_canopy_rough_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 6,
+  "materials_expected": 6,
+  "texture_images": 2,
+  "size_reimported_m": [
+   3.6,
+   2.814,
+   2.39
+  ],
+  "size_validated_m": [
+   3.6,
+   2.814,
+   2.39
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_stall_canopy_rough_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 6,
+  "materials_expected": 6,
+  "texture_images": 2,
+  "size_reimported_m": [
+   3.6,
+   2.814,
+   2.39
+  ],
+  "size_validated_m": [
+   3.6,
+   2.814,
+   2.39
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_fence_woven_timber_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   3.087,
+   0.142,
+   1.45
+  ],
+  "size_validated_m": [
+   3.087,
+   0.142,
+   1.45
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_fence_woven_timber_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   3.087,
+   0.142,
+   1.45
+  ],
+  "size_validated_m": [
+   3.087,
+   0.142,
+   1.45
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_shop_row_roadside_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 12,
+  "materials_expected": 12,
+  "texture_images": 8,
+  "size_reimported_m": [
+   15.806,
+   6.77,
+   3.403
+  ],
+  "size_validated_m": [
+   15.806,
+   6.77,
+   3.403
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_shop_row_roadside_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 12,
+  "materials_expected": 12,
+  "texture_images": 8,
+  "size_reimported_m": [
+   15.806,
+   6.77,
+   3.403
+  ],
+  "size_validated_m": [
+   15.806,
+   6.77,
+   3.403
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_mudbrick_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 10,
+  "size_reimported_m": [
+   8.84,
+   7.92,
+   4.46
+  ],
+  "size_validated_m": [
+   8.84,
+   7.92,
+   4.46
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_mudbrick_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 10,
+  "size_reimported_m": [
+   8.84,
+   7.92,
+   4.46
+  ],
+  "size_validated_m": [
+   8.84,
+   7.92,
+   4.46
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_validated_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_validated_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_tree_large_shade_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 3,
+  "size_reimported_m": [
+   11.763,
+   11.414,
+   11.868
+  ],
+  "size_validated_m": [
+   11.763,
+   11.414,
+   11.868
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_tree_large_shade_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   11.763,
+   11.414,
+   11.868
+  ],
+  "size_validated_m": [
+   11.763,
+   11.414,
+   11.868
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_grass_tall_verge_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 1,
+  "size_reimported_m": [
+   1.043,
+   1.132,
+   1.291
+  ],
+  "size_validated_m": [
+   1.043,
+   1.132,
+   1.291
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_grass_tall_verge_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   1.043,
+   1.132,
+   1.291
+  ],
+  "size_validated_m": [
+   1.043,
+   1.132,
+   1.291
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_shed_market_corrugated_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 9,
+  "materials_expected": 9,
+  "texture_images": 6,
+  "size_reimported_m": [
+   15.4,
+   9.44,
+   4.36
+  ],
+  "size_validated_m": [
+   15.4,
+   9.44,
+   4.36
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_shed_market_corrugated_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 9,
+  "materials_expected": 9,
+  "texture_images": 6,
+  "size_reimported_m": [
+   15.4,
+   9.44,
+   4.36
+  ],
+  "size_validated_m": [
+   15.4,
+   9.44,
+   4.36
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_kiosk_lockup_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 9,
+  "materials_expected": 9,
+  "texture_images": 8,
+  "size_reimported_m": [
+   4.12,
+   3.346,
+   2.643
+  ],
+  "size_validated_m": [
+   4.12,
+   3.346,
+   2.643
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_kiosk_lockup_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 9,
+  "materials_expected": 9,
+  "texture_images": 8,
+  "size_reimported_m": [
+   4.12,
+   3.346,
+   2.643
+  ],
+  "size_validated_m": [
+   4.12,
+   3.346,
+   2.643
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_mudbrick_b",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 10,
+  "size_reimported_m": [
+   10.84,
+   7.49,
+   3.96
+  ],
+  "size_validated_m": [
+   10.84,
+   7.49,
+   3.96
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_mudbrick_b",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 10,
+  "size_reimported_m": [
+   10.84,
+   7.49,
+   3.96
+  ],
+  "size_validated_m": [
+   10.84,
+   7.49,
+   3.96
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_block_corrugated_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 8,
+  "size_reimported_m": [
+   10.24,
+   7.24,
+   4.26
+  ],
+  "size_validated_m": [
+   10.24,
+   7.24,
+   4.26
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_house_block_corrugated_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 8,
+  "materials_expected": 8,
+  "texture_images": 8,
+  "size_reimported_m": [
+   10.24,
+   7.24,
+   4.26
+  ],
+  "size_validated_m": [
+   10.24,
+   7.24,
+   4.26
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_b",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_validated_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_b",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_validated_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_wall_gate_set_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 6,
+  "size_reimported_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_validated_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_wall_gate_set_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 6,
+  "size_reimported_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_validated_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_banana_plant_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 4,
+  "materials_expected": 4,
+  "texture_images": 3,
+  "size_reimported_m": [
+   4.357,
+   3.974,
+   3.475
+  ],
+  "size_validated_m": [
+   4.357,
+   3.974,
+   3.475
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_banana_plant_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 4,
+  "materials_expected": 4,
+  "texture_images": 4,
+  "size_reimported_m": [
+   4.357,
+   3.974,
+   3.475
+  ],
+  "size_validated_m": [
+   4.357,
+   3.974,
+   3.475
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_bougainvillea_wall_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 7,
+  "size_reimported_m": [
+   4.5,
+   1.539,
+   2.632
+  ],
+  "size_validated_m": [
+   4.5,
+   1.539,
+   2.632
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_bougainvillea_wall_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   4.5,
+   1.539,
+   2.632
+  ],
+  "size_validated_m": [
+   4.5,
+   1.539,
+   2.632
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_tree_large_shade_wet_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 3,
+  "size_reimported_m": [
+   12.271,
+   11.26,
+   11.992
+  ],
+  "size_validated_m": [
+   12.271,
+   11.26,
+   11.992
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_tree_large_shade_wet_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 3,
+  "lod_meshes": 3,
+  "lods_expected": 3,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   12.271,
+   11.26,
+   11.992
+  ],
+  "size_validated_m": [
+   12.271,
+   11.26,
+   11.992
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_grass_tall_wet_a",
+  "version": "v001",
+  "format": "glb",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 1,
+  "size_reimported_m": [
+   1.343,
+   1.398,
+   1.588
+  ],
+  "size_validated_m": [
+   1.343,
+   1.398,
+   1.588
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_grass_tall_wet_a",
+  "version": "v001",
+  "format": "fbx",
+  "meshes": 1,
+  "lod_meshes": 1,
+  "lods_expected": 1,
+  "materials": 1,
+  "materials_expected": 1,
+  "texture_images": 2,
+  "size_reimported_m": [
+   1.343,
+   1.398,
+   1.588
+  ],
+  "size_validated_m": [
+   1.343,
+   1.398,
+   1.588
+  ],
+  "size_ok": true,
+  "ok": true
+ }
+]
