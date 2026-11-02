@@ -84,8 +84,9 @@ def hausa_quarter(season: str, lay: dict) -> Scene:
 
 def village(season: str, lay: dict) -> Scene:
     """A village lane: a compacted-earth (dry) or rutted-mud (wet) lane with puddles, mud-brick and block houses with woven fences between them, banana plants behind the houses, shade trees, a rough canopy stall."""
-    wet = season == "wet"; s = Scene("village", season, lay, "grass_green" if wet else "dry_earth", "a village lane (houses, fences, banana plants: R-020, R-021; vernacular not verified, M-14)")
-    road = "aro_road_mud_rutted_a" if wet else "aro_road_earth_compacted_a"; s.road(road, [-36.0, -12.0, 12.0, 36.0])
+    wet = season == "wet"; s = Scene("village", season, lay, "grass_green" if wet else "dry_earth", "a village lane (houses, fences, banana plants: R-020, R-021; vernacular not verified, M-14); dry: compacted earth with a sandy stretch (R-016, R-017)")
+    if wet: s.road("aro_road_mud_rutted_a", [-36.0, -12.0, 12.0, 36.0])
+    else: s.road("aro_road_earth_compacted_a", [-36.0, -12.0, 12.0]); s.road("aro_road_sand_loose_a", [36.0])                  # a sandy stretch at the far end in the dry season
     P = 5.2
     s.front("rg_ngn_house_mudbrick_a", 1, P, -26.0, "house"); s.front("rg_ngn_house_block_corrugated_a", 1, P, -8.0, "house"); s.front("rg_ngn_house_mudbrick_b", 1, P, 12.0, "house"); s.front("rg_ngn_house_mudbrick_a", 1, P, 32.0, "house")
     s.front("rg_ngn_house_mudbrick_b", -1, P, -30.0, "house"); s.front("rg_ngn_house_mudbrick_a", -1, P, -12.0, "house"); s.front("rg_ngn_house_block_corrugated_a", -1, P, 6.0, "house"); s.front("rg_ngn_house_mudbrick_b", -1, P, 26.0, "house")

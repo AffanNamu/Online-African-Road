@@ -50,7 +50,7 @@ async function imageDiff(page, a64, b64) {
   const BASE = process.env.REVIEW_BASE || '&hour=15.5';
   for (const entry of views) {
     const [left, variant] = entry.split(':'); const [view, scene] = left.split('@'); const label = (scene ? scene + '-' : '') + view + (variant ? '-' + variant : ''); let done = false;      // entry: view[@scene][:variant]
-    if (variant && !VARIANT_QUERY[variant]) { failures.push(`${entry}: unknown variant '${variant}'`); continue; }
+    if (variant && !(variant in VARIANT_QUERY)) { failures.push(`${entry}: unknown variant '${variant}'`); continue; }
     for (const q of (variant === 'low' ? ['low'] : QUALITIES)) {
       const page = await browser.newPage({ viewport: { width: 1280, height: 720 } }); page.setDefaultTimeout(300000); const logs = [], errors = [];
       page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));

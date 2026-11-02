@@ -73,7 +73,7 @@ def with_open(flags: str, text: str) -> str:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--placements", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--previews", default=""); ap.add_argument("--only", default="")
+    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--placements", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--previews", default=""); ap.add_argument("--only", default=""); ap.add_argument("--release-name", default="kano_residential_section_a")
     a = ap.parse_args(); C = Path(a.content).resolve(); W = ws.default_root(); now = time.strftime("%Y-%m-%d", time.gmtime())
     reg_path = C / "registry" / "asset_registry.json"; reg = json.loads(reg_path.read_text()); by_id = {x["id"]: x for x in reg["assets"]}
     lic = (C / "LICENSES.md").read_text(); staged = []
@@ -106,7 +106,10 @@ def main() -> int:
             if not latest:
                 manifest["superseded"] = ("superseded by " + vers[-1] + ": the colour textures of this version were decoded twice (darker, more saturated: yellow plaster, red stone); never reviewed or approved" if n == 1 else
                                           "superseded by " + vers[-1] + " (owner-approved v003 scope: richer villa facades, fewer materials, overlaps corrected). THIS VERSION IS FROZEN: it stays as the original in-game review candidate and is never edited; its manifest hashes are in the game repository (docs/kano/KANO_RESIDENTIAL_v002.freeze.json); awaiting the owner's visual and performance approval")
-            (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2))
+            if latest and len(vers) > 1: manifest["supersedes"] = vers[:-1]
+            mp = u / f"{aid}.manifest.json"
+            if not latest and mp.is_file(): continue                                          # an existing package manifest of an older version is never rewritten (v002 is frozen)
+            mp.write_text(json.dumps(manifest, indent=2))
             if not latest: continue
             if f"| {aid} |" not in lic:
                 lic = lic.rstrip("\n") + f"\n| {aid} | {n} | Claude (code), owner (direction) | {', '.join(concepts) or '-'} | original geometry and procedural textures; design reference ChatGPT concept R-006; ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending, {now} |\n"
@@ -149,8 +152,8 @@ def main() -> int:
         pv = C / "previews" / "kano_residential_section_a" / staged[-1][1]; pv.mkdir(parents=True, exist_ok=True)
         from PIL import Image
         for f in Path(a.renders).glob("kano_residential_*.png"): Image.open(f).convert("RGB").save(pv / (f.stem + ".jpg"), "JPEG", quality=88, optimize=True)
-    rel = {"release": "kano_residential_section_a", "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender review renders are previews of Blender geometry, not proof of Unity behaviour."}
-    (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / "kano_residential_section_a.release.json").write_text(json.dumps(rel, indent=2))
+    rel = {"release": a.release_name, "date": now, "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry)", "note": "Blender review renders are previews of Blender geometry, not proof of Unity behaviour."}
+    (C / "manifests").mkdir(exist_ok=True); (C / "manifests" / f"{a.release_name}.release.json").write_text(json.dumps(rel, indent=2))
     print("staged", len(staged), "assets:", ", ".join(i for i, _, _ in staged)); return 0
 
 

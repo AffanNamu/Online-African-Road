@@ -21,7 +21,7 @@ def unity_cell(e: dict) -> str:
 
 
 def validation_cell(e: dict, report: dict | None) -> str:
-    if e.get("status") not in ("blender_validation_passed", "unity_import_passed", "visual_review_pending", "production_approved"): return e.get("status", "?")
+    if e.get("status") not in ("blender_validation_passed", "unity_import_verified", "in_game_visual_review_passed", "production_approved"): return e.get("status", "?")
     if report is not None and not report.get("passed"): return "FAILED"
     return "Blender validation passed"
 
@@ -37,10 +37,13 @@ def render(entries: list[dict], reports: dict[str, dict], categories: dict, regi
         rows.append(f"| `{e['id']}` | {e.get('assetClass', '-')} | {cat} | {region} | {reference_cell(e)} | {blend} | {exp} | {validation_cell(e, rep)} | {unity_cell(e)} | {'/'.join(str(t) for t in lods) or '-'} | {len(e.get('materials') or [])} |")
     head = ("| ID | Class | Library category | Intended region | Source reference | Blender file (private repository) | Export | Validation | Unity | Triangles per LOD | Materials |\n"
             "|---|---|---|---|---|---|---|---|---|---|---|")
-    n_pass = sum(1 for e in entries if e.get("status") == "blender_validation_passed")
+    n_pass = sum(1 for e in entries if e.get("status") in ("blender_validation_passed", "unity_import_verified", "in_game_visual_review_passed", "production_approved"))
+    n_unity = sum(1 for e in entries if (e.get("unity") or {}).get("imported")); n_game = sum(1 for e in entries if (e.get("unity") or {}).get("inGameVerified")); n_app = sum(1 for e in entries if e.get("status") == "production_approved")
+    unity_sentence = ("None is imported into Unity or verified in the game, and none is approved" if n_unity == 0 and n_game == 0 and n_app == 0 else
+                      f"{n_unity} have been imported through the real Unity importer (the import proof: LOD triangles and material count equal the Blender validation); {n_game} have been verified in the game by the owner's review and {n_app} are approved")
     return f"""# Environmental asset library: handover
 
-**Generated {generated} from the private asset registry and the Blender validation reports by `tools/blender/env_kit/handover.py`; nothing below is typed by hand.** {len(entries)} environmental assets; {n_pass} passed the Blender validation. **None is imported into Unity or verified in the game, and none is approved**: the status vocabulary is `needs_concept`, `concept_approved`, `blender_validation_passed`, `unity_import_passed`, `visual_review_pending`, `production_approved`, and the last one needs a person.
+**Generated {generated} from the private asset registry and the Blender validation reports by `tools/blender/env_kit/handover.py`; nothing below is typed by hand.** {len(entries)} environmental assets; {n_pass} passed the Blender validation. **{unity_sentence}**: the three proofs are separate (Blender validation, Unity import, in-game visual review by a person) and none is approval. The status vocabulary is `needs_concept`, `concept_approved`, `blender_validation_passed`, `unity_import_verified`, `in_game_visual_review_passed`, `production_approved`; the last needs a person.
 
 **Where the files are.** The Blender sources, exports and previews are in the private repository `ARO-CONTENT`, branch `assets/environment-kit-v1` (Git LFS pointers; **the binaries are not on GitHub yet: the environment's network policy blocks `lfs.github.com`**, see `INFRASTRUCTURE_INVESTIGATION_2026-11-02.md` section 5). The code that produces them, the tests and the frozen hash manifests are in this repository (`tools/blender/env_kit`, `docs/kano/ENVIRONMENT_KIT_*.freeze.json`).
 
@@ -50,7 +53,7 @@ def render(entries: list[dict], reports: dict[str, dict], categories: dict, regi
 {chr(10).join(rows)}
 
 ## What is not claimed
-* No asset here is Unity-verified: none has been imported by Unity's importer, put under the game's lighting, or measured in the running game. The residential kit was imported and run in the game (see `KANO_RESIDENTIAL_MILESTONE.md` section 11) and still awaits the owner's approval; this kit has not even been imported.
+* **Unity import is not an in-game review.** Where the table says "imported; not verified in the game", the asset went through the real Unity importer and was placed in review scenes that were measured and photographed (`ENVIRONMENT_SCENES.md`, `PERFORMANCE_REPORT_V003.md`); whether it looks right in the game is for the owner to judge from those pictures, and nothing is approved. An asset that says "not imported" has not been through Unity at all.
 * The vernacular forms (houses, shops, stalls, kiosk, market shed, fence) are **not verified against real references** (M-14); the Hausa-style compounds and frontage have **no real reference at all** (M-01) and are design interpretations of the documented qualitative features; seasonal vegetation looks are **not established** (M-07, M-17).
 * Mud, flooding, rainy-season and seasonal behaviour **do not exist in the game**: the road, water and vegetation assets are geometry only. Nothing here reads, changes or depends on the driving physics, road generation, weather system or vehicle behaviour; the engine proposals RB-18 to RB-25 are not started and need a separate technical proposal and approval.
 * Each entry's complete list of open visual and factual differences is in the registry field `flags` (after `OPEN:`).

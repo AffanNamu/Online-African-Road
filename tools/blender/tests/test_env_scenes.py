@@ -62,3 +62,8 @@ def test_ground_patches_sit_with_their_surface_at_zero(lay):
         for it in s.items:
             d = s.lay[it["asset"]]["datum"]
             if it["tag"] == "road" and d is not None: assert abs(it["z"] + d) < 1e-3, (s.name, it)
+
+
+def test_every_environmental_asset_appears_in_at_least_one_scene():
+    """The Unity review imports only what a scene places, so the scenes together must cover the whole environmental kit (otherwise an asset could be called imported without having been)."""
+    assert set(BE.SPECS) <= SC.asset_ids() | {"rg_ngn_stall_umbrella_a"}, sorted(set(BE.SPECS) - SC.asset_ids())

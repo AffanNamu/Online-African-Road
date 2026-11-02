@@ -230,3 +230,16 @@ Blender axes: street along +Y, right +X, up +Z, metres; the Unity camera is the 
 **Objective checks made on the nine pictures of the second run** (measured in a browser canvas; they are not a judgement of looks): **no magenta pixels at all** (the colour of Unity's error shader) in any of them; 0.3% to 2.4% near-black pixels (dark interiors and shadows); mean channel values between 38 and 91 of 255, nothing flat or blank. The standard pictures' mean colours: ref 53.3 / 62.4 / 60.9, front 69.0 / 77.8 / 72.0, side 74.2 / 90.6 / 90.3, street1 63.2 / 71.3 / 69.3, street2 56.2 / 64.8 / 63.8, top 44.7 / 60.1 / 38.4.
 
 **Known risk to look for in the pictures: z-fighting on the villas.** A new check (`kano_kit.coplanar`) found overlapping coplanar faces in the frozen v002 villas (62 pairs on villa A, 69 on villa B, largest 0.6 m2: white trim against cream plaster and frames against frames), the ornate gate (6), the wall lantern (1) and the One Way sign (16). Where two faces share a plane they fight for the pixels and flicker in a game. v002 was not touched; a corrected v003 (same separation as the environmental kit) would be built only after the owner's review of v002. Details in `ENVIRONMENT_KIT_E3.md`.
+
+## 13. v003 and the environment scenes: the pictures of review run 41476407715
+The same artifact as in section 12, a new run: [41476407715](https://github.com/AffanNamu/Online-African-Road/actions/runs/41476407715), artifact `kano-review-in-game` (20 MB, **kept 7 days: expires 2026-11-09 16:50 UTC**), 24 pictures and the summary, all 1280 x 720, quality tier `medium`, hour 15:30, software GL. The run is marked *failed* only because two diagnostic views (the low quality tier) were rejected by a bug in the review driver, fixed afterwards; everything else completed. I have not seen the pictures (this environment cannot download artifacts); the owner's review of them is the in-game approval gate, and nothing is approved.
+| File (`kanoreview-<name>.png`) | What it shows |
+|---|---|
+| `ref`, `front`, `side`, `street1`, `street2`, `top` | the six views of section 12 (cameras unchanged) with the **v003** kit |
+| `ref-merged`, `street1-merged`, `side-merged`, `street2-merged` | the same views with the merged plot frontages |
+| `ref-noshadow` | the reference view without the shadow pass |
+| `ref-shadowsmall` | the reference view with a shadow policy in which small and thin kit assets (lanterns, hedges, shrubs, piers, wall panels, streetlights, poles, signs, gates) cast no shadow (review only) |
+| `env_hausa_quarter_dry-drive`, `env_hausa_quarter_dry-aerial`, `env_hausa_quarter_wet-drive`, `env_hausa_quarter_wet-aerial` | the Hausa-style quarter lane, both seasons |
+| `env_village_dry-drive`, `-aerial`, `env_village_wet-drive`, `-aerial` | the village lane, both seasons |
+| `env_market_street_dry-drive`, `-aerial`, `env_market_street_wet-drive`, `-aerial` | the market street, both seasons |
+`drive` is the driver's eye in the left lane looking along the lane; `aerial` is three-quarter from above the left side. Cameras of the environment scenes are listed in `tools/blender/env_kit/scenes.py` (they travel with the scene data into Unity). Details and measurements: `KANO_RESIDENTIAL_V003.md`, `PERFORMANCE_REPORT_V003.md`, `ENVIRONMENT_SCENES.md`.

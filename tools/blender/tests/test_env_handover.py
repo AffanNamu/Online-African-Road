@@ -38,3 +38,9 @@ def test_the_text_never_claims_unity_verification_or_approval():
 def test_an_imported_asset_is_not_called_verified():
     t = H.render([entry(unity={"imported": True, "inGameVerified": False})], {}, CATS, REGIONS, "d")
     assert "imported; not verified in the game" in t
+
+
+def test_an_import_proof_is_reported_as_import_and_never_as_in_game_verification_or_approval():
+    t = H.render([entry(status="unity_import_verified", unity={"imported": True, "inGameVerified": False})], {"rg_ngn_kiosk_lockup_a": {"passed": True}}, CATS, REGIONS, "d")
+    assert "1 have been imported through the real Unity importer" in t and "0 have been verified in the game" in t and "0 are approved" in t
+    row = [l for l in t.splitlines() if l.startswith("| `rg_ngn_kiosk_lockup_a`")][0]; assert "imported; not verified in the game" in row and "Blender validation passed" in row

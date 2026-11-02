@@ -1,0 +1,371 @@
+{
+ "run": 41476407715,
+ "commit": "956aaed",
+ "unity": "6000.0.58f2",
+ "importer": "the real Unity importer (FBX) and ARO.Editor.BlenderImport.BlenderAssetBuilder, built by the review job",
+ "problemsInLog": 0,
+ "assets": {
+  "kano_street_oneway_section_a": {
+   "lodTriangles": [
+    1518,
+    38
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "aro_wall_compound_panel_a": {
+   "lodTriangles": [
+    50
+   ],
+   "materials": 2,
+   "collider": true
+  },
+  "aro_gate_ornate_steel_a": {
+   "lodTriangles": [
+    2156,
+    500,
+    12
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_pier_stone_a": {
+   "lodTriangles": [
+    144,
+    34,
+    12
+   ],
+   "materials": 2,
+   "collider": true
+  },
+  "aro_lantern_wall_a": {
+   "lodTriangles": [
+    106
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "aro_villa_2storey_hip_a": {
+   "lodTriangles": [
+    4802,
+    965,
+    58
+   ],
+   "materials": 7,
+   "collider": true
+  },
+  "rg_ngn_tree_street_broadleaf_a": {
+   "lodTriangles": [
+    2364,
+    213,
+    22
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "rg_ngn_tree_street_broadleaf_b": {
+   "lodTriangles": [
+    2364,
+    213,
+    22
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_hedge_clipped_a": {
+   "lodTriangles": [
+    328
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_shrub_ixora_red_a": {
+   "lodTriangles": [
+    1176,
+    36
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_villa_2storey_hip_b": {
+   "lodTriangles": [
+    4289,
+    803,
+    70
+   ],
+   "materials": 7,
+   "collider": true
+  },
+  "aro_streetlight_single_arm_a": {
+   "lodTriangles": [
+    256,
+    94,
+    22
+   ],
+   "materials": 2,
+   "collider": true
+  },
+  "aro_pole_electric_concrete_span_a": {
+   "lodTriangles": [
+    918,
+    234,
+    34
+   ],
+   "materials": 3,
+   "collider": true
+  },
+  "aro_sign_oneway_a": {
+   "lodTriangles": [
+    357,
+    69,
+    24
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "aro_frontage_r2_a": {
+   "lodTriangles": [
+    1132,
+    334,
+    108
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "aro_frontage_r1_a": {
+   "lodTriangles": [
+    1132,
+    334,
+    108
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "aro_frontage_l3_a": {
+   "lodTriangles": [
+    1132,
+    334,
+    108
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "aro_frontage_l2_a": {
+   "lodTriangles": [
+    1132,
+    334,
+    108
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "aro_frontage_far_run_a": {
+   "lodTriangles": [
+    60
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_road_earth_compacted_a": {
+   "lodTriangles": [
+    6480,
+    600
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "aro_drain_open_slab_a": {
+   "lodTriangles": [
+    282,
+    12
+   ],
+   "materials": 4,
+   "collider": false
+  },
+  "rg_ngn_hausa_compound_a": {
+   "lodTriangles": [
+    2406,
+    108
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "rg_ngn_hausa_wall_gate_set_a": {
+   "lodTriangles": [
+    934,
+    36
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "rg_ngn_hausa_compound_b": {
+   "lodTriangles": [
+    1998,
+    96
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "rg_ngn_house_mudbrick_b": {
+   "lodTriangles": [
+    776,
+    30
+   ],
+   "materials": 8,
+   "collider": true
+  },
+  "rg_ngn_tree_large_shade_a": {
+   "lodTriangles": [
+    1404,
+    213,
+    22
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "rg_ngn_grass_tall_verge_a": {
+   "lodTriangles": [
+    44
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_road_mud_rutted_a": {
+   "lodTriangles": [
+    6480,
+    600
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "rg_ngn_tree_large_shade_wet_a": {
+   "lodTriangles": [
+    2244,
+    213,
+    22
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "rg_ngn_grass_tall_wet_a": {
+   "lodTriangles": [
+    60
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "aro_water_puddle_set_a": {
+   "lodTriangles": [
+    168
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "aro_road_asphalt_cracked_a": {
+   "lodTriangles": [
+    5376,
+    384
+   ],
+   "materials": 3,
+   "collider": false
+  },
+  "aro_road_pothole_set_a": {
+   "lodTriangles": [
+    6048,
+    360
+   ],
+   "materials": 2,
+   "collider": false
+  },
+  "rg_ngn_shop_row_roadside_a": {
+   "lodTriangles": [
+    1304,
+    28
+   ],
+   "materials": 12,
+   "collider": true
+  },
+  "rg_ngn_kiosk_lockup_a": {
+   "lodTriangles": [
+    906,
+    28
+   ],
+   "materials": 9,
+   "collider": true
+  },
+  "rg_ngn_shed_market_corrugated_a": {
+   "lodTriangles": [
+    2708,
+    92
+   ],
+   "materials": 9,
+   "collider": false
+  },
+  "rg_ngn_bougainvillea_wall_a": {
+   "lodTriangles": [
+    1206,
+    106,
+    32
+   ],
+   "materials": 5,
+   "collider": false
+  },
+  "rg_ngn_house_block_corrugated_a": {
+   "lodTriangles": [
+    1022,
+    34
+   ],
+   "materials": 8,
+   "collider": true
+  },
+  "rg_ngn_stall_umbrella_a": {
+   "lodTriangles": [
+    1122,
+    52
+   ],
+   "materials": 8,
+   "collider": false
+  },
+  "rg_ngn_stall_canopy_rough_a": {
+   "lodTriangles": [
+    700,
+    40
+   ],
+   "materials": 6,
+   "collider": false
+  },
+  "aro_water_flood_sheet_a": {
+   "lodTriangles": [
+    640,
+    42
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "rg_ngn_house_mudbrick_a": {
+   "lodTriangles": [
+    582,
+    38
+   ],
+   "materials": 8,
+   "collider": true
+  },
+  "rg_ngn_fence_woven_timber_a": {
+   "lodTriangles": [
+    1174,
+    76
+   ],
+   "materials": 1,
+   "collider": false
+  },
+  "rg_ngn_banana_plant_a": {
+   "lodTriangles": [
+    1385,
+    362,
+    78
+   ],
+   "materials": 4,
+   "collider": false
+  }
+ }
+}
