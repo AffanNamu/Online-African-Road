@@ -63,7 +63,7 @@ LIBRARY: dict[str, tuple[tuple[float, float, float], float, float, float, str]] 
     "lantern_glow":      ((0.95, 0.76, 0.42), 0.4, 0.0, 0.0, "warm lantern glass"),
     # ---- environmental kit (2026-11-02): unpaved and damaged roads, water, roadside and village materials. Colours are first-pass sRGB estimates read from the generated references
     # R-016 to R-023 by eye; soil and mud colour for Kano and its surroundings is NOT established (reference gap M-15) and must be checked against real photographs before approval.
-    "mud_wet":           ((0.34, 0.19, 0.12), 0.30, 0.0, 0.0, "wet red-brown clay mud in wheel ruts"),
+    "mud_wet":           ((0.34, 0.19, 0.12), 0.45, 0.0, 0.0, "wet red-brown clay mud in wheel ruts"),
     "mud_crest":         ((0.52, 0.33, 0.20), 0.88, 0.0, 0.0, "drier mud on ruts' ridges, banks and clods"),
     "earth_compacted":   ((0.60, 0.42, 0.27), 0.95, 0.0, 0.0, "compacted laterite earth road surface"),
     "sand_dusty":        ((0.76, 0.64, 0.46), 0.97, 0.0, 0.0, "loose dusty sand"),

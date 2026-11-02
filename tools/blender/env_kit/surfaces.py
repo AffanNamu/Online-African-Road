@@ -59,7 +59,7 @@ def grid_surface(p: Part, nx, ny, x0, x1, y0, y1, hfun, keyfun, mask=None) -> fl
 def mud_rutted(lod=0):
     """An unpaved clay road after heavy rain: crowned, four wheel ruts (0.1 to 0.3 m deep, wandering), ridges between the ruts and along the centre, clods, banks falling away to a side drain at both edges.
     Material: wet glossy mud in the ruts, drier mud on the ridges."""
-    p = Part("surface"); seed = 21; ruts = (-3.0, -1.35, 1.35, 3.0)
+    p = Part("surface"); p.planar_xy = True; seed = 21; ruts = (-3.0, -1.35, 1.35, 3.0)
     def h(X, Y):
         H = 0.10 * (1 - (X / 4.0) ** 2); D = np.zeros_like(X)
         for k, xc in enumerate(ruts):
@@ -77,7 +77,7 @@ def mud_rutted(lod=0):
 # ------------------------------------------------------------------------------------------------------------------------------------------------ compacted earth road (8 m x 24 m)
 def earth_compacted(lod=0):
     """A compacted laterite road in the dry season: crowned, shallow wheel tracks, small potholes, runoff gullies cut across the shoulders and dust drifted along the edges."""
-    p = Part("surface"); seed = 41
+    p = Part("surface"); p.planar_xy = True; seed = 41
     def h(X, Y):
         H = 0.12 * (1 - (X / 4.0) ** 2); D = np.zeros_like(X)
         for xc in (-2.6, -1.0, 1.0, 2.6): D += 0.028 * np.exp(-(((X - xc) / 0.32) ** 2))
@@ -93,7 +93,7 @@ def earth_compacted(lod=0):
 # ------------------------------------------------------------------------------------------------------------------------------------------------ loose sandy road (8 m x 24 m)
 def sand_loose(lod=0):
     """A loose sand road: wind ripples, soft wheel tracks with a hard pan showing in the bottoms and sand drifted into low dunes along both edges."""
-    p = Part("surface"); seed = 61
+    p = Part("surface"); p.planar_xy = True; seed = 61
     def h(X, Y):
         warp = fbm(X, Y, seed, 0.5, 2); H = 0.018 * np.sin(1.0 * Y + 4.0 * warp + 0.3 * X) + 0.02 * (fbm(X, Y, seed + 2, 0.9, 3) - 0.5) * 2; D = np.zeros_like(X)
         for xc in (-2.8, -1.0, 1.0, 2.8): D += 0.08 * np.exp(-(((X - xc + 0.12 * np.sin(0.4 * Y + xc)) / 0.30) ** 2))
@@ -109,7 +109,7 @@ PATCHES = ((-1.0, -6.0, 2.4, 1.3), (1.2, -1.0, 1.6, 2.6), (-1.5, 5.0, 1.2, 1.0),
 
 def asphalt_cracked(lod=0):
     """Old asphalt: cracks (texture), four raised repair patches of different shapes, raveled edges that break up and expose the earth beneath and faint rutting in the wheel paths."""
-    p = Part("surface"); seed = 81
+    p = Part("surface"); p.planar_xy = True; seed = 81
     def h(X, Y):
         H = 0.003 * (fbm(X, Y, seed, 3.0, 2) - 0.5) * 2
         for xc in (-1.0, 1.0): H -= 0.016 * np.exp(-(((X - xc) / 0.5) ** 2))
@@ -127,7 +127,7 @@ def asphalt_cracked(lod=0):
 # ------------------------------------------------------------------------------------------------------------------------------------------------ pothole set (7 m x 12 m)
 def pothole_set(lod=0):
     """A damaged asphalt patch with nine potholes of 0.6 to 1.4 m across and 7 to 20 cm deep, ragged edges, a chipped rim and the earth and stone base showing at the bottom."""
-    p = Part("surface"); rnd = np.random.default_rng(5); holes = []
+    p = Part("surface"); p.planar_xy = True; rnd = np.random.default_rng(5); holes = []
     while len(holes) < 9:
         c = (rnd.uniform(-2.6, 2.6), rnd.uniform(-4.8, 4.8)); r = rnd.uniform(0.30, 0.70)
         if all(math.hypot(c[0] - o[0], c[1] - o[1]) > (r + o[2]) * 1.25 for o in holes): holes.append((c[0], c[1], r, rnd.uniform(0.07, 0.20), rnd.uniform(0, 6.28), rnd.uniform(0, 6.28)))

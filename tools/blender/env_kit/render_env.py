@@ -12,7 +12,7 @@ from . import build_env as BE, textures as ET
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--only", default=""); ap.add_argument("--samples", type=int, default=32); ap.add_argument("--exposure", type=float, default=-3.0); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--only", default=""); ap.add_argument("--samples", type=int, default=32); ap.add_argument("--exposure", type=float, default=-3.5); a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     for aid, sp in BE.SPECS.items():
         if a.only and aid not in a.only.split(","): continue
@@ -24,7 +24,7 @@ def main():
             if lv > 0: o.hide_render = True
         lo, hi = bounds([asset.lods[0]]); c = (lo + hi) / 2; size = hi - lo; surface = aid.startswith(("aro_road_", "aro_water_")); d = max(size.x, size.y, size.z)
         g = geo.Part("ground"); r_ = max(size.x, size.y, 10) * 1.6; z = lo.z - 0.02
-        g.face_n([(c.x - r_, c.y - r_, z), (c.x + r_, c.y - r_, z), (c.x + r_, c.y + r_, z), (c.x - r_, c.y + r_, z)], "dry_earth" if not aid.startswith("aro_road_asphalt") and not aid.startswith("aro_road_pothole") else "concrete_dark", (0, 0, 1)); g.to_object("preview_ground")
+        g.face_n([(c.x - r_, c.y - r_, z), (c.x + r_, c.y - r_, z), (c.x + r_, c.y + r_, z), (c.x - r_, c.y + r_, z)], "concrete_dark", (0, 0, 1)); g.to_object("preview_ground")
         R.world(36, 200, clouds=True)
         if surface:
             views = (("iso", (c.x - 0.45 * d, c.y - 0.62 * d, c.z + 0.55 * d), (c.x, c.y, c.z), 30), ("front", (c.x, lo.y + 0.6, lo.z + 1.5), (c.x, c.y + d * 0.3, lo.z + 0.2), 28))      # oblique from above; driver height along the patch

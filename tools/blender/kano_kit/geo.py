@@ -144,7 +144,7 @@ class Part:
         fixed = getattr(self, "_fixed", set())
         for f in bm.faces:
             if f in fixed: continue
-            n = f.normal; ax = max(range(3), key=lambda i: abs(n[i])); sc = per.get(self.keys[f.material_index], scale)
+            n = f.normal; ax = 2 if getattr(self, 'planar_xy', False) else max(range(3), key=lambda i: abs(n[i])); sc = per.get(self.keys[f.material_index], scale)   # planar_xy: ground patches keep one projection so steep rut walls do not break the texture
             for l in f.loops:
                 p = l.vert.co; u, v = ((p.y, p.z) if ax == 0 else (p.x, p.z) if ax == 1 else (p.x, p.y))
                 l[uvl].uv = (u * sc, v * sc)
