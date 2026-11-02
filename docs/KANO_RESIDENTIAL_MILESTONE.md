@@ -158,6 +158,7 @@ The draw-call estimate is dominated by repeated small parts: piers 84, wall pane
 `docs/kano/KANO_RESIDENTIAL_v002.freeze.json` records, for each of the 14 assets, the path, size and SHA-256 of the `.blend`, FBX, GLB, textures, manifest and validation report (126 files), the game-repository commit that holds the producing code (`bba95b2`, last change to the producing modules; branch head `90d20af` when frozen) and the validation result (14 of 14 passed). **v002 is frozen as a candidate for the in-game review. It is not approved:** `production_approved` needs the in-game review and the owner's decision. A change after this point is v003.
 
 ### 10.6 Completed and outstanding
+*(Written before the in-game run; the Unity import, build size and in-game numbers are now in section 11.)*
 | Done | Outstanding |
 |---|---|
 | 14 assets built as v002, validated (Blender), exported (FBX and GLB), hashed and frozen | **Import into the real Unity game and in-game screenshots** (owner actions in section 9) |
@@ -165,3 +166,40 @@ The draw-call estimate is dominated by repeated small parts: piers 84, wall pane
 | export verification passed: colours, re-import, exact sizes, appearance | in-game `[Perf]`, build size, load time, memory (E0) |
 | comparison with R-006 and the one significant difference recorded | villa facade richness (v003, targeted) |
 | sources, exports, previews and hashes preserved as a text manifest in the public code repository | binaries in the private asset repository as Git LFS objects (blocked: `lfs.github.com`) |
+
+## 11. In-game review of the real kit (Unity import and running game): what was measured on 2026-11-02
+Run: `blender-unity.yml`, run 41391901470 (commit `dcafeb0`, marker `[kano-review]`), in the game repository's existing workflow with its existing Unity credentials. The 14 residential assets were **built from the code** with the Blender toolchain (all 14 passed the toolchain validation), staged under the git-ignored `Assets/ThirdParty/ARO`, imported by Unity 6000.0.58f2 and built with `ARO.Editor.BuildScript.BuildKanoReviewWebGL` (no backend baked in, not deployed, nothing committed). The built player was then driven in headless Chromium with **software GL (SwiftShader) on a CI virtual machine**, six camera views, the game's own lighting, camera rig, tone mapping and quality tier `medium`. Every step of the job succeeded. This is an **import-and-render proof, not an approval**: `production_approved` needs a person.
+
+### 11.1 Import (from the Unity build log)
+| Check | Result |
+|---|---|
+| Models imported and prefabs built | **14 of 14** (`[KanoReviewBuilder]` line per asset) |
+| LOD triangle counts in Unity against the Blender validation | **identical for every asset** (e.g. villa A 5,454 / 824 / 58; tree 2,364 / 213 / 22; street 1,518 / 38) |
+| Materials per prefab | as validated (villa A 11, villa B 10, street 7, pole 5, others 1 to 3) |
+| Review prefab | `kano_residential_section_a`: **337 placements, 0 skipped** (no missing prefab) |
+| Asset-related warnings or errors in the Unity build log | **none found** (search for the asset paths, `kano`, `T_kano`) |
+| Page (script) errors in the running game, six views | **none** |
+| WebGL build | `WebGL.data.unityweb` 23,702,569 bytes against 20,105,528 in the baseline build of CI run 273: **+3.6 MB**; wasm and framework unchanged; **39 MB** on disk in total (baseline 35.9 MB); desktop budget 120 MB: within |
+
+### 11.2 In-game numbers (the game's own `[Perf]` lines; each view at the first tier tried, `medium`, no fallback)
+| View | Visible triangles | Draw calls (game estimate) | Visible renderers | Set-pass calls | Result against the desktop budget (1,000,000 triangles / 400 draw calls) |
+|---|---|---|---|---|---|
+| ref (reference camera) | 180,789 | **690** | 252 | 37 | triangles within; **draw calls exceed** |
+| front | 40,154 | 107 | 30 | 15 | within |
+| side | 157,589 | **654** | 248 | 27 | triangles within; **draw calls exceed** |
+| street1 | 170,644 | **650** | 233 | 35 | triangles within; **draw calls exceed** |
+| street2 | 167,496 | **618** | 219 | 37 | triangles within; **draw calls exceed** |
+| top | 116,804 | 331 | 118 | 12 | within |
+
+* **Draw calls exceed the desktop budget in 4 of 6 views (618 to 690 against 400).** The game's figure counts everything visible (terrain chunks, road, props and the kit), so it cannot be split into "kit" and "rest" from these lines; it is not the 432 estimated for the kit alone in section 10.4, and the two must not be compared. The finding stands either way: the unbatched instancing of the section needs the content-side merging described in section 10.4 and, for a real fix, the engine batching item RB-15. Neither was done here.
+* **Texture memory:** 112 textures, 20.9 MB loaded in the whole scene (budget 300 MB): within.
+* **Load:** about 4 to 5 s from page load to the game's own ready line (software GL, local file server, polled once a second; indicative only).
+* **Frame time (470 to 1,160 ms per frame) is NOT a measurement of player performance.** It is CPU software rasterisation on a CI virtual machine. It says nothing about a GPU and must not be quoted as a frame rate. A real frame-time number needs a real GPU and is outstanding.
+* **JS heap** 242 to 257 MB (browser, software GL, indicative only).
+
+### 11.3 Materials and textures: what is and is not established
+* **Established by numbers and logs:** the textures and materials import, nothing logs an error, the six views render without a script error, and the scene holds 112 textures (20.9 MB).
+* **NOT established by me: that the materials look right.** The six pictures (`kanoreview-ref|front|side|street1|street2|top.png`, 1280 x 720) are only in the one-day artifact `kano-review-in-game` of the run (5.3 MB, expires 2026-11-03 05:51 UTC); this environment cannot download artifacts, so **I have not seen them**. Whether the plaster, stone, roof tiles, asphalt, leaves and grass render with the right colour and texture is for a person to judge from those pictures. Anything wrong goes into v003 (a new version; v002 is not edited).
+
+### 11.4 What this run did not do
+Mud, flooding, rainy-season or seasonal behaviour: none of it exists in the game or was built into this review (section 6 of `docs/ENVIRONMENT_SYSTEMS_ASSESSMENT.md`). No driving physics, road generation, weather, vehicle behaviour or production configuration was touched.
