@@ -10,7 +10,7 @@ from aro_blender import workspace as ws
 from . import build_all
 
 PRODUCERS = ["tools/blender/aro_blender", "tools/blender/kano_kit/geo.py", "tools/blender/kano_kit/street.py", "tools/blender/kano_kit/walls.py", "tools/blender/kano_kit/villa.py", "tools/blender/kano_kit/lights.py",
-             "tools/blender/kano_kit/veg.py", "tools/blender/kano_kit/textures.py", "tools/blender/kano_kit/assemble.py", "tools/blender/kano_kit/build_all.py"]
+             "tools/blender/kano_kit/veg.py", "tools/blender/kano_kit/textures.py", "tools/blender/kano_kit/assemble.py", "tools/blender/kano_kit/build_all.py", "tools/blender/env_kit"]
 
 
 def git(root: Path, *a: str) -> str:
@@ -21,11 +21,15 @@ def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--version", required=True); ap.add_argument("--out", required=True); ap.add_argument("--renders", default=""); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--version", required=True); ap.add_argument("--out", required=True); ap.add_argument("--renders", default=""); ap.add_argument("--kit", default="kano", choices=["kano", "env"]); a = ap.parse_args()
     repo = Path(__file__).resolve().parents[3]; W = ws.default_root(); v = a.version
     producers_commit = git(repo, "log", "-1", "--format=%H", "--", *PRODUCERS); head = git(repo, "rev-parse", "HEAD"); dirty = bool(git(repo, "status", "--porcelain", "--", "tools/blender"))
     assets = []; all_pass = True
-    for aid, sp in build_all.SPECS.items():
+    if a.kit == "env":
+        from env_kit import build_env
+        specs = build_env.SPECS
+    else: specs = build_all.SPECS
+    for aid, sp in specs.items():
         kind = sp["kind"]; proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"
         files = [proj / f"{aid}.blend", proj / "project.json", W / "exports" / "fbx" / aid / v / f"{aid}.fbx", W / "exports" / "glb" / aid / v / f"{aid}.glb", W / "exports" / "fbx" / aid / v / f"{aid}.manifest.json", val]
         files += sorted(proj.glob("T_*.png"))
@@ -34,7 +38,7 @@ def main() -> int:
         res = json.loads(val.read_text()); all_pass &= bool(res["passed"]); st = res["stats"]
         assets.append({"id": aid, "kind": kind, "version": v, "validation": {"passed": res["passed"], "lodTriangles": st["lod_triangles"], "sizeM": st["size_m"], "materials": st["materials"]},
                        "files": [{"path": str(f.relative_to(W)), "bytes": f.stat().st_size, "sha256": sha(f)} for f in files]})
-    doc = {"freeze": f"kano_residential_section_a {v}", "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)", "date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    doc = {"freeze": f"{'environment_kit_e1_e2' if a.kit == 'env' else 'kano_residential_section_a'} {v}", "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)", "date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
            "gameRepository": {"repo": "AffanNamu/Online-African-Road", "branch": "work/kano-residential", "head": head, "producerCodeLastChangedIn": producers_commit, "uncommittedChangesUnderToolsBlender": dirty},
            "blender": __import__("bpy").app.version_string, "allAssetsPassedBlenderValidation": all_pass, "assetCount": len(assets), "assets": assets,
            "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."}
