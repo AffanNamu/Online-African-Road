@@ -151,6 +151,7 @@ def puddle_set(lod=0):
         for k in range(seg):
             th = 2 * math.pi * k / seg; r = R * (1 + 0.28 * math.sin(3 * th + ph[0]) + 0.14 * math.sin(5 * th + ph[1]) + 0.07 * math.sin(9 * th + ph[2])); pts.append((cx + r * math.cos(th), cy + r * math.sin(th), 0.01))
         for k in range(seg): p.face([(cx, cy, 0.01), pts[k], pts[(k + 1) % seg]], key)
+    p.datum = 0.01                                                                          # the water plane sits 1 cm above the ground it lies on
     return p
 
 

@@ -32,12 +32,13 @@ spec("aro_shrub_ixora_red_a", "vegetation", {0: lambda: veg.shrub_ixora(0), 1: l
 ROOT = None
 
 
-def produce(sp: dict, do_export: bool = True) -> dict:
+def produce(sp: dict, do_export: bool = True, extra_pbr=None) -> dict:
     a = geo.Asset(sp["id"], sp["kind"])
     if sp["textured"]: textures.paver_material(); textures.asphalt_material()
     if sp["id"].startswith(("rg_ngn_tree", "aro_hedge", "aro_shrub")): textures.leaf_material()
     for lv, fn in sorted(sp["lods"].items()): a.lod(lv, fn())
     textures.apply_pbr()                                                                         # base colour and normal maps for every kit surface that has them
+    if extra_pbr: extra_pbr()                                                                    # another kit's texture sets (the environmental kit passes its own)
     if sp["col"]: a.collision(*sp["col"])
     bad = {o.name: [round(v, 3) for v in geo.shell_volumes(o) if v <= 0] for o in a.lods.values()}
     bad = {k: v for k, v in bad.items() if v}

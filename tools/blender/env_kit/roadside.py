@@ -98,9 +98,9 @@ def drain_open_slab(lod: int = 0) -> Part:
     """A 6 m section of concrete roadside drain along Y: floor, two walls, five slab covers (one cracked and dropped, one missing, leaving an opening), silt on the floor and a few stones. The bottom of the channel is
     z = 0; the road surface beside it is at z = 0.85 (the asset is placed 0.85 m lower, datum 0.85)."""
     p = Part("drain"); C = "concrete"
+    if lod >= 1: p.box(-0.55, -3.0, 0.0, 0.55, 3.0, 0.85, C); return p                       # far LOD: one block
     p.box(-0.45, -3.0, 0.0, 0.45, 3.0, 0.15, C)
     for sx in (-1, 1): p.box(sx * 0.45 - (0.15 if sx > 0 else 0), -3.0, 0.15, sx * 0.45 + (0 if sx > 0 else 0.15), 3.0, 0.85, C, skip=() )
-    if lod >= 1: return p
     for k, (y0, y1) in enumerate(((-3.0, -2.0), (-2.0, -1.0), (1.0, 2.0), (2.0, 3.0))):                     # slabs
         z = 0.78 if k != 1 else 0.70
         p.box(-0.55, y0 + 0.03, z, 0.55, y1 - 0.03, z + 0.07, C)
