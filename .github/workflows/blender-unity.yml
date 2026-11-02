@@ -3,9 +3,14 @@
 # and removed again when the job ends), and the EditMode tests in Assets/_Project/Tests/EditMode/BlenderAssetImportTests.cs measure what Unity imported: orientation, mirroring, scale, stray rotations,
 # materials, the collision box, LOD triangle counts against the prop catalogue's rules. glTFast is added to the CI copy of Packages/manifest.json only (GLB needs an importer); the committed manifest is untouched.
 # This is the same seam the private asset repository will use: files appear under Assets/ThirdParty at CI time and are not part of the public repository.
+# REVIEW (only when the commit message contains [kano-review], or a manual run sets review): after the import tests the job also builds the 14 residential kit assets FROM THE CODE with the toolchain (validated),
+# stages them under Assets/ThirdParty/ARO, builds the game with ARO.Editor.BuildScript.BuildKanoReviewWebGL (no backend is baked in: no -supabaseUrl/-supabaseAnonKey, nothing live is touched), drives the WebGL
+# build in headless Chromium (?smoke=kanostreet) and keeps the screenshots as a one-day artifact. The assets exist only inside the job; no picture or build is written to the log or uploaded beyond that artifact.
 name: Blender import into Unity
 on:
   workflow_dispatch:
+    inputs:
+      review: { description: "also build the real Kano residential kit and show it in the running game (the same as a [kano-review] commit)", type: boolean, default: false }
   push:
     paths:
       - 'tools/blender/**'
@@ -85,9 +90,75 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: blender-import-results, path: "${{ steps.tests.outputs.artifactsPath }}", if-no-files-found: warn }
+      # ------------------------------------------------------------------------------------------------ the real kit in the running game (opt-in)
+      - name: Review gate (a [kano-review] commit message, or a manual run with review set)
+        id: gate
+        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}" }
+        run: |
+          case "$MSG" in *"[kano-review]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
+      - name: Review - remove the test fixtures so that only the real kit is built
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta Assets/ThirdParty/ARO Assets/ThirdParty/ARO.meta Builds
+      - name: Review - build the 14 residential kit assets from the code (toolchain validation must pass for every one)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        run: |
+          python -m kano_kit.build_all --report "$RUNNER_TEMP/kit_report.json"
+          python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "kit_report.json")))
+          bad = [x["id"] for x in r if not x["passed"]]
+          for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"))
+          print(f"{len(r)} assets built; failed validation: {bad or 'none'}")
+          sys.exit(1 if bad or len(r) != 14 else 0)
+          PY
+      - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        run: python -m kano_kit.stage_unity --out Assets/ThirdParty/ARO
+      - name: Review - pre-pull the Unity WebGL editor image (retry with backoff)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: |
+          img=unityci/editor:ubuntu-6000.0.58f2-webgl-3; ok=0
+          for i in 1 2 3 4 5 6 7 8; do if docker pull "$img"; then ok=1; break; fi; echo "pull of $img failed (attempt $i); sleeping $((i*30))s"; sleep $((i*30)); done
+          [ "$ok" = 1 ] || { echo "could not pull $img after retries"; exit 1; }
+      - name: Review - build the game with the real kit (BuildKanoReviewWebGL; no backend is baked in)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          buildMethod: ARO.Editor.BuildScript.BuildKanoReviewWebGL
+          versioning: None
+      - uses: actions/setup-node@v4
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        with: { node-version: 22 }
+      - name: Review - install Playwright and Chromium
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: |
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: Review - drive the built game and take one screenshot per view (the numbers come from the game's own [Perf] lines)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: |
+          sudo chown -R "$USER" Builds || true; mkdir -p kano-review
+          echo "WebGL build size (E0): $(du -sm Builds/WebGL | cut -f1) MB on disk"; ls -l Builds/WebGL/Build | awk '{print $5, $9}'
+          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top" || { echo "review script reported failures"; exit 1; }
+        shell: bash {0}
+      - name: Review - the numbers (no pictures are written to this public log)
+        if: ${{ always() && steps.gate.outputs.on == 'true' }}
+        run: |
+          mkdir -p kano-review; [ -f kano-review/kanoreview-summary.json ] && python3 -c "import json;d=json.load(open('kano-review/kanoreview-summary.json'));[print(k, json.dumps({x:y for x,y in v.items() if x!='render'})) for k,v in d.items()]" || echo "no summary was written"
+          ls -la kano-review || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && steps.gate.outputs.on == 'true' }}
+        with: { name: kano-review-in-game, path: kano-review, retention-days: 1, if-no-files-found: warn }
       - name: Remove the generated fixture (it is never part of a build or of the repository)
         if: always()
         # The Unity container runs as root and writes the kit materials it creates into the
         # workspace, so a plain rm fails with "Permission denied" (seen on run 41259509027,
         # after all four import tests had passed).
-        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta
+        run: sudo rm -rf Assets/ThirdParty/ARO_Calibration Assets/ThirdParty/ARO_Calibration.meta Assets/ThirdParty/ARO_KitFixture Assets/ThirdParty/ARO_KitFixture.meta Assets/ThirdParty/ARO Assets/ThirdParty/ARO.meta Builds
