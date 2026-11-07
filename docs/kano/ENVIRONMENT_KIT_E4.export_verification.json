@@ -1,0 +1,278 @@
+[
+ {
+  "asset": "aro_road_mud_rutted_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.125,
+   24.0,
+   0.388
+  ],
+  "size_validated_m": [
+   8.125,
+   24.0,
+   0.388
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_mud_rutted_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   8.125,
+   24.0,
+   0.388
+  ],
+  "size_validated_m": [
+   8.125,
+   24.0,
+   0.388
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_pothole_set_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   7.0,
+   12.0,
+   0.209
+  ],
+  "size_validated_m": [
+   7.0,
+   12.0,
+   0.209
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_road_pothole_set_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 2,
+  "materials_expected": 2,
+  "texture_images": 4,
+  "size_reimported_m": [
+   7.0,
+   12.0,
+   0.209
+  ],
+  "size_validated_m": [
+   7.0,
+   12.0,
+   0.209
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_flood_sheet_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 3,
+  "materials_expected": 3,
+  "texture_images": 5,
+  "size_reimported_m": [
+   14.077,
+   8.538,
+   0.02
+  ],
+  "size_validated_m": [
+   14.077,
+   8.538,
+   0.02
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "aro_water_flood_sheet_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 3,
+  "materials_expected": 3,
+  "texture_images": 5,
+  "size_reimported_m": [
+   14.077,
+   8.538,
+   0.02
+  ],
+  "size_validated_m": [
+   14.077,
+   8.538,
+   0.02
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_a",
+  "version": "v003",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_validated_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_a",
+  "version": "v003",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_validated_m": [
+   20.14,
+   16.18,
+   7.21
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_b",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_validated_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_compound_b",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 8,
+  "size_reimported_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_validated_m": [
+   14.14,
+   12.18,
+   4.59
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_wall_gate_set_a",
+  "version": "v002",
+  "format": "glb",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 6,
+  "size_reimported_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_validated_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_ok": true,
+  "ok": true
+ },
+ {
+  "asset": "rg_ngn_hausa_wall_gate_set_a",
+  "version": "v002",
+  "format": "fbx",
+  "meshes": 2,
+  "lod_meshes": 2,
+  "lods_expected": 2,
+  "materials": 5,
+  "materials_expected": 5,
+  "texture_images": 6,
+  "size_reimported_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_validated_m": [
+   16.0,
+   1.62,
+   4.69
+  ],
+  "size_ok": true,
+  "ok": true
+ }
+]
