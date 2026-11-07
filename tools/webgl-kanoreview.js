@@ -70,7 +70,7 @@ async function imageDiff(page, a64, b64) {
       shots[label] = buf.toString('base64');
       const jsHeapMB = await page.evaluate(() => (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null));
       const draws = { total: lastOf(/^\[KanoReview\] draws total=/), kit: lastOf(/^\[KanoReview\] draws kit /), ground: lastOf(/^\[KanoReview\] draws ground /), rest: lastOf(/^\[KanoReview\] draws rest /),
-                      byAsset: lastOf(/^\[KanoReview\] draws byAsset/), instancing: lastOf(/^\[KanoReview\] draws kitMaterialsInstancingOn/) };
+                      byAsset: lastOf(/^\[KanoReview\] draws byAsset/), byLod: lastOf(/^\[KanoReview\] draws byLod /), byLodAsset: lastOf(/^\[KanoReview\] draws byLodAsset/), instancing: lastOf(/^\[KanoReview\] draws kitMaterialsInstancingOn/) };
       summary[label] = { quality: q === null ? 'as given' : q, loadSeconds, jsHeapMB, budgetWarnings: logs.filter(l => l.includes('BUDGET EXCEEDED')).slice(-2), perf: perf(), draws, render: logs.filter(l => l.startsWith('[Render]')).slice(-2), review: logs.filter(l => l.startsWith('[KanoReview] ready')), errors };
       fs.writeFileSync(`${prefix}-summary.json`, JSON.stringify(summary, null, 1));
       if (errors.length) failures.push(`${label}: page errors: ${errors.slice(0, 2).join(' | ')}`);

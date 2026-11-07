@@ -19,3 +19,10 @@ def test_helpers_read_the_game_lines():
 def test_compare_shows_the_change_in_percent():
     after = {"views": {"ref": dict(V, perf=[PERF.replace("drawEstimate=300", "drawEstimate=240").replace("engineDraws=600", "engineDraws=480")])}}
     t = R.compare({"views": {"ref": V}}, after); assert "-20.0%" in t and "| ref | 300 | 240 |" in t
+
+
+def test_lod_lines_are_parsed_and_tabulated():
+    v = dict(V, draws=dict(V["draws"], byLod="draws byLod (draws/renderers/tris) 0=200/20/900, 1=90/30/200, none=9/3/10", byLodAsset="draws byLodAsset (draws/renderers/tris) villa_a#0=120/10/800, villa_a#1=60/20/150, tree#1=30/10/50"))
+    assert R.by_lod(v) == {"0": (200, 20, 900), "1": (90, 30, 200), "none": (9, 3, 10)}
+    assert R.by_lod_asset(v)[("villa_a", "1")] == (60, 20, 150)
+    t = R.lod_table({"views": {"ref": v}}); assert "| ref | 200 | 90 | 0 | 0 | 9 | villa_a LOD1 60, tree LOD1 30 |" in t

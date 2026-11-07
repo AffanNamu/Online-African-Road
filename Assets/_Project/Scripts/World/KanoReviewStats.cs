@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using ARO.NetCore;
 using UnityEngine;
 
@@ -34,6 +35,15 @@ namespace ARO.World
             return t != null ? t.name : null;
         }
 
+        static readonly Regex LodRx = new Regex(@"_lod(\d)", RegexOptions.IgnoreCase), InstanceRx = new Regex(@"[ _\-]*\(?\d+\)?$");
+
+        /// <summary>The LOD level (0..3) of the LOD group child that owns this transform (the importer names them {id}_lod0..3), or -1 when the renderer is not under a LOD child.</summary>
+        int LodOf(Transform t)
+        {
+            while (t != null && t.parent != Root) { var m = LodRx.Match(t.name); if (m.Success) return m.Groups[1].Value[0] - '0'; t = t.parent; }
+            return -1;
+        }
+
         void Log()
         {
             var b = new DrawBreakdown(); var kitMaterials = new HashSet<Material>(); int instancingOn = 0;
@@ -47,12 +57,15 @@ namespace ARO.World
                 if (asset == null) { b.Add("rest", mesh, ids, draws, tris); continue; }
                 if (asset == "review_ground") { b.Add("ground", mesh, ids, draws, tris); continue; }
                 b.Add("kit", mesh, ids, draws, tris); b.Add("asset:" + asset, mesh, ids, draws, tris);
+                int lod = LodOf(r.transform); string lodName = lod >= 0 ? lod.ToString() : "none";
+                b.Add("lod:" + lodName, mesh, ids, draws, tris); b.Add("lodasset:" + InstanceRx.Replace(asset, "") + "#" + lodName, mesh, ids, draws, tris);
                 for (int i = 0; i < draws; i++) if (mats[i] != null && kitMaterials.Add(mats[i]) && mats[i].enableInstancing) instancingOn++;
             }
             int total = b.Draws("kit", "ground", "rest");
             Debug.Log("[KanoReview] draws total=" + total + " kitShare=" + (total > 0 ? (100f * b.Draws("kit") / total).ToString("0.0") : "0") + "%");
             Debug.Log("[KanoReview] draws " + b.Summary("kit")); Debug.Log("[KanoReview] draws " + b.Summary("ground")); Debug.Log("[KanoReview] draws " + b.Summary("rest"));
             Debug.Log("[KanoReview] draws byAsset (draws/renderers/tris) " + b.Ranked("asset:"));
+            Debug.Log("[KanoReview] draws byLod (draws/renderers/tris) " + b.Ranked("lod:")); Debug.Log("[KanoReview] draws byLodAsset (draws/renderers/tris) " + b.Ranked("lodasset:"));
             Debug.Log("[KanoReview] draws kitMaterialsInstancingOn=" + instancingOn + "/" + kitMaterials.Count);
         }
     }

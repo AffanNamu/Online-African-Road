@@ -38,6 +38,30 @@ def by_asset(view: dict) -> dict:
     return out
 
 
+def _ranked(line: str) -> dict:
+    """{name: (draws, renderers, tris)} from a '(draws/renderers/tris) name=d/r/t, ...' line."""
+    if ") " not in line: return {}
+    out = {}
+    for part in line.split(") ", 1)[1].split(", "):
+        k, _, v = part.rpartition("="); a = v.split("/")
+        if k and len(a) == 3: out[k] = tuple(int(x) for x in a)
+    return out
+
+
+def by_lod(view: dict) -> dict:
+    """Kit draws per LOD level of the running game: {'0': (draws, renderers, tris), '1': ..., 'none': ...}; keys are the LOD level, 'none' for renderers outside a LOD group."""
+    return {k[len("lod:"):] if k.startswith("lod:") else k: v for k, v in _ranked((view.get("draws") or {}).get("byLod") or "").items()}
+
+
+def by_lod_asset(view: dict) -> dict:
+    """{('aro_villa_2storey_hip_a', 1): (draws, renderers, tris)}: kit draws per asset and LOD level."""
+    out = {}
+    for k, v in _ranked((view.get("draws") or {}).get("byLodAsset") or "").items():
+        base, _, lod = k.removeprefix("lodasset:").rpartition("#")
+        if base: out[(base, lod)] = v
+    return out
+
+
 def row(label: str, v: dict) -> str:
     est = num(v, "drawEstimate"); eng = num(v, "engineDraws"); tri = num(v, "visibleTris"); ren = num(v, "visibleRenderers"); sp = num(v, "setPass"); mat = (v.get("draws") or {}).get("kit", "")
     dm = re.search(r"distinctMaterials=(\d+)", mat); dp = re.search(r"distinctMeshMaterialPairs=(\d+)", mat); img = v.get("image") or {}
@@ -60,11 +84,24 @@ def compare(before: dict, after: dict) -> str:
     return "\n".join(out)
 
 
+def lod_table(doc: dict, assets: int = 6) -> str:
+    """Markdown: for every view, the kit draws at each LOD level of the running game, and the assets with the most draws at LOD1 and above (where a lower-detail LOD would save draws)."""
+    out = ["| View | LOD0 draws | LOD1 draws | LOD2 draws | LOD3 draws | Outside a LOD group | Largest assets at LOD1 or above (draws) |", "|---|---|---|---|---|---|---|"]
+    for k, v in doc["views"].items():
+        L = by_lod(v)
+        if not L: continue
+        hi = sorted(((d[0], a, l) for (a, l), d in by_lod_asset(v).items() if l not in ("0", "none")), reverse=True)[:assets]
+        out.append(f"| {k} | " + " | ".join(str(L.get(x, (0, 0, 0))[0]) for x in ("0", "1", "2", "3", "none")) + " | " + (", ".join(f"{a} LOD{l} {n}" for n, a, l in hi) or "-") + " |")
+    return "\n".join(out)
+
+
 def main(argv) -> int:
     if len(argv) >= 4 and argv[1] == "extract":
         run = argv[argv.index("--run") + 1] if "--run" in argv else ""; commit = argv[argv.index("--commit") + 1] if "--commit" in argv else ""; note = argv[argv.index("--note") + 1] if "--note" in argv else ""
         doc = {"run": int(run) if run.isdigit() else run, "commit": commit, "renderer": "headless Chromium, SwiftShader software GL, quality tier medium unless the label says low, hour 15.5, 1280x720", "note": note, "views": extract(open(argv[2], encoding="utf-8", errors="replace").read())}
         json.dump(doc, open(argv[3], "w"), indent=1); print(f"{len(doc['views'])} views written to {argv[3]}"); return 0
+    if len(argv) == 3 and argv[1] == "lods":
+        print(lod_table(json.load(open(argv[2])))); return 0
     if len(argv) == 4 and argv[1] == "compare":
         print(compare(json.load(open(argv[2])), json.load(open(argv[3])))); return 0
     print(__doc__); return 2
