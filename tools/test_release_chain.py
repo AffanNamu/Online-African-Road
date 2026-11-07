@@ -38,3 +38,8 @@ def test_asset_without_a_reference_stays_open_only_with_a_recorded_reason(tmp_pa
 def test_a_recorded_visual_review_must_exist(tmp_path):
     c = make(tmp_path); reg = json.loads((c / "registry/asset_registry.json").read_text()); reg["assets"][0]["validation"]["visualReview"] = "reviews/x.json"; (c / "registry/asset_registry.json").write_text(json.dumps(reg))
     assert chain(c)["in_game_review"][0] == "missing"
+
+
+def test_documentary_references_satisfy_the_reference_link_and_must_exist(tmp_path):
+    ok = chain(make(tmp_path, concepts=[], documentaryReferences=["R-001"], flags="gap M-01")); assert ok["reference"][0] == "ok" and "documentary" in ok["reference"][1]
+    assert chain(make(tmp_path, concepts=[], documentaryReferences=["R-999"]))["reference"][0] == "mismatch"

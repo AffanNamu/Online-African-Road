@@ -29,4 +29,6 @@ def test_every_environmental_material_is_declared_in_the_kit_and_every_texture_e
     names = {f"M_{k}" for k in AM.LIBRARY}
     assert {m for m in used if m not in names} == set(), "an asset uses a material that is not in the kit"
     gen = {"mud_wet", "mud_crest", "earth_compacted", "sand_dusty", "asphalt_cracked", "roof_zinc_rust", "mud_brick", "plaster_weathered", "timber_weathered", "water_brown", "water_rain", "leaf_dry_cutout", "grass_blade_cutout", "leaf_wet_cutout", "grass_blade_wet_cutout", "banana_leaf_cutout"}   # the last two are alpha-clipped cutouts made by cutout_material
-    assert {k for k in AM.TEXTURED if "T_env_" in AM.TEXTURED[k]["texture"]} == gen
+    from env_kit import e4 as E4                                                             # importing batch E4 registers its three materials; each must have a generator in E4_TEXTURES (order of tests must not matter)
+    assert {k for k in AM.TEXTURED if "T_env_" in AM.TEXTURED[k]["texture"]} == gen | set(E4.E4_TEXTURES)
+    assert all(AM.TEXTURED[k]["texture"] == v[0] and AM.TEXTURED[k]["normal"] == v[1] for k, v in E4.E4_TEXTURES.items()), "an E4 material names a texture its generator does not write"

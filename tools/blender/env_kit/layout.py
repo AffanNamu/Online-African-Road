@@ -7,12 +7,17 @@ from pathlib import Path
 
 def measure(ids) -> dict:
     """{id: {"bbox": [xmin, ymin, zmin, xmax, ymax, zmax], "datum": float or None}} built from the LOD0 builders of the environmental kit."""
+    import os
     from . import build_env as BE
     from kano_kit import build_all
+    e4 = None
+    if os.environ.get("ARO_ENV_KIT") == "e4":                                  # batch E4 (corrections of the in-game review, env_kit.e4): its builders and datums replace the E3 ones for the ids it corrects; importing it also registers its materials
+        from . import e4 as e4
     out = {}
     for aid in ids:
-        sp = BE.SPECS.get(aid) or build_all.SPECS[aid]; part = sp["lods"][0](); vs = [v.co for v in part.bm.verts]
-        out[aid] = {"bbox": [round(min(v[i] for v in vs), 4) for i in range(3)] + [round(max(v[i] for v in vs), 4) for i in range(3)], "datum": BE.DATUM.get(aid)}
+        use4 = e4 is not None and aid in e4.SPECS_E4
+        sp = e4.SPECS_E4[aid] if use4 else (BE.SPECS.get(aid) or build_all.SPECS[aid]); part = sp["lods"][0](); vs = [v.co for v in part.bm.verts]
+        out[aid] = {"bbox": [round(min(v[i] for v in vs), 4) for i in range(3)] + [round(max(v[i] for v in vs), 4) for i in range(3)], "datum": (e4.DATUM_E4 if use4 else BE.DATUM).get(aid)}
         part.bm.free()
     return out
 

@@ -23,13 +23,16 @@ def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--version", default="", help="one version label for every asset; omitted: the LATEST version of each asset"); ap.add_argument("--out", required=True); ap.add_argument("--renders", default="")
-    ap.add_argument("--kit", default="kano", choices=["kano", "env", "v3"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
+    ap.add_argument("--kit", default="kano", choices=["kano", "env", "v3", "e4"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
     repo = Path(__file__).resolve().parents[3]; W = ws.default_root(); only = set(a.only.split(",")) if a.only else None
     producers_commit = git(repo, "log", "-1", "--format=%H", "--", *PRODUCERS); head = git(repo, "rev-parse", "HEAD"); dirty = bool(git(repo, "status", "--porcelain", "--", "tools/blender"))
     assets = []; all_pass = True
     if a.kit == "env":
         from env_kit import build_env
         specs = build_env.SPECS
+    elif a.kit == "e4":
+        from env_kit import e4
+        specs = e4.SPECS_E4                                                                 # batch E4: the corrections of the in-game review, frozen as the LATEST version of each asset
     elif a.kit == "v3":
         from . import build3
         specs = {**build3.SPECS, **build3.FRONTAGE}

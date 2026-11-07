@@ -935,6 +935,170 @@
     "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
     "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
    }
+  },
+  {
+   "id": "R-024",
+   "kind": "documentary_source",
+   "label": "Hausa architecture (encyclopaedia article)",
+   "source": {
+    "title": "Hausa architecture",
+    "publisher": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Hausa_architecture",
+    "textLicence": "CC BY-SA (text); each image has its own file licence on Wikimedia Commons"
+   },
+   "documents": [
+    "tubali are cone-shaped, sun-baked mud bricks laid in rectilinear courses in thick mud mortar, the walls thinning towards the top",
+    "mortar and plaster use clay-rich earth (kasa), often with red pigment, giving the reddish-brown finish",
+    "plaster is burnished with a stone at the Gidan Rumfa, with shallow arched grooves traced in it",
+    "zankwaye are the pinnacles that rise above walls and roofs",
+    "buttresses run up past the parapet and end in pinnacles and towers while shading the wall",
+    "the zaure is the gatehouse and entrance hall; zaure roofs are flat, corniced terraces reached by steps"
+   ],
+   "doesNotDocument": [
+    "wall and parapet heights",
+    "an exact plaster colour value",
+    "painted motifs beyond relief and burnishing",
+    "any specific Kano compound"
+   ],
+   "actualLocation": "Hausa lands (northern Nigeria, Niger): Kano examples cited (Gidan Rumfa); a general article, not Kano-specific",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic"
+  },
+  {
+   "id": "R-025",
+   "kind": "documentary_source",
+   "label": "Gidan Rumfa (the Emir's palace, Kano) site record",
+   "source": {
+    "title": "Gidan Rumfa",
+    "publisher": "ArchNet",
+    "url": "https://archnet.org/sites/3778",
+    "textLicence": "see the site's terms; cite, do not copy"
+   },
+   "documents": [
+    "built by Muhammad Rumfa in the late 15th century",
+    "decoration is concentrated on the two royal audience chambers and uses abstract designs",
+    "the exterior wall is modestly decorated"
+   ],
+   "doesNotDocument": [
+    "dimensions",
+    "colour values",
+    "the compound street front of an ordinary house"
+   ],
+   "actualLocation": "Kano old city",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic"
+  },
+  {
+   "id": "R-026",
+   "kind": "documentary_source",
+   "label": "Gidan Makama (Kano Museum), a decorated Hausa compound in the old city",
+   "source": {
+    "title": "Gidan Makama Museum Kano",
+    "publisher": "Wikipedia; descriptions in the MIT Libraries Aga Khan Visual Archive (Dome) and ArchNet records",
+    "url": "https://en.wikipedia.org/wiki/Gidan_Makama_Museum_Kano",
+    "textLicence": "CC BY-SA (Wikipedia text); the MIT Dome photographs are marked 'All rights reserved' (collection terms CC BY-NC): view only"
+   },
+   "documents": [
+    "the compound is divided into three enclosures, each with its own monumental zaure gatehouse set along the road at the northern perimeter wall",
+    "motifs are moulded as relief patterns, painted on, or textural, alternating smooth and rough finishes",
+    "it stands opposite the Kofar Kudu gate of the Emir's palace"
+   ],
+   "doesNotDocument": [
+    "heights and thicknesses",
+    "colour values",
+    "ordinary (undecorated) compounds"
+   ],
+   "actualLocation": "Kano old city",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic Photographs to VIEW privately (not store): MIT Dome items 1721.3/124930, 1721.3/124938 and neighbours (R. Keith Rowan, Kano 1980); the agent has not seen them."
+  },
+  {
+   "id": "R-027",
+   "kind": "documentary_source",
+   "label": "Academic papers on the Hausa house form, wall construction and compound plan",
+   "source": {
+    "title": "e.g. 'The practice of Hausa traditional architecture: Towards conservation and restoration of spatial morphology and techniques' (Scientific African, 2019); 'Development of traditional architecture in Nigeria: a case study of Hausa house form'; 'A Study on the Building Materials and Construction Technology of Traditional Hausa Architecture in Nigeria' (SciTePress, 2018)",
+    "publisher": "journals and repositories (ScienceDirect, ResearchGate, SciTePress)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S2468227619307033 ; https://scitepress.org/Documents/2018/74398",
+    "textLicence": "per publisher; Scientific African is open access"
+   },
+   "documents": [
+    "walls taper: about 600 mm at the base to about 200 mm at the top, five to six tubali courses at the base reducing to two near the top (figure as summarised from one paper; another source says early walls could reach about six feet: the sources disagree or describe different periods)",
+    "compound walls were built high enough to stop passers-by seeing in",
+    "the zaure separates the public street from the private interior; rooms surround a central courtyard that can be extended",
+    "straw and mud are mixed for plaster"
+   ],
+   "doesNotDocument": [
+    "parapet and roof-edge heights",
+    "soro (reception room) forms",
+    "colour values"
+   ],
+   "actualLocation": "Hausa lands; Kano-based studies among them",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic"
+  },
+  {
+   "id": "R-028",
+   "kind": "documentary_source",
+   "label": "External house decoration in a northern Nigerian city (Zaria)",
+   "source": {
+    "title": "Hausa Urban Art and its Social Background: external house decorations in a northern Nigerian city",
+    "authors": "Friedrich W. Schwerdtfeger",
+    "publisher": "Project MUSE",
+    "url": "https://muse.jhu.edu/article/250411/pdf",
+    "textLicence": "publisher terms; cite, do not copy"
+   },
+   "documents": [
+    "facades are covered by geometrical designs, floral patterns and at times calligraphy in moulded plaster",
+    "a freshly decorated facade glistens white in the high sun",
+    "the elaboration of the decoration signals the wealth and standing of the owner; royalty and office holders have boldly sculpted geometry, the common classes cheaper cement decoration"
+   ],
+   "doesNotDocument": [
+    "Kano (the study is of Zaria)",
+    "colour values of undecorated walls"
+   ],
+   "actualLocation": "Zaria, northern Nigeria (NOT Kano)",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic"
+  },
+  {
+   "id": "R-029",
+   "kind": "documentary_source",
+   "label": "Photographic archives to consult privately (not stored, not reusable as textures)",
+   "source": {
+    "title": "MIT Libraries Aga Khan Visual Archive (Dome) Kano photographs by R. Keith Rowan, 1980 (exterior walls, perimeter wall and gates, carved plaster, pinnacles and gutters); Smithsonian Eliot Elisofon collection (Kano street with open sewer, mud-brick compounds, 1959 and 1973); Wikimedia Commons CC0 photograph of the Babban Soro wing of Abdullahi dan Dabo's palace, Kano (c. 1903)",
+    "publisher": "MIT Libraries; Smithsonian Institution Archives; Wikimedia Commons",
+    "url": "https://dome.mit.edu/handle/1721.3/124930 ; https://si.edu/object/archives/components/sova-eepa-1973-001-ref7729",
+    "textLicence": "MIT: collection CC BY-NC, individual items 'All rights reserved'; Smithsonian: permission needed to reproduce; Commons item: CC0"
+   },
+   "documents": [
+    "real Kano wall finishes, perimeter walls, gates, carved plaster, pinnacles, gutters and street edges (existence of the photographs, from their catalogue records)"
+   ],
+   "doesNotDocument": [
+    "their content as seen by the agent: not seen",
+    "any measurement"
+   ],
+   "actualLocation": "Kano (old city), 1903 to 1980",
+   "howSeen": "Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.",
+   "storedInRepository": false,
+   "usableFor": "design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied",
+   "notUsableFor": "textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed",
+   "verificationNeeded": "read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic Obtain the owner's own or licensed photographs where possible; the CC0 Commons item may be used freely."
   }
  ],
  "missingReferences": [
@@ -954,7 +1118,7 @@
     "kit_openings"
    ],
    "need": "At least three distinct Kano compounds: the street front with the zaure and its door, the compound wall and its top (parapet, zankwaye), gates (leaves, piers), roof edge and roof furniture, windows, wall finish and wear. For each: a front, a side, a close detail, and something for scale (a person or a door). Heights and thicknesses of walls and parapets.",
-   "status": "MISSING (no usable reference; R-001 is too distant)"
+   "status": "PARTLY ADDRESSED 2026-11-08 by DOCUMENTARY sources only (R-024 to R-029: construction, plaster colour, ornament vocabulary, plan type). Still MISSING: a licensed photograph or measured drawing of a Kano compound, wall and parapet heights, the zankwaye and parapet details, the soro, colour values. R-001 is too distant."
   },
   {
    "id": "M-02",

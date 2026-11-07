@@ -198,11 +198,69 @@ Rights: Generated for the owner as a design specification. The copyright and lic
 * Usable for: modern highway road design and roadside: median, lights, gantry, walls, buildings; flyover as future grade separation.
 * Four-way classification: design requirement: highway cross-section, median, lighting, gantry, flyover deck on piers, walls; verified geographical fact: none; fictional architectural concept: the building, the mosque form and the hill; possible actual landmark: the mosque (generic); 'Bompai' and the A2 route name on the sign.
 
+## 2b. Documentary sources (R-024 to R-029)
+
+Text and scholarly sources for traditional Hausa building, registered 2026-11-08 to start answering gap M-01. **Not images, not photographs of any asset's subject; nothing is stored.** Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.
+
+**R-024 (Hausa architecture (encyclopaedia article))**
+* Source: Hausa architecture (Wikipedia) <https://en.wikipedia.org/wiki/Hausa_architecture>; licence: CC BY-SA (text); each image has its own file licence on Wikimedia Commons.
+* Documents: tubali are cone-shaped, sun-baked mud bricks laid in rectilinear courses in thick mud mortar, the walls thinning towards the top; mortar and plaster use clay-rich earth (kasa), often with red pigment, giving the reddish-brown finish; plaster is burnished with a stone at the Gidan Rumfa, with shallow arched grooves traced in it; zankwaye are the pinnacles that rise above walls and roofs; buttresses run up past the parapet and end in pinnacles and towers while shading the wall; the zaure is the gatehouse and entrance hall; zaure roofs are flat, corniced terraces reached by steps.
+* Does not document: wall and parapet heights; an exact plaster colour value; painted motifs beyond relief and burnishing; any specific Kano compound.
+* Where: Hausa lands (northern Nigeria, Niger): Kano examples cited (Gidan Rumfa); a general article, not Kano-specific.
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic
+
+**R-025 (Gidan Rumfa (the Emir's palace, Kano) site record)**
+* Source: Gidan Rumfa (ArchNet) <https://archnet.org/sites/3778>; licence: see the site's terms; cite, do not copy.
+* Documents: built by Muhammad Rumfa in the late 15th century; decoration is concentrated on the two royal audience chambers and uses abstract designs; the exterior wall is modestly decorated.
+* Does not document: dimensions; colour values; the compound street front of an ordinary house.
+* Where: Kano old city.
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic
+
+**R-026 (Gidan Makama (Kano Museum), a decorated Hausa compound in the old city)**
+* Source: Gidan Makama Museum Kano (Wikipedia; descriptions in the MIT Libraries Aga Khan Visual Archive (Dome) and ArchNet records) <https://en.wikipedia.org/wiki/Gidan_Makama_Museum_Kano>; licence: CC BY-SA (Wikipedia text); the MIT Dome photographs are marked 'All rights reserved' (collection terms CC BY-NC): view only.
+* Documents: the compound is divided into three enclosures, each with its own monumental zaure gatehouse set along the road at the northern perimeter wall; motifs are moulded as relief patterns, painted on, or textural, alternating smooth and rough finishes; it stands opposite the Kofar Kudu gate of the Emir's palace.
+* Does not document: heights and thicknesses; colour values; ordinary (undecorated) compounds.
+* Where: Kano old city.
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic Photographs to VIEW privately (not store): MIT Dome items 1721.3/124930, 1721.3/124938 and neighbours (R. Keith Rowan, Kano 1980); the agent has not seen them.
+
+**R-027 (Academic papers on the Hausa house form, wall construction and compound plan)**
+* Source: e.g. 'The practice of Hausa traditional architecture: Towards conservation and restoration of spatial morphology and techniques' (Scientific African, 2019); 'Development of traditional architecture in Nigeria: a case study of Hausa house form'; 'A Study on the Building Materials and Construction Technology of Traditional Hausa Architecture in Nigeria' (SciTePress, 2018) (journals and repositories (ScienceDirect, ResearchGate, SciTePress)) <https://www.sciencedirect.com/science/article/pii/S2468227619307033 ; https://scitepress.org/Documents/2018/74398>; licence: per publisher; Scientific African is open access.
+* Documents: walls taper: about 600 mm at the base to about 200 mm at the top, five to six tubali courses at the base reducing to two near the top (figure as summarised from one paper; another source says early walls could reach about six feet: the sources disagree or describe different periods); compound walls were built high enough to stop passers-by seeing in; the zaure separates the public street from the private interior; rooms surround a central courtyard that can be extended; straw and mud are mixed for plaster.
+* Does not document: parapet and roof-edge heights; soro (reception room) forms; colour values.
+* Where: Hausa lands; Kano-based studies among them.
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic
+
+**R-028 (External house decoration in a northern Nigerian city (Zaria))**
+* Source: Hausa Urban Art and its Social Background: external house decorations in a northern Nigerian city (Project MUSE) <https://muse.jhu.edu/article/250411/pdf>; licence: publisher terms; cite, do not copy.
+* Documents: facades are covered by geometrical designs, floral patterns and at times calligraphy in moulded plaster; a freshly decorated facade glistens white in the high sun; the elaboration of the decoration signals the wealth and standing of the owner; royalty and office holders have boldly sculpted geometry, the common classes cheaper cement decoration.
+* Does not document: Kano (the study is of Zaria); colour values of undecorated walls.
+* Where: Zaria, northern Nigeria (NOT Kano).
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic
+
+**R-029 (Photographic archives to consult privately (not stored, not reusable as textures))**
+* Source: MIT Libraries Aga Khan Visual Archive (Dome) Kano photographs by R. Keith Rowan, 1980 (exterior walls, perimeter wall and gates, carved plaster, pinnacles and gutters); Smithsonian Eliot Elisofon collection (Kano street with open sewer, mud-brick compounds, 1959 and 1973); Wikimedia Commons CC0 photograph of the Babban Soro wing of Abdullahi dan Dabo's palace, Kano (c. 1903) (MIT Libraries; Smithsonian Institution Archives; Wikimedia Commons) <https://dome.mit.edu/handle/1721.3/124930 ; https://si.edu/object/archives/components/sova-eepa-1973-001-ref7729>; licence: MIT: collection CC BY-NC, individual items 'All rights reserved'; Smithsonian: permission needed to reproduce; Commons item: CC0.
+* Documents: real Kano wall finishes, perimeter walls, gates, carved plaster, pinnacles, gutters and street edges (existence of the photographs, from their catalogue records).
+* Does not document: their content as seen by the agent: not seen; any measurement.
+* Where: Kano (old city), 1903 to 1980.
+* Usable for: design guidance in words and figures (construction, finish colour, ornament vocabulary, plan type): the DESIGN is modelled from the description, nothing is copied.
+* Not usable for: textures, tracing, or any claim that a model reproduces a named building; no image is stored or redistributed.
+* To verify: read the full source; obtain a licensed photograph or measured drawing of a Kano compound (M-01) before an asset is called authentic Obtain the owner's own or licensed photographs where possible; the CC0 Commons item may be used freely.
+
 ## 3. Missing references
 
 | Id | Area | What is needed | Drives | Status |
 |---|---|---|---|---|
-| M-01 | Traditional Hausa compounds and gates | At least three distinct Kano compounds: the street front with the zaure and its door, the compound wall and its top (parapet, zankwaye), gates (leaves, piers), roof edge and roof furniture, windows, wall finish and wear. For each: a front, a side, a close detail, and something for scale (a person or a door). Heights and thicknesses of walls and parapets. | `kano_hausa_compound_a`, `kano_hausa_compound_b`, `kano_hausa_compound_c`, `kit_zaure_entrance`, `kit_wall_plain`, `kit_wall_decorated`, `kit_gate_pier`, `kit_gate_leaf`, `kit_flat_roof_parapet`, `kit_openings` | MISSING (no usable reference; R-001 is too distant) |
+| M-01 | Traditional Hausa compounds and gates | At least three distinct Kano compounds: the street front with the zaure and its door, the compound wall and its top (parapet, zankwaye), gates (leaves, piers), roof edge and roof furniture, windows, wall finish and wear. For each: a front, a side, a close detail, and something for scale (a person or a door). Heights and thicknesses of walls and parapets. | `kano_hausa_compound_a`, `kano_hausa_compound_b`, `kano_hausa_compound_c`, `kit_zaure_entrance`, `kit_wall_plain`, `kit_wall_decorated`, `kit_gate_pier`, `kit_gate_leaf`, `kit_flat_roof_parapet`, `kit_openings` | PARTLY ADDRESSED 2026-11-08 by DOCUMENTARY sources only (R-024 to R-029: construction, plaster colour, ornament vocabulary, plan type). Still MISSING: a licensed photograph or measured drawing of a Kano compound, wall and parapet heights, the zankwaye and parapet details, the soro, colour values. R-001 is too distant. |
 | M-02 | Modern Kano buildings | Walled bungalows and villas with gates, shop rows and shop-and-flat blocks, a commercial plaza, an apartment block, a mid-rise block, a filling station, each shown as they are in Kano. | `kano_compound_modern_a`, `kano_compound_modern_b`, `kano_shop_row_a`, `kano_shop_row_b`, `kano_plaza_a`, `kano_apartment_block_a`, `kano_midrise_a`, `kano_filling_station_a`, `kit_storey_modern`, `kit_shopfront` | CONCEPTS SUPPLIED for modern villas, hospital, police station, fuel/service and warehouses (R-006, R-010, R-011, R-013 to R-015: generated, not Kano-verified); Kano-specific modern buildings still need real references |
 | M-03 | Mosques | A real Kano neighbourhood mosque (not the Great Mosque): dome(s), minaret(s), prayer-hall walls, ablution block, boundary wall, colours and finishes; front, side and detail. | `kano_mosque_neighbourhood_a`, `kit_dome_minaret` | PARTIAL: a generated skyline mosque recurs in R-006/R-008/R-009/R-010/R-012 (owner to say whether it stands for the Central Mosque); R-004 shows one real-looking mosque type, location not established; no real Kano mosque reference |
 | M-04 | Commercial streets and markets | Shopfronts with shutters and sign bands, kiosks, market stalls (frames, tarpaulins, goods), bus stops, street-level views of a commercial street with its activity. | `kano_shop_row_a`, `kano_shop_row_b`, `kano_kiosk_a`, `kano_market_stall_a`, `kano_bus_stop_a`, `kano_billboard_a` | CONCEPTS SUPPLIED for roadside shop rows, stalls and market-village frontage in dry, harmattan, rainy and flooded states (R-016 to R-021: generated, not Kano-verified); real traditional markets and streets still MISSING |

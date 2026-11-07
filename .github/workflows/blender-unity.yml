@@ -14,6 +14,7 @@ on:
     inputs:
       review: { description: "also build the real Kano residential kit and show it in the running game (the same as a [kano-review] commit)", type: boolean, default: false }
       kit: { description: "which residential kit the review builds from the code: v3 (default) or v2 (the frozen candidate; a commit message with [kano-review-v2] does the same)", type: string, default: "v3" }
+      env_kit: { description: "which environmental kit the review shows: e4 (default: E3 plus the six corrections of batch E4, env_kit/e4.py) or e3 (the frozen E1 to E3 kit as reviewed on 2026-11-07)", type: string, default: "e4" }
       retention_days: { description: "days the review artifact (screenshots and summary) is kept", type: string, default: "7" }
   push:
     paths:
@@ -39,9 +40,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Review gate (a [kano-review] commit message, or a manual run with review set)
         id: gate
-        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}", KIT: "${{ inputs.kit }}" }
+        env: { MSG: "${{ github.event.head_commit.message }}", MANUAL: "${{ inputs.review }}", KIT: "${{ inputs.kit }}", ENVKIT: "${{ inputs.env_kit }}" }
         run: |
           kit=v3; [ "$KIT" = "v2" ] && kit=v2; case "$MSG" in *"[kano-review-v2]"*) kit=v2;; esac; echo "kit=$kit" >> "$GITHUB_OUTPUT"
+          envkit=e4; [ "$ENVKIT" = "e3" ] && envkit=e3; echo "env_kit=$envkit" >> "$GITHUB_OUTPUT"
           case "$MSG" in *"[kano-review]"*|*"[kano-review-v2]"*) echo "on=true" >> "$GITHUB_OUTPUT";; *) if [ "$MANUAL" = "true" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; else echo "on=false" >> "$GITHUB_OUTPUT"; fi;; esac
       - uses: actions/setup-python@v5
         with: { python-version: '3.13' }
@@ -160,9 +162,22 @@ jobs:
           print(f"{len(r)} environmental assets built; failed validation: {bad or 'none'}")
           sys.exit(1 if bad or len(r) != 26 else 0)
           PY
+      - name: Review - build the six corrections of batch E4 as the next version of their assets (potholes, mud ruts, flood sheet, three Hausa assets; toolchain validation must pass for every one)
+        if: ${{ steps.gate.outputs.on == 'true' && steps.gate.outputs.env_kit == 'e4' }}
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        run: |
+          python -m env_kit.build_e4 --report "$RUNNER_TEMP/e4_report.json"
+          python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "e4_report.json")))
+          bad = [x["id"] for x in r if not x["passed"]]
+          for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"), "materials", len(x["stats"].get("materials", [])))
+          print(f"{len(r)} E4 assets built; failed validation: {bad or 'none'}")
+          sys.exit(1 if bad or len(r) != 6 else 0)
+          PY
       - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
         if: ${{ steps.gate.outputs.on == 'true' }}
-        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender }
+        env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender, ARO_ENV_KIT: "${{ steps.gate.outputs.env_kit }}" }
         run: python -m kano_kit.stage_unity --out Assets/ThirdParty/ARO
       - name: Review - pre-pull the Unity WebGL editor image (retry with backoff)
         if: ${{ steps.gate.outputs.on == 'true' }}

@@ -35,6 +35,56 @@ def overlaps(part) -> list[tuple]:
                 if du > EPS and dv > EPS: out.append((part.keys[a[4].material_index], part.keys[b[4].material_index], key, round(du * dv, 4)))
     return out
 
+def _poly_area(pts) -> float:
+    return abs(sum(pts[i][0] * pts[(i + 1) % len(pts)][1] - pts[(i + 1) % len(pts)][0] * pts[i][1] for i in range(len(pts)))) / 2
+
+
+def _ccw(pts):
+    a = sum(pts[i][0] * pts[(i + 1) % len(pts)][1] - pts[(i + 1) % len(pts)][0] * pts[i][1] for i in range(len(pts)))
+    return pts if a >= 0 else list(reversed(pts))
+
+
+def _intersection_area(a, b) -> float:
+    """Area of the intersection of two convex polygons (lists of (u, v)): Sutherland-Hodgman clipping of a by the edges of b."""
+    out = _ccw(a); clip = _ccw(b)
+    for i in range(len(clip)):
+        p, q = clip[i], clip[(i + 1) % len(clip)]; inp, out = out, []
+        if not inp: return 0.0
+        side = lambda r: (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+        for j in range(len(inp)):
+            r, t = inp[j], inp[(j + 1) % len(inp)]; sr, st = side(r), side(t)
+            if sr >= 0: out.append(r)
+            if (sr >= 0) != (st >= 0): k = sr / (sr - st); out.append((r[0] + k * (t[0] - r[0]), r[1] + k * (t[1] - r[1])))
+    return _poly_area(out) if len(out) >= 3 else 0.0
+
+
+def overlaps_exact(part) -> list[tuple]:
+    """Like `overlaps`, but the area is the EXACT intersection of the two faces' outlines in their plane (convex polygons), not of their bounding rectangles: use it for meshes made of triangles and other
+    non-rectangular faces (clipped height fields), where `overlaps` reports candidates that are not overlaps. Same return format; faces that only touch along an edge are never reported."""
+    bm = part.bm; bm.normal_update(); groups = defaultdict(list)
+    for f in bm.faces:
+        n = f.normal
+        if n.length < 0.5: continue
+        c = f.calc_center_median()
+        if n.z < -0.99 and c.z < 0.005: continue
+        groups[(round(n.x, 3), round(n.y, 3), round(n.z, 3), round(n.dot(c), 3))].append(f)
+    out = []
+    for key, fs in groups.items():
+        if len(fs) < 2: continue
+        ax = max(range(3), key=lambda i: abs(key[i])); u, v = [i for i in range(3) if i != ax]; items = []
+        for f in fs:
+            pts = [(vv.co[u], vv.co[v]) for vv in f.verts]; items.append((min(p[0] for p in pts), max(p[0] for p in pts), min(p[1] for p in pts), max(p[1] for p in pts), pts, f))
+        items.sort(key=lambda r: r[0])
+        for i in range(len(items)):
+            for j in range(i + 1, len(items)):
+                if items[j][0] >= items[i][1] - EPS: break
+                a, b = items[i], items[j]
+                if min(a[1], b[1]) - max(a[0], b[0]) <= EPS or min(a[3], b[3]) - max(a[2], b[2]) <= EPS: continue
+                area = _intersection_area(a[4], b[4])
+                if area > EPS * EPS * 100: out.append((part.keys[a[5].material_index], part.keys[b[5].material_index], key, round(area, 4)))
+    return out
+
+
 
 def degenerate_faces(part, min_area: float = 1e-7) -> list[int]:
     """Indices of faces with (almost) zero area: invisible, they cost triangles and can break normals and exporters."""
