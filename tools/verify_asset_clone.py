@@ -3,7 +3,7 @@
 It never reads or prints a credential: git uses the credentials the environment already has.
 
 Steps: clone the branch into an empty temporary directory with the LFS smudge filter off; list the LFS pointers (path, oid, size from the pointer files); `git lfs pull`; for every pointer check that the file now exists,
-that its size equals the pointer's size and that its SHA-256 equals the pointer's oid; then, for every file named in the frozen manifests of the game repository (docs/kano/*.freeze.json), check that the clone holds a file
+that its size equals the pointer's size and that its SHA-256 equals the pointer's oid; then, for every file named in the frozen manifests of the game repository (docs/kano/*.freeze.json), check that the clone holds a file (an LFS object or a plain text file)
 with the same SHA-256 (the frozen manifest hashes are the independent record of what was exported). Exit code 0 only when every object passes.
 
   python3 tools/verify_asset_clone.py --repo https://github.com/AffanNamu/ARO-CONTENT.git --branch assets/kano-residential-v3 [--freeze docs/kano/KANO_RESIDENTIAL_v003.freeze.json ...]
@@ -39,6 +39,11 @@ def frozen_hashes(freeze_files) -> dict:
     return out
 
 
+def hashes_in_tree(root: Path) -> set:
+    """SHA-256 of EVERY file of the working tree (the LFS objects after the pull and the plain text files: project.json, validation reports, manifests), not of the .git directory."""
+    return {sha256(p) for p in root.rglob("*") if p.is_file() and ".git" not in p.relative_to(root).parts}
+
+
 def check_tree(root: Path, pointers: dict) -> tuple[list, list]:
     """Compares the working tree with the pointers recorded at clone time ({relative path: (oid, size)}). Returns (failures, ok paths)."""
     bad, ok = [], []
@@ -70,11 +75,11 @@ def main() -> int:
     for rel, why in bad[:20]: print("  FAIL", rel, why)
     missing_frozen = []
     if a.freeze:
-        have = {sha256(dest / rel) for rel in ok}; fz = frozen_hashes(a.freeze)
-        missing_frozen = [(h, ps[0]) for h, ps in fz.items() if h not in have and not any(Path(p).suffix == ".blend" for p in ps)]
-        blend = [ps[0] for h, ps in fz.items() if any(Path(p).suffix == ".blend" for p in ps)]
-        print(f"frozen manifest files found in the clone: {len(fz) - len(missing_frozen) - len(blend)} of {len(fz) - len(blend)} (the {len(blend)} .blend files are compared by pointer oid only: Blender writes them non-deterministically)")
-        for h, p in missing_frozen[:20]: print("  NOT IN THE CLONE:", p, h[:12])
+        have = hashes_in_tree(dest); fz = frozen_hashes(a.freeze)
+        missing_frozen = [(h, ps[0]) for h, ps in fz.items() if h not in have]
+        print(f"frozen manifest files found in the clone, byte for byte (SHA-256; .blend sources included): {len(fz) - len(missing_frozen)} of {len(fz)}")
+        if missing_frozen: print(f"{len(missing_frozen)} frozen manifest files have no file with the same SHA-256 in the clone")
+        for h, p in missing_frozen[:60]: print("  NOT IN THE CLONE:", p, h[:12])
     return 0 if not bad and not missing_frozen else 1
 
 

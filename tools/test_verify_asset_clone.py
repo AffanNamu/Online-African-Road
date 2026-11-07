@@ -25,3 +25,12 @@ def test_tree_check_flags_missing_pointer_size_and_hash_problems(tmp_path):
 def test_frozen_hashes_collects_every_file(tmp_path):
     f = tmp_path / "a.freeze.json"; f.write_text(json.dumps({"assets": [{"files": [{"path": "x.fbx", "sha256": "1" * 64}, {"path": "y.png", "sha256": "2" * 64}]}, {"files": [{"path": "z.png", "sha256": "2" * 64}]}]}))
     h = V.frozen_hashes([f]); assert set(h) == {"1" * 64, "2" * 64} and h["2" * 64] == ["y.png", "z.png"]
+
+
+def test_hashes_cover_plain_text_files_and_skip_git(tmp_path):
+    (tmp_path / "blender" / "validation").mkdir(parents=True); (tmp_path / ".git").mkdir()
+    (tmp_path / "blender" / "validation" / "v002.json").write_bytes(b'{"ok": true}'); (tmp_path / "a.glb").write_bytes(b"binary")
+    (tmp_path / ".git" / "config").write_bytes(b"secret-looking")
+    got = V.hashes_in_tree(tmp_path)
+    assert hashlib.sha256(b'{"ok": true}').hexdigest() in got and hashlib.sha256(b"binary").hexdigest() in got
+    assert hashlib.sha256(b"secret-looking").hexdigest() not in got
