@@ -1,0 +1,16 @@
+{
+  "ng-lagos-ibadan": {
+    "chunks": "46",
+    "road": "fadc0a3c5817d9d89a6fd98cf6d10f13898b847bb4e3796fc30dcac3db741203",
+    "terrain": "461040ac774f1a511b52a20af80827de27eff780bf642ebfb7f79b4fea82aceb",
+    "props": "be94ed3b1767f9210a9dca184d4701ee335745b0c4243373b80a6d50c96334e6",
+    "ground": "1d8cd57f6f1f34f9c0b79196406447eda8a2fa25f69d09e814a04917753bf45b"
+  },
+  "ng-kano-slice-draft": {
+    "chunks": "3",
+    "road": "8589609197a69808f4439598b45ae892545f1bbda8a90db7241babb64c4ec017",
+    "terrain": "45bee308de58215d323f3688d123d58cf423198ef5acae738a2caa9ec8c91c57",
+    "props": "132f80b02c1b3190aa201ebca46a5fbd56aa84d4836a3da06ab0efa807d88c06",
+    "ground": "f625c98d68b11ea6e197438a2d1534e824ff3b6d94d7592e6f3264e71619106c"
+  }
+}
