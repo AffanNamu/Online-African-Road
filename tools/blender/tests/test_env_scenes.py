@@ -21,7 +21,7 @@ def test_every_scene_asset_exists_in_a_kit(lay):
 def test_there_are_three_places_in_two_seasons(lay):
     sc = SC.all_scenes({**lay, "aro_pole_electric_concrete_span_a": {"bbox": [-1, -15, 0, 1, 15, 9.5], "datum": None}})
     assert sorted(f"{s.name}/{s.season}" for s in sc) == sorted(f"{n}/{se}" for n in SC.BUILDERS for se in SC.SEASONS)
-    for s in sc: assert len(s.items) > 40 and len(s.views) == 2 and all(v["lens"] > 0 for v in s.views), (s.name, s.season)
+    for s in sc: assert len(s.items) > 40 and len(s.views) >= 2 and {"drive", "aerial"} <= {v["name"] for v in s.views} and all(v["lens"] > 0 for v in s.views), (s.name, s.season)
 
 
 def _scenes(lay): return SC.all_scenes({**lay, "aro_pole_electric_concrete_span_a": {"bbox": [-1, -15, 0, 1, 15, 9.5], "datum": None}})
@@ -67,3 +67,9 @@ def test_ground_patches_sit_with_their_surface_at_zero(lay):
 def test_every_environmental_asset_appears_in_at_least_one_scene():
     """The Unity review imports only what a scene places, so the scenes together must cover the whole environmental kit (otherwise an asset could be called imported without having been)."""
     assert set(BE.SPECS) <= SC.asset_ids() | {"rg_ngn_stall_umbrella_a"}, sorted(set(BE.SPECS) - SC.asset_ids())
+
+
+def test_every_batch_e4_correction_has_a_close_view_in_the_scene_that_shows_it(lay):
+    sc = {f"{s.name}_{s.season}": {v["name"] for v in s.views} for s in _scenes(lay)}
+    assert "potholes" in sc["market_street_dry"] and "potholes" in sc["market_street_wet"] and "flood" in sc["market_street_wet"], "the potholes and the flood sheet need a camera that sees them (the drive camera starts 50 m from the potholes and INSIDE the flood sheet)"
+    assert "ruts" in sc["village_wet"] and "ruts" in sc["hausa_quarter_wet"] and "wall" in sc["hausa_quarter_dry"] and "wall" in sc["hausa_quarter_wet"]

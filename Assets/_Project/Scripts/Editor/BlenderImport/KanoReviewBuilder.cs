@@ -32,7 +32,7 @@ namespace ARO.Editor.BlenderImport
         [Serializable] class Placement { public string asset; public float x, y, z, yawDeg, scale = 1f; public string tag; }
         [Serializable] class ViewDef { public string name; public float[] loc; public float[] look; public float lens; }
         [Serializable] class ViewsOut { public ViewDef[] views; }
-        [Serializable] class PlacementFile { public string scene; public string ground; public ViewDef[] views; public Placement[] items; }
+        [Serializable] class PlacementFile { public string scene; public string kind; public string ground; public ViewDef[] views; public Placement[] items; }
         [Serializable] class ManifestWrap { public PropDef catalog_entry; }
 
         public static Vector3 FromBlender(float x, float y, float z) => new Vector3(-x, z, -y);
@@ -98,12 +98,27 @@ namespace ARO.Editor.BlenderImport
             ground.transform.localScale = new Vector3(3000f, 0.2f, 3000f); ground.transform.localPosition = new Vector3(0f, -0.1f - 0.03f, 300f);
             string groundKey = string.IsNullOrEmpty(file.ground) ? "grass_green" : file.ground;
             if (kit != null) { var e = kit.materials.FirstOrDefault(x => x.name == "M_" + groundKey); if (e != null) ground.GetComponent<MeshRenderer>().sharedMaterial = BlenderAssetBuilder.KitMaterial(e, Root + "/Materials"); }
-            int placed = 0, missing = 0;
+            int placed = 0, missing = 0; Bounds trench = default; bool haveTrench = false;
             foreach (var it in file.items)
             {
                 if (!prefabs.TryGetValue(it.asset, out var prefab) || prefab == null) { missing++; continue; }
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, root.transform); go.name = it.asset;
                 go.transform.localPosition = FromBlender(it.x, it.y, it.z); go.transform.localRotation = Quaternion.Euler(0f, -it.yawDeg, 0f); go.transform.localScale = Vector3.one * (it.scale > 0f ? it.scale : 1f); placed++;
+                if (file.kind == "environment" && it.asset.StartsWith("aro_road_"))                                                              // the footprint of the road patches (ground surfaces whose ruts, potholes and banks lie below the nominal level)
+                    foreach (var r in go.GetComponentsInChildren<Renderer>()) { if (!haveTrench) { trench = r.bounds; haveTrench = true; } else trench.Encapsulate(r.bounds); }
+            }
+            if (haveTrench)                                                                                                                      // a ground slab flush with the nominal road level would hide every rut floor and pothole under grass: sink the slab below the road patches and keep the verge at its level around them
+            {
+                const float vergeTop = -0.03f, baseTop = -0.60f; var groundMat = ground.GetComponent<MeshRenderer>().sharedMaterial;
+                ground.transform.localPosition = new Vector3(0f, baseTop - 0.1f, 300f);
+                void Verge(float x0, float x1, float z0, float z1)
+                {
+                    var c = GameObject.CreatePrimitive(PrimitiveType.Cube); c.name = "review_ground"; c.transform.SetParent(root.transform, false);
+                    c.transform.localScale = new Vector3(x1 - x0, vergeTop - baseTop, z1 - z0); c.transform.localPosition = new Vector3((x0 + x1) / 2f, (vergeTop + baseTop) / 2f, (z0 + z1) / 2f);
+                    c.GetComponent<MeshRenderer>().sharedMaterial = groundMat;
+                }
+                Verge(-1500f, trench.min.x, -1200f, 1800f); Verge(trench.max.x, 1500f, -1200f, 1800f); Verge(trench.min.x, trench.max.x, -1200f, trench.min.z); Verge(trench.min.x, trench.max.x, trench.max.z, 1800f);
+                notes.Add("review ground: road trench x " + trench.min.x.ToString("0.0") + " to " + trench.max.x.ToString("0.0") + ", z " + trench.min.z.ToString("0.0") + " to " + trench.max.z.ToString("0.0") + ", verge at " + vergeTop + " m, base at " + baseTop + " m");
             }
             Directory.CreateDirectory(ReviewFolder);
             var saved = PrefabUtility.SaveAsPrefabAsset(root, prefabPath); UnityEngine.Object.DestroyImmediate(root); AssetDatabase.SaveAssets();

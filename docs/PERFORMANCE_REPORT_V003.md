@@ -88,3 +88,23 @@ The low tier already shortens its LOD and cull distances (the reference view at 
 3. The shadow policy of section 3 is the largest remaining lever on the real cost (31% of engine draws) and needs the owner's eye.
 4. For the mobile tier (section 8) a dedicated lower-detail version of the kit (fewer, simpler parts at that tier) or engine batching is needed; neither is started.
 5. Engine batching (`ENGINE_BATCHING_PROPOSAL_RB15.md`) remains a separate proposal; nothing in it is done. With these measurements the case for it is: after every content-side step the game's own estimate is still 434 on the reference view with the baseline added, and the engine count with shadows is 812.
+
+## 10. Draws per LOD level, measured (2026-11-08): what a villa v004 could save
+Owner decision of 2026-11-07: measure the draws per LOD first; build a villa v004 with cheaper LOD1 materials only if the improvement is meaningful. `KanoReviewStats` now logs the kit's draws per LOD level and per asset and LOD of the running game (review run [42429096946](https://github.com/AffanNamu/Online-African-Road/actions/runs/42429096946); numbers in `docs/kano/KANO_REVIEW_RUN_42429096946_numbers.json`, table by `python3 tools/review_numbers.py lods <file>`). Same method as before: software GL, tier medium, hour 15.5.
+
+**Where the 550 kit draws of the reference view are.** LOD0 417 (76%), LOD1 102 (19%), LOD2 30 (5%). At LOD0 the largest are the wall panels 164, the piers 54, villa A 49, villa B 28, the wall lanterns 28 and the street 20: **the part of the cost that content can still remove is mostly at LOD0 and is what the merged frontages already attack** (-210 at this view). Villa B is at LOD0 in every standard view (4 instances); only villa A appears at LOD1 and LOD2.
+
+**Villa A at its lower levels** (per instance: LOD1 six materials, LOD2 three materials, measured as draws divided by renderers):
+| View | Kit draws | Villa A at LOD1 | at LOD2 | Saving, 4-material LOD1 | Saving, 3-material LOD1 and 2-material LOD2 | Kit draws after (best case) |
+|---|---|---|---|---|---|---|
+| ref | 550 | 10 inst, 60 draws | 10 inst, 30 draws | -20 (3.6%) | -40 (7.3%) | 510 |
+| street1 | 521 | 12 inst, 72 draws | 8 inst, 24 draws | -24 (4.6%) | -44 (8.4%) | 477 |
+| street2 | 495 | 10 inst, 60 draws | 8 inst, 24 draws | -20 (4.0%) | -38 (7.7%) | 457 |
+| side | 521 | 10 inst, 60 draws | 10 inst, 30 draws | -20 (3.8%) | -40 (7.7%) | 481 |
+| ref, merged frontages | 340 | 10 inst, 60 draws | 10 inst, 30 draws | -20 (5.9%) | -40 (11.8%) | 300 |
+| street1, merged | 321 | 12 inst, 72 draws | 8 inst, 24 draws | -24 (7.5%) | -44 (13.7%) | 277 |
+| street2, merged | 305 | 10 inst, 60 draws | 8 inst, 24 draws | -20 (6.6%) | -38 (12.5%) | 267 |
+| side, merged | 323 | 10 inst, 60 draws | 10 inst, 30 draws | -20 (6.2%) | -40 (12.4%) | 283 |
+(The savings are the measured instance counts times the material difference; they are exact for those counts, but they are not a measurement of a built v004: that does not exist.)
+
+**Reading.** With the standard placement a villa LOD1 with four materials saves **3.6 to 4.6%** of the kit draws and the most aggressive variant (three materials at LOD1, two at LOD2) **7 to 8%**: not a meaningful improvement on its own, and it costs the stone and grey cladding bands at LOD1 distance. **With the merged frontages** the same changes are worth 6 to 8% and 12 to 14%. At the reference view the merged kit plus the measured baseline of the rest of the game is 340 + 94 = 434 draws against the 400 budget: a 4-material LOD1 brings that to 414 (still over), only the aggressive variant to 394 (under, by 6). **Recommendation: do not build v004 now.** It becomes worth building only if the owner adopts the merged frontages as the production placement and accepts the LOD1 and LOD2 simplification; the larger levers are unchanged: the merged frontages (-210 at the reference view), the small-item shadow policy (engine draws 988 to 682), a mobile tier and, as a separate proposal, engine batching. If a v004 is built it must be a new version of the two villas (LOD0 geometry unchanged, v002 and v003 frozen), with its own freeze, validation, Unity import, a check of the LOD transitions in the running game and new pictures.

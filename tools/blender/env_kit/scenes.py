@@ -79,7 +79,10 @@ def hausa_quarter(season: str, lay: dict) -> Scene:
     tree = "rg_ngn_tree_large_shade_wet_a" if wet else "rg_ngn_tree_large_shade_a"; grass = "rg_ngn_grass_tall_wet_a" if wet else "rg_ngn_grass_tall_verge_a"
     _veg(s, tree, grass, [(5.8, -28.0), (5.8, 6.0), (5.8, 24.0), (-5.8, -22.0), (-5.8, 10.0), (-5.8, 30.0)], [(5.6, -3.0), (5.6, -10.5), (-5.6, -8.0), (-5.6, 14.0), (5.6, 28.0), (-5.6, 42.0), (5.6, 44.0), (-5.6, -40.0)])
     if wet: s.add("aro_water_puddle_set_a", -(s.bb("aro_water_puddle_set_a")[0] + s.bb("aro_water_puddle_set_a")[3]) / 2, 12.0, 0.0, 0.0, "puddles"); s.add("aro_water_puddle_set_a", 0.0, -34.0, 0.0, 0.0, "puddles")
-    _views(s, -44.0, 44.0); return s
+    _views(s, -44.0, 44.0)
+    s.view("wall", (-2.0, 2.0, 1.7), (6.3, 14.0, 2.6), 28.0)                                   # close view of the compound walls (the earth render of batch E4) from the lane at eye height
+    if wet: s.view("ruts", (-1.7, -30.0, 1.2), (0.0, -12.0, -0.1), 28.0)                       # the rutted-mud stretch of the wet lane (y -24 to 0), seen from 18 m
+    return s
 
 
 def village(season: str, lay: dict) -> Scene:
@@ -101,7 +104,9 @@ def village(season: str, lay: dict) -> Scene:
     b = s.bb("rg_ngn_stall_canopy_rough_a"); s.front("rg_ngn_stall_canopy_rough_a", 1, 4.6, -1.0, "stall")
     if wet:
         for y in (-30.0, -6.0, 18.0, 40.0): s.add("aro_water_puddle_set_a", -(s.bb("aro_water_puddle_set_a")[0] + s.bb("aro_water_puddle_set_a")[3]) / 2, y, 0.0, 0.0, "puddles")
-    _views(s, -44.0, 44.0); return s
+    _views(s, -44.0, 44.0)
+    s.view("ruts", (0.3, -30.0, 1.0), (0.0, -12.0, -0.1), 28.0)                                # the lane surface at low eye height (wet: the wheel ruts of the mud road; dry: compacted earth)
+    return s
 
 
 def market_street(season: str, lay: dict) -> Scene:
@@ -123,7 +128,10 @@ def market_street(season: str, lay: dict) -> Scene:
         pz = s.bb("aro_water_puddle_set_a"); xp = -(pz[0] + pz[3]) / 2
         for y in (-12.0, 22.0): s.add("aro_water_puddle_set_a", xp, y, 0.0, 0.0, "puddles")
         fz = s.bb("aro_water_flood_sheet_a"); d = s.lay["aro_water_flood_sheet_a"]["datum"] or 0.0; s.add("aro_water_flood_sheet_a", -(fz[0] + fz[3]) / 2, -43.0 - (fz[1] + fz[4]) / 2, 0.0, -d, "flood")
-    _views(s, -46.0, 40.0); return s
+    _views(s, -46.0, 40.0)
+    s.view("potholes", (-1.7, -3.0, 1.4), (0.2, 6.0, -0.1), 28.0)                              # the pothole stretch (centre y = 6 m, 12 m long) from 9 m, the driver's height
+    if wet: s.view("flood", (-1.7, -57.0, 1.6), (0.0, -42.0, -0.05), 28.0)                     # the flood sheet (y -47 to -39) from outside it: the drive camera starts INSIDE the sheet
+    return s
 
 
 BUILDERS = {"hausa_quarter": hausa_quarter, "village": village, "market_street": market_street}
