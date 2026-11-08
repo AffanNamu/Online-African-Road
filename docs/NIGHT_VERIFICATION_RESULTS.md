@@ -54,3 +54,11 @@ The `UnityLinker` crash has now hit two of five builds. A re-run passed once. If
 |---|---|---|
 | 315 (`aa8ea92`) | failure | **only** the lighting job's first enforced step: "noon chase road: mean 74.4 is below 80" (as above); Unity tests, build, browser and everything else green |
 | 317 (`afd4ff2`) | **success** | none |
+
+## Update: the run for `b944d88` (CI run 42528262034 on the harness branch, 42528265318 on the work branch), read 2026-11-08 night
+
+* **Night suite: 40 of 40.** The beacon check passes at 110 m before the real mast (max 7 red pixels, 0 in other frames: it flashes), the left-indicator picture check passes with the 2-pixel floor. In the pictures (`webgl-light-nt-sheet-beacons.png`) the beacons are **barely visible: a thin lattice mast and a red dot of a few pixels at its top in one frame of eight**. The check proves the beacon flashes; it does not prove it looks good, and on a real display I would expect a faint effect (the beacon halo is small). I did not change it.
+* **E1 to E3 corridor: 75 of 75**, as in run 317.
+* **Strict noon check: passed, road mean 98.3** (80 needed; the failing runs read 74 to 77, the passing ones 91 to 98). One good run with the pose snap is not proof that the outlier is gone.
+* **Something real in the crossing frame.** The `cross-opening` truck was frozen **0.97 m above the road, rolled, mid-fall** (a settled truck rests 0.13 m above the surface; the other 14 places read 0.09 and 0.04). The hold waited 3 seconds of real time, and under the software renderer that is well under a second of game time, so the truck was caught before it had landed. That is probably also what made the frozen pose differ by up to 1.4 m between hours (the noon outlier). **Fixed in the next commit:** the hold now waits, a second at a time (at most 12), until the truck is less than 0.6 m above the road and not falling, and logs `still landing` while it waits. Not yet re-run; the crossing frame (does the planter median open at the four-way crossing?) has therefore still not been seen with a level truck.
+* The pictures of the yard and the terminal at ground level (`yard-ground`, `terminal-ground`) show the truck level on the plate, the warehouse boxes and bays in the distance and the very pale concrete.

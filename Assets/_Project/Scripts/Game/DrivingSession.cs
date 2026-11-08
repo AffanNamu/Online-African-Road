@@ -147,7 +147,7 @@ namespace ARO.Game
             }
         }
 
-        float _freezeAt = -1f; int _freezeTries; Quaternion _spawnRot = Quaternion.identity;
+        float _freezeAt = -1f; int _freezeTries, _freezeWaits; Quaternion _spawnRot = Quaternion.identity;
         /// <summary>
         /// Test hook (?smoke=drive&hold=1 only): stop the truck where it settled so the lighting screenshots are reproducible. The truck is dropped onto the road
         /// and on a slow software-GL frame rate it can roll onto its side (seen in a Medium-quality run), so it is only frozen when it is upright and nearly still;
@@ -157,6 +157,18 @@ namespace ARO.Game
         {
             var rb = Vehicle.GetComponent<Rigidbody>(); if (rb == null) { _freezeAt = -1f; return; }
             var t = Vehicle.transform; float upright = Vector3.Dot(t.up, Vector3.up);
+            // Not before it has LANDED. The timer runs on real time and the software renderer runs the game clock slowly, so 3 real seconds can be well under a second of falling: CI run 319 froze the truck
+            // 0.9 m above the road, rolled, at the crossing (a settled truck rests 0.13 m above the surface). Wait, a second at a time, until it is low and not falling (at most 12 more seconds).
+            if (_route != null && _route.Model != null && _freezeWaits < 12)
+            {
+                float above = t.position.y - _route.GroundY(t.position.x, t.position.z);
+                if (above > 0.6f || Mathf.Abs(rb.linearVelocity.y) > 0.3f)
+                {
+                    _freezeWaits++; _freezeAt = Time.unscaledTime + 1f;
+                    Debug.Log($"[Drive] smoke hold: still landing ({above:F2} m above the road, vertical speed {rb.linearVelocity.y:F2} m/s); waiting, {_freezeWaits}");
+                    return;
+                }
+            }
             if ((upright < 0.95f || Vehicle.SpeedKmh > 2f) && _freezeTries < 6)
             {
                 _freezeTries++;
