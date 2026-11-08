@@ -475,7 +475,7 @@
     "intensity": 1.0,
     "range": 24,
     "haloSize": 1.8,
-    "poolRadius": 6.5,
+    "poolRadius": 5.5,
     "poolShift": 3.0,
     "realLight": true,
     "heads": [
@@ -515,7 +515,7 @@
     "intensity": 0.7,
     "range": 18,
     "haloSize": 1.4,
-    "poolRadius": 5.0,
+    "poolRadius": 4.5,
     "poolShift": 2.4,
     "realLight": true,
     "heads": [
@@ -556,7 +556,7 @@
     "intensity": 1.15,
     "range": 30,
     "haloSize": 2.0,
-    "poolRadius": 7.5,
+    "poolRadius": 6.5,
     "poolShift": 1.8,
     "realLight": true,
     "heads": [
@@ -602,7 +602,7 @@
     "intensity": 1.4,
     "range": 34,
     "haloSize": 2.4,
-    "poolRadius": 9.0,
+    "poolRadius": 8.0,
     "poolShift": 3.0,
     "realLight": true,
     "heads": [

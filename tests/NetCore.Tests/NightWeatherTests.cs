@@ -166,6 +166,7 @@ public class NightTierTests
         Assert.True(l.LampLights <= m.LampLights && m.LampLights <= h.LampLights); Assert.True(l.LampGlowRange <= m.LampGlowRange && m.LampGlowRange <= h.LampGlowRange);
         Assert.True(l.AdditionalLightsPerObject <= m.AdditionalLightsPerObject && m.AdditionalLightsPerObject <= h.AdditionalLightsPerObject);
         Assert.True(!l.WetEffects || m.WetEffects); Assert.True(!m.WetEffects || h.WetEffects);
+        Assert.True(l.WetEffects, "rain must look wet on every tier (the streaks cost vertices, not draw calls); only the real lights are a High/Medium extra");
     }
 
     [Fact] public void EveryTierHasSaneNightValuesAndTheLowTierCostsNoRealLamps()

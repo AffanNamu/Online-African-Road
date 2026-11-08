@@ -41,7 +41,7 @@ namespace ARO.NetCore
             Name = "low", ShadowDistance = 60f, ShadowCascades = 1, ShadowResolution = 1024, SoftShadows = false, MsaaSamples = 1, RenderScale = 0.8f,
             Tonemapping = true, ColorGrading = false, Vignette = false, Bloom = false, LodBias = 0.7f, LoadRadiusChunks = 2, UnloadRadiusChunks = 3,
             PropDensity = 0.5f, PropCullScale = 0.6f, TerrainDetail = 0.5f, MaxTrafficAgents = 20, TrafficDensity = 3f, FarClip = 900f,
-            LampLights = 0, LampGlowRange = 250f, WetEffects = false, AdditionalLightsPerObject = 4
+            LampLights = 0, LampGlowRange = 250f, WetEffects = true, AdditionalLightsPerObject = 4
         };
         public static readonly QualityTier Medium = new QualityTier
         {

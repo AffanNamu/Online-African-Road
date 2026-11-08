@@ -24,6 +24,8 @@ namespace ARO.World
             AtlasId = Shader.PropertyToID("_Atlas"), EmissionId = Shader.PropertyToID("_EmissionColor"), BaseColorId = Shader.PropertyToID("_BaseColor"), DayId = Shader.PropertyToID("_Day"),
             WetId = Shader.PropertyToID("_Wet"), SkyId = Shader.PropertyToID("_Sky");
 
+        // Strength of the additive layers. First in-game reading (CI run 302): pools at full strength came out cream-white and washed out the road; a pool is a hint of light on the asphalt, not a lit floor.
+        const float PoolBase = 0.5f, StreakMax = 0.6f;
         const float LampLightIntensity = 90f, LampLightAngle = 130f, LampLightInnerAngle = 60f, FadeRate = 4f, RebuildGap = 0.4f, SelectGap = 0.2f;
 
         sealed class ChunkData { public Vector3 origin; public List<Lamp> lamps; public GlowBuffers glow; public PuddleBuffers puddles; }
@@ -133,7 +135,7 @@ namespace ARO.World
             if (_glow != null)
             {
                 _glow.SetFloat(LevelId, _level); _glow.SetFloat(BeaconId, beacon);
-                _glow.SetVector(WeightsId, new Vector4(1f, WeatherLook.PoolBoost(_wet), _tier.WetEffects ? WeatherLook.StreakStrength(_wet) : 0f, 0f));
+                _glow.SetVector(WeightsId, new Vector4(1f, PoolBase * WeatherLook.PoolBoost(_wet), _tier.WetEffects ? StreakMax * WeatherLook.StreakStrength(_wet) : 0f, 0f));
                 float r = Mathf.Max(60f, _tier.LampGlowRange); _glow.SetVector(FadeId, new Vector4(r * 0.6f, r, 0f, 0f));
                 if (_glowMr != null) _glowMr.enabled = lit && _glowMesh.vertexCount > 0;
             }
