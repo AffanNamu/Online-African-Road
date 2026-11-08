@@ -257,6 +257,14 @@ public class SitePlateTests
         Assert.False(PropLabelLayout.Resolve(D("kiosk"), out _)); Assert.False(PropLabelLayout.Resolve(null, out _));
     }
 
+    [Fact] public void ADefaultLabelObjectMeansNoLabel()
+    {   // JsonUtility gives a catalogue entry without a `label` a default LabelSpec: it must not turn into a text face on every prop
+        var d = Fx.Clone(Fx.LoadCatalog().props.Single(p => p.id == "kiosk")); d.label = new LabelSpec();
+        Assert.False(d.HasLabel); Assert.False(PropLabelLayout.Resolve(d, out _));
+        var rs = Fx.Clone(Fx.LoadCatalog().props.Single(p => p.id == "road_sign")); rs.label = new LabelSpec();
+        Assert.True(PropLabelLayout.Resolve(rs, out var f)); Assert.Equal(rs.widthM * 0.92f, f.Width, 4);           // the road sign keeps its built-in face
+    }
+
     [Fact] public void AnyCataloguedPropCanDeclareATextFace()
     {
         var kiosk = Fx.Clone(Fx.LoadCatalog().props.Single(p => p.id == "kiosk"));

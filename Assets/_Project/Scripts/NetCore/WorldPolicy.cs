@@ -165,7 +165,7 @@ namespace ARO.NetCore
     public class LabelSpec
     {
         public float x, y, z;               // centre of the face
-        public float width = 1f, height = 0.5f;
+        public float width, height;         // 0 = no face. Both default to 0 on purpose: JsonUtility (the game) gives a catalogue entry WITHOUT a `label` a default instance, and that must read as "no label" (HasLabel)
         public float yawDeg;                // turns the face about the vertical axis relative to the prop (0 = facing the way the prop faces; 180 = on its back)
         public string colour = "white";     // white | black | yellow | red | green
         public int fontMax;                 // 0 = fit to the face
