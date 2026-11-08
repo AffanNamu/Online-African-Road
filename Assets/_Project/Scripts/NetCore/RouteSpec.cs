@@ -74,7 +74,8 @@ namespace ARO.NetCore
     {
         public string id, prop;
         public string zones;                    // comma separated (urban,commercial...), empty = every zone
-        public string side = "both";            // both | left | right
+        public string profiles;                 // comma separated road profile ids (urban_4lane,...), empty = every profile. Lets one zone carry different layouts (a village lane and an expressway in the same zone)
+        public string side = "both";            // both | left | right | median (on the centre line, only where the road profile has a median; turned along the road)
         public float sFrom = 0f, sTo = 0f;      // sTo <= sFrom means "to the end of the route"
         public float offsetMin = 2f, offsetMax = 12f;
         public float spacingMin = 20f, spacingMax = 40f;
@@ -82,6 +83,8 @@ namespace ARO.NetCore
         public float scaleMin = 1f, scaleMax = 1f;
         public float yawJitterDeg = 10f;
         public bool faceRoad = true;
+        public bool fixedDensity;               // true = the quality tier's prop density does not thin this rule (street lights keep their regular spacing on every tier); a density of 0 still removes everything
+        public float exclusionMargin = -1f;     // metres of clearance kept beyond the road formation; -1 = the engine default (PropScatter.ExclusionMargin, 3 m). Street lights stand close to the road and ask for less
     }
 
     /// <summary>A hand-placed set piece (sign, fuel station, bus stop). lateral is from the road centre line, positive = right.</summary>

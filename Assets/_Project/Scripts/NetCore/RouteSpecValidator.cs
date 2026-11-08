@@ -10,7 +10,7 @@ namespace ARO.NetCore
     {
         public const float MinRadiusMetres = 40f, MaxGrade = 0.08f, MinPointSpacing = 20f;
         static readonly Regex IdRx = new Regex(@"^[a-z0-9]+([-_][a-z0-9]+)*$", RegexOptions.Compiled);
-        static readonly string[] Sides = { "both", "left", "right" };
+        static readonly string[] Sides = { "both", "left", "right", "median" };
 
         public static List<string> Validate(RouteSpec spec, ISet<string> knownProps = null)
         {
@@ -146,10 +146,19 @@ namespace ARO.NetCore
                 string tag = "propRule '" + r.id + "'";
                 if (string.IsNullOrEmpty(r.prop)) e.Add(tag + ": prop is required");
                 else if (knownProps != null && !knownProps.Contains(r.prop)) e.Add(tag + ": unknown prop '" + r.prop + "'");
-                if (!Sides.Contains(r.side)) e.Add(tag + ": side must be both, left or right");
+                if (!Sides.Contains(r.side)) e.Add(tag + ": side must be both, left, right or median");
+                if (r.side == "median" && string.IsNullOrWhiteSpace(r.profiles) && !spec.profiles.Any(pr => pr.medianWidth > 0.01f)) e.Add(tag + ": side median needs a divided road profile in this route");
+                if (!string.IsNullOrWhiteSpace(r.profiles))
+                    foreach (var pid in r.profiles.Split(','))
+                    {
+                        var prof = spec.profiles.FirstOrDefault(pr => pr.id == pid.Trim());
+                        if (prof == null) e.Add(tag + ": unknown road profile '" + pid.Trim() + "'");
+                        else if (r.side == "median" && prof.medianWidth <= 0.01f) e.Add(tag + ": profile '" + prof.id + "' has no median");
+                    }
                 if (r.offsetMin < 0f || r.offsetMax < r.offsetMin || r.offsetMax > 120f) e.Add(tag + ": offsets must satisfy 0 <= min <= max <= 120");
                 if (r.spacingMin < 3f || r.spacingMax < r.spacingMin) e.Add(tag + ": spacing must satisfy 3 <= min <= max");
                 if (r.presence < 0f || r.presence > 1f) e.Add(tag + ": presence must be 0..1");
+                if (r.exclusionMargin != -1f && !(r.exclusionMargin >= 0f && r.exclusionMargin <= 10f)) e.Add(tag + ": exclusionMargin must be -1 (default) or 0..10 m");
                 if (r.scaleMin <= 0f || r.scaleMax < r.scaleMin) e.Add(tag + ": scale range invalid");
                 if (!string.IsNullOrWhiteSpace(r.zones))
                     foreach (var z in r.zones.Split(',')) if (!RouteVocab.TryZone(z, out _)) e.Add(tag + ": unknown zone '" + z.Trim() + "'");

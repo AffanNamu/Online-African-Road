@@ -5,7 +5,12 @@ namespace ARO.NetCore
     /// <summary>Material slots of a prop mesh. The Unity layer maps each slot to a material (dev palette, or the production prefab's own materials).</summary>
     public static class PropSub
     {
-        public const int Wall = 0, Roof = 1, Foliage = 2, Trunk = 3, Metal = 4, SignPanel = 5, Accent = 6, Glass = 7, Count = 8;
+        public const int Wall = 0, Roof = 1, Foliage = 2, Trunk = 3, Metal = 4, SignPanel = 5, Accent = 6, Glass = 7,
+            Lamp = 8,       // the lit face of a street luminaire: emissive, follows the lamp factor
+            Glow = 9,       // lit windows, shop fronts, stall bulbs, porch lanterns: emissive, softer than a street lamp
+            Beacon = 10,    // a red aviation light on a mast: emissive, blinks
+            Count = 11;
+        public static bool IsEmissive(int sub) => sub >= Lamp;
     }
 
     /// <summary>
@@ -38,6 +43,9 @@ namespace ARO.NetCore
                 case "bus_stop": BusStop(mb, w, d, h, detail); break;
                 case "utility_pole": Pole(mb, h, 0.2f, detail); Box(mb, PropSub.Trunk, 0, h - 0.7f, 0, 2.2f, 0.12f, 0.12f); break;
                 case "street_light": StreetLight(mb, h, w, detail); break;
+                case "street_light_village": VillageLight(mb, h, w, detail); break;
+                case "highway_light": HighwayLight(mb, h, w, detail); break;
+                case "junction_mast": JunctionMast(mb, h, detail); break;
                 case "road_sign": Sign(mb, w, h, d, detail); break;
                 case "billboard": Billboard(mb, w, h, d, detail); break;
                 case "telecom_mast": Mast(mb, h, w, detail); break;
@@ -101,7 +109,8 @@ namespace ARO.NetCore
             if (detail >= 1)
             {
                 Slab(mb, PropSub.Accent, -w * 0.25f, 0.0f, d * 0.5f + 0.01f, w * 0.18f, wallH * 0.65f);          // door
-                Slab(mb, PropSub.Glass, w * 0.2f, wallH * 0.35f, d * 0.5f + 0.01f, w * 0.2f, wallH * 0.3f);        // window
+                Slab(mb, PropSub.Glow, w * 0.2f, wallH * 0.35f, d * 0.5f + 0.01f, w * 0.2f, wallH * 0.3f);         // window, lit at night
+                Box(mb, PropSub.Glow, -w * 0.05f, wallH * 0.6f, d * 0.5f + 0.1f, 0.2f, 0.28f, 0.2f);              // porch lantern beside the door
             }
             if (detail == 2) Slab(mb, PropSub.Glass, w * 0.5f + 0.01f, wallH * 0.35f, 0f, 0f, 0f, d * 0.2f, wallH * 0.3f, true);
         }
@@ -115,8 +124,14 @@ namespace ARO.NetCore
             if (detail == 1) { floors = Math.Min(floors, 3); }
             for (int f = 0; f < floors; f++)
                 for (int c = 0; c < cols; c++)
-                    Slab(mb, PropSub.Glass, -w * 0.5f + (c + 0.5f) * w / cols - 0.6f, 1.2f + f * (h - 2.4f) / floors, d * 0.5f + 0.01f, 1.2f, 1.3f);
+                    Slab(mb, WindowLit(f, c) ? PropSub.Glow : PropSub.Glass, -w * 0.5f + (c + 0.5f) * w / cols - 0.6f, 1.2f + f * (h - 2.4f) / floors, d * 0.5f + 0.01f, 1.2f, 1.3f);
         }
+
+        /// <summary>Which windows of an apartment block are lit at night: a fixed, scattered share (about 40%), the same for every block, so the placeholder reads as occupied rather than as a lit wall.</summary>
+        public static bool WindowLit(int floor, int column) => (floor * 7 + column * 3) % 5 < 2;
+
+        /// <summary>Which shop fronts of a shop row are open and lit (two of every three).</summary>
+        public static bool ShopLit(int shop) => shop % 3 != 2;
 
         static void ShopRow(MeshBuffers mb, float w, float d, float h, int detail)
         {
@@ -129,7 +144,7 @@ namespace ARO.NetCore
             for (int s = 0; s < shops; s++)
             {
                 float cx = -w * 0.5f + (s + 0.5f) * w / shops;
-                Slab(mb, PropSub.Glass, cx - 0.9f, 0.1f, d * 0.5f + 0.01f, 1.8f, h * 0.5f);
+                Slab(mb, ShopLit(s) ? PropSub.Glow : PropSub.Glass, cx - 0.9f, 0.1f, d * 0.5f + 0.01f, 1.8f, h * 0.5f);
                 if (detail == 2) Slab(mb, PropSub.SignPanel, cx - 1.1f, h * 0.7f, d * 0.5f + 0.02f, 2.2f, h * 0.2f);
             }
         }
@@ -138,7 +153,8 @@ namespace ARO.NetCore
         {
             Box(mb, PropSub.Accent, 0, 0, 0, w, h * 0.85f, d);
             Box(mb, PropSub.Roof, 0, h * 0.85f, 0, w * 1.15f, h * 0.15f, d * 1.15f);
-            if (detail == 2) Slab(mb, PropSub.Glass, -w * 0.3f, h * 0.35f, d * 0.5f + 0.01f, w * 0.6f, h * 0.3f);
+            Box(mb, PropSub.Glow, 0, h * 0.85f - 0.2f, d * 0.5f + 0.1f, 0.2f, 0.14f, 0.2f);                       // the bulb over the counter
+            if (detail == 2) Slab(mb, PropSub.Glow, -w * 0.3f, h * 0.35f, d * 0.5f + 0.01f, w * 0.6f, h * 0.3f);
         }
 
         static void Stall(MeshBuffers mb, float w, float d, float h, int detail)
@@ -146,6 +162,7 @@ namespace ARO.NetCore
             float pr = 0.04f;
             foreach (int sx in new[] { -1, 1 }) foreach (int sz in new[] { -1, 1 }) Box(mb, PropSub.Metal, sx * (w * 0.5f - pr), 0, sz * (d * 0.5f - pr), pr * 2f, h, pr * 2f);
             Wedge(mb, PropSub.Accent, 0, h, 0, w * 1.1f, 0.5f, d * 1.1f);
+            foreach (int sx in new[] { -1, 1 }) Box(mb, PropSub.Glow, sx * w * 0.35f, h - 0.3f, d * 0.5f - 0.1f, 0.14f, 0.16f, 0.14f);     // two bulbs under the awning
             if (detail == 2) Box(mb, PropSub.Wall, 0, 0.7f, 0, w * 0.9f, 0.1f, d * 0.6f);
         }
 
@@ -154,6 +171,7 @@ namespace ARO.NetCore
             float wallH = h * 0.8f;
             Box(mb, PropSub.Wall, 0, 0, 0, w, wallH, d);
             Gable(mb, PropSub.Roof, 0, wallH, 0, w * 1.04f, h - wallH, d * 1.04f);
+            foreach (int sx in new[] { -1, 1 }) Head(mb, sx * w * 0.35f, wallH - 0.9f, d * 0.5f + 0.35f, 0.5f, 0.2f, 0.5f);     // two security lights on the front wall
             if (detail < 2) return;
             int doors = Math.Max(2, (int)(w / 9f));
             for (int i = 0; i < doors; i++) Slab(mb, PropSub.Accent, -w * 0.5f + (i + 0.5f) * w / doors - 1.8f, 0f, d * 0.5f + 0.01f, 3.6f, 4.2f);
@@ -164,11 +182,13 @@ namespace ARO.NetCore
             float canopyY = 5.2f, cw = w * 0.62f, cd = d * 0.55f;
             Box(mb, PropSub.Accent, w * 0.1f, canopyY, d * 0.1f, cw, 0.6f, cd);
             foreach (int sx in new[] { -1, 1 }) foreach (int sz in new[] { -1, 1 }) Box(mb, PropSub.Metal, w * 0.1f + sx * (cw * 0.5f - 0.5f), 0, d * 0.1f + sz * (cd * 0.5f - 0.5f), 0.4f, canopyY, 0.4f);
+            foreach (int sx in new[] { -1, 1 }) foreach (int sz in new[] { -1, 1 }) FlatDown(mb, PropSub.Glow, w * 0.1f + sx * cw * 0.25f, canopyY - 0.01f, d * 0.1f + sz * cd * 0.25f, 1.4f, 1.4f);   // canopy downlights
             Box(mb, PropSub.Wall, -w * 0.34f, 0, -d * 0.3f, w * 0.26f, 3.4f, d * 0.4f);
             Box(mb, PropSub.Roof, -w * 0.34f, 3.4f, -d * 0.3f, w * 0.28f, 0.3f, d * 0.42f);
             if (detail == 2)
             {
                 Box(mb, PropSub.SignPanel, w * 0.42f, 0, -d * 0.4f, 0.6f, h, 1.2f);                    // price pylon
+                Slab(mb, PropSub.Glow, w * 0.42f - 0.25f, h * 0.55f, -d * 0.4f + 0.61f, 0.5f, 1.5f);   // its lit price panel
                 foreach (int p in new[] { -1, 1 }) Box(mb, PropSub.Accent, w * 0.1f + p * 2.2f, 0, d * 0.1f, 0.7f, 1.5f, 0.5f);   // pumps
             }
         }
@@ -177,6 +197,7 @@ namespace ARO.NetCore
         {
             foreach (int sx in new[] { -1, 1 }) Box(mb, PropSub.Metal, sx * (w * 0.5f - 0.1f), 0, 0, 0.12f, h, 0.12f);
             Box(mb, PropSub.Roof, 0, h, 0, w * 1.1f, 0.15f, d);
+            FlatDown(mb, PropSub.Glow, 0, h - 0.01f, 0, w * 0.5f, 0.3f);                                   // the shelter light under the roof
             if (detail == 2) { Box(mb, PropSub.Trunk, 0, 0.45f, -d * 0.25f, w * 0.7f, 0.08f, 0.4f); Slab(mb, PropSub.Glass, -w * 0.5f + 0.2f, 0.4f, -d * 0.5f + 0.01f, w - 0.4f, h - 0.7f); }
         }
 
@@ -186,12 +207,56 @@ namespace ARO.NetCore
             Frustum(mb, PropSub.Trunk, 0, 0, 0, r, 0, 0, h, r * 0.6f, sides);
         }
 
+        // The luminaires. A head is a small housing (Metal) with its lit face (Lamp) looking down; the head positions in prop_catalog.json (light.heads) are the centres of these lit faces.
         static void StreetLight(MeshBuffers mb, float h, float w, int detail)
         {
             Pole(mb, h, 0.12f, detail);
             Box(mb, PropSub.Metal, 0, h - 0.1f, w * 0.25f, 0.1f, 0.1f, w * 0.5f);
-            Box(mb, PropSub.Accent, 0, h - 0.25f, w * 0.5f, 0.35f, 0.15f, 0.7f);
+            Head(mb, 0, h - 0.34f, w * 0.5f, 0.36f, 0.16f, 0.72f);
         }
+
+        static void VillageLight(MeshBuffers mb, float h, float w, int detail)
+        {
+            Frustum(mb, PropSub.Trunk, 0, 0, 0, 0.13f, 0, 0, h, 0.08f, detail == 2 ? 6 : 4);
+            Box(mb, PropSub.Metal, 0, h - 0.12f, w * 0.25f, 0.07f, 0.07f, w * 0.5f);
+            Head(mb, 0, h - 0.3f, w * 0.5f, 0.26f, 0.13f, 0.46f);
+        }
+
+        /// <summary>A median luminaire: one pole on the central reservation, an arm over each carriageway (arms along the local x axis; the prop is turned along the road).</summary>
+        static void HighwayLight(MeshBuffers mb, float h, float w, int detail)
+        {
+            Frustum(mb, PropSub.Metal, 0, 0, 0, 0.17f, 0, 0, h, 0.09f, detail == 2 ? 8 : detail == 1 ? 6 : 4);
+            float arm = w * 0.5f - 0.35f;
+            foreach (int sx in new[] { -1, 1 })
+            {
+                Box(mb, PropSub.Metal, sx * (arm * 0.5f), h - 0.14f, 0, arm, 0.12f, 0.12f);
+                Head(mb, sx * w * 0.5f, h - 0.4f, 0, 0.7f, 0.18f, 0.36f);
+            }
+        }
+
+        /// <summary>A high mast at a junction: a stout pole and a ring carrying three downward heads.</summary>
+        static void JunctionMast(MeshBuffers mb, float h, int detail)
+        {
+            Frustum(mb, PropSub.Metal, 0, 0, 0, 0.26f, 0, 0, h, 0.14f, detail == 2 ? 8 : detail == 1 ? 6 : 4);
+            Box(mb, PropSub.Metal, 0, h - 0.5f, 0, 0.9f, 0.14f, 0.9f);
+            for (int k = 0; k < 3; k++)
+            {
+                float a = (90f + k * 120f) * (float)Math.PI / 180f, x = (float)Math.Cos(a) * 1.6f, z = (float)Math.Sin(a) * 1.6f;
+                Box(mb, PropSub.Metal, x * 0.5f, h - 0.5f, z * 0.5f, 0.12f + Math.Abs(x) * 0.5f, 0.1f, 0.12f + Math.Abs(z) * 0.5f);
+                Head(mb, x, h - 0.8f, z, 0.6f, 0.2f, 0.6f);
+            }
+        }
+
+        /// <summary>A luminaire head: a housing (Metal) whose underside is the lit face (Lamp).</summary>
+        static void Head(MeshBuffers mb, float cx, float yCentre, float cz, float w, float h, float d)
+        {
+            Box(mb, PropSub.Metal, cx, yCentre - h * 0.5f + h * 0.2f, cz, w, h * 0.8f, d);
+            FlatDown(mb, PropSub.Lamp, cx, yCentre - h * 0.5f + h * 0.2f - 0.004f, cz, w * 0.86f, d * 0.86f);
+        }
+
+        /// <summary>A flat quad at height y facing down (the lit face of a downlight, a canopy light, a shelter light).</summary>
+        static void FlatDown(MeshBuffers mb, int sub, float cx, float y, float cz, float w, float d)
+            => mb.QuadFacing(sub, new V3(cx - w / 2, y, cz - d / 2), new V3(cx + w / 2, y, cz - d / 2), new V3(cx - w / 2, y, cz + d / 2), new V3(cx + w / 2, y, cz + d / 2), new V3(0, -1, 0), new V2(0, 0), new V2(1, 0), new V2(0, 1), new V2(1, 1));
 
         static void Sign(MeshBuffers mb, float w, float h, float d, int detail)
         {
@@ -206,6 +271,12 @@ namespace ARO.NetCore
             foreach (int sx in new[] { -1, 1 }) Box(mb, PropSub.Metal, sx * w * 0.3f, 0, 0, 0.35f, h - 3.2f, 0.35f);
             Box(mb, PropSub.SignPanel, 0, h - 4.2f, 0, w, 4.2f, d);
             if (detail == 2) Box(mb, PropSub.Metal, 0, h - 4.3f, 0, w * 1.02f, 0.1f, d * 1.5f);
+            if (detail == 2)
+                foreach (int sx in new[] { -1, 1 })
+                {   // two flood lamps on arms over the top edge, looking down at the panel
+                    Box(mb, PropSub.Metal, sx * w * 0.25f, h, d * 0.5f + 0.25f, 0.08f, 0.08f, 0.5f);
+                    Head(mb, sx * w * 0.25f, h + 0.1f, d * 0.5f + 0.6f, 0.5f, 0.2f, 0.4f);
+                }
         }
 
         static void Mast(MeshBuffers mb, float h, float w, int detail)
@@ -219,6 +290,8 @@ namespace ARO.NetCore
             }
             int platforms = detail == 2 ? 4 : detail == 1 ? 2 : 0;
             for (int p = 1; p <= platforms; p++) Box(mb, PropSub.Accent, 0, h * p / (platforms + 1), 0, r * 1.2f * (1f - 0.7f * p / (platforms + 1f)), 0.25f, r * 1.2f * (1f - 0.7f * p / (platforms + 1f)));
+            Box(mb, PropSub.Beacon, 0, h, 0, 0.34f, 0.34f, 0.34f);                                         // red obstruction light at the top
+            Box(mb, PropSub.Beacon, r * 0.6f, h * 0.5f, 0, 0.28f, 0.28f, 0.28f);                           // and one half way up, on a leg
         }
 
         // ------------------------------------------------------------------------------------------------------ primitives

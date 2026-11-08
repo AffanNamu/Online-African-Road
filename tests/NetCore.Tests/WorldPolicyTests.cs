@@ -39,7 +39,12 @@ public class PropScatterTests
     {
         var m = Fx.Shipped; var all = Everything(m); Assert.True(all.Count > 1000, "expected a populated corridor, got " + all.Count);
         foreach (var p in all.Where(p => p.Origin != null && !m.Spec.props.Any(h => h.id == p.Origin)))
-            Assert.False(m.Terrain.InsideFormation(p.Pos.X, p.Pos.Z, PropScatter.ExclusionMargin - 0.01f), p.Prop + " was placed on the road");
+        {
+            var rule = m.Spec.propRules.Single(r => r.id == p.Origin);
+            if (rule.side == "median") { Assert.True(m.Terrain.InsideFormation(p.Pos.X, p.Pos.Z), p.Prop + " (median rule " + rule.id + ") is not on the road it lights"); continue; }     // a median light stands on the centre line by design
+            float margin = rule.exclusionMargin >= 0f ? rule.exclusionMargin : PropScatter.ExclusionMargin;      // each rule keeps the clearance it declares (the default is 3 m)
+            Assert.False(m.Terrain.InsideFormation(p.Pos.X, p.Pos.Z, margin - 0.01f), p.Prop + " was placed on the road");
+        }
     }
 
     [Fact] public void DensityMultiplierScalesTheCountAndZeroRemovesAllRuleProps()

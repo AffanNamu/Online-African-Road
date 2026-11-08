@@ -145,6 +145,32 @@ namespace ARO.NetCore
         public int[] lodTriangles;
         public bool castShadow;
         public string[] tags;
+        /// <summary>Optional light emitted by the prop (street luminaire, shop or window light, mast beacon). JsonUtility gives a missing object a default instance, so test <see cref="HasLight"/>, never `light != null`.</summary>
+        public LightSpec light;
+        public bool HasLight => light != null && light.heads != null && light.heads.Length > 0;
+    }
+
+    /// <summary>One light source on a prop, in the prop's local axes (x right, y up, z forward = the way the prop faces), metres before the instance scale.</summary>
+    [Serializable] public class LampHead { public float x, y, z; }
+
+    /// <summary>
+    /// What a prop lights at night. The same spec drives the emissive head (through the prop's lamp sub-material), the camera-facing halo, the pool of light on the ground, the wet-road streak and,
+    /// for the few lamps near the player, a real light. kind: lamp (street luminaire: halo, pool, streak, real-light candidate), glow (a building, stall or canopy light: halo and an optional small pool)
+    /// or beacon (a blinking red mast light: halo only).
+    /// </summary>
+    [Serializable]
+    public class LightSpec
+    {
+        public string kind = "lamp";
+        public float r = 1f, g = 0.72f, b = 0.38f;       // light colour (gamma space, like every colour in the project)
+        public float intensity = 1f;                      // multiplies the glow brightness and the real light's intensity
+        public float range = 22f;                         // range of the real light, metres
+        public float haloSize = 1.6f;                     // camera-facing halo, metres across
+        public float poolRadius = 6f;                     // radius of the pool of light on the ground under the head; 0 = none
+        public float poolShift = 0f;                      // metres the pool is moved from under the head, in the direction the head points away from the pole
+        public bool realLight = true;                     // may take one of the pooled real lights when near the player
+        public bool shiftFront;                           // the pool shifts along the prop's own forward axis (a wall light over a shop front) instead of away from the pole axis (a lamp on an arm)
+        public LampHead[] heads;
     }
 
     [Serializable] public class PropCatalogSpec { public int schemaVersion = 1; public PropDef[] props; }
@@ -185,8 +211,31 @@ namespace ARO.NetCore
                 if (string.IsNullOrEmpty(p.source)) e.Add(tag + ": source is required");
                 else if (p.status == "dev" && !p.source.StartsWith("dev:")) e.Add(tag + ": a dev prop's source must be 'dev:<generator>'");
                 else if (p.status == "production" && !p.source.StartsWith("Props/")) e.Add(tag + ": a production prop's source must be a Resources path under 'Props/'");
+                if (p.HasLight) ValidateLight(p, tag, e);
             }
             return e;
+        }
+
+        public static readonly string[] LightKinds = { "lamp", "glow", "beacon" };
+
+        static void ValidateLight(PropDef p, string tag, List<string> e)
+        {
+            var l = p.light; tag += " light";
+            if (!LightKinds.Contains(l.kind)) e.Add(tag + ": kind must be one of " + string.Join(", ", LightKinds));
+            if (l.heads.Length > 8) e.Add(tag + ": at most 8 heads");
+            foreach (var h in l.heads)
+            {
+                if (h == null) { e.Add(tag + ": a head is null"); continue; }
+                if (float.IsNaN(h.x) || float.IsNaN(h.y) || float.IsNaN(h.z) || Math.Abs(h.x) > 20f || Math.Abs(h.z) > 20f) e.Add(tag + ": head position must be within 20 m of the pole axis");
+                if (h.y < 0f || h.y > p.heightM * 1.05f) e.Add(tag + ": head height must be between 0 and the prop height");
+            }
+            if (!(l.r >= 0f && l.r <= 1f && l.g >= 0f && l.g <= 1f && l.b >= 0f && l.b <= 1f)) e.Add(tag + ": colour components must be 0..1");
+            if (!(l.intensity >= 0f && l.intensity <= 8f)) e.Add(tag + ": intensity must be 0..8");
+            if (!(l.range >= 3f && l.range <= 60f)) e.Add(tag + ": range must be 3..60 m");
+            if (!(l.haloSize >= 0f && l.haloSize <= 8f)) e.Add(tag + ": haloSize must be 0..8 m");
+            if (!(l.poolRadius >= 0f && l.poolRadius <= 20f)) e.Add(tag + ": poolRadius must be 0..20 m");
+            if (!(l.poolShift >= -10f && l.poolShift <= 10f)) e.Add(tag + ": poolShift must be -10..10 m");
+            if (l.kind == "beacon" && (l.poolRadius > 0f || l.realLight)) e.Add(tag + ": a beacon has no ground pool and no real light");
         }
     }
 
@@ -216,7 +265,8 @@ namespace ARO.NetCore
             {
                 var r = rules[ri]; float from = Math.Max(0f, r.sFrom), to = r.sTo > r.sFrom ? Math.Min(L, r.sTo) : L;
                 float size = (r.spacingMin + r.spacingMax) * 0.5f, jitter = (r.spacingMax - r.spacingMin) * 0.25f;
-                var zones = ParseZones(r.zones);
+                var zones = ParseZones(r.zones); var profiles = ParseProfiles(r.profiles);
+                bool median = r.side == "median"; float dens = r.fixedDensity && density > 0f ? 1f : density, margin = r.exclusionMargin >= 0f ? r.exclusionMargin : ExclusionMargin;
                 int k0 = Math.Max(0, (int)Math.Floor((Math.Max(sLo, from) - from) / size) - 1), k1 = (int)Math.Ceiling((Math.Min(sHi, to) - from) / size) + 1;
                 for (int k = k0; k <= k1; k++)
                 {
@@ -224,14 +274,23 @@ namespace ARO.NetCore
                     if (s < from || s > to || s < 0f || s > L) continue;
                     if (zones != null && !zones.Contains(main.ZoneAt(s))) continue;
                     if (main.InBridge(s, out _)) continue;
-                    foreach (int side in SidesOf(r.side))
+                    if (profiles != null && !profiles.Contains(main.SectionAt(s).Spec.id)) continue;
+                    if (median && !main.SectionAt(s).HasMedian) continue;
+                    foreach (int side in median ? MedianSide : SidesOf(r.side))
                     {
-                        if (Mathx.Hash01(spec.seed + ri * 7919, k, side + 3) > r.presence * density) continue;
-                        float off = main.HalfFormationAt(s) + r.offsetMin + Mathx.Hash01(spec.seed + ri * 104729, k, side + 7) * (r.offsetMax - r.offsetMin);
+                        if (Mathx.Hash01(spec.seed + ri * 7919, k, side + 3) > r.presence * dens) continue;
                         main.Spline.FrameAt(s, out var pos, out var fwd, out var right);
+                        if (median)
+                        {   // on the centre line of a divided road, standing on the median, turned along the road (a double arm then reaches over both carriageways)
+                            if (pos.X < minX || pos.X >= maxX || pos.Z < minZ || pos.Z >= maxZ) continue;
+                            float headingM = (float)(Math.Atan2(fwd.X, fwd.Z) * 180.0 / Math.PI) + (Mathx.Hash01(spec.seed + ri, k, 13) * 2f - 1f) * r.yawJitterDeg;
+                            res.Add(new PropInstance { Prop = r.prop, Origin = r.id, Pos = new V3(pos.X, main.SurfaceY(s, 0f), pos.Z), YawDeg = headingM, Scale = Mathx.Lerp(r.scaleMin, r.scaleMax, Mathx.Hash01(spec.seed + ri, k, 19)) });
+                            continue;
+                        }
+                        float off = main.HalfFormationAt(s) + r.offsetMin + Mathx.Hash01(spec.seed + ri * 104729, k, side + 7) * (r.offsetMax - r.offsetMin);
                         float x = pos.X + right.X * side * off, z = pos.Z + right.Z * side * off;
                         if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
-                        if (m.Terrain.InsideFormation(x, z, ExclusionMargin)) continue;
+                        if (m.Terrain.InsideFormation(x, z, margin)) continue;
                         float towardRoad = (float)(Math.Atan2(-right.X * side, -right.Z * side) * 180.0 / Math.PI);
                         float yaw = (r.faceRoad ? towardRoad : Mathx.Hash01(spec.seed, k, 5) * 360f) + (Mathx.Hash01(spec.seed + ri, k, side + 13) * 2f - 1f) * r.yawJitterDeg;
                         float scale = Mathx.Lerp(r.scaleMin, r.scaleMax, Mathx.Hash01(spec.seed + ri, k, side + 19));
@@ -246,7 +305,8 @@ namespace ARO.NetCore
                 float x = pos.X + right.X * p.lateral, z = pos.Z + right.Z * p.lateral;
                 if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
                 float heading = (float)(Math.Atan2(fwd.X, fwd.Z) * 180.0 / Math.PI);
-                res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, m.Terrain.HeightAt(x, z), z), YawDeg = heading + p.yawDeg, Scale = p.scale });
+                float y = Math.Abs(p.lateral) < main.HalfFormationAt(Mathx.Clamp(p.s, 0f, L)) ? main.SurfaceY(Mathx.Clamp(p.s, 0f, L), p.lateral) : m.Terrain.HeightAt(x, z);   // a piece placed on the road itself (a median light) stands on the surface, not on the terrain 0.35 m below it
+                res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
             }
             return res;
         }
@@ -259,6 +319,16 @@ namespace ARO.NetCore
             return set;
         }
 
+        /// <summary>A comma separated list of road profile ids, or null when the list is empty (= any profile).</summary>
+        static HashSet<string> ParseProfiles(string list)
+        {
+            if (string.IsNullOrWhiteSpace(list)) return null;
+            var set = new HashSet<string>();
+            foreach (var part in list.Split(',')) { var t = part.Trim(); if (t.Length > 0) set.Add(t); }
+            return set.Count == 0 ? null : set;
+        }
+
+        static readonly int[] MedianSide = { 0 };
         static IEnumerable<int> SidesOf(string side) => side == "left" ? new[] { -1 } : side == "right" ? new[] { 1 } : new[] { -1, 1 };
 
         /// <summary>The range of route distances whose centre line lies within `margin` of the box.</summary>

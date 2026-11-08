@@ -73,7 +73,32 @@
     120
    ],
    "castShadow": true,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.45,
+    "intensity": 0.55,
+    "range": 8,
+    "haloSize": 1.8,
+    "poolRadius": 2.4,
+    "poolShift": 1.0,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.5,
+      "y": 2.66,
+      "z": 4.6
+     },
+     {
+      "x": 3.0,
+      "y": 2.1,
+      "z": 4.65
+     }
+    ]
+   }
   },
   {
    "id": "apartment_block",
@@ -91,7 +116,51 @@
     200
    ],
    "castShadow": true,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.82,
+    "b": 0.55,
+    "intensity": 0.5,
+    "range": 10,
+    "haloSize": 2.4,
+    "poolRadius": 0,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -7.5,
+      "y": 1.85,
+      "z": 7.16
+     },
+     {
+      "x": -4.5,
+      "y": 4.57,
+      "z": 7.16
+     },
+     {
+      "x": -1.5,
+      "y": 7.29,
+      "z": 7.16
+     },
+     {
+      "x": 1.5,
+      "y": 10.01,
+      "z": 7.16
+     },
+     {
+      "x": 4.5,
+      "y": 12.73,
+      "z": 7.16
+     },
+     {
+      "x": 7.5,
+      "y": 10.01,
+      "z": 7.16
+     }
+    ]
+   }
   },
   {
    "id": "shop_row",
@@ -109,7 +178,37 @@
     200
    ],
    "castShadow": true,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.8,
+    "b": 0.5,
+    "intensity": 0.8,
+    "range": 10,
+    "haloSize": 2.6,
+    "poolRadius": 3.5,
+    "poolShift": 2.2,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -6.75,
+      "y": 1.2,
+      "z": 4.2
+     },
+     {
+      "x": -2.25,
+      "y": 1.2,
+      "z": 4.2
+     },
+     {
+      "x": 6.75,
+      "y": 1.2,
+      "z": 4.2
+     }
+    ]
+   }
   },
   {
    "id": "kiosk",
@@ -127,7 +226,32 @@
     60
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.82,
+    "b": 0.5,
+    "intensity": 0.7,
+    "range": 7,
+    "haloSize": 1.4,
+    "poolRadius": 2.2,
+    "poolShift": 1.2,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 0,
+      "y": 2.1,
+      "z": 1.6
+     },
+     {
+      "x": 0,
+      "y": 1.3,
+      "z": 1.55
+     }
+    ]
+   }
   },
   {
    "id": "market_stall",
@@ -145,7 +269,31 @@
     80
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.82,
+    "b": 0.5,
+    "intensity": 0.8,
+    "range": 7,
+    "haloSize": 1.2,
+    "poolRadius": 2.4,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -1.225,
+      "y": 2.1,
+      "z": 1.4
+     },
+     {
+      "x": 1.225,
+      "y": 2.1,
+      "z": 1.4
+     }
+    ]
+   }
   },
   {
    "id": "warehouse",
@@ -163,7 +311,32 @@
     150
    ],
    "castShadow": true,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 14,
+    "haloSize": 1.8,
+    "poolRadius": 5.0,
+    "poolShift": 3.0,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -10.5,
+      "y": 7.04,
+      "z": 10.35
+     },
+     {
+      "x": 10.5,
+      "y": 7.04,
+      "z": 10.35
+     }
+    ]
+   }
   },
   {
    "id": "fuel_station",
@@ -181,7 +354,41 @@
     350
    ],
    "castShadow": true,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.95,
+    "b": 0.8,
+    "intensity": 1.1,
+    "range": 14,
+    "haloSize": 2.2,
+    "poolRadius": 7.0,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -1.54,
+      "y": 5.15,
+      "z": -0.675
+     },
+     {
+      "x": 7.14,
+      "y": 5.15,
+      "z": -0.675
+     },
+     {
+      "x": -1.54,
+      "y": 5.15,
+      "z": 4.275
+     },
+     {
+      "x": 7.14,
+      "y": 5.15,
+      "z": 4.275
+     }
+    ]
+   }
   },
   {
    "id": "bus_stop",
@@ -199,7 +406,26 @@
     100
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.6,
+    "poolRadius": 3.2,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 0,
+      "y": 2.9,
+      "z": 0
+     }
+    ]
+   }
   },
   {
    "id": "utility_pole",
@@ -227,7 +453,7 @@
    "source": "dev:street_light",
    "collider": "none",
    "heightM": 9,
-   "widthM": 3,
+   "widthM": 4.4,
    "depthM": 0.6,
    "cullDistance": 260,
    "lodTriangles": [
@@ -235,7 +461,168 @@
     100
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [
+    "street_lighting",
+    "residential",
+    "commercial",
+    "industrial"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.7,
+    "b": 0.36,
+    "intensity": 1.0,
+    "range": 24,
+    "haloSize": 1.8,
+    "poolRadius": 6.5,
+    "poolShift": 3.0,
+    "realLight": true,
+    "heads": [
+     {
+      "x": 0,
+      "y": 8.6,
+      "z": 2.2
+     }
+    ]
+   }
+  },
+  {
+   "id": "street_light_village",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/street_light_village (same id, same real-world size and pivot).",
+   "source": "dev:street_light_village",
+   "collider": "none",
+   "heightM": 6.5,
+   "widthM": 3.0,
+   "depthM": 0.5,
+   "cullDistance": 240,
+   "lodTriangles": [
+    150,
+    60
+   ],
+   "castShadow": false,
+   "tags": [
+    "street_lighting",
+    "village"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.74,
+    "b": 0.42,
+    "intensity": 0.7,
+    "range": 18,
+    "haloSize": 1.4,
+    "poolRadius": 5.0,
+    "poolShift": 2.4,
+    "realLight": true,
+    "heads": [
+     {
+      "x": 0,
+      "y": 6.15,
+      "z": 1.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "highway_light",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/highway_light (same id, same real-world size and pivot).",
+   "source": "dev:highway_light",
+   "collider": "none",
+   "heightM": 12,
+   "widthM": 6,
+   "depthM": 0.6,
+   "cullDistance": 320,
+   "lodTriangles": [
+    300,
+    120
+   ],
+   "castShadow": false,
+   "tags": [
+    "street_lighting",
+    "expressway",
+    "median"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.8,
+    "b": 0.52,
+    "intensity": 1.15,
+    "range": 30,
+    "haloSize": 2.0,
+    "poolRadius": 7.5,
+    "poolShift": 1.8,
+    "realLight": true,
+    "heads": [
+     {
+      "x": -3.0,
+      "y": 11.54,
+      "z": 0
+     },
+     {
+      "x": 3.0,
+      "y": 11.54,
+      "z": 0
+     }
+    ]
+   }
+  },
+  {
+   "id": "junction_mast",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/junction_mast (same id, same real-world size and pivot).",
+   "source": "dev:junction_mast",
+   "collider": "none",
+   "heightM": 18,
+   "widthM": 4,
+   "depthM": 4,
+   "cullDistance": 420,
+   "lodTriangles": [
+    350,
+    140
+   ],
+   "castShadow": false,
+   "tags": [
+    "street_lighting",
+    "junction",
+    "high_mast"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.82,
+    "b": 0.55,
+    "intensity": 1.4,
+    "range": 34,
+    "haloSize": 2.4,
+    "poolRadius": 9.0,
+    "poolShift": 3.0,
+    "realLight": true,
+    "heads": [
+     {
+      "x": 0,
+      "y": 17.13,
+      "z": 1.6
+     },
+     {
+      "x": -1.386,
+      "y": 17.13,
+      "z": -0.8
+     },
+     {
+      "x": 1.386,
+      "y": 17.13,
+      "z": -0.8
+     }
+    ]
+   }
   },
   {
    "id": "road_sign",
@@ -271,7 +658,31 @@
     60
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.95,
+    "b": 0.85,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.4,
+    "poolRadius": 0,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -2.0,
+      "y": 8.04,
+      "z": 0.9
+     },
+     {
+      "x": 2.0,
+      "y": 8.04,
+      "z": 0.9
+     }
+    ]
+   }
   },
   {
    "id": "telecom_mast",
@@ -289,7 +700,31 @@
     120
    ],
    "castShadow": false,
-   "tags": []
+   "tags": [],
+   "light": {
+    "kind": "beacon",
+    "r": 1.0,
+    "g": 0.08,
+    "b": 0.05,
+    "intensity": 1.3,
+    "range": 10,
+    "haloSize": 2.4,
+    "poolRadius": 0,
+    "poolShift": 0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 0,
+      "y": 30.17,
+      "z": 0
+     },
+     {
+      "x": 0.9,
+      "y": 15.14,
+      "z": 0
+     }
+    ]
+   }
   }
  ]
 }
