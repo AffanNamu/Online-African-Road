@@ -1,6 +1,6 @@
 // The E1 street kit (kerbs, walkways, gutters, the planter median, dropped kerbs, pavement symbols), checked in the real WebGL build.
 // Usage: node tools/webgl-e1.js <build-dir> <out-prefix> [quality]        (self-test of the frame analysis: --selftest)
-// The game is opened on its engine TEST corridor (?smoke=drive&route=ng-kano-e1-streets) at eight places, day and night, with the truck frozen (hold=1); each place gives a chase-view and a bumper-view frame.
+// The game is opened on its engine TEST corridor (?smoke=drive&route=ng-kano-e1-streets) at fourteen places, day and night, with the truck frozen (hold=1); each place gives a chase-view and a bumper-view frame.
 // Output: <prefix>-sheet.png (all frames), <prefix>-report.json and a PASS / FAIL list. The checks are about the running game (the corridor loaded, the truck stood on real ground, nothing threw);
 // whether the kerbs, walkways and markings LOOK right is for a person to judge from the sheet.
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -34,7 +34,8 @@ function serve() {
 const results = [];
 function check(name, ok, detail) { results.push({ name, ok: !!ok, detail }); console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' (' + detail + ')' : ''}`); }
 
-// metres along the corridor (docs: the arterial runs 0 to 760 m, the collector 760 to 1500 m; junctions at 840 right, 1020 left, 1250 right)
+// metres along the corridor (the arterial runs 0 to 760 m, the collector 760 to 1500 m; junctions at 840 right, 1020 left, 1250 right, 1420 right); `site` starts the truck on a site plate instead
+// `view`: the second frame is the bumper view (key 8) unless this says 7, the overhead view, which shows the layout of the pavement marks
 const PLACES = [
   { id: 'arterial-arrows', start: 90, hour: 'noon', what: 'planter median in a painted kerb, walkways, gutters, lane arrows' },
   { id: 'zebra', start: 262, hour: 'noon', what: 'zebra crossing and stop lines on the arterial' },
@@ -42,8 +43,14 @@ const PLACES = [
   { id: 'class-change', start: 700, hour: 'noon', what: 'arterial narrowing to the collector (the run transition)' },
   { id: 'local-mouth', start: 800, hour: 'noon', what: 'collector with a kerb dropped at the local street on the right' },
   { id: 'service-mouth', start: 975, hour: 'noon', what: 'service road with its yield triangles and loading bay lines, kerb dropped on the left' },
+  { id: 'yard', site: 'site_yard', hour: 'noon', what: 'E2 logistics yard: concrete plate, kerb with an entrance, stop line, arrows, two warehouses, loading bays, keep-clear hatch', view: '7' },
+  { id: 'yard-ground', site: 'site_yard', hour: 'noon', what: 'the same yard from the cab: the bays and the warehouse fronts' },
+  { id: 'terminal', site: 'site_terminal', hour: 'noon', what: 'E2 bus terminal: black and white kerb, twelve bays, four shelters, ticket kiosks, market stalls, name board', view: '7' },
+  { id: 'terminal-ground', site: 'site_terminal', hour: 'noon', what: 'the same terminal from the cab' },
   { id: 'arterial-night', start: 90, hour: 'night', what: 'the arterial at night: median lights on the planter, lit kerbs' },
   { id: 'collector-night', start: 880, hour: 'night', what: 'the collector at night: street lights behind the walkway' },
+  { id: 'yard-night', site: 'site_yard', hour: 'night', what: 'the logistics yard at night: lamps, lit warehouse windows', view: '7' },
+  { id: 'terminal-night', site: 'site_terminal', hour: 'night', what: 'the bus terminal at night', view: '7' },
 ];
 
 (async () => {
@@ -55,16 +62,17 @@ const PLACES = [
     const page = await browser.newPage({ viewport: { width: 1024, height: 576 } });
     const logs = [], errors = []; page.on('console', m => logs.push(m.text())); page.on('pageerror', e => errors.push(String(e)));
     const has = re => logs.some(l => re.test(l)); const waitFor = async (re, secs) => { for (let i = 0; i < secs * 4; i++) { if (has(re)) return true; await page.waitForTimeout(250); } return false; };
-    console.log(`\n=== ${pl.id}: ${pl.what} (start=${pl.start} m, hour=${pl.hour}, ${quality}) ===`);
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&quality=${quality}&route=ng-kano-e1-streets&start=${pl.start}&hour=${pl.hour}`);
+    console.log(`\n=== ${pl.id}: ${pl.what} (${pl.site ? 'on ' + pl.site : 'start=' + pl.start + ' m'}, hour=${pl.hour}, ${quality}) ===`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&quality=${quality}&route=ng-kano-e1-streets&${pl.site ? 'site=' + pl.site : 'start=' + pl.start}&hour=${pl.hour}`);
     const started = await waitFor(/\[Smoke\] drive scenario/, 150), ground = started && await waitFor(/\[Drive\] ground ready/, 90), held = ground && await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
-    check(`${pl.id}: the drive scenario started on the corridor`, started && has(/\[Smoke\] driving the test corridor ng-kano-e1-streets/) && has(/\[Route\] ng-kano-e1-streets: .*3 junctions/), started ? (logs.find(l => /^\[Route\] /.test(l)) || 'no [Route] line').slice(0, 200) : 'the build did not start');
+    check(`${pl.id}: the drive scenario started on the corridor`, started && has(/\[Smoke\] driving the test corridor ng-kano-e1-streets/) && has(/\[Route\] ng-kano-e1-streets: .*4 junctions/), started ? (logs.find(l => /^\[Route\] /.test(l)) || 'no [Route] line').slice(0, 200) : 'the build did not start');
     check(`${pl.id}: the truck stood on real ground and was held`, held, held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '').slice(0, 160) : 'no ground / hold line');
     let chase = null, bumper = null;
     if (held) {
       await page.waitForTimeout(4000); await page.mouse.click(512, 288); await page.waitForTimeout(500);
       chase = PNG.sync.read(await page.screenshot());
-      for (let i = 0; i < 3; i++) { const n = logs.length; await page.keyboard.press('8', { delay: 350 }); await page.waitForTimeout(800); if (logs.slice(n).some(l => /\[Camera\] view=FrontBumper/.test(l))) break; }
+      const second = pl.view || '8', wantView = second === '7' ? 'Overhead' : 'FrontBumper';
+      for (let i = 0; i < 3; i++) { const n = logs.length; await page.keyboard.press(second, { delay: 350 }); await page.waitForTimeout(800); if (logs.slice(n).some(l => new RegExp('\\[Camera\\] view=' + wantView).test(l))) break; }
       await page.waitForTimeout(2200); bumper = PNG.sync.read(await page.screenshot());
       const a = stats(chase), b = stats(bumper);
       check(`${pl.id}: the frames show a rendered scene`, a.sd > 12 && b.sd > 12, `chase mean ${a.mean.toFixed(0)} sd ${a.sd.toFixed(0)}, bumper mean ${b.mean.toFixed(0)} sd ${b.sd.toFixed(0)}`);
@@ -76,7 +84,7 @@ const PLACES = [
     report.places.push({ id: pl.id, start: pl.start, hour: pl.hour, route: (logs.find(l => /^\[Route\] /.test(l)) || '').slice(0, 300), lamp: (logs.filter(l => /^\[Lamp\] level=/.test(l)).pop() || '').slice(0, 200) });
     await page.close();
   }
-  if (frames.length) { fs.writeFileSync(prefix + '-sheet.png', PNG.sync.write(sheet(PNG, frames, 4, 512, 288))); console.log(`\nwrote ${prefix}-sheet.png (${frames.length} frames, two per place: chase view, bumper view)`); }
+  if (frames.length) { fs.writeFileSync(prefix + '-sheet.png', PNG.sync.write(sheet(PNG, frames, 4, 512, 288))); console.log(`\nwrote ${prefix}-sheet.png (${frames.length} frames, two per place: the chase view, then the bumper or overhead view)`); }
   report.checks = results; fs.writeFileSync(prefix + '-report.json', JSON.stringify(report, null, 1));
   await browser.close(); server.close();
   const failed = results.filter(r => !r.ok);

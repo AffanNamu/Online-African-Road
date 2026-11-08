@@ -111,6 +111,63 @@ namespace ARO.NetCore
             if (!string.IsNullOrEmpty(p.roadClass) && !RoadClasses.IsKnown(p.roadClass)) e.Add(tag + ": unknown roadClass '" + p.roadClass + "' (expressway, arterial, collector, local, lane, service)");
         }
 
+        static readonly string[] SiteSurfaces = { "asphalt", "concrete", "paving", "gravel" }, SiteKerbs = { "none", "plain", "black_white" }, SiteEdges = { "front", "back", "left", "right" },
+            SiteMarkKinds = { "line", "bay_row", "hatch", "arrow_straight", "arrow_left", "arrow_right" };
+
+        /// <summary>E2 site plates: data ranges only. Whether a plate lies on a road or on another plate is checked when the model is built (RouteModel.CheckSites), because it needs the splines.</summary>
+        static void ValidateSites(RouteSpec spec, List<JunctionSpec> junctions, float mainLength, ISet<string> knownProps, List<string> e)
+        {
+            if (spec.sites == null) return;
+            if (spec.sites.Length > 40) e.Add("at most 40 site plates per route");
+            var seen = new HashSet<string>();
+            foreach (var s in spec.sites)
+            {
+                if (s == null) { e.Add("a site plate is null"); continue; }
+                string tag = "site '" + s.id + "'";
+                if (string.IsNullOrEmpty(s.id) || !seen.Add(s.id)) e.Add("a site plate id is missing or duplicate");
+                float corridorLength = mainLength;
+                if (!string.IsNullOrEmpty(s.corridor) && s.corridor != spec.routeId)
+                {
+                    var j = junctions.FirstOrDefault(x => x.id == s.corridor);
+                    if (j == null) e.Add(tag + ": corridor '" + s.corridor + "' is neither the main road nor a junction"); else corridorLength = j.length;
+                }
+                if (s.s < 0f || s.s > corridorLength) e.Add(tag + ": s must lie on its corridor");
+                if (Math.Abs(s.lateral) > 400f || Math.Abs(s.forward) > 400f) e.Add(tag + ": lateral and forward must be within 400 m");
+                if (s.widthM < 6f || s.widthM > 250f || s.depthM < 6f || s.depthM > 250f) e.Add(tag + ": widthM and depthM must be 6..250 m");
+                if (s.yawDeg < -180f || s.yawDeg > 180f) e.Add(tag + ": yawDeg must be -180..180");
+                if (!SiteSurfaces.Contains(s.surface)) e.Add(tag + ": surface must be asphalt, concrete, paving or gravel");
+                if (!SiteKerbs.Contains(s.kerb)) e.Add(tag + ": kerb must be none, plain or black_white");
+                else if (s.kerb != "none" && (s.kerbHeight < 0.06f || s.kerbHeight > 0.20f)) e.Add(tag + ": kerbHeight must be 0.06..0.20 m");
+                if (s.heightOffset < -0.5f || s.heightOffset > 1.0f) e.Add(tag + ": heightOffset must be -0.5..1.0 m");
+                float hw = s.widthM * 0.5f, hd = s.depthM * 0.5f;
+                foreach (var en in s.entrances ?? new SiteEntranceSpec[0])
+                {
+                    if (en == null || !SiteEdges.Contains(en.edge)) { e.Add(tag + ": an entrance edge must be front, back, left or right"); continue; }
+                    float half = en.edge == "front" || en.edge == "back" ? hw : hd;
+                    if (!(en.from < en.to) || en.from < -half || en.to > half) e.Add(tag + ": entrance on the " + en.edge + " edge must satisfy -" + half + " <= from < to <= " + half);
+                    else if (en.to - en.from < 3f) e.Add(tag + ": an entrance must be at least 3 m wide");
+                }
+                foreach (var mk in s.marks ?? new SiteMarkSpec[0])
+                {
+                    if (mk == null || !SiteMarkKinds.Contains(mk.kind)) { e.Add(tag + ": mark kind must be one of " + string.Join(", ", SiteMarkKinds)); continue; }
+                    if (Math.Abs(mk.x) > hw || Math.Abs(mk.z) > hd) e.Add(tag + ": a " + mk.kind + " mark starts outside the plate");
+                    if (mk.count < 1 || mk.count > 60) e.Add(tag + ": mark count must be 1..60");
+                    if (mk.length < 0f || mk.length > 250f || mk.width < 0f || mk.width > 250f) e.Add(tag + ": mark length and width must be 0..250 m");
+                    if (mk.angleDeg < -360f || mk.angleDeg > 360f) e.Add(tag + ": mark angleDeg must be -360..360");
+                }
+                var pseen = new HashSet<string>();
+                foreach (var p in s.props ?? new SitePropSpec[0])
+                {
+                    if (p == null) { e.Add(tag + ": a prop is null"); continue; }
+                    if (string.IsNullOrEmpty(p.id) || !pseen.Add(p.id)) e.Add(tag + ": a prop id is missing or duplicate");
+                    if (string.IsNullOrEmpty(p.prop)) e.Add(tag + ", prop '" + p.id + "': prop is required");
+                    else if (knownProps != null && !knownProps.Contains(p.prop)) e.Add(tag + ", prop '" + p.id + "': unknown prop '" + p.prop + "'");
+                    if (Math.Abs(p.x) > hw || Math.Abs(p.z) > hd) e.Add(tag + ", prop '" + p.id + "': stands outside the plate");
+                    if (p.scale <= 0f) e.Add(tag + ", prop '" + p.id + "': scale must be positive");
+                }
+            }
+        }
+
         static void ValidateSymbols(RouteSpec spec, List<JunctionSpec> junctions, float mainLength, List<string> e)
         {
             if (spec.symbols == null) return;
@@ -216,6 +273,7 @@ namespace ARO.NetCore
                     foreach (var z in r.zones.Split(',')) if (!RouteVocab.TryZone(z, out _)) e.Add(tag + ": unknown zone '" + z.Trim() + "'");
             }
             ValidateSymbols(spec, junctions, L, e);
+            ValidateSites(spec, junctions, L, knownProps, e);
             seen.Clear();
             foreach (var p in spec.props ?? new PropPlacementSpec[0])
             {
@@ -223,7 +281,13 @@ namespace ARO.NetCore
                 if (string.IsNullOrEmpty(p.id) || !seen.Add(p.id)) e.Add("a prop placement id is missing or duplicate");
                 if (string.IsNullOrEmpty(p.prop)) e.Add("prop placement '" + p.id + "': prop is required");
                 else if (knownProps != null && !knownProps.Contains(p.prop)) e.Add("prop placement '" + p.id + "': unknown prop '" + p.prop + "'");
-                if (p.s < 0f || p.s > L) e.Add("prop placement '" + p.id + "': s outside the route");
+                float propLength = L; string where = "the route";
+                if (!string.IsNullOrEmpty(p.corridor) && p.corridor != spec.routeId)
+                {
+                    var pj = junctions.FirstOrDefault(x => x.id == p.corridor);
+                    if (pj == null) e.Add("prop placement '" + p.id + "': corridor '" + p.corridor + "' is neither the main road nor a junction"); else { propLength = pj.length; where = "its corridor"; }
+                }
+                if (p.s < 0f || p.s > propLength) e.Add("prop placement '" + p.id + "': s outside " + where);
                 if (p.scale <= 0f) e.Add("prop placement '" + p.id + "': scale must be positive");
             }
 

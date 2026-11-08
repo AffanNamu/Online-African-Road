@@ -60,6 +60,15 @@ namespace ARO.Game
                 n0 = new Vector3(sp.X, sp.Y, sp.Z); dir = new Vector3(sf.X, 0f, sf.Z).normalized;
             }
             var start = n0 + Vector3.Cross(Vector3.up, new Vector3(dir.x, 0f, dir.z).normalized) * _route.LaneOffset(Mathf.Max(0f, sStart), 0);   // in the right-hand lane, not on the centre line
+            var siteId = at == null ? SmokeMode.StartSite : null;           // test pages only: start on a site plate of the route (?smoke=drive&site=id)
+            if (siteId != null && _route.Model != null)
+                foreach (var plate in _route.Model.Sites)
+                    if (plate.Id == siteId)
+                    {
+                        var w = plate.ToWorld(0f, -plate.HalfD + 14f); start = new Vector3(w.X, plate.BaseY, w.Z); dir = new Vector3(plate.FwdX, 0f, plate.FwdZ).normalized;
+                        Debug.Log("[Smoke] starting on site plate " + siteId);
+                        break;
+                    }
             Vehicle = TruckFactory.Create(def, (at ?? start) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;

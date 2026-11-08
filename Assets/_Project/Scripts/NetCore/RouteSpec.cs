@@ -119,6 +119,7 @@ namespace ARO.NetCore
     public class PropPlacementSpec
     {
         public string id, prop, text;
+        public string corridor = "";            // "" = placed from the main road (as always); otherwise a junction id: s and lateral are then measured along that side road
         public float s, lateral, yawDeg, scale = 1f;
     }
 
@@ -164,6 +165,7 @@ namespace ARO.NetCore
         public TrafficSpec traffic;
         public WaypointSpec[] waypoints;
         public MarkingSymbolSpec[] symbols;     // optional (E1): pavement symbols; null = none
+        public SitePlateSpec[] sites;           // optional (E2): paved plates for yards, terminals and forecourts; null = none
     }
 
     public enum Zone { Urban, Commercial, Industrial, Rural, Highway }

@@ -155,6 +155,20 @@ namespace ARO.NetCore
         /// <summary>Optional light emitted by the prop (street luminaire, shop or window light, mast beacon). JsonUtility gives a missing object a default instance, so test <see cref="HasLight"/>, never `light != null`.</summary>
         public LightSpec light;
         public bool HasLight => light != null && light.heads != null && light.heads.Length > 0;
+        /// <summary>Optional text face (E2, RB-07): where a prop shows the text of a placement (sign, destination board, terminal name). JsonUtility gives a missing object a default instance, so test <see cref="HasLabel"/>.</summary>
+        public LabelSpec label;
+        public bool HasLabel => label != null && label.width > 0.01f && label.height > 0.01f;
+    }
+
+    /// <summary>A text face on a prop, in the prop's local axes (x right, y up, z forward = the way the prop faces), metres before the instance scale. The text reads from in front of the prop.</summary>
+    [Serializable]
+    public class LabelSpec
+    {
+        public float x, y, z;               // centre of the face
+        public float width = 1f, height = 0.5f;
+        public float yawDeg;                // turns the face about the vertical axis relative to the prop (0 = facing the way the prop faces; 180 = on its back)
+        public string colour = "white";     // white | black | yellow | red | green
+        public int fontMax;                 // 0 = fit to the face
     }
 
     /// <summary>One light source on a prop, in the prop's local axes (x right, y up, z forward = the way the prop faces), metres before the instance scale.</summary>
@@ -219,8 +233,21 @@ namespace ARO.NetCore
                 else if (p.status == "dev" && !p.source.StartsWith("dev:")) e.Add(tag + ": a dev prop's source must be 'dev:<generator>'");
                 else if (p.status == "production" && !p.source.StartsWith("Props/")) e.Add(tag + ": a production prop's source must be a Resources path under 'Props/'");
                 if (p.HasLight) ValidateLight(p, tag, e);
+                if (p.HasLabel) ValidateLabel(p, tag, e);
             }
             return e;
+        }
+
+        public static readonly string[] LabelColours = { "white", "black", "yellow", "red", "green" };
+
+        static void ValidateLabel(PropDef p, string tag, List<string> e)
+        {
+            var l = p.label; tag += " label";
+            if (!(l.width >= 0.05f && l.width <= 30f && l.height >= 0.05f && l.height <= 30f)) e.Add(tag + ": width and height must be 0.05..30 m");
+            if (float.IsNaN(l.x) || float.IsNaN(l.y) || float.IsNaN(l.z) || Math.Abs(l.x) > 40f || Math.Abs(l.z) > 40f || l.y < 0f || l.y > p.heightM + 1f) e.Add(tag + ": the face must lie within 40 m of the prop axis and no higher than the prop");
+            if (!LabelColours.Contains(l.colour)) e.Add(tag + ": colour must be one of " + string.Join(", ", LabelColours));
+            if (l.fontMax < 0 || l.fontMax > 400) e.Add(tag + ": fontMax must be 0..400");
+            if (l.yawDeg < -360f || l.yawDeg > 360f) e.Add(tag + ": yawDeg must be -360..360");
         }
 
         public static readonly string[] LightKinds = { "lamp", "glow", "beacon" };
@@ -265,7 +292,8 @@ namespace ARO.NetCore
         {
             var res = new List<PropInstance>();
             var main = m.Main; var spec = m.Spec; float L = main.Length;
-            if (!SRange(main, minX, minZ, maxX, maxZ, 130f, out float sLo, out float sHi)) return res;
+            bool nearMain = SRange(main, minX, minZ, maxX, maxZ, 130f, out float sLo, out float sHi);
+            if (!nearMain) { AddSideProps(m, minX, minZ, maxX, maxZ, res); return res; }      // side roads and site plates can lie farther from the main road than the scatter reaches
 
             var rules = spec.propRules ?? new PropRule[0];
             for (int ri = 0; ri < rules.Length; ri++)
@@ -308,6 +336,7 @@ namespace ARO.NetCore
 
             foreach (var p in spec.props ?? new PropPlacementSpec[0])
             {
+                if (!string.IsNullOrEmpty(p.corridor)) continue;                  // placed from a side road: AddSideProps
                 main.Spline.FrameAt(p.s, out var pos, out var fwd, out var right);
                 float x = pos.X + right.X * p.lateral, z = pos.Z + right.Z * p.lateral;
                 if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
@@ -315,7 +344,26 @@ namespace ARO.NetCore
                 float y = Math.Abs(p.lateral) < main.HalfFormationAt(Mathx.Clamp(p.s, 0f, L)) ? main.SurfaceY(Mathx.Clamp(p.s, 0f, L), p.lateral) : m.Terrain.HeightAt(x, z);   // a piece placed on the road itself (a median light) stands on the surface, not on the terrain 0.35 m below it
                 res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
             }
+            AddSideProps(m, minX, minZ, maxX, maxZ, res);
             return res;
+        }
+
+        /// <summary>Hand-placed pieces measured from a side road (PropPlacementSpec.corridor) and the props of every site plate. Independent of the main road's scatter range, so a yard 250 m down a stub is furnished.</summary>
+        static void AddSideProps(RouteModel m, float minX, float minZ, float maxX, float maxZ, List<PropInstance> res)
+        {
+            foreach (var p in m.Spec.props ?? new PropPlacementSpec[0])
+            {
+                if (string.IsNullOrEmpty(p.corridor) || p.corridor == m.Spec.routeId) continue;
+                var c = m.CorridorById(p.corridor); if (c == null) continue;
+                float s = Mathx.Clamp(p.s, 0f, c.Length);
+                c.Spline.FrameAt(s, out var pos, out var fwd, out var right);
+                float x = pos.X + right.X * p.lateral, z = pos.Z + right.Z * p.lateral;
+                if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
+                float heading = (float)(Math.Atan2(fwd.X, fwd.Z) * 180.0 / Math.PI);
+                float y = Math.Abs(p.lateral) < c.HalfFormationAt(s) ? c.SurfaceY(s, p.lateral) : m.Terrain.HeightAt(x, z);
+                res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
+            }
+            foreach (var site in m.Sites) res.AddRange(site.Props(minX, minZ, maxX, maxZ));
         }
 
         static HashSet<Zone> ParseZones(string z)

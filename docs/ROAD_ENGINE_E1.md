@@ -44,3 +44,5 @@ The test corridor `Assets/_Project/Resources/Routes/ng-kano-e1-streets.route.jso
 * Walkway, kerb and planter use development textures like every other road material; production PBR sets replace them without code changes.
 * Street lights on a kerbed road stand behind the walkway (props are measured from the formation edge); a lamp on the median uses the existing `side: median` rule.
 * Weather: the kerb and walkway materials are not in the wet set (the weather system is not changed); they do not darken in rain.
+
+Stage E2 (site plates, text faces, side-road props, prefab colliders) is in `docs/ROAD_ENGINE_E2.md`.

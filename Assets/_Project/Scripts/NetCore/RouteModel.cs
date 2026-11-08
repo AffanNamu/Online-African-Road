@@ -103,6 +103,7 @@ namespace ARO.NetCore
         public RouteSpec Spec { get; private set; }
         public RoadCorridor Main { get; private set; }
         public IReadOnlyList<RoadCorridor> Sides { get; private set; }
+        public IReadOnlyList<SitePlate> Sites { get; private set; } = new SitePlate[0];      // E2 plates (empty for every route that declares none)
         public TerrainModel Terrain { get; private set; }
         public float Length => Main.Length;
         public IEnumerable<RoadCorridor> AllCorridors { get { yield return Main; foreach (var c in Sides) yield return c; } }
@@ -148,8 +149,67 @@ namespace ARO.NetCore
                 foreach (var sc in sides) sc.Symbols = spec.symbols.Where(y => y.corridor == sc.Id).ToArray();
             }
             var model = new RouteModel { Spec = spec, Main = main, Sides = sides };
+            if (spec.sites != null && spec.sites.Length > 0)
+            {
+                var plates = new List<SitePlate>();
+                foreach (var ss in spec.sites)
+                {
+                    var plate = SitePlate.Place(model, ss); plates.Add(plate);
+                    if (ss.dropRoadKerb) DropRoadKerbAlong(model, plate);
+                }
+                model.Sites = plates;
+                var problems = model.CheckSites();
+                if (problems.Count > 0) throw new ArgumentException("invalid site plates:\n" + string.Join("\n", problems));
+            }
             model.Terrain = new TerrainModel(spec, model);
             return model;
+        }
+
+        /// <summary>A plate that stands beside a kerbed road drops that road's kerb along the plate (a driveway): the same gap that interrupts the edge line.</summary>
+        static void DropRoadKerbAlong(RouteModel m, SitePlate plate)
+        {
+            var c = string.IsNullOrEmpty(plate.Spec.corridor) || plate.Spec.corridor == m.Spec.routeId ? m.Main : m.CorridorById(plate.Spec.corridor);
+            if (c == null || Math.Abs(plate.Spec.lateral) < 1f) return;                                   // a plate on the corridor's own axis (the end of a stub) needs no gap
+            float half = Math.Max(plate.HalfW, plate.HalfD) * Math.Abs((float)Math.Cos(Math.PI * plate.Spec.yawDeg / 180.0)) + Math.Min(plate.HalfW, plate.HalfD) * Math.Abs((float)Math.Sin(Math.PI * plate.Spec.yawDeg / 180.0));
+            var gaps = c.MarkingGaps.ToList(); gaps.Add(new MarkingGap { S0 = plate.Spec.s - half, S1 = plate.Spec.s + half, Side = plate.Spec.lateral >= 0f ? 1 : -1 });
+            c.MarkingGaps = gaps.ToArray();
+        }
+
+        /// <summary>Why the plates cannot stand where they are: overlapping each other, or covering a road (a plate may touch the road it is placed from, but not lie on it).</summary>
+        public List<string> CheckSites()
+        {
+            var e = new List<string>();
+            for (int i = 0; i < Sites.Count; i++)
+            {
+                var a = Sites[i];
+                for (int j = i + 1; j < Sites.Count; j++) if (Overlap(a, Sites[j])) e.Add("site '" + a.Id + "' overlaps site '" + Sites[j].Id + "'");
+                // interior points (1 m inside the edge) must not lie in any road formation
+                for (float u = -a.HalfW + 1f; u <= a.HalfW - 1f + 1e-3f; u += 4f)
+                    for (float v = -a.HalfD + 1f; v <= a.HalfD - 1f + 1e-3f; v += 4f)
+                    {
+                        var w = a.ToWorld(u, v);
+                        foreach (var c in AllCorridors)
+                        {
+                            if (!c.Spline.Nearest(w.X, w.Z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
+                            if (s <= 1e-3f || s >= c.Spline.Length - 1e-3f) continue;               // beyond the end of a road is not on it
+                            if (Math.Abs(lat) < c.HalfFormationAt(s) - 0.5f) { e.Add("site '" + a.Id + "' lies on road '" + c.Id + "' at s=" + s.ToString("0") + " m"); goto next; }
+                        }
+                    }
+                next:;
+            }
+            return e.Distinct().ToList();
+        }
+
+        static bool Overlap(SitePlate a, SitePlate b)
+        {   // separating axis test of two rectangles
+            foreach (var ax in new[] { new[] { a.FwdX, a.FwdZ }, new[] { a.RightX, a.RightZ }, new[] { b.FwdX, b.FwdZ }, new[] { b.RightX, b.RightZ } })
+            {
+                float d = Math.Abs((b.Cx - a.Cx) * ax[0] + (b.Cz - a.Cz) * ax[1]);
+                float ra = a.HalfW * Math.Abs(a.RightX * ax[0] + a.RightZ * ax[1]) + a.HalfD * Math.Abs(a.FwdX * ax[0] + a.FwdZ * ax[1]);
+                float rb = b.HalfW * Math.Abs(b.RightX * ax[0] + b.RightZ * ax[1]) + b.HalfD * Math.Abs(b.FwdX * ax[0] + b.FwdZ * ax[1]);
+                if (d > ra + rb) return false;
+            }
+            return true;
         }
 
         static RoadRun[] MakeRuns(ControlPoint[] cps, RoadSpline spline, Dictionary<string, RoadCrossSection> sections)
@@ -212,6 +272,7 @@ namespace ARO.NetCore
                 if (Math.Abs(lat) <= c.Runs[ri].Section.FormationHalfWidth * k)
                     return c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k);
             }
+            foreach (var p in Sites) if (p.Contains(x, z)) return p.BaseY;
             return Terrain.HeightAt(x, z);
         }
 
@@ -290,6 +351,9 @@ namespace ARO.NetCore
             {
                 float reach = c.MaxFormationHalf + MaxReachBeyondFormation;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
+                // Legacy: straight beyond the end of a road the sideways offset is about zero, so the ground there counts as "inside the formation" for up to `reach` metres. That is kept as it is for routes
+                // without site plates (the golden master); a route with plates (E2) uses the exact rule, so a yard at the end of a stub is not surrounded by a flat extension of the road.
+                if (_route.Sites.Count > 0 && (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon)) continue;
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s); var sec = c.Runs[ri].Section;
                 float half = sec.FormationHalfWidth * k, d = Math.Abs(lat) - half;
                 if (d >= bestD) continue;
@@ -313,6 +377,21 @@ namespace ARO.NetCore
                 }
                 bestD = d; result = h;
             }
+            foreach (var p in _route.Sites)
+            {
+                float d = p.SignedDistance(x, z);
+                if (d >= bestD || d > MaxReachBeyondFormation) continue;
+                float h;
+                if (d <= 0f) h = p.BaseY - SinkUnderRoad;
+                else
+                {
+                    float edgeY = p.BaseY + p.KerbHeight;                      // the ground outside starts at the top of the kerb
+                    float delta = nat - edgeY;
+                    float blend = Math.Min(MaxReachBeyondFormation, Math.Max(_t.minBlendDistance, Math.Abs(delta) / Math.Max(0.05f, _t.maxEmbankmentSlope) * 1.5f));
+                    h = edgeY + delta * Mathx.SmoothStep(d / blend);
+                }
+                bestD = d; result = h;
+            }
             return result;
         }
 
@@ -332,6 +411,7 @@ namespace ARO.NetCore
                 if (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon) continue;     // the nearest point is an end of the centre line: this point is beyond the road, not on it
                 if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
             }
+            foreach (var p in _route.Sites) if (p.Contains(x, z, margin)) return true;
             return false;
         }
         const float EndEpsilon = 1e-3f;
@@ -345,6 +425,7 @@ namespace ARO.NetCore
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
                 if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
             }
+            foreach (var p in _route.Sites) if (p.Contains(x, z, margin)) return true;
             return false;
         }
     }

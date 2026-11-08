@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ARO.NetCore
 {
@@ -289,29 +290,8 @@ namespace ARO.NetCore
                     float xc = sgn * (xi + (ln - 0.5f) * w);
                     float len = sy.length > 0f ? sy.length : ArrowLength;
                     // local frame: forward = along the flow, side = towards the driver's right. For the left-hand carriageway the flow is -s, so the driver's right is -x.
-                    V2 P(float fwd, float side) => new V2(s0 + dir * fwd, xc + dir * side);
-                    float stemW = 0.11f, headW = 0.5f;
-                    if (sy.kind == "arrow_straight")
-                    {
-                        float stemEnd = len - 1.4f;
-                        res.Add(new[] { P(0f, -stemW), P(0f, stemW), P(stemEnd, stemW), P(stemEnd, -stemW) });
-                        res.Add(new[] { P(stemEnd, -headW), P(stemEnd, headW), P(len, 0f) });
-                    }
-                    else
-                    {
-                        float turn = sy.kind == "arrow_right" ? 1f : -1f;                    // +side = the driver's right
-                        float stemEnd = len * 0.5f;
-                        res.Add(new[] { P(0f, -stemW), P(0f, stemW), P(stemEnd + stemW, stemW), P(stemEnd + stemW, -stemW) });
-                        // arm: from the top of the stem, leaning 40 degrees to the turning side
-                        float ax = (float)Math.Cos(Math.PI * 40 / 180), ay = (float)Math.Sin(Math.PI * 40 / 180) * turn;
-                        float armLen = len * 0.28f;
-                        V2 A = new V2(stemEnd, 0f), B = new V2(stemEnd + ax * armLen, ay * armLen);
-                        res.Add(ArmQuad(P, A, B, stemW, ax, ay));
-                        // head
-                        float hl = 0.9f; V2 tip = new V2(B.X + ax * hl, B.Y + ay * hl);
-                        float hx = -ay, hy = ax;
-                        res.Add(new[] { P(B.X + hx * headW, B.Y + hy * headW), P(B.X - hx * headW, B.Y - hy * headW), P(tip.X, tip.Y) });
-                    }
+                    foreach (var piece in ArrowPieces(sy.kind, len))
+                        res.Add(piece.Select(q => new V2(s0 + dir * q.X, xc + dir * q.Y)).ToArray());
                     break;
                 }
                 case "bay":
@@ -331,10 +311,32 @@ namespace ARO.NetCore
             return res;
         }
 
-        static V2[] ArmQuad(Func<float, float, V2> P, V2 a, V2 b, float half, float ax, float ay)
+        /// <summary>The convex polygons of an arrow in its own frame: X = forward from the tail (0) to the tip (len), Y = towards the driver's right. Shared by road lanes and site plates.</summary>
+        public static List<V2[]> ArrowPieces(string kind, float len)
         {
-            float px = -ay * half, py = ax * half;                                   // half-width vector perpendicular to the arm
-            return new[] { P(a.X + px, a.Y + py), P(a.X - px, a.Y - py), P(b.X - px, b.Y - py), P(b.X + px, b.Y + py) };
+            var res = new List<V2[]>();
+            float stemW = 0.11f, headW = 0.5f;
+            if (kind == "arrow_straight")
+            {
+                float stemEnd = len - 1.4f;
+                res.Add(new[] { new V2(0f, -stemW), new V2(0f, stemW), new V2(stemEnd, stemW), new V2(stemEnd, -stemW) });
+                res.Add(new[] { new V2(stemEnd, -headW), new V2(stemEnd, headW), new V2(len, 0f) });
+            }
+            else
+            {
+                float turn = kind == "arrow_right" ? 1f : -1f;                               // +Y = the driver's right
+                float stemEnd = len * 0.5f;
+                res.Add(new[] { new V2(0f, -stemW), new V2(0f, stemW), new V2(stemEnd + stemW, stemW), new V2(stemEnd + stemW, -stemW) });
+                // arm: from the top of the stem, leaning 40 degrees to the turning side
+                float ax = (float)Math.Cos(Math.PI * 40 / 180), ay = (float)Math.Sin(Math.PI * 40 / 180) * turn;
+                float armLen = len * 0.28f;
+                var a = new V2(stemEnd, 0f); var b = new V2(stemEnd + ax * armLen, ay * armLen);
+                float px = -ay * stemW, py = ax * stemW;                                      // half-width vector perpendicular to the arm
+                res.Add(new[] { new V2(a.X + px, a.Y + py), new V2(a.X - px, a.Y - py), new V2(b.X - px, b.Y - py), new V2(b.X + px, b.Y + py) });
+                float hl = 0.9f; var tip = new V2(b.X + ax * hl, b.Y + ay * hl); float hx = -ay, hy = ax;
+                res.Add(new[] { new V2(b.X + hx * headW, b.Y + hy * headW), new V2(b.X - hx * headW, b.Y - hy * headW), tip });
+            }
+            return res;
         }
 
         /// <summary>World (origin-relative) position of station s and scaled lateral x on the road surface, lifted by MarkingLift.</summary>
@@ -346,7 +348,7 @@ namespace ARO.NetCore
         }
 
         /// <summary>A convex polygon as a triangle fan facing up.</summary>
-        static void FillConvex(MeshBuffers mb, int sub, V3[] pts)
+        public static void FillConvex(MeshBuffers mb, int sub, V3[] pts)
         {
             if (pts.Length < 3) return;
             var idx = new int[pts.Length];

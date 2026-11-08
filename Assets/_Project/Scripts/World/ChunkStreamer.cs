@@ -142,6 +142,12 @@ namespace ARO.World
             foreach (var cor in route.Model.AllCorridors)
                 for (int i = 0; i < cor.RingX.Length; i++)
                     if (cor.RingX[i] >= x0 && cor.RingX[i] < x1 && cor.RingZ[i] >= z0 && cor.RingZ[i] < z1) return true;
+            foreach (var p in route.Model.Sites)         // a site plate (E2) is built with the roads; one of its cells may lie in a chunk no road passes through
+            {
+                int nu = Mathf.Max(1, Mathf.CeilToInt(p.HalfW * 2f / 40f)), nv = Mathf.Max(1, Mathf.CeilToInt(p.HalfD * 2f / 40f));       // a point every 40 m or less: a chunk is 200 m
+                for (int i = 0; i <= nu; i++)
+                    for (int j = 0; j <= nv; j++) { var w = p.ToWorld(-p.HalfW + 2f * p.HalfW * i / nu, -p.HalfD + 2f * p.HalfD * j / nv); if (w.X >= x0 && w.X < x1 && w.Z >= z0 && w.Z < z1) return true; }
+            }
             return false;
         }
 
@@ -241,6 +247,20 @@ namespace ARO.World
                 go.isStatic = true;
                 ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
             }
+            foreach (var plate in m.Sites)       // E2 site plates: paved yards, terminals, forecourts. Same materials, same collision slots as the roads.
+            {
+                var mb = SiteGeometry.BuildChunk(plate, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org);
+                if (mb.IsEmpty) continue;
+                var mesh = MeshUtil.ToMesh(mb, "Site_" + plate.Id, out var used);
+                var go = new GameObject("Site_" + plate.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
+                go.GetComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
+                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                var cm = MeshUtil.ToCollisionMesh(mb, "SiteCollision_" + plate.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Concrete, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk);
+                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
+                go.isStatic = true;
+                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+            }
         }
 
         Material TerrainMaterial(Chunk ch)
@@ -323,6 +343,10 @@ namespace ARO.World
                 {
                     var go = Instantiate(PropLibrary.ProductionPrefab(inst.Prop), ch.root.transform);
                     go.transform.localPosition = new Vector3(inst.Pos.X - o.x, inst.Pos.Y, inst.Pos.Z - o.z); go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg, 0f); go.transform.localScale *= inst.Scale;
+                    var def = PropLibrary.Def(inst.Prop);
+                    if (def != null && def.collider == "box" && ring <= 1 && go.GetComponentInChildren<Collider>() == null)      // E2 (RB-10): a catalogued solid prefab without a collider of its own gets the box of its catalogue size
+                    { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(def.widthM, def.heightM, def.depthM); bc.center = new Vector3(0f, def.heightM * 0.5f, 0f); }
+                    if (!string.IsNullOrEmpty(inst.Text)) MakeLabel(ch, inst, o);          // a production sign or board that declares a text face
                     ch.productionProps.Add(go);
                 }
             }
@@ -341,27 +365,24 @@ namespace ARO.World
         /// <summary>Text on a sign face (a world-space UI canvas, only for the few hand-placed signs, billboards and fuel stations).</summary>
         void MakeLabel(Chunk ch, PropInstance inst, Vector3 o)
         {
-            var d = PropLibrary.Def(inst.Prop); if (d == null) return;
-            V3 local; float w, h;
-            switch (inst.Prop)
-            {
-                case "road_sign": local = new V3(0f, d.heightM - 0.6f, 0.08f + d.depthM * 0.5f + 0.02f); w = d.widthM * 0.92f; h = 1.25f; break;
-                case "billboard": local = new V3(0f, d.heightM - 2.1f, d.depthM * 0.5f + 0.03f); w = d.widthM * 0.9f; h = 3.6f; break;
-                case "fuel_station": local = new V3(d.widthM * 0.1f, 5.5f, d.depthM * 0.375f + 0.03f); w = d.widthM * 0.55f; h = 0.5f; break;
-                case "bus_stop": local = new V3(0f, d.heightM + 0.08f, d.depthM * 0.5f + 0.02f); w = d.widthM; h = 0.14f; break;
-                default: return;
-            }
+            var d = PropLibrary.Def(inst.Prop); if (!PropLabelLayout.Resolve(d, out var face)) return;
+            V3 local = face.Local; float w = face.Width, h = face.Height;
             if (ch.labels == null) { ch.labels = new GameObject("Labels"); ch.labels.transform.SetParent(ch.root.transform, false); }
             var wp = PropBatcher.Place(local, inst.Pos, inst.YawDeg, inst.Scale);
             var go = new GameObject("Label_" + inst.Prop, typeof(RectTransform), typeof(Canvas)); go.transform.SetParent(ch.labels.transform, false);
             go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
             var rt = (RectTransform)go.transform; rt.sizeDelta = new Vector2(w * 100f, h * 100f); rt.localScale = Vector3.one * 0.01f * inst.Scale;
             go.transform.localPosition = new Vector3(wp.X - o.x, wp.Y, wp.Z - o.z);
-            go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg + 180f, 0f);        // a world canvas reads from its -z side; the sign face looks along +z
+            go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg + face.YawDeg + 180f, 0f);        // a world canvas reads from its -z side; the sign face looks along +z
             var tgo = new GameObject("Text", typeof(RectTransform), typeof(Text)); tgo.transform.SetParent(go.transform, false);
             var trt = (RectTransform)tgo.transform; trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one; trt.offsetMin = trt.offsetMax = Vector2.zero;
-            var t = tgo.GetComponent<Text>(); t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); t.text = inst.Text; t.color = Color.white; t.raycastTarget = false;
-            t.alignment = TextAnchor.MiddleCenter; t.resizeTextForBestFit = true; t.resizeTextMinSize = 8; t.resizeTextMaxSize = Mathf.Max(10, (int)(h * 100f * 0.5f)); t.fontStyle = FontStyle.Bold;
+            var t = tgo.GetComponent<Text>(); t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); t.text = inst.Text; t.color = LabelColour(face.Colour); t.raycastTarget = false;
+            t.alignment = TextAnchor.MiddleCenter; t.resizeTextForBestFit = true; t.resizeTextMinSize = 8; t.resizeTextMaxSize = face.FontMax > 0 ? face.FontMax : Mathf.Max(10, (int)(h * 100f * 0.5f)); t.fontStyle = FontStyle.Bold;
+        }
+
+        static Color LabelColour(string name)
+        {
+            switch (name) { case "black": return new Color(0.04f, 0.04f, 0.04f); case "yellow": return new Color(0.96f, 0.80f, 0.15f); case "red": return new Color(0.80f, 0.10f, 0.08f); case "green": return new Color(0.10f, 0.55f, 0.25f); default: return Color.white; }
         }
 
         void Unload(Vector2Int c)

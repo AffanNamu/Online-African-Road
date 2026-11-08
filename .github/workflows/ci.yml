@@ -351,7 +351,7 @@ jobs:
         run: |
           node tools/webgl-night.js --selftest
           node tools/webgl-night.js Builds/WebGL webgl-light-nt
-      - name: "Kano E1 street kit - the engine test corridor (planter median, kerbs, walkways, gutters, dropped kerbs, pavement symbols) at eight places by day and night, chase and bumper views (checks and a contact sheet; the pictures still have to be looked at)"
+      - name: "Kano E1 and E2 street kit - the engine test corridor (planter median, kerbs, walkways, gutters, dropped kerbs, pavement symbols, site plates) at fourteen places (roads, a logistics yard and a bus terminal) by day and night, chase, bumper and overhead views (checks and a contact sheet; the pictures still have to be looked at)"
         if: always()
         continue-on-error: true
         run: |

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "routeId": "ng-kano-e1-streets",
-  "name": "Kano E1 street kit (DRAFT test corridor: arterial, collector, local and service roads)",
+  "name": "Kano E1/E2 street kit (DRAFT test corridor: arterial, collector, local and service roads, a logistics yard and a bus terminal)",
   "seed": 7731,
   "meta": {
     "country": "NG",
@@ -11,7 +11,7 @@
     "worldMapRouteId": "kaduna-kano",
     "realRoadKm": 209.6,
     "gameLengthKm": 1.5,
-    "gameCoverage": "ENGINE TEST CORRIDOR, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional 1.5 km corridor that exercises the E1 road cross-sections (kerbs, walkways, gutters, planter median, dropped kerbs, pavement symbols) in the game. realRoadKm repeats the Kaduna-Kano great-circle lower bound only because the field is required. Nothing here is a real street. See docs/KANO_TRANSPORT_EXPANSION_PLAN.md.",
+    "gameCoverage": "ENGINE TEST CORRIDOR, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional 1.5 km corridor that exercises the E1 road cross-sections (kerbs, walkways, gutters, planter median, dropped kerbs, pavement symbols) and the E2 site plates (a logistics yard and a bus terminal) in the game. realRoadKm repeats the Kaduna-Kano great-circle lower bound only because the field is required. Nothing here is a real street. See docs/KANO_TRANSPORT_EXPANSION_PLAN.md.",
     "elevationSource": "design (flat test corridor)",
     "notes": "Not registered in the world map and not reachable in the live game: it exists for engine tests, the golden master and the E1 verification pages."
   },
@@ -223,6 +223,16 @@
       "s": 1250.0,
       "angleDeg": 90.0,
       "length": 200.0,
+      "rise": 0.0
+    },
+    {
+      "id": "j_terminal",
+      "name": "Bus terminal access",
+      "kind": "t_junction",
+      "profile": "kano_collector",
+      "s": 1420.0,
+      "angleDeg": 90.0,
+      "length": 180.0,
       "rise": 0.0
     }
   ],
@@ -619,6 +629,488 @@
       "length": 3.0,
       "count": 5,
       "yellow": false
+    }
+  ],
+  "sites": [
+    {
+      "id": "site_yard",
+      "name": "Logistics yard",
+      "corridor": "j_service",
+      "s": 220.0,
+      "lateral": 0.0,
+      "forward": 50.0,
+      "widthM": 80.0,
+      "depthM": 100.0,
+      "yawDeg": 0.0,
+      "surface": "concrete",
+      "kerb": "plain",
+      "kerbHeight": 0.12,
+      "heightOffset": 0.0,
+      "dropRoadKerb": true,
+      "entrances": [
+        {
+          "edge": "back",
+          "from": -9.0,
+          "to": 9.0
+        }
+      ],
+      "marks": [
+        {
+          "kind": "line",
+          "x": -9.0,
+          "z": -44.0,
+          "angleDeg": 90.0,
+          "length": 18.0,
+          "width": 0.4,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_straight",
+          "x": -1.75,
+          "z": -36.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_straight",
+          "x": 1.75,
+          "z": -36.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "bay_row",
+          "x": -35.0,
+          "z": 12.0,
+          "angleDeg": 0.0,
+          "length": 14.0,
+          "width": 3.5,
+          "count": 8,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "bay_row",
+          "x": 7.0,
+          "z": 12.0,
+          "angleDeg": 0.0,
+          "length": 14.0,
+          "width": 3.5,
+          "count": 8,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "hatch",
+          "x": 0.0,
+          "z": 19.0,
+          "angleDeg": 0.0,
+          "length": 12.0,
+          "width": 6.0,
+          "count": 1,
+          "closed": false,
+          "yellow": true
+        },
+        {
+          "kind": "line",
+          "x": -35.0,
+          "z": 26.0,
+          "angleDeg": 90.0,
+          "length": 70.0,
+          "width": 0.15,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        }
+      ],
+      "props": [
+        {
+          "id": "wh_a",
+          "prop": "warehouse",
+          "text": "",
+          "x": -20.0,
+          "z": 36.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "wh_b",
+          "prop": "warehouse",
+          "text": "",
+          "x": 20.0,
+          "z": 36.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "sign",
+          "prop": "road_sign",
+          "text": "LOGISTICS YARD\nGATE 1",
+          "x": -12.0,
+          "z": -40.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "office",
+          "prop": "kiosk",
+          "text": "",
+          "x": -30.0,
+          "z": -38.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l1",
+          "prop": "street_light",
+          "text": "",
+          "x": -38.0,
+          "z": -30.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l2",
+          "prop": "street_light",
+          "text": "",
+          "x": 38.0,
+          "z": -30.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l3",
+          "prop": "street_light",
+          "text": "",
+          "x": -38.0,
+          "z": 6.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l4",
+          "prop": "street_light",
+          "text": "",
+          "x": 38.0,
+          "z": 6.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l5",
+          "prop": "street_light",
+          "text": "",
+          "x": -38.0,
+          "z": 40.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l6",
+          "prop": "street_light",
+          "text": "",
+          "x": 38.0,
+          "z": 40.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "mast",
+          "prop": "junction_mast",
+          "text": "",
+          "x": 0.0,
+          "z": 2.0,
+          "yawDeg": 0.0,
+          "scale": 1.0
+        }
+      ]
+    },
+    {
+      "id": "site_terminal",
+      "name": "Bus terminal",
+      "corridor": "j_terminal",
+      "s": 180.0,
+      "lateral": 0.0,
+      "forward": 30.0,
+      "widthM": 90.0,
+      "depthM": 60.0,
+      "yawDeg": 0.0,
+      "surface": "concrete",
+      "kerb": "black_white",
+      "kerbHeight": 0.12,
+      "heightOffset": 0.0,
+      "dropRoadKerb": true,
+      "entrances": [
+        {
+          "edge": "back",
+          "from": -9.0,
+          "to": 9.0
+        }
+      ],
+      "marks": [
+        {
+          "kind": "line",
+          "x": -9.0,
+          "z": -24.0,
+          "angleDeg": 90.0,
+          "length": 18.0,
+          "width": 0.4,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_straight",
+          "x": -1.75,
+          "z": -18.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_straight",
+          "x": 1.75,
+          "z": -18.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_left",
+          "x": -1.75,
+          "z": -8.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "arrow_right",
+          "x": 1.75,
+          "z": -8.0,
+          "angleDeg": 0.0,
+          "length": 0.0,
+          "width": 0.0,
+          "count": 1,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "bay_row",
+          "x": -24.0,
+          "z": 6.0,
+          "angleDeg": 0.0,
+          "length": 14.0,
+          "width": 4.0,
+          "count": 12,
+          "closed": false,
+          "yellow": false
+        },
+        {
+          "kind": "line",
+          "x": -24.0,
+          "z": 20.0,
+          "angleDeg": 90.0,
+          "length": 48.0,
+          "width": 0.15,
+          "count": 1,
+          "closed": false,
+          "yellow": true
+        },
+        {
+          "kind": "hatch",
+          "x": 0.0,
+          "z": -1.0,
+          "angleDeg": 0.0,
+          "length": 6.0,
+          "width": 6.0,
+          "count": 1,
+          "closed": false,
+          "yellow": true
+        }
+      ],
+      "props": [
+        {
+          "id": "board",
+          "prop": "billboard",
+          "text": "KANO NORTH\nBUS TERMINAL",
+          "x": -36.0,
+          "z": -18.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "sh1",
+          "prop": "bus_stop",
+          "text": "BAY 1-3",
+          "x": -20.0,
+          "z": 24.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "sh2",
+          "prop": "bus_stop",
+          "text": "BAY 4-6",
+          "x": -8.0,
+          "z": 24.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "sh3",
+          "prop": "bus_stop",
+          "text": "BAY 7-9",
+          "x": 4.0,
+          "z": 24.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "sh4",
+          "prop": "bus_stop",
+          "text": "BAY 10-12",
+          "x": 16.0,
+          "z": 24.0,
+          "yawDeg": 180.0,
+          "scale": 1.0
+        },
+        {
+          "id": "ticket1",
+          "prop": "kiosk",
+          "text": "",
+          "x": 32.0,
+          "z": 10.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "ticket2",
+          "prop": "kiosk",
+          "text": "",
+          "x": 32.0,
+          "z": 16.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "stall1",
+          "prop": "market_stall",
+          "text": "",
+          "x": -38.0,
+          "z": 16.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "stall2",
+          "prop": "market_stall",
+          "text": "",
+          "x": -38.0,
+          "z": 10.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "stall3",
+          "prop": "market_stall",
+          "text": "",
+          "x": -38.0,
+          "z": 4.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l1",
+          "prop": "street_light",
+          "text": "",
+          "x": -42.0,
+          "z": -20.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l2",
+          "prop": "street_light",
+          "text": "",
+          "x": 42.0,
+          "z": -20.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l3",
+          "prop": "street_light",
+          "text": "",
+          "x": -42.0,
+          "z": 12.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l4",
+          "prop": "street_light",
+          "text": "",
+          "x": 42.0,
+          "z": 12.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l5",
+          "prop": "street_light",
+          "text": "",
+          "x": -42.0,
+          "z": 26.0,
+          "yawDeg": 90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "l6",
+          "prop": "street_light",
+          "text": "",
+          "x": 42.0,
+          "z": 26.0,
+          "yawDeg": -90.0,
+          "scale": 1.0
+        },
+        {
+          "id": "tree1",
+          "prop": "tropical_tree",
+          "text": "",
+          "x": -40.0,
+          "z": 27.0,
+          "yawDeg": 0.0,
+          "scale": 1.0
+        },
+        {
+          "id": "tree2",
+          "prop": "tropical_tree",
+          "text": "",
+          "x": 40.0,
+          "z": 27.0,
+          "yawDeg": 0.0,
+          "scale": 1.0
+        }
+      ]
     }
   ]
 }
