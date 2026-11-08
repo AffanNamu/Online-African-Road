@@ -173,11 +173,12 @@ The asset library and every frozen version are untouched; this milestone adds co
 | Step | State |
 |---|---|
 | Inspection of lighting, time of day, weather, vehicles, props, URP | done |
-| References registered (R-030, R-031) | done |
+| References registered (R-030, R-031; R-032 to R-036 for the transport brief) | done |
 | Technical plan (this document) | done |
-| Pure models and tests (lamp factor, light specs, selector, scatter additions, vehicle state, codec) | planned |
-| Catalog, dev geometry, materials, route rules | planned |
-| Runtime: emissive materials, glow mesh and shader, light pool, beacons, tiers, URL hooks | planned |
-| Vehicle lighting: high beam, hazards, auto, HUD, net flags, traffic lamps | planned |
-| In-game verification in CI, pictures looked at | planned |
+| Pure models and tests: lamp ramp, light specs and validator, selector, lamp field, glow geometry and atlas, `PropScatter` additions (`profiles`, `median`, `fixedDensity`, `exclusionMargin`), layout tests against the real route | **done, 1,158 unit tests green** (2026-11-08) |
+| Catalogue (3 new luminaires, light specs on 11 props), dev geometry (lamp, glow and beacon sub-materials), default materials, route rules per environment, junction masts and bridge-end lights | **done** (placeholders, as every dev prop; not yet seen in the running game) |
+| Finding: the old one-size street-light rule and the old utility-pole rules placed nothing (offsets inside the 3 m road clearance) | recorded; the new lamp rules carry their own clearance |
+| Runtime: emissive materials, glow mesh and shader, light pool, beacons, tiers, URL hooks | not started |
+| Vehicle lighting: high beam, hazards, auto, HUD, net flags, traffic lamps | not started |
+| In-game verification in CI, pictures looked at | not started |
 | Owner's visual review | not done; nothing is approved |

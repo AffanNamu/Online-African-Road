@@ -32,6 +32,17 @@ Also delivered: the **reference-to-asset production matrix** (`kano/city/REFEREN
 * Where nothing exists to copy (Hausa compounds, old-city lanes, markets, the palace, the Great Mosque, schools, government buildings, hotels) the work is **BLOCKED on a reference**, and nothing is invented to fill it.
 * Work stays within the current engine's limits. What the engine cannot do is documented as a backlog item (RB-12 to RB-17), not worked around permanently in Kano data.
 
+### Update 2026-11-08: the transportation expansion brief
+
+The owner's brief of 2026-11-08 (seven roundabout designs, urban highways, flyovers, logistics facilities, bus terminals, supporting infrastructure, day and night) is answered by **`docs/KANO_TRANSPORT_EXPANSION_PLAN.md`**: the inspection of the current road, prop, vehicle, job and bus systems, the technical proposal for the engine work it needs, the order of work, the phase-by-phase report and the decisions requested. It changes nothing in this plan's districts or network; it adds:
+
+* **Where the brief lands here.** Roundabouts, four-way junctions, flyovers and interchanges are RB-01 to RB-03 and stages E3 to E5 of `ROAD_ENGINE_PROPOSAL.md`; the 21 of 54 junctions this plan says the engine cannot build are the same ones. Logistics (D10) and bus terminals (D09) need only E1 and E2 (RB-13 site plates, RB-07 text signs, kerbs), which is why the proposed order builds them before the roundabouts.
+* **Seven roundabout designs on the same 54 nodes.** The four ring roundabouts (RR0, RR90, RR180, RR270) and two promoted four-way crossings (MA0, MA225) carry six designs; the interchange node RR225 carries the seventh (a grade-separated roundabout interchange). The junction count and the 21 unsupported junctions are unchanged. Proposed mapping: landmark MA225, modern urban RR90, traditional RR180, large multi-lane RR270, commercial MA0, green landscape RR0, highway interchange RR225. Indicative, for the owner to confirm.
+* **Flyover candidates:** the ring interchange RR225, the A2 over the logistics junction X_LOG, and a radial arterial over the middle ring (for example MA270). They are corridors of the graph, never isolated structures.
+* **Phase numbering.** The brief's phases 1 to 6 (roundabouts, highways and flyovers, logistics, bus terminals, supporting infrastructure, lighting) are work packages inside this plan's P1b to P5; they do not replace section 12. The proposed execution order is in section 6 of the expansion plan.
+* **New references R-030 to R-036** (night, wet-road, highway, roundabout, flyover and interchange scenes) are registered as `generated_night_reference`: design references for lighting, signage and infrastructure layout; hash only, nothing stored; real brand marks and sign text in them are not used.
+* **Nothing is built.** No engine file changed, no asset added; the lighting foundation (`docs/NIGHT_LIGHTING_PLAN.md`) is the only implementation work, and it adds code, catalogue entries and route rules only.
+
 ### Status vocabulary (an asset moves through these in order and never skips one)
 
 | Status | Meaning |
@@ -46,7 +57,7 @@ Also delivered: the **reference-to-asset production matrix** (`kano/city/REFEREN
 | `in_game_visual_review_passed` | in-game screenshot at the reference camera compared with the concept and accepted |
 | `production_approved` | the owner approves it for the game; the registry then records source, export, prefab, validation and approver |
 
-**Today every one of the 95 assets sits at `concept_approved` (76 concept-backed) or `needs_concept` (19 blocked), with the asset breakdown still awaiting the owner's approval. Not one has a Blender source.**
+**Today every one of the 132 assets sits at `concept_approved` (113 concept-backed) or `needs_concept` (19 blocked), with the asset breakdown still awaiting the owner's approval. Not one has a Blender source.**
 
 ---
 ## 1. The study area
@@ -232,6 +243,14 @@ The research record (`kano/RESEARCH.md`) gives words (tubali mud brick, zaure, w
 | R-013 | Truck fuel and service centre | ChatGPT-generated concept; the owner's compulsory design standard |
 | R-014 | Warehouse and logistics yard (aerial) | ChatGPT-generated concept; the owner's compulsory design standard |
 | R-015 | Warehouse and logistics yard (ground level) | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-016 | Dry season street (hot and dusty): cracked and potholed asphalt, roadside shops | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-017 | Harmattan season (dusty and hazy) | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-018 | Rainy season (heavy rain): wet asphalt, reflections, splash | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-019 | Flooded road (heavy-rain aftermath) | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-020 | Muddy unpaved road after rain (village) | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-021 | Muddy unpaved road after heavy rain (market village) | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-022 | Modern boulevard in the city centre | ChatGPT-generated concept; the owner's compulsory design standard |
+| R-023 | Modern divided highway with a flyover | ChatGPT-generated concept; the owner's compulsory design standard |
 
 Each concept is a design specification for **genuine 3D geometry**. The matrix (section 9) breaks every concept into assets, says which are reusable components and which are Kano-specific, and lists the Blender and Unity tasks. The owner approves each breakdown before work starts.
 
@@ -257,20 +276,28 @@ Every concept has a **reference camera** (the framing that reproduces the concep
 ---
 ## 9. Reference-to-asset production matrix
 
-95 assets for the ten concepts: GLOBAL 70, REGIONAL 10, CITY_SPECIFIC 9, LANDMARK 6; 76 are backed by a concept and **19 are blocked** (no concept or verified reference; nothing invented). Full tables, per concept: visual requirements, assets, reusable components, city-specific components, engine gaps, Blender tasks, Unity tasks, reference camera, comparison checklist.
+132 assets for the ten concepts: GLOBAL 92, REGIONAL 25, CITY_SPECIFIC 9, LANDMARK 6; 113 are backed by a concept and **19 are blocked** (no concept or verified reference; nothing invented). Full tables, per concept: visual requirements, assets, reusable components, city-specific components, engine gaps, Blender tasks, Unity tasks, reference camera, comparison checklist.
 
 | Ref | Concept | Districts | Assets | GLOBAL | REGIONAL | CITY | LANDMARK | Shared with another concept | Engine gaps | Flags for the owner |
 |---|---|---|---|---|---|---|---|---|---|---|
-| **R-006** | Gated modern residential street, one-way | D06 | 17 | 15 | 2 | 0 | 0 | 7 | RB-04, RB-12 | recurring twin-minaret mosque |
+| **R-006** | Gated modern residential street, one-way | D06 | 17 | 15 | 2 | 0 | 0 | 9 | RB-04, RB-12 | recurring twin-minaret mosque |
 | **R-007** | Curved dual-carriageway expressway | D11 | 10 | 5 | 5 | 0 | 0 | 7 | RB-04, RB-09, RB-14, RB-17 | hilly terrain unlike Kano's plain |
 | **R-008** | A2 gantry, planter median | D11 | 9 | 7 | 2 | 0 | 0 | 9 | RB-04, RB-07, RB-09, RB-14, RB-17 | recurring twin-minaret mosque, sign text and distances do not match sources |
 | **R-009** | Bus terminal | D09 | 18 | 16 | 1 | 1 | 0 | 13 | RB-04, RB-07, RB-12, RB-13 | recurring twin-minaret mosque, terminal name not verified |
-| **R-010** | Hospital campus | D08 | 19 | 17 | 1 | 1 | 0 | 10 | RB-07, RB-12, RB-13 | recurring twin-minaret mosque, hospital name resembles a real institution |
+| **R-010** | Hospital campus | D08 | 19 | 17 | 1 | 1 | 0 | 11 | RB-07, RB-12, RB-13 | recurring twin-minaret mosque, hospital name resembles a real institution |
 | **R-011** | Police station beside a divided arterial | D08 | 14 | 13 | 0 | 1 | 0 | 10 | RB-04, RB-07, RB-09, RB-17 | real police crest and livery |
 | **R-012** | A2 gantry, concrete median barrier | D11 | 9 | 7 | 2 | 0 | 0 | 8 | RB-04, RB-07, RB-09, RB-14 | recurring twin-minaret mosque, sign text and distances do not match sources |
 | **R-013** | Truck fuel and service centre | D10 | 17 | 17 | 0 | 0 | 0 | 13 | RB-04, RB-07, RB-12, RB-13 | generic fuel brand |
 | **R-014** | Warehouse and logistics yard, aerial | D10 | 18 | 18 | 0 | 0 | 0 | 16 | RB-04, RB-07, RB-12, RB-13 | - |
 | **R-015** | Warehouse yard, ground level | D10 | 14 | 14 | 0 | 0 | 0 | 13 | RB-04, RB-05, RB-12, RB-13 | - |
+| **R-016** | Dry season street: cracked and potholed asphalt, shops | D03, D05, D07 | 19 | 12 | 7 | 0 | 0 | 17 | RB-04, RB-05, RB-06, RB-07, RB-18, RB-22, RB-23, RB-24 | - |
+| **R-017** | Harmattan: dusty haze over the same street | D03, D05, D07 | 13 | 10 | 3 | 0 | 0 | 12 | RB-04, RB-06, RB-07, RB-18, RB-20, RB-22, RB-23, RB-24 | - |
+| **R-018** | Rainy season: heavy rain on wet asphalt | D03, D05, D07 | 11 | 7 | 4 | 0 | 0 | 11 | RB-04, RB-07, RB-21, RB-23, RB-24 | - |
+| **R-019** | Flooded road after heavy rain | D03, D05, D07 | 8 | 5 | 3 | 0 | 0 | 7 | RB-04, RB-05, RB-07, RB-21, RB-22, RB-23, RB-24 | - |
+| **R-020** | Muddy unpaved village road after rain |  | 14 | 4 | 10 | 0 | 0 | 11 | RB-14, RB-18, RB-19, RB-21, RB-23, RB-24 | - |
+| **R-021** | Muddy unpaved road after heavy rain (market village) |  | 13 | 4 | 9 | 0 | 0 | 12 | RB-18, RB-19, RB-21, RB-23, RB-24 | - |
+| **R-022** | Modern boulevard in the city centre | D05 | 15 | 14 | 1 | 0 | 0 | 12 | RB-04, RB-07, RB-09, RB-12, RB-17 | - |
+| **R-023** | Modern divided highway with a flyover | D11 | 11 | 9 | 2 | 0 | 0 | 9 | RB-03, RB-04, RB-07, RB-09, RB-14, RB-17 | - |
 
 See `kano/city/REFERENCE_ASSET_MATRIX.md` for the per-asset tables, and `kano/city/reference_asset_matrix.json` for the data. **Reusable** assets recur across concepts (the painted kerb, the single-arm streetlight, the arrow marking, the street trees): they are modelled once.
 
@@ -458,6 +485,8 @@ The plan needs these to move beyond the five districts. Each should be a labelle
 | Diagrams | `docs/kano/city/img/` (`tools/kano/city_diagrams.py`; the PNG files are Git LFS objects of this repository) |
 | Reference register | `docs/kano/REFERENCE_REGISTER.md` |
 | Engine backlog | `docs/ROAD_ENGINE_BACKLOG.md` |
+| Transportation expansion plan (2026-11-08) | `docs/KANO_TRANSPORT_EXPANSION_PLAN.md` |
+| Night and street-lighting plan | `docs/NIGHT_LIGHTING_PLAN.md` |
 | Coordinates | `docs/kano/COORDINATES.md` |
 | Research | `docs/kano/RESEARCH.md` |
 | Texture budget | `docs/TEXTURE_BUDGET.md` |

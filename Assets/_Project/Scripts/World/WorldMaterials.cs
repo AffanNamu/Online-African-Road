@@ -47,6 +47,11 @@ namespace ARO.World
             w.Prop[PropSub.SignPanel] = Make("PropSignPanel", new Color(0.03f, 0.34f, 0.19f), 0.20f, 0f, null);
             w.Prop[PropSub.Accent] = Make("PropAccent", new Color(0.86f, 0.55f, 0.10f), 0.20f, 0f, null);
             w.Prop[PropSub.Glass] = Make("PropGlass", new Color(0.10f, 0.14f, 0.20f), 0.90f, 0f, null);
+            // The emissive slots (lit lamp faces, lit windows and bulbs, mast beacons). These plain lit materials are the safe default: every slot of a prop mesh has a material, and a prop looks like a pale
+            // lamp or a dull window in daylight. The street-lighting system (StreetLightSystem) replaces them with its unlit emissive material that follows the lamp factor.
+            w.Prop[PropSub.Lamp] = Make("PropLamp", new Color(0.78f, 0.76f, 0.70f), 0.35f, 0f, null);
+            w.Prop[PropSub.Glow] = Make("PropGlow", new Color(0.30f, 0.30f, 0.28f), 0.60f, 0f, null);
+            w.Prop[PropSub.Beacon] = Make("PropBeacon", new Color(0.35f, 0.05f, 0.04f), 0.40f, 0f, null);
             return w;
         }
 
