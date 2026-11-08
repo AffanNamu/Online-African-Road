@@ -1,6 +1,6 @@
 // The E1 street kit (kerbs, walkways, gutters, the planter median, dropped kerbs, pavement symbols), checked in the real WebGL build.
 // Usage: node tools/webgl-e1.js <build-dir> <out-prefix> [quality]        (self-test of the frame analysis: --selftest)
-// The game is opened on its engine TEST corridor (?smoke=drive&route=ng-kano-e1-streets) at fourteen places, day and night, with the truck frozen (hold=1); each place gives a chase-view and a bumper-view frame.
+// The game is opened on its engine TEST corridor (?smoke=drive&route=ng-kano-e1-streets) at fifteen places, day and night, with the truck frozen (hold=1); each place gives a chase-view and a bumper-view frame.
 // Output: <prefix>-sheet.png (all frames), <prefix>-report.json and a PASS / FAIL list. The checks are about the running game (the corridor loaded, the truck stood on real ground, nothing threw);
 // whether the kerbs, walkways and markings LOOK right is for a person to judge from the sheet.
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -39,6 +39,7 @@ function check(name, ok, detail) { results.push({ name, ok: !!ok, detail }); con
 const PLACES = [
   { id: 'arterial-arrows', start: 90, hour: 'noon', what: 'planter median in a painted kerb, walkways, gutters, lane arrows' },
   { id: 'zebra', start: 262, hour: 'noon', what: 'zebra crossing and stop lines on the arterial' },
+  { id: 'cross-opening', start: 372, hour: 'noon', what: 'E3 four-way crossing on the arterial: the planter median is cut across the junction, kerbs dropped on both sides, zebra crossings on the cross street' },
   { id: 'turn-arrows', start: 480, hour: 'noon', what: 'left and right turn arrows in two lanes' },
   { id: 'class-change', start: 700, hour: 'noon', what: 'arterial narrowing to the collector (the run transition)' },
   { id: 'local-mouth', start: 800, hour: 'noon', what: 'collector with a kerb dropped at the local street on the right' },
@@ -65,7 +66,7 @@ const PLACES = [
     console.log(`\n=== ${pl.id}: ${pl.what} (${pl.site ? 'on ' + pl.site : 'start=' + pl.start + ' m'}, hour=${pl.hour}, ${quality}) ===`);
     await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&quality=${quality}&route=ng-kano-e1-streets&${pl.site ? 'site=' + pl.site : 'start=' + pl.start}&hour=${pl.hour}`);
     const started = await waitFor(/\[Smoke\] drive scenario/, 150), ground = started && await waitFor(/\[Drive\] ground ready/, 90), held = ground && await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
-    check(`${pl.id}: the drive scenario started on the corridor`, started && has(/\[Smoke\] driving the test corridor ng-kano-e1-streets/) && has(/\[Route\] ng-kano-e1-streets: .*4 junctions/), started ? (logs.find(l => /^\[Route\] /.test(l)) || 'no [Route] line').slice(0, 200) : 'the build did not start');
+    check(`${pl.id}: the drive scenario started on the corridor`, started && has(/\[Smoke\] driving the test corridor ng-kano-e1-streets/) && has(/\[Route\] ng-kano-e1-streets: .*6 junctions/), started ? (logs.find(l => /^\[Route\] /.test(l)) || 'no [Route] line').slice(0, 200) : 'the build did not start');
     check(`${pl.id}: the truck stood on real ground and was held`, held, held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '').slice(0, 160) : 'no ground / hold line');
     let chase = null, bumper = null;
     if (held) {

@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "routeId": "ng-kano-e1-streets",
-  "name": "Kano E1/E2 street kit (DRAFT test corridor: arterial, collector, local and service roads, a logistics yard and a bus terminal)",
+  "name": "Kano E1/E2/E3 street kit (DRAFT test corridor: arterial with a cross street, collector, local and service roads, a logistics yard and a bus terminal)",
   "seed": 7731,
   "meta": {
     "country": "NG",
@@ -11,7 +11,7 @@
     "worldMapRouteId": "kaduna-kano",
     "realRoadKm": 209.6,
     "gameLengthKm": 1.5,
-    "gameCoverage": "ENGINE TEST CORRIDOR, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional 1.5 km corridor that exercises the E1 road cross-sections (kerbs, walkways, gutters, planter median, dropped kerbs, pavement symbols) and the E2 site plates (a logistics yard and a bus terminal) in the game. realRoadKm repeats the Kaduna-Kano great-circle lower bound only because the field is required. Nothing here is a real street. See docs/KANO_TRANSPORT_EXPANSION_PLAN.md.",
+    "gameCoverage": "ENGINE TEST CORRIDOR, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional 1.5 km corridor that exercises the E1 road cross-sections (kerbs, walkways, gutters, planter median, dropped kerbs, pavement symbols) the E2 site plates (a logistics yard and a bus terminal) and the E3 junction forms (a four-way crossing with a median opening) in the game. realRoadKm repeats the Kaduna-Kano great-circle lower bound only because the field is required. Nothing here is a real street. See docs/KANO_TRANSPORT_EXPANSION_PLAN.md.",
     "elevationSource": "design (flat test corridor)",
     "notes": "Not registered in the world map and not reachable in the live game: it exists for engine tests, the golden master and the E1 verification pages."
   },
@@ -195,6 +195,20 @@
   ],
   "bridges": [],
   "junctions": [
+    {
+      "id": "j_cross",
+      "name": "Cross street (four-way, median opening)",
+      "kind": "four_way",
+      "profile": "kano_collector",
+      "s": 420.0,
+      "angleDeg": 90.0,
+      "length": 190.0,
+      "rise": 0.0,
+      "profileLeft": "kano_collector",
+      "lengthLeft": 150.0,
+      "fillet": 0.0,
+      "medianOpening": true
+    },
     {
       "id": "j_local",
       "name": "Local street",
@@ -628,6 +642,28 @@
       "lane": 0,
       "length": 3.0,
       "count": 5,
+      "yellow": false
+    },
+    {
+      "id": "sy_zebra_cross",
+      "kind": "zebra",
+      "corridor": "j_cross",
+      "s": 45.0,
+      "side": "both",
+      "lane": 0,
+      "length": 0.0,
+      "count": 1,
+      "yellow": false
+    },
+    {
+      "id": "sy_zebra_cross_l",
+      "kind": "zebra",
+      "corridor": "j_cross_left",
+      "s": 45.0,
+      "side": "both",
+      "lane": 0,
+      "length": 0.0,
+      "count": 1,
       "yellow": false
     }
   ],

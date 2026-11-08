@@ -16,7 +16,7 @@ namespace ARO.NetCore
         {
             var e = new List<string>();
             if (spec == null) { e.Add("route spec is null"); return e; }
-            if (spec.schemaVersion != 1) e.Add("schemaVersion must be 1 (got " + spec.schemaVersion + ")");
+            if (spec.schemaVersion != 1 && spec.schemaVersion != 2) e.Add("schemaVersion must be 1 or 2 (got " + spec.schemaVersion + ")");
             if (string.IsNullOrEmpty(spec.routeId) || !IdRx.IsMatch(spec.routeId)) e.Add("routeId must be lowercase letters, digits and dashes");
             if (string.IsNullOrWhiteSpace(spec.name)) e.Add("name is required");
             if (spec.meta == null) e.Add("meta is required");
@@ -93,6 +93,22 @@ namespace ARO.NetCore
             return e;
         }
 
+        static int RunIndexAtS(RouteSpec spec, RoadSpline spline, float s) { int i = 0; while (i < spec.controlPoints.Length - 2 && s > spline.ControlS(i + 1)) i++; return i; }
+
+        /// <summary>The corridors of a junction: its own stub, and for a four-way junction the opposite stub named id + "_left".</summary>
+        public static IEnumerable<(string id, float length, string profile)> JunctionCorridors(JunctionSpec j)
+        {
+            yield return (j.id, j.length, j.profile);
+            if (j.kind == "four_way") yield return (j.id + "_left", j.lengthLeft > 0f ? j.lengthLeft : j.length, string.IsNullOrEmpty(j.profileLeft) ? j.profile : j.profileLeft);
+        }
+
+        /// <summary>Finds a side corridor by name among the junctions (null when there is none).</summary>
+        static bool FindCorridor(IEnumerable<JunctionSpec> junctions, string name, out float length, out string profile)
+        {
+            foreach (var j in junctions) foreach (var c in JunctionCorridors(j)) if (c.id == name) { length = c.length; profile = c.profile; return true; }
+            length = 0f; profile = null; return false;
+        }
+
         static readonly string[] SymbolKinds = { "zebra", "stop_line", "yield", "arrow_straight", "arrow_left", "arrow_right", "bay" };
 
         /// <summary>The E1 cross-section fields of one profile: ranges, and the combinations that make no sense (a walkway without a kerb, a barrier on a kerbed edge).</summary>
@@ -128,8 +144,7 @@ namespace ARO.NetCore
                 float corridorLength = mainLength;
                 if (!string.IsNullOrEmpty(s.corridor) && s.corridor != spec.routeId)
                 {
-                    var j = junctions.FirstOrDefault(x => x.id == s.corridor);
-                    if (j == null) e.Add(tag + ": corridor '" + s.corridor + "' is neither the main road nor a junction"); else corridorLength = j.length;
+                    if (!FindCorridor(junctions, s.corridor, out corridorLength, out _)) { corridorLength = mainLength; e.Add(tag + ": corridor '" + s.corridor + "' is neither the main road nor a junction"); }
                 }
                 if (s.s < 0f || s.s > corridorLength) e.Add(tag + ": s must lie on its corridor");
                 if (Math.Abs(s.lateral) > 400f || Math.Abs(s.forward) > 400f) e.Add(tag + ": lateral and forward must be within 400 m");
@@ -188,9 +203,7 @@ namespace ARO.NetCore
                 float corridorLength = mainLength; string corridorProfile = null;
                 if (!string.IsNullOrEmpty(y.corridor) && y.corridor != spec.routeId)
                 {
-                    var j = junctions.FirstOrDefault(x => x.id == y.corridor);
-                    if (j == null) { e.Add(tag + ": corridor '" + y.corridor + "' is neither the main road nor a junction"); continue; }
-                    corridorLength = j.length; corridorProfile = j.profile;
+                    if (!FindCorridor(junctions, y.corridor, out corridorLength, out corridorProfile)) { e.Add(tag + ": corridor '" + y.corridor + "' is neither the main road nor a junction"); continue; }
                 }
                 if (y.s < 3f || y.s > corridorLength - 3f) e.Add(tag + ": s must lie inside its corridor (3 m from the ends)");
                 if (corridorProfile != null && sections.TryGetValue(corridorProfile, out var pr))
@@ -239,13 +252,43 @@ namespace ARO.NetCore
                 var j = junctions[i]; string tag = "junction '" + j.id + "'";
                 if (string.IsNullOrEmpty(j.id) || !seen.Add(j.id)) e.Add("a junction id is missing or duplicate");
                 if (j.profile == null || !profileIds.Contains(j.profile)) e.Add(tag + ": profile '" + j.profile + "' does not exist");
-                if (j.kind != "t_junction") e.Add(tag + ": only kind 't_junction' is supported");
+                bool v2 = spec.schemaVersion >= 2;
+                if (j.kind != "t_junction" && !(j.kind == "four_way" && v2)) e.Add(tag + (v2 ? ": kind must be 't_junction' or 'four_way'" : ": only kind 't_junction' is supported (four_way needs schemaVersion 2)"));
                 if (j.s < 60f || j.s > L - 60f) e.Add(tag + ": s must be at least 60 m from both ends");
                 if (Math.Abs(j.angleDeg) < 30f || Math.Abs(j.angleDeg) > 150f) e.Add(tag + ": |angleDeg| must be 30..150");
                 if (j.length < 40f || j.length > 600f) e.Add(tag + ": length must be 40..600 m");
                 if (Math.Abs(j.rise) > j.length * MaxGrade) e.Add(tag + ": rise is steeper than the maximum grade");
-                if (i > 0 && j.s - junctions[i - 1].s < 150f) e.Add(tag + ": closer than 150 m to the previous junction");
-                if (DividedAt(Mathx.Clamp(j.s, 0f, L))) e.Add(tag + ": junctions on a divided section would need an interchange (not supported)");
+                float minGap = v2 ? 60f : 150f;
+                if (i > 0 && j.s - junctions[i - 1].s < minGap) e.Add(tag + ": closer than " + minGap + " m to the previous junction");
+                if (v2 && i > 0 && profileIds.Contains(j.profile) && profileIds.Contains(junctions[i - 1].profile))
+                {   // closer than the old 150 m: the two stubs must still not lie on top of each other
+                    var p0 = junctions[i - 1]; bool sameSide = p0.kind == "four_way" || j.kind == "four_way" || (p0.angleDeg >= 0f) == (j.angleDeg >= 0f);
+                    float need = sections[j.profile].FormationHalfWidth + sections[p0.profile].FormationHalfWidth + 2f * Math.Max(j.fillet, p0.fillet) + 2f;
+                    if (sameSide && j.s - p0.s < need) e.Add(tag + ": its road would overlap the road of junction '" + p0.id + "' (needs " + need.ToString("0") + " m between them)");
+                }
+                bool divided = DividedAt(Mathx.Clamp(j.s, 0f, L));
+                if (divided)
+                {
+                    var secHere = sections[spec.controlPoints[RunIndexAtS(spec, spline, Mathx.Clamp(j.s, 0f, L))].profile];
+                    if (!v2) e.Add(tag + ": junctions on a divided section would need an interchange (not supported)");
+                    else if (!j.medianOpening) e.Add(tag + ": a junction on a divided section needs medianOpening (and a planter or painted median)");
+                    else if (secHere.Spec.medianStyle == "jersey") e.Add(tag + ": a jersey (barrier) median cannot be opened; use a planter or painted median");
+                }
+                else if (j.medianOpening) e.Add(tag + ": medianOpening needs a divided section");
+                if (!v2 && (j.fillet != 0f || j.medianOpening || !string.IsNullOrEmpty(j.profileLeft) || j.lengthLeft != 0f)) e.Add(tag + ": fillet, medianOpening, profileLeft and lengthLeft need schemaVersion 2");
+                if (j.fillet < 0f || j.fillet > 15f) e.Add(tag + ": fillet must be 0..15 m");
+                else if (j.fillet > 0f)
+                {
+                    if (Math.Abs(Math.Abs(j.angleDeg) - 90f) > 10f) e.Add(tag + ": a fillet needs |angleDeg| within 10 degrees of 90");
+                    var mainSec = sections[spec.controlPoints[RunIndexAtS(spec, spline, Mathx.Clamp(j.s, 0f, L))].profile];
+                    if (mainSec.HasKerb) e.Add(tag + ": a fillet is for unkerbed roads (a kerbed junction mouth has a dropped kerb)");
+                }
+                if (j.kind == "four_way")
+                {
+                    if (j.lengthLeft != 0f && (j.lengthLeft < 40f || j.lengthLeft > 600f)) e.Add(tag + ": lengthLeft must be 0 or 40..600 m");
+                    if (!string.IsNullOrEmpty(j.profileLeft) && !profileIds.Contains(j.profileLeft)) e.Add(tag + ": profileLeft '" + j.profileLeft + "' does not exist");
+                    if (string.IsNullOrEmpty(j.id) || junctions.Any(o => o != j && o.id == j.id + "_left")) e.Add(tag + ": the id '" + j.id + "_left' (the opposite stub) is already used");
+                }
                 if (bridges.Any(b => j.s > b.startS - 40f && j.s < b.endS + 40f)) e.Add(tag + ": too close to a bridge");
             }
 
@@ -284,8 +327,7 @@ namespace ARO.NetCore
                 float propLength = L; string where = "the route";
                 if (!string.IsNullOrEmpty(p.corridor) && p.corridor != spec.routeId)
                 {
-                    var pj = junctions.FirstOrDefault(x => x.id == p.corridor);
-                    if (pj == null) e.Add("prop placement '" + p.id + "': corridor '" + p.corridor + "' is neither the main road nor a junction"); else { propLength = pj.length; where = "its corridor"; }
+                    if (!FindCorridor(junctions, p.corridor, out propLength, out _)) { propLength = L; e.Add("prop placement '" + p.id + "': corridor '" + p.corridor + "' is neither the main road nor a junction"); } else where = "its corridor";
                 }
                 if (p.s < 0f || p.s > propLength) e.Add("prop placement '" + p.id + "': s outside " + where);
                 if (p.scale <= 0f) e.Add("prop placement '" + p.id + "': scale must be positive");

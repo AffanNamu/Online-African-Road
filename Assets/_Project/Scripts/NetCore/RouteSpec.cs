@@ -90,9 +90,14 @@ namespace ARO.NetCore
     [Serializable]
     public class JunctionSpec
     {
-        public string id, name, profile, kind = "t_junction";
+        public string id, name, profile, kind = "t_junction";      // kind: t_junction | four_way (schemaVersion 2: a second stub leaves on the opposite side at the same s, its id is id + "_left")
         public float s, angleDeg = 90f, length = 150f;
         public float rise = 0f;     // side-road elevation change over its length (metres)
+        // ---- E3 junction forms (schemaVersion 2 only; every field defaults to "not there")
+        public string profileLeft = "";     // four_way: profile of the opposite stub ("" = the same as profile)
+        public float lengthLeft = 0f;       // four_way: length of the opposite stub (0 = the same as length)
+        public float fillet = 0f;           // metres: a flared bellmouth at each corner of the mouth (unkerbed roads, |angleDeg| within 10 degrees of 90)
+        public bool medianOpening;          // on a divided road with a planter or painted median: the median is cut across the junction (a jersey median cannot be opened)
     }
 
     /// <summary>Procedural roadside scatter. Offsets are measured from the edge of the road formation, never from its centre.</summary>

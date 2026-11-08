@@ -14,6 +14,9 @@ namespace ARO.NetCore
     }
 
     /// <summary>A road centre line with its runs, ring table (where cross-sections are generated) and, on the main road, bridges.</summary>
+    /// <summary>A flared corner at a junction mouth on the main road: station of the junction, side (+1 right, -1 left), radius, half width of the side road's paved mouth.</summary>
+    public struct Fillet { public float S; public int Side; public float Radius, HalfMouth; }
+
     public sealed class RoadCorridor
     {
         public const float TransitionMetres = 40f;
@@ -24,11 +27,19 @@ namespace ARO.NetCore
         public BridgeSpec[] Bridges = new BridgeSpec[0];
         public float[] RingS, RingX, RingZ;
         public MarkingGap[] MarkingGaps = new MarkingGap[0];
+        public MarkingGap[] MedianOpenings = new MarkingGap[0];            // E3: stretches where a styled median is cut for a junction (Side is unused)
+        public Fillet[] Fillets = new Fillet[0];                           // E3: flared corners of junction mouths
         public MarkingSymbolSpec[] Symbols = new MarkingSymbolSpec[0];     // E1 pavement symbols on this corridor (empty for every route that declares none)
         public int Seed;
         /// <summary>True when any run uses the E1 strips (kerb, walkway, planter, gutter); only then does the mesh carry the extra submeshes.</summary>
         public bool NeedsE1Strips { get { foreach (var r in Runs) if (r.Section.UsesE1Strips) return true; return false; } }
         /// <summary>The kerb and walkway are dropped (flat paving) where a side road leaves on `side` (-1 left, +1 right): the road mouth is a driveway, not a wall.</summary>
+        public bool MedianOpen(float s)
+        {
+            foreach (var g in MedianOpenings) if (s >= g.S0 - 1e-3f && s <= g.S1 + 1e-3f) return true;
+            return false;
+        }
+
         public bool KerbDropped(float s, int side)
         {
             foreach (var g in MarkingGaps) if (g.Side == side && s >= g.S0 - 1e-3f && s <= g.S1 + 1e-3f) return true;
@@ -135,14 +146,26 @@ namespace ARO.NetCore
             main.BuildRings();
 
             var sides = new List<RoadCorridor>();
-            var gaps = new List<MarkingGap>();
-            foreach (var j in spec.junctions ?? new JunctionSpec[0])
+            var gaps = new List<MarkingGap>(); var openings = new List<MarkingGap>(); var fillets = new List<Fillet>();
+            foreach (var j0 in spec.junctions ?? new JunctionSpec[0])
             {
-                sides.Add(MakeJunction(spec, main, sections, j));
-                float half = sections[j.profile].FormationHalfWidth;
-                gaps.Add(new MarkingGap { S0 = j.s - half, S1 = j.s + half, Side = j.angleDeg >= 0f ? 1 : -1 });
+                var legs = new List<JunctionSpec> { j0 };
+                if (j0.kind == "four_way")                // E3: the opposite stub, same station, mirrored angle
+                    legs.Add(new JunctionSpec { id = j0.id + "_left", name = j0.name, kind = "t_junction", profile = string.IsNullOrEmpty(j0.profileLeft) ? j0.profile : j0.profileLeft, s = j0.s, angleDeg = -j0.angleDeg,
+                        length = j0.lengthLeft > 0f ? j0.lengthLeft : j0.length, rise = j0.rise });
+                float widest = 0f;
+                foreach (var j in legs)
+                {
+                    sides.Add(MakeJunction(spec, main, sections, j));
+                    float half = sections[j.profile].FormationHalfWidth; widest = Math.Max(widest, half);
+                    int side = j.angleDeg >= 0f ? 1 : -1;
+                    float reach = j0.fillet > 0f ? half + j0.fillet : half;
+                    gaps.Add(new MarkingGap { S0 = j.s - reach, S1 = j.s + reach, Side = side });
+                    if (j0.fillet > 0f) fillets.Add(new Fillet { S = j.s, Side = side, Radius = j0.fillet, HalfMouth = sections[j.profile].PavedHalfWidth });
+                }
+                if (j0.medianOpening) openings.Add(new MarkingGap { S0 = j0.s - widest, S1 = j0.s + widest });
             }
-            main.MarkingGaps = gaps.ToArray();
+            main.MarkingGaps = gaps.ToArray(); main.MedianOpenings = openings.ToArray(); main.Fillets = fillets.ToArray();
             if (spec.symbols != null && spec.symbols.Length > 0)
             {
                 main.Symbols = spec.symbols.Where(y => string.IsNullOrEmpty(y.corridor) || y.corridor == spec.routeId).ToArray();

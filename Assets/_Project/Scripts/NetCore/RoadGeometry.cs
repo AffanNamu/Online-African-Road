@@ -22,7 +22,7 @@ namespace ARO.NetCore
         };
         static readonly V2[] Rail = { new V2(-0.04f, 0.55f), new V2(-0.04f, 0.86f), new V2(0.04f, 0.86f), new V2(0.04f, 0.55f) };
 
-        sealed class Ring { public V3 Pos, Fwd, Right; public float S, Scale; public int Run; public int[] Verts; public bool DropL, DropR; }
+        sealed class Ring { public V3 Pos, Fwd, Right; public float S, Scale; public int Run; public int[] Verts; public bool DropL, DropR, OpenMedian; }
 
         public static MeshBuffers BuildChunk(RoadCorridor c, float minX, float minZ, float maxX, float maxZ, V3 origin, Func<float, float, float> ground = null)
         {
@@ -51,10 +51,11 @@ namespace ARO.NetCore
                     int sub = sec.Points[j].Strip;
                     if (onBridge && sub == RoadSub.Verge) continue;           // no dirt verge on a deck
                     if (RoadSub.IsE1(sub) && Dropped(sec, a, b, j)) sub = RoadSub.Shoulder;     // a dropped kerb is plain paving
+                    if (a.OpenMedian && b.OpenMedian && InMedianBand(sec, j)) sub = RoadSub.Asphalt;       // E3: a median cut for a junction is carriageway
                     mb.Quad(sub, a.Verts[j], a.Verts[j + 1], b.Verts[j], b.Verts[j + 1]);
                 }
 
-                if (sec.HasMedian && sec.Spec.medianStyle == "jersey") Extrude(mb, RoadSub.Concrete, a, b, 0f, sec.HeightAt(0f), Jersey, origin);
+                if (sec.HasMedian && sec.Spec.medianStyle == "jersey" && !(a.OpenMedian && b.OpenMedian)) Extrude(mb, RoadSub.Concrete, a, b, 0f, sec.HeightAt(0f), Jersey, origin);
                 if (sec.Spec.edgeBarrier == "guardrail" && !onBridge)
                     foreach (int side in new[] { -1, 1 })
                     {
@@ -75,6 +76,7 @@ namespace ARO.NetCore
 
             AddGuardrailPosts(mb, c, minX, minZ, maxX, maxZ, origin);
             if (c.Symbols.Length > 0) AddSymbols(mb, c, minX, minZ, maxX, maxZ, origin);
+            if (c.Fillets.Length > 0) AddFillets(mb, c, minX, minZ, maxX, maxZ, origin);
             if (ground != null) AddPiers(mb, c, minX, minZ, maxX, maxZ, origin, ground);
             if (!c.IsMain) AddStopLine(mb, c, minX, minZ, maxX, maxZ, origin);
             return mb;
@@ -88,6 +90,8 @@ namespace ARO.NetCore
             var r = new Ring { Pos = pos, Fwd = fwd, Right = right, S = s, Scale = scale, Run = run, Verts = new int[sec.Points.Length] };
             var surface = c.Runs[run].Surface;
             if (sec.HasKerb) { r.DropL = c.KerbDropped(s, -1); r.DropR = c.KerbDropped(s, 1); }
+            r.OpenMedian = sec.HasMedian && sec.Spec.medianStyle != "jersey" && c.MedianOpen(s);
+            float band = sec.Spec.medianWidth * 0.5f + RoadCrossSection.MedianFace + 1e-4f;
             float paved = sec.PavedHalfWidth, yPaved = sec.HeightAt(paved), yPavedL = sec.HeightAt(-paved);
             for (int j = 0; j < sec.Points.Length; j++)
             {
@@ -95,12 +99,20 @@ namespace ARO.NetCore
                 bool concrete = p.Strip == RoadSub.Concrete || RoadSub.IsE1(p.Strip) || (j > 0 && RoadSub.IsE1(sec.Points[j - 1].Strip));       // kerbs, walkways and planters are cast, not worn: neither their own vertices nor the far edge of such a strip ripple
                 float wear = concrete ? 0f : RoadWear.Height(surface, c.Seed, s, x);
                 float py = p.Y;
+                if (r.OpenMedian && Math.Abs(p.X) <= band) py = 0f;                                                      // the median is cut down to the carriageway
                 if (r.DropR && p.X > paved + 1e-4f) py = j == sec.Points.Length - 1 ? Math.Min(py, yPaved) : yPaved;       // the kerb falls to the paving level at a road mouth
                 else if (r.DropL && p.X < -paved - 1e-4f) py = j == 0 ? Math.Min(py, yPavedL) : yPavedL;
                 var w = new V3(pos.X + right.X * x - origin.X, pos.Y + py + wear - origin.Y, pos.Z + right.Z * x - origin.Z);
                 r.Verts[j] = mb.Add(w, new V2(x / TileMetres, s / TileMetres));
             }
             return r;
+        }
+
+        /// <summary>True when strip j lies wholly inside the median band (the rim, the top and the sloped faces): the strips a junction opening turns into carriageway.</summary>
+        static bool InMedianBand(RoadCrossSection sec, int j)
+        {
+            float band = sec.Spec.medianWidth * 0.5f + RoadCrossSection.MedianFace + 1e-4f;
+            return sec.Points[j].X >= -band && sec.Points[j + 1].X <= band;
         }
 
         /// <summary>True when strip j (between cross-section points j and j+1) lies outside the paved edge on a side where both rings are in a kerb drop.</summary>
@@ -207,6 +219,53 @@ namespace ARO.NetCore
             V3 L1 = new V3(q1.X + right.X * -lanesW, q1.Y, q1.Z + right.Z * -lanesW), R1 = new V3(q1.X, q1.Y, q1.Z);
             int a = mb.Add(L0, new V2(0, 0)), b = mb.Add(R0, new V2(1, 0)), cc = mb.Add(L1, new V2(0, 1)), d = mb.Add(R1, new V2(1, 1));
             mb.Quad(RoadSub.MarkWhite, a, b, cc, d);
+        }
+
+        // ---------------------------------------------------------------------------------------------------------- junction fillets (E3)
+        public const float FilletLift = 0.012f;
+        public const int FilletSteps = 6;
+
+        /// <summary>
+        /// The two flared corners of a junction mouth, as polygons in (station along the main road, outward lateral from the centre line) coordinates. For the corner downstream of the mouth
+        /// (k = +1) the corner point C is where the main road's paved edge meets the side road's paved edge; the flare is the region between C and a circle of the fillet radius that touches both edges.
+        /// Pure geometry: unit-tested without a mesh. Every polygon is a fan around its first point.
+        /// </summary>
+        public static List<V2[]> FilletPolygons(float s0, float paved, float halfMouth, float radius)
+        {
+            var res = new List<V2[]>();
+            foreach (int k in new[] { 1, -1 })
+            {
+                var poly = new List<V2> { new V2(s0 + k * halfMouth, paved) };                                   // the corner
+                float ox = s0 + k * (halfMouth + radius), oy = paved + radius;                                   // centre of the circle
+                for (int i = 0; i <= FilletSteps; i++)
+                {
+                    double phi = Math.PI * 0.5 * i / FilletSteps;                                                // 0 = tangent to the side road's edge, 90 degrees = tangent to the main road's edge
+                    poly.Add(new V2(ox - k * radius * (float)Math.Cos(phi), oy - radius * (float)Math.Sin(phi)));
+                }
+                res.Add(poly.ToArray());
+            }
+            return res;
+        }
+
+        static void AddFillets(MeshBuffers mb, RoadCorridor c, float minX, float minZ, float maxX, float maxZ, V3 origin)
+        {
+            foreach (var f in c.Fillets)
+            {
+                var anchor = c.Spline.PositionAt(Math.Max(0f, Math.Min(c.Length, f.S)));
+                if (anchor.X < minX || anchor.X >= maxX || anchor.Z < minZ || anchor.Z >= maxZ) continue;          // the chunk that holds the junction builds both corners
+                float k = c.ScaleAt(f.S), paved = c.HalfPavedAt(f.S);
+                foreach (var poly in FilletPolygons(f.S, paved, f.HalfMouth, f.Radius))
+                {
+                    var pts = new V3[poly.Length];
+                    for (int i = 0; i < poly.Length; i++)
+                    {
+                        float st = Math.Max(0f, Math.Min(c.Length, poly[i].X)); c.Spline.FrameAt(st, out var pos, out _, out var right);
+                        float lat = f.Side * poly[i].Y, y = c.Spline.ElevationAt(st) + c.SectionAt(st).HeightAt(f.Side * paved / k) + FilletLift;       // flat at the height of the paved edge
+                        pts[i] = new V3(pos.X + right.X * lat - origin.X, y - origin.Y, pos.Z + right.Z * lat - origin.Z);
+                    }
+                    for (int i = 1; i + 1 < pts.Length; i++) FillConvex(mb, RoadSub.Asphalt, new[] { pts[0], pts[i], pts[i + 1] });
+                }
+            }
         }
 
         // ---------------------------------------------------------------------------------------------------------- pavement symbols (RB-12)

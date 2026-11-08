@@ -21,7 +21,7 @@ public class RouteSpecTests
     [Fact] public void NullAndWrongVersionAreRejected()
     {
         Assert.Contains("null", RouteSpecValidator.Validate(null)[0]);
-        Rejects(s => s.schemaVersion = 2, "schemaVersion");
+        Rejects(s => s.schemaVersion = 99, "schemaVersion");     // 2 is the junction-forms version (E3); an unknown version is still refused
     }
 
     [Fact] public void IdentityAndMetaAreRequired()

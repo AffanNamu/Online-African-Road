@@ -78,11 +78,11 @@ public class KanoE1RouteTests
     [Fact] public void TheCorridorHoldsTheArterialAndTheCollectorWithTheirSymbolsAndDropsTheKerbsAtTheMouths()
     {
         var m = Model; var main = m.Main;
-        Assert.Equal(4, m.Sides.Count); Assert.Equal(2, m.Sites.Count);
+        Assert.Equal(6, m.Sides.Count); Assert.Equal(2, m.Sites.Count);
         Assert.Equal("planter", main.Runs[0].Section.Spec.medianStyle); Assert.True(main.Runs[0].Section.HasMedian);
         Assert.False(main.Runs[main.Runs.Length - 1].Section.HasMedian);
         Assert.All(m.Sides, s => Assert.True(s.Runs[0].Section.UsesE1Strips)); Assert.Empty(m.CheckSites());
-        Assert.Equal(12, main.Symbols.Length); Assert.Equal(1, m.CorridorById("j_local").Symbols.Length); Assert.Equal(2, m.CorridorById("j_service").Symbols.Length);
+        Assert.Equal(12, main.Symbols.Length); Assert.Equal(1, m.CorridorById("j_cross").Symbols.Length); Assert.Equal(1, m.CorridorById("j_cross_left").Symbols.Length); Assert.Single(main.MedianOpenings); Assert.Equal(1, m.CorridorById("j_local").Symbols.Length); Assert.Equal(2, m.CorridorById("j_service").Symbols.Length);
         Assert.True(main.KerbDropped(840f, 1) && !main.KerbDropped(840f, -1));         // j_local leaves to the right
         Assert.True(main.KerbDropped(1020f, -1) && !main.KerbDropped(1020f, 1));        // j_service leaves to the left
     }
