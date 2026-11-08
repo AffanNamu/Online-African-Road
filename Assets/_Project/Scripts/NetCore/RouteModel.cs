@@ -108,6 +108,40 @@ namespace ARO.NetCore
         }
     }
 
+    /// <summary>
+    /// E4a: which corridors can possibly answer a point query. A city network has dozens of corridors, and every terrain sample, ground-height query and prop exclusion test asked each of them;
+    /// this grid (128 m cells) lists, per cell, the corridors whose centre line comes within the largest query reach of that cell, in the same order as AllCorridors, so the answers are IDENTICAL
+    /// (the first corridor that contains a point still wins). Used only by routes with many corridors; a route with few keeps the plain loop, byte for byte.
+    /// </summary>
+    public sealed class CorridorIndex
+    {
+        public const float CellMetres = 128f, Slack = 8f;
+        readonly Dictionary<long, RoadCorridor[]> _cells = new Dictionary<long, RoadCorridor[]>();
+        static long Key(int cx, int cz) => ((long)cx << 32) ^ (uint)cz;
+
+        public CorridorIndex(IEnumerable<RoadCorridor> corridors)
+        {
+            var lists = new Dictionary<long, List<RoadCorridor>>();
+            foreach (var c in corridors)                                  // in AllCorridors order, so every cell list keeps that order
+            {
+                float reach = c.MaxFormationHalf + TerrainModel.MaxReachBeyondFormation + Slack;
+                var mine = new HashSet<long>();
+                for (int i = 0; i < c.RingX.Length; i++)
+                {
+                    int x0 = (int)Math.Floor((c.RingX[i] - reach) / CellMetres), x1 = (int)Math.Floor((c.RingX[i] + reach) / CellMetres);
+                    int z0 = (int)Math.Floor((c.RingZ[i] - reach) / CellMetres), z1 = (int)Math.Floor((c.RingZ[i] + reach) / CellMetres);
+                    for (int cx = x0; cx <= x1; cx++) for (int cz = z0; cz <= z1; cz++) mine.Add(Key(cx, cz));
+                }
+                foreach (var k in mine) { if (!lists.TryGetValue(k, out var l)) lists[k] = l = new List<RoadCorridor>(); l.Add(c); }
+            }
+            foreach (var kv in lists) _cells[kv.Key] = kv.Value.ToArray();
+        }
+
+        static readonly RoadCorridor[] None = new RoadCorridor[0];
+        public RoadCorridor[] Near(float x, float z) => _cells.TryGetValue(Key((int)Math.Floor(x / CellMetres), (int)Math.Floor(z / CellMetres)), out var l) ? l : None;
+        public int CellCount => _cells.Count;
+    }
+
     /// <summary>Everything derived from a RouteSpec: corridors (main road + junction side roads), terrain, lookups. Pure; unit-tested.</summary>
     public sealed class RouteModel
     {
@@ -118,6 +152,24 @@ namespace ARO.NetCore
         public TerrainModel Terrain { get; private set; }
         public float Length => Main.Length;
         public IEnumerable<RoadCorridor> AllCorridors { get { yield return Main; foreach (var c in Sides) yield return c; } }
+
+        /// <summary>Routes with this many corridors or more answer point queries through the spatial index (E4a). Fewer: the plain loop, as always.</summary>
+        public const int IndexThreshold = 8;
+        CorridorIndex _index; bool _indexChecked; bool? _forceIndex; RoadCorridor[] _all;
+        /// <summary>For tests: true = always use the index, false = never, null = by the threshold.</summary>
+        public bool? ForceIndex { get { return _forceIndex; } set { _forceIndex = value; _indexChecked = false; _index = null; } }
+        public bool Indexed { get { EnsureIndex(); return _index != null; } }
+        public CorridorIndex Index { get { EnsureIndex(); return _index; } }
+        void EnsureIndex()
+        {
+            if (_indexChecked) return;
+            _indexChecked = true;
+            _all = AllCorridors.ToArray();
+            bool use = _forceIndex ?? (Sides.Count + 1 >= IndexThreshold);
+            _index = use ? new CorridorIndex(_all) : null;
+        }
+        /// <summary>The corridors that can contain or influence (x, z), in AllCorridors order. For a small route that is all of them. An array, so the loops that call this thousands of times per chunk allocate nothing.</summary>
+        public RoadCorridor[] CorridorsNear(float x, float z) { EnsureIndex(); return _index != null ? _index.Near(x, z) : _all; }
 
         public static RouteModel Build(RouteSpec spec)
         {
@@ -288,7 +340,7 @@ namespace ARO.NetCore
         /// <summary>Height a vehicle or marker stands on at (x, z): the road surface (camber included, no wear) inside any road formation, otherwise the terrain.</summary>
         public float GroundHeight(float x, float z)
         {
-            foreach (var c in AllCorridors)
+            foreach (var c in CorridorsNear(x, z))
             {
                 if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s);
@@ -370,7 +422,7 @@ namespace ARO.NetCore
         {
             float nat = NaturalAt(x, z);
             float bestD = float.MaxValue, result = nat;
-            foreach (var c in _route.AllCorridors)
+            foreach (var c in _route.CorridorsNear(x, z))
             {
                 float reach = c.MaxFormationHalf + MaxReachBeyondFormation;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
@@ -427,7 +479,7 @@ namespace ARO.NetCore
         /// </summary>
         public bool InsideRoadAlong(float x, float z, float margin = 0f)
         {
-            foreach (var c in _route.AllCorridors)
+            foreach (var c in _route.CorridorsNear(x, z))
             {
                 float reach = c.MaxFormationHalf + 2f;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
@@ -442,7 +494,7 @@ namespace ARO.NetCore
         /// <summary>True when (x, z) lies inside a road formation shrunk by margin metres (negative margin = strictly inside).</summary>
         public bool InsideFormation(float x, float z, float margin = 0f)
         {
-            foreach (var c in _route.AllCorridors)
+            foreach (var c in _route.CorridorsNear(x, z))
             {
                 float reach = c.MaxFormationHalf + 2f;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
