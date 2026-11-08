@@ -34,7 +34,7 @@ namespace ARO.Tests
         [Test] public void PropCatalogParsesAndEveryPropIsMarkedAsAPlaceholder()
         {
             PropLibrary.EnsureLoaded();
-            Assert.AreEqual(16, PropLibrary.All.Count());
+            Assert.AreEqual(19, PropLibrary.All.Count());      // 16 original placeholders + 3 luminaires (street_light_village, highway_light, junction_mast)
             foreach (var d in PropLibrary.All) { Assert.AreEqual("dev", d.status, d.id); Assert.IsNotEmpty(d.lodTriangles, d.id); }
             Assert.IsNull(PropLibrary.Def("not_a_prop")); Assert.IsNull(PropLibrary.Geometry("not_a_prop", 0));
         }
