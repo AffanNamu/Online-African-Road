@@ -3,7 +3,7 @@
 // Scenarios (each opens the real game with ?smoke=drive&hold=1 at a place on the route, at night, presses the REAL keys where a key is the thing under test, and reads both the pixels and the game's own log lines):
 //   beams       low beam against high beam on the same dark stretch (key K), bumper view: the road ahead must get brighter
 //   rear        rear lamps: lights on, brake (Space), lights off (L), hazard lights (T), left and right indicators (Q, E): burst of frames per blinking state + the game's [Light] rear edges
-//   beacons     the red mast beacons near a telecom mast: burst of frames over more than one flash cycle
+//   beacons     the red mast beacons 70 m before a telecom mast (150 m gave 1 to 4 red pixels, too few to judge): burst of frames over more than one flash cycle
 //   traffic     ambient traffic with its head and tail lamps: a slow burst on the expressway + the [Traffic] lines
 //   transition  a whole dusk (hour 16.6 on) and a whole dawn (hour 4.8 on) filmed in one run each (?hourrate=): the lamp level against the hour, the headlight auto switching
 //   wet         rain against dry on the Low, Medium and High tiers: streaks, puddles, and the change of the road
@@ -111,7 +111,7 @@ async function sc_rear(env) {
     const edges = g.logs.slice(m0).map(l => l.text).filter(t => /^\[Light\] rear /.test(t));
     const L = edges.filter(t => /indicatorLeft=True/.test(t)).length, Rr = edges.filter(t => /indicatorRight=True/.test(t)).length, off = edges.filter(t => /indicatorLeft=False indicatorRight=False/.test(t)).length;
     console.log(`  ${name}: amber pixels per frame ${lit.join(' ')} | log edges left-on ${L}, right-on ${Rr}, both-off ${off}`);
-    check('rear', `${name}: the game's lamps flash (on and off edges in the log)`, (wantL ? L : 0) >= 1 && (wantR ? Rr : 0) >= 1 && off >= 1, `left-on ${L}, right-on ${Rr}, off ${off}`);
+    check('rear', `${name}: the game's lamps flash (on and off edges in the log)`, (!wantL || L >= 1) && (!wantR || Rr >= 1) && off >= 1, `left-on ${L}, right-on ${Rr}, off ${off}`);
     check('rear', `${name}: the side that should not flash stays dark`, (wantL || L === 0) && (wantR || Rr === 0), `left-on ${L}, right-on ${Rr}`);
     check('rear', `${name}: the picture shows amber lamps in some frames and none in others`, bright >= 1 && dark >= 1, `${bright} lit frame(s), ${dark} dark`);
     await g.press(key, 200); await g.page.waitForTimeout(900);
@@ -121,7 +121,7 @@ async function sc_rear(env) {
 }
 
 async function sc_beacons(env) {
-  const g = await openGame(env, 'red beacons on a telecom mast, 150 m before it', 'hour=night&start=13632', env.q); if (!g.ok) { check('beacons', 'the scenario ran', false, 'the game did not start'); return; }
+  const g = await openGame(env, 'red beacons on a telecom mast, 70 m before it', 'hour=night&start=13712', env.q); if (!g.ok) { check('beacons', 'the scenario ran', false, 'the game did not start'); return; }
   g.report(); const lamp = g.last(/^\[Lamp\] level=/); check('beacons', 'the game has beacons loaded', lampVal(lamp && lamp.text, 'beacons') >= 2, lamp ? lamp.text.match(/beacons=\d+/) : 'no [Lamp] line');
   const fr = await g.burst(16, 120); const upper = [0.0, 0.0, 1.0, 0.55]; const reds = fr.map(p => count(p, upper, isRed));
   console.log('  bright red pixels in the upper frame, 16 frames: ' + reds.join(' '));

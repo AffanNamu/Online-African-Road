@@ -210,7 +210,8 @@ namespace ARO.NetCore
     public static class HeadlightSpec
     {
         public const float Intensity = 240f, Range = 100f, OuterAngleDeg = 55f, InnerAngleDeg = 25f, PitchDownDeg = 1.5f;
-        /// <summary>The high beam: the same two lights, narrower, brighter, reaching farther and aimed nearly level.</summary>
-        public const float HighIntensity = 420f, HighRange = 170f, HighOuterAngleDeg = 38f, HighInnerAngleDeg = 14f, HighPitchDownDeg = 0.3f;
+        /// <summary>The high-beam lamps: a second pair ADDED to the low beam (which stays on), narrower, reaching farther and aimed nearly level. Run 306 showed that re-aiming and narrowing the low-beam lamps themselves
+        /// (the earlier 420 / 170 m / 38 degrees / 0.3 degrees) gave a dimmer road ahead than the low beam, so the high beam now only adds light.</summary>
+        public const float HighIntensity = 360f, HighRange = 170f, HighOuterAngleDeg = 34f, HighInnerAngleDeg = 12f, HighPitchDownDeg = 0.6f;
     }
 }

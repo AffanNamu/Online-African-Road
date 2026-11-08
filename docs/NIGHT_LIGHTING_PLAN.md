@@ -133,7 +133,7 @@ All inside the existing dev prop geometry (production models replace them id by 
 
 ## 8. Vehicle lighting
 ### 8.1 Player vehicle (reuses `VehicleLights`)
-* Low beam: today's `HeadlightSpec`. **High beam** (`K`): the same two `Light` objects with a narrower, longer, brighter spec (`HeadlightSpec.High`: intensity 420, range 170, outer 38°, inner 14°,
+* Low beam: today's `HeadlightSpec`. **High beam** (`K`): **(changed after CI run 306: the first design, the same two `Light` objects re-aimed with a narrower, longer spec of 420 / 170 / 38° / 14°, rendered a dimmer road than the low beam; the high beam now ADDS a second pair of lamps, 360 / 170 m / 34° / 12° / 0.6° down, and the low beam stays on)** the original text follows: the same two `Light` objects with a narrower, longer, brighter spec (`HeadlightSpec.High`: intensity 420, range 170, outer 38°, inner 14°,
   pitch 0.3°). No extra lights.
 * Rear lights: red tail lights on with the headlights, brighter on the brake (exists). Reverse lamps (exists). Indicators (exist). **Hazards** (`T`): both indicators together.
 * Automatic: lights come on at dusk and go off in daylight from `LampsChanged` (section 3); a manual `L` choice is respected until the next auto transition, as today.
@@ -180,4 +180,6 @@ The asset library and every frozen version are untouched; this milestone adds co
 | Runtime: `StreetLightSystem`, shaders `ARO/LampEmit`, `ARO/LampGlow`, `ARO/Puddle`, emissive prop materials, glow mesh, pooled real lights, beacons, tiers, `TimeOfDay.LampFactor`, `WeatherSystem.cloud`, test hooks | **compiled and rendered in Unity (CI run 302, 2026-11-08)**; first reading and tuning in `docs/LIGHTING.md`; the tuned version is not rendered yet |
 | Vehicle lighting: high beam (K), hazards (T), auto at dusk, net flags, controls table, lit traffic bodies | **written; compiled; high beam and tail lamps seen working**; hazards, traffic lamps and beacons not yet seen in a picture; not done: HUD indicator, traffic brake lights and real lights |
 | In-game verification in CI (20 night frames, `[Lamp]` lines), pictures looked at | **run 302 read; five of 20 frames looked at**; the tuned version is the next run |
+| Night verification suite (`tools/webgl-night.js`) in the real build, results read | **run 306 / 309 read (2026-11-08): 36 of 40 checks passed**; the four failures were a real high-beam defect (high beam dimmer than the low beam; fixed by adding lamps, not yet re-run), two bugs in the script's indicator check (fixed) and a marginal beacon check (view moved closer). Per-point results in `docs/NIGHT_VERIFICATION_RESULTS.md` |
+| Real-GPU test | not done; the owner's (`docs/NIGHT_GPU_CHECK.md`) |
 | Owner's visual review | not done; nothing is approved |
