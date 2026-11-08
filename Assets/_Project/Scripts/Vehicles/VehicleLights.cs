@@ -21,6 +21,8 @@ namespace ARO.Vehicles
         }
 
         VehicleLightPolicy.Beam _beam = VehicleLightPolicy.Beam.Off; bool _beamKnown;
+        static int _smokePage = -1; bool _ll, _lr, _lbrake, _loggedOnce;
+        static bool SmokePage { get { if (_smokePage < 0) { var u = Application.absoluteURL; _smokePage = !string.IsNullOrEmpty(u) && u.Contains("smoke=") ? 1 : 0; } return _smokePage == 1; } }
 
         void Update()
         {
@@ -42,6 +44,15 @@ namespace ARO.Vehicles
             VehicleLightPolicy.Indicators(_v.Indicator, _v.Hazard, blink, out bool left, out bool right);
             Set(leftEmit, left ? new Color(4f, 2f, 0f) : Color.black);
             Set(rightEmit, right ? new Color(4f, 2f, 0f) : Color.black);
+            if (SmokePage)
+            {   // CI reads these edges: proof that indicators and hazards flash and that the brake lamp follows the brake (what the lamps do, not only what the state says)
+                bool brakeLamp = tail >= 1f;
+                if (!_loggedOnce || left != _ll || right != _lr || brakeLamp != _lbrake)
+                {
+                    _loggedOnce = true; _ll = left; _lr = right; _lbrake = brakeLamp;
+                    Debug.Log($"[Light] rear indicatorLeft={left} indicatorRight={right} hazard={_v.Hazard} indicatorState={_v.Indicator} brakeLamp={brakeLamp} tailLevel={tail.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)} lights={_v.LightsOn} t={Time.time.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}");
+                }
+            }
         }
 
         float[] _baseAngle, _baseInner, _baseRange, _baseIntensity, _basePitch;

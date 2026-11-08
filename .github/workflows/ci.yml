@@ -340,6 +340,12 @@ jobs:
           run commercial-hazard low "&start=3600&hazard=1"
           run commercial-medium medium "&start=3600"
           run commercial-rain-medium medium "&start=3600&weather=rain"
+      - name: "Night verification - low and high beam, rear lamps, brake, hazards and indicators with the real keys, red beacons, traffic lamps, a whole dusk and a whole dawn, wet roads on Low, Medium and High (checks, logs and contact sheets; the pictures still have to be looked at)"
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-night.js --selftest
+          node tools/webgl-night.js Builds/WebGL webgl-light-nt
       - uses: actions/upload-artifact@v4
         if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }

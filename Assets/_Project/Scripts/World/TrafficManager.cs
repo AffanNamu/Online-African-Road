@@ -74,9 +74,15 @@ namespace ARO.World
             return v * (n.surface == RoadSurface.Damaged ? 0.55f : n.surface == RoadSurface.Worn ? 0.85f : 1f);
         }
 
+        float _nextTrafficLog;
         void FixedUpdate()
         {
             if (_sim == null) return;
+            if (Time.unscaledTime >= _nextTrafficLog && !string.IsNullOrEmpty(Application.absoluteURL) && Application.absoluteURL.Contains("smoke="))
+            {   // smoke pages only: how many traffic bodies are alive and whether they carry the shared lit lamp materials (CI reads this)
+                _nextTrafficLog = Time.unscaledTime + 5f; int lamps = 0; foreach (var v in _views.Values) if (v.go != null) lamps += v.go.transform.childCount;
+                Debug.Log($"[Traffic] active={_views.Count} pooled={_pool.Count} lampBoxes={lamps} lampMaterials={(StreetLightSystem.TrafficHead != null ? "ok" : "none")}");
+            }
             float ps = player != null ? route.Project(player.position, out _) : 0f;
             if (player != null)
             {

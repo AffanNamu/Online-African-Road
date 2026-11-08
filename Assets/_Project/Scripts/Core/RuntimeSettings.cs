@@ -10,6 +10,8 @@ namespace ARO.Core
         public static float CameraShake = 1f, EngineVolume = 1f, SteeringGain = 1f, FixedHour = -1f;
         /// <summary>The hour from the page address (?hour=noon, ?hour=17.6), for reproducible lighting screenshots; -1 when there is none. It beats the player's Time of Day setting.</summary>
         public static float TestHour = -1f;
+        /// <summary>Test hook (smoke pages only, ?hourrate=): game hours that pass per real second after the truck has been frozen, starting from ?hour=. CI uses it to film a whole dusk or dawn in one run. -1 = off.</summary>
+        public static float TestHourRate = -1f, TestHourRateT0 = -1f;
         /// <summary>Test hook (only on ?smoke= pages): a sky atmosphere thickness from ?atm=, so CI can render dawn and sunset at several thicknesses and the value is chosen from real frames. -1 when none.</summary>
         public static float TestAtmosphere = -1f;
         /// <summary>Test hook (only on ?smoke= pages): ?sky=gradient draws the custom gradient sky (ARO/SkyGradient) instead of the procedural one, so CI can render both and the choice is made from frames. False by default.</summary>

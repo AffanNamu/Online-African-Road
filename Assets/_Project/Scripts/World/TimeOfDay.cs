@@ -77,12 +77,16 @@ namespace ARO.World
             if (Suspended) return;
             float setting = ARO.Core.RuntimeSettings.FixedHour;       // the player's Time of Day setting: a fixed hour, or -1 for the real clock
             float urlHour = ARO.Core.RuntimeSettings.TestHour;        // ?hour= in the page address (tests, reviews): beats the setting
-            if (urlHour >= 0f || setting >= 0f || followWestAfricaTime) hour = LightingHour.Resolve(urlHour, setting, LightingHour.ClockHour(DateTime.UtcNow), out _source);
+            if (urlHour >= 0f || setting >= 0f || followWestAfricaTime)
+            {
+                hour = LightingHour.Resolve(urlHour, setting, LightingHour.ClockHour(DateTime.UtcNow), out _source);
+                if (urlHour >= 0f && ARO.Core.RuntimeSettings.TestHourRate > 0f && ARO.Core.RuntimeSettings.TestHourRateT0 >= 0f) hour = Mathf.Repeat(urlHour + ARO.Core.RuntimeSettings.TestHourRate * (Time.unscaledTime - ARO.Core.RuntimeSettings.TestHourRateT0), 24f);   // smoke pages: a filmed dusk or dawn
+            }
             else { hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f); _source = "accelerated"; }
             Apply();
             if (IsNight != _wasNight) { _wasNight = IsNight; NightChanged?.Invoke(IsNight); }
             bool lamps = NightLighting.AutoLampsOn(LampsAreOn, LampFactor);
-            if (lamps != LampsAreOn) { LampsAreOn = lamps; LampsChanged?.Invoke(lamps); }
+            if (lamps != LampsAreOn) { LampsAreOn = lamps; Debug.Log($"[Light] lamps auto on={lamps} hour={F(hour)} lampFactor={F(LampFactor)}"); LampsChanged?.Invoke(lamps); }
         }
 
         void Apply()

@@ -127,6 +127,7 @@ namespace ARO.Game
                 Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = Vehicle.transform.position; _lastSafe = _spawnPos;
                 Debug.Log($"[Drive] ground ready after {Time.unscaledTime - _holdSince:F1}s at y={gy:F2}; vehicle released");
+                if (ARO.Core.RuntimeSettings.TestHourRate > 0f && ARO.Core.RuntimeSettings.TestHourRateT0 < 0f) ARO.Core.RuntimeSettings.TestHourRateT0 = Time.unscaledTime;      // a free-driving test page: the clock runs from here
                 if (SmokeMode.Hold) _freezeAt = Time.unscaledTime + 3f;   // let the suspension settle first
             }
             else if (Time.unscaledTime - _holdSince > HoldTimeout)
@@ -159,6 +160,7 @@ namespace ARO.Game
             _freezeAt = -1f;
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; rb.constraints = RigidbodyConstraints.FreezeAll;
             var p = t.position;
+            if (ARO.Core.RuntimeSettings.TestHourRate > 0f) ARO.Core.RuntimeSettings.TestHourRateT0 = Time.unscaledTime;      // the filmed dusk or dawn starts now
             Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={t.eulerAngles.y:F0} upright={upright:F2} tries={_freezeTries} for reproducible screenshots");
             if (SmokeMode.Probe) ProbeSurroundings();
         }

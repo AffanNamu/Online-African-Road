@@ -37,7 +37,7 @@ namespace ARO.World
         readonly List<Lamp> _real = new List<Lamp>(); readonly Dictionary<long, Lamp> _byKey = new Dictionary<long, Lamp>();
         bool _dirty; float _nextRebuild, _nextSelect, _nextLog, _nextSky;
         Light[] _pool; long[] _poolKey; float[] _poolFade; bool[] _poolWanted; LampSelector _selector;
-        int _lamps, _halos, _pools, _streaks, _glowVerts, _puddlePatches, _rebuilds;
+        int _lamps, _halos, _pools, _streaks, _glowVerts, _puddlePatches, _rebuilds, _beacons;
         float _level, _wet; bool _ready;
 
         public float Level => _level;
@@ -80,7 +80,7 @@ namespace ARO.World
             }
             _selector = new LampSelector(n, Mathf.Max(60f, _tier.LampGlowRange * 0.25f));
             _ready = true;
-            Debug.Log($"[Lamp] init glow={(glowOk ? "ok" : "UNAVAILABLE")} puddles={(_puddle != null ? "ok" : puddleOk ? "off(tier)" : "UNAVAILABLE")} emissive={(emitOk ? "ok" : "UNAVAILABLE(plain materials)")} realLights={n} glowRange={_tier.LampGlowRange:0} wetEffects={_tier.WetEffects} mode={_mode} " +
+            Debug.Log($"[Lamp] init glow={(glowOk ? "ok" : "UNAVAILABLE")} puddles={(_puddle != null ? "ok" : puddleOk ? "off(tier)" : "UNAVAILABLE")} emissive={(emitOk ? "ok" : "UNAVAILABLE(plain materials)")} trafficLamps={(TrafficHead != null ? "ok" : "none")} realLights={n} glowRange={_tier.LampGlowRange:0} wetEffects={_tier.WetEffects} mode={_mode} " +
                       $"additionalLights={(UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset != null ? UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.additionalLightsRenderingMode.ToString() : "n/a")} perObjectLimit={(UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset != null ? UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.maxAdditionalLightsCount : 0)}");
         }
 
@@ -166,13 +166,13 @@ namespace ARO.World
             _rebuilds++;
             if (_chunks.Count == 0) { if (_glowMesh != null) _glowMesh.Clear(); if (_puddleMesh != null) _puddleMesh.Clear(); _real.Clear(); _byKey.Clear(); _lamps = _halos = _pools = _streaks = _glowVerts = _puddlePatches = 0; return; }
             Vector3 c = Vector3.zero; foreach (var d in _chunks.Values) { c = d.origin; break; }
-            _real.Clear(); _byKey.Clear(); _lamps = _halos = _pools = _streaks = _puddlePatches = 0;
+            _real.Clear(); _byKey.Clear(); _lamps = _halos = _pools = _streaks = _puddlePatches = _beacons = 0;
             var verts = new List<Vector3>(); var uv0 = new List<Vector2>(); var uv1 = new List<Vector4>(); var cols = new List<Color>(); var tris = new List<int>();
             var pv = new List<Vector3>(); var pu0 = new List<Vector2>(); var pu1 = new List<Vector2>(); var pt = new List<int>();
             foreach (var d in _chunks.Values)
             {
                 var off = d.origin - c;
-                if (d.lamps != null) { _lamps += d.lamps.Count; foreach (var l in d.lamps) if (l.Real && !_byKey.ContainsKey(l.Key)) { _real.Add(l); _byKey[l.Key] = l; } }
+                if (d.lamps != null) { _lamps += d.lamps.Count; foreach (var l in d.lamps) { if (l.Kind == LampKind.Beacon) _beacons++; if (l.Real && !_byKey.ContainsKey(l.Key)) { _real.Add(l); _byKey[l.Key] = l; } } }
                 var g = d.glow;
                 if (g != null)
                 {
@@ -250,8 +250,8 @@ namespace ARO.World
         void LogState(float clock)
         {
             var ci = CultureInfo.InvariantCulture;
-            Debug.Log($"[Lamp] level={_level.ToString("0.000", ci)} clock={clock.ToString("0.000", ci)} mode={_mode} chunks={_chunks.Count} lamps={_lamps} halos={_halos} pools={_pools} streaks={_streaks} glowVerts={_glowVerts} puddles={_puddlePatches} " +
-                      $"wet={_wet.ToString("0.00", ci)} realLights={_activeLights}/{_pool.Length} glowDraw={(_glowMr != null && _glowMr.enabled ? "on" : "off")} puddleDraw={(_puddleMr != null && _puddleMr.enabled ? "on" : "off")} rebuilds={_rebuilds}");
+            Debug.Log($"[Lamp] level={_level.ToString("0.000", ci)} clock={clock.ToString("0.000", ci)} hour={(_tod != null ? _tod.hour : -1f).ToString("0.00", ci)} mode={_mode} chunks={_chunks.Count} lamps={_lamps} halos={_halos} pools={_pools} streaks={_streaks} glowVerts={_glowVerts} puddles={_puddlePatches} " +
+                      $"wet={_wet.ToString("0.00", ci)} realLights={_activeLights}/{_pool.Length} beacons={_beacons} glowDraw={(_glowMr != null && _glowMr.enabled ? "on" : "off")} puddleDraw={(_puddleMr != null && _puddleMr.enabled ? "on" : "off")} rebuilds={_rebuilds}");
         }
 
         void OnDestroy()

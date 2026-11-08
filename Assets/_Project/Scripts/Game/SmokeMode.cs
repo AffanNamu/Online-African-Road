@@ -25,6 +25,8 @@ namespace ARO.Game
         /// <summary>"?smoke=drive&weather=clear|cloudy|rain|wet": a named test weather. Null when absent or unknown.</summary>
         public static string Weather => Drive && WeatherLook.TryPreset(NightLighting.QueryValue(Url, "weather"), out var p) ? p.Name : null;
         /// <summary>"?smoke=drive&highbeam=1" and "&hazard=1": the truck starts with its high beam or hazard lights on (CI renders them without a key press).</summary>
+        /// <summary>"?smoke=drive&hour=16.8&hourrate=0.04": the clock runs from that hour at 0.04 game hours per real second once the truck is frozen (a dusk filmed in about a minute). -1 when absent.</summary>
+        public static float HourRate => Drive ? LightingHour.QueryNumber(Url, "hourrate", 0.001f, 2f) : -1f;
         public static bool HighBeam => Drive && Url.Contains("highbeam=1");
         public static bool Hazard => Drive && Url.Contains("hazard=1");
         /// <summary>The page is a loopback test page that asked for a scripted sign-in on a throw-away backend.</summary>
