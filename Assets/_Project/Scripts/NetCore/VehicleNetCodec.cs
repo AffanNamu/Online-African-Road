@@ -5,9 +5,9 @@ namespace ARO.NetCore
     /// <summary>Compact quantisation of the vehicle state replicated to other players (bandwidth: 5 bytes + transform).</summary>
     public static class VehicleNetCodec
     {
-        public const byte Lights = 1, IndicatorLeft = 2, IndicatorRight = 4, Horn = 8, Brake = 16, Reverse = 32;
+        public const byte Lights = 1, IndicatorLeft = 2, IndicatorRight = 4, Horn = 8, Brake = 16, Reverse = 32, HighBeam = 64, Hazard = 128;
 
-        public static byte PackFlags(bool lights, int indicator, bool horn, bool brake, bool reverse)
+        public static byte PackFlags(bool lights, int indicator, bool horn, bool brake, bool reverse, bool highBeam = false, bool hazard = false)
         {
             int f = 0;
             if (lights) f |= Lights;
@@ -15,6 +15,8 @@ namespace ARO.NetCore
             if (horn) f |= Horn;
             if (brake) f |= Brake;
             if (reverse) f |= Reverse;
+            if (highBeam) f |= HighBeam;
+            if (hazard) f |= Hazard;
             return (byte)f;
         }
         public static bool Has(byte flags, byte bit) => (flags & bit) != 0;

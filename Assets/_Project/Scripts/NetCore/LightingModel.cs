@@ -210,5 +210,7 @@ namespace ARO.NetCore
     public static class HeadlightSpec
     {
         public const float Intensity = 240f, Range = 100f, OuterAngleDeg = 55f, InnerAngleDeg = 25f, PitchDownDeg = 1.5f;
+        /// <summary>The high beam: the same two lights, narrower, brighter, reaching farther and aimed nearly level.</summary>
+        public const float HighIntensity = 420f, HighRange = 170f, HighOuterAngleDeg = 38f, HighInnerAngleDeg = 14f, HighPitchDownDeg = 0.3f;
     }
 }

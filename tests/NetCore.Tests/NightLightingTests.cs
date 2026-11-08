@@ -254,19 +254,23 @@ public class LightingLayoutTests
             for (float z = (float)Math.Floor(c.RingZ.Min() / 200f) * 200f - 200f; z < c.RingZ.Max() + 200f; z += 200f) all.AddRange(PropScatter.PlaceChunk(M, x, z, x + 200f, z + 200f, 1f));
         return all;
     });
-    static List<PropInstance> Placed(string rule) => Everything.Value.Where(p => p.Origin == rule).ToList();
+    static List<PropInstance> Placed(params string[] rules) => Everything.Value.Where(p => rules.Contains(p.Origin)).ToList();
     static float S(PropInstance p) { M.Main.Spline.Nearest(p.Pos.X, p.Pos.Z, 300f, out float s, out _, out _); return s; }
-    static double LampsPerKm(string rule, Func<float, bool> stretch)
+    static double LampsPerKm(string rule, Func<float, bool> stretch) => LampsPerKm(new[] { rule }, stretch);
+    static double LampsPerKm(string[] rules, Func<float, bool> stretch)
     {
         double metres = 0; for (float s = 0; s < M.Main.Length; s += 10f) if (stretch(s)) metres += 10;
-        return metres < 1 ? 0 : Placed(rule).Count(p => stretch(S(p))) / (metres / 1000.0);
+        return metres < 1 ? 0 : Placed(rules).Count(p => stretch(S(p))) / (metres / 1000.0);
     }
+    static readonly string[] Village = { "lights_village_a", "lights_village_b" }, OpenExpressway = { "lights_median_expressway_open_a", "lights_median_expressway_open_b" };
+    static bool InVillageWindow(float s) => (s >= 33000f && s <= 34700f) || (s >= 35800f && s <= 36900f);
+    static bool InOpenWindow(float s) => (s >= 19400f && s <= 21700f) || (s >= 27300f && s <= 29300f);
     static Func<float, bool> Profile(params string[] ids) => s => ids.Contains(M.Main.SectionAt(s).Spec.id);
 
     [Fact] public void TheOldOneSizeFitsAllRuleIsGone()
     {
         Assert.DoesNotContain(Fx.LoadRoute().propRules, r => r.id == "urban_lights");
-        foreach (var id in new[] { "lights_village", "lights_residential", "lights_commercial", "lights_industrial", "lights_median_city", "lights_median_expressway", "lights_median_expressway_open" })
+        foreach (var id in new[] { "lights_village_a", "lights_village_b", "lights_residential", "lights_commercial", "lights_industrial", "lights_median_city", "lights_median_expressway", "lights_median_expressway_open_a", "lights_median_expressway_open_b" })
             Assert.Contains(Fx.LoadRoute().propRules, r => r.id == id);
     }
 
@@ -274,7 +278,7 @@ public class LightingLayoutTests
     {
         var rules = Fx.LoadRoute().propRules.Where(r => r.id.StartsWith("lights_")).ToList();
         Assert.True(rules.Select(r => r.prop).Distinct().Count() >= 3, "a village lane, a city street and an expressway should not share one fixture");
-        Assert.Equal("street_light_village", rules.Single(r => r.id == "lights_village").prop);
+        Assert.Equal("street_light_village", rules.Single(r => r.id == "lights_village_a").prop);
         Assert.Equal("highway_light", rules.Single(r => r.id == "lights_median_expressway").prop);
         Assert.Equal("street_light", rules.Single(r => r.id == "lights_residential").prop);
     }
@@ -282,7 +286,7 @@ public class LightingLayoutTests
     [Fact] public void LightingDensityDependsOnTheEnvironment()
     {
         // lamps per kilometre of the matching road, one side counted: a village lane is the sparsest, a commercial street the densest of the side-mounted layouts
-        double village = LampsPerKm("lights_village", Profile("rural_2lane")), residential = LampsPerKm("lights_residential", s => M.Main.ZoneAt(s) == Zone.Urban && Profile("urban_4lane", "commercial_2lane")(s));
+        double village = LampsPerKm(Village, InVillageWindow), residential = LampsPerKm("lights_residential", s => M.Main.ZoneAt(s) == Zone.Urban && Profile("urban_4lane", "commercial_2lane")(s));
         double commercial = LampsPerKm("lights_commercial", s => M.Main.ZoneAt(s) == Zone.Commercial), industrial = LampsPerKm("lights_industrial", s => M.Main.ZoneAt(s) == Zone.Industrial && Profile("urban_4lane")(s));
         Assert.True(village > 0, "no village lights"); Assert.True(residential > 0 && commercial > 0 && industrial > 0, "a city layout has no lamps");
         Assert.True(village < industrial, $"village {village:0.0}/km should be sparser than an industrial road {industrial:0.0}/km");
@@ -293,7 +297,7 @@ public class LightingLayoutTests
 
     [Fact] public void ExpresswaysAndDividedRoadsAreLitFromTheMedianAndOnlyThere()
     {
-        foreach (var id in new[] { "lights_median_city", "lights_median_expressway", "lights_median_expressway_open" })
+        foreach (var id in new[] { "lights_median_city", "lights_median_expressway", "lights_median_expressway_open_a", "lights_median_expressway_open_b" })
         {
             var placed = Placed(id); Assert.NotEmpty(placed);
             foreach (var p in placed) { float s = S(p); Assert.True(M.Main.SectionAt(s).HasMedian, id + " placed on an undivided road at s=" + s); M.Main.Spline.Nearest(p.Pos.X, p.Pos.Z, 300f, out _, out float lat, out _); Assert.InRange(lat, -0.05f, 0.05f); }
@@ -302,14 +306,29 @@ public class LightingLayoutTests
         for (float s = 300f; s < M.Main.Length - 300f; s += 500f)
         {
             bool divided = M.Main.SectionAt(s).HasMedian; if (M.Main.SectionAt(s - 250f).HasMedian != divided || M.Main.SectionAt(s + 250f).HasMedian != divided) continue;     /* not near a change of profile */ bool near = Fx.LoadRoute().propRules.Where(r => r.side == "median").SelectMany(r => Placed(r.id)).Any(p => Math.Abs(S(p) - s) < 200f);
-            Assert.Equal(divided, near);
+            if (!divided) Assert.False(near, "a median light within 200 m of the undivided road at s=" + s);
+            else if (M.Main.ZoneAt(s) != Zone.Rural) Assert.True(near, "a divided road in town has no median light at s=" + s);
         }
     }
 
     [Fact] public void TheExpresswayIsDenserInTownAndSparserInOpenCountry()
     {
-        double town = LampsPerKm("lights_median_expressway", s => M.Main.SectionAt(s).HasMedian && M.Main.ZoneAt(s) == Zone.Highway), open = LampsPerKm("lights_median_expressway_open", s => M.Main.SectionAt(s).HasMedian && M.Main.ZoneAt(s) == Zone.Rural);
+        double town = LampsPerKm("lights_median_expressway", s => M.Main.SectionAt(s).HasMedian && M.Main.ZoneAt(s) == Zone.Highway), open = LampsPerKm(OpenExpressway, InOpenWindow);
         Assert.True(town > open * 1.2, $"expressway in town {town:0.0}/km vs open country {open:0.0}/km");
+    }
+
+    [Fact] public void RuralStretchesAreLimitedOrUnlitNotAllTheSame()
+    {
+        // regional variation: the open expressway and the old road are dark between their settlements
+        var all = Fx.LoadRoute().propRules.Where(r => r.id.StartsWith("lights_")).SelectMany(r => Placed(r.id)).ToList();
+        double dark = 0, total = 0;
+        for (float s = 16500f; s < 37500f; s += 50f) { total++; if (!all.Any(p => Math.Abs(S(p) - s) < 250f)) dark++; }
+        Assert.True(dark / total > 0.45, $"only {dark / total:P0} of the open country is unlit: every road would look the same");
+        Assert.True(dark / total < 0.95, "the open country has no lighting at all");
+        // the lit settlements really are lit: a lamp within 300 m of each window centre
+        foreach (float centre in new[] { 20500f, 28300f, 33800f, 36300f }) Assert.Contains(all, p => Math.Abs(S(p) - centre) < 800f);
+        // and a city street is lit everywhere along its length (no 300 m gap in the commercial zone)
+        for (float s = 3100f; s < 4800f; s += 100f) Assert.Contains(Placed("lights_commercial"), p => Math.Abs(S(p) - s) < 120f);
     }
 
     [Fact] public void EveryJunctionAndBridgeEndHasItsOwnLight()
