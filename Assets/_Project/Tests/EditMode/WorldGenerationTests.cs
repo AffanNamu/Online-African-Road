@@ -92,6 +92,43 @@ namespace ARO.Tests
             finally { foreach (var o in new Object[] { m, cm, t, slab }) if (o != null) Object.DestroyImmediate(o); }
         }
 
+        [Test] public void AnUrbanRoadWithKerbsAndAPlanterMedianConvertsToUnityMeshesWithItsExtraSlots()
+        {
+            var spec = new RouteSpec
+            {
+                schemaVersion = 1, routeId = "e1-test", name = "E1", seed = 5,
+                meta = new RouteMeta { country = "NG", from = "A", to = "B", status = "prototype", worldMapRouteId = "x", realRoadKm = 1f, gameLengthKm = 0.6f, gameCoverage = "test only", elevationSource = "design" },
+                terrain = new TerrainSpec { baseElevation = 10f, hillAmplitude = 0f, detailAmplitude = 0f },
+                profiles = new[] { RoadClasses.Make(RoadClasses.Arterial, "art") },
+                controlPoints = new[]
+                {
+                    new ControlPoint { id = "a", name = "A", x = 0, z = 0, elevation = 10, zone = "urban", surface = "good", profile = "art" },
+                    new ControlPoint { id = "b", name = "B", x = 600, z = 0, elevation = 10, zone = "urban", surface = "good", profile = "art" },
+                },
+                bridges = new BridgeSpec[0], junctions = new JunctionSpec[0], propRules = new PropRule[0], props = new PropPlacementSpec[0], traffic = new TrafficSpec(), waypoints = new WaypointSpec[0],
+                symbols = new[] { new MarkingSymbolSpec { id = "z", kind = "zebra", s = 300f, side = "both" } }
+            };
+            var model = RouteModel.Build(spec);
+            var road = RoadGeometry.BuildChunk(model.Main, 200f, -100f, 400f, 100f, new V3(200f, 0, -100f), (x, z) => model.Terrain.HeightAt(x, z));
+            Assert.AreEqual(RoadSub.CountE1, road.Triangles.Length); Assert.IsTrue(road.Validate(out var err), err);
+            Mesh m = null, cm = null;
+            try
+            {
+                m = MeshUtil.ToMesh(road, "e1", out var used);
+                foreach (int sub in new[] { RoadSub.Asphalt, RoadSub.Sidewalk, RoadSub.KerbPainted, RoadSub.Planter, RoadSub.Drain, RoadSub.MarkWhite }) Assert.Contains(sub, used);
+                Assert.AreEqual(used.Length, m.subMeshCount);
+                cm = MeshUtil.ToCollisionMesh(road, "e1col", RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter, RoadSub.Drain);
+                int walk = road.Triangles[RoadSub.Sidewalk].Count / 3, kerb = road.Triangles[RoadSub.KerbPainted].Count / 3, planter = road.Triangles[RoadSub.Planter].Count / 3;
+                Assert.Greater(walk, 0); Assert.GreaterOrEqual(MeshUtil.Triangles(cm), walk + kerb + planter, "the walkway, kerb and planter are solid");
+                // a route without E1 elements still builds seven submeshes (so its mesh, and every hash of it, is what it was)
+                var shipped = RouteModel.Build(LoadSpec()); var p = shipped.Main.Spline.PositionAt(5000f);
+                float x0 = Mathf.Floor(p.X / 200f) * 200f, z0 = Mathf.Floor(p.Z / 200f) * 200f;
+                var old = RoadGeometry.BuildChunk(shipped.Main, x0, z0, x0 + 200f, z0 + 200f, new V3(x0, 0, z0), (x, z) => shipped.Terrain.HeightAt(x, z));
+                Assert.AreEqual(RoadSub.Count, old.Triangles.Length);
+            }
+            finally { foreach (var o in new Object[] { m, cm }) if (o != null) Object.DestroyImmediate(o); }
+        }
+
         [Test] public void LargeMeshesSwitchToThirtyTwoBitIndices()
         {
             var mb = new MeshBuffers(1); for (int i = 0; i < 70000; i++) mb.Add(new V3(i, 0, 0), new V2(0, 0));
@@ -117,7 +154,7 @@ namespace ARO.Tests
             var w = WorldMaterials.Create(null);
             try
             {
-                for (int i = 0; i < RoadSub.Count; i++) Assert.IsNotNull(w.Road[i], "road slot " + i);
+                for (int i = 0; i < RoadSub.CountE1; i++) Assert.IsNotNull(w.Road[i], "road slot " + i);      // the original seven strips and the five E1 strips (kerb, painted kerb, walkway, planter, gutter)
                 for (int i = 0; i < PropSub.Count; i++) Assert.IsNotNull(w.Prop[i], "prop slot " + i);
                 Assert.IsNotNull(w.TerrainLush); Assert.IsNotNull(w.TerrainDry); Assert.AreEqual(2, w.WeatherSet.Length);
                 Assert.IsNotNull(w.Road[RoadSub.Asphalt].GetTexture("_BaseMap")); Assert.IsNull(w.Road[RoadSub.MarkWhite].GetTexture("_BaseMap"));

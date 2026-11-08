@@ -209,6 +209,11 @@ jobs:
         continue-on-error: true
         env: { DRIVE_QUERY: "&quality=medium" }
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive-medium
+      - name: "Drive scenario on the Kano E1 street kit (the engine test corridor: kerbs, walkways, planter median; the truck must land on the road, accelerate and drive; informational until two runs agree)"
+        if: always()
+        continue-on-error: true
+        env: { DRIVE_QUERY: "&route=ng-kano-e1-streets&start=640" }
+        run: node tools/webgl-drive.js Builds/WebGL webgl-drive-e1
       - name: Install PostgREST
         if: always()
         run: tools/e2e/install_postgrest.sh
@@ -346,6 +351,12 @@ jobs:
         run: |
           node tools/webgl-night.js --selftest
           node tools/webgl-night.js Builds/WebGL webgl-light-nt
+      - name: "Kano E1 street kit - the engine test corridor (planter median, kerbs, walkways, gutters, dropped kerbs, pavement symbols) at eight places by day and night, chase and bumper views (checks and a contact sheet; the pictures still have to be looked at)"
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-e1.js --selftest
+          node tools/webgl-e1.js Builds/WebGL webgl-light-e1
       - uses: actions/upload-artifact@v4
         if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }

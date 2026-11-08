@@ -30,6 +30,8 @@ namespace ARO.Game
             var svc = new GameServices(cfg);
 
             // Route data first (the streamer, traffic and the vehicle spawn all depend on it), then the rendering foundation.
+            var testRoute = SmokeMode.TestRoute;     // smoke pages only: an engine test corridor (Resources/Routes) instead of Lagos to Ibadan
+            if (testRoute != null) { var ta = Resources.Load<TextAsset>("Routes/" + testRoute + ".route"); if (ta != null) { route.specJson = ta; Debug.Log("[Smoke] driving the test corridor " + testRoute); } else Debug.LogWarning("[Smoke] no route data for " + testRoute); }
             bool haveModel = route.Prepare();
             Light sun = null;
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }

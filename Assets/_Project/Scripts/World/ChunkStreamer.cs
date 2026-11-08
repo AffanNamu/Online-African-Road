@@ -233,7 +233,10 @@ namespace ARO.World
                 go.GetComponent<MeshFilter>().sharedMesh = mesh;
                 var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
                 mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
-                var cm = MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
+                // E1 strips (kerb, walkway, planter, gutter) exist only in the mesh of a corridor that uses them; they are driveable/solid like the rest of the road surface
+                var cm = mb.Triangles.Length > RoadSub.Kerb
+                    ? MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter, RoadSub.Drain)
+                    : MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
                 var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
                 go.isStatic = true;
                 ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);

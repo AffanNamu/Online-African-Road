@@ -12,6 +12,8 @@ It extends, and does not replace, `docs/KANO_CITY_MASTER_PLAN.md` (KSA-1: distri
 New references supplied with the brief are registered as **R-032 to R-036** (hash only, nothing stored; flags: real brand names in the images must not be reproduced, sign text is illustrative, the
 monument and the interchange layout are designs, not real places or engineering geometry): urban expressway at night, rural highway at night, landmark roundabout, flyover and urban highway, aerial interchange.
 
+> **Update 2026-11-08 (later the same day): the owner said "start building them now, don't stop until finish all".** Stage **E1 is built**: `docs/ROAD_ENGINE_E1.md` (kerbs, walkways, gutters, planter and painted medians, dropped kerbs, six road classes, pavement symbols; 1,241 unit tests passing, golden master unchanged; in-game verification wired into CI, not yet read). E2 onwards, the asset work and every other row below are **not started**; the "None is approved or started" statements in this document describe the state when it was written.
+
 ## 0. Answers in one page
 
 | Question | Answer |

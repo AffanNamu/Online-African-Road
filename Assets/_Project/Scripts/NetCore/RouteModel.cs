@@ -24,7 +24,16 @@ namespace ARO.NetCore
         public BridgeSpec[] Bridges = new BridgeSpec[0];
         public float[] RingS, RingX, RingZ;
         public MarkingGap[] MarkingGaps = new MarkingGap[0];
+        public MarkingSymbolSpec[] Symbols = new MarkingSymbolSpec[0];     // E1 pavement symbols on this corridor (empty for every route that declares none)
         public int Seed;
+        /// <summary>True when any run uses the E1 strips (kerb, walkway, planter, gutter); only then does the mesh carry the extra submeshes.</summary>
+        public bool NeedsE1Strips { get { foreach (var r in Runs) if (r.Section.UsesE1Strips) return true; return false; } }
+        /// <summary>The kerb and walkway are dropped (flat paving) where a side road leaves on `side` (-1 left, +1 right): the road mouth is a driveway, not a wall.</summary>
+        public bool KerbDropped(float s, int side)
+        {
+            foreach (var g in MarkingGaps) if (g.Side == side && s >= g.S0 - 1e-3f && s <= g.S1 + 1e-3f) return true;
+            return false;
+        }
         public float Length => Spline.Length;
         /// <summary>Largest formation half width on this corridor (cached; used to bound spatial queries).</summary>
         public float MaxFormationHalf { get { if (_maxHalf <= 0f) _maxHalf = Runs.Max(r => r.Section.FormationHalfWidth * Math.Max(1f, Math.Max(r.ScaleAtStart, r.ScaleAtEnd))); return _maxHalf; } }
@@ -133,6 +142,11 @@ namespace ARO.NetCore
                 gaps.Add(new MarkingGap { S0 = j.s - half, S1 = j.s + half, Side = j.angleDeg >= 0f ? 1 : -1 });
             }
             main.MarkingGaps = gaps.ToArray();
+            if (spec.symbols != null && spec.symbols.Length > 0)
+            {
+                main.Symbols = spec.symbols.Where(y => string.IsNullOrEmpty(y.corridor) || y.corridor == spec.routeId).ToArray();
+                foreach (var sc in sides) sc.Symbols = spec.symbols.Where(y => y.corridor == sc.Id).ToArray();
+            }
             var model = new RouteModel { Spec = spec, Main = main, Sides = sides };
             model.Terrain = new TerrainModel(spec, model);
             return model;

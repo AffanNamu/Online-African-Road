@@ -21,11 +21,11 @@ namespace ARO.NetCore
         };
         static readonly V2[] Rail = { new V2(-0.04f, 0.55f), new V2(-0.04f, 0.86f), new V2(0.04f, 0.86f), new V2(0.04f, 0.55f) };
 
-        sealed class Ring { public V3 Pos, Fwd, Right; public float S, Scale; public int Run; public int[] Verts; }
+        sealed class Ring { public V3 Pos, Fwd, Right; public float S, Scale; public int Run; public int[] Verts; public bool DropL, DropR; }
 
         public static MeshBuffers BuildChunk(RoadCorridor c, float minX, float minZ, float maxX, float maxZ, V3 origin, Func<float, float, float> ground = null)
         {
-            var mb = new MeshBuffers(RoadSub.Count);
+            var mb = new MeshBuffers(c.NeedsE1Strips ? RoadSub.CountE1 : RoadSub.Count);
             var cache = new Dictionary<long, Ring>();
             Ring GetRing(int k, int run)
             {
@@ -49,10 +49,11 @@ namespace ARO.NetCore
                 {
                     int sub = sec.Points[j].Strip;
                     if (onBridge && sub == RoadSub.Verge) continue;           // no dirt verge on a deck
+                    if (RoadSub.IsE1(sub) && Dropped(sec, a, b, j)) sub = RoadSub.Shoulder;     // a dropped kerb is plain paving
                     mb.Quad(sub, a.Verts[j], a.Verts[j + 1], b.Verts[j], b.Verts[j + 1]);
                 }
 
-                if (sec.HasMedian) Extrude(mb, RoadSub.Concrete, a, b, 0f, sec.HeightAt(0f), Jersey, origin);
+                if (sec.HasMedian && sec.Spec.medianStyle == "jersey") Extrude(mb, RoadSub.Concrete, a, b, 0f, sec.HeightAt(0f), Jersey, origin);
                 if (sec.Spec.edgeBarrier == "guardrail" && !onBridge)
                     foreach (int side in new[] { -1, 1 })
                     {
@@ -72,6 +73,7 @@ namespace ARO.NetCore
             }
 
             AddGuardrailPosts(mb, c, minX, minZ, maxX, maxZ, origin);
+            if (c.Symbols.Length > 0) AddSymbols(mb, c, minX, minZ, maxX, maxZ, origin);
             if (ground != null) AddPiers(mb, c, minX, minZ, maxX, maxZ, origin, ground);
             if (!c.IsMain) AddStopLine(mb, c, minX, minZ, maxX, maxZ, origin);
             return mb;
@@ -84,15 +86,30 @@ namespace ARO.NetCore
             var sec = c.Runs[run].Section; float scale = c.ScaleAt(run, s);
             var r = new Ring { Pos = pos, Fwd = fwd, Right = right, S = s, Scale = scale, Run = run, Verts = new int[sec.Points.Length] };
             var surface = c.Runs[run].Surface;
+            if (sec.HasKerb) { r.DropL = c.KerbDropped(s, -1); r.DropR = c.KerbDropped(s, 1); }
+            float paved = sec.PavedHalfWidth, yPaved = sec.HeightAt(paved), yPavedL = sec.HeightAt(-paved);
             for (int j = 0; j < sec.Points.Length; j++)
             {
                 var p = sec.Points[j]; float x = p.X * scale;
-                bool concrete = p.Strip == RoadSub.Concrete;
+                bool concrete = p.Strip == RoadSub.Concrete || RoadSub.IsE1(p.Strip) || (j > 0 && RoadSub.IsE1(sec.Points[j - 1].Strip));       // kerbs, walkways and planters are cast, not worn: neither their own vertices nor the far edge of such a strip ripple
                 float wear = concrete ? 0f : RoadWear.Height(surface, c.Seed, s, x);
-                var w = new V3(pos.X + right.X * x - origin.X, pos.Y + p.Y + wear - origin.Y, pos.Z + right.Z * x - origin.Z);
+                float py = p.Y;
+                if (r.DropR && p.X > paved + 1e-4f) py = j == sec.Points.Length - 1 ? Math.Min(py, yPaved) : yPaved;       // the kerb falls to the paving level at a road mouth
+                else if (r.DropL && p.X < -paved - 1e-4f) py = j == 0 ? Math.Min(py, yPavedL) : yPavedL;
+                var w = new V3(pos.X + right.X * x - origin.X, pos.Y + py + wear - origin.Y, pos.Z + right.Z * x - origin.Z);
                 r.Verts[j] = mb.Add(w, new V2(x / TileMetres, s / TileMetres));
             }
             return r;
+        }
+
+        /// <summary>True when strip j (between cross-section points j and j+1) lies outside the paved edge on a side where both rings are in a kerb drop.</summary>
+        static bool Dropped(RoadCrossSection sec, Ring a, Ring b, int j)
+        {
+            if (!sec.HasKerb) return false;
+            float paved = sec.PavedHalfWidth;
+            if (sec.Points[j].X >= paved - 1e-4f) return a.DropR && b.DropR;
+            if (sec.Points[j + 1].X <= -paved + 1e-4f) return a.DropL && b.DropL;
+            return false;
         }
 
         /// <summary>World-space (origin-relative) position of lateral offset x (already scaled) on ring r, including the cross-section height and wear.</summary>
@@ -189,6 +206,156 @@ namespace ARO.NetCore
             V3 L1 = new V3(q1.X + right.X * -lanesW, q1.Y, q1.Z + right.Z * -lanesW), R1 = new V3(q1.X, q1.Y, q1.Z);
             int a = mb.Add(L0, new V2(0, 0)), b = mb.Add(R0, new V2(1, 0)), cc = mb.Add(L1, new V2(0, 1)), d = mb.Add(R1, new V2(1, 1));
             mb.Quad(RoadSub.MarkWhite, a, b, cc, d);
+        }
+
+        // ---------------------------------------------------------------------------------------------------------- pavement symbols (RB-12)
+        /// <summary>Default dimensions in metres (the sizes of Nigerian and common African highway practice; every one can be changed by `length`).</summary>
+        public const float ArrowLength = 4f, ZebraDepth = 3f, ZebraBar = 0.5f, ZebraPitch = 1.0f, StopLineDepth = 0.5f, YieldTooth = 0.5f, BayPitch = 2.5f, BayLine = 0.12f;
+
+        static void AddSymbols(MeshBuffers mb, RoadCorridor c, float minX, float minZ, float maxX, float maxZ, V3 origin)
+        {
+            foreach (var sy in c.Symbols)
+            {
+                var p = c.Spline.PositionAt(Math.Max(0f, Math.Min(c.Length, sy.s)));
+                if (p.X < minX || p.X >= maxX || p.Z < minZ || p.Z >= maxZ) continue;          // the chunk that holds the anchor builds the symbol
+                foreach (var piece in SymbolPieces(c, sy))
+                {
+                    int sub = sy.yellow ? RoadSub.MarkYellow : RoadSub.MarkWhite;
+                    var pts = new V3[piece.Length];
+                    for (int i = 0; i < pts.Length; i++) pts[i] = SymbolPoint(c, piece[i].X, piece[i].Y, origin);
+                    FillConvex(mb, sub, pts);
+                }
+            }
+        }
+
+        /// <summary>The convex polygons of one symbol as (station, lateral) pairs. Pure geometry: unit-tested without a mesh.</summary>
+        public static List<V2[]> SymbolPieces(RoadCorridor c, MarkingSymbolSpec sy)
+        {
+            var res = new List<V2[]>();
+            float s0 = Math.Max(0f, Math.Min(c.Length, sy.s));
+            var sec = c.SectionAt(s0); float k = c.ScaleAt(s0);
+            float w = sec.Spec.laneWidth * k, xi = sec.InnerLaneEdge * k, xo = sec.CarriagewayHalfWidth * k;
+            int L = sec.Spec.lanesPerDirection;
+            bool both = sy.side == "both", rightSide = sy.side != "left";
+
+            // lateral span of the lanes the symbol governs, for one side (sgn = +1 right, -1 left)
+            void Span(int sgn, out float lo, out float hi)
+            {
+                float a = xi, b = xo;
+                if (sy.lane > 0) { a = xi + (sy.lane - 1) * w; b = xi + Math.Min(sy.lane, L) * w; }
+                lo = sgn > 0 ? a : -b; hi = sgn > 0 ? b : -a;
+            }
+            V2[] Rect(float d0, float d1, float x0, float x1) => new[] { new V2(s0 + d0, x0), new V2(s0 + d0, x1), new V2(s0 + d1, x1), new V2(s0 + d1, x0) };
+
+            switch (sy.kind)
+            {
+                case "zebra":
+                {
+                    float depth = sy.length > 0f ? sy.length : ZebraDepth;
+                    var spans = new List<float[]>();
+                    if (both && !sec.HasMedian) spans.Add(new[] { -xo, xo });
+                    else { foreach (int sgn in both ? new[] { -1, 1 } : new[] { rightSide ? 1 : -1 }) { Span(sgn, out float lo, out float hi); spans.Add(new[] { lo, hi }); } }
+                    foreach (var sp in spans)
+                        for (float x = sp[0] + (ZebraPitch - ZebraBar) * 0.5f; x + ZebraBar <= sp[1] + 1e-3f; x += ZebraPitch)
+                            res.Add(Rect(-depth * 0.5f, depth * 0.5f, x, x + ZebraBar));
+                    break;
+                }
+                case "stop_line":
+                {
+                    float depth = sy.length > 0f ? sy.length : StopLineDepth;
+                    foreach (int sgn in both ? new[] { -1, 1 } : new[] { rightSide ? 1 : -1 })
+                    {
+                        Span(sgn, out float lo, out float hi);
+                        float d0 = sgn > 0 ? 0f : -depth, d1 = sgn > 0 ? depth : 0f;       // the line lies on the approaching side of s, as seen by that carriageway
+                        res.Add(Rect(d0, d1, lo + 0.1f, hi - 0.1f));
+                    }
+                    break;
+                }
+                case "yield":
+                {
+                    int sgn = rightSide ? 1 : -1; float dir = sgn;
+                    Span(sgn, out float lo, out float hi);
+                    float tooth = sy.length > 0f ? sy.length : YieldTooth;
+                    for (float x = lo + 0.15f; x + tooth <= hi - 0.05f; x += tooth * 1.5f)
+                        res.Add(new[] { new V2(s0, x), new V2(s0 + dir * tooth * 1.2f, x - tooth * 0.5f), new V2(s0 + dir * tooth * 1.2f, x + tooth * 0.5f) });
+                    break;
+                }
+                case "arrow_straight":
+                case "arrow_left":
+                case "arrow_right":
+                {
+                    int sgn = rightSide ? 1 : -1; float dir = sgn;                           // the flow is towards +s on the right-hand carriageway
+                    int ln = Math.Max(1, Math.Min(L, sy.lane <= 0 ? 1 : sy.lane));
+                    float xc = sgn * (xi + (ln - 0.5f) * w);
+                    float len = sy.length > 0f ? sy.length : ArrowLength;
+                    // local frame: forward = along the flow, side = towards the driver's right. For the left-hand carriageway the flow is -s, so the driver's right is -x.
+                    V2 P(float fwd, float side) => new V2(s0 + dir * fwd, xc + dir * side);
+                    float stemW = 0.11f, headW = 0.5f;
+                    if (sy.kind == "arrow_straight")
+                    {
+                        float stemEnd = len - 1.4f;
+                        res.Add(new[] { P(0f, -stemW), P(0f, stemW), P(stemEnd, stemW), P(stemEnd, -stemW) });
+                        res.Add(new[] { P(stemEnd, -headW), P(stemEnd, headW), P(len, 0f) });
+                    }
+                    else
+                    {
+                        float turn = sy.kind == "arrow_right" ? 1f : -1f;                    // +side = the driver's right
+                        float stemEnd = len * 0.5f;
+                        res.Add(new[] { P(0f, -stemW), P(0f, stemW), P(stemEnd + stemW, stemW), P(stemEnd + stemW, -stemW) });
+                        // arm: from the top of the stem, leaning 40 degrees to the turning side
+                        float ax = (float)Math.Cos(Math.PI * 40 / 180), ay = (float)Math.Sin(Math.PI * 40 / 180) * turn;
+                        float armLen = len * 0.28f;
+                        V2 A = new V2(stemEnd, 0f), B = new V2(stemEnd + ax * armLen, ay * armLen);
+                        res.Add(ArmQuad(P, A, B, stemW, ax, ay));
+                        // head
+                        float hl = 0.9f; V2 tip = new V2(B.X + ax * hl, B.Y + ay * hl);
+                        float hx = -ay, hy = ax;
+                        res.Add(new[] { P(B.X + hx * headW, B.Y + hy * headW), P(B.X - hx * headW, B.Y - hy * headW), P(tip.X, tip.Y) });
+                    }
+                    break;
+                }
+                case "bay":
+                {
+                    int sgn = rightSide ? 1 : -1; float dir = sgn;
+                    float pitch = sy.length > 0f ? sy.length : BayPitch;
+                    float depth = Math.Max(1.0f, sec.Spec.shoulderWidth * k);
+                    for (int i = 0; i <= Math.Max(1, sy.count); i++)
+                    {
+                        float d = i * pitch * dir;
+                        float x0 = sgn * xo, x1 = sgn * (xo + depth);
+                        res.Add(new[] { new V2(s0 + d - BayLine * 0.5f, x0), new V2(s0 + d - BayLine * 0.5f, x1), new V2(s0 + d + BayLine * 0.5f, x1), new V2(s0 + d + BayLine * 0.5f, x0) });
+                    }
+                    break;
+                }
+            }
+            return res;
+        }
+
+        static V2[] ArmQuad(Func<float, float, V2> P, V2 a, V2 b, float half, float ax, float ay)
+        {
+            float px = -ay * half, py = ax * half;                                   // half-width vector perpendicular to the arm
+            return new[] { P(a.X + px, a.Y + py), P(a.X - px, a.Y - py), P(b.X - px, b.Y - py), P(b.X + px, b.Y + py) };
+        }
+
+        /// <summary>World (origin-relative) position of station s and scaled lateral x on the road surface, lifted by MarkingLift.</summary>
+        static V3 SymbolPoint(RoadCorridor c, float s, float x, V3 origin)
+        {
+            s = Math.Max(0f, Math.Min(c.Length, s));
+            c.Spline.FrameAt(s, out var pos, out _, out var right);
+            return new V3(pos.X + right.X * x - origin.X, c.SurfaceY(s, x) + MarkingLift - origin.Y, pos.Z + right.Z * x - origin.Z);
+        }
+
+        /// <summary>A convex polygon as a triangle fan facing up.</summary>
+        static void FillConvex(MeshBuffers mb, int sub, V3[] pts)
+        {
+            if (pts.Length < 3) return;
+            var idx = new int[pts.Length];
+            for (int i = 0; i < pts.Length; i++) idx[i] = mb.Add(pts[i], new V2(i % 2, i / 2));
+            for (int i = 1; i + 1 < pts.Length; i++)
+            {
+                var n = MeshBuffers.Cross(pts[i] - pts[0], pts[i + 1] - pts[0]);
+                if (n.Y >= 0f) mb.Tri(sub, idx[0], idx[i], idx[i + 1]); else mb.Tri(sub, idx[0], idx[i + 1], idx[i]);
+            }
         }
 
         // ---------------------------------------------------------------------------------------------------------- guardrail posts and bridge piers

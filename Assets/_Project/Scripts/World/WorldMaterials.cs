@@ -10,7 +10,7 @@ namespace ARO.World
     /// </summary>
     public sealed class WorldMaterials
     {
-        public readonly Material[] Road = new Material[RoadSub.Count];
+        public readonly Material[] Road = new Material[RoadSub.CountE1];     // slots 0..6 are the original road strips; 7..11 (kerb, painted kerb, walkway, planter, gutter) exist only in the mesh of a corridor that uses them
         public readonly Material[] Prop = new Material[PropSub.Count];
         public Material TerrainLush, TerrainDry;
         /// <summary>True when the three emissive prop slots (lamp, glow, beacon) use the unlit ARO/LampEmit material that StreetLightSystem drives; false when they are the plain lit fallback.</summary>
@@ -39,6 +39,12 @@ namespace ARO.World
             w.Road[RoadSub.MarkWhite] = Make("MarkWhite", new Color(0.92f, 0.92f, 0.88f), 0.25f, 0f, null);
             w.Road[RoadSub.MarkYellow] = Make("MarkYellow", new Color(0.95f, 0.72f, 0.10f), 0.25f, 0f, null);
             w.Road[RoadSub.Metal] = Make("GuardrailMetal", new Color(0.62f, 0.64f, 0.66f), 0.55f, 0.6f, null);
+            // E1 strips (urban cross-sections): development materials like the rest; production PBR sets replace the textures without code changes
+            w.Road[RoadSub.Kerb] = Make("Kerb", Color.white, 0.10f, 0f, ProcTex.Grain(128, new Color(0.62f, 0.62f, 0.60f), new Color(0.76f, 0.76f, 0.73f), 3, 18, 0.03f));
+            w.Road[RoadSub.KerbPainted] = Make("KerbPainted", Color.white, 0.12f, 0f, ProcTex.Stripes(16, new Color(0.93f, 0.93f, 0.90f), new Color(0.05f, 0.05f, 0.05f), 4));
+            w.Road[RoadSub.Sidewalk] = Make("Sidewalk", Color.white, 0.08f, 0f, ProcTex.Grain(128, new Color(0.60f, 0.58f, 0.54f), new Color(0.74f, 0.72f, 0.67f), 3, 15, 0.05f));
+            w.Road[RoadSub.Planter] = Make("Planter", Color.white, 0.04f, 0f, ProcTex.Patchy(128, new Color(0.18f, 0.30f, 0.08f), new Color(0.30f, 0.42f, 0.13f), new Color(0.36f, 0.27f, 0.16f), 16));
+            w.Road[RoadSub.Drain] = Make("Drain", Color.white, 0.10f, 0f, ProcTex.Grain(128, new Color(0.26f, 0.26f, 0.26f), new Color(0.36f, 0.36f, 0.35f), 3, 17, 0.05f));
             w.TerrainLush = Make("TerrainLush", Color.white, 0.04f, 0f, ProcTex.Patchy(256, new Color(0.16f, 0.28f, 0.09f), new Color(0.30f, 0.40f, 0.13f), new Color(0.36f, 0.27f, 0.16f), 21));
             w.TerrainDry = Make("TerrainDry", Color.white, 0.04f, 0f, ProcTex.Patchy(256, new Color(0.46f, 0.35f, 0.22f), new Color(0.58f, 0.46f, 0.30f), new Color(0.30f, 0.36f, 0.14f), 22));
             w.Prop[PropSub.Wall] = Make("PropWall", new Color(0.80f, 0.74f, 0.64f), 0.08f, 0f, null);
@@ -125,6 +131,18 @@ namespace ARO.World
                     px[y * size + x] = new Color32(Cb(c.r + s), Cb(c.g + s), Cb(c.b + s), 255);
                 }
             return Finish(px, size, "ProcGrain" + seed, keepReadable);
+        }
+
+        /// <summary>Bands of two colours across the texture's V direction (a painted kerb: with the road's 4 m texture tile, `bands` = 4 gives 1 m stripes along the road).</summary>
+        public static Texture2D Stripes(int size, Color a, Color b, int bands)
+        {
+            var px = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                var c = ((y * bands / size) & 1) == 0 ? a : b;
+                for (int x = 0; x < size; x++) px[y * size + x] = new Color32(Cb(c.r), Cb(c.g), Cb(c.b), 255);
+            }
+            return Finish(px, size, "ProcStripes" + bands, false);
         }
 
         /// <summary>Large soft patches of a second colour over a two-colour base (grass and soil).</summary>

@@ -40,6 +40,7 @@ namespace ARO.NetCore
                     if (p.edgeBarrier != "none" && p.edgeBarrier != "guardrail") e.Add("profile '" + p.id + "': edgeBarrier must be none or guardrail");
                     if (p.camberPercent < 0f || p.camberPercent > 6f) e.Add("profile '" + p.id + "': camberPercent must be 0..6");
                     if (p.ditchDepth < 0f || p.ditchDepth > 1.5f || p.ditchWidth < 0.5f || p.ditchWidth > 8f) e.Add("profile '" + p.id + "': ditch size out of range");
+                    ValidateE1(p, e);
                 }
 
             // terrain
@@ -90,6 +91,57 @@ namespace ARO.NetCore
 
             if (spline != null) ValidateAlongRoute(spec, spline, profileIds, knownProps, e);
             return e;
+        }
+
+        static readonly string[] SymbolKinds = { "zebra", "stop_line", "yield", "arrow_straight", "arrow_left", "arrow_right", "bay" };
+
+        /// <summary>The E1 cross-section fields of one profile: ranges, and the combinations that make no sense (a walkway without a kerb, a barrier on a kerbed edge).</summary>
+        static void ValidateE1(RoadProfileSpec p, List<string> e)
+        {
+            string tag = "profile '" + p.id + "'";
+            if (p.kerbHeight < 0f || p.kerbHeight > 0.20f) e.Add(tag + ": kerbHeight must be 0..0.20 m (a mountable kerb)");
+            else if (p.kerbHeight > 0.001f && p.kerbHeight < 0.06f) e.Add(tag + ": kerbHeight must be 0 (none) or 0.06..0.20 m");
+            if (p.kerbPaint != "none" && p.kerbPaint != "black_white") e.Add(tag + ": kerbPaint must be none or black_white");
+            if (p.sidewalkWidth < 0f || p.sidewalkWidth > 6f) e.Add(tag + ": sidewalkWidth must be 0..6 m");
+            if (p.drainWidth < 0f || p.drainWidth > 1.2f) e.Add(tag + ": drainWidth must be 0..1.2 m");
+            if ((p.sidewalkWidth > 0.001f || p.drainWidth > 0.001f) && p.kerbHeight <= 0.001f) e.Add(tag + ": a walkway or gutter needs kerbHeight > 0");
+            if (p.kerbHeight > 0.001f && p.edgeBarrier != "none") e.Add(tag + ": a kerbed edge cannot also carry a guardrail");
+            if (p.medianStyle != "jersey" && p.medianStyle != "planter" && p.medianStyle != "painted") e.Add(tag + ": medianStyle must be jersey, planter or painted");
+            else if (p.medianStyle != "jersey" && p.medianWidth < 0.9f && p.medianWidth > 0.01f) e.Add(tag + ": a planter or painted median needs medianWidth of at least 0.9 m");
+            if (!string.IsNullOrEmpty(p.roadClass) && !RoadClasses.IsKnown(p.roadClass)) e.Add(tag + ": unknown roadClass '" + p.roadClass + "' (expressway, arterial, collector, local, lane, service)");
+        }
+
+        static void ValidateSymbols(RouteSpec spec, List<JunctionSpec> junctions, float mainLength, List<string> e)
+        {
+            if (spec.symbols == null) return;
+            var seen = new HashSet<string>();
+            var sections = spec.profiles != null ? spec.profiles.Where(p => p != null && !string.IsNullOrEmpty(p.id)).GroupBy(p => p.id).ToDictionary(g => g.Key, g => g.First()) : new Dictionary<string, RoadProfileSpec>();
+            foreach (var y in spec.symbols)
+            {
+                if (y == null) { e.Add("a pavement symbol is null"); continue; }
+                string tag = "symbol '" + y.id + "'";
+                if (string.IsNullOrEmpty(y.id) || !seen.Add(y.id)) e.Add("a pavement symbol id is missing or duplicate");
+                if (!SymbolKinds.Contains(y.kind)) e.Add(tag + ": kind must be one of " + string.Join(", ", SymbolKinds));
+                if (y.side != "right" && y.side != "left" && y.side != "both") e.Add(tag + ": side must be right, left or both");
+                else if (y.side == "both" && y.kind != "zebra" && y.kind != "stop_line") e.Add(tag + ": side 'both' is for zebra crossings and stop lines only");
+                if (y.lane < 0 || y.lane > 4) e.Add(tag + ": lane must be 0..4");
+                if (y.length < 0f || y.length > 30f) e.Add(tag + ": length must be 0..30 m");
+                if (y.count < 1 || y.count > 40) e.Add(tag + ": count must be 1..40");
+                if (y.kind.StartsWith("arrow") && y.lane == 0) e.Add(tag + ": an arrow belongs to one lane (lane 1..4)");
+                float corridorLength = mainLength; string corridorProfile = null;
+                if (!string.IsNullOrEmpty(y.corridor) && y.corridor != spec.routeId)
+                {
+                    var j = junctions.FirstOrDefault(x => x.id == y.corridor);
+                    if (j == null) { e.Add(tag + ": corridor '" + y.corridor + "' is neither the main road nor a junction"); continue; }
+                    corridorLength = j.length; corridorProfile = j.profile;
+                }
+                if (y.s < 3f || y.s > corridorLength - 3f) e.Add(tag + ": s must lie inside its corridor (3 m from the ends)");
+                if (corridorProfile != null && sections.TryGetValue(corridorProfile, out var pr))
+                {
+                    if (y.lane > pr.lanesPerDirection) e.Add(tag + ": lane " + y.lane + " does not exist on profile '" + pr.id + "'");
+                }
+                else if (corridorProfile == null && y.lane > 0 && spec.profiles != null && spec.profiles.All(pr2 => pr2.lanesPerDirection < y.lane)) e.Add(tag + ": lane " + y.lane + " does not exist on any profile of this route");
+            }
         }
 
         static void ValidateAlongRoute(RouteSpec spec, RoadSpline spline, HashSet<string> profileIds, ISet<string> knownProps, List<string> e)
@@ -163,6 +215,7 @@ namespace ARO.NetCore
                 if (!string.IsNullOrWhiteSpace(r.zones))
                     foreach (var z in r.zones.Split(',')) if (!RouteVocab.TryZone(z, out _)) e.Add(tag + ": unknown zone '" + z.Trim() + "'");
             }
+            ValidateSymbols(spec, junctions, L, e);
             seen.Clear();
             foreach (var p in spec.props ?? new PropPlacementSpec[0])
             {

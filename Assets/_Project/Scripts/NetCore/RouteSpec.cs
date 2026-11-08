@@ -46,6 +46,33 @@ namespace ARO.NetCore
         public string edgeBarrier = "none";     // none | guardrail (outer edges)
         public float ditchWidth = 2.0f, ditchDepth = 0.4f;
         public float laneLineDash = 3f, laneLineGap = 9f;
+
+        // ---- E1 cross-section elements (docs/KANO_TRANSPORT_EXPANSION_PLAN.md section 5.2). Every field is optional and its default means "not there": a profile that sets none of them builds
+        // exactly the geometry it built before E1 (the golden master of every existing route proves it).
+        public string roadClass = "";           // "" | expressway | arterial | collector | local | lane | service: the road-class catalogue (RoadClasses) as data; informational for the generator, used by tools and the validator
+        public float kerbHeight = 0f;           // > 0: a mountable kerb (sloped face) at the outer paved edge, 0.06..0.20 m high. 0 = none
+        public string kerbPaint = "none";       // none | black_white (the painted kerb of Nigerian urban roads)
+        public float sidewalkWidth = 0f;        // paved walkway beyond the kerb at kerb-top height, 0..6 m. Needs kerbHeight > 0
+        public float drainWidth = 0f;           // a concrete gutter channel between the paved shoulder and the kerb, 0..1.2 m. Needs kerbHeight > 0
+        public string medianStyle = "jersey";   // jersey (the raised concrete median with a barrier, as before) | planter (soil and planting inside a kerb rim, no barrier) | painted (a low paved island with a painted kerb rim, no barrier)
+    }
+
+    /// <summary>
+    /// A pavement symbol painted on one corridor: arrows, zebra crossings, stop lines, yield triangles, parking and loading bays (RB-12). The symbol is anchored at station s of its corridor.
+    /// Right-hand carriageway lanes carry traffic towards increasing s, left-hand lanes towards decreasing s; arrows and yield triangles point the way the lane flows.
+    /// </summary>
+    [Serializable]
+    public class MarkingSymbolSpec
+    {
+        public string id;
+        public string kind;                     // zebra | stop_line | yield | arrow_straight | arrow_left | arrow_right | bay
+        public string corridor = "";            // "" = the main road; otherwise the id of a junction (side road)
+        public float s;                         // station along that corridor (the centre of a zebra crossing, the START of an arrow, the stop line or the first bay line)
+        public string side = "right";           // right | left | both (both: zebra and stop line only)
+        public int lane = 0;                    // 1 = the lane nearest the median or centre line; 0 = every lane of that side (zebra, stop_line, yield)
+        public float length = 0f;               // along the road: zebra depth (default 3 m), arrow length (default 4 m), bay spacing (default 2.5 m); 0 = the default
+        public int count = 1;                   // bay: number of bays
+        public bool yellow;                     // paint colour (white unless true)
     }
 
     /// <summary>A bridge between two route distances. The terrain dips into a valley under it, the deck gets parapets and a slab underside.</summary>
@@ -136,6 +163,7 @@ namespace ARO.NetCore
         public PropPlacementSpec[] props;
         public TrafficSpec traffic;
         public WaypointSpec[] waypoints;
+        public MarkingSymbolSpec[] symbols;     // optional (E1): pavement symbols; null = none
     }
 
     public enum Zone { Urban, Commercial, Industrial, Rural, Highway }
