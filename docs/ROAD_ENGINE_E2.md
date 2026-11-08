@@ -36,7 +36,7 @@ These use the **placeholder dev props** of the game (grey boxes). They are layou
 | E1/E2 corridor digest (road, plates, props, terrain) | `golden/e1_streets.sha256` |
 | What `SitePlateTests` proves | placement and heading, local/world round trip, signed distance, yaw and height offset, terrain flattening and blending, ground height, exclusion, cell and kerb ownership by chunk (areas add up), entrance gaps, painted kerb, bay/hatch/arrow/line marks, props in the right chunk and far from the main road, dropped road kerb, validation of 15 kinds of bad plate, overlap and on-road refusal, text face defaults and catalogue labels |
 | Furnishing of the two sites | every solid footprint lies inside its plate and no two overlap (`KanoE1RouteTests`) |
-| In-game (real WebGL build, software GL) | `tools/webgl-e1.js` now has 14 places incl. the yard and the terminal (chase + overhead/bumper, day + night); `?smoke=drive&route=ng-kano-e1-streets&site=site_yard` starts the truck on a plate; CI lighting job; **not yet read** |
+| In-game (real WebGL build, software GL) | **run 317: all checks passed** (the truck stands on the yard and the terminal, no exception, nothing left the world); the pictures show the yard and the terminal with their marks and the grey placeholder props, by day and by night (the plate concrete reads very pale; the real assets are not built) |
 
 ## Known limits
 

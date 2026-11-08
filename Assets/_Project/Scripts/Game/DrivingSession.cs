@@ -69,7 +69,8 @@ namespace ARO.Game
                         Debug.Log("[Smoke] starting on site plate " + siteId);
                         break;
                     }
-            Vehicle = TruckFactory.Create(def, (at ?? start) + Vector3.up * 1.5f, facing ?? Quaternion.LookRotation(dir), _body, _wheel);
+            _spawnRot = facing ?? Quaternion.LookRotation(dir);
+            Vehicle = TruckFactory.Create(def, (at ?? start) + Vector3.up * 1.5f, _spawnRot, _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             // Freeze the vehicle until the streamer has built the ground under it; otherwise it drops through the world.
@@ -146,7 +147,7 @@ namespace ARO.Game
             }
         }
 
-        float _freezeAt = -1f; int _freezeTries;
+        float _freezeAt = -1f; int _freezeTries; Quaternion _spawnRot = Quaternion.identity;
         /// <summary>
         /// Test hook (?smoke=drive&hold=1 only): stop the truck where it settled so the lighting screenshots are reproducible. The truck is dropped onto the road
         /// and on a slow software-GL frame rate it can roll onto its side (seen in a Medium-quality run), so it is only frozen when it is upright and nearly still;
@@ -167,7 +168,17 @@ namespace ARO.Game
                 return;
             }
             _freezeAt = -1f;
-            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; rb.constraints = RigidbodyConstraints.FreezeAll;
+            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+            // Reproducible pose (CI runs 306, 309, 315 and 317 on identical lighting code: the strict noon check read 77.2 and 74.4 in two runs and 91 in two others, with the same road surface mean and the
+            // frozen truck 0.2 to 1.4 m apart): the held truck is put back on its spawn point and heading, whatever the suspension did meanwhile. Smoke hold only; the height follows the ground change.
+            if (_route != null && _route.Model != null && (new Vector2(t.position.x - _spawnPos.x, t.position.z - _spawnPos.z).magnitude > 0.02f || Quaternion.Angle(t.rotation, _spawnRot) > 0.5f))
+            {
+                float dy = _route.GroundY(_spawnPos.x, _spawnPos.z) - _route.GroundY(t.position.x, t.position.z);
+                var before = t.position; var yawBefore = t.eulerAngles.y;
+                t.SetPositionAndRotation(new Vector3(_spawnPos.x, t.position.y + dy, _spawnPos.z), Quaternion.Euler(0f, _spawnRot.eulerAngles.y, 0f));
+                Debug.Log($"[Drive] smoke hold: pose snapped to the spawn point (moved {Vector2.Distance(new Vector2(before.x, before.z), new Vector2(_spawnPos.x, _spawnPos.z)):F2} m, turned {Mathf.DeltaAngle(yawBefore, _spawnRot.eulerAngles.y):F1} deg)");
+            }
+            rb.constraints = RigidbodyConstraints.FreezeAll;
             var p = t.position;
             if (ARO.Core.RuntimeSettings.TestHourRate > 0f) ARO.Core.RuntimeSettings.TestHourRateT0 = Time.unscaledTime;      // the filmed dusk or dawn starts now
             Debug.Log($"[Drive] smoke hold: vehicle frozen at ({p.x:F1},{p.y:F2},{p.z:F1}) yaw={t.eulerAngles.y:F0} upright={upright:F2} tries={_freezeTries} for reproducible screenshots");

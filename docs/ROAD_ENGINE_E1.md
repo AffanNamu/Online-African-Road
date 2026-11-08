@@ -34,7 +34,7 @@ The test corridor `Assets/_Project/Resources/Routes/ng-kano-e1-streets.route.jso
 | Golden master (existing routes unchanged) | 3 passed, hashes untouched |
 | E1 corridor golden digest | `tests/NetCore.Tests/golden/e1_streets.sha256` (regenerate only for a deliberate change) |
 | Unity edit-mode test for the E1 mesh conversion and the extra material slots | written; runs in CI (Unity cannot be compiled locally) |
-| In-game (real WebGL build, software GL): `tools/webgl-e1.js` (8 places, day and night, chase and bumper views) and a drive-through (`webgl-drive.js` with `DRIVE_QUERY`) | wired into CI; **see the CI record below**; the pictures still have to be looked at |
+| In-game (real WebGL build, software GL): `tools/webgl-e1.js` (8 places in run 309, 15 in run 317, day and night) and a drive-through (`webgl-drive.js` with `DRIVE_QUERY`) | **run 309: 40 of 40 checks; run 317: 75 of 75**; pictures looked at (planter median, painted kerb, walkways, collector street, night lamps look as intended in software GL); details in `NIGHT_VERIFICATION_RESULTS.md` |
 
 ## Known limits (honest list)
 

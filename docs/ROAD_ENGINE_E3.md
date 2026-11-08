@@ -20,7 +20,7 @@ Built 2026-11-08 after E1 and E2, on the owner's instruction "start building the
 | What `JunctionFormsTests` proves | version gate (1 refuses the new fields, 2 accepts, 3 refused); four-way geometry, opposite stub profile and length, both edge-line gaps, referencing `id_left` from symbols, props and sites; spacing rule and the overlap rule; median-opening rules (version, flag, jersey, undivided) and the geometry (no planter or rim in the opening, carriageway level, faces up, mesh valid, painted median too); fillet polygon (tangent points, area = R squared times (1 - pi/4), within 3 to 10 percent for the 6-segment arc), asphalt added in the mesh (4 corners for a four-way, 2 for a T), gap growth, height on the road surface, 4 kinds of bad fillet refused |
 | The existing test `RouteSpecTests ... schemaVersion = 2 is rejected` | **changed deliberately** to test version 99: version 2 is now a valid version (this is the stage the proposal calls "a new schemaVersion"); the test still proves that an unknown version is refused |
 | Test corridor | `ng-kano-e1-streets` is now schemaVersion 2 and has `j_cross`: a four-way crossing (190 m south, 150 m north) on the arterial with a median opening and a zebra crossing on each cross-street stub |
-| In-game (real WebGL build) | `tools/webgl-e1.js` place `cross-opening`; CI lighting job; **not yet read** |
+| In-game (real WebGL build) | run 317: the corridor with the four-way crossing loads and the checks pass; **the median cut is not clearly visible in the frames taken at start 372 m** (needs a closer view); the flare (fillet) is only unit-tested |
 
 ## Known limits
 

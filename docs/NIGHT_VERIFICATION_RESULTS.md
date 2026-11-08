@@ -36,3 +36,21 @@ Sources: run 42483971653 (#306, commit `ee1fa0a`, attempt 2) for the log lines, 
 | 315 (`aa8ea92`, E1 to E4, label fix) | Unity edit-mode tests **passed**; build and browser jobs were still running when this was written | |
 
 The `UnityLinker` crash has now hit two of five builds. A re-run passed once. If it keeps happening the build step needs a retry; that is a workflow change I have not made.
+
+## Update: run 42501692847 (#317, commit `afd4ff2`: the high-beam fix, E1 to E4), read 2026-11-08 evening
+
+**The whole run is green** (every job; the lighting job's enforced steps passed this time). Night suite **37 of 40**, the E1 to E3 corridor suite **75 of 75** (15 places, day and night).
+
+| Point | Result in run 317 |
+|---|---|
+| 3 High beam | **fixed.** The game logs `highBeamLamps=2` and returns to 0 when K is pressed again; the far road bands went from 126.4 (low beam) to **147.9** (high beam) (the first design gave 126.7 to 98.6); "the whole frame is not darker": pass. In the bumper-view pair (`webgl-light-nt-sheet-beams.png`) the high beam lights a visibly larger and brighter patch than the low beam; the difference is **real but modest** (about 17 percent more on the far bands), the pictures are software GL. |
+| 4 Indicators | the "lamps flash" checks (script bug) now pass; the one remaining failure is **"left indicator (Q): the picture shows amber lamps in some frames"**: the left lamp is 2 to 3 amber pixels in this view and the check wanted 4. The game's own log shows 42 left edges and 0 right. The floor is lowered to 2 pixels (a dark frame is 0 to 1; nothing else on the road is that amber). This is a change of a threshold of my own harness to the measured size of one rear lamp, stated here so it is visible. |
+| 5 Beacons | still 1 pixel at best: **my scenario was aimed wrongly.** The route's telecom masts were computed (they stand 58 to 73 m BESIDE the road, at s = 13,782 and every 2 km): 70 m before the mast it is out of the picture (the sheet shows an ordinary lamp post), 150 m before it the beacons were 1 to 4 pixels. The view now starts 110 m before the mast (about 30 degrees off the heading, inside the frame). Not yet re-run. |
+| E1 to E3 in the game | 75 of 75 checks: the corridor loaded with 6 junctions, the truck stood on real ground in the **yard and the terminal plates** (their colliders work), nothing threw, nothing left the world. In the pictures (`webgl-light-e1-sheet.png`, 15 places): the planter median with the black and white painted kerb rim, walkways, the collector with kerb and shops; the yard (pale concrete plate, two warehouse boxes, mast, arrows, stop line) and the terminal (arrows, yellow hatch, shelters in the distance) seen from the chase and the overhead camera, by day and by night, the headlights lighting the plate at night. **Not seen clearly:** the planter median being cut across the four-way crossing (the frames at start 372 m show the median still continuous in the distance; a closer view at 400 m is needed), and the pavement text of the board props. One thing to look at: a flat yellow band at the foot of the chase frame at the arterial to collector change (`local-mouth`). The plate concrete reads very pale. |
+
+**The strict noon check again.** Run 315 failed it (road mean **74.4** against 80, the same signature as run 306's 77.2); runs 309 and 317 passed it (**91.3** in 317). Four runs, two failures, identical lighting code. In the failing runs the *road surface* mean is the same as in the passing ones (92 to 93) while the wider "road" region reads 15 lower, which says the region contains different things, and the frozen truck is 0.2 to 1.4 m apart from hour to hour inside one run. The held truck is now **snapped to its spawn point and heading before it is frozen** (`DrivingSession.FreezeForScreenshots`, smoke hold only, the log says how far it moved). This is a repeatability fix for the harness; whether it cures the noon outlier will be known after several runs. The threshold is unchanged.
+
+| Run (commit) | Result | Cause |
+|---|---|---|
+| 315 (`aa8ea92`) | failure | **only** the lighting job's first enforced step: "noon chase road: mean 74.4 is below 80" (as above); Unity tests, build, browser and everything else green |
+| 317 (`afd4ff2`) | **success** | none |

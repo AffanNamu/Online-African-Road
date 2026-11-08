@@ -39,7 +39,7 @@ function check(name, ok, detail) { results.push({ name, ok: !!ok, detail }); con
 const PLACES = [
   { id: 'arterial-arrows', start: 90, hour: 'noon', what: 'planter median in a painted kerb, walkways, gutters, lane arrows' },
   { id: 'zebra', start: 262, hour: 'noon', what: 'zebra crossing and stop lines on the arterial' },
-  { id: 'cross-opening', start: 372, hour: 'noon', what: 'E3 four-way crossing on the arterial: the planter median is cut across the junction, kerbs dropped on both sides, zebra crossings on the cross street' },
+  { id: 'cross-opening', start: 398, hour: 'noon', what: 'E3 four-way crossing on the arterial: the planter median is cut across the junction, kerbs dropped on both sides, zebra crossings on the cross street' },
   { id: 'turn-arrows', start: 480, hour: 'noon', what: 'left and right turn arrows in two lanes' },
   { id: 'class-change', start: 700, hour: 'noon', what: 'arterial narrowing to the collector (the run transition)' },
   { id: 'local-mouth', start: 800, hour: 'noon', what: 'collector with a kerb dropped at the local street on the right' },
