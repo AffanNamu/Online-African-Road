@@ -15,8 +15,16 @@ namespace ARO.World
         public Transform vehicle;
         public Material[] roadMaterials;
         [Range(0, 1)] public float rain, target;
+        /// <summary>Cloud cover without rain (a cloudy night): darkens the sky, moon and ambient through the lighting model's overcast. 0 = unchanged behaviour.</summary>
+        [Range(0, 1)] public float cloud;
         public float changeSpeed = 0.05f, dryingSpeed = 0.01f;
         public float Wetness { get; private set; }
+
+        /// <summary>Test pages only (?weather=clear|cloudy|rain|wet, see GameBootstrap): start in a named weather. The wet state keeps its wetness (no drying), so screenshots are reproducible. Grip and physics are not touched.</summary>
+        public void ApplyTestState(ARO.NetCore.WeatherLook.Preset p)
+        {
+            rain = target = p.Rain; cloud = p.Cloud; Wetness = p.Wetness; if (p.Name == "wet") dryingSpeed = 0f;
+        }
 
         ParticleSystem _ps; ParticleSystem.EmissionModule _em;
         Color[] _baseColor; float[] _baseSmooth;
@@ -62,7 +70,7 @@ namespace ARO.World
             var cam = Camera.main;
             if (cam != null) _ps.transform.position = cam.transform.position + Vector3.up * 14f;
             _em.rateOverTime = 4500f * rain;
-            if (timeOfDay != null) timeOfDay.overcast = Mathf.Clamp01(rain * 1.1f);
+            if (timeOfDay != null) timeOfDay.overcast = ARO.NetCore.WeatherLook.Overcast(cloud, rain);
 
             for (int i = 0; i < roadMaterials.Length; i++) Apply(roadMaterials[i], _baseColor[i], _baseSmooth[i], Wetness);
             if (vehicle != null && vehicle.TryGetComponent(out VehicleController v))

@@ -34,6 +34,8 @@ namespace ARO.Vehicles
         public float SpeedKmh { get; private set; }
         public bool LightsOn { get; private set; }
         public int Indicator { get; private set; }          // -1 left, 0 off, 1 right
+        public bool HighBeam { get; private set; }          // only works with the lights on (switching the lights off dips the beam)
+        public bool Hazard { get; private set; }            // both indicators flash together
         public bool HornActive { get; private set; }
         public bool OutOfFuel => fuelL <= 0f;
         public bool BrakeLit { get; private set; }
@@ -53,7 +55,10 @@ namespace ARO.Vehicles
         float _lastVy;
 
         public void SetInput(IVehicleInput input) => _input = input;
-        public void SetLights(bool on) => LightsOn = on;
+        public void SetLights(bool on) { LightsOn = on; if (!on) HighBeam = false; }
+        /// <summary>High beam on or off (it needs the lights on). The driver uses K; this is for the code and the test pages.</summary>
+        public void SetHighBeam(bool on) { HighBeam = on && LightsOn; }
+        public void SetHazard(bool on) { Hazard = on; }
 
         /// <summary>True for a networked puppet: physics and input are disabled, state comes from the owner.</summary>
         public bool IsRemote { get; private set; }
@@ -67,9 +72,9 @@ namespace ARO.Vehicles
             foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false;
         }
 
-        public void ApplyRemoteState(bool lights, int indicator, bool brake, bool reverse, bool horn, float speedKmh, float damage)
+        public void ApplyRemoteState(bool lights, int indicator, bool brake, bool reverse, bool horn, float speedKmh, float damage, bool highBeam = false, bool hazard = false)
         {
-            LightsOn = lights; Indicator = indicator; BrakeLit = brake; HornActive = horn;
+            LightsOn = lights; Indicator = indicator; BrakeLit = brake; HornActive = horn; HighBeam = lights && highBeam; Hazard = hazard;
             CurrentGear = reverse ? -1 : 1; SpeedKmh = speedKmh; damagePct = damage;
         }
 
@@ -123,7 +128,9 @@ namespace ARO.Vehicles
             if (_input == null) return;
             _state = _input.Read();
             if (SmokeLog) { if (_state.Throttle > 0.1f && _prevThrottle <= 0.1f) Debug.Log($"[Drive] throttle on t={Time.time.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}"); _prevThrottle = _state.Throttle; }   // browser tests anchor their game-time windows to the real throttle press
-            if (_state.LightsToggled) LightsOn = !LightsOn;
+            if (_state.LightsToggled) { LightsOn = !LightsOn; if (!LightsOn) HighBeam = false; }
+            if (_state.HighBeamToggled) { if (!LightsOn) { LightsOn = true; HighBeam = true; } else HighBeam = !HighBeam; }
+            if (_state.HazardToggled) Hazard = !Hazard;
             if (_state.IndicatorLeftToggled) Indicator = Indicator == -1 ? 0 : -1;
             if (_state.IndicatorRightToggled) Indicator = Indicator == 1 ? 0 : 1;
             HornActive = _state.HornHeld;

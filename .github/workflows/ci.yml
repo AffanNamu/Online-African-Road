@@ -313,6 +313,33 @@ jobs:
         if: always()
         continue-on-error: true
         run: node tools/webgl-lighting.js --compare webgl-light-metrics.json webgl-light-medium-metrics.json
+      - name: "Night environment study - regions, lamps on and off, weather, high beam, hazards and the Medium tier, driving in the real game at night (informational; docs/NIGHT_LIGHTING_PLAN.md section 9)"
+        if: always()
+        continue-on-error: true
+        run: |
+          set +e
+          # run NAME QUALITY EXTRA: one night frame (chase view) with the truck frozen at a route distance; the game prints its [Lamp], [Light] and [Weather] lines
+          run() { echo; echo "##### night study: $1"; LIGHT_ONLY=night node tools/webgl-lighting.js Builds/WebGL "webgl-light-night-$1" "$2" "$3" || true; }
+          run depot low ""
+          run residential low "&start=5600"
+          run commercial low "&start=3600"
+          run city-road low "&start=8000"
+          run expressway low "&start=11500"
+          run service-area low "&start=20500"
+          run open-expressway-dark low "&start=24000"
+          run village low "&start=34000"
+          run old-road-dark low "&start=35000"
+          run commercial-lamps-off low "&start=3600&lamps=off"
+          run expressway-lamps-off low "&start=11500&lamps=off"
+          run commercial-rain low "&start=3600&weather=rain"
+          run commercial-cloudy low "&start=3600&weather=cloudy"
+          run commercial-wet low "&start=3600&weather=wet"
+          run expressway-rain low "&start=11500&weather=rain"
+          run open-expressway-rain low "&start=24000&weather=rain"
+          run open-expressway-highbeam low "&start=24000&highbeam=1"
+          run commercial-hazard low "&start=3600&hazard=1"
+          run commercial-medium medium "&start=3600"
+          run commercial-rain-medium medium "&start=3600&weather=rain"
       - uses: actions/upload-artifact@v4
         if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }

@@ -64,7 +64,7 @@ changes the camera. (The direct `C` read in `DrivingSession` was removed; it was
 | Camera | `C`, `Shift`, `1` to `8` |
 
 No current control uses a digit. The planned driving controls (gear selection, high beams, hazard lights, wipers, pause, settings) must **not** use `C`, `Shift+C` or the digits
-`1` to `8`; suggested keys when they are built: `R` / `F` (gear up / down), `K` (high beams), `T` (hazards), `V` (wipers). `NoCameraKeyIsAlsoAFixedDrivingKey` (xunit and EditMode) fails if a
+`1` to `8`; suggested keys when they are built: `R` / `F` (gear up / down), `V` (wipers); `K` (high beams) and `T` (hazards) are built (2026-11-08, `KeyboardVehicleInput`; gamepad d-pad down and left). `NoCameraKeyIsAlsoAFixedDrivingKey` (xunit and EditMode) fails if a
 camera key is also one of the fixed driving keys.
 
 **Rebinding**: the camera keys are declared in one place, `ARO.Input.CameraBindings` (`Next`, the two `Shift` keys, `Direct[0..7]`), and read through it

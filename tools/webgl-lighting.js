@@ -120,7 +120,11 @@ async function main() {
     if (postCheck) console.log('  ' + postCheck); if (hold) console.log('  ' + hold);
     console.log('  ' + (render || 'NO [Render] LINE').slice(0, 520)); console.log('  ' + (light || 'NO [Light] hour LINE').slice(0, 520));
     if (grade) console.log('  ' + grade); if (head) console.log('  ' + head);
-    lines[name] = { render, light, grade, head, postCheck, hold };
+    // the night environment (docs/NIGHT_LIGHTING_PLAN.md): what the street-light system built and drew, the weather it was given, the headlight beam
+    const lampInit = find(/^\[Lamp\] init/), lampState = [...logs].reverse().find(l => /^\[Lamp\] level=/.test(l)), beamLine = [...logs].reverse().find(l => /^\[Light\] beam=/.test(l)), weatherLine = find(/^\[Weather\]/);
+    for (const l of [lampInit, lampState, beamLine, weatherLine]) if (l) console.log('  ' + l.slice(0, 520));
+    for (const l of logs.filter(l => /^\[Lamp\].*(UNAVAILABLE|not found)/.test(l))) console.log('  WARNING ' + l.slice(0, 300));
+    lines[name] = { render, light, grade, head, postCheck, hold, lampInit, lampState, beamLine, weatherLine };
     if (!render || !/colorSpace=(Gamma|Linear)/.test(render)) failures.push(`${name}: the [Render] line does not report the colour space`);
     if (!light) failures.push(`${name}: no [Light] line`);
     else {

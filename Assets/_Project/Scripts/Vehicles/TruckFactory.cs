@@ -82,6 +82,14 @@ namespace ARO.Vehicles
             lights.leftEmit = left.ToArray(); lights.rightEmit = right.ToArray(); lights.headEmit = new Renderer[0];
         }
 
+        static Material _emitTemplate; static bool _emitLooked;
+        /// <summary>The unlit lamp material (Resources/Lighting/ARO_LampEmit, shader ARO/LampEmit), or null when it is not in the build.</summary>
+        static Material EmitTemplate()
+        {
+            if (!_emitLooked) { _emitLooked = true; var m = Resources.Load<Material>("Lighting/ARO_LampEmit"); _emitTemplate = m != null && m.shader != null && m.shader.isSupported ? m : null; }
+            return _emitTemplate;
+        }
+
         static Renderer Emitter(GameObject root, Material baseMat, Vector3 pos, Vector3 scale)
         {
             var g = GameObject.CreatePrimitive(PrimitiveType.Cube); Object.Destroy(g.GetComponent<Collider>());
@@ -89,6 +97,8 @@ namespace ARO.Vehicles
             var r = g.GetComponent<Renderer>();
             // The primitive's default material uses the built-in Standard shader, which a URP player build does not contain (renders magenta).
             // Derive from the (URP) body material instead.
+            var emit = EmitTemplate();
+            if (emit != null) { var m = new Material(emit) { name = "ARO_VehicleLamp" }; m.SetColor("_BaseColor", new Color(0.25f, 0.03f, 0.03f)); r.sharedMaterial = m; return r; }      // unlit lamp material: does not depend on the stripped _EMISSION variant of Lit
             if (baseMat != null) { var m = new Material(baseMat); m.color = new Color(0.25f, 0.03f, 0.03f); if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", m.color); r.sharedMaterial = m; }
             r.material.EnableKeyword("_EMISSION"); return r;
         }

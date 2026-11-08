@@ -13,6 +13,8 @@ namespace ARO.World
         public readonly Material[] Road = new Material[RoadSub.Count];
         public readonly Material[] Prop = new Material[PropSub.Count];
         public Material TerrainLush, TerrainDry;
+        /// <summary>True when the three emissive prop slots (lamp, glow, beacon) use the unlit ARO/LampEmit material that StreetLightSystem drives; false when they are the plain lit fallback.</summary>
+        public bool Emissive { get; private set; }
 
         public Material[] WeatherSet => new[] { Road[RoadSub.Asphalt], Road[RoadSub.Shoulder] };
 
@@ -52,7 +54,18 @@ namespace ARO.World
             w.Prop[PropSub.Lamp] = Make("PropLamp", new Color(0.78f, 0.76f, 0.70f), 0.35f, 0f, null);
             w.Prop[PropSub.Glow] = Make("PropGlow", new Color(0.30f, 0.30f, 0.28f), 0.60f, 0f, null);
             w.Prop[PropSub.Beacon] = Make("PropBeacon", new Color(0.35f, 0.05f, 0.04f), 0.40f, 0f, null);
+            var emit = Resources.Load<Material>("Lighting/ARO_LampEmit");
+            if (emit != null && emit.shader != null && emit.shader.isSupported)
+            {   // the real emissive materials: unlit, lit by the lamp factor (StreetLightSystem); these replace the plain fallbacks above
+                EmitSlot(w, PropSub.Lamp, emit, new Color(0.62f, 0.64f, 0.66f)); EmitSlot(w, PropSub.Glow, emit, new Color(0.10f, 0.14f, 0.20f)); EmitSlot(w, PropSub.Beacon, emit, new Color(0.35f, 0.05f, 0.04f));
+                w.Emissive = true;
+            }
             return w;
+        }
+
+        static void EmitSlot(WorldMaterials w, int sub, Material template, Color off)
+        {
+            Kill(w.Prop[sub]); var m = new Material(template) { name = "ARO_PropEmit" + sub }; m.SetColor("_BaseColor", off); m.SetColor("_EmissionColor", Color.black); w.Prop[sub] = m;
         }
 
         public void DestroyAll()

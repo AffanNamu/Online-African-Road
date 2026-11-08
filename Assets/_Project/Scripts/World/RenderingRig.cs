@@ -58,7 +58,7 @@ namespace ARO.World
                       $"post={(PostProcessingActive ? "on" : "off")} ({PostProcessingNote}) pipeline={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.name : "NONE")} " +
                       $"colorSpace={QualitySettings.activeColorSpace} hdr={(UniversalRenderPipeline.asset != null && UniversalRenderPipeline.asset.supportsHDR)} cameraHdr={(_cam != null && _cam.allowHDR)} " +
                       $"additionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.additionalLightsRenderingMode.ToString() : "n/a")} maxAdditionalLights={(UniversalRenderPipeline.asset != null ? UniversalRenderPipeline.asset.maxAdditionalLightsCount : 0)} " +
-                      $"graphicsApi={SystemInfo.graphicsDeviceType} rendererPostProcessData={PostProcessDataState()}");
+                      $"lampLights={Tier.LampLights} lampGlowRange={Tier.LampGlowRange:0} wetEffects={Tier.WetEffects} graphicsApi={SystemInfo.graphicsDeviceType} rendererPostProcessData={PostProcessDataState()}");
         }
 
         /// <summary>Whether the URP renderer has post-process data. Without it the Volume is never drawn (see SceneBuilder.AssignPostProcessData). Read by reflection: "present", "NULL" or why it could not be read.</summary>
@@ -92,6 +92,7 @@ namespace ARO.World
             {
                 urp.shadowDistance = Tier.ShadowDistance; urp.shadowCascadeCount = Tier.ShadowCascades;
                 urp.msaaSampleCount = Tier.MsaaSamples; urp.renderScale = Tier.RenderScale;
+                urp.maxAdditionalLightsCount = Tier.AdditionalLightsPerObject;       // URP's per-object limit of additional lights (headlights plus the pooled street lights): Low 4, Medium 6, High 8
             }
             if (_cam != null) _cam.farClipPlane = Tier.FarClip;
             _noShadowsTest = !string.IsNullOrEmpty(Application.absoluteURL) && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("shadows=off");   // test-only: isolates the shadow contribution in the Medium study

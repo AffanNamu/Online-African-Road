@@ -13,6 +13,8 @@ namespace ARO.Input
         public bool LightsToggled;       // edge: true for one frame
         public bool IndicatorLeftToggled;
         public bool IndicatorRightToggled;
+        public bool HighBeamToggled;     // edge: high beam on or off (K, gamepad d-pad down)
+        public bool HazardToggled;       // edge: hazard lights on or off (T, gamepad d-pad left)
         public bool CameraToggled;       // edge: next camera view (C, gamepad Y, touch button)
         public bool CameraPrevious;      // edge: previous camera view (Shift+C)
         public int CameraSelect;         // edge: 1..8 = that camera view (number keys), 0 = none

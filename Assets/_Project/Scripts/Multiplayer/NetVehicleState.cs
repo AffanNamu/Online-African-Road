@@ -8,10 +8,10 @@ namespace ARO.Multiplayer
     {
         public byte Flags; public sbyte Steer; public ushort Speed; public byte Damage;
 
-        public static NetVehicleState From(bool lights, int indicator, bool horn, bool brake, bool reverse, float steer, float kmh, float damagePct) =>
+        public static NetVehicleState From(bool lights, int indicator, bool horn, bool brake, bool reverse, float steer, float kmh, float damagePct, bool highBeam = false, bool hazard = false) =>
             new NetVehicleState
             {
-                Flags = VehicleNetCodec.PackFlags(lights, indicator, horn, brake, reverse),
+                Flags = VehicleNetCodec.PackFlags(lights, indicator, horn, brake, reverse, highBeam, hazard),
                 Steer = VehicleNetCodec.QuantizeSteer(steer), Speed = VehicleNetCodec.QuantizeSpeed(kmh), Damage = VehicleNetCodec.QuantizeDamage(damagePct)
             };
 

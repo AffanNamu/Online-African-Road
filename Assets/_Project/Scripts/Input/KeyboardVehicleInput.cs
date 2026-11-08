@@ -27,6 +27,8 @@ namespace ARO.Input
                 s.LightsToggled = kb.lKey.wasPressedThisFrame;
                 s.IndicatorLeftToggled = kb.qKey.wasPressedThisFrame;
                 s.IndicatorRightToggled = kb.eKey.wasPressedThisFrame;
+                s.HighBeamToggled = kb.kKey.wasPressedThisFrame;      // K and T are the keys docs/CAMERA.md reserves for high beams and hazards
+                s.HazardToggled = kb.tKey.wasPressedThisFrame;
                 // Camera keys come from CameraBindings (C next, Shift+C previous, 1..8 direct) so they can be rebound in one place.
                 bool shift = kb[CameraBindings.PreviousModifierLeft].isPressed || kb[CameraBindings.PreviousModifierRight].isPressed;
                 if (kb[CameraBindings.Next].wasPressedThisFrame) { if (shift) s.CameraPrevious = true; else s.CameraToggled = true; }
@@ -43,6 +45,8 @@ namespace ARO.Input
                 s.Handbrake |= pad.buttonSouth.isPressed;
                 s.HornHeld |= pad.buttonWest.isPressed;
                 s.LightsToggled |= pad.dpad.up.wasPressedThisFrame;
+                s.HighBeamToggled |= pad.dpad.down.wasPressedThisFrame;
+                s.HazardToggled |= pad.dpad.left.wasPressedThisFrame;
                 s.CameraToggled |= pad.buttonNorth.wasPressedThisFrame;
             }
 

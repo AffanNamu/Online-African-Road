@@ -64,7 +64,7 @@ namespace ARO.Multiplayer
             transform.SetPositionAndRotation(v.transform.position, v.transform.rotation);
             if (Time.unscaledTime < _nextSend) return;
             _nextSend = Time.unscaledTime + 1f / StateHz;
-            var st = NetVehicleState.From(v.LightsOn, v.Indicator, v.HornActive, v.BrakeLit, v.Reversing, 0f, v.SpeedKmh, v.damagePct);
+            var st = NetVehicleState.From(v.LightsOn, v.Indicator, v.HornActive, v.BrakeLit, v.Reversing, 0f, v.SpeedKmh, v.damagePct, v.HighBeam, v.Hazard);
             if (!st.Equals(State.Value)) State.Value = st;
             var id = NetVisualContext.LocalVehicleDefinitionId();
             if (DefinitionId.Value.ToString() != id) DefinitionId.Value = new FixedString32Bytes(id);
@@ -78,7 +78,8 @@ namespace ARO.Multiplayer
             var s = State.Value;
             _puppet.ApplyRemoteState(VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Lights), VehicleNetCodec.IndicatorOf(s.Flags),
                 VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Brake), VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Reverse),
-                VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Horn), VehicleNetCodec.DequantizeSpeed(s.Speed), VehicleNetCodec.DequantizeDamage(s.Damage));
+                VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Horn), VehicleNetCodec.DequantizeSpeed(s.Speed), VehicleNetCodec.DequantizeDamage(s.Damage),
+                VehicleNetCodec.Has(s.Flags, VehicleNetCodec.HighBeam), VehicleNetCodec.Has(s.Flags, VehicleNetCodec.Hazard));
             if (_nameplate != null && _nameplate.gameObject.activeSelf != ARO.Core.RuntimeSettings.ShowPlayerNames) _nameplate.gameObject.SetActive(ARO.Core.RuntimeSettings.ShowPlayerNames);   // the Show Player Names setting
             if (_nameplate != null && Camera.main != null)
                 _nameplate.transform.rotation = Quaternion.LookRotation(_nameplate.transform.position - Camera.main.transform.position);

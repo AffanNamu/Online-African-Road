@@ -157,3 +157,29 @@ public class VehicleLightPolicyTests
         Assert.Equal(8, bits.Select(b => (int)b).Distinct().Count()); Assert.Equal(255, bits.Aggregate(0, (a, b) => a | b));
     }
 }
+
+public class NightTierTests
+{
+    [Fact] public void TheNightBudgetsNeverRiseFromHighToLow()
+    {
+        var l = QualityTiers.Low; var m = QualityTiers.Medium; var h = QualityTiers.High;
+        Assert.True(l.LampLights <= m.LampLights && m.LampLights <= h.LampLights); Assert.True(l.LampGlowRange <= m.LampGlowRange && m.LampGlowRange <= h.LampGlowRange);
+        Assert.True(l.AdditionalLightsPerObject <= m.AdditionalLightsPerObject && m.AdditionalLightsPerObject <= h.AdditionalLightsPerObject);
+        Assert.True(!l.WetEffects || m.WetEffects); Assert.True(!m.WetEffects || h.WetEffects);
+    }
+
+    [Fact] public void EveryTierHasSaneNightValuesAndTheLowTierCostsNoRealLamps()
+    {
+        foreach (var t in QualityTiers.All)
+        {
+            Assert.InRange(t.LampLights, 0, 16); Assert.InRange(t.LampGlowRange, 100f, 1500f); Assert.InRange(t.AdditionalLightsPerObject, 1, 8);
+            Assert.True(t.AdditionalLightsPerObject >= 4, "the two headlights and the lamps near them need at least four lights per object");
+        }
+        Assert.Equal(0, QualityTiers.Low.LampLights);          // the mobile budget: emissive lamps, halos and pools only
+    }
+
+    [Fact] public void ACopyOfATierKeepsTheNightValues()
+    {
+        var c = QualityTiers.High.Clone(); Assert.Equal(8, c.LampLights); Assert.True(c.WetEffects); Assert.Equal(600f, c.LampGlowRange);
+    }
+}

@@ -31,6 +31,7 @@ namespace ARO.Editor
 
             EnsureUrp();
             EnsureSkyGradientMaterial();
+            EnsureLightingMaterials();
             var mats = new
             {
                 good = Mat("RoadGood", new Color(0.16f, 0.16f, 0.17f)),
@@ -147,6 +148,26 @@ namespace ARO.Editor
         /// The gradient sky's material lives in Resources so the player build includes the shader (a shader nothing references is stripped). It is only used when TimeOfDay is asked
         /// for the gradient sky; a missing shader here is reported and nothing else changes.
         /// </summary>
+        /// <summary>
+        /// The night-lighting materials live in Resources for the same reason as the gradient sky: a shader that no asset references is stripped from the player build. ARO/LampEmit (lit faces of lamps, windows,
+        /// beacons and vehicle lamps), ARO/LampGlow (halos, light pools, reflection streaks) and ARO/Puddle (cosmetic standing water). A missing or broken shader is reported and the game keeps its plain materials.
+        /// </summary>
+        static void EnsureLightingMaterials()
+        {
+            Directory.CreateDirectory($"{Root}/Resources/Lighting");
+            foreach (var name in new[] { "LampEmit", "LampGlow", "Puddle" })
+            {
+                var shader = Shader.Find("ARO/" + name);
+                if (shader == null) { Debug.LogWarning($"[Lamp] shader ARO/{name} not found; that night-lighting layer will be unavailable"); continue; }
+                string path = $"{Root}/Resources/Lighting/ARO_{name}.mat";
+                var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (m == null) { m = new Material(shader); AssetDatabase.CreateAsset(m, path); }
+                m.shader = shader; EditorUtility.SetDirty(m);
+                Debug.Log($"[Lamp] material ready (Resources/Lighting/ARO_{name}), shader supported={shader.isSupported}");
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         static void EnsureSkyGradientMaterial()
         {
             var shader = Shader.Find("ARO/SkyGradient");

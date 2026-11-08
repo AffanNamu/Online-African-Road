@@ -131,6 +131,30 @@ namespace ARO.World
             foreach (var r in v.renders) r.SetPropertyBlock(_mpb);
         }
 
+        /// <summary>
+        /// Head and tail lamps on a traffic body: small lit boxes using the shared lamp materials (they glow with the lamp factor, so oncoming traffic is visible from afar at night). The body is a cube scaled to the
+        /// vehicle's size, so each lamp's position and size are divided by it. No colliders, no real lights (the street-light system owns the few real lights there are).
+        /// </summary>
+        static void AddLamps(GameObject body, Vector3 size, TrafficKind kind)
+        {
+            if (StreetLightSystem.TrafficHead == null || StreetLightSystem.TrafficTail == null) return;
+            float track = kind == TrafficKind.Motorcycle ? 0f : size.x * 0.34f; int n = kind == TrafficKind.Motorcycle ? 1 : 2;
+            for (int i = 0; i < n; i++)
+            {
+                float x = n == 1 ? 0f : (i == 0 ? -track : track);
+                Lamp(body, size, StreetLightSystem.TrafficHead, new Vector3(x, size.y * 0.22f - size.y * 0.5f + 0.35f, size.z * 0.5f), new Vector3(0.32f, 0.2f, 0.06f));
+                Lamp(body, size, StreetLightSystem.TrafficTail, new Vector3(x, size.y * 0.30f - size.y * 0.5f + 0.35f, -size.z * 0.5f), new Vector3(0.34f, 0.18f, 0.06f));
+            }
+        }
+
+        static void Lamp(GameObject body, Vector3 size, Material m, Vector3 pos, Vector3 box)
+        {
+            var g = GameObject.CreatePrimitive(PrimitiveType.Cube); Destroy(g.GetComponent<Collider>()); g.name = "Lamp";
+            g.transform.SetParent(body.transform, false);
+            g.transform.localPosition = new Vector3(pos.x / size.x, pos.y / size.y, pos.z / size.z); g.transform.localScale = new Vector3(box.x / size.x, box.y / size.y, box.z / size.z);
+            var r = g.GetComponent<Renderer>(); r.sharedMaterial = m; r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; r.receiveShadows = false;
+        }
+
         View Build(TrafficKind kind)
         {
             Vector3 size = kind == TrafficKind.Truck ? new Vector3(2.5f, 3.0f, 12f) : kind == TrafficKind.Minibus ? new Vector3(2.0f, 2.4f, 7f)
@@ -140,6 +164,7 @@ namespace ARO.World
             var rb = go.AddComponent<Rigidbody>(); rb.isKinematic = true; rb.interpolation = RigidbodyInterpolation.Interpolate;
             rb.mass = kind == TrafficKind.Truck ? 9000f : kind == TrafficKind.Minibus ? 3500f : kind == TrafficKind.Motorcycle ? 200f : 1400f;
             var r = go.GetComponent<Renderer>(); if (bodyTemplate != null) r.sharedMaterial = bodyTemplate;
+            AddLamps(go, size, kind);
             return new View { go = go, rb = rb, renders = new[] { r }, kind = kind };
         }
     }

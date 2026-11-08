@@ -27,6 +27,8 @@ namespace ARO.World
         public Material[] buildingMats;
         public WorldMaterials materials;
         public QualityTier tier = QualityTiers.Medium;
+        /// <summary>The night lighting: every chunk hands it the lamps (and cosmetic puddles) of its props once, and takes them back when it unloads. Null = no lamp layers (everything else is unchanged).</summary>
+        public StreetLightSystem lamps;
 
         public int LoadedChunkCount => _chunks.Count;
         public int PooledProps => _pool.Count;
@@ -58,7 +60,7 @@ namespace ARO.World
             public readonly List<Object> owned = new List<Object>();
             public List<PropInstance> instances;
             public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
-            public bool hasCollision;
+            public bool hasCollision, lampsRegistered;
             public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
         }
 
@@ -271,6 +273,11 @@ namespace ARO.World
         {
             var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
             if (ch.instances == null) ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity);
+            if (lamps != null && !ch.lampsRegistered)
+            {
+                ch.lampsRegistered = true;      // all lamps of the chunk, whatever the prop LOD or cull distance: the glow layer is what makes far lamps readable at night
+                lamps.RegisterChunk(ch.id, o, LampField.FromInstances(m, ch.instances, PropLibrary.Def), lamps.WantsPuddles ? PuddleField.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize) : null);
+            }
             int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
             if (ch.propLod == lod) return;
             ClearProps(ch);
@@ -358,6 +365,7 @@ namespace ARO.World
         {
             if (!_chunks.TryGetValue(c, out var ch)) return;
             _chunks.Remove(c);
+            if (lamps != null && ch.lampsRegistered) lamps.UnregisterChunk(c);
             if (UsesRouteModel)
             {
                 foreach (var o in ch.owned) if (o != null) Destroy(o);

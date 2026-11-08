@@ -70,9 +70,12 @@ namespace ARO.Game
             var weather = new GameObject("Weather").AddComponent<WeatherSystem>();
             weather.timeOfDay = tod; weather.roadMaterials = haveModel ? worldMats.WeatherSet : new[] { roadGood, roadWorn, roadDamaged };
             rig.timeOfDay = tod; rig.weather = weather;
+            if (SmokeMode.Weather != null && ARO.NetCore.WeatherLook.TryPreset(SmokeMode.Weather, out var testWeather)) { weather.ApplyTestState(testWeather); Debug.Log($"[Weather] test weather '{testWeather.Name}': rain={testWeather.Rain:0.00} wetness={testWeather.Wetness:0.00} cloud={testWeather.Cloud:0.00}"); }
+            StreetLightSystem lamps = null;
+            if (haveModel && worldMats != null) { lamps = new GameObject("StreetLights").AddComponent<StreetLightSystem>(); lamps.Init(tod, weather, route, worldMats, tier, null); streamer.lamps = lamps; }   // the night: lamps, glow, puddles, real lights (docs/NIGHT_LIGHTING_PLAN.md)
             var probe = new GameObject("PerfProbe").AddComponent<PerfProbe>(); probe.streamer = streamer; probe.tier = tier;
-            drive.VehicleSpawned += v => { weather.vehicle = v.transform; v.SetLights(tod.IsNight); };
-            tod.NightChanged += night => { if (drive.Vehicle != null) drive.Vehicle.SetLights(night); };
+            drive.VehicleSpawned += v => { weather.vehicle = v.transform; v.SetLights(tod.IsNight || tod.LampsAreOn); if (lamps != null) lamps.SetTarget(v.transform); if (SmokeMode.HighBeam) { v.SetLights(true); v.SetHighBeam(true); } if (SmokeMode.Hazard) v.SetHazard(true); };
+            tod.LampsChanged += on => { if (drive.Vehicle != null) drive.Vehicle.SetLights(on); };      // headlights follow the same lamp factor as the street lights (on from the middle of dusk, off in the morning); L still toggles by hand
 
             // Menu backdrop camera position: above the start of the route.
             var n0 = route.nodes[0].position; streamer.target = new GameObject("MenuFocus").transform; streamer.target.position = n0;

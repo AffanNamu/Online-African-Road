@@ -18,6 +18,11 @@ namespace ARO.World
         public float overcast;                    // 0..1, set by WeatherSystem
         public bool IsNight => hour < 5.6f || hour > 18.4f;
         public event Action<bool> NightChanged;
+        /// <summary>0 in daylight, 1 at night, smooth between (NightLighting.LampFactor of the current lighting state): street lights, shop lights and vehicle lights follow it.</summary>
+        public float LampFactor { get; private set; }
+        /// <summary>The automatic decision for vehicle headlights (on from about half way through dusk, with a hysteresis band). Raised when it changes.</summary>
+        public bool LampsAreOn { get; private set; }
+        public event Action<bool> LampsChanged;
 
         Material _sky, _gradient; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
         /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
@@ -76,11 +81,14 @@ namespace ARO.World
             else { hour = Mathf.Repeat(hour + Time.deltaTime * timeScale / 3600f, 24f); _source = "accelerated"; }
             Apply();
             if (IsNight != _wasNight) { _wasNight = IsNight; NightChanged?.Invoke(IsNight); }
+            bool lamps = NightLighting.AutoLampsOn(LampsAreOn, LampFactor);
+            if (lamps != LampsAreOn) { LampsAreOn = lamps; LampsChanged?.Invoke(lamps); }
         }
 
         void Apply()
         {
             var st = State = LightingModel.Evaluate(hour, overcast);
+            LampFactor = NightLighting.LampFactor(st);
             if (ARO.Core.RuntimeSettings.TestAtmosphere >= 0f) st.Atmosphere = ARO.Core.RuntimeSettings.TestAtmosphere;   // sky study only (?smoke= pages)
             if (sun != null)
             {

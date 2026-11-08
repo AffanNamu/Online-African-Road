@@ -20,6 +20,10 @@ namespace ARO.NetCore
         public float TerrainDetail;                 // multiplies terrain cells per tile
         public int MaxTrafficAgents; public float TrafficDensity;
         public float FarClip;
+        public int LampLights;                      // real lights moved onto the lamps nearest the player (street lighting); the look does not depend on them
+        public float LampGlowRange;                 // metres: how far the halo, pool and streak layer of a lamp is drawn
+        public bool WetEffects;                     // reflection streaks under lamps and cosmetic puddles on wet roads
+        public int AdditionalLightsPerObject;       // URP's per-object limit of additional lights
 
         /// <summary>A copy, so a player's choice never changes the shared tier objects.</summary>
         public QualityTier Clone() => (QualityTier)MemberwiseClone();
@@ -36,19 +40,22 @@ namespace ARO.NetCore
         {
             Name = "low", ShadowDistance = 60f, ShadowCascades = 1, ShadowResolution = 1024, SoftShadows = false, MsaaSamples = 1, RenderScale = 0.8f,
             Tonemapping = true, ColorGrading = false, Vignette = false, Bloom = false, LodBias = 0.7f, LoadRadiusChunks = 2, UnloadRadiusChunks = 3,
-            PropDensity = 0.5f, PropCullScale = 0.6f, TerrainDetail = 0.5f, MaxTrafficAgents = 20, TrafficDensity = 3f, FarClip = 900f
+            PropDensity = 0.5f, PropCullScale = 0.6f, TerrainDetail = 0.5f, MaxTrafficAgents = 20, TrafficDensity = 3f, FarClip = 900f,
+            LampLights = 0, LampGlowRange = 250f, WetEffects = false, AdditionalLightsPerObject = 4
         };
         public static readonly QualityTier Medium = new QualityTier
         {
             Name = "medium", ShadowDistance = 110f, ShadowCascades = 2, ShadowResolution = 2048, SoftShadows = false, MsaaSamples = 2, RenderScale = 1f,
             Tonemapping = true, ColorGrading = true, Vignette = true, Bloom = false, LodBias = 1f, LoadRadiusChunks = 3, UnloadRadiusChunks = 5,
-            PropDensity = 0.8f, PropCullScale = 1f, TerrainDetail = 1f, MaxTrafficAgents = 40, TrafficDensity = 5f, FarClip = 1500f
+            PropDensity = 0.8f, PropCullScale = 1f, TerrainDetail = 1f, MaxTrafficAgents = 40, TrafficDensity = 5f, FarClip = 1500f,
+            LampLights = 4, LampGlowRange = 400f, WetEffects = true, AdditionalLightsPerObject = 6
         };
         public static readonly QualityTier High = new QualityTier
         {
             Name = "high", ShadowDistance = 150f, ShadowCascades = 3, ShadowResolution = 4096, SoftShadows = true, MsaaSamples = 4, RenderScale = 1f,
             Tonemapping = true, ColorGrading = true, Vignette = true, Bloom = true, LodBias = 1.5f, LoadRadiusChunks = 4, UnloadRadiusChunks = 6,
-            PropDensity = 1f, PropCullScale = 1.4f, TerrainDetail = 1.25f, MaxTrafficAgents = 80, TrafficDensity = 8f, FarClip = 2200f
+            PropDensity = 1f, PropCullScale = 1.4f, TerrainDetail = 1.25f, MaxTrafficAgents = 80, TrafficDensity = 8f, FarClip = 2200f,
+            LampLights = 8, LampGlowRange = 600f, WetEffects = true, AdditionalLightsPerObject = 8
         };
 
         public static IReadOnlyList<QualityTier> All => new[] { Low, Medium, High };
