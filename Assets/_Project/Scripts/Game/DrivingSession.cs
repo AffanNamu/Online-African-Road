@@ -161,7 +161,7 @@ namespace ARO.Game
                 if (ARO.Core.RuntimeSettings.TestHourRate > 0f && ARO.Core.RuntimeSettings.TestHourRateT0 < 0f) ARO.Core.RuntimeSettings.TestHourRateT0 = Time.unscaledTime;      // a free-driving test page: the clock runs from here
                 if (SmokeMode.Hold) _freezeAt = Time.unscaledTime + 3f;   // let the suspension settle first
             }
-            else if (Time.unscaledTime - _holdSince > HoldTimeout)
+            else if (Time.unscaledTime - _holdSince > (SmokeMode.Drive && _route != null && _route.Model != null && _route.Model.HasLevels ? 4f * HoldTimeout : HoldTimeout))      // smoke pages on a two-level route: a slow software-GL page needs longer to build the deck's collider (run 42644510827: the hold timed out at 10 s and the truck was released into the void, y 15.9 m)
             {
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = pos;
                 Debug.LogError("[Drive] no ground after " + HoldTimeout + "s; releasing the vehicle anyway");

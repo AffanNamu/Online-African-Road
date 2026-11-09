@@ -61,11 +61,15 @@ const PLACES = [
     const has = re => logs.some(l => re.test(l)); const waitFor = async (re, secs) => { for (let i = 0; i < secs * 4; i++) { if (has(re)) return true; await page.waitForTimeout(250); } return false; };
     console.log(`\n=== ${pl.id}: ${pl.what} (${pl.route}${pl.corridor ? ' ' + pl.corridor : ''} start=${pl.start} m${pl.back ? ' facing back' : ''}, ${quality}) ===`);
     await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&hold=1&quality=${quality}&route=${pl.route}${pl.corridor ? '&corridor=' + pl.corridor : ''}&start=${pl.start}${pl.back ? '&facing=back' : ''}&hour=${pl.hour}`);
-    const started = await waitFor(/\[Smoke\] drive scenario/, 150), ground = started && await waitFor(/\[Drive\] ground ready/, 120), held = ground && await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
+    const started = await waitFor(/\[Smoke\] drive scenario/, 150), ground = started && await waitFor(/\[Drive\] ground ready/, 120), held = ground && await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 100);
     check(`${pl.id}: the city route loaded`, started && has(new RegExp('\\[Smoke\\] driving the test corridor ' + pl.route)) && !has(/invalid route spec/i), started ? (logs.find(l => /^\[Route\] /.test(l)) || '').slice(0, 140) : 'no drive scenario');
     check(`${pl.id}: the truck stood on real ground and was held`, held, held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '').slice(0, 160) : 'no ground / hold line');
     const driveLine = held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '') : '', py = (/pos=\([-\d.]+,([-\d.]+),/.exec(driveLine) || [])[1];
-    if (pl.deck) check(`${pl.id}: the truck stands on the flyover deck (y of 15 m or more; the deck is at 17.8 m, the ground at 10 m)`, held && parseFloat(py) >= 15, `y=${py}`);
+    if (pl.deck) {
+      const driveLines = logs.filter(l => /^\[Drive\]/.test(l)), ys = driveLines.filter(l => /\[Drive\] t=/.test(l)).map(l => (/pos=\([-\d.]+,([-\d.]+),/.exec(l) || [])[1]);
+      console.log('  [diagnostic] ' + pl.id + ' [Drive] lines: ' + driveLines.filter(l => !/\[Drive\] t=/.test(l)).slice(0, 8).map(l => l.slice(0, 150)).join(' | ') + ' ; y of every [Drive] t= line: ' + ys.join(', '));
+      check(`${pl.id}: the truck stands on the flyover deck (y of 17.3 m or more; the deck surface is at 17.8 m, the ground at 10 m)`, held && parseFloat(py) >= 17.3, `y=${py}`);
+    }
     const entry = { id: pl.id, route: pl.route, corridor: pl.corridor || 'main', startMetres: pl.start, facing: pl.back ? 'back' : 'forward', district: pl.district, road: pl.road, what: pl.what, frames: [] };
     if (held) {
       await page.waitForTimeout(6000); await page.mouse.click(512, 288); await page.waitForTimeout(500);
