@@ -59,6 +59,15 @@ insert into ad_boards(id, route_code, city, district, road_label, station_m, sid
 insert into ad_slots(id, board_id, face, aspect, width_m, height_m) values
   ('test:board:a#1', 'test:board:a', 1, '2:1', 12.2, 3.0), ('test:board:b#1', 'test:board:b', 1, '2:1', 14.6, 4.2), ('test:board:c#1', 'test:board:c', 1, '1:2', 3.0, 6.0);
 
+-- ===== 00. the route inventory seed (generated from the route data): boards start planned, loading it twice changes nothing, and it never overwrites a board the owner changed
+select testkit.assert_eq('the seed made boards from the route data', (select (count(*) >= 3)::text from ad_boards where source = 'route_data'), 'true');
+select testkit.assert_eq('all of them start planned', (select count(*)::text from ad_boards where source = 'route_data' and status <> 'planned'), '0');
+select testkit.assert_eq('each board has one face', (select count(*)::text from ad_boards b where source = 'route_data' and (select count(*) from ad_slots s where s.board_id = b.id) <> 1), '0');
+update ad_boards set status = 'available', est_daily_passes = 1234 where id = (select min(id) from ad_boards where source = 'route_data');
+\i seed_ads.sql
+select testkit.assert_eq('loading the seed again keeps what the owner set', (select status || ':' || est_daily_passes from ad_boards where id = (select min(id) from ad_boards where source = 'route_data')), 'available:1234');
+update ad_boards set status = 'planned', est_daily_passes = null where source = 'route_data';
+
 -- ===== 0. what the migration ships: packages without prices, the bucket settings, the surface
 select testkit.assert_eq('ten packages ship', (select count(*)::text from ad_packages), '10');
 select testkit.assert_eq('NO price is hard coded: the migration ships none', (select count(*)::text from ad_package_prices), '0');
@@ -297,24 +306,24 @@ select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_review_campaign(%L
 -- creative approval: owner only; nothing is public yet
 select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[]', 'publish the files')::text$$, (select v from ids where k = 'cre')), 'creative_not_approved');
 select testkit.assert_eq('the owner approves the artwork', pg_temp.j('OWN', format($$select admin_ad_review_creative(%L, 'approve', false, 'on brief, no brand problems')::text$$, (select v from ids where k = 'cre')))->>'status', 'approved');
-select testkit.assert_eq('the public paths are fixed by the approval', (select expected_paths ->> 0 from ad_creatives where id = (select v::uuid from ids where k = 'cre')), 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp');
+select testkit.assert_eq('the public paths are fixed by the approval', (select expected_paths ->> 0 from ad_creatives where id = (select v::uuid from ids where k = 'cre')), 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg');
 select testkit.assert_eq('and it is still not public', (select public_ready::text from ad_creatives where id = (select v::uuid from ids where k = 'cre')), 'false');
 select testkit.assert_eq('a rejected creative stays out', pg_temp.j('OWN', format($$select admin_ad_review_creative(%L, 'reject', false, 'the portrait banner is off brand')::text$$, (select v from ids where k = 'cre_p')))->>'status', 'rejected');
 select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_review_creative(%L, 'approve', false, 'second decision')::text$$, (select v from ids where k = 'cre')), 'invalid_transition');
 -- the PUBLIC bucket: owner only, only at a path an approved creative expects
-select pg_temp.put_denied('authenticated', pg_temp.u('ADV')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp', 'advertising publishing a file');
-select pg_temp.put_denied('authenticated', pg_temp.u('ANA')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp', 'analyst publishing a file');
-select pg_temp.put_denied('authenticated', pg_temp.u('P')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp', 'player publishing a file');
-select pg_temp.put_denied('anon', null, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp', 'anon publishing a file');
-select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre_p') || '/1x2_v1.webp', 'the owner publishing a REJECTED creative');
+select pg_temp.put_denied('authenticated', pg_temp.u('ADV')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'advertising publishing a file');
+select pg_temp.put_denied('authenticated', pg_temp.u('ANA')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'analyst publishing a file');
+select pg_temp.put_denied('authenticated', pg_temp.u('P')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'player publishing a file');
+select pg_temp.put_denied('anon', null, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'anon publishing a file');
+select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre_p') || '/1x2_v1.jpg', 'the owner publishing a REJECTED creative');
 select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/anything-else.webp', 'the owner publishing at an unexpected path');
-select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || gen_random_uuid() || '/2x1_v1.webp', 'the owner publishing for a creative that does not exist');
-select pg_temp.put('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.webp', 60000, 'image/webp');
+select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || gen_random_uuid() || '/2x1_v1.jpg', 'the owner publishing for a creative that does not exist');
+select pg_temp.put('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 60000, 'image/jpeg');
 -- confirm: sizes, types and hashes are checked, then the creative is public_ready
 select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/other.webp","width":1024,"height":512,"sha256":"%s"}]', 'wrong path')::text$$, (select v from ids where k = 'cre'), repeat('a', 64)), 'unexpected_path');
-select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.webp","width":1024,"height":512,"sha256":"nothex"}]', 'bad hash')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre')), 'invalid_hash');
-select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.webp","width":9999,"height":512,"sha256":"%s"}]', 'bad size')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre'), repeat('a', 64)), 'invalid_dimensions');
-select testkit.assert_eq('the owner confirms the variant', pg_temp.j('OWN', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.webp","width":1024,"height":512,"sha256":"%s"}]', 'uploaded the 1024x512 variant')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre'), repeat('b', 64)))->>'public_ready', 'true');
+select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.jpg","width":1024,"height":512,"sha256":"nothex"}]', 'bad hash')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre')), 'invalid_hash');
+select pg_temp.denied('OWN', 'aal2', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.jpg","width":9999,"height":512,"sha256":"%s"}]', 'bad size')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre'), repeat('a', 64)), 'invalid_dimensions');
+select testkit.assert_eq('the owner confirms the variant', pg_temp.j('OWN', format($$select admin_ad_confirm_variants(%L, '[{"path":"creatives/%s/2x1_v1.jpg","width":1024,"height":512,"sha256":"%s"}]', 'uploaded the 1024x512 variant')::text$$, (select v from ids where k = 'cre'), (select v from ids where k = 'cre'), repeat('b', 64)))->>'public_ready', 'true');
 -- the manifest is empty until the owner approves the CAMPAIGN
 select testkit.assert_eq('nothing is in the manifest before the campaign is approved', jsonb_array_length(pg_temp.j('P', $$select get_ad_manifest()::text$$) -> 'items')::text, '0');
 select pg_temp.denied('ADV', 'aal2', format($$select admin_ad_review_campaign(%L, 'approve', false, 'let me approve')::text$$, (select v from ids where k = 'camp')), 'not_allowed');

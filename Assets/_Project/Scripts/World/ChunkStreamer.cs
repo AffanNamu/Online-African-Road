@@ -60,7 +60,7 @@ namespace ARO.World
             public readonly List<Object> owned = new List<Object>();
             public List<PropInstance> instances;
             public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
-            public bool hasCollision, lampsRegistered;
+            public bool hasCollision, lampsRegistered, facesReported;
             public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
         }
 
@@ -73,6 +73,8 @@ namespace ARO.World
         readonly Stack<GameObject> _pool = new Stack<GameObject>();
         Vector2Int _lastCentre = new Vector2Int(int.MinValue, 0);
 
+        /// <summary>Advertising faces of the props placed in a chunk (the chunk, the faces) and the chunk unloading. Raised only for chunks that hold billboards; nothing is raised when nobody listens (the ad service is optional).</summary>
+        public System.Action<Vector2Int, List<AdFace>> FacesLoaded; public System.Action<Vector2Int> FacesUnloaded;
         void Start() { StartCoroutine(Pump()); }
 
         /// <summary>True when something solid (other than `ignore`'s own colliders) lies under p; y receives the highest such surface.</summary>
@@ -318,6 +320,7 @@ namespace ARO.World
                 ch.lampsRegistered = true;      // all lamps of the chunk, whatever the prop LOD or cull distance: the glow layer is what makes far lamps readable at night
                 lamps.RegisterChunk(ch.id, o, LampField.FromInstances(m, ch.instances, PropLibrary.Def), lamps.WantsPuddles ? PuddleField.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize) : null);
             }
+            if (FacesLoaded != null && !ch.facesReported) { ch.facesReported = true; var faces = new List<AdFace>(AdFaces.Place(m.Spec.routeId, ch.instances, PropLibrary.Def)); if (faces.Count > 0) FacesLoaded(ch.id, faces); }
             int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
             if (ch.propLod == lod) return;
             ClearProps(ch);
@@ -406,6 +409,7 @@ namespace ARO.World
         {
             if (!_chunks.TryGetValue(c, out var ch)) return;
             _chunks.Remove(c);
+            if (ch.facesReported && FacesUnloaded != null) FacesUnloaded(c);
             if (lamps != null && ch.lampsRegistered) lamps.UnregisterChunk(c);
             if (UsesRouteModel)
             {

@@ -30,6 +30,8 @@ namespace ARO.Game
         public static string Autopilot { get { if (!Drive) return null; var v = NightLighting.QueryValue(Url, "autopilot"); return !string.IsNullOrEmpty(v) && System.Text.RegularExpressions.Regex.IsMatch(v, "^[a-z0-9_:]{1,40}$") ? v : null; } }
         /// <summary>"?smoke=drive&vehicle=truck_light_01|truck_medium_01|bus_city_01": which vehicle the test page drives (default the light truck). Only these three ids are honoured.</summary>
         public static string VehicleId { get { if (!Drive) return null; var v = NightLighting.QueryValue(Url, "vehicle"); return v == "truck_light_01" || v == "truck_medium_01" || v == "bus_city_01" ? v : null; } }
+        /// <summary>"?smoke=drive&adtest=1": advertising fixture. Every board in a loaded chunk shows a generated test image through the real atlas and mesh path, no network (CI proves the rendering path; the data path is the API contract).</summary>
+        public static bool AdTest => Drive && Url.Contains("adtest=1");
         /// <summary>"?smoke=drive&weather=clear|cloudy|rain|wet": a named test weather. Null when absent or unknown.</summary>
         public static string Weather => Drive && WeatherLook.TryPreset(NightLighting.QueryValue(Url, "weather"), out var p) ? p.Name : null;
         /// <summary>"?smoke=drive&highbeam=1" and "&hazard=1": the truck starts with its high beam or hazard lights on (CI renders them without a key press).</summary>

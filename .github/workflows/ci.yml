@@ -370,6 +370,12 @@ jobs:
         run: |
           node tools/webgl-e5.js --selftest
           node tools/webgl-e5.js Builds/WebGL webgl-light-e5
+      - name: "Advertising render path - boards in the loaded chunks show generated test images through the real atlas and the one-mesh face renderer, no network (informational)"
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-ads.js --selftest
+          node tools/webgl-ads.js Builds/WebGL webgl-light-ads
       - uses: actions/upload-artifact@v4
         if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }

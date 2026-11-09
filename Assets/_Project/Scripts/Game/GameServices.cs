@@ -28,6 +28,7 @@ namespace ARO.Game
         public ProgressionService Progress { get; }
         public LeaderboardService Boards { get; }
         public ContentService Content { get; }
+        public AdsService Ads { get; }
         public BusService Bus { get; }
         public SessionService Session { get; }
 
@@ -44,7 +45,7 @@ namespace ARO.Game
             Config = cfg; Api = new SupabaseClient(cfg);
             Player = new PlayerService(Api); Presence = new PresenceService(Api); Friends = new FriendService(Api); Notifications = new NotificationService(Api);
             Garage = new VehicleService(Api); Jobs = new JobService(Api); World = new WorldService(Api); Progress = new ProgressionService(Api);
-            Boards = new LeaderboardService(Api); Content = new ContentService(Api); Bus = new BusService(Api);
+            Boards = new LeaderboardService(Api); Content = new ContentService(Api); Ads = new AdsService(Api); Bus = new BusService(Api);
             Session = new SessionService(); Convoys = new ConvoyService(Api, Session);
         }
 

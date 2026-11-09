@@ -189,6 +189,17 @@ namespace ARO.Backend
     [Serializable] public class ContentItem { public string id, kind, category, title, body, image_key, publish_at, expires_at, source, eyebrow, headline, headline_accent, action, button; public int priority; }
     [Serializable] public class ContentList { public ContentItem[] items; }
 
+    // ---------------------------------------------------------------- advertising (get_ad_manifest, record_ad_exposure; docs/ADVERTISING_SYSTEM.md)
+    [Serializable] public class AdItemDto { public string slot_id, board_id, campaign_id, creative_id, aspect, label, ends, image, sha256, link; public float width_m, height_m; public int width, height; }
+    [Serializable]
+    public class AdManifestDto
+    {
+        public string version, server_time; public bool unchanged;
+        // optional: only sent when the manifest changed since the version the client already has
+        public string bucket; public AdItemDto[] items;
+    }
+    [Serializable] public class AdExposureAck { public int accepted, ignored; }
+
     // ---------------------------------------------------------------- leaderboards
     [Serializable] public class LeaderboardRow { public string player_id, display_name, username, avatar_id, country_code; public int rank, level; public double value; }
     [Serializable] public class LeaderboardMe { public int rank; public double value; }

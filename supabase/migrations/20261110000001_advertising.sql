@@ -879,7 +879,7 @@ begin
   if p_decision = 'approve' then
     select count(*) into v_flags from ad_campaigns c join ad_enquiries e on e.id = c.enquiry_id where c.id = k.campaign_id and cardinality(e.policy_flags) > 0;
     if v_flags > 0 and not coalesce(p_policy_ack, false) then raise exception 'policy_ack_required'; end if;
-    v_paths := jsonb_build_array('creatives/' || k.id::text || '/' || replace(k.aspect, ':', 'x') || '_v1.webp');
+    v_paths := jsonb_build_array('creatives/' || k.id::text || '/' || replace(k.aspect, ':', 'x') || '_v1.jpg');
     update ad_creatives set status = 'approved', expected_paths = v_paths, policy_ack = coalesce(p_policy_ack, false), review_reason = v_reason, reviewed_by = auth.uid(), reviewed_at = now() where id = p_id returning * into k;
   else
     update ad_creatives set status = 'rejected', review_reason = v_reason, reviewed_by = auth.uid(), reviewed_at = now() where id = p_id returning * into k;

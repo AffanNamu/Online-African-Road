@@ -38,7 +38,7 @@
   const stateBadge = s => badge(s, ({ live: 'live', approved: 'ok', scheduled: 'scheduled', in_review: 'scheduled', draft: '', paused: 'scheduled', ended: 'expired', terminated: 'expired', rejected: 'expired', new: 'scheduled', contacted: 'scheduled', converted: 'ok',
     submitted: 'scheduled', available: 'ok', planned: 'scheduled', maintenance: 'expired', retired: 'expired' })[s] || '');
 
-  // ------------------------------------------------------------------ images: decode, shrink to the board's shape, encode (WebP, at most 150 KB), fingerprint, upload. Done in THIS browser; the server only checks the result.
+  // ------------------------------------------------------------------ images: decode, shrink to the board's shape, encode (JPEG, at most 150 KB), fingerprint, upload. Done in THIS browser; the server only checks the result.
   async function storage(method, path, body, contentType) {
     const token = await authToken();
     const headers = { apikey: cfg.anonKey, Authorization: 'Bearer ' + token };
@@ -56,10 +56,10 @@
     const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
     const s = Math.max(w / bmp.width, h / bmp.height), dw = bmp.width * s, dh = bmp.height * s; g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h); g.drawImage(bmp, (w - dw) / 2, (h - dh) / 2, dw, dh); return c;
   }
-  async function encode(canvas) {
+  async function encode(canvas) {      // JPEG, because the game decodes JPEG and PNG (the engine has no WebP decoder)
     for (const q of [0.9, 0.82, 0.74, 0.66, 0.58, 0.5, 0.42, 0.34]) {
-      const b = await new Promise(r => canvas.toBlob(r, 'image/webp', q));
-      if (b && b.type === 'image/webp' && b.size <= 150 * 1024) return b;
+      const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
+      if (b && b.type === 'image/jpeg' && b.size <= 150 * 1024) return b;
     }
     throw new A.ApiError('variant_too_large', 0);
   }
@@ -250,13 +250,13 @@
       try { await rpc('admin_ad_review_creative', { p_id: k.id, p_decision: d, p_policy_ack: a.ack === 'YES', p_reason: a.reason }); say(out, 'Done.', 'ok'); await load(); } catch (x) { say(out, words(x), 'err'); }
     }
     async function publish(k) {
-      const a = await ask({ title: 'Publish ' + k.name, text: 'This browser will resize the image to the board shape, re-encode it (all metadata is dropped), upload it to the public bucket and tell the database. Players can then be shown it once a campaign using it is approved.', ok: 'Publish', fields: [reasonField()] }); if (!a) return;
+      const a = await ask({ title: 'Publish ' + k.name, text: 'This browser will resize the image to the board shape, re-encode it as a JPEG (all metadata is dropped), upload it to the public bucket and tell the database. Players can then be shown it once a campaign using it is approved.', ok: 'Publish', fields: [reasonField()] }); if (!a) return;
       try {
         say(out, 'Reading the submission...', 'muted');
         const blob = await (await storage('GET', 'authenticated/ad-submissions/' + k.submission_path.split('/').map(encodeURIComponent).join('/'))).blob(), bmp = await decode(blob);
         const [w, h] = SIZE[k.aspect], web = await encode(cover(bmp, w, h)), hash = await sha256(web), path = k.expected_paths[0];
         say(out, 'Uploading ' + Math.round(web.size / 1024) + ' KB...', 'muted');
-        await storage('POST', 'ad-creatives-public/' + path.split('/').map(encodeURIComponent).join('/'), web, 'image/webp');
+        await storage('POST', 'ad-creatives-public/' + path.split('/').map(encodeURIComponent).join('/'), web, 'image/jpeg');
         await rpc('admin_ad_confirm_variants', { p_id: k.id, p_variants: [{ path, width: w, height: h, sha256: hash }], p_reason: a.reason });
         say(out, 'Published (' + w + ' x ' + h + ', ' + Math.round(web.size / 1024) + ' KB).', 'ok'); await load();
       } catch (x) { say(out, words(x), 'err'); }

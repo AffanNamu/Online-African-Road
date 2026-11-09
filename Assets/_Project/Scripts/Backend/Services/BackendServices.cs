@@ -288,6 +288,17 @@ namespace ARO.Backend
             Api.Call<LeaderboardPage>("search_leaderboard", JsonArgs.Obj(("p_metric", metric), ("p_period", period), ("p_query", query), ("p_limit", limit)));
     }
 
+    // ---------------------------------------------------------------------------------------------------------------- AdsService
+    /// <summary>Advertising: the manifest of what is showing on which board, and the aggregated exposure the game measured. Both are optional extras: the game never waits for them and never fails because of them.</summary>
+    public sealed class AdsService : ServiceBase
+    {
+        public AdsService(SupabaseClient api) : base(api) { }
+        public Task<Result<AdManifestDto>> LoadManifest(string route, string sinceVersion) =>
+            Api.Call<AdManifestDto>("get_ad_manifest", "{\"p_route\":\"" + (route ?? "") + "\",\"p_since\":" + (string.IsNullOrEmpty(sinceVersion) ? "null" : "\"" + sinceVersion + "\"") + "}");
+        /// <summary>batchJson is the array from AdExposureMeter.ToJson. Not retried: a lost batch is only a lost sample.</summary>
+        public Task<Result<AdExposureAck>> SendExposure(string batchJson) => Api.Call<AdExposureAck>("record_ad_exposure", "{\"p_batch\":" + batchJson + "}", false);
+    }
+
     // ---------------------------------------------------------------------------------------------------------------- ContentService
     /// <summary>Authored in-house content (news). Served by the backend so it can change without a new build; it is labelled authored, never external news.</summary>
     public sealed class ContentService : ServiceBase

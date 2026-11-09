@@ -13,6 +13,7 @@ for f in "$MIG"/*.sql; do run "$f"; done
 run seed.sql
 run seed_world.sql
 run seed_content.sql
+run seed_ads.sql
 run tests/01_testkit.sql
 run tests/20_security_matrix.sql
 run tests/25_bus_and_shop.sql

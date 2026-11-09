@@ -53,6 +53,7 @@ namespace ARO.Game
             NetVisualContext.LocalVehicle = () => drive.Vehicle;
             NetVisualContext.LocalName = () => svc.Profile != null ? svc.Profile.display_name : "Driver";
             NetVisualContext.LocalVehicleDefinitionId = () => drive.Vehicle != null && drive.Vehicle.definition != null ? drive.Vehicle.definition.id : "truck_light_01";
+            if (haveModel) new GameObject("AdService").AddComponent<AdService>().Init(svc, route, streamer, SmokeMode.AdTest);      // advertising is optional: off without a backend, silent when the service is down
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
             var bus = new GameObject("BusSession").AddComponent<BusSession>(); bus.Init(svc, drive); hud.Bus = bus;
             new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud, bus);

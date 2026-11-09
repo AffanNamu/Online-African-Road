@@ -111,6 +111,14 @@ def scenario():
     for u in (B, C, F):
         sid = psql(f"select id from game_sessions where player_id = '{u}' and ended_at is null limit 1")
         as_user(u, f"select heartbeat('{sid}', 'driving', 'lagos-ibadan', 'lagos')::text")
+    # advertising: one live campaign on one board, so the manifest has an item whose fields are compared with the client's AdItemDto
+    psql("insert into ad_boards(id, route_code, board_type, width_m, height_m, status, source) values ('ct:board', 'ng-contract', 'roadside', 7.2, 3.6, 'available', 'manual')")
+    psql("insert into ad_slots(id, board_id, face, aspect, width_m, height_m) values ('ct:board#1', 'ct:board', 1, '2:1', 7.2, 3.6)")
+    psql("insert into ad_advertisers(id, business_name, contact_name, email, category) values ('00000000-0000-0000-0000-00000000c0a1', 'Contract Co', 'Cora Contract', 'cora@example.test', 'retail')")
+    psql("insert into ad_campaigns(id, advertiser_id, title, state, start_date, end_date, sponsored_label, destination_url, created_by) values ('00000000-0000-0000-0000-00000000c0c1', '00000000-0000-0000-0000-00000000c0a1', 'Contract campaign', 'approved', _ad_today() - 1, _ad_today() + 5, true, 'https://example.com/contract', gen_random_uuid())")
+    psql("insert into ad_creatives(id, advertiser_id, campaign_id, name, aspect, status, submission_path, submission_mime, submission_bytes, variants, public_ready, created_by) values ('00000000-0000-0000-0000-00000000c0d1', '00000000-0000-0000-0000-00000000c0a1', '00000000-0000-0000-0000-00000000c0c1', 'Contract art', '2:1', 'approved', 'admin/contract.png', 'image/png', 1000, "
+         "'[{\"aspect\":\"2:1\",\"path\":\"creatives/00000000-0000-0000-0000-00000000c0d1/2x1_v1.jpg\",\"width\":1024,\"height\":512,\"bytes\":60000,\"sha256\":\"" + "a" * 64 + "\",\"mime\":\"image/jpeg\"}]'::jsonb, true, gen_random_uuid())")
+    psql("insert into ad_assignments(campaign_id, slot_id, creative_id, start_date, end_date, created_by) values ('00000000-0000-0000-0000-00000000c0c1', 'ct:board#1', '00000000-0000-0000-0000-00000000c0d1', _ad_today() - 1, _ad_today() + 5, gen_random_uuid())")
     # A has a job in progress; progress to the 'verified_km' path
     return A, B, C, D, E, F, G
 
@@ -175,6 +183,9 @@ def main():
             ("get_leaderboard", A, "select get_leaderboard('xp')::text", "LeaderboardPage"),
             ("get_friends_leaderboard", A, "select get_friends_leaderboard('xp')::text", "LeaderboardPage"),
             ("search_leaderboard", A, "select search_leaderboard('xp', 'all', 'cta')::text", "LeaderboardPage"),
+            ("get_ad_manifest", A, "select get_ad_manifest('ng-contract')::text", "AdManifestDto"),
+            ("get_ad_manifest(unchanged)", A, "select get_ad_manifest('ng-contract', (get_ad_manifest('ng-contract')->>'version'))::text", "AdManifestDto"),
+            ("record_ad_exposure", A, "select record_ad_exposure('[{\"slot_id\":\"ct:board#1\",\"seconds\":3,\"views\":1,\"loaded\":1}]')::text", "AdExposureAck"),
         ]
         # an active job for the get_my_active_job shape, accepted by user E
         as_user(E, "select accept_job((select id from jobs where code = 'CT-2'), (select id from vehicle_ownership where player_id = auth.uid()))")
