@@ -1,0 +1,2784 @@
+{
+ "schemaVersion": 1,
+ "note": "catalogue entries measured from the models plus the light heads, text faces and tags of transport_kit.common.EXTRAS; sockets are data for a future gameplay integration (nothing reads them)",
+ "props": [
+  {
+   "id": "rg_ngn_warehouse_hall_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class REGIONAL: pitched-roof steel-frame warehouse, six docks, platform, office annex References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/rg_ngn_warehouse_hall_a",
+   "collider": "box",
+   "heightM": 10.1,
+   "widthM": 49.0,
+   "depthM": 24.92,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1450,
+    396,
+    58
+   ],
+   "castShadow": true,
+   "tags": [
+    "industrial",
+    "logistics",
+    "warehouse"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.6,
+    "poolRadius": 3.6,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 12.0,
+      "y": 5.1,
+      "z": 11.24
+     },
+     {
+      "x": 6.0,
+      "y": 5.1,
+      "z": 11.24
+     },
+     {
+      "x": -0.0,
+      "y": 5.1,
+      "z": 11.24
+     },
+     {
+      "x": -6.0,
+      "y": 5.1,
+      "z": 11.24
+     },
+     {
+      "x": -12.0,
+      "y": 5.1,
+      "z": 11.24
+     },
+     {
+      "x": -18.0,
+      "y": 5.1,
+      "z": 11.24
+     }
+    ]
+   },
+   "label": {
+    "x": -6.0,
+    "y": 6.0,
+    "z": 12.1,
+    "width": 10.0,
+    "height": 1.6,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "rg_ngn_warehouse_hall_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class REGIONAL: low-bay distribution shed, sawtooth roof, four docks, platform canopy References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/rg_ngn_warehouse_hall_b",
+   "collider": "box",
+   "heightM": 8.0,
+   "widthM": 36.4,
+   "depthM": 21.04,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1048,
+    370,
+    70
+   ],
+   "castShadow": true,
+   "tags": [
+    "industrial",
+    "logistics",
+    "warehouse"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.6,
+    "poolRadius": 3.6,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 11.0,
+      "y": 5.1,
+      "z": 9.24
+     },
+     {
+      "x": 3.7,
+      "y": 5.1,
+      "z": 9.24
+     },
+     {
+      "x": -3.6,
+      "y": 5.1,
+      "z": 9.24
+     },
+     {
+      "x": -10.9,
+      "y": 5.1,
+      "z": 9.24
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 6.2,
+    "z": 9.2,
+    "width": 14.0,
+    "height": 1.2,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "rg_ngn_warehouse_cold_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class REGIONAL: insulated cold store, plant deck with condensers, three docks References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/rg_ngn_warehouse_cold_a",
+   "collider": "box",
+   "heightM": 9.97,
+   "widthM": 30.66,
+   "depthM": 18.02,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1294,
+    244,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "cold_store",
+    "industrial",
+    "logistics"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.6,
+    "poolRadius": 3.6,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 8.0,
+      "y": 4.9,
+      "z": 8.24
+     },
+     {
+      "x": -0.0,
+      "y": 4.9,
+      "z": 8.24
+     },
+     {
+      "x": -8.0,
+      "y": 4.9,
+      "z": 8.24
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_dock_leveller_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: one dock bay on a 3.5 m pitch: wall, roller door, bumpers, shelter, platform, leveller References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_dock_leveller_set",
+   "collider": "box",
+   "heightM": 4.4,
+   "widthM": 3.5,
+   "depthM": 1.47,
+   "cullDistance": 140,
+   "lodTriangles": [
+    348,
+    64,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "tile_3_5m"
+   ]
+  },
+  {
+   "id": "aro_container_20ft_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 20 ft shipping container, plain livery, no brand References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_20ft_a",
+   "collider": "box",
+   "heightM": 2.59,
+   "widthM": 6.07,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    322,
+    82,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_container_20ft_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 20 ft shipping container, plain livery, no brand References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_20ft_b",
+   "collider": "box",
+   "heightM": 2.59,
+   "widthM": 6.07,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    322,
+    82,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_container_20ft_c",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 20 ft shipping container, plain livery, no brand References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_20ft_c",
+   "collider": "box",
+   "heightM": 2.59,
+   "widthM": 6.07,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    322,
+    82,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_container_40ft_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 40 ft shipping container, plain livery, no brand References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_40ft_a",
+   "collider": "box",
+   "heightM": 2.59,
+   "widthM": 12.2,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    322,
+    82,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_container_40ft_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 40 ft shipping container, plain livery, no brand References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_40ft_b",
+   "collider": "box",
+   "heightM": 2.59,
+   "widthM": 12.2,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    322,
+    82,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_container_stack_3",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: three 40 ft containers stacked, merged into one mesh References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_container_stack_3",
+   "collider": "box",
+   "heightM": 7.8,
+   "widthM": 12.21,
+   "depthM": 2.44,
+   "cullDistance": 140,
+   "lodTriangles": [
+    754,
+    274,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "container",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_pallet_stack_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: wrapped pallets, sacks, cartons and a crate References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_pallet_stack_a",
+   "collider": "box",
+   "heightM": 1.83,
+   "widthM": 2.7,
+   "depthM": 2.12,
+   "cullDistance": 140,
+   "lodTriangles": [
+    1102,
+    160,
+    88
+   ],
+   "castShadow": true,
+   "tags": [
+    "cargo",
+    "logistics"
+   ]
+  },
+  {
+   "id": "aro_gate_sliding_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: two-lane yard gate with a guard hut on the island, leaves open References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_gate_sliding_a",
+   "collider": "box",
+   "heightM": 3.12,
+   "widthM": 16.85,
+   "depthM": 4.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    918,
+    298,
+    54
+   ],
+   "castShadow": true,
+   "tags": [
+    "gate",
+    "logistics"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.0,
+      "z": 1.0
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 2.2,
+    "z": 1.06,
+    "width": 1.1,
+    "height": 0.35,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_fence_palisade_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 4 m steel palisade fence run References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_fence_palisade_set",
+   "collider": "box",
+   "heightM": 2.55,
+   "widthM": 4.02,
+   "depthM": 0.12,
+   "cullDistance": 140,
+   "lodTriangles": [
+    188,
+    98,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "tile_4m"
+   ]
+  },
+  {
+   "id": "aro_wall_plot_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 4 m rendered plot wall run References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_wall_plot_set",
+   "collider": "box",
+   "heightM": 2.48,
+   "widthM": 4.02,
+   "depthM": 0.28,
+   "cullDistance": 140,
+   "lodTriangles": [
+    186,
+    30,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "tile_4m"
+   ]
+  },
+  {
+   "id": "aro_weighbridge_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 18 m truck weighbridge with cabin and display; the deck is drive-over (no collision) References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_weighbridge_a",
+   "collider": "box",
+   "heightM": 3.3,
+   "widthM": 19.34,
+   "depthM": 6.72,
+   "cullDistance": 140,
+   "lodTriangles": [
+    528,
+    82,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "weighbridge"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -8.5,
+      "y": 3.3,
+      "z": 2.4
+     }
+    ]
+   },
+   "label": {
+    "x": -8.5,
+    "y": 2.9,
+    "z": 2.44,
+    "width": 1.5,
+    "height": 0.5,
+    "yawDeg": 0,
+    "colour": "yellow",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_fuel_island_truck",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: truck fuel island: canopy, two pump islands, bollards References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_fuel_island_truck",
+   "collider": "box",
+   "heightM": 6.5,
+   "widthM": 16.0,
+   "depthM": 8.02,
+   "cullDistance": 140,
+   "lodTriangles": [
+    1034,
+    174,
+    86
+   ],
+   "castShadow": true,
+   "tags": [
+    "fuel",
+    "logistics"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.72,
+    "intensity": 1.0,
+    "range": 14,
+    "haloSize": 1.6,
+    "poolRadius": 7.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 5.0,
+      "y": 5.7,
+      "z": -0.0
+     },
+     {
+      "x": 1.7,
+      "y": 5.7,
+      "z": -0.0
+     },
+     {
+      "x": -1.7,
+      "y": 5.7,
+      "z": -0.0
+     },
+     {
+      "x": -5.0,
+      "y": 5.7,
+      "z": -0.0
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 6.15,
+    "z": 4.0,
+    "width": 11.0,
+    "height": 0.5,
+    "yawDeg": 0,
+    "colour": "yellow",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_forklift_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: static forklift (prop only) References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_forklift_a",
+   "collider": "box",
+   "heightM": 2.38,
+   "widthM": 1.3,
+   "depthM": 3.38,
+   "cullDistance": 140,
+   "lodTriangles": [
+    794,
+    286,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "prop"
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: parked flatbed semi-trailer, no cab References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_truck_trailer_parked_a",
+   "collider": "box",
+   "heightM": 2.7,
+   "widthM": 2.56,
+   "depthM": 13.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    572,
+    240,
+    42
+   ],
+   "castShadow": true,
+   "tags": [
+    "flatbed",
+    "logistics",
+    "trailer"
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: parked box semi-trailer, no cab References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_truck_trailer_parked_b",
+   "collider": "box",
+   "heightM": 4.0,
+   "widthM": 2.58,
+   "depthM": 13.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    576,
+    160,
+    32
+   ],
+   "castShadow": true,
+   "tags": [
+    "box",
+    "logistics",
+    "trailer"
+   ]
+  },
+  {
+   "id": "aro_yard_mast_light",
+   "category": "lights",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: 20 m high-mast floodlight with four heads References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_yard_mast_light",
+   "collider": "box",
+   "heightM": 19.9,
+   "widthM": 1.9,
+   "depthM": 1.9,
+   "cullDistance": 140,
+   "lodTriangles": [
+    612,
+    236,
+    44
+   ],
+   "castShadow": true,
+   "tags": [
+    "high_mast",
+    "industrial",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.72,
+    "intensity": 1.5,
+    "range": 36,
+    "haloSize": 2.4,
+    "poolRadius": 11.0,
+    "poolShift": 0.0,
+    "realLight": true,
+    "heads": [
+     {
+      "x": -0.672,
+      "y": 18.7,
+      "z": -0.672
+     },
+     {
+      "x": 0.672,
+      "y": 18.7,
+      "z": -0.672
+     },
+     {
+      "x": 0.672,
+      "y": 18.7,
+      "z": 0.672
+     },
+     {
+      "x": -0.672,
+      "y": 18.7,
+      "z": 0.672
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_bollard_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family A, class GLOBAL: steel and concrete bollard, yellow-black References: R-013, R-014, R-015, RB-13. No brand, plate or logo.",
+   "source": "Props/aro_bollard_set",
+   "collider": "box",
+   "heightM": 1.0,
+   "widthM": 0.3,
+   "depthM": 0.3,
+   "cullDistance": 140,
+   "lodTriangles": [
+    150,
+    76,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "logistics",
+    "prop"
+   ]
+  },
+  {
+   "id": "kano_bus_terminal_hall_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: bus terminal building: glazed concourse and ticket hall, arrivals canopy, brise-soleil upper volume References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_bus_terminal_hall_a",
+   "collider": "box",
+   "heightM": 10.5,
+   "widthM": 40.6,
+   "depthM": 22.3,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2388,
+    364,
+    60
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_terminal",
+    "commercial",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.6,
+    "poolRadius": 3.6,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 17.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": 12.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": 7.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": 2.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": -2.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": -7.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": -12.5,
+      "y": 4.75,
+      "z": 10.5
+     },
+     {
+      "x": -17.5,
+      "y": 4.75,
+      "z": 10.5
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 5.8,
+    "z": 11.05,
+    "width": 24.0,
+    "height": 0.8,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "kano_bus_shelter_long_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: long platform canopy for three bays: benches, route panels, bay-number fascia; no collision (open canopy) References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_bus_shelter_long_a",
+   "collider": "none",
+   "heightM": 4.2,
+   "widthM": 18.1,
+   "depthM": 4.1,
+   "cullDistance": 140,
+   "lodTriangles": [
+    1042,
+    442,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_terminal",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 6.0,
+      "y": 3.4,
+      "z": 1.7
+     },
+     {
+      "x": -0.0,
+      "y": 3.4,
+      "z": 1.7
+     },
+     {
+      "x": -6.0,
+      "y": 3.4,
+      "z": 1.7
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 3.82,
+    "z": 2.07,
+    "width": 17.0,
+    "height": 0.45,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_bus_shelter_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class GLOBAL: single-bay roadside shelter with bench and stop pole; no collision References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/aro_bus_shelter_a",
+   "collider": "none",
+   "heightM": 3.04,
+   "widthM": 5.67,
+   "depthM": 2.04,
+   "cullDistance": 140,
+   "lodTriangles": [
+    346,
+    164,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_stop",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 2.76,
+      "z": 0.96
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 2.93,
+    "z": 1.03,
+    "width": 4.8,
+    "height": 0.14,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "kano_ticket_kiosk_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: ticket booth with window, counter and queue rail References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_ticket_kiosk_a",
+   "collider": "box",
+   "heightM": 2.8,
+   "widthM": 2.5,
+   "depthM": 3.38,
+   "cullDistance": 140,
+   "lodTriangles": [
+    200,
+    52,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_terminal",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 2.45,
+      "z": 0.3
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 2.37,
+    "z": 0.2,
+    "width": 1.5,
+    "height": 0.22,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "kano_departure_board_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: double-face departures board on two posts References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_departure_board_a",
+   "collider": "box",
+   "heightM": 4.7,
+   "widthM": 3.0,
+   "depthM": 0.4,
+   "cullDistance": 140,
+   "lodTriangles": [
+    462,
+    118,
+    26
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_terminal",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 4.7,
+      "z": 0.2
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 3.9,
+    "z": 0.145,
+    "width": 2.9,
+    "height": 1.0,
+    "yawDeg": 0,
+    "colour": "yellow",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "kano_minibus_stand_canopy_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: minibus stand: tin roof on poles, route boards, bench, queue rail References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_minibus_stand_canopy_a",
+   "collider": "box",
+   "heightM": 3.66,
+   "widthM": 12.0,
+   "depthM": 6.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    872,
+    292,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "minibus",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 4.0,
+      "y": 3.2,
+      "z": 2.95
+     },
+     {
+      "x": -4.0,
+      "y": 3.2,
+      "z": 2.95
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 3.45,
+    "z": 3.0,
+    "width": 11.0,
+    "height": 0.3,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "kano_tricycle_rank_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class CITY_SPECIFIC: tricycle rank: small canopy, bench, painted kerb, queue marks; no collision References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/kano_tricycle_rank_a",
+   "collider": "none",
+   "heightM": 2.96,
+   "widthM": 8.5,
+   "depthM": 5.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    388,
+    188,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "transport",
+    "tricycle"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 2.6,
+      "z": -0.3
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_parking_bay_barrier_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family B, class GLOBAL: parking-bay wheel stop, low rail and planter box (2.5 m tile) References: R-009, RB-13, RB-07. No brand, plate or logo.",
+   "source": "Props/aro_parking_bay_barrier_set",
+   "collider": "box",
+   "heightM": 0.68,
+   "widthM": 2.4,
+   "depthM": 0.72,
+   "cullDistance": 140,
+   "lodTriangles": [
+    156,
+    92,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "tile_2_5m",
+    "transport"
+   ]
+  },
+  {
+   "id": "aro_streetlight_arm_single_a",
+   "category": "lights",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: single-arm 9 m street light with a cobra-head luminaire References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_streetlight_arm_single_a",
+   "collider": "none",
+   "heightM": 9.37,
+   "widthM": 0.48,
+   "depthM": 3.29,
+   "cullDistance": 140,
+   "lodTriangles": [
+    356,
+    106,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "industrial",
+    "residential",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 1.0,
+    "range": 24,
+    "haloSize": 1.8,
+    "poolRadius": 5.5,
+    "poolShift": 3.0,
+    "realLight": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 8.9,
+      "z": 2.2
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_streetlight_double_median_a",
+   "category": "lights",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: twin-arm 12 m street light for a planter median References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_streetlight_double_median_a",
+   "collider": "none",
+   "heightM": 12.17,
+   "widthM": 5.2,
+   "depthM": 0.9,
+   "cullDistance": 140,
+   "lodTriangles": [
+    542,
+    132,
+    44
+   ],
+   "castShadow": true,
+   "tags": [
+    "expressway",
+    "median",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 1.15,
+    "range": 30,
+    "haloSize": 1.8,
+    "poolRadius": 6.5,
+    "poolShift": 1.8,
+    "realLight": true,
+    "heads": [
+     {
+      "x": 2.55,
+      "y": 11.5,
+      "z": -0.0
+     },
+     {
+      "x": -2.55,
+      "y": 11.5,
+      "z": -0.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_streetlight_ornamental_a",
+   "category": "lights",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: decorative 6 m lantern pole for islands and plazas References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_streetlight_ornamental_a",
+   "collider": "none",
+   "heightM": 6.1,
+   "widthM": 0.93,
+   "depthM": 0.8,
+   "cullDistance": 140,
+   "lodTriangles": [
+    358,
+    150,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "island",
+    "plaza",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.72,
+    "b": 0.38,
+    "intensity": 0.9,
+    "range": 18,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 5.4,
+      "z": -0.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_road_sign_stop_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'stop' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_stop_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.76,
+   "depthM": 0.11,
+   "cullDistance": 140,
+   "lodTriangles": [
+    402,
+    100,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_yield_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'yield' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_yield_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.94,
+   "depthM": 0.13,
+   "cullDistance": 140,
+   "lodTriangles": [
+    310,
+    56,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_speed50_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'speed50' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_speed50_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.72,
+   "depthM": 0.12,
+   "cullDistance": 140,
+   "lodTriangles": [
+    546,
+    200,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_speed80_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'speed80' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_speed80_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.72,
+   "depthM": 0.12,
+   "cullDistance": 140,
+   "lodTriangles": [
+    570,
+    200,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_no_entry_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'no_entry' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_no_entry_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.72,
+   "depthM": 0.12,
+   "cullDistance": 140,
+   "lodTriangles": [
+    390,
+    160,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_bus_stop_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'bus_stop' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_bus_stop_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.6,
+   "depthM": 0.13,
+   "cullDistance": 140,
+   "lodTriangles": [
+    336,
+    74,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "information",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_zebra_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'zebra' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_zebra_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.6,
+   "depthM": 0.14,
+   "cullDistance": 140,
+   "lodTriangles": [
+    316,
+    80,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "road_sign",
+    "warning"
+   ]
+  },
+  {
+   "id": "aro_road_sign_no_left_turn_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: road sign 'no_left_turn' on a 3 m post (one placement per sign; the breakdown's 'post set' row) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_no_left_turn_a",
+   "collider": "none",
+   "heightM": 2.93,
+   "widthM": 0.72,
+   "depthM": 0.13,
+   "cullDistance": 140,
+   "lodTriangles": [
+    506,
+    224,
+    20
+   ],
+   "castShadow": false,
+   "tags": [
+    "regulatory",
+    "road_sign"
+   ]
+  },
+  {
+   "id": "aro_road_sign_direction_a",
+   "category": "signs",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: blue-green destination sign on two posts with a blank text field References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_road_sign_direction_a",
+   "collider": "none",
+   "heightM": 3.95,
+   "widthM": 3.0,
+   "depthM": 0.16,
+   "cullDistance": 140,
+   "lodTriangles": [
+    308,
+    110,
+    26
+   ],
+   "castShadow": false,
+   "tags": [
+    "direction",
+    "road_sign"
+   ],
+   "label": {
+    "x": -0.0,
+    "y": 3.2,
+    "z": 0.085,
+    "width": 2.7,
+    "height": 1.0,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_gantry_sign_a",
+   "category": "environment",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: overhead sign gantry over a 2 x 3 lane carriageway (24 m between the legs), 5.6 m clearance References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_gantry_sign_a",
+   "collider": "box",
+   "heightM": 7.0,
+   "widthM": 25.0,
+   "depthM": 1.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    1008,
+    284,
+    64
+   ],
+   "castShadow": true,
+   "tags": [
+    "expressway",
+    "gantry",
+    "road_sign"
+   ],
+   "label": {
+    "x": 6.1,
+    "y": 6.35,
+    "z": 0.452,
+    "width": 8.4,
+    "height": 1.2,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
+  },
+  {
+   "id": "aro_traffic_signal_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: signal mast with an arm over the road and two three-aspect heads (static) References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_traffic_signal_a",
+   "collider": "none",
+   "heightM": 6.0,
+   "widthM": 0.6,
+   "depthM": 4.48,
+   "cullDistance": 140,
+   "lodTriangles": [
+    462,
+    226,
+    28
+   ],
+   "castShadow": true,
+   "tags": [
+    "junction",
+    "traffic_signal"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.1,
+    "b": 0.06,
+    "intensity": 0.9,
+    "range": 3,
+    "haloSize": 0.6,
+    "poolRadius": 0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 5.33,
+      "z": 4.07
+     },
+     {
+      "x": -0.0,
+      "y": 3.33,
+      "z": 0.47
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_guardrail_post_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: 4 m W-beam guardrail run with posts and a tapered end References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_guardrail_post_set",
+   "collider": "box",
+   "heightM": 0.9,
+   "widthM": 4.1,
+   "depthM": 0.26,
+   "cullDistance": 140,
+   "lodTriangles": [
+    150,
+    88,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "barrier",
+    "tile_4m"
+   ]
+  },
+  {
+   "id": "aro_jersey_barrier_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: 3 m concrete safety barrier module References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_jersey_barrier_a",
+   "collider": "box",
+   "heightM": 0.8,
+   "widthM": 3.0,
+   "depthM": 0.64,
+   "cullDistance": 140,
+   "lodTriangles": [
+    124,
+    52,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "barrier",
+    "tile_3m"
+   ]
+  },
+  {
+   "id": "aro_kerb_painted_run_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: 2 m painted island kerb run References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_kerb_painted_run_a",
+   "collider": "box",
+   "heightM": 0.15,
+   "widthM": 2.0,
+   "depthM": 0.26,
+   "cullDistance": 140,
+   "lodTriangles": [
+    100,
+    40,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "kerb",
+    "tile_2m"
+   ]
+  },
+  {
+   "id": "aro_drain_grate_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: drain inlet grate and manhole cover as thin raised plates References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_drain_grate_set",
+   "collider": "none",
+   "heightM": 0.04,
+   "widthM": 1.2,
+   "depthM": 0.7,
+   "cullDistance": 140,
+   "lodTriangles": [
+    270,
+    128,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "drainage"
+   ]
+  },
+  {
+   "id": "aro_bench_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: street bench References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_bench_a",
+   "collider": "box",
+   "heightM": 0.9,
+   "widthM": 1.84,
+   "depthM": 0.6,
+   "cullDistance": 140,
+   "lodTriangles": [
+    308,
+    100,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "street_furniture"
+   ]
+  },
+  {
+   "id": "aro_litter_bin_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: street litter bin References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_litter_bin_a",
+   "collider": "box",
+   "heightM": 0.9,
+   "widthM": 0.5,
+   "depthM": 0.52,
+   "cullDistance": 140,
+   "lodTriangles": [
+    190,
+    66,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "street_furniture"
+   ]
+  },
+  {
+   "id": "aro_planter_island_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: kerbed planter box, 4 m References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_planter_island_a",
+   "collider": "box",
+   "heightM": 0.84,
+   "widthM": 4.08,
+   "depthM": 2.01,
+   "cullDistance": 140,
+   "lodTriangles": [
+    218,
+    90,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "island",
+    "median",
+    "planter"
+   ]
+  },
+  {
+   "id": "aro_planter_island_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class GLOBAL: kerbed planter box, 8 m References: R-004, R-012, R-022, R-023, RB-07, RB-09. No brand, plate or logo.",
+   "source": "Props/aro_planter_island_b",
+   "collider": "box",
+   "heightM": 0.84,
+   "widthM": 8.08,
+   "depthM": 2.01,
+   "cullDistance": 140,
+   "lodTriangles": [
+    378,
+    130,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "island",
+    "median",
+    "planter"
+   ]
+  },
+  {
+   "id": "kano_utility_pole_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family C, class CITY_SPECIFIC: 11 m utility pole with a transformer, insulators and cable stubs References: R-021, R-016, RB-07, M-06. No brand, plate or logo.",
+   "source": "Props/kano_utility_pole_set",
+   "collider": "none",
+   "heightM": 11.0,
+   "widthM": 14.0,
+   "depthM": 1.08,
+   "cullDistance": 140,
+   "lodTriangles": [
+    434,
+    272,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "residential",
+    "utility"
+   ]
+  }
+ ],
+ "bounds": {
+  "rg_ngn_warehouse_hall_a": [
+   [
+    -24.5,
+    -12.925,
+    0.0
+   ],
+   [
+    24.5,
+    12.0,
+    10.1
+   ]
+  ],
+  "rg_ngn_warehouse_hall_b": [
+   [
+    -18.2,
+    -12.0,
+    0.0
+   ],
+   [
+    18.2,
+    9.04,
+    8.0
+   ]
+  ],
+  "rg_ngn_warehouse_cold_a": [
+   [
+    -15.1,
+    -9.925,
+    0.0
+   ],
+   [
+    15.561,
+    8.1,
+    9.97
+   ]
+  ],
+  "aro_dock_leveller_set": [
+   [
+    -1.75,
+    -0.795,
+    0.0
+   ],
+   [
+    1.75,
+    0.675,
+    4.4
+   ]
+  ],
+  "aro_container_20ft_a": [
+   [
+    -3.029,
+    -1.219,
+    0.0
+   ],
+   [
+    3.039,
+    1.219,
+    2.591
+   ]
+  ],
+  "aro_container_20ft_b": [
+   [
+    -3.029,
+    -1.219,
+    0.0
+   ],
+   [
+    3.039,
+    1.219,
+    2.591
+   ]
+  ],
+  "aro_container_20ft_c": [
+   [
+    -3.029,
+    -1.219,
+    0.0
+   ],
+   [
+    3.039,
+    1.219,
+    2.591
+   ]
+  ],
+  "aro_container_40ft_a": [
+   [
+    -6.096,
+    -1.219,
+    0.0
+   ],
+   [
+    6.106,
+    1.219,
+    2.591
+   ]
+  ],
+  "aro_container_40ft_b": [
+   [
+    -6.096,
+    -1.219,
+    0.0
+   ],
+   [
+    6.106,
+    1.219,
+    2.591
+   ]
+  ],
+  "aro_container_stack_3": [
+   [
+    -6.106,
+    -1.219,
+    0.0
+   ],
+   [
+    6.106,
+    1.219,
+    7.8
+   ]
+  ],
+  "aro_pallet_stack_a": [
+   [
+    -1.35,
+    -1.0,
+    0.0
+   ],
+   [
+    1.35,
+    1.12,
+    1.83
+   ]
+  ],
+  "aro_gate_sliding_a": [
+   [
+    -8.425,
+    -2.0,
+    0.0
+   ],
+   [
+    8.425,
+    2.0,
+    3.12
+   ]
+  ],
+  "aro_fence_palisade_set": [
+   [
+    -2.0,
+    -0.06,
+    0.0
+   ],
+   [
+    2.02,
+    0.06,
+    2.55
+   ]
+  ],
+  "aro_wall_plot_set": [
+   [
+    -2.02,
+    -0.14,
+    0.0
+   ],
+   [
+    2.0,
+    0.14,
+    2.48
+   ]
+  ],
+  "aro_weighbridge_a": [
+   [
+    -9.67,
+    -3.27,
+    0.0
+   ],
+   [
+    9.67,
+    3.45,
+    3.3
+   ]
+  ],
+  "aro_fuel_island_truck": [
+   [
+    -8.0,
+    -4.02,
+    0.0
+   ],
+   [
+    8.0,
+    4.0,
+    6.5
+   ]
+  ],
+  "aro_forklift_a": [
+   [
+    -0.65,
+    -1.6,
+    0.0
+   ],
+   [
+    0.65,
+    1.779,
+    2.38
+   ]
+  ],
+  "aro_truck_trailer_parked_a": [
+   [
+    -1.28,
+    -6.5,
+    0.0
+   ],
+   [
+    1.28,
+    6.5,
+    2.7
+   ]
+  ],
+  "aro_truck_trailer_parked_b": [
+   [
+    -1.29,
+    -6.5,
+    0.0
+   ],
+   [
+    1.29,
+    6.5,
+    4.0
+   ]
+  ],
+  "aro_yard_mast_light": [
+   [
+    -0.952,
+    -0.952,
+    0.0
+   ],
+   [
+    0.952,
+    0.952,
+    19.9
+   ]
+  ],
+  "aro_bollard_set": [
+   [
+    -0.15,
+    -0.15,
+    0.0
+   ],
+   [
+    0.15,
+    0.15,
+    1.0
+   ]
+  ],
+  "kano_bus_terminal_hall_a": [
+   [
+    -20.3,
+    -11.0,
+    0.0
+   ],
+   [
+    20.3,
+    11.3,
+    10.5
+   ]
+  ],
+  "kano_bus_shelter_long_a": [
+   [
+    -9.05,
+    -2.05,
+    0.0
+   ],
+   [
+    9.05,
+    2.05,
+    4.2
+   ]
+  ],
+  "aro_bus_shelter_a": [
+   [
+    -2.52,
+    -1.02,
+    0.0
+   ],
+   [
+    3.15,
+    1.02,
+    3.04
+   ]
+  ],
+  "kano_ticket_kiosk_a": [
+   [
+    -1.25,
+    -1.69,
+    0.0
+   ],
+   [
+    1.25,
+    1.69,
+    2.8
+   ]
+  ],
+  "kano_departure_board_a": [
+   [
+    -1.5,
+    -0.2,
+    0.0
+   ],
+   [
+    1.5,
+    0.2,
+    4.7
+   ]
+  ],
+  "kano_minibus_stand_canopy_a": [
+   [
+    -6.0,
+    -3.0,
+    0.0
+   ],
+   [
+    6.0,
+    3.0,
+    3.66
+   ]
+  ],
+  "kano_tricycle_rank_a": [
+   [
+    -4.0,
+    -2.5,
+    0.0
+   ],
+   [
+    4.5,
+    2.5,
+    2.96
+   ]
+  ],
+  "aro_parking_bay_barrier_set": [
+   [
+    -1.2,
+    -0.42,
+    0.0
+   ],
+   [
+    1.2,
+    0.3,
+    0.68
+   ]
+  ],
+  "aro_streetlight_arm_single_a": [
+   [
+    -0.24,
+    -3.05,
+    0.0
+   ],
+   [
+    0.24,
+    0.24,
+    9.37
+   ]
+  ],
+  "aro_streetlight_double_median_a": [
+   [
+    -2.601,
+    -0.45,
+    0.0
+   ],
+   [
+    2.601,
+    0.45,
+    12.17
+   ]
+  ],
+  "aro_streetlight_ornamental_a": [
+   [
+    -0.464,
+    -0.4,
+    0.0
+   ],
+   [
+    0.464,
+    0.4,
+    6.1
+   ]
+  ],
+  "aro_road_sign_stop_a": [
+   [
+    -0.38,
+    -0.014,
+    0.0
+   ],
+   [
+    0.38,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_yield_a": [
+   [
+    -0.47,
+    -0.026,
+    0.0
+   ],
+   [
+    0.47,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_speed50_a": [
+   [
+    -0.36,
+    -0.022,
+    0.0
+   ],
+   [
+    0.36,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_speed80_a": [
+   [
+    -0.36,
+    -0.022,
+    0.0
+   ],
+   [
+    0.36,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_no_entry_a": [
+   [
+    -0.36,
+    -0.024,
+    0.0
+   ],
+   [
+    0.36,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_bus_stop_a": [
+   [
+    -0.3,
+    -0.03,
+    0.0
+   ],
+   [
+    0.3,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_zebra_a": [
+   [
+    -0.3,
+    -0.036,
+    0.0
+   ],
+   [
+    0.3,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_no_left_turn_a": [
+   [
+    -0.36,
+    -0.032,
+    0.0
+   ],
+   [
+    0.36,
+    0.1,
+    2.93
+   ]
+  ],
+  "aro_road_sign_direction_a": [
+   [
+    -1.5,
+    -0.085,
+    0.0
+   ],
+   [
+    1.5,
+    0.075,
+    3.95
+   ]
+  ],
+  "aro_gantry_sign_a": [
+   [
+    -12.5,
+    -0.5,
+    0.0
+   ],
+   [
+    12.5,
+    0.5,
+    7.0
+   ]
+  ],
+  "aro_traffic_signal_a": [
+   [
+    -0.3,
+    -4.18,
+    0.0
+   ],
+   [
+    0.3,
+    0.3,
+    6.0
+   ]
+  ],
+  "aro_guardrail_post_set": [
+   [
+    -2.045,
+    -0.135,
+    0.0
+   ],
+   [
+    2.05,
+    0.125,
+    0.9
+   ]
+  ],
+  "aro_jersey_barrier_a": [
+   [
+    -1.5,
+    -0.32,
+    0.0
+   ],
+   [
+    1.5,
+    0.32,
+    0.8
+   ]
+  ],
+  "aro_kerb_painted_run_a": [
+   [
+    -1.0,
+    -0.13,
+    0.0
+   ],
+   [
+    1.0,
+    0.13,
+    0.15
+   ]
+  ],
+  "aro_drain_grate_set": [
+   [
+    -0.6,
+    -0.35,
+    0.0
+   ],
+   [
+    0.6,
+    0.35,
+    0.037
+   ]
+  ],
+  "aro_bench_a": [
+   [
+    -0.92,
+    -0.3,
+    0.0
+   ],
+   [
+    0.92,
+    0.3,
+    0.9
+   ]
+  ],
+  "aro_litter_bin_a": [
+   [
+    -0.25,
+    -0.27,
+    0.0
+   ],
+   [
+    0.25,
+    0.25,
+    0.9
+   ]
+  ],
+  "aro_planter_island_a": [
+   [
+    -2.04,
+    -1.01,
+    0.0
+   ],
+   [
+    2.04,
+    1.0,
+    0.84
+   ]
+  ],
+  "aro_planter_island_b": [
+   [
+    -4.04,
+    -1.01,
+    0.0
+   ],
+   [
+    4.04,
+    1.0,
+    0.84
+   ]
+  ],
+  "kano_utility_pole_set": [
+   [
+    -7.002,
+    -0.73,
+    0.0
+   ],
+   [
+    7.002,
+    0.35,
+    11.0
+   ]
+  ]
+ },
+ "sockets": {
+  "rg_ngn_warehouse_hall_a": [
+   {
+    "name": "dock_1",
+    "kind": "truck_dock_rear",
+    "x": 12.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_2",
+    "kind": "truck_dock_rear",
+    "x": 6.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_3",
+    "kind": "truck_dock_rear",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_4",
+    "kind": "truck_dock_rear",
+    "x": -6.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_5",
+    "kind": "truck_dock_rear",
+    "x": -12.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_6",
+    "kind": "truck_dock_rear",
+    "x": -18.0,
+    "y": 0.0,
+    "z": 12.15,
+    "yawDeg": 0
+   }
+  ],
+  "rg_ngn_warehouse_hall_b": [
+   {
+    "name": "dock_1",
+    "kind": "truck_dock_rear",
+    "x": 11.0,
+    "y": 0.0,
+    "z": 10.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_2",
+    "kind": "truck_dock_rear",
+    "x": 3.7,
+    "y": 0.0,
+    "z": 10.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_3",
+    "kind": "truck_dock_rear",
+    "x": -3.6,
+    "y": 0.0,
+    "z": 10.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_4",
+    "kind": "truck_dock_rear",
+    "x": -10.9,
+    "y": 0.0,
+    "z": 10.15,
+    "yawDeg": 0
+   }
+  ],
+  "rg_ngn_warehouse_cold_a": [
+   {
+    "name": "dock_1",
+    "kind": "truck_dock_rear",
+    "x": 8.0,
+    "y": 0.0,
+    "z": 9.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_2",
+    "kind": "truck_dock_rear",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 9.15,
+    "yawDeg": 0
+   },
+   {
+    "name": "dock_3",
+    "kind": "truck_dock_rear",
+    "x": -8.0,
+    "y": 0.0,
+    "z": 9.15,
+    "yawDeg": 0
+   }
+  ],
+  "aro_dock_leveller_set": [
+   {
+    "name": "dock",
+    "kind": "truck_dock_rear",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 0.85,
+    "yawDeg": 0
+   }
+  ],
+  "aro_container_20ft_a": [
+   {
+    "name": "pickup",
+    "kind": "container_lift_point",
+    "x": -0.0,
+    "y": 2.59,
+    "z": -0.0,
+    "yawDeg": 0
+   }
+  ],
+  "aro_container_20ft_b": [
+   {
+    "name": "pickup",
+    "kind": "container_lift_point",
+    "x": -0.0,
+    "y": 2.59,
+    "z": -0.0,
+    "yawDeg": 0
+   }
+  ],
+  "aro_container_20ft_c": [
+   {
+    "name": "pickup",
+    "kind": "container_lift_point",
+    "x": -0.0,
+    "y": 2.59,
+    "z": -0.0,
+    "yawDeg": 0
+   }
+  ],
+  "aro_container_40ft_a": [
+   {
+    "name": "pickup",
+    "kind": "container_lift_point",
+    "x": -0.0,
+    "y": 2.59,
+    "z": -0.0,
+    "yawDeg": 0
+   }
+  ],
+  "aro_container_40ft_b": [
+   {
+    "name": "pickup",
+    "kind": "container_lift_point",
+    "x": -0.0,
+    "y": 2.59,
+    "z": -0.0,
+    "yawDeg": 0
+   }
+  ],
+  "aro_pallet_stack_a": [
+   {
+    "name": "collect",
+    "kind": "cargo_pickup",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 1.6,
+    "yawDeg": 0
+   }
+  ],
+  "aro_gate_sliding_a": [
+   {
+    "name": "lane_in",
+    "kind": "gate_entry_lane",
+    "x": 2.75,
+    "y": 0.0,
+    "z": 4.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "lane_out",
+    "kind": "gate_exit_lane",
+    "x": -2.75,
+    "y": 0.0,
+    "z": 4.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "check",
+    "kind": "checkpoint_stop",
+    "x": 2.75,
+    "y": 0.0,
+    "z": 2.8,
+    "yawDeg": 0
+   }
+  ],
+  "aro_weighbridge_a": [
+   {
+    "name": "weigh",
+    "kind": "truck_weigh_stop",
+    "x": -0.0,
+    "y": 0.285,
+    "z": 1.3,
+    "yawDeg": 90
+   }
+  ],
+  "aro_fuel_island_truck": [
+   {
+    "name": "pump_west",
+    "kind": "truck_fuel_stop",
+    "x": 3.5,
+    "y": 0.0,
+    "z": 4.5,
+    "yawDeg": 0
+   },
+   {
+    "name": "pump_east",
+    "kind": "truck_fuel_stop",
+    "x": -3.5,
+    "y": 0.0,
+    "z": 4.5,
+    "yawDeg": 0
+   }
+  ],
+  "aro_truck_trailer_parked_a": [
+   {
+    "name": "hitch",
+    "kind": "trailer_hitch",
+    "x": -0.0,
+    "y": 1.25,
+    "z": 6.4,
+    "yawDeg": 0
+   }
+  ],
+  "aro_truck_trailer_parked_b": [
+   {
+    "name": "hitch",
+    "kind": "trailer_hitch",
+    "x": -0.0,
+    "y": 1.2,
+    "z": 6.4,
+    "yawDeg": 0
+   }
+  ],
+  "kano_bus_terminal_hall_a": [
+   {
+    "name": "bay_1",
+    "kind": "bus_bay_stop",
+    "x": 12.0,
+    "y": 0.0,
+    "z": 22.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "bay_2",
+    "kind": "bus_bay_stop",
+    "x": 4.0,
+    "y": 0.0,
+    "z": 22.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "bay_3",
+    "kind": "bus_bay_stop",
+    "x": -4.0,
+    "y": 0.0,
+    "z": 22.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "bay_4",
+    "kind": "bus_bay_stop",
+    "x": -12.0,
+    "y": 0.0,
+    "z": 22.0,
+    "yawDeg": 0
+   }
+  ],
+  "kano_bus_shelter_long_a": [
+   {
+    "name": "board_1",
+    "kind": "passenger_board",
+    "x": 6.0,
+    "y": 0.0,
+    "z": 2.5,
+    "yawDeg": 0
+   },
+   {
+    "name": "board_2",
+    "kind": "passenger_board",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 2.5,
+    "yawDeg": 0
+   },
+   {
+    "name": "board_3",
+    "kind": "passenger_board",
+    "x": -6.0,
+    "y": 0.0,
+    "z": 2.5,
+    "yawDeg": 0
+   }
+  ],
+  "aro_bus_shelter_a": [
+   {
+    "name": "board",
+    "kind": "passenger_board",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 1.8,
+    "yawDeg": 0
+   }
+  ],
+  "kano_ticket_kiosk_a": [
+   {
+    "name": "queue",
+    "kind": "ticket_queue",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 2.0,
+    "yawDeg": 0
+   }
+  ],
+  "kano_minibus_stand_canopy_a": [
+   {
+    "name": "load_1",
+    "kind": "minibus_load",
+    "x": 4.0,
+    "y": 0.0,
+    "z": 5.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "load_2",
+    "kind": "minibus_load",
+    "x": -0.0,
+    "y": 0.0,
+    "z": 5.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "load_3",
+    "kind": "minibus_load",
+    "x": -4.0,
+    "y": 0.0,
+    "z": 5.0,
+    "yawDeg": 0
+   }
+  ],
+  "kano_tricycle_rank_a": [
+   {
+    "name": "rank_1",
+    "kind": "tricycle_queue",
+    "x": 3.0,
+    "y": 0.0,
+    "z": 1.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "rank_2",
+    "kind": "tricycle_queue",
+    "x": 0.8,
+    "y": 0.0,
+    "z": 1.0,
+    "yawDeg": 0
+   }
+  ]
+ }
+}
