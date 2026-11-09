@@ -77,3 +77,38 @@ spec("rg_ngn_pier_panel_a", "props", D.pier_panel, [(-1.5, -0.15, 0, 1.5, 0.15, 
 spec("aro_deck_edge_light_a", "props", D.edge_light, [], "deck edge luminaire (wall washer)", target=[0.4, 0.3, 0.6])
 spec("aro_noise_wall_set", "props", D.noise_wall, [(-2.05, -0.17, 0, 2.05, 0.17, 3.0)], "4 m sound-wall module for ramps", target=[4, 0.3, 3])
 spec("lmk_kano_roundabout_monument_a", "buildings", D.monument, [(-5.9, -5.9, 0, 5.9, 5.9, 1.05), (-2.9, -2.9, 1.05, 2.9, 2.9, 22.0)], "fictional civic monument: octagonal plinth, shaft, four arches, sphere and spire", target=[12, 12, 22])
+
+
+# ---- Family E (2026-11-09 densification directive): the mosque family. Compound-based: each asset includes its forecourt and the railed boundary wall along the road (front at -Y); the colliders are the building and the minarets,
+# the wall as one long thin box. Real mosques are NOT modelled (owner decision C1); the designs are generic, after R-037 and R-038 (grand), and flagged interpretations (traditional).
+from . import mosque as E
+
+
+def _mn(x, y, w, h):
+    """Collider of a minaret: the footprint of its base block (0.68 w each way, as mosque.minaret builds it) to the full height."""
+    return (round(x - 0.68 * w, 3), round(y - 0.68 * w, 3), 0.0, round(x + 0.68 * w, 3), round(y + 0.68 * w, 3), h)
+
+
+def _mcols(wx, wd, halls, minarets, wall_h=1.8):
+    """Collision boxes in Blender axes: the building (hall and any taller central block), each minaret base-to-top and the road-side wall (a vehicle model cannot enter the compound)."""
+    return list(halls) + list(minarets) + [(-wx / 2, -wd / 2 - 0.3, 0.0, wx / 2, -wd / 2 + 0.3, wall_h)]
+
+
+spec("kano_mosque_grand_a", "buildings", E.grand_a, _mcols(46, 40, [(-22, -4, 0, 22, 17, 7.5), (-16, -5, 0, 16, 17, 12.5)], [_mn(sx * 17.5, -4.5, 3.4, 30.0) for sx in (-1, 1)] + [_mn(sx * 11.0, 15.0, 2.6, 20.0) for sx in (-1, 1)]), "grand mosque after R-037: four minarets, a large ribbed green dome on a windowed drum, a tall pointed iwan, a forecourt and a railed wall (generic design)", target=[46, 40, 30])
+spec("kano_mosque_grand_b", "buildings", E.grand_b, _mcols(58, 42, [(-26, -5, 0, 26, 18, 8.0), (-9, -8, 0, 9, 18, 14.0)], [_mn(sx * 28.0, -6.0, 3.2, 27.0) for sx in (-1, 1)] + [_mn(sx * 12.5, 9.0, 2.4, 19.0) for sx in (-1, 1)]), "grand mosque after R-038: a wide symmetrical facade, a central iwan with steps, a green dome, four minarets, long arcades, a forecourt and a railed wall (generic design)", target=[58, 42, 28])
+spec("rg_ngn_mosque_medium_a", "buildings", E.medium_a, _mcols(26, 26, [(-9, -5, 0, 9, 11.5, 7.0)], [_mn(sx * 10.2, -5.4, 1.9, 17.0) for sx in (-1, 1)]), "medium neighbourhood mosque: a square hall under a green dome, two slim front minarets, a railed wall", target=[26, 26, 17])
+spec("rg_ngn_mosque_medium_b", "buildings", E.medium_b, _mcols(30, 24, [(-12, -4, 0, 12, 10.5, 7.0)], [_mn(13.8, -3.8, 2.4, 18.0)]), "medium mosque: an arcaded flat-roofed hall with three small domes and one octagonal minaret, a railed wall", target=[30, 24, 18])
+spec("rg_ngn_mosque_medium_c", "buildings", E.medium_c, _mcols(28, 28, [(-9, -5, 0, 9, 12, 7.0)], [_mn(sx * 9.8, 11.2, 1.8, 17.0) for sx in (-1, 1)]), "medium mosque: a hall under a pointed dome with four corner domes, a portico, twin rear minarets, a railed wall", target=[28, 28, 17])
+spec("rg_ngn_mosque_small_a", "buildings", E.small_a, _mcols(18, 16, [(-5, -2.5, 0, 5, 7, 4.8)], [_mn(6.3, -1.8, 1.4, 11.0)]), "small local mosque: a compact hall under one small dome, a short minaret, a low railed wall", target=[18, 16, 11])
+spec("rg_ngn_mosque_small_b", "buildings", E.small_b, _mcols(20, 16, [(-7, -2.5, 0, 7, 7, 4.8)], [_mn(8.2, -1.8, 1.4, 10.0)]), "small local mosque: a flat-roofed hall with a hipped porch, a short minaret, a low wall", target=[20, 16, 10])
+spec("rg_ngn_mosque_small_c", "buildings", E.small_c, _mcols(14, 12, [(-4.2, -1.8, 0, 4.2, 5.2, 4.2)], [_mn(5.1, -1.3, 1.1, 8.0)]), "small prayer house: a flat-roofed hall with a small dome over the niche, a short minaret, a plain wall", target=[14, 12, 8])
+spec("rg_ngn_mosque_traditional_a", "buildings", E.traditional_a, _mcols(26, 22, [(-9.2, -3.2, 0, 9.2, 9.7, 6.5)], [(9.6, -2.7, 0.0, 12.0, -0.3, 15.0)], 2.45), "traditional earth-render mosque (a flagged interpretation of R-024 to R-029): battered walls, pinnacles, relief panels, a tapering minaret, a decorated gateway", target=[26, 22, 15])
+spec("rg_ngn_mosque_traditional_b", "buildings", E.traditional_b, _mcols(17, 15, [(-5.7, -2.2, 0, 5.7, 6.7, 5.0)], [(5.65, -1.95, 0.0, 7.55, -0.05, 10.5)], 2.2), "smaller traditional earth-render mosque (flagged interpretation): battered walls, pinnacles, one pointed entrance, a stepped minaret", target=[17, 15, 10.5])
+
+
+# ---- Family F (2026-11-09 densification directive): city fabric: three mid-rise buildings of the R-039 skyline and the monument after R-034 (generic designs; the monument is fictional)
+from . import city as F2
+spec("kano_shopping_parade_a", "buildings", F2.shopping_parade, [(-18, -5.6, 0, 18, 8, 4.6), (-18, -8, 4.6, 18, 8, 15.0)], "four-storey shop-house parade: an arcade with shutter shopfronts, three floors of windows with sunshades, roof tanks (generic design, blank sign bands)", target=[36, 16, 17])
+spec("kano_office_block_a", "buildings", F2.office_block, [(-11, -7, 0, 11, 10, 5.0), (-11, -10, 5.0, 11, 10, 26.6), (-6, -4, 26.6, 6, 4, 29.6)], "seven-storey office block: concrete frame with glazed bands, a glass lobby with a canopy, a plant enclosure and a mast (generic design)", target=[22, 20, 30])
+spec("kano_midrise_apartments_a", "buildings", F2.midrise_apartments, [(-12, -7, 0, 12, 7, 16.2), (-4, 7, 0, 4, 9.6, 18.8)], "five-storey residential block with a balcony on every floor, shutters on the ground floor and a rear stair core (generic design)", target=[24, 18, 19])
+spec("lmk_kano_roundabout_monument_b", "buildings", F2.monument_b, [(-6, -6, 0, 6, 6, 1.2)] + [(sx * 4.05 - 0.85, -0.85, 1.2, sx * 4.05 + 0.85, 0.85, 7.0) for sx in (-1, 1)] + [(-0.85, sy * 4.05 - 0.85, 1.2, 0.85, sy * 4.05 + 0.85, 7.0) for sy in (-1, 1)], "fictional civic monument after R-034: two tall crossing arches on a dark plinth with lettering bands (no real Kano monument is claimed)", target=[12, 12, 24])

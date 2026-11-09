@@ -17,6 +17,7 @@ FAMILIES = {
                  "laterite", "dry_earth", "mud_brick", "tarp_olive", "roof_tile_red", "timber_light", "plaster_terracotta", "paint_blue_bus", "paint_orange", "tile_floor"],
     "tk_metal": ["metal_galvanised", "metal_gate_black", "metal_gate_blue", "frame_aluminium_dark", "shutter_steel", "roof_zinc", "roof_zinc_rust"],
     "tk_glass": ["glass_dark", "glass"],
+    "tk_paint_ext2": ["stone_ivory", "dome_green", "trim_gold", "railing_green", "paver_red"],   # mosque family (2026-11-09): again a separate palette, so the staged T_tk_paint_Palette.png and T_tk_paintext_Palette.png stay byte for byte
     "tk_paint_ext": ["kasa_render", "water_pool"],           # family D (2026-11-09): colours added AFTER tk_paint was frozen and staged; a separate palette so the staged T_tk_paint_Palette.png stays byte for byte
 }
 NEW = {"timber_light": ((0.62, 0.46, 0.28), 0.8, 0.0, 0.0, "light sawn timber (benches, slats)"),
@@ -25,13 +26,19 @@ NEW = {"timber_light": ((0.62, 0.46, 0.28), 0.8, 0.0, 0.0, "light sawn timber (b
        "paint_orange": ((0.88, 0.42, 0.08), 0.55, 0.0, 0.0, "generic orange paint (route panels, minibus stand)"),
        "tile_floor": ((0.66, 0.60, 0.52), 0.7, 0.0, 0.0, "light concourse floor tile"),
        "kasa_render": ((0.57, 0.39, 0.28), 0.94, 0.0, 0.0, "red-pigmented earth (kasa) render of traditional Hausa walls (R-024, R-027); first-pass colour, not established"),
+       "stone_ivory": ((0.80, 0.77, 0.68), 0.85, 0.0, 0.0, "ivory rendered stone of a generic mosque (R-037, R-038); first-pass colour, not established"),
+       "dome_green": ((0.10, 0.36, 0.28), 0.5, 0.0, 0.0, "green dome and minaret cap sheeting (R-037, R-038); first-pass colour"),
+       "trim_gold": ((0.78, 0.60, 0.20), 0.4, 0.0, 0.0, "gold-painted finial and dome ribs (flat colour, no metallic shader)"),
+       "railing_green": ((0.12, 0.28, 0.20), 0.55, 0.0, 0.0, "dark-green painted boundary railing"),
+       "paver_red": ((0.55, 0.28, 0.22), 0.9, 0.0, 0.0, "red concrete forecourt pavers"),
        "water_pool": ((0.16, 0.42, 0.52), 0.1, 0.0, 0.0, "flat pool water of a fountain (no water shader)")}
 for _k, _v in NEW.items(): AM.LIBRARY.setdefault(_k, _v)
 AM.LIBRARY.setdefault("tk_paint", ((0.80, 0.80, 0.78), 0.70, 0.0, 0.0, "transport kit palette of non-metal flat colours (colours of the library entries it folds)"))
 AM.LIBRARY.setdefault("tk_paint_ext", ((0.80, 0.80, 0.78), 0.80, 0.0, 0.0, "transport kit palette extension: kasa render and pool water (family D)"))
+AM.LIBRARY.setdefault("tk_paint_ext2", ((0.80, 0.80, 0.78), 0.80, 0.0, 0.0, "transport kit palette extension: ivory stone, dome green, gold trim, railing green and red pavers (mosque family)"))
 AM.LIBRARY.setdefault("tk_metal", ((0.45, 0.45, 0.47), 0.55, 0.55, 0.0, "transport kit palette of metals (galvanised, black and blue painted steel, aluminium, shutter steel, roof sheet)"))
 AM.LIBRARY.setdefault("tk_glass", ((0.30, 0.40, 0.45), 0.05, 0.0, 0.0, "transport kit palette of glass: dark and pale; alpha is the cell alpha times the material alpha 0.42"))
-TEXTURE_NAME = {"tk_paint": "T_tk_paint_Palette", "tk_metal": "T_tk_metal_Palette", "tk_glass": "T_tk_glass_Palette", "tk_paint_ext": "T_tk_paintext_Palette"}
+TEXTURE_NAME = {"tk_paint": "T_tk_paint_Palette", "tk_metal": "T_tk_metal_Palette", "tk_glass": "T_tk_glass_Palette", "tk_paint_ext": "T_tk_paintext_Palette", "tk_paint_ext2": "T_tk_paintext2_Palette"}
 for _f, _t in TEXTURE_NAME.items(): AM.TEXTURED.setdefault(_f, {"texture": _t})
 AM.ALPHA.setdefault("tk_glass", 0.42)
 GLASS_CELL_ALPHA = {"glass_dark": 1.0, "glass": round(AM.ALPHA["glass"] / AM.ALPHA["glass_dark"], 3)}

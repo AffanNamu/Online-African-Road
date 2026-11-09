@@ -2199,6 +2199,770 @@
     "colour": "white",
     "fontMax": 0
    }
+  },
+  {
+   "id": "kano_mosque_grand_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class CITY_SPECIFIC: grand mosque after R-037: four minarets, a large ribbed green dome on a windowed drum, a tall pointed iwan, a forecourt and a railed wall (generic design) References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/kano_mosque_grand_a",
+   "collider": "box",
+   "heightM": 33.2,
+   "widthM": 46.68,
+   "depthM": 37.94,
+   "cullDistance": 250,
+   "lodTriangles": [
+    5410,
+    2168,
+    108
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "grand_mosque",
+    "landmark_class",
+    "mosque"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.72,
+    "intensity": 1.1,
+    "range": 24,
+    "haloSize": 2.4,
+    "poolRadius": 9.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 17.5,
+      "y": 22.0,
+      "z": 4.5
+     },
+     {
+      "x": -17.5,
+      "y": 22.0,
+      "z": 4.5
+     },
+     {
+      "x": -0.0,
+      "y": 12.0,
+      "z": 5.0
+     },
+     {
+      "x": 20.0,
+      "y": 6.0,
+      "z": 4.0
+     },
+     {
+      "x": -20.0,
+      "y": 6.0,
+      "z": 4.0
+     },
+     {
+      "x": 11.0,
+      "y": 15.0,
+      "z": -18.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_mosque_grand_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class CITY_SPECIFIC: grand mosque after R-038: a wide symmetrical facade, a central iwan with steps, a green dome, four minarets, long arcades, a forecourt and a railed wall (generic design) References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/kano_mosque_grand_b",
+   "collider": "box",
+   "heightM": 30.02,
+   "widthM": 60.61,
+   "depthM": 39.64,
+   "cullDistance": 250,
+   "lodTriangles": [
+    5370,
+    2450,
+    108
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "grand_mosque",
+    "landmark_class",
+    "mosque"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.72,
+    "intensity": 1.1,
+    "range": 24,
+    "haloSize": 2.4,
+    "poolRadius": 9.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 28.0,
+      "y": 20.0,
+      "z": 6.0
+     },
+     {
+      "x": -28.0,
+      "y": 20.0,
+      "z": 6.0
+     },
+     {
+      "x": -0.0,
+      "y": 10.0,
+      "z": 9.0
+     },
+     {
+      "x": 14.0,
+      "y": 6.0,
+      "z": 6.0
+     },
+     {
+      "x": -14.0,
+      "y": 6.0,
+      "z": 6.0
+     },
+     {
+      "x": -0.0,
+      "y": 21.0,
+      "z": -8.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_medium_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: medium neighbourhood mosque: a square hall under a green dome, two slim front minarets, a railed wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_medium_a",
+   "collider": "box",
+   "heightM": 19.42,
+   "widthM": 26.68,
+   "depthM": 25.14,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2850,
+    1238,
+    96
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "mosque",
+    "neighbourhood_mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 16,
+    "haloSize": 1.5,
+    "poolRadius": 6.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 10.2,
+      "y": 12.0,
+      "z": 5.4
+     },
+     {
+      "x": -10.2,
+      "y": 12.0,
+      "z": 5.4
+     },
+     {
+      "x": -0.0,
+      "y": 6.0,
+      "z": 6.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_medium_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: medium mosque: an arcaded flat-roofed hall with three small domes and one octagonal minaret, a railed wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_medium_b",
+   "collider": "box",
+   "heightM": 20.48,
+   "widthM": 30.87,
+   "depthM": 23.14,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2904,
+    1444,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "mosque",
+    "neighbourhood_mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 16,
+    "haloSize": 1.5,
+    "poolRadius": 6.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -13.8,
+      "y": 14.0,
+      "z": 3.8
+     },
+     {
+      "x": -0.0,
+      "y": 5.0,
+      "z": 6.0
+     },
+     {
+      "x": 8.0,
+      "y": 5.0,
+      "z": 6.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_medium_c",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: medium mosque: a hall under a pointed dome with four corner domes, a portico, twin rear minarets, a railed wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_medium_c",
+   "collider": "box",
+   "heightM": 19.42,
+   "widthM": 28.68,
+   "depthM": 26.84,
+   "cullDistance": 250,
+   "lodTriangles": [
+    3300,
+    1440,
+    96
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "mosque",
+    "neighbourhood_mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 16,
+    "haloSize": 1.5,
+    "poolRadius": 6.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 9.8,
+      "y": 12.0,
+      "z": -11.0
+     },
+     {
+      "x": -9.8,
+      "y": 12.0,
+      "z": -11.0
+     },
+     {
+      "x": -0.0,
+      "y": 5.0,
+      "z": 7.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_small_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: small local mosque: a compact hall under one small dome, a short minaret, a low railed wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_small_a",
+   "collider": "box",
+   "heightM": 13.06,
+   "widthM": 18.68,
+   "depthM": 15.64,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1774,
+    780,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "local_mosque",
+    "mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -6.3,
+      "y": 8.0,
+      "z": 1.8
+     },
+     {
+      "x": -0.0,
+      "y": 4.0,
+      "z": 3.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_small_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: small local mosque: a flat-roofed hall with a hipped porch, a short minaret, a low wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_small_b",
+   "collider": "box",
+   "heightM": 12.0,
+   "widthM": 20.68,
+   "depthM": 15.64,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1768,
+    906,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "local_mosque",
+    "mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -8.2,
+      "y": 8.0,
+      "z": 1.8
+     },
+     {
+      "x": -0.0,
+      "y": 4.0,
+      "z": 4.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_small_c",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: small prayer house: a flat-roofed hall with a small dome over the niche, a short minaret, a plain wall References: R-037, R-038, R-039, R-009. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_small_c",
+   "collider": "box",
+   "heightM": 9.88,
+   "widthM": 14.68,
+   "depthM": 11.84,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1526,
+    728,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "local_mosque",
+    "mosque"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -5.1,
+      "y": 6.0,
+      "z": 1.3
+     },
+     {
+      "x": -0.0,
+      "y": 3.0,
+      "z": 2.8
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: traditional earth-render mosque (a flagged interpretation of R-024 to R-029): battered walls, pinnacles, relief panels, a tapering minaret, a decorated gateway References: R-024, R-025, R-026, R-027, R-028, R-029. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_traditional_a",
+   "collider": "box",
+   "heightM": 15.9,
+   "widthM": 26.0,
+   "depthM": 21.15,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1358,
+    472,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "flagged_interpretation",
+    "hausa_inspired",
+    "mosque",
+    "traditional"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.72,
+    "b": 0.38,
+    "intensity": 0.8,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -10.8,
+      "y": 10.0,
+      "z": 3.4
+     },
+     {
+      "x": -0.0,
+      "y": 4.0,
+      "z": 5.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family E, class REGIONAL: smaller traditional earth-render mosque (flagged interpretation): battered walls, pinnacles, one pointed entrance, a stepped minaret References: R-024, R-025, R-026, R-027, R-028, R-029. No brand, plate or logo.",
+   "source": "Props/rg_ngn_mosque_traditional_b",
+   "collider": "box",
+   "heightM": 11.4,
+   "widthM": 17.0,
+   "depthM": 14.55,
+   "cullDistance": 250,
+   "lodTriangles": [
+    730,
+    234,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "flagged_interpretation",
+    "hausa_inspired",
+    "mosque",
+    "traditional"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.72,
+    "b": 0.38,
+    "intensity": 0.8,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -6.6,
+      "y": 7.0,
+      "z": 2.4
+     },
+     {
+      "x": -0.0,
+      "y": 3.5,
+      "z": 3.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_shopping_parade_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family F, class CITY_SPECIFIC: four-storey shop-house parade: an arcade with shutter shopfronts, three floors of windows with sunshades, roof tanks (generic design, blank sign bands) References: R-034, R-039, R-022, R-009. No brand, plate or logo.",
+   "source": "Props/kano_shopping_parade_a",
+   "collider": "box",
+   "heightM": 18.1,
+   "widthM": 36.5,
+   "depthM": 16.9,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1300,
+    214,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "mid_rise",
+    "shop_house"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 12.0,
+      "y": 4.4,
+      "z": 8.2
+     },
+     {
+      "x": -0.0,
+      "y": 4.4,
+      "z": 8.2
+     },
+     {
+      "x": -12.0,
+      "y": 4.4,
+      "z": 8.2
+     },
+     {
+      "x": 12.0,
+      "y": 11.0,
+      "z": 8.2
+     },
+     {
+      "x": -12.0,
+      "y": 11.0,
+      "z": 8.2
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_office_block_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family F, class CITY_SPECIFIC: seven-storey office block: concrete frame with glazed bands, a glass lobby with a canopy, a plant enclosure and a mast (generic design) References: R-034, R-039, R-022, R-009. No brand, plate or logo.",
+   "source": "Props/kano_office_block_a",
+   "collider": "box",
+   "heightM": 34.6,
+   "widthM": 22.56,
+   "depthM": 21.2,
+   "cullDistance": 250,
+   "lodTriangles": [
+    916,
+    268,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "mid_rise",
+    "office"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 14,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 6.3,
+      "y": 4.0,
+      "z": 10.0
+     },
+     {
+      "x": -6.3,
+      "y": 4.0,
+      "z": 10.0
+     },
+     {
+      "x": -0.0,
+      "y": 28.0,
+      "z": 7.0
+     },
+     {
+      "x": -0.0,
+      "y": 33.0,
+      "z": -0.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_midrise_apartments_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family F, class CITY_SPECIFIC: five-storey residential block with a balcony on every floor, shutters on the ground floor and a rear stair core (generic design) References: R-034, R-039, R-022, R-009. No brand, plate or logo.",
+   "source": "Props/kano_midrise_apartments_a",
+   "collider": "box",
+   "heightM": 19.2,
+   "widthM": 24.3,
+   "depthM": 17.9,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1226,
+    484,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "apartments",
+    "generic_design",
+    "mid_rise",
+    "residential"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.6,
+    "poolRadius": 3.5,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.2,
+      "z": 7.2
+     },
+     {
+      "x": 8.0,
+      "y": 3.2,
+      "z": 7.2
+     },
+     {
+      "x": -8.0,
+      "y": 3.2,
+      "z": 7.2
+     }
+    ]
+   }
+  },
+  {
+   "id": "lmk_kano_roundabout_monument_b",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family F, class LANDMARK: fictional civic monument after R-034: two tall crossing arches on a dark plinth with lettering bands (no real Kano monument is claimed) References: R-034, R-035. No brand, plate or logo.",
+   "source": "Props/lmk_kano_roundabout_monument_b",
+   "collider": "box",
+   "heightM": 24.5,
+   "widthM": 12.0,
+   "depthM": 12.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    474,
+    222,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_design",
+    "monument",
+    "roundabout",
+    "twin_arch"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.4,
+    "range": 30,
+    "haloSize": 1.5,
+    "poolRadius": 6.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 4.9,
+      "y": 1.15,
+      "z": 4.9
+     },
+     {
+      "x": -4.9,
+      "y": 1.15,
+      "z": 4.9
+     },
+     {
+      "x": 4.9,
+      "y": 1.15,
+      "z": -4.9
+     },
+     {
+      "x": -4.9,
+      "y": 1.15,
+      "z": -4.9
+     }
+    ]
+   }
   }
  ],
  "bounds": {
@@ -2968,6 +3732,174 @@
     5.451,
     5.451,
     22.0
+   ]
+  ],
+  "kano_mosque_grand_a": [
+   [
+    -23.34,
+    -20.34,
+    0.0
+   ],
+   [
+    23.34,
+    17.6,
+    33.2
+   ]
+  ],
+  "kano_mosque_grand_b": [
+   [
+    -30.304,
+    -21.34,
+    0.0
+   ],
+   [
+    30.304,
+    18.3,
+    30.02
+   ]
+  ],
+  "rg_ngn_mosque_medium_a": [
+   [
+    -13.34,
+    -13.34,
+    0.0
+   ],
+   [
+    13.34,
+    11.8,
+    19.42
+   ]
+  ],
+  "rg_ngn_mosque_medium_b": [
+   [
+    -15.34,
+    -12.34,
+    0.0
+   ],
+   [
+    15.528,
+    10.8,
+    20.48
+   ]
+  ],
+  "rg_ngn_mosque_medium_c": [
+   [
+    -14.34,
+    -14.34,
+    0.0
+   ],
+   [
+    14.34,
+    12.496,
+    19.42
+   ]
+  ],
+  "rg_ngn_mosque_small_a": [
+   [
+    -9.34,
+    -8.34,
+    0.0
+   ],
+   [
+    9.34,
+    7.3,
+    13.06
+   ]
+  ],
+  "rg_ngn_mosque_small_b": [
+   [
+    -10.34,
+    -8.34,
+    0.0
+   ],
+   [
+    10.34,
+    7.3,
+    12.0
+   ]
+  ],
+  "rg_ngn_mosque_small_c": [
+   [
+    -7.34,
+    -6.34,
+    0.0
+   ],
+   [
+    7.34,
+    5.5,
+    9.88
+   ]
+  ],
+  "rg_ngn_mosque_traditional_a": [
+   [
+    -13.0,
+    -11.45,
+    0.0
+   ],
+   [
+    13.0,
+    9.7,
+    15.9
+   ]
+  ],
+  "rg_ngn_mosque_traditional_b": [
+   [
+    -8.5,
+    -7.85,
+    0.0
+   ],
+   [
+    8.5,
+    6.7,
+    11.4
+   ]
+  ],
+  "kano_shopping_parade_a": [
+   [
+    -18.25,
+    -8.7,
+    0.0
+   ],
+   [
+    18.25,
+    8.2,
+    18.1
+   ]
+  ],
+  "kano_office_block_a": [
+   [
+    -11.28,
+    -11.0,
+    0.0
+   ],
+   [
+    11.28,
+    10.2,
+    34.6
+   ]
+  ],
+  "kano_midrise_apartments_a": [
+   [
+    -12.15,
+    -8.3,
+    0.0
+   ],
+   [
+    12.15,
+    9.6,
+    19.2
+   ]
+  ],
+  "lmk_kano_roundabout_monument_b": [
+   [
+    -6.0,
+    -6.0,
+    0.0
+   ],
+   [
+    6.0,
+    6.0,
+    24.5
    ]
   ]
  },

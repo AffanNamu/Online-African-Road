@@ -20,6 +20,8 @@ def main():
         asset = build_scene(sp)
         for lv, o in asset.lods.items():
             if lv > 0: o.hide_render = True
+        for ob in bpy.data.objects:
+            if ob.name.startswith("col_"): ob.hide_render = True                                   # collision boxes are wire objects in Blender but Cycles would draw them (and they can coincide with the walls)
         lo, hi = bounds([asset.lods[0]]); c = (lo + hi) / 2; size = hi - lo; d = max(size.x, size.y, size.z)
         g = geo.Part("ground"); r_ = max(size.x, size.y, 10) * 1.6; z = lo.z - 0.02
         g.face_n([(c.x - r_, c.y - r_, z), (c.x + r_, c.y - r_, z), (c.x + r_, c.y + r_, z), (c.x - r_, c.y + r_, z)], "concrete_dark", (0, 0, 1)); g.to_object("preview_ground")

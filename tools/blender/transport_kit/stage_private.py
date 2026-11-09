@@ -29,12 +29,16 @@ OVERLAP = {
     "aro_jersey_barrier_a": ["aro_median_barrier_jersey_a"], "aro_kerb_painted_run_a": ["aro_kerb_painted_blackwhite_a", "aro_kerb_painted_yellowblack_a"], "aro_drain_grate_set": ["aro_drain_grating_strip_a"],
     "aro_litter_bin_a": ["aro_bin_a"], "aro_planter_island_a": ["aro_planter_island_kerbed_a", "aro_median_planter_kerbed_a"], "aro_planter_island_b": ["aro_planter_island_kerbed_a", "aro_median_planter_kerbed_a"],
     "kano_utility_pole_set": ["aro_pole_electric_concrete_span_a", "rg_ngn_pole_timber_span_a"], "aro_truck_trailer_parked_a": ["aro_trailer_box_a"],
+    "rg_ngn_mosque_medium_a": ["kano_neighbourhood_mosque_a"], "rg_ngn_mosque_medium_b": ["kano_neighbourhood_mosque_a"], "rg_ngn_mosque_medium_c": ["kano_neighbourhood_mosque_a"],
+    "rg_ngn_mosque_small_a": ["kano_neighbourhood_mosque_a"], "rg_ngn_mosque_small_b": ["kano_neighbourhood_mosque_a"], "rg_ngn_mosque_small_c": ["kano_neighbourhood_mosque_a"],
     "aro_flyover_deck_segment_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_b": ["aro_flyover_deck_pier_a"],
 }
 SAME_ID = {"aro_bench_a", "aro_pallet_stack_a"}                  # the registry already has an entry with this id: it moves to this version
 
 
 def library_of(aid: str, x: dict) -> str:
+    if x["family"] == "F": return "modern_architecture"
+    if x["family"] == "E": return "traditional_architecture"                                  # the registry's own category for the (planned, blocked) neighbourhood and great mosques
     if x["family"] == "D":
         if aid == "lmk_kano_roundabout_monument_a": return "modern_architecture"
         if aid in ("rg_ngn_island_wall_a", "rg_ngn_pattern_panel_a", "rg_ngn_pattern_panel_b", "rg_ngn_pattern_panel_c"): return "boundaries_walls_gates"
@@ -74,7 +78,7 @@ def freeze(C: Path, ids, version="v001") -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--game-docs", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--commit", default=""); ap.add_argument("--family", default="", help="only the assets of this family (A, B, C or D); a batch staged later")
+    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--game-docs", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--commit", default=""); ap.add_argument("--family", default="", help="only the assets of this family (A, B, C, D or E); a batch staged later")
     a = ap.parse_args()
     from PIL import Image
     from .build_transport import SPECS, load_all
@@ -112,12 +116,14 @@ def main() -> int:
             for k in ("iso", "front"):
                 src = Path(a.previews) / f"{aid}_{k}.png"
                 if src.is_file(): d = C / "previews" / aid / v; d.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(d / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
-        placements = [{"scene": f"env_{s.name}_dry", "district": {"A": "D10", "B": "D09", "C": "-", "D": "-"}[x["family"]], "count": sum(1 for i in s.items if i["asset"] == aid)} for s in scenes.values() if any(i["asset"] == aid for i in s.items)]
+        placements = [{"scene": f"env_{s.name}_dry", "district": {"A": "D10", "B": "D09", "C": "-", "D": "-", "E": "-", "F": "-"}[x["family"]], "count": sum(1 for i in s.items if i["asset"] == aid)} for s in scenes.values() if any(i["asset"] == aid for i in s.items)]
         cols = sp["cols"]; collision = {"type": "box", "size": [round(cols[0][3] - cols[0][0], 3), round(cols[0][4] - cols[0][1], 3), round(cols[0][5] - cols[0][2], 3)], "boxes": len(cols)} if cols else {"type": "none"}
         flag = ("OPEN: design interpretation of the generated concept reference(s) " + ", ".join(refs) + " (not Kano-verified; first-pass colours and proportions); no brand, plate or logo; not imported into Unity, not reviewed, not approved"
-                + ("; **overlaps the library plan**: the registry also lists " + ", ".join(OVERLAP[aid]) + " for the same thing (the owner decides which id the game uses)" if aid in OVERLAP else "") + ("; built on the owner's instruction that family D follows E5; the family D rows of the breakdown were not individually approved; fictional design interpretation where the id says monument or pattern" if x["family"] == "D" else "") + "; " + sp["note"])
+                + ("; **overlaps the library plan**: the registry also lists " + ", ".join(OVERLAP[aid]) + " for the same thing (the owner decides which id the game uses)" if aid in OVERLAP else "") + ("; built on the owner's instruction that family D follows E5; the family D rows of the breakdown were not individually approved; fictional design interpretation where the id says monument or pattern" if x["family"] == "D" else "")
+                + ("; family E: built on the owner's Kano densification directive of 2026-11-09 (mosque family), a GENERIC mosque design: not the Kano Central Mosque and not any real mosque (owner decision C1: " + ("no real landmark is modelled" if "traditional" not in aid else "traditional forms are a flagged interpretation of documentary sources R-024 to R-029, no licensed photograph") + "); it does not replace the planned `kano_neighbourhood_mosque_a` / `lmk_kano_great_mosque`" if x["family"] == "E" else "")
+                + ("; family F: built on the owner's Kano densification directive of 2026-11-09 (city fabric of the R-039 skyline), a GENERIC design with blank sign bands (no brand, no billboard text)" + ("; the monument is a FICTIONAL designed civic monument, no real Kano monument is claimed" if "monument" in aid else "") if x["family"] == "F" else "") + "; " + sp["note"])
         new = {"id": aid, "name": name_of(sp), "assetClass": x["class"], "category": entry["category"], "region": "ngn" if aid.startswith("rg_ngn_") else None, "city": "kano" if aid.startswith(("kano_", "lmk_kano_")) else None, "approvedCities": [],
-               "concepts": concepts, "districts": {"A": ["D10"], "B": ["D09"], "C": [], "D": []}[x["family"]], "status": "blender_validation_passed", "breakdownApproved": x["family"] != "D",
+               "concepts": concepts, "districts": {"A": ["D10"], "B": ["D09"], "C": [], "D": [], "E": [], "F": []}[x["family"]], "status": "blender_validation_passed", "breakdownApproved": x["family"] not in ("D", "E", "F"),
                "blenderSource": manifest["source"]["blend"], "export": f"unity/Models/{aid}/{v}/{aid}.fbx", "unityPrefab": None, "placements": placements,
                "validation": {"blender": f"blender/validation/{aid}/{v}.json", "unityImport": None, "visualReview": None}, "approvedBy": None,
                "plannedBudget": {"lod0TrisMax": stats["budget_triangles"], "note": "validator ceiling for the category; the approved breakdown row (docs/KANO_TRANSPORT_ASSET_BREAKDOWN.md) gives the expected count"},
