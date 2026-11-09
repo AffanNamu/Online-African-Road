@@ -130,3 +130,37 @@ admin_list_sanctions
 # --- immediate ban enforcement (20261023000001): the PostgREST pre-request hook and the player's own restriction view
 enforce_account_status
 get_my_restrictions
+# --- advertising (migration 20261110000001): players
+get_ad_manifest
+record_ad_exposure
+# --- advertising: the admin site (every one checks signed in, active admin, second step and role inside)
+admin_ad_overview
+admin_ad_list_boards
+admin_ad_set_board_status
+admin_ad_list_packages
+admin_ad_save_package
+admin_ad_set_price
+admin_ad_list_enquiries
+admin_ad_update_enquiry
+admin_ad_convert_enquiry
+admin_ad_create_campaign
+admin_ad_list_campaigns
+admin_ad_save_campaign
+admin_ad_submit_campaign
+admin_ad_review_campaign
+admin_ad_set_campaign_state
+admin_ad_set_payment_status
+admin_ad_assign
+admin_ad_unassign
+admin_ad_list_creatives
+admin_ad_register_creative
+admin_ad_review_creative
+admin_ad_confirm_variants
+admin_ad_analytics
+# --- advertising: anonymous advertisers (also listed in anon_surface.txt) and the storage policy helpers (booleans about the caller or a path; change nothing)
+submit_ad_enquiry
+request_ad_upload
+_ad_is_owner
+_ad_is_reviewer
+_ad_may_publish
+_ad_ticket_ok

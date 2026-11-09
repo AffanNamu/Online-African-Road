@@ -23,6 +23,8 @@ jobs:
         run: bash supabase/tests/40_upgrade.sh
       - name: Job board top-up script (cold start, steady top-up, the cap, expired and closed jobs not counted, a foreign database refused)
         run: bash supabase/tests/49_top_up_jobs.sh
+      - name: The advertising storage script is a verbatim copy of the migration's storage block
+        run: python3 tools/check_storage_ads_copy.py
       - name: API contract (every C# DTO the client parses versus the real output of the real RPCs)
         run: python3 tools/check_api_contract.py
       - name: Mutation test (every protection must be caught by a test)
@@ -51,6 +53,11 @@ jobs:
           npm install --no-save playwright@1.49.1
           npx playwright install --with-deps chromium
           node tools/admin_e2e.js
+      - name: Advertising section of the admin site end to end (the advertising role, a public enquiry, conversion to a draft, prices in minor units, analytics wording; informational until two runs agree)
+        continue-on-error: true
+        run: |
+          source /tmp/aro-e2e.env
+          node tools/admin_ads_e2e.js
       - name: Backend logs
         if: failure()
         run: tail -n 80 /tmp/aro-e2e-postgrest.log /tmp/aro-e2e-shim.log || true

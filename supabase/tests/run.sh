@@ -32,4 +32,5 @@ run tests/48_nearby_opt_in.sql
 run tests/50_admin.sql
 run tests/51_admin_content_moderation.sql
 run tests/52_account_status.sql
+run tests/53_advertising.sql
 if [ -z "${SKIP_CONCURRENCY:-}" ]; then bash tests/30_concurrency.sh; fi

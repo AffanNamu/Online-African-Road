@@ -47,3 +47,6 @@ button.danger { background:var(--bad); color:#1b0000; }
 blockquote { margin:10px 0; padding:8px 12px; border-left:3px solid var(--line); background:var(--bg); border-radius:0 8px 8px 0; word-break:break-word; }
 .ctx ul { list-style:none; padding:0; margin:8px 0; } .ctx li { padding:3px 8px; border-radius:6px; } .ctx li.hit { background:rgba(255,107,107,.12); }
 .row-head { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+.thumb { margin:8px 0; } .thumb canvas { max-width:100%; height:auto; border:1px solid var(--line); border-radius:8px; background:#fff; display:block; }
+.warn { color:var(--warn); }

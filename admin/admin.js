@@ -138,6 +138,15 @@
     codeBox.focus();
   }
 
+  // ------------------------------------------------------------------ extension point: other files of this site (admin/ads.js) add sections here. They get the same helpers, the same RPC wrapper and the
+  // same error words; they decide nothing either (the database authorises every call).
+  const EXT = { tabs: [] };
+  async function authToken() {
+    if (!session) throw new ApiError('not_authenticated', 401);
+    if (session.expires_at - Date.now() < 30000) { try { await refresh(); } catch (e) { keep(null); throw new ApiError('not_authenticated', 401); } }
+    return session.access_token;
+  }
+
   // ------------------------------------------------------------------ the app
   const TABS = [
     { id: 'health', label: 'Live health', roles: ['owner', 'operations', 'support', 'analyst'], view: viewHealth },
@@ -159,12 +168,12 @@
   function showApp() {
     $('top').hidden = false; $('who').textContent = (email ? email + ' - ' : '') + me.role; touchIdle();
     const nav = $('tabs'); clear(nav);
-    const mine = TABS.filter(t => t.roles.includes(me.role));
+    const mine = TABS.concat(EXT.tabs).filter(t => t.roles.includes(me.role));
     for (const t of mine) nav.append(el('button', { type: 'button', id: 'tab_' + t.id, onclick: () => go(t.id) }, t.label));
     go(mine[0].id);
   }
   async function go(id) {
-    const tab = TABS.find(t => t.id === id); if (!tab) return;
+    const tab = TABS.concat(EXT.tabs).find(t => t.id === id); if (!tab) return;
     stopTimers(); current = id;
     for (const b of $('tabs').children) b.removeAttribute('aria-current'); const btn = $('tab_' + id); if (btn) btn.setAttribute('aria-current', 'page');
     clear(main); main.append(el('h1', {}, tab.label));
@@ -272,6 +281,7 @@
   const badge = (text, cls) => el('span', { class: 'badge ' + (cls || text) }, text);
   const field = (label, input, id) => el('div', {}, el('label', { for: id }, label), input);
   const ACTIONS = ['jobs', 'convoy', 'bus', 'map', 'garage'], CATEGORIES = ['update', 'event', 'tip', 'maintenance'];
+  window.ARO_ADMIN = { el, clear, rpc, ask, reasonField, words, WORDS, when, ago, num, table, badge, field, dtLocal, dtIso, authToken, cfg, ApiError, tabs: EXT.tabs, role: () => (me ? me.role : null) };
 
   async function viewContent(root) {
     const list = el('div'), editor = el('div', { id: 'editor' }), out = el('p', { id: 'contentout', class: 'muted', role: 'status' });

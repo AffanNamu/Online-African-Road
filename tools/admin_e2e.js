@@ -71,7 +71,7 @@ async function run() {
   { const r = await rpcAs(U.own.token, 'admin_health'); check(r.status >= 400 && /mfa_required/.test(JSON.stringify(r.body)), 'the API refuses an owner whose sign-in has no second factor (mfa_required)', JSON.stringify(r)); }
   const own = await newPage();
   await signIn(own, U.own); await enrol(own, U.own, true);
-  check((await tabs(own)).join('|') === 'Live health|Players|News & banners|Broadcast|Routes & servers|Reports|Restrictions|Audit log|Team', 'an owner sees every section', (await tabs(own)).join('|'));
+  check((await tabs(own)).join('|') === 'Live health|Players|News & banners|Broadcast|Routes & servers|Reports|Restrictions|Audit log|Team|Advertising', 'an owner sees every section', (await tabs(own)).join('|'));
   check((await decodeAal(own)) === 'aal2', 'after the second factor the session is aal2');
   await own.reload(); await own.waitForSelector('#tabs button'); check(true, 'a reload keeps the signed-in admin (this tab only)');
   await own.click('#signout'); await own.waitForSelector('#email'); check(await own.evaluate(() => sessionStorage.getItem('aro_admin_session') === null), 'signing out removes the session');
@@ -140,7 +140,7 @@ async function run() {
     const g = await rpcAs(tok, 'admin_get_player', { p_id: U.tgt.id, p_reason: 'bypassing the page' }); check(g.status >= 400 && /not_allowed/.test(JSON.stringify(g.body)), 'the server refuses operations a player record', JSON.stringify(g));
     await p.context().close(); }
   { const p = await rolePage(U.ana);
-    check((await tabs(p)).join('|') === 'Live health|Audit log', 'an analyst sees Live health and the Audit log only');
+    check((await tabs(p)).join('|') === 'Live health|Audit log|Advertising', 'an analyst sees Live health, the Audit log and the (read-only) Advertising numbers');
     await p.waitForSelector('.tile');          // the tabs appear before the health view has loaded; the button is added when it has
     check((await p.$('#gen')) === null, 'an analyst has no "generate jobs" button');
     await p.click('#tab_audit'); await p.waitForSelector('tbody tr'); check(true, 'an analyst can read the audit log');

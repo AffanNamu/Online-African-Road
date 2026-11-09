@@ -1,0 +1,8 @@
+# Every function in schema public that the role `anon` (a caller with only the anon key and no sign-in) may EXECUTE. One name per line. The security matrix fails if the database exposes anything else.
+# Before advertising nothing was listed here: an anonymous caller could do nothing. Adding a line is a reviewed change.
+submit_ad_enquiry
+request_ad_upload
+_ad_is_owner
+_ad_is_reviewer
+_ad_may_publish
+_ad_ticket_ok

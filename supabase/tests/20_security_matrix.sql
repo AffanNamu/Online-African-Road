@@ -1,5 +1,6 @@
 \set ON_ERROR_STOP on
 \set api `grep -v '^#' api_surface.txt | tr '\n' ' '`
+\set anonapi `grep -v '^#' anon_surface.txt | tr '\n' ' '`
 select set_config('aro.api', :'api', false);
 -- Security matrix (phases 1 and 4). Maps to docs/SECURITY.md.
 
@@ -58,6 +59,14 @@ do $$ declare extra text; begin
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname <> all (string_to_array(trim(current_setting('aro.api')), ' '));
   if extra is not null then raise exception 'unexpected client-executable functions: %', extra; end if;
+end $$;
+-- and the anonymous role may execute exactly the functions in anon_surface.txt (the public advertising form and the storage policy helpers), nothing else
+select set_config('aro.anonapi', :'anonapi', false);
+do $$ declare extra text; begin
+  select string_agg(p.oid::regprocedure::text, ', ') into extra from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
+     and p.proname <> all (string_to_array(trim(current_setting('aro.anonapi')), ' '));
+  if extra is not null then raise exception 'unexpected anonymous-executable functions: %', extra; end if;
 end $$;
 do $$ declare bad text; begin
   select string_agg(p.proname, ',') into bad from pg_proc p join pg_namespace n on n.oid = p.pronamespace

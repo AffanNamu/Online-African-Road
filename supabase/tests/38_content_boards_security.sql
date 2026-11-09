@@ -2,6 +2,7 @@
 -- Backend foundation tests, part 4: authored content, leaderboards, analytics hygiene, dashboard summary, and structural
 -- API-security checks that hold for EVERY endpoint (so a future endpoint cannot silently break them).
 \set api `grep -v '^#' api_surface.txt | tr '\n' ' '`
+\set anonapi `grep -v '^#' anon_surface.txt | tr '\n' ' '`
 select set_config('aro.api', :'api', false);
 create function pg_temp.j(p_uid uuid, p_sql text) returns jsonb language sql as $$ select testkit.as_user(p_uid, p_sql)::jsonb $$;
 create temp table fx(k text primary key, v text);
@@ -157,32 +158,39 @@ select testkit.assert_eq('the API surface is exactly the reviewed list', (select
 select testkit.assert_eq('every listed endpoint exists', (select count(*)::text from unnest(string_to_array(trim(:'api'), ' ')) n where not exists (select 1 from api where proname = n)), '0');
 select testkit.assert_eq('every endpoint is SECURITY DEFINER with a pinned search_path',
   (select count(*)::text from api where not prosecdef or not coalesce(proconfig::text like '%search_path=public%', false)), '0');
-select testkit.assert_eq('every endpoint authenticates with auth.uid()', (select coalesce(string_agg(proname, ','), 'none') from api where prosrc not like '%auth.uid()%'), 'none');
+select testkit.assert_eq('every endpoint authenticates with auth.uid() (except the reviewed anonymous surface of anon_surface.txt: the public advertising form and the storage policy helpers)',
+  (select coalesce(string_agg(proname, ','), 'none') from api where prosrc not like '%auth.uid()%' and proname <> all (string_to_array(trim(:'anonapi'), ' '))), 'none');
 select testkit.assert_eq('no endpoint accepts a caller identity (the player is always auth.uid())',
   (select coalesce(string_agg(proname || '(' || a || ')', ','), 'none') from api, unnest(proargnames) a
     where a in ('p_uid','p_user','p_user_id','p_player_id','p_owner','p_owner_id','p_me','p_self','p_caller')), 'none');
 select testkit.assert_eq('no endpoint accepts a reward, xp, coins, balance or amount from the client',
   (select coalesce(string_agg(proname || '(' || a || ')', ','), 'none') from api, unnest(proargnames) a
-    where a ~* '(reward|xp|coin|balance|amount|price|cost|level|distance|damage_total)' and proname not in ('complete_job')), 'none');
+    where a ~* '(reward|xp|coin|balance|amount|price|cost|level|distance|damage_total)' and proname not in ('complete_job', 'admin_ad_set_price')), 'none');      -- admin_ad_set_price: the OWNER sets a package price (owner only, audited with old and new amount); it touches no player balance
 select testkit.assert_eq('complete_job accepts only the damage figure besides the assignment id', (select array_to_string(proargnames, ',') from api where proname = 'complete_job'), 'p_assignment,p_damage_pct');
 select testkit.assert_eq('every write endpoint is rate limited or state-machine guarded',
   (select coalesce(string_agg(proname, ','), 'none') from api
-    where prosrc not like '%_rate_limit%'
+    where prosrc not like '%_rate_limit%' and prosrc not like '%_ad_public_limit%'      -- the public advertising form is capped by shared counters (it has no identity to count)
       and proname not in ('set_display_name','accept_job','start_job','submit_telemetry','complete_job','abandon_job','buy_fuel','repair_vehicle',
                           'create_convoy','join_convoy','leave_convoy','get_convoy_session_code','set_convoy_session_code','buy_vehicle','buy_vehicle_skin',
                           'start_bus_run','submit_bus_telemetry','serve_stop','abandon_bus_run',
-                          'enforce_account_status')), 'none');   -- the PostgREST pre-request hook: it reads, never writes, and runs before every request, so it must stay cheap
+                          'enforce_account_status',
+                          '_ad_is_owner','_ad_is_reviewer','_ad_may_publish','_ad_ticket_ok')), 'none');   -- the four storage-policy helpers only answer a yes or no about the caller or a path   -- the PostgREST pre-request hook: it reads, never writes, and runs before every request, so it must stay cheap
 select testkit.assert_eq('no table in public is readable by anon', (select count(*)::text from information_schema.role_table_grants where table_schema = 'public' and grantee = 'anon'), '0');
 select testkit.assert_eq('clients hold no write privilege on any table', (select count(*)::text from information_schema.role_table_grants
    where table_schema = 'public' and grantee = 'authenticated' and privilege_type in ('INSERT','UPDATE','DELETE','TRUNCATE')), '0');
 select testkit.assert_eq('RLS is enabled on every table', (select count(*)::text from pg_class c where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and not c.relrowsecurity), '0');
-select testkit.assert_eq('no function is executable by anon', (select count(*)::text from pg_proc p where p.pronamespace = 'public'::regnamespace and has_function_privilege('anon', p.oid, 'execute')), '0');
-select testkit.assert_eq('no internal helper is executable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where proname like '\_%'), 'none');
+select testkit.assert_eq('no function is executable by anon except the reviewed list (anon_surface.txt)', (select count(*)::text from pg_proc p where p.pronamespace = 'public'::regnamespace and has_function_privilege('anon', p.oid, 'execute')
+   and p.proname <> all (string_to_array(trim(:'anonapi'), ' '))), '0');
+select testkit.assert_eq('no internal helper is executable by clients (except the four storage-policy helpers of the advertising migration)', (select coalesce(string_agg(proname, ','), 'none') from api where proname like '\_%'
+   and proname not in ('_ad_is_owner','_ad_is_reviewer','_ad_may_publish','_ad_ticket_ok')), 'none');
 -- the reviewed admin-site endpoints (migrations 20261021000001 and 20261022000001) check the caller's admin role and multi-factor sign-in themselves; tests/50_admin.sql proves it. Every OTHER operator tool stays unreachable.
 select testkit.assert_eq('no operator tool is executable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where (proname like 'admin\_%' and proname not in
   ('admin_whoami','admin_health','admin_generate_jobs','admin_find_players','admin_get_player','admin_list_audit','admin_list_admins','admin_set_role',
    'admin_list_content','admin_save_content','admin_set_content_published','admin_send_broadcast','admin_list_broadcasts','admin_list_world','admin_set_route_state','admin_set_server_state',
-   'admin_list_reports','admin_get_report','admin_review_report','admin_apply_sanction','admin_lift_sanction','admin_list_sanctions'))
+   'admin_list_reports','admin_get_report','admin_review_report','admin_apply_sanction','admin_lift_sanction','admin_list_sanctions',
+   'admin_ad_overview','admin_ad_list_boards','admin_ad_set_board_status','admin_ad_list_packages','admin_ad_save_package','admin_ad_set_price','admin_ad_list_enquiries','admin_ad_update_enquiry',
+   'admin_ad_convert_enquiry','admin_ad_create_campaign','admin_ad_list_campaigns','admin_ad_save_campaign','admin_ad_submit_campaign','admin_ad_review_campaign','admin_ad_set_campaign_state','admin_ad_set_payment_status',
+   'admin_ad_assign','admin_ad_unassign','admin_ad_list_creatives','admin_ad_register_creative','admin_ad_review_creative','admin_ad_confirm_variants','admin_ad_analytics'))
   or proname in ('purge_old_data','sweep_stale_sessions','generate_jobs','cfg')), 'none');
 select testkit.assert_eq('trigger functions are not callable by clients', (select coalesce(string_agg(proname, ','), 'none') from api where prosrc like '%TG_OP%' or proname in
   ('handle_new_user')), 'none');
