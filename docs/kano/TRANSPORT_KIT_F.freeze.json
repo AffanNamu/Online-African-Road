@@ -1,13 +1,13 @@
 {
  "freeze": "transport_kit_family_f_city_buildings v001",
  "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
- "date": "2026-11-09T10:37:48Z",
+ "date": "2026-11-09T10:37:59Z",
  "gameRepository": {
   "repo": "AffanNamu/Online-African-Road",
   "branch": "work/kano-residential",
-  "head": "ce53dc6fcc2deb4fc3c584d2f02c5a9b303385ad",
-  "producerCodeLastChangedIn": "c6d9c430625ca8c54dfe1735369b34093187bc87",
-  "uncommittedChangesUnderToolsBlender": true
+  "head": "c26d3df22ab426796f2da1bd20c7ba97ba465d4f",
+  "producerCodeLastChangedIn": "c26d3df22ab426796f2da1bd20c7ba97ba465d4f",
+  "uncommittedChangesUnderToolsBlender": false
  },
  "blender": "5.2.3 LTS",
  "allAssetsPassedBlenderValidation": true,
