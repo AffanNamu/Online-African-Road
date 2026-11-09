@@ -450,6 +450,7 @@ namespace ARO.NetCore
             ValidateE5(spec, junctions, profileIds, sections, L, knownProps, e);
             ValidateSymbols(spec, junctions, L, e);
             ValidateSites(spec, junctions, L, knownProps, e);
+            FrontageValidator.Validate(spec, new HashSet<string>(junctions.Where(j => j != null && !string.IsNullOrEmpty(j.id)).SelectMany(j => j.kind == "four_way" ? new[] { j.id, j.id + "_left" } : new[] { j.id })), knownProps, e);
             seen.Clear();
             foreach (var p in spec.props ?? new PropPlacementSpec[0])
             {

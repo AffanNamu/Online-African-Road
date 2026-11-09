@@ -293,7 +293,7 @@ namespace ARO.NetCore
             var res = new List<PropInstance>();
             var main = m.Main; var spec = m.Spec; float L = main.Length;
             bool nearMain = SRange(main, minX, minZ, maxX, maxZ, 130f, out float sLo, out float sHi);
-            if (!nearMain) { AddSideProps(m, minX, minZ, maxX, maxZ, res); return res; }      // side roads and site plates can lie farther from the main road than the scatter reaches
+            if (!nearMain) { AddSideProps(m, minX, minZ, maxX, maxZ, res); FrontagePlacer.AddToChunk(m, minX, minZ, maxX, maxZ, density, res); return res; }      // side roads and site plates can lie farther from the main road than the scatter reaches
 
             var rules = spec.propRules ?? new PropRule[0];
             for (int ri = 0; ri < rules.Length; ri++)
@@ -345,6 +345,7 @@ namespace ARO.NetCore
                 res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
             }
             AddSideProps(m, minX, minZ, maxX, maxZ, res);
+            FrontagePlacer.AddToChunk(m, minX, minZ, maxX, maxZ, density, res);
             return res;
         }
 
@@ -388,6 +389,8 @@ namespace ARO.NetCore
         static IEnumerable<int> SidesOf(string side) => side == "left" ? new[] { -1 } : side == "right" ? new[] { 1 } : new[] { -1, 1 };
 
         /// <summary>The range of route distances whose centre line lies within `margin` of the box.</summary>
+        public static bool SRangeOf(RoadCorridor c, float minX, float minZ, float maxX, float maxZ, float margin, out float lo, out float hi) => SRange(c, minX, minZ, maxX, maxZ, margin, out lo, out hi);
+
         static bool SRange(RoadCorridor c, float minX, float minZ, float maxX, float maxZ, float margin, out float lo, out float hi)
         {
             lo = float.MaxValue; hi = float.MinValue;

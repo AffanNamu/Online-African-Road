@@ -49,7 +49,10 @@ namespace ARO.NetCore
                 case "road_sign": Sign(mb, w, h, d, detail); break;
                 case "billboard": Billboard(mb, w, h, d, detail); break;
                 case "telecom_mast": Mast(mb, h, w, detail); break;
-                default: Box(mb, PropSub.Wall, 0, 0, 0, w, h, d); break;
+                default:
+                    if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
+                    else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
+                    break;
             }
             return mb;
         }
@@ -113,6 +116,23 @@ namespace ARO.NetCore
                 Box(mb, PropSub.Glow, -w * 0.05f, wallH * 0.6f, d * 0.5f + 0.1f, 0.2f, 0.28f, 0.2f);              // porch lantern beside the door
             }
             if (detail == 2) Slab(mb, PropSub.Glass, w * 0.5f + 0.01f, wallH * 0.35f, 0f, 0f, 0f, d * 0.2f, wallH * 0.3f, true);
+        }
+
+        /// <summary>A plain building of its real footprint: lod 2 (detail 0) one box; detail 1 adds a roof slab (24 triangles); detail 2 adds a door and a grid of non-emissive windows on the front. No lamp geometry: a prop with no light spec must have none.</summary>
+        static void CityBuilding(MeshBuffers mb, float w, float d, float h, int detail)
+        {
+            Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
+            if (detail == 0) return;
+            Box(mb, PropSub.Roof, 0, h, 0, w * 1.02f, 0.4f, d * 1.02f);
+            if (detail == 1) return;
+            int floors = Math.Max(1, Math.Min(8, (int)(h / 3.4f))), cols = Math.Max(2, Math.Min(10, (int)(w / 4f)));
+            Slab(mb, PropSub.Accent, -w * 0.12f, 0f, d * 0.5f + 0.01f, w * 0.24f, Math.Min(h * 0.4f, 3.2f));
+            for (int f = 0; f < floors; f++)
+                for (int c = 0; c < cols; c++)
+                {
+                    if (f == 0 && Math.Abs(-w * 0.5f + (c + 0.5f) * w / cols) < w * 0.14f) continue;                      // not over the door
+                    Slab(mb, PropSub.Glass, -w * 0.5f + (c + 0.5f) * w / cols - 0.6f, 1.2f + f * Math.Max(1.5f, (h - 2.4f) / floors), d * 0.5f + 0.01f, 1.2f, 1.3f);
+                }
         }
 
         static void Block(MeshBuffers mb, float w, float d, float h, int detail)

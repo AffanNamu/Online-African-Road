@@ -230,6 +230,7 @@ namespace ARO.NetCore
         public SitePlateSpec[] sites;           // optional (E2): paved plates for yards, terminals and forecourts; null = none
         public RoadSpec[] roads;                // optional (E5, schemaVersion 3): additional roads (flyover road, ramps, cross roads); null = none
         public RingSpec[] rings;                // optional (E5, schemaVersion 3): roundabouts on the main road; null = none
+        public FrontageRule[] frontage;         // optional (schemaVersion 3): blocks and lots of buildings along a road (Frontage.cs); null = none
     }
 
     public enum Zone { Urban, Commercial, Industrial, Rural, Highway }
