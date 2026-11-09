@@ -149,7 +149,11 @@ namespace ARO.Game
         void TryRelease()
         {
             var pos = Vehicle.transform.position;
-            if (Streamer.GroundBelow(pos, Vehicle.transform, out float gy, _route != null && _route.Model != null && _route.Model.HasLevels ? pos.y : float.MaxValue))
+            bool found = Streamer.GroundBelow(pos, Vehicle.transform, out float gy, _route != null && _route.Model != null && _route.Model.HasLevels ? pos.y : float.MaxValue);
+            // Smoke pages on a two-level route (a flyover deck): when the chunk's deck is not built yet only the ground under it exists, 10 m or more below the spawn point, and releasing there would drop the truck under the deck.
+            // Keep holding until the deck's collider is there (or the hold times out). Never applies to a live game: smoke pages and routes with levels only.
+            bool belowTheIntendedLevel = found && SmokeMode.Drive && _route != null && _route.Model != null && _route.Model.HasLevels && gy < pos.y - 4f;
+            if (found && !belowTheIntendedLevel)
             {
                 Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = Vehicle.transform.position; _lastSafe = _spawnPos;

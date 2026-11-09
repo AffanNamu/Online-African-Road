@@ -45,8 +45,8 @@ const PLACES = [
   { id: 'residential-street', route: E1, corridor: 'j_local', start: 28, hour: 'noon', second: '4', district: 'test corridor, local street (a residential neighbourhood class; no real district)', road: 'kano_local: a narrow two-way residential street', what: 'a residential neighbourhood: villas, Hausa-style compounds and houses, a small mosque on the left 45 m ahead' },
   { id: 'arterial-grand-mosque', route: E1, start: 235, hour: 'noon', second: '4', district: 'test corridor, arterial section (a major-road district class; no real district)', road: 'kano_arterial: divided road, two lanes each way and a planter median', what: 'a major arterial: mid-rise blocks, a shopping parade, a grand mosque on the left 80 m ahead set back 10 to 15 m' },
   { id: 'urban-density-arterial', route: E1, start: 380, hour: 'noon', second: '7', district: 'test corridor, arterial and cross street', road: 'kano_arterial at the four-way crossing', what: 'a wider view of the urban density around the crossing: two rows of buildings each side of the arterial, mosques, a cross street', first: '4' },
-  { id: 'flyover-north-driver', route: F1, start: 700, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, direction of increasing distance (north), driver in the right lane', what: 'the flyover from the cab going north: a populated city on both sides, a mosque alongside the deck on the left' },
-  { id: 'flyover-south-driver', route: F1, start: 1150, back: true, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, the other direction (south), driver in the right lane', what: 'the flyover from the cab going south: the same city seen from the other direction, the mosque now on the right' },
+  { id: 'flyover-north-driver', route: F1, start: 700, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, direction of increasing distance (north), driver in the right lane', what: 'the flyover from the cab going north: a populated city on both sides, a mosque alongside the deck on the left', deck: true },
+  { id: 'flyover-south-driver', route: F1, start: 1150, back: true, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, the other direction (south), driver in the right lane', what: 'the flyover from the cab going south: the same city seen from the other direction, the mosque now on the right', deck: true },
   { id: 'flyover-wide-density', route: F1, start: 900, hour: 'noon', second: '7', district: 'test interchange F1, ground roundabout under the deck', road: 'expressway deck over the roundabout', what: 'a wider view of the interchange and the city rows beside it', first: '4' },
 ];
 
@@ -64,6 +64,8 @@ const PLACES = [
     const started = await waitFor(/\[Smoke\] drive scenario/, 150), ground = started && await waitFor(/\[Drive\] ground ready/, 120), held = ground && await waitFor(/\[Drive\] smoke hold: vehicle frozen/, 60);
     check(`${pl.id}: the city route loaded`, started && has(new RegExp('\\[Smoke\\] driving the test corridor ' + pl.route)) && !has(/invalid route spec/i), started ? (logs.find(l => /^\[Route\] /.test(l)) || '').slice(0, 140) : 'no drive scenario');
     check(`${pl.id}: the truck stood on real ground and was held`, held, held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '').slice(0, 160) : 'no ground / hold line');
+    const driveLine = held ? (logs.filter(l => /\[Drive\] t=/.test(l)).pop() || '') : '', py = (/pos=\([-\d.]+,([-\d.]+),/.exec(driveLine) || [])[1];
+    if (pl.deck) check(`${pl.id}: the truck stands on the flyover deck (y of 15 m or more; the deck is at 17.8 m, the ground at 10 m)`, held && parseFloat(py) >= 15, `y=${py}`);
     const entry = { id: pl.id, route: pl.route, corridor: pl.corridor || 'main', startMetres: pl.start, facing: pl.back ? 'back' : 'forward', district: pl.district, road: pl.road, what: pl.what, frames: [] };
     if (held) {
       await page.waitForTimeout(6000); await page.mouse.click(512, 288); await page.waitForTimeout(500);
@@ -79,6 +81,7 @@ const PLACES = [
     }
     entry.perf = logs.filter(l => l.startsWith('[Perf]') && !l.includes('BUDGET')).slice(-1)[0] || null; entry.budgetWarnings = logs.filter(l => l.includes('[Perf] BUDGET EXCEEDED')).slice(-3);
     check(`${pl.id}: nothing threw`, errors.length === 0 && !has(/Exception|\[Error\]/), errors.concat(logs.filter(l => /Exception/.test(l))).slice(0, 2).join(' | ').slice(0, 200));
+    console.log(`  [numbers] ${pl.id}: ${(entry.perf || 'no [Perf] line').slice(0, 260)}`);
     report.places.push(entry); await page.close();
   }
   await browser.close(); server.close();
