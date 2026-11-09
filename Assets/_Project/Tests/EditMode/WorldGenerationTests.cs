@@ -34,7 +34,9 @@ namespace ARO.Tests
         [Test] public void PropCatalogParsesAndEveryPropIsMarkedAsAPlaceholder()
         {
             PropLibrary.EnsureLoaded();
-            Assert.AreEqual(19, PropLibrary.All.Count());      // 16 original placeholders + 3 luminaires (street_light_village, highway_light, junction_mast)
+            Assert.AreEqual(44, PropLibrary.All.Count());      // 16 original placeholders + 3 luminaires (street_light_village, highway_light, junction_mast) + 25 Kano city test-route buildings (tag kano_city_test, used only by ng-kano-city-e1 and ng-kano-city-f1)
+            Assert.AreEqual(25, PropLibrary.All.Count(d => d.tags != null && d.tags.Contains("kano_city_test")));
+            Assert.IsNull(PropLibrary.All.FirstOrDefault(d => d.tags != null && d.tags.Contains("kano_city_test") && d.category != "buildings"), "the city entries are buildings");
             foreach (var d in PropLibrary.All) { Assert.AreEqual("dev", d.status, d.id); Assert.IsNotEmpty(d.lodTriangles, d.id); }
             Assert.IsNull(PropLibrary.Def("not_a_prop")); Assert.IsNull(PropLibrary.Geometry("not_a_prop", 0));
         }
