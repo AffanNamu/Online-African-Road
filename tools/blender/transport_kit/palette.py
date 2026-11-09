@@ -14,9 +14,10 @@ FAMILIES = {
     "tk_paint": ["paint_white", "kerb_black", "kerb_white", "road_white", "road_yellow", "paint_red", "sign_blue", "sign_green", "sign_yellow", "warning_yellow", "lantern_glow", "rubber", "concrete_dark", "insulator_brown",
                  "interior_dark", "plaster_cream", "plaster_white", "plaster_ochre", "sheet_cream", "sheet_green", "board_dark", "signal_red", "signal_amber", "signal_green", "container_blue", "container_red",
                  "container_green", "container_grey", "wood_door", "timber_weathered", "burlap", "fabric_red", "fabric_white", "pavement_grey", "hedge_green", "leaf_green", "leaf_green_dark", "flower_red", "flower_bougainvillea",
-                 "laterite", "dry_earth", "mud_brick", "tarp_olive", "roof_tile_red", "timber_light", "plaster_terracotta", "paint_blue_bus", "paint_orange", "tile_floor", "kasa_render", "water_pool"],
+                 "laterite", "dry_earth", "mud_brick", "tarp_olive", "roof_tile_red", "timber_light", "plaster_terracotta", "paint_blue_bus", "paint_orange", "tile_floor"],
     "tk_metal": ["metal_galvanised", "metal_gate_black", "metal_gate_blue", "frame_aluminium_dark", "shutter_steel", "roof_zinc", "roof_zinc_rust"],
     "tk_glass": ["glass_dark", "glass"],
+    "tk_paint_ext": ["kasa_render", "water_pool"],           # family D (2026-11-09): colours added AFTER tk_paint was frozen and staged; a separate palette so the staged T_tk_paint_Palette.png stays byte for byte
 }
 NEW = {"timber_light": ((0.62, 0.46, 0.28), 0.8, 0.0, 0.0, "light sawn timber (benches, slats)"),
        "plaster_terracotta": ((0.62, 0.36, 0.24), 0.9, 0.0, 0.0, "terracotta painted render (brise-soleil, accent walls)"),
@@ -27,9 +28,10 @@ NEW = {"timber_light": ((0.62, 0.46, 0.28), 0.8, 0.0, 0.0, "light sawn timber (b
        "water_pool": ((0.16, 0.42, 0.52), 0.1, 0.0, 0.0, "flat pool water of a fountain (no water shader)")}
 for _k, _v in NEW.items(): AM.LIBRARY.setdefault(_k, _v)
 AM.LIBRARY.setdefault("tk_paint", ((0.80, 0.80, 0.78), 0.70, 0.0, 0.0, "transport kit palette of non-metal flat colours (colours of the library entries it folds)"))
+AM.LIBRARY.setdefault("tk_paint_ext", ((0.80, 0.80, 0.78), 0.80, 0.0, 0.0, "transport kit palette extension: kasa render and pool water (family D)"))
 AM.LIBRARY.setdefault("tk_metal", ((0.45, 0.45, 0.47), 0.55, 0.55, 0.0, "transport kit palette of metals (galvanised, black and blue painted steel, aluminium, shutter steel, roof sheet)"))
 AM.LIBRARY.setdefault("tk_glass", ((0.30, 0.40, 0.45), 0.05, 0.0, 0.0, "transport kit palette of glass: dark and pale; alpha is the cell alpha times the material alpha 0.42"))
-TEXTURE_NAME = {"tk_paint": "T_tk_paint_Palette", "tk_metal": "T_tk_metal_Palette", "tk_glass": "T_tk_glass_Palette"}
+TEXTURE_NAME = {"tk_paint": "T_tk_paint_Palette", "tk_metal": "T_tk_metal_Palette", "tk_glass": "T_tk_glass_Palette", "tk_paint_ext": "T_tk_paintext_Palette"}
 for _f, _t in TEXTURE_NAME.items(): AM.TEXTURED.setdefault(_f, {"texture": _t})
 AM.ALPHA.setdefault("tk_glass", 0.42)
 GLASS_CELL_ALPHA = {"glass_dark": 1.0, "glass": round(AM.ALPHA["glass"] / AM.ALPHA["glass_dark"], 3)}
