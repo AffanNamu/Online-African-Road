@@ -316,6 +316,10 @@ select pg_temp.put_denied('authenticated', pg_temp.u('ANA')::text, 'ad-creatives
 select pg_temp.put_denied('authenticated', pg_temp.u('P')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'player publishing a file');
 select pg_temp.put_denied('anon', null, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 'anon publishing a file');
 select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre_p') || '/1x2_v1.jpg', 'the owner publishing a REJECTED creative');
+-- a creative that WAS approved and has since been withdrawn keeps its expected paths in the row, but the public bucket takes nothing more for it
+insert into ad_creatives(id, advertiser_id, campaign_id, name, aspect, status, submission_path, submission_mime, submission_bytes, expected_paths, created_by)
+  values ('00000000-0000-0000-0000-0000000000d3', '00000000-0000-0000-0000-0000000000a2', '00000000-0000-0000-0000-0000000000c2', 'Withdrawn art', '2:1', 'withdrawn', 'admin/withdrawn.png', 'image/png', 1000, '["creatives/withdrawn/2x1_v1.jpg"]', pg_temp.u('ADV'));
+select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/withdrawn/2x1_v1.jpg', 'the owner publishing for a WITHDRAWN creative');
 select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/anything-else.webp', 'the owner publishing at an unexpected path');
 select pg_temp.put_denied('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || gen_random_uuid() || '/2x1_v1.jpg', 'the owner publishing for a creative that does not exist');
 select pg_temp.put('authenticated', pg_temp.u('OWN')::text, 'ad-creatives-public', 'creatives/' || (select v from ids where k = 'cre') || '/2x1_v1.jpg', 60000, 'image/jpeg');
