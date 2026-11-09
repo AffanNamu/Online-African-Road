@@ -47,7 +47,7 @@ const PLACES = [
   { id: 'urban-density-arterial', route: E1, start: 380, hour: 'noon', second: '7', district: 'test corridor, arterial and cross street', road: 'kano_arterial at the four-way crossing', what: 'a wider view of the urban density around the crossing: two rows of buildings each side of the arterial, mosques, a cross street', first: '4' },
   { id: 'flyover-north-driver', route: F1, start: 700, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, direction of increasing distance (north), driver in the right lane', what: 'the flyover from the cab going north: a populated city on both sides, a mosque alongside the deck on the left', deck: true },
   { id: 'flyover-south-driver', route: F1, start: 1150, back: true, hour: 'noon', second: '4', district: 'test interchange F1, expressway deck over the ground roundabout', road: 'expressway deck, the other direction (south), driver in the right lane', what: 'the flyover from the cab going south: the same city seen from the other direction, the mosque now on the right', deck: true },
-  { id: 'flyover-wide-density', route: F1, start: 900, hour: 'noon', second: '7', district: 'test interchange F1, ground roundabout under the deck', road: 'expressway deck over the roundabout', what: 'a wider view of the interchange and the city rows beside it', first: '4' },
+  { id: 'flyover-wide-density', route: F1, start: 800, hour: 'noon', second: '7', district: 'test interchange F1, expressway deck 100 m before the ground roundabout', road: 'expressway deck, direction of increasing distance (north)', what: 'a wider view of the interchange ahead and the city rows beside the deck', first: '4', deck: true },
 ];
 
 (async () => {
