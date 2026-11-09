@@ -1,13 +1,13 @@
-# Transport kit: asset families A, B and C (built 2026-11-09)
+# Transport kit: asset families A, B, C and D (built 2026-11-09)
 
-**Authorised by the owner on 2026-11-09** (asset families A logistics, B bus terminals, C road furniture; reusable assets first; GLOBAL / REGIONAL / CITY_SPECIFIC / LANDMARK classes kept; family D follows E5; family E on hold, see `KANO_FAMILY_E_BREAKDOWN.md`). The approved rows are in `KANO_TRANSPORT_ASSET_BREAKDOWN.md`; this document says what was actually built and what is and is not proven.
+**Authorised by the owner on 2026-11-09** (asset families A logistics, B bus terminals, C road furniture; reusable assets first; family D, which "follows E5", was built in the same session as a reuse-first subset (section 3b); GLOBAL / REGIONAL / CITY_SPECIFIC / LANDMARK classes kept; family D follows E5; family E on hold, see `KANO_FAMILY_E_BREAKDOWN.md`). The approved rows are in `KANO_TRANSPORT_ASSET_BREAKDOWN.md`; this document says what was actually built and what is and is not proven.
 
 ## 1. Verification levels (what is true today)
 
 | Level | Result |
 |---|---|
-| 1. Implemented | **52 asset ids** (family A 21, B 8, C 23) built by parametric Blender code (`tools/blender/transport_kit/`), three review scenes (`scenes.py`), Unity staging (`stage_unity.py`), the review-workflow steps. All 52 export to FBX and GLB with a manifest. The `aro_bus_bay_marking_set` row is road-plate data (E2 marks), not a mesh: no model was made. |
-| 2. Automated tests passed | `tests/test_transport_kit.py` (65 checks: every asset passes the toolchain validator, at most 4 materials, three strictly decreasing LODs with the last at most 10% of LOD0, the game's own triangle budgets, the breakdown's expected triangle counts (no row exceeded by more than 25%), sizes against the approved rows apart from the documented deviations, light heads and text faces on the model, colliders on the model, classification prefixes, no brand names, vehicle clearances) and `tests/test_transport_scenes.py` (13: the review scenes). The whole Blender suite: **251 passed**. |
+| 1. Implemented | **64 asset ids** (family A 21, B 8, C 23, D 12) built by parametric Blender code (`tools/blender/transport_kit/`), four review scenes (`scenes.py`), Unity staging (`stage_unity.py`), the review-workflow steps. All 64 export to FBX and GLB with a manifest. The `aro_bus_bay_marking_set` row is road-plate data (E2 marks), not a mesh: no model was made. |
+| 2. Automated tests passed | `tests/test_transport_kit.py` (every asset passes the toolchain validator, at most 4 materials, three strictly decreasing LODs with the last at most 10% of LOD0, the game's own triangle budgets, the breakdown's expected triangle counts (no row exceeded by more than 25%), sizes against the approved rows apart from the documented deviations, light heads and text faces on the model, colliders on the model, classification prefixes, no brand names, vehicle clearances) and `tests/test_transport_scenes.py` (the review scenes): **94 kit and scene tests pass**; the whole Blender suite passed (251 tests) before families D and the fourth scene were added. |
 | 3. Imported into Unity | **pending.** The review workflow (`blender-unity.yml`, a `[kano-review]` commit) now builds the 52 assets from the code, stages them with the three scenes and takes 12 pictures; **it has not been run**. The Unity licence queue was busy (CI runs 325 and 326) when this was written. |
 | 4. Verified in actual gameplay | **no.** Nothing in the game places these assets. The shipped `prop_catalog.json` and the routes are unchanged. |
 | 5. Visually reviewed | **no.** I (the agent) looked at Blender renders of the three scenes and of single assets (Cycles, CPU) and corrected the one thing they showed (fully metallic steel rendering black); that is not the owner's review. **Nothing is approved; `production_approved` is the owner's alone.** |
@@ -91,7 +91,26 @@ Triangles are LOD0/LOD1/LOD2; colliders are `col_*` boxes (the Unity builder mak
 | `aro_planter_island_b` | GLOBAL | 8.08 x 2.01 x 0.84 | 8 x 2 x 0.6 | 378/130/12 | 2 | 1 | - | - | 0 |
 | `kano_utility_pole_set` | CITY_SPECIFIC | 14.0 x 1.08 x 11.0 | 0.4 x 0.4 x 11 | 434/272/20 | 3 | 0 | - | - | 0 |
 
-Total LOD0 triangles of all 52 assets: 27,600. Every asset is far below its category budget (props 2,500, buildings 6,000, signs 800, lights 1,200). **The kit's cost in the game is not measured** (no draw-call or frame-time measurement exists: that needs the Unity review run).
+### D. Roundabout, island and flyover components (a subset: trees, shrubs and hedges are reused, not rebuilt; `KANO_FAMILY_D_PLAN.md`)
+
+| Asset id | Class | Built size x/y/z (m) | Breakdown size | Tris LOD0/1/2 | Mats | Colliders | Light heads | Text face | Sockets |
+|---|---|---|---|---|---|---|---|---|---|
+| `aro_roundabout_fountain_a` | GLOBAL | 7.8 x 7.8 x 1.95 | 8 x 8 x 1.6 | 978/300/28 | 3 | 1 | glow x4 | - | 0 |
+| `rg_ngn_island_wall_a` | REGIONAL | 3.04 x 0.48 x 1.28 | 3 x 0.4 x 1.2 | 242/30/12 | 2 | 1 | - | - | 0 |
+| `rg_ngn_pattern_panel_a` | REGIONAL | 3.1 x 0.37 x 1.4 | 3 x 0.3 x 1.4 | 374/34/12 | 1 | 1 | - | - | 0 |
+| `rg_ngn_pattern_panel_b` | REGIONAL | 3.1 x 0.35 x 1.4 | 3 x 0.3 x 1.4 | 426/34/12 | 1 | 1 | - | - | 0 |
+| `rg_ngn_pattern_panel_c` | REGIONAL | 3.0 x 0.4 x 1.4 | 3 x 0.3 x 1.4 | 302/34/12 | 1 | 1 | - | - | 0 |
+| `aro_flyover_deck_segment_a` | GLOBAL | 12.0 x 24.16 x 1.62 | 12 x 24 x 1.6 | 808/68/44 | 3 | 0 | lamp x6 | - | 0 |
+| `aro_flyover_pier_a` | GLOBAL | 2.5 x 2.5 x 7.0 | 2.4 x 2.4 x 7 | 280/76/24 | 2 | 1 | - | - | 0 |
+| `aro_flyover_pier_b` | GLOBAL | 2.4 x 2.4 x 8.0 | 2.4 x 2.4 x 8 | 274/38/24 | 2 | 1 | - | - | 0 |
+| `rg_ngn_pier_panel_a` | REGIONAL | 3.0 x 0.35 x 6.0 | 3 x 0.3 x 6 | 582/18/10 | 1 | 1 | - | - | 0 |
+| `aro_deck_edge_light_a` | GLOBAL | 0.4 x 0.32 x 0.6 | 0.4 x 0.3 x 0.6 | 194/30/12 | 2 | 0 | lamp x1 | - | 0 |
+| `aro_noise_wall_set` | GLOBAL | 4.39 x 0.34 x 3.0 | 4 x 0.3 x 3 | 186/50/12 | 4 | 1 | - | - | 0 |
+| `lmk_kano_roundabout_monument_a` | LANDMARK | 10.9 x 10.9 x 22.0 | 12 x 12 x 22 | 1788/186/22 | 3 | 2 | glow x6 | yes | 0 |
+
+The **monument** (`lmk_kano_roundabout_monument_a`) and the **pattern and lattice panels** are **fictional designed interpretations** (the owner's defaults of 2026-11-09; the documentary sources R-024 to R-029 only; no real Kano monument or pattern is claimed; every proportion is a design choice). The engine draws the ring, the islands, the deck and its piers; these assets are dressing on top. **Nothing places them yet**: no island rule or route uses them; the E5 test routes still carry the game's grey placeholder props.
+
+Total LOD0 triangles of all 64 assets: 34,034. Every asset is far below its category budget (props 2,500, buildings 6,000, signs 800, lights 1,200). **The kit's cost in the game is not measured** (no draw-call or frame-time measurement exists: that needs the Unity review run).
 
 ## 4. Deviations from the approved rows (all intended, listed so the owner can overrule)
 
@@ -149,7 +168,7 @@ The approved breakdown (`KANO_TRANSPORT_ASSET_BREAKDOWN.md`) was written from th
 
 ## 6. Review scenes
 
-`transport_kit/scenes.py` composes three review scenes from the kit only: **`env_logistics_yard_dry`** (a walled yard behind the two-lane gate, weighbridge in the entry lane, two halls and a cold store, fuel island, trailers, containers, forklift and pallets at the docks, mast lights), **`env_bus_terminal_dry`** (the terminal, its platform canopy, kiosk, board, minibus stand, tricycle rank, shelter, barriers, lights and signs along a road) and **`env_road_furniture_dry`** (a lineup of all the furniture). They are placement files of the same format as the environmental scenes, built by the same Unity code (`KanoReviewBuilder`) and shown with `?smoke=kanostreet&scene=env_<name>_dry&view=<view>`; the workflow step lists their 12 views. **They are review compositions, not game content**: nothing in the game places them. Layouts are design choices.
+`transport_kit/scenes.py` composes four review scenes from the kit only: **`env_logistics_yard_dry`** (a walled yard behind the two-lane gate, weighbridge in the entry lane, two halls and a cold store, fuel island, trailers, containers, forklift and pallets at the docks, mast lights), **`env_bus_terminal_dry`** (the terminal, its platform canopy, kiosk, board, minibus stand, tricycle rank, shelter, barriers, lights and signs along a road) **`env_road_furniture_dry`** (a lineup of all the furniture) and **`env_roundabout_kit_dry`** (the family D lineup on grass: monument, fountain, wall run, pattern panels, a flyover parapet module on two piers, pier panel, sound walls, edge lights). They are placement files of the same format as the environmental scenes, built by the same Unity code (`KanoReviewBuilder`) and shown with `?smoke=kanostreet&scene=env_<name>_dry&view=<view>`; the workflow step lists their 16 views. **They are review compositions, not game content**: nothing in the game places them. Layouts are design choices.
 
 ## 7. What is not done, and what the owner is asked
 

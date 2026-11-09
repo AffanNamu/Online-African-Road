@@ -29,11 +29,16 @@ OVERLAP = {
     "aro_jersey_barrier_a": ["aro_median_barrier_jersey_a"], "aro_kerb_painted_run_a": ["aro_kerb_painted_blackwhite_a", "aro_kerb_painted_yellowblack_a"], "aro_drain_grate_set": ["aro_drain_grating_strip_a"],
     "aro_litter_bin_a": ["aro_bin_a"], "aro_planter_island_a": ["aro_planter_island_kerbed_a", "aro_median_planter_kerbed_a"], "aro_planter_island_b": ["aro_planter_island_kerbed_a", "aro_median_planter_kerbed_a"],
     "kano_utility_pole_set": ["aro_pole_electric_concrete_span_a", "rg_ngn_pole_timber_span_a"], "aro_truck_trailer_parked_a": ["aro_trailer_box_a"],
+    "aro_flyover_deck_segment_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_b": ["aro_flyover_deck_pier_a"],
 }
 SAME_ID = {"aro_bench_a", "aro_pallet_stack_a"}                  # the registry already has an entry with this id: it moves to this version
 
 
 def library_of(aid: str, x: dict) -> str:
+    if x["family"] == "D":
+        if aid == "lmk_kano_roundabout_monument_a": return "modern_architecture"
+        if aid in ("rg_ngn_island_wall_a", "rg_ngn_pattern_panel_a", "rg_ngn_pattern_panel_b", "rg_ngn_pattern_panel_c"): return "boundaries_walls_gates"
+        return "site_props_vehicles" if aid == "aro_roundabout_fountain_a" else "road_structure_signs_lighting"
     if aid in ("rg_ngn_warehouse_hall_a", "rg_ngn_warehouse_hall_b", "rg_ngn_warehouse_cold_a", "aro_dock_leveller_set", "kano_bus_terminal_hall_a"): return "modern_architecture"
     if aid in ("aro_gate_sliding_a", "aro_fence_palisade_set", "aro_wall_plot_set"): return "boundaries_walls_gates"
     if aid == "aro_fuel_island_truck": return "markets_roadside_businesses"
@@ -69,7 +74,7 @@ def freeze(C: Path, ids, version="v001") -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--game-docs", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--commit", default="")
+    ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--game-docs", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--commit", default=""); ap.add_argument("--family", default="", help="only the assets of this family (A, B, C or D); a batch staged later")
     a = ap.parse_args()
     from PIL import Image
     from .build_transport import SPECS, load_all
@@ -79,7 +84,9 @@ def main() -> int:
     cat = json.loads((G / "TRANSPORT_KIT_catalog.json").read_text()); scenes = {s.name: s for s in SC.all_scenes()}; rows = []; staged = []
     tex_have = {p.name: p for p in (C / "unity" / "Textures").rglob("T_*.png")}
     for aid, sp in SPECS.items():
-        x = C_.EXTRAS[aid]; kind = sp["kind"]; v = sorted(p.name for p in (W / "exports" / "fbx" / aid).iterdir() if p.is_dir())[-1]; n = int(v[1:])
+        x = C_.EXTRAS[aid]
+        if a.family and x["family"] != a.family: continue
+        kind = sp["kind"]; v = sorted(p.name for p in (W / "exports" / "fbx" / aid).iterdir() if p.is_dir())[-1]; n = int(v[1:])
         if v != "v001": raise SystemExit(f"{aid}: expected v001, the workspace has {v}")
         proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"; stats = json.loads(val.read_text())["stats"]; entry = next(e for e in cat["props"] if e["id"] == aid)
         if (C / "unity" / "Models" / aid / v).exists(): raise SystemExit(f"REFUSED: {aid} {v} is already in the library")
@@ -105,12 +112,12 @@ def main() -> int:
             for k in ("iso", "front"):
                 src = Path(a.previews) / f"{aid}_{k}.png"
                 if src.is_file(): d = C / "previews" / aid / v; d.mkdir(parents=True, exist_ok=True); Image.open(src).convert("RGB").save(d / f"{aid}_{k}.jpg", "JPEG", quality=88, optimize=True); pv.append(f"previews/{aid}/{v}/{aid}_{k}.jpg")
-        placements = [{"scene": f"env_{s.name}_dry", "district": {"A": "D10", "B": "D09", "C": "-"}[x["family"]], "count": sum(1 for i in s.items if i["asset"] == aid)} for s in scenes.values() if any(i["asset"] == aid for i in s.items)]
+        placements = [{"scene": f"env_{s.name}_dry", "district": {"A": "D10", "B": "D09", "C": "-", "D": "-"}[x["family"]], "count": sum(1 for i in s.items if i["asset"] == aid)} for s in scenes.values() if any(i["asset"] == aid for i in s.items)]
         cols = sp["cols"]; collision = {"type": "box", "size": [round(cols[0][3] - cols[0][0], 3), round(cols[0][4] - cols[0][1], 3), round(cols[0][5] - cols[0][2], 3)], "boxes": len(cols)} if cols else {"type": "none"}
         flag = ("OPEN: design interpretation of the generated concept reference(s) " + ", ".join(refs) + " (not Kano-verified; first-pass colours and proportions); no brand, plate or logo; not imported into Unity, not reviewed, not approved"
-                + ("; **overlaps the library plan**: the registry also lists " + ", ".join(OVERLAP[aid]) + " for the same thing (the owner decides which id the game uses)" if aid in OVERLAP else "") + "; " + sp["note"])
+                + ("; **overlaps the library plan**: the registry also lists " + ", ".join(OVERLAP[aid]) + " for the same thing (the owner decides which id the game uses)" if aid in OVERLAP else "") + ("; built on the owner's instruction that family D follows E5; the family D rows of the breakdown were not individually approved; fictional design interpretation where the id says monument or pattern" if x["family"] == "D" else "") + "; " + sp["note"])
         new = {"id": aid, "name": name_of(sp), "assetClass": x["class"], "category": entry["category"], "region": "ngn" if aid.startswith("rg_ngn_") else None, "city": "kano" if aid.startswith("kano_") else None, "approvedCities": [],
-               "concepts": concepts, "districts": {"A": ["D10"], "B": ["D09"], "C": []}[x["family"]], "status": "blender_validation_passed", "breakdownApproved": True,
+               "concepts": concepts, "districts": {"A": ["D10"], "B": ["D09"], "C": [], "D": []}[x["family"]], "status": "blender_validation_passed", "breakdownApproved": x["family"] != "D",
                "blenderSource": manifest["source"]["blend"], "export": f"unity/Models/{aid}/{v}/{aid}.fbx", "unityPrefab": None, "placements": placements,
                "validation": {"blender": f"blender/validation/{aid}/{v}.json", "unityImport": None, "visualReview": None}, "approvedBy": None,
                "plannedBudget": {"lod0TrisMax": stats["budget_triangles"], "note": "validator ceiling for the category; the approved breakdown row (docs/KANO_TRANSPORT_ASSET_BREAKDOWN.md) gives the expected count"},
@@ -137,10 +144,10 @@ def main() -> int:
     (C / "LICENSES.md").write_text(lic.rstrip("\n") + "\n" + "\n".join(rows) + "\n"); reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n")
     for s in scenes.values(): j = s.as_json(); (C / "unity" / "placements").mkdir(parents=True, exist_ok=True); (C / "unity" / "placements" / f"{j['scene']}.json").write_text(json.dumps(j, indent=1)); added.append(f"unity/placements/{j['scene']}.json")
     fr = freeze(C, [i for i, _, _ in staged]); (C / "manifests").mkdir(exist_ok=True)
-    (C / "manifests" / "transport_kit.freeze.json").write_text(json.dumps({"release": "transport_kit_v001", "date": time.strftime("%Y-%m-%d", time.gmtime()), "producingCommit": a.commit, "files": fr}, indent=1))
-    rel = {"release": "transport_kit", "date": time.strftime("%Y-%m-%d", time.gmtime()), "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry); not imported into Unity until a review run says so",
+    (C / "manifests" / ("transport_kit" + (("_family_" + a.family.lower()) if a.family else "") + ".freeze.json")).write_text(json.dumps({"release": "transport_kit_v001", "date": time.strftime("%Y-%m-%d", time.gmtime()), "producingCommit": a.commit, "files": fr}, indent=1))
+    rel = {"release": "transport_kit" + (("_family_" + a.family.lower()) if a.family else ""), "date": time.strftime("%Y-%m-%d", time.gmtime()), "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry); not imported into Unity until a review run says so",
            "note": "Families A (logistics), B (bus terminals) and C (road furniture) of the owner's decision of 2026-11-09, as built by tools/blender/transport_kit. Nothing is reviewed or approved. 24 of the 52 overlap an asset the library plan lists under another id (registry field overlapsPlanned)."}
-    (C / "manifests" / "transport_kit.release.json").write_text(json.dumps(rel, indent=2))
+    (C / "manifests" / ("transport_kit" + (("_family_" + a.family.lower()) if a.family else "") + ".release.json")).write_text(json.dumps(rel, indent=2))
     ref_src = G / "REFERENCE_REGISTER.md"
     if ref_src.is_file(): shutil.copy2(ref_src, C / "references" / "REFERENCE_REGISTER.md")
     print(f"staged {len(staged)} assets; {len(added)} files added; {len(fr)} files in the freeze manifest"); return 0

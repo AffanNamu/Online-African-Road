@@ -59,7 +59,7 @@ def produce(root: Path, sp: dict, do_export: bool = True) -> dict:
 
 
 def load_all():
-    from . import logistics, terminal, furniture            # noqa: F401  (importing registers the specs)
+    from . import logistics, terminal, furniture, island        # noqa: F401  (importing registers the specs)
     from . import specs                                        # noqa: F401
     return SPECS
 

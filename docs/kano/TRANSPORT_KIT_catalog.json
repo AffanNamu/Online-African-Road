@@ -1773,6 +1773,432 @@
     "residential",
     "utility"
    ]
+  },
+  {
+   "id": "aro_roundabout_fountain_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: low fountain basin (no animation), pedestal, jets and basin lights References: R-004, R-005, R-023, R-034, R-035, R-036. No brand, plate or logo.",
+   "source": "Props/aro_roundabout_fountain_a",
+   "collider": "box",
+   "heightM": 1.95,
+   "widthM": 7.8,
+   "depthM": 7.8,
+   "cullDistance": 140,
+   "lodTriangles": [
+    978,
+    300,
+    28
+   ],
+   "castShadow": true,
+   "tags": [
+    "fountain",
+    "island",
+    "roundabout"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -2.298,
+      "y": 0.7,
+      "z": -2.298
+     },
+     {
+      "x": 2.298,
+      "y": 0.7,
+      "z": -2.298
+     },
+     {
+      "x": 2.298,
+      "y": 0.7,
+      "z": 2.298
+     },
+     {
+      "x": -2.298,
+      "y": 0.7,
+      "z": 2.298
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_island_wall_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class REGIONAL: 3 m red-earth rendered island wall run with coping References: R-024, R-027, R-004. No brand, plate or logo.",
+   "source": "Props/rg_ngn_island_wall_a",
+   "collider": "box",
+   "heightM": 1.28,
+   "widthM": 3.04,
+   "depthM": 0.48,
+   "cullDistance": 140,
+   "lodTriangles": [
+    242,
+    30,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "island",
+    "roundabout",
+    "tile_3m"
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class REGIONAL: Hausa-inspired geometric relief panel a (a fictional interpretation) References: R-024, R-025, R-026, R-027, R-028, R-029. No brand, plate or logo.",
+   "source": "Props/rg_ngn_pattern_panel_a",
+   "collider": "box",
+   "heightM": 1.4,
+   "widthM": 3.1,
+   "depthM": 0.37,
+   "cullDistance": 140,
+   "lodTriangles": [
+    374,
+    34,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_interpretation",
+    "island",
+    "pattern_panel"
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class REGIONAL: Hausa-inspired geometric relief panel b (a fictional interpretation) References: R-024, R-025, R-026, R-027, R-028, R-029. No brand, plate or logo.",
+   "source": "Props/rg_ngn_pattern_panel_b",
+   "collider": "box",
+   "heightM": 1.4,
+   "widthM": 3.1,
+   "depthM": 0.35,
+   "cullDistance": 140,
+   "lodTriangles": [
+    426,
+    34,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_interpretation",
+    "island",
+    "pattern_panel"
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_c",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class REGIONAL: Hausa-inspired geometric relief panel c (a fictional interpretation) References: R-024, R-025, R-026, R-027, R-028, R-029. No brand, plate or logo.",
+   "source": "Props/rg_ngn_pattern_panel_c",
+   "collider": "box",
+   "heightM": 1.4,
+   "widthM": 3.0,
+   "depthM": 0.4,
+   "cullDistance": 140,
+   "lodTriangles": [
+    302,
+    34,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_interpretation",
+    "island",
+    "pattern_panel"
+   ]
+  },
+  {
+   "id": "aro_flyover_deck_segment_a",
+   "category": "environment",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: parapet and luminaire-bracket kit for a 24 m flyover deck module (the engine draws the deck) References: R-023. No brand, plate or logo.",
+   "source": "Props/aro_flyover_deck_segment_a",
+   "collider": "none",
+   "heightM": 1.62,
+   "widthM": 12.0,
+   "depthM": 24.16,
+   "cullDistance": 140,
+   "lodTriangles": [
+    808,
+    68,
+    44
+   ],
+   "castShadow": true,
+   "tags": [
+    "deck",
+    "flyover",
+    "tile_24m"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 0.7,
+    "range": 14,
+    "haloSize": 1.8,
+    "poolRadius": 4.0,
+    "poolShift": 2.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 5.2,
+      "y": 0.6,
+      "z": 8.0
+     },
+     {
+      "x": 5.2,
+      "y": 0.6,
+      "z": -0.0
+     },
+     {
+      "x": 5.2,
+      "y": 0.6,
+      "z": -8.0
+     },
+     {
+      "x": -5.2,
+      "y": 0.6,
+      "z": 8.0
+     },
+     {
+      "x": -5.2,
+      "y": 0.6,
+      "z": -0.0
+     },
+     {
+      "x": -5.2,
+      "y": 0.6,
+      "z": -8.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_flyover_pier_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: round flyover pier with a flared head and a square cap References: R-023. No brand, plate or logo.",
+   "source": "Props/aro_flyover_pier_a",
+   "collider": "box",
+   "heightM": 7.0,
+   "widthM": 2.5,
+   "depthM": 2.5,
+   "cullDistance": 140,
+   "lodTriangles": [
+    280,
+    76,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "flyover",
+    "pier"
+   ]
+  },
+  {
+   "id": "aro_flyover_pier_b",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: square-capped flyover pier References: R-023. No brand, plate or logo.",
+   "source": "Props/aro_flyover_pier_b",
+   "collider": "box",
+   "heightM": 8.0,
+   "widthM": 2.4,
+   "depthM": 2.4,
+   "cullDistance": 140,
+   "lodTriangles": [
+    274,
+    38,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "flyover",
+    "pier"
+   ]
+  },
+  {
+   "id": "rg_ngn_pier_panel_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class REGIONAL: lattice cladding panel for interchange piers (a fictional interpretation) References: R-024, R-025, R-026, R-027, R-028, R-029, R-023. No brand, plate or logo.",
+   "source": "Props/rg_ngn_pier_panel_a",
+   "collider": "box",
+   "heightM": 6.0,
+   "widthM": 3.0,
+   "depthM": 0.35,
+   "cullDistance": 140,
+   "lodTriangles": [
+    582,
+    18,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_interpretation",
+    "flyover",
+    "pattern_panel",
+    "pier"
+   ]
+  },
+  {
+   "id": "aro_deck_edge_light_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: deck edge luminaire (wall washer) References: R-023. No brand, plate or logo.",
+   "source": "Props/aro_deck_edge_light_a",
+   "collider": "none",
+   "heightM": 0.6,
+   "widthM": 0.4,
+   "depthM": 0.32,
+   "cullDistance": 140,
+   "lodTriangles": [
+    194,
+    30,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "flyover",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 0.6,
+    "range": 12,
+    "haloSize": 1.8,
+    "poolRadius": 3.0,
+    "poolShift": 1.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 0.3,
+      "z": 0.14
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_noise_wall_set",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class GLOBAL: 4 m sound-wall module for ramps References: R-023. No brand, plate or logo.",
+   "source": "Props/aro_noise_wall_set",
+   "collider": "box",
+   "heightM": 3.0,
+   "widthM": 4.39,
+   "depthM": 0.34,
+   "cullDistance": 140,
+   "lodTriangles": [
+    186,
+    50,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "flyover",
+    "ramp",
+    "tile_4m"
+   ]
+  },
+  {
+   "id": "lmk_kano_roundabout_monument_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family D, class LANDMARK: fictional civic monument: octagonal plinth, shaft, four arches, sphere and spire References: R-004, R-005, R-034. No brand, plate or logo.",
+   "source": "Props/lmk_kano_roundabout_monument_a",
+   "collider": "box",
+   "heightM": 22.0,
+   "widthM": 10.9,
+   "depthM": 10.9,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1788,
+    186,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "fictional_design",
+    "landmark",
+    "monument",
+    "roundabout"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.2,
+    "range": 14,
+    "haloSize": 1.5,
+    "poolRadius": 5.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -5.0,
+      "y": 1.3,
+      "z": -0.0
+     },
+     {
+      "x": -2.5,
+      "y": 1.3,
+      "z": -4.33
+     },
+     {
+      "x": 2.5,
+      "y": 1.3,
+      "z": -4.33
+     },
+     {
+      "x": 5.0,
+      "y": 1.3,
+      "z": -0.0
+     },
+     {
+      "x": 2.5,
+      "y": 1.3,
+      "z": 4.33
+     },
+     {
+      "x": -2.5,
+      "y": 1.3,
+      "z": 4.33
+     }
+    ]
+   },
+   "label": {
+    "x": -0.0,
+    "y": 0.78,
+    "z": 2.8,
+    "width": 2.0,
+    "height": 0.4,
+    "yawDeg": 0,
+    "colour": "white",
+    "fontMax": 0
+   }
   }
  ],
  "bounds": {
@@ -2398,6 +2824,150 @@
     7.002,
     0.35,
     11.0
+   ]
+  ],
+  "aro_roundabout_fountain_a": [
+   [
+    -3.9,
+    -3.9,
+    0.0
+   ],
+   [
+    3.9,
+    3.9,
+    1.95
+   ]
+  ],
+  "rg_ngn_island_wall_a": [
+   [
+    -1.54,
+    -0.24,
+    0.0
+   ],
+   [
+    1.5,
+    0.24,
+    1.28
+   ]
+  ],
+  "rg_ngn_pattern_panel_a": [
+   [
+    -1.55,
+    -0.22,
+    0.0
+   ],
+   [
+    1.55,
+    0.15,
+    1.4
+   ]
+  ],
+  "rg_ngn_pattern_panel_b": [
+   [
+    -1.5,
+    -0.2,
+    0.0
+   ],
+   [
+    1.6,
+    0.15,
+    1.4
+   ]
+  ],
+  "rg_ngn_pattern_panel_c": [
+   [
+    -1.5,
+    -0.25,
+    0.0
+   ],
+   [
+    1.5,
+    0.15,
+    1.4
+   ]
+  ],
+  "aro_flyover_deck_segment_a": [
+   [
+    -6.0,
+    -12.08,
+    0.0
+   ],
+   [
+    6.0,
+    12.08,
+    1.62
+   ]
+  ],
+  "aro_flyover_pier_a": [
+   [
+    -1.25,
+    -1.25,
+    0.0
+   ],
+   [
+    1.25,
+    1.25,
+    7.0
+   ]
+  ],
+  "aro_flyover_pier_b": [
+   [
+    -1.2,
+    -1.2,
+    0.0
+   ],
+   [
+    1.2,
+    1.2,
+    8.0
+   ]
+  ],
+  "rg_ngn_pier_panel_a": [
+   [
+    -1.5,
+    -0.2,
+    0.0
+   ],
+   [
+    1.5,
+    0.15,
+    6.0
+   ]
+  ],
+  "aro_deck_edge_light_a": [
+   [
+    -0.2,
+    -0.15,
+    0.0
+   ],
+   [
+    0.2,
+    0.17,
+    0.6
+   ]
+  ],
+  "aro_noise_wall_set": [
+   [
+    -2.09,
+    -0.17,
+    0.0
+   ],
+   [
+    2.3,
+    0.17,
+    3.0
+   ]
+  ],
+  "lmk_kano_roundabout_monument_a": [
+   [
+    -5.451,
+    -5.451,
+    0.0
+   ],
+   [
+    5.451,
+    5.451,
+    22.0
    ]
   ]
  },

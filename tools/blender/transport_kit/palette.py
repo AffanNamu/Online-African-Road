@@ -14,7 +14,7 @@ FAMILIES = {
     "tk_paint": ["paint_white", "kerb_black", "kerb_white", "road_white", "road_yellow", "paint_red", "sign_blue", "sign_green", "sign_yellow", "warning_yellow", "lantern_glow", "rubber", "concrete_dark", "insulator_brown",
                  "interior_dark", "plaster_cream", "plaster_white", "plaster_ochre", "sheet_cream", "sheet_green", "board_dark", "signal_red", "signal_amber", "signal_green", "container_blue", "container_red",
                  "container_green", "container_grey", "wood_door", "timber_weathered", "burlap", "fabric_red", "fabric_white", "pavement_grey", "hedge_green", "leaf_green", "leaf_green_dark", "flower_red", "flower_bougainvillea",
-                 "laterite", "dry_earth", "mud_brick", "tarp_olive", "roof_tile_red", "timber_light", "plaster_terracotta", "paint_blue_bus", "paint_orange", "tile_floor"],
+                 "laterite", "dry_earth", "mud_brick", "tarp_olive", "roof_tile_red", "timber_light", "plaster_terracotta", "paint_blue_bus", "paint_orange", "tile_floor", "kasa_render", "water_pool"],
     "tk_metal": ["metal_galvanised", "metal_gate_black", "metal_gate_blue", "frame_aluminium_dark", "shutter_steel", "roof_zinc", "roof_zinc_rust"],
     "tk_glass": ["glass_dark", "glass"],
 }
@@ -22,7 +22,9 @@ NEW = {"timber_light": ((0.62, 0.46, 0.28), 0.8, 0.0, 0.0, "light sawn timber (b
        "plaster_terracotta": ((0.62, 0.36, 0.24), 0.9, 0.0, 0.0, "terracotta painted render (brise-soleil, accent walls)"),
        "paint_blue_bus": ((0.10, 0.30, 0.55), 0.55, 0.0, 0.0, "generic blue bus-station paint (no brand)"),
        "paint_orange": ((0.88, 0.42, 0.08), 0.55, 0.0, 0.0, "generic orange paint (route panels, minibus stand)"),
-       "tile_floor": ((0.66, 0.60, 0.52), 0.7, 0.0, 0.0, "light concourse floor tile")}
+       "tile_floor": ((0.66, 0.60, 0.52), 0.7, 0.0, 0.0, "light concourse floor tile"),
+       "kasa_render": ((0.57, 0.39, 0.28), 0.94, 0.0, 0.0, "red-pigmented earth (kasa) render of traditional Hausa walls (R-024, R-027); first-pass colour, not established"),
+       "water_pool": ((0.16, 0.42, 0.52), 0.1, 0.0, 0.0, "flat pool water of a fountain (no water shader)")}
 for _k, _v in NEW.items(): AM.LIBRARY.setdefault(_k, _v)
 AM.LIBRARY.setdefault("tk_paint", ((0.80, 0.80, 0.78), 0.70, 0.0, 0.0, "transport kit palette of non-metal flat colours (colours of the library entries it folds)"))
 AM.LIBRARY.setdefault("tk_metal", ((0.45, 0.45, 0.47), 0.55, 0.55, 0.0, "transport kit palette of metals (galvanised, black and blue painted steel, aluminium, shutter steel, roof sheet)"))

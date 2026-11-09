@@ -109,8 +109,23 @@ def furniture_lineup(b: dict) -> Scene:
     return s
 
 
+def roundabout_kit(b: dict) -> Scene:
+    """The family D components laid out for review: the fictional monument and the fountain, a run of island wall and the three pattern panels, a 24 m flyover parapet module on two piers with a pier panel, sound-wall modules and deck edge lights.
+    Not a roundabout (the engine draws those): a lineup on grass."""
+    s = Scene("roundabout_kit", "grass_green", "roundabout, island and flyover components from family D (review composition, not game content)", b)
+    s.add("lmk_kano_roundabout_monument_a", 0.0, 40.0, 0, tag="monument"); s.add("aro_roundabout_fountain_a", -28.0, 40.0, 0, tag="fountain")
+    for k in range(8): s.add("rg_ngn_island_wall_a", -10.5 + 3.0 * k, 20.0, 0, tag="wall")
+    for k, v in enumerate("abc"): s.add(f"rg_ngn_pattern_panel_{v}", -12.0 + 5.0 * k, 28.0, 0, tag="panel")
+    s.add("aro_flyover_deck_segment_a", 30.0, 40.0, 0, z=7.0, tag="deck"); s.add("aro_flyover_pier_a", 50.0, 30.0, 0, tag="pier"); s.add("aro_flyover_pier_b", 56.0, 30.0, 0, tag="pier"); s.add("rg_ngn_pier_panel_a", 50.0, 20.0, 0, tag="panel")
+    for k in range(4): s.add("aro_noise_wall_set", 24.0 + 4.4 * k, 10.0, 0, tag="noise")
+    for x in (-2.0, 0.0, 2.0): s.add("aro_deck_edge_light_a", x, 12.0, 0, tag="light")
+    s.view("front", (0.0, -12.0, 4.0), (0.0, 40.0, 8.0), 26); s.view("aerial", (0.0, -30.0, 55.0), (15.0, 32.0, 0.0), 28)
+    s.view("kit", (-8.0, 10.0, 2.5), (-8.0, 28.0, 1.5), 30); s.view("flyover", (30.0, 4.0, 5.0), (42.0, 34.0, 3.0), 26)
+    return s
+
+
 def all_scenes(bounds: dict | None = None) -> list[Scene]:
-    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b)]
+    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b), roundabout_kit(b)]
 
 
 def asset_ids(bounds: dict | None = None) -> set:

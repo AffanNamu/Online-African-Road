@@ -1,6 +1,6 @@
-# Family D (roundabout, island and flyover components): reuse-first plan (not built)
+# Family D (roundabout, island and flyover components): reuse-first plan and what was built
 
-Written 2026-11-09. The owner's decision: **Family D follows E5**, and reusable assets come first. E5 is built (`ROAD_ENGINE_E5.md`), so D is unblocked, but **nothing in Family D was modelled in this session**; this plan says what to build, what to reuse, and what the engine already draws so that nothing is made twice. The rows are those of `KANO_TRANSPORT_ASSET_BREAKDOWN.md` section D. The lesson of the transport kit (`TRANSPORT_KIT.md` section 5b) is applied: the **private library registry was read first** and every row mapped to what it already holds.
+Written 2026-11-09. The owner's decision: **Family D follows E5**, and reusable assets come first. E5 is built (`ROAD_ENGINE_E5.md`), so D is unblocked, and **the new-build rows were then modelled in the same session** (12 ids in `tools/blender/transport_kit/island.py`, see `TRANSPORT_KIT.md` section 3, D; the reuse rows were not rebuilt); this plan says what to build, what to reuse, and what the engine already draws so that nothing is made twice. The rows are those of `KANO_TRANSPORT_ASSET_BREAKDOWN.md` section D. The lesson of the transport kit (`TRANSPORT_KIT.md` section 5b) is applied: the **private library registry was read first** and every row mapped to what it already holds.
 
 ## What the engine already draws (do not model it)
 E5 builds, as road geometry: the ring carriageway with its kerbs and markings, the central island (kerbed or paved or grass fill), the splitter islands, yield lines and zebra crossings, the flyover **deck with parapets, the slab underside and the piers** (the existing bridge code, `BridgeSpec.overRoad`), and the ramps' embankments. The island's **props** (lights, palms, kiosks, signs) come from the existing prop rules and the catalogue. So the Family D assets are *dressing and detail on top of this*, not the structure.
@@ -25,7 +25,9 @@ E5 builds, as road geometry: the ring carriageway with its kerbs and markings, t
 
 Net: **of the 13 rows, 4 are reuse** (palms, shrubs, shade trees, hedge ring: the registry already holds the built and imported or planned asset) and **9 are new builds** (fountain, monument, pattern panels, island wall, deck kit, piers, pier panel, deck edge light, noise wall; about 14 ids because panels and piers have variants).
 
-## Order, budgets and checks when it is built
+## Order, budgets and checks (what was done, what is left)
+
+**Done:** fountain, island wall, three pattern panels, flyover parapet and bracket kit, two piers, pier panel, deck edge light, noise wall and the monument, all validated (at most 4 materials, three LODs), staged with the rest of the kit, in a fourth review scene. **Not done:** placing any of them (no island rule, no route), the Unity review, the owner's look at the monument and the panels. The numbered list below is the order and the checks that still apply to placement.
 1. Fountain, island wall, deck edge light, noise wall (no reference risk), then the deck and pier kit, then the **flagged** pieces (pattern panels, pier panel, monument) with their flags in the registry and no claim of Kano accuracy.
 2. Same toolchain as the transport kit (`tools/blender/transport_kit`: palette materials, at most 4 materials, three LODs, catalogue light heads and text faces, the registry staging). Budgets as in the breakdown (monument 5,400, fountain 1,600, panels 500 each).
 3. Before any placement on the E5 test routes: a test that an island prop's footprint stays inside the island and off the ring's paved edge (the island radii are in `ROAD_ENGINE_E5.md`), and that nothing on a ramp or deck reduces the 5.5 m headroom.

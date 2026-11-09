@@ -63,3 +63,17 @@ spec("aro_litter_bin_a", "props", C3.litter_bin, [(-0.25, -0.25, 0, 0.25, 0.25, 
 spec("aro_planter_island_a", "props", C3._planter(4.0), [(-2.0, -1.0, 0, 2.0, 1.0, 0.6)], "kerbed planter box, 4 m", target=[4, 2, 0.6])
 spec("aro_planter_island_b", "props", C3._planter(8.0), [(-4.0, -1.0, 0, 4.0, 1.0, 0.6)], "kerbed planter box, 8 m", target=[8, 2, 0.6])
 spec("kano_utility_pole_set", "props", C3.utility_pole, [], "11 m utility pole with a transformer, insulators and cable stubs", target=[0.4, 0.4, 11])
+
+
+# ---- Family D: roundabout, island and flyover components (reuse-first: trees, shrubs and hedges are not rebuilt, docs/KANO_FAMILY_D_PLAN.md)
+from . import island as D
+spec("aro_roundabout_fountain_a", "props", D.fountain, [(-3.95, -3.95, 0, 3.95, 3.95, 1.0)], "low fountain basin (no animation), pedestal, jets and basin lights", target=[8, 8, 1.6])
+spec("rg_ngn_island_wall_a", "props", D.island_wall, [(-1.5, -0.2, 0, 1.5, 0.2, 1.2)], "3 m red-earth rendered island wall run with coping", target=[3, 0.4, 1.2])
+for _k in "abc": spec(f"rg_ngn_pattern_panel_{_k}", "props", D.pattern_panel(_k), [(-1.5, -0.15, 0, 1.5, 0.15, 1.4)], f"Hausa-inspired geometric relief panel {_k} (a fictional interpretation)", target=[3, 0.3, 1.4])
+spec("aro_flyover_deck_segment_a", "environments", D.deck_parapet_kit, [], "parapet and luminaire-bracket kit for a 24 m flyover deck module (the engine draws the deck)", target=[12, 24, 1.6])
+spec("aro_flyover_pier_a", "props", D.pier_round, [(-1.2, -1.2, 0, 1.2, 1.2, 7.0)], "round flyover pier with a flared head and a square cap", target=[2.4, 2.4, 7])
+spec("aro_flyover_pier_b", "props", D.pier_square, [(-1.2, -1.2, 0, 1.2, 1.2, 8.0)], "square-capped flyover pier", target=[2.4, 2.4, 8])
+spec("rg_ngn_pier_panel_a", "props", D.pier_panel, [(-1.5, -0.15, 0, 1.5, 0.15, 6.0)], "lattice cladding panel for interchange piers (a fictional interpretation)", target=[3, 0.3, 6])
+spec("aro_deck_edge_light_a", "props", D.edge_light, [], "deck edge luminaire (wall washer)", target=[0.4, 0.3, 0.6])
+spec("aro_noise_wall_set", "props", D.noise_wall, [(-2.05, -0.17, 0, 2.05, 0.17, 3.0)], "4 m sound-wall module for ramps", target=[4, 0.3, 3])
+spec("lmk_kano_roundabout_monument_a", "buildings", D.monument, [(-5.9, -5.9, 0, 5.9, 5.9, 1.05), (-2.9, -2.9, 1.05, 2.9, 2.9, 22.0)], "fictional civic monument: octagonal plinth, shaft, four arches, sphere and spire", target=[12, 12, 22])

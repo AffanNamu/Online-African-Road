@@ -53,7 +53,7 @@ def built():
 
 def test_the_approved_families_are_all_present():
     ids = set(SPECS)
-    assert len(ids) == 52
+    assert len(ids) == 64
     for must in ("rg_ngn_warehouse_hall_a", "rg_ngn_warehouse_hall_b", "rg_ngn_warehouse_cold_a", "aro_dock_leveller_set", "aro_weighbridge_a", "aro_fuel_island_truck", "aro_gate_sliding_a",
                  "kano_bus_terminal_hall_a", "kano_bus_shelter_long_a", "aro_bus_shelter_a", "kano_ticket_kiosk_a", "kano_departure_board_a", "kano_minibus_stand_canopy_a", "kano_tricycle_rank_a",
                  "aro_streetlight_arm_single_a", "aro_streetlight_double_median_a", "aro_streetlight_ornamental_a", "aro_road_sign_direction_a", "aro_gantry_sign_a", "aro_traffic_signal_a",
@@ -61,6 +61,8 @@ def test_the_approved_families_are_all_present():
         assert must in ids, must
     assert {f"aro_container_20ft_{v}" for v in "abc"} <= ids and {f"aro_container_40ft_{v}" for v in "ab"} <= ids
     assert {f"aro_truck_trailer_parked_{v}" for v in "ab"} <= ids
+    for must in ("lmk_kano_roundabout_monument_a", "aro_roundabout_fountain_a", "rg_ngn_island_wall_a", "aro_flyover_deck_segment_a", "aro_flyover_pier_a", "aro_flyover_pier_b", "rg_ngn_pier_panel_a", "aro_deck_edge_light_a", "aro_noise_wall_set"): assert must in ids, must
+    assert {f"rg_ngn_pattern_panel_{v}" for v in "abc"} <= ids
 
 
 def test_every_asset_ids_in_the_breakdown_rows():
@@ -76,7 +78,7 @@ def test_naming_class_and_registration(aid):
     x = C.EXTRAS.get(aid)
     assert x, f"{aid}: no catalogue extras registered"
     assert aid.startswith(CLASS_PREFIX[x["class"]]), f"{aid}: class {x['class']} needs the prefix {CLASS_PREFIX[x['class']]}"
-    assert x["family"] in "ABC" and x["ref"], aid
+    assert x["family"] in "ABCD" and x["ref"], aid
     assert not BRANDS.search(aid) and not BRANDS.search(SPECS[aid]["note"]), f"{aid}: a brand name"
     assert re.fullmatch(r"[a-z0-9]+(_[a-z0-9]+)*", aid)
 
@@ -206,8 +208,8 @@ def test_palette_is_consistent():
     assert all(PAL.TARGET[k] in PAL.FAMILIES for k in PAL.TARGET)
     # every flat colour a builder uses must be in a palette family or be the textured concrete
     used = set()
-    import inspect, transport_kit.logistics as A, transport_kit.terminal as B, transport_kit.furniture as F
-    for mod in (A, B, F):
+    import inspect, transport_kit.logistics as A, transport_kit.terminal as B, transport_kit.furniture as F, transport_kit.island as D
+    for mod in (A, B, F, D):
         used |= set(re.findall(r'"([a-z_0-9]+)"', inspect.getsource(mod)))
     from aro_blender import materials as AM
     missing = sorted(k for k in used if k in AM.LIBRARY and k not in PAL.TARGET and k not in ("concrete", "tk_paint", "tk_metal", "tk_glass"))

@@ -90,5 +90,5 @@ def test_stage_copies_the_exports_and_writes_the_placements(tmp_path):
     assert staged == {"aro_bench_a": "v001", "aro_litter_bin_a": "v001"}
     assert (out / "Models" / "aro_bench_a" / "v001" / "aro_bench_a.fbx").is_file() and (out / "Textures" / "kano_kit" / "T_tk_paint_Palette.png").is_file()
     assert [m["name"] for m in json.loads((out / "Materials" / "aro_materials.json").read_text())["materials"]] == ["M_concrete", "M_tk_paint"]
-    assert {p.name for p in (out / "placements").glob("*.json")} == {"env_logistics_yard_dry.json", "env_bus_terminal_dry.json", "env_road_furniture_dry.json"}
+    assert {p.name for p in (out / "placements").glob("*.json")} == {"env_logistics_yard_dry.json", "env_bus_terminal_dry.json", "env_road_furniture_dry.json", "env_roundabout_kit_dry.json"}
     with pytest.raises(SystemExit): ST.stage(W, out, ["aro_missing_a"], SCENES)
