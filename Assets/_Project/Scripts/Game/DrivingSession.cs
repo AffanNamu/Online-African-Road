@@ -69,9 +69,23 @@ namespace ARO.Game
                         Debug.Log("[Smoke] starting on site plate " + siteId);
                         break;
                     }
+            ARO.NetCore.AutoPath autoPath = null; ARO.NetCore.DesignVehicle autoVehicle = null;
+            if (at == null && SmokeMode.Autopilot != null && _route.Model != null)       // test pages only: start at the beginning of an E5 autopilot path
+            {
+                autoVehicle = def.id == "bus_city_01" ? ARO.NetCore.DesignVehicle.Bus : def.id == "truck_medium_01" ? ARO.NetCore.DesignVehicle.TruckMedium : ARO.NetCore.DesignVehicle.TruckLight;
+                autoPath = ARO.NetCore.AutoPaths.Build(_route.Model, SmokeMode.Autopilot, autoVehicle);
+                if (autoPath != null)
+                {
+                    var p0 = autoPath.Points[0]; var p1 = autoPath.Points[1];
+                    start = new Vector3(p0.X, autoPath.StartY, p0.Y); dir = new Vector3(p1.X - p0.X, 0f, p1.Y - p0.Y).normalized;
+                    Debug.Log("[Smoke] autopilot path " + SmokeMode.Autopilot + " starts at (" + p0.X.ToString("F1") + ", " + autoPath.StartY.ToString("F2") + ", " + p0.Y.ToString("F1") + ")");
+                }
+                else Debug.LogWarning("[Smoke] no autopilot path named " + SmokeMode.Autopilot + " on this route");
+            }
             _spawnRot = facing ?? Quaternion.LookRotation(dir);
             Vehicle = TruckFactory.Create(def, (at ?? start) + Vector3.up * 1.5f, _spawnRot, _body, _wheel);
             if (Vehicle == null) { Say("Vehicle model failed to load.", 8f, ARO.NetCore.Severity.Error); return; }
+            if (autoPath != null) { var ap = Vehicle.gameObject.AddComponent<SmokeAutopilot>(); ap.Init(Vehicle, autoPath, autoVehicle, _route); Vehicle.SetInput(ap); }
             Vehicle.fuelL = (float)owned.fuel_l; Vehicle.damagePct = (float)owned.damage_pct;
             // Freeze the vehicle until the streamer has built the ground under it; otherwise it drops through the world.
             _holdRb = Vehicle.GetComponent<Rigidbody>(); _holdRb.constraints = RigidbodyConstraints.FreezeAll; _holdSince = Time.unscaledTime; _holding = true;
@@ -132,7 +146,7 @@ namespace ARO.Game
         void TryRelease()
         {
             var pos = Vehicle.transform.position;
-            if (Streamer.GroundBelow(pos, Vehicle.transform, out float gy))
+            if (Streamer.GroundBelow(pos, Vehicle.transform, out float gy, _route != null && _route.Model != null && _route.Model.HasLevels ? pos.y : float.MaxValue))
             {
                 Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = Vehicle.transform.position; _lastSafe = _spawnPos;
@@ -161,7 +175,7 @@ namespace ARO.Game
             // 0.9 m above the road, rolled, at the crossing (a settled truck rests 0.13 m above the surface). Wait, a second at a time, until it is low and not falling (at most 12 more seconds).
             if (_route != null && _route.Model != null && _freezeWaits < 12)
             {
-                float above = t.position.y - _route.GroundY(t.position.x, t.position.z);
+                float above = t.position.y - _route.GroundY(t.position.x, t.position.z, t.position.y);
                 if (above > 0.6f || Mathf.Abs(rb.linearVelocity.y) > 0.3f)
                 {
                     _freezeWaits++; _freezeAt = Time.unscaledTime + 1f;
@@ -185,7 +199,7 @@ namespace ARO.Game
             // frozen truck 0.2 to 1.4 m apart): the held truck is put back on its spawn point and heading, whatever the suspension did meanwhile. Smoke hold only; the height follows the ground change.
             if (_route != null && _route.Model != null && (new Vector2(t.position.x - _spawnPos.x, t.position.z - _spawnPos.z).magnitude > 0.02f || Quaternion.Angle(t.rotation, _spawnRot) > 0.5f))
             {
-                float dy = _route.GroundY(_spawnPos.x, _spawnPos.z) - _route.GroundY(t.position.x, t.position.z);
+                float dy = _route.GroundY(_spawnPos.x, _spawnPos.z, _spawnPos.y) - _route.GroundY(t.position.x, t.position.z, t.position.y);
                 var before = t.position; var yawBefore = t.eulerAngles.y;
                 t.SetPositionAndRotation(new Vector3(_spawnPos.x, t.position.y + dy, _spawnPos.z), Quaternion.Euler(0f, _spawnRot.eulerAngles.y, 0f));
                 Debug.Log($"[Drive] smoke hold: pose snapped to the spawn point (moved {Vector2.Distance(new Vector2(before.x, before.z), new Vector2(_spawnPos.x, _spawnPos.z)):F2} m, turned {Mathf.DeltaAngle(yawBefore, _spawnRot.eulerAngles.y):F1} deg)");

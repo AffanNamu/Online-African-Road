@@ -11,8 +11,8 @@ namespace ARO.NetCore
         public float RearOverhang => Length - Wheelbase - FrontOverhang;
         public float MinTurnRadius => Wheelbase / (float)Math.Tan(MaxSteerDeg * Math.PI / 180.0);          // rear axle centre, full lock
         public float MinFrontTurnRadius => Wheelbase / (float)Math.Sin(MaxSteerDeg * Math.PI / 180.0);     // front axle centre, full lock (the path a driver steers: the front axle follows the lane)
-        /// <summary>The radius of the turn onto and off a ring that a driver takes with this vehicle: a good margin over full lock, and never tighter than 12 m.</summary>
-        public float EasyTurnRadius => Math.Max(12f, MinFrontTurnRadius * 1.15f);
+        /// <summary>The radius of the turn onto and off a ring that a driver takes with this vehicle: a good margin over full lock (the game reduces the steering angle with speed: about 80 percent of full lock at city speeds), and never tighter than 12 m.</summary>
+        public float EasyTurnRadius => Math.Max(12f, MinFrontTurnRadius * 1.25f);
 
         /// <summary>The game's placeholder truck (TruckFactory: body 2.4 x 6 m, wheels 4.2 m apart, VehicleDefinition steer 32 degrees).</summary>
         public static readonly DesignVehicle TruckLight = new DesignVehicle { Name = "truck_light_01", Width = 2.4f, Length = 6.0f, Wheelbase = 4.2f, FrontOverhang = 0.4f, MaxSteerDeg = 32f };

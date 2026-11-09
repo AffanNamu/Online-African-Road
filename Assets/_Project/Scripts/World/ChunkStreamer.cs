@@ -76,12 +76,13 @@ namespace ARO.World
         void Start() { StartCoroutine(Pump()); }
 
         /// <summary>True when something solid (other than `ignore`'s own colliders) lies under p; y receives the highest such surface.</summary>
-        public bool GroundBelow(Vector3 p, Transform ignore, out float y)
+        public bool GroundBelow(Vector3 p, Transform ignore, out float y, float maxY = float.MaxValue)
         {
             y = 0f; bool found = false;
             foreach (var h in Physics.RaycastAll(p + Vector3.up * 300f, Vector3.down, 600f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (ignore != null && h.collider.transform.IsChildOf(ignore)) continue;
+                if (h.point.y > maxY) continue;           // E5: on a route with decks, only surfaces at or below the vehicle count (the road under a flyover, not the deck above it)
                 if (!found || h.point.y > y) { y = h.point.y; found = true; }
             }
             return found;
@@ -142,6 +143,8 @@ namespace ARO.World
             foreach (var cor in route.Model.AllCorridors)
                 for (int i = 0; i < cor.RingX.Length; i++)
                     if (cor.RingX[i] >= x0 && cor.RingX[i] < x1 && cor.RingZ[i] >= z0 && cor.RingZ[i] < z1) return true;
+            foreach (var r in route.Model.Rings)         // E5: the island and the splitters of a roundabout are built with the roads, whatever chunk the circulating road leaves out
+                if (r.Cx >= x0 && r.Cx < x1 && r.Cz >= z0 && r.Cz < z1) return true;
             foreach (var p in route.Model.Sites)         // a site plate (E2) is built with the roads; one of its cells may lie in a chunk no road passes through
             {
                 int nu = Mathf.Max(1, Mathf.CeilToInt(p.HalfW * 2f / 40f)), nv = Mathf.Max(1, Mathf.CeilToInt(p.HalfD * 2f / 40f));       // a point every 40 m or less: a chunk is 200 m
@@ -243,6 +246,20 @@ namespace ARO.World
                 var cm = mb.Triangles.Length > RoadSub.Kerb
                     ? MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter, RoadSub.Drain)
                     : MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
+                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
+                go.isStatic = true;
+                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+            }
+            foreach (var rb in m.Rings)          // E5: the central island (core and apron) and the splitter islands of every roundabout. Same materials and collision slots as the E1 strips.
+            {
+                var mb = RingGeometry.BuildChunk(rb, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org, id => m.CorridorById(id));
+                if (mb.IsEmpty) continue;
+                var mesh = MeshUtil.ToMesh(mb, "Ring_" + rb.Id, out var used);
+                var go = new GameObject("Ring_" + rb.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
+                go.GetComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
+                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                var cm = MeshUtil.ToCollisionMesh(mb, "RingCollision_" + rb.Id, RoadSub.Verge, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter);
                 var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
                 go.isStatic = true;
                 ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);

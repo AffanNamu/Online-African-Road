@@ -54,7 +54,7 @@ namespace ARO.Game
             {
                 await Task.Yield();
                 Debug.Log("[Smoke] drive scenario: skipping sign-in");
-                _drive.Enter(new OwnedVehicleDto { id = "smoke-truck", definition_id = "truck_light_01", fuel_l = 120, damage_pct = 0 });
+                _drive.Enter(new OwnedVehicleDto { id = "smoke-truck", definition_id = SmokeMode.VehicleId ?? "truck_light_01", fuel_l = 120, damage_pct = 0 });
                 _canvas.gameObject.SetActive(false); _hud.SetVisible(true); _drive.Pause(false);
                 return;
             }

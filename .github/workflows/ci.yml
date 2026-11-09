@@ -357,6 +357,12 @@ jobs:
         run: |
           node tools/webgl-e1.js --selftest
           node tools/webgl-e1.js Builds/WebGL webgl-light-e1
+      - name: "Roundabouts and the flyover (E5) - an autopilot drives the real bus and trucks round four of the six test roundabouts, over the F1 flyover deck, along the ground road under it and down and up its ramps (reached the end, stayed in the lane, on the right level; the pictures still have to be looked at)"
+        if: always()
+        continue-on-error: true
+        run: |
+          node tools/webgl-e5.js --selftest
+          node tools/webgl-e5.js Builds/WebGL webgl-light-e5
       - uses: actions/upload-artifact@v4
         if: always() && vars.ASSETS_REPO == ''
         with: { name: webgl-lighting, path: "webgl-light-*", if-no-files-found: ignore }

@@ -75,6 +75,8 @@ namespace ARO.World
 
         /// <summary>Height a vehicle or marker stands on at (x, z): road surface on the road, terrain elsewhere (0 without route data).</summary>
         public float GroundY(float x, float z) => Model != null ? Model.GroundHeight(x, z) : 0f;
+        /// <summary>E5: on a route with decks, the surface nearest to nearY (a vehicle on the flyover stands on the deck, one under it on the road below). Without decks it is the same as GroundY.</summary>
+        public float GroundY(float x, float z, float nearY) => Model != null ? Model.GroundHeight(x, z, nearY) : 0f;
 
         /// <summary>Lateral offset of the centre of a driving lane on the right of the direction of travel at polyline distance s. laneHash picks the lane on multi-lane roads.</summary>
         public float LaneOffset(float s, int laneHash)

@@ -1271,7 +1271,7 @@
    "zone": "urban",
    "surface": "good",
    "flare": 0.0,
-   "mouthScale": 1.6,
+   "mouthScale": 1.8,
    "splitterLength": 22.0,
    "splitterWidth": 4.0,
    "yieldLines": true,

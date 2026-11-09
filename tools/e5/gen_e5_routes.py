@@ -90,7 +90,7 @@ DESIGNS = [
     dict(id='r_traditional', name='Traditional roundabout (three legs, one wide lane, earth island with a ring of palms)', design='traditional', profile='ring_traditional', radius=15.0, apron=1.5, island='earth', splitter=(12.0, 2.6), flare=9.0, mouth=1.8,
          legs=[('s1', 'legrural', 270)], link_profile='legrural',
          island_props=[('palm%d' % i, 'palm_tree', 9 * math.cos(math.radians(30 * i)), 9 * math.sin(math.radians(30 * i)), 0) for i in range(12)]),
-    dict(id='r_large', name='Large multi-lane roundabout (four circulating lanes, six legs)', design='large', profile='ring_large', radius=30.0, apron=0.0, island='planter', splitter=(22.0, 4.0), flare=0.0, mouth=1.6,
+    dict(id='r_large', name='Large multi-lane roundabout (four circulating lanes, six legs)', design='large', profile='ring_large', radius=30.0, apron=0.0, island='planter', splitter=(22.0, 4.0), flare=0.0, mouth=1.8,
          legs=[('n1', 'leg4', 60), ('n2', 'leg4', 120), ('s1', 'leg4', 240), ('s2', 'leg4', 300)], link_profile='leg4',
          island_props=[('t%d' % i, 'tropical_tree', 16 * math.cos(math.radians(30 * i)), 16 * math.sin(math.radians(30 * i)), 0) for i in range(12)]),
     dict(id='r_commercial', name='Commercial roundabout (wide market walkways, bus bays on the legs)', design='commercial', profile='ring_commercial', radius=14.0, apron=1.5, island='paved', splitter=(12.0, 2.8), flare=0.0, mouth=1.9,

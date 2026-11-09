@@ -23,9 +23,13 @@ namespace ARO.Game
         /// <summary>"?smoke=drive&start=12000": the truck starts that many metres along the route (night and weather checks in the village, on the expressway, at a junction). -1 when absent.</summary>
         public static float StartMetres => Drive ? LightingHour.QueryNumber(Url, "start", 1f, 60000f) : -1f;
         /// <summary>"?smoke=drive&route=ng-kano-e1-streets": drive a test corridor shipped for engine verification instead of the Lagos to Ibadan road. Only the ids listed here are honoured; the live game never sets this.</summary>
-        public static string TestRoute { get { if (!Drive) return null; var id = NightLighting.QueryValue(Url, "route"); return id == "ng-kano-e1-streets" ? id : null; } }
+        public static string TestRoute { get { if (!Drive) return null; var id = NightLighting.QueryValue(Url, "route"); return id == "ng-kano-e1-streets" || id == "ng-kano-e5-roundabouts" || id == "ng-kano-e5-f1" ? id : null; } }
         /// <summary>"?smoke=drive&route=ng-kano-e1-streets&site=site_yard": the truck starts on that site plate, just inside its back edge, facing the way the plate faces. Letters, digits and underscores only.</summary>
         public static string StartSite { get { if (!Drive) return null; var id = NightLighting.QueryValue(Url, "site"); return !string.IsNullOrEmpty(id) && System.Text.RegularExpressions.Regex.IsMatch(id, "^[a-z0-9_]{1,40}$") ? id : null; } }
+        /// <summary>"?smoke=drive&route=ng-kano-e5-f1&autopilot=upper|upper_south|lower|lower_back|ramp_off|ramp_on|ring:r_highway&vehicle=bus_city_01": the vehicle starts at the beginning of that path and drives it by itself (E5 verification in the real build). Null when absent.</summary>
+        public static string Autopilot { get { if (!Drive) return null; var v = NightLighting.QueryValue(Url, "autopilot"); return !string.IsNullOrEmpty(v) && System.Text.RegularExpressions.Regex.IsMatch(v, "^[a-z0-9_:]{1,40}$") ? v : null; } }
+        /// <summary>"?smoke=drive&vehicle=truck_light_01|truck_medium_01|bus_city_01": which vehicle the test page drives (default the light truck). Only these three ids are honoured.</summary>
+        public static string VehicleId { get { if (!Drive) return null; var v = NightLighting.QueryValue(Url, "vehicle"); return v == "truck_light_01" || v == "truck_medium_01" || v == "bus_city_01" ? v : null; } }
         /// <summary>"?smoke=drive&weather=clear|cloudy|rain|wet": a named test weather. Null when absent or unknown.</summary>
         public static string Weather => Drive && WeatherLook.TryPreset(NightLighting.QueryValue(Url, "weather"), out var p) ? p.Name : null;
         /// <summary>"?smoke=drive&highbeam=1" and "&hazard=1": the truck starts with its high beam or hazard lights on (CI renders them without a key press).</summary>
