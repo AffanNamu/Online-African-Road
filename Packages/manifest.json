@@ -13,6 +13,7 @@
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.unitywebrequesttexture": "1.0.0",
     "com.unity.modules.vehicles": "1.0.0",
     "com.unity.netcode.gameobjects": "2.2.0",
     "com.unity.render-pipelines.universal": "17.0.3",
