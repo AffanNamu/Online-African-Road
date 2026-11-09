@@ -84,6 +84,62 @@ namespace ARO.NetCore
         public float valleyDepth = 9f;
         public float deckThickness = 1.2f;
         public float pierSpacing = 18f;
+        public PierGap[] pierGaps = new PierGap[0];     // E5: no piers between these route distances (the clear span over a lower road)
+        public bool overRoad;                           // E5: a grade-separated deck (a flyover): no valley is dug, the ground under it is whatever the roads and terrain below make it (valleyDepth must be 0)
+    }
+
+    /// <summary>E5: a stretch of a deck where no pier stands (the span over a road underneath).</summary>
+    [Serializable] public class PierGap { public float from, to; }
+
+    /// <summary>
+    /// E5 (schemaVersion 3): an additional road corridor beyond the main road and the junction stubs: a flyover road, a ramp or a cross road. It has its own control points (x, z, elevation),
+    /// so it can climb, cross the main road on a deck and come down; `decks` are the stretches carried on a deck with piers (no valley is dug under them). Rules: the main spline's (40 m radius, 8 percent grade).
+    /// </summary>
+    [Serializable]
+    public class RoadSpec
+    {
+        public string id, name;
+        public string role = "road";            // road | ramp | flyover: a ramp or flyover is held to the 6 percent grade of E5 and must meet the road it leaves or joins
+        public ControlPoint[] controlPoints;
+        public BridgeSpec[] decks = new BridgeSpec[0];
+        public RoadJoinSpec[] joins = new RoadJoinSpec[0];     // where this road's ends meet the paved edge of another road (the gap in that road's kerb and edge line)
+    }
+
+    /// <summary>
+    /// E5: one end of a road meets the paved edge of another corridor. `end` = start | end (which end of this road), `corridor` and `s` where on the other road, `side` = +1 right / -1 left of that road,
+    /// `gap` = half length in metres of the kerb and edge-line gap on that road (a slip road joins at a shallow angle, so the gap is long: 20 to 40 m).
+    /// </summary>
+    [Serializable] public class RoadJoinSpec { public string end = "start", corridor; public float s, gap = 20f; public int side = 1; }
+
+    /// <summary>
+    /// E5: a leg of a roundabout: a straight road that leaves the ring at a bearing and ends `length` metres away. angleDeg is a WORLD angle, counter-clockwise from +x (east): 0 = east, 90 = north, 180 = west, 270 = south.
+    /// It is a two-way road of `profile` (a corridor with the id `id`, like a junction stub); `rise` changes its elevation over its length.
+    /// </summary>
+    [Serializable] public class RingLegSpec { public string id, profile; public float angleDeg, length = 150f, rise; public string zone = "", surface = ""; }
+
+    /// <summary>
+    /// E5 (schemaVersion 3): a roundabout. A closed circular corridor (counter-clockwise seen from above: right-hand traffic) with the lanes of `profile` (all lanes circulate the same way; the centre line is a
+    /// lane line, normally white), a central island, and legs. It is placed by its centre (x, z, elevation) or attached to the END of an existing corridor (`attachTo`): then the ring is put so that its outer paved
+    /// edge meets that end and the corridor becomes one of the legs. `radius` is the island radius to the foot of the island kerb; the ring's centre line is then radius + the profile's formation half width.
+    /// </summary>
+    [Serializable]
+    public class RingSpec
+    {
+        public string id, name, design;
+        public string profile;                  // cross-section of the circulating carriageway (lanesPerDirection x 2 lanes, all circulating)
+        public float x, z, elevation;           // the centre of the island and the elevation of the ring's centre line (ignored with attachTo)
+        public string attachTo = "";            // id of a corridor (the main road, a junction stub, a RoadSpec) whose end or start meets the ring
+        public string attachEnd = "end";        // end | start: which end of that corridor
+        public float radius = 16f;              // island radius, metres
+        public float apron = 0f;                // width of the paved (mountable) apron ring at the island's edge, metres
+        public string island = "planter";       // planter | paved | grass | earth: what the island is covered with
+        public string zone = "urban", surface = "good";
+        public float flare = 0f;                // flared entries (the E3 fillet) at every leg; unkerbed rings only
+        public float splitterLength = 14f, splitterWidth = 3f;     // raised splitter island on every leg (length 0 = none)
+        public bool yieldLines = true, zebra = true;
+        public RingLegSpec[] legs = new RingLegSpec[0];
+        public string[] connect = new string[0];   // ids of other corridors (RoadSpecs, stubs) whose end meets the ring's outer edge (they count as legs for mouths, splitters and markings)
+        public SitePropSpec[] props = new SitePropSpec[0];   // island props: x, z are metres east and north of the island centre
     }
 
     /// <summary>A side road leaving the main road. angleDeg > 0 turns right of the travel direction, < 0 left.</summary>
@@ -171,6 +227,8 @@ namespace ARO.NetCore
         public WaypointSpec[] waypoints;
         public MarkingSymbolSpec[] symbols;     // optional (E1): pavement symbols; null = none
         public SitePlateSpec[] sites;           // optional (E2): paved plates for yards, terminals and forecourts; null = none
+        public RoadSpec[] roads;                // optional (E5, schemaVersion 3): additional roads (flyover road, ramps, cross roads); null = none
+        public RingSpec[] rings;                // optional (E5, schemaVersion 3): roundabouts on the main road; null = none
     }
 
     public enum Zone { Urban, Commercial, Industrial, Rural, Highway }

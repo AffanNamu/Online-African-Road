@@ -24,7 +24,7 @@ public class JunctionFormsTests
     [Fact] public void SchemaVersionTwoIsAcceptedAndOthersAreNot()
     {
         Assert.Empty(Errors(Spec(2)));
-        var s = Spec(2); s.schemaVersion = 3; Assert.Contains(Errors(s), e => e.Contains("schemaVersion"));
+        var s = Spec(2); s.schemaVersion = 99; Assert.Contains(Errors(s), e => e.Contains("schemaVersion"));       // 3 is E5's (roundabouts, flyovers); it became valid then
         s = Spec(2); s.schemaVersion = 0; Assert.Contains(Errors(s), e => e.Contains("schemaVersion"));
     }
 

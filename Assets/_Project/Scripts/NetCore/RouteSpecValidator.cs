@@ -16,7 +16,7 @@ namespace ARO.NetCore
         {
             var e = new List<string>();
             if (spec == null) { e.Add("route spec is null"); return e; }
-            if (spec.schemaVersion != 1 && spec.schemaVersion != 2) e.Add("schemaVersion must be 1 or 2 (got " + spec.schemaVersion + ")");
+            if (spec.schemaVersion < 1 || spec.schemaVersion > 3) e.Add("schemaVersion must be 1, 2 or 3 (got " + spec.schemaVersion + ")");
             if (string.IsNullOrEmpty(spec.routeId) || !IdRx.IsMatch(spec.routeId)) e.Add("routeId must be lowercase letters, digits and dashes");
             if (string.IsNullOrWhiteSpace(spec.name)) e.Add("name is required");
             if (spec.meta == null) e.Add("meta is required");
@@ -109,6 +109,24 @@ namespace ARO.NetCore
             length = 0f; profile = null; return false;
         }
 
+        /// <summary>The same, also among the E5 roads, ring legs and rings (their lengths as the model will build them).</summary>
+        static bool FindCorridor(RouteSpec spec, IEnumerable<JunctionSpec> junctions, string name, out float length, out string profile)
+        {
+            if (FindCorridor(junctions, name, out length, out profile)) return true;
+            foreach (var r in spec.roads ?? new RoadSpec[0])
+                if (r != null && r.id == name && r.controlPoints != null && r.controlPoints.Length >= 2 && r.controlPoints.All(c => c != null))
+                {
+                    float len = 0f; for (int i = 1; i < r.controlPoints.Length; i++) len += (float)Math.Sqrt(Math.Pow(r.controlPoints[i].x - r.controlPoints[i - 1].x, 2) + Math.Pow(r.controlPoints[i].z - r.controlPoints[i - 1].z, 2));
+                    length = len; profile = r.controlPoints[0].profile; return true;
+                }
+            foreach (var g in spec.rings ?? new RingSpec[0])
+            {
+                if (g == null) continue;
+                foreach (var l in g.legs ?? new RingLegSpec[0]) if (l != null && l.id == name) { length = l.length; profile = l.profile; return true; }
+            }
+            length = 0f; profile = null; return false;
+        }
+
         static readonly string[] SymbolKinds = { "zebra", "stop_line", "yield", "arrow_straight", "arrow_left", "arrow_right", "bay" };
 
         /// <summary>The E1 cross-section fields of one profile: ranges, and the combinations that make no sense (a walkway without a kerb, a barrier on a kerbed edge).</summary>
@@ -144,7 +162,7 @@ namespace ARO.NetCore
                 float corridorLength = mainLength;
                 if (!string.IsNullOrEmpty(s.corridor) && s.corridor != spec.routeId)
                 {
-                    if (!FindCorridor(junctions, s.corridor, out corridorLength, out _)) { corridorLength = mainLength; e.Add(tag + ": corridor '" + s.corridor + "' is neither the main road nor a junction"); }
+                    if (!FindCorridor(spec, junctions, s.corridor, out corridorLength, out _)) { corridorLength = mainLength; e.Add(tag + ": corridor '" + s.corridor + "' is neither the main road nor a junction"); }
                 }
                 if (s.s < 0f || s.s > corridorLength) e.Add(tag + ": s must lie on its corridor");
                 if (Math.Abs(s.lateral) > 400f || Math.Abs(s.forward) > 400f) e.Add(tag + ": lateral and forward must be within 400 m");
@@ -203,7 +221,7 @@ namespace ARO.NetCore
                 float corridorLength = mainLength; string corridorProfile = null;
                 if (!string.IsNullOrEmpty(y.corridor) && y.corridor != spec.routeId)
                 {
-                    if (!FindCorridor(junctions, y.corridor, out corridorLength, out corridorProfile)) { e.Add(tag + ": corridor '" + y.corridor + "' is neither the main road nor a junction"); continue; }
+                    if (!FindCorridor(spec, junctions, y.corridor, out corridorLength, out corridorProfile)) { e.Add(tag + ": corridor '" + y.corridor + "' is neither the main road, a junction nor an E5 road or leg"); continue; }
                 }
                 if (y.s < 3f || y.s > corridorLength - 3f) e.Add(tag + ": s must lie inside its corridor (3 m from the ends)");
                 if (corridorProfile != null && sections.TryGetValue(corridorProfile, out var pr))
@@ -211,6 +229,111 @@ namespace ARO.NetCore
                     if (y.lane > pr.lanesPerDirection) e.Add(tag + ": lane " + y.lane + " does not exist on profile '" + pr.id + "'");
                 }
                 else if (corridorProfile == null && y.lane > 0 && spec.profiles != null && spec.profiles.All(pr2 => pr2.lanesPerDirection < y.lane)) e.Add(tag + ": lane " + y.lane + " does not exist on any profile of this route");
+            }
+        }
+
+        static readonly string[] RoadRoles = { "road", "ramp", "flyover" }, IslandCovers = { "planter", "paved", "grass", "earth" };
+
+        /// <summary>E5 (schemaVersion 3): extra roads, ring roads. Data ranges and references only; geometry (legs meeting rings, overlaps, clearance) is checked when the model is built.</summary>
+        static void ValidateE5(RouteSpec spec, List<JunctionSpec> junctions, HashSet<string> profileIds, Dictionary<string, RoadCrossSection> sections, float mainLength, ISet<string> knownProps, List<string> e)
+        {
+            bool hasRoads = spec.roads != null && spec.roads.Length > 0, hasRings = spec.rings != null && spec.rings.Length > 0;
+            if (!hasRoads && !hasRings) return;
+            if (spec.schemaVersion < 3) { e.Add("roads and rings need schemaVersion 3"); return; }
+            if ((spec.roads?.Length ?? 0) > 60) e.Add("at most 60 extra roads per route");
+            if ((spec.rings?.Length ?? 0) > 12) e.Add("at most 12 roundabouts per route");
+            var used = new HashSet<string> { spec.routeId };
+            foreach (var j in junctions) foreach (var c in JunctionCorridors(j)) used.Add(c.id);
+            bool Claim(string id, string what) { if (string.IsNullOrEmpty(id) || !IdRx.IsMatch(id)) { e.Add(what + ": id must be lowercase letters, digits, dashes or underscores"); return false; } if (!used.Add(id)) { e.Add(what + ": id '" + id + "' is already used by another corridor"); return false; } return true; }
+
+            foreach (var r in spec.roads ?? new RoadSpec[0])
+            {
+                if (r == null) { e.Add("a road is null"); continue; }
+                string tag = "road '" + r.id + "'";
+                Claim(r.id, "road");
+                if (!RoadRoles.Contains(r.role)) e.Add(tag + ": role must be road, ramp or flyover");
+                if (r.controlPoints == null || r.controlPoints.Length < 2) { e.Add(tag + ": at least two control points are required"); continue; }
+                bool pts = true;
+                for (int i = 0; i < r.controlPoints.Length; i++)
+                {
+                    var c = r.controlPoints[i]; string ct = tag + ", point " + i;
+                    if (c == null) { e.Add(ct + " is null"); pts = false; continue; }
+                    if (float.IsNaN(c.x) || float.IsNaN(c.z) || float.IsNaN(c.elevation) || float.IsInfinity(c.x) || float.IsInfinity(c.z) || float.IsInfinity(c.elevation)) { e.Add(ct + ": coordinates must be finite"); pts = false; continue; }
+                    if (c.elevation < -50f || c.elevation > 2500f) e.Add(ct + ": elevation out of range");
+                    if (!RouteVocab.TryZone(c.zone, out _)) e.Add(ct + ": unknown zone '" + c.zone + "'");
+                    if (!RouteVocab.TrySurface(c.surface, out _)) e.Add(ct + ": unknown surface '" + c.surface + "'");
+                    if (c.profile == null || !profileIds.Contains(c.profile)) e.Add(ct + ": profile '" + c.profile + "' does not exist");
+                    if (i > 0 && r.controlPoints[i - 1] != null && Math.Sqrt(Math.Pow(c.x - r.controlPoints[i - 1].x, 2) + Math.Pow(c.z - r.controlPoints[i - 1].z, 2)) < MinPointSpacing) { e.Add(ct + ": closer than " + MinPointSpacing + " m to the previous point"); pts = false; }
+                }
+                if (!pts) continue;
+                float len = 0f; for (int i = 1; i < r.controlPoints.Length; i++) len += (float)Math.Sqrt(Math.Pow(r.controlPoints[i].x - r.controlPoints[i - 1].x, 2) + Math.Pow(r.controlPoints[i].z - r.controlPoints[i - 1].z, 2));
+                foreach (var b in r.decks ?? new BridgeSpec[0])
+                {
+                    if (b == null) { e.Add(tag + ": a deck is null"); continue; }
+                    string dt = tag + ", deck '" + b.id + "'";
+                    if (string.IsNullOrEmpty(b.id)) e.Add(tag + ": a deck has no id");
+                    if (!b.overRoad) e.Add(dt + ": decks of extra roads are flyover decks: overRoad must be true");
+                    if (b.valleyDepth != 0f) e.Add(dt + ": valleyDepth must be 0");
+                    if (b.startS < 0f || b.endS <= b.startS || b.endS > len * 1.02f + 1f) e.Add(dt + ": span must satisfy 0 <= startS < endS <= the road's length (about " + len.ToString("0") + " m)");
+                    if (b.deckThickness < 0.3f || b.deckThickness > 4f) e.Add(dt + ": deckThickness must be 0.3..4 m");
+                    if (b.pierSpacing < 8f) e.Add(dt + ": pierSpacing must be at least 8 m");
+                    foreach (var g in b.pierGaps ?? new PierGap[0]) if (g == null || g.from >= g.to) e.Add(dt + ": a pierGap needs from < to");
+                }
+                foreach (var jn in r.joins ?? new RoadJoinSpec[0])
+                {
+                    if (jn == null) { e.Add(tag + ": a join is null"); continue; }
+                    if (jn.end != "start" && jn.end != "end") e.Add(tag + ": a join's end must be start or end");
+                    if (jn.side != 1 && jn.side != -1) e.Add(tag + ": a join's side must be +1 or -1");
+                    if (jn.gap < 5f || jn.gap > 80f) e.Add(tag + ": a join's gap must be 5..80 m");
+                    if (jn.corridor == spec.routeId) { if (jn.s < 0f || jn.s > mainLength) e.Add(tag + ": a join's s lies outside the main road"); }
+                    else if (!FindCorridor(spec, junctions, jn.corridor ?? "", out float cl, out _)) e.Add(tag + ": a join names corridor '" + jn.corridor + "', which does not exist");
+                    else if (jn.s < 0f || jn.s > cl) e.Add(tag + ": a join's s lies outside corridor '" + jn.corridor + "'");
+                }
+            }
+
+            foreach (var g in spec.rings ?? new RingSpec[0])
+            {
+                if (g == null) { e.Add("a ring is null"); continue; }
+                string tag = "ring '" + g.id + "'";
+                Claim(g.id, "ring");
+                if (g.profile == null || !sections.TryGetValue(g.profile, out var sec)) { e.Add(tag + ": profile '" + g.profile + "' does not exist"); continue; }
+                if (sec.HasMedian) e.Add(tag + ": the carriageway profile of a ring has no median");
+                if (sec.Spec.centreLine == "double_solid") e.Add(tag + ": the centre line of a ring carriageway is a lane line (dashed or none), not a double solid line");
+                if (float.IsNaN(g.x) || float.IsNaN(g.z) || float.IsNaN(g.elevation) || float.IsInfinity(g.x) || float.IsInfinity(g.z) || float.IsInfinity(g.elevation)) e.Add(tag + ": position must be finite");
+                if (g.radius < 4f || g.radius > 80f) e.Add(tag + ": radius must be 4..80 m");
+                if (!IslandCovers.Contains(g.island)) e.Add(tag + ": island must be planter, paved, grass or earth");
+                if (!RouteVocab.TryZone(g.zone, out _)) e.Add(tag + ": unknown zone '" + g.zone + "'");
+                if (!RouteVocab.TrySurface(g.surface, out _)) e.Add(tag + ": unknown surface '" + g.surface + "'");
+                if (!string.IsNullOrEmpty(g.attachTo))
+                {
+                    if (g.attachTo != spec.routeId && !FindCorridor(spec, junctions, g.attachTo, out _, out _)) e.Add(tag + ": attachTo '" + g.attachTo + "' does not exist");
+                    if (g.attachEnd != "start" && g.attachEnd != "end") e.Add(tag + ": attachEnd must be start or end");
+                }
+                var legIds = new HashSet<string>();
+                foreach (var l in g.legs ?? new RingLegSpec[0])
+                {
+                    if (l == null) { e.Add(tag + ": a leg is null"); continue; }
+                    string lt = tag + ", leg '" + l.id + "'";
+                    Claim(l.id, tag + " leg");
+                    if (l.profile == null || !profileIds.Contains(l.profile)) e.Add(lt + ": profile '" + l.profile + "' does not exist");
+                    if (float.IsNaN(l.angleDeg) || float.IsInfinity(l.angleDeg)) e.Add(lt + ": angleDeg must be finite");
+                    if (l.length < 40f || l.length > 600f) e.Add(lt + ": length must be 40..600 m");
+                    if (Math.Abs(l.rise) > l.length * RouteModel.MaxRampGrade) e.Add(lt + ": rise is steeper than " + (RouteModel.MaxRampGrade * 100f) + "%");
+                    if (!string.IsNullOrEmpty(l.zone) && !RouteVocab.TryZone(l.zone, out _)) e.Add(lt + ": unknown zone '" + l.zone + "'");
+                    if (!string.IsNullOrEmpty(l.surface) && !RouteVocab.TrySurface(l.surface, out _)) e.Add(lt + ": unknown surface '" + l.surface + "'");
+                }
+                foreach (var c in g.connect ?? new string[0])
+                    if (string.IsNullOrEmpty(c) || (c != spec.routeId && !FindCorridor(spec, junctions, c, out _, out _))) e.Add(tag + ": connect names corridor '" + c + "', which does not exist");
+                var pseen = new HashSet<string>();
+                foreach (var p in g.props ?? new SitePropSpec[0])
+                {
+                    if (p == null) { e.Add(tag + ": a prop is null"); continue; }
+                    if (string.IsNullOrEmpty(p.id) || !pseen.Add(p.id)) e.Add(tag + ": a prop id is missing or duplicate");
+                    if (string.IsNullOrEmpty(p.prop)) e.Add(tag + ", prop '" + p.id + "': prop is required");
+                    else if (knownProps != null && !knownProps.Contains(p.prop)) e.Add(tag + ", prop '" + p.id + "': unknown prop '" + p.prop + "'");
+                    if (Math.Sqrt(p.x * p.x + p.z * p.z) > g.radius) e.Add(tag + ", prop '" + p.id + "': stands outside the island");
+                    if (p.scale <= 0f) e.Add(tag + ", prop '" + p.id + "': scale must be positive");
+                }
             }
         }
 
@@ -240,6 +363,8 @@ namespace ARO.NetCore
                 float span = b.endS - b.startS;
                 if (span < 20f || span < 2f * b.valleyDepth / 0.6f) e.Add(tag + ": span " + span.ToString("0") + " m is too short for a valley " + b.valleyDepth + " m deep");
                 if (b.deckThickness < 0.3f || b.deckThickness > 4f) e.Add(tag + ": deckThickness must be 0.3..4 m");
+                if (b.overRoad && spec.schemaVersion < 3) e.Add(tag + ": overRoad needs schemaVersion 3");
+                if (b.overRoad && b.valleyDepth != 0f) e.Add(tag + ": a flyover deck (overRoad) digs no valley: valleyDepth must be 0");
                 if (b.pierSpacing < 8f) e.Add(tag + ": pierSpacing must be at least 8 m");
                 if (i > 0 && b.startS < bridges[i - 1].endS + 30f) e.Add(tag + ": closer than 30 m to the previous bridge");
                 if (TopologyAt(b.startS + 0.01f) != TopologyAt(b.endS - 0.01f) || TopologyAt(b.startS + 0.01f) != TopologyAt((b.startS + b.endS) * 0.5f)) e.Add(tag + ": the road profile changes on the bridge");
@@ -315,6 +440,7 @@ namespace ARO.NetCore
                 if (!string.IsNullOrWhiteSpace(r.zones))
                     foreach (var z in r.zones.Split(',')) if (!RouteVocab.TryZone(z, out _)) e.Add(tag + ": unknown zone '" + z.Trim() + "'");
             }
+            ValidateE5(spec, junctions, profileIds, sections, L, knownProps, e);
             ValidateSymbols(spec, junctions, L, e);
             ValidateSites(spec, junctions, L, knownProps, e);
             seen.Clear();
@@ -327,7 +453,7 @@ namespace ARO.NetCore
                 float propLength = L; string where = "the route";
                 if (!string.IsNullOrEmpty(p.corridor) && p.corridor != spec.routeId)
                 {
-                    if (!FindCorridor(junctions, p.corridor, out propLength, out _)) { propLength = L; e.Add("prop placement '" + p.id + "': corridor '" + p.corridor + "' is neither the main road nor a junction"); } else where = "its corridor";
+                    if (!FindCorridor(spec, junctions, p.corridor, out propLength, out _)) { propLength = L; e.Add("prop placement '" + p.id + "': corridor '" + p.corridor + "' is neither the main road nor a junction"); } else where = "its corridor";
                 }
                 if (p.s < 0f || p.s > propLength) e.Add("prop placement '" + p.id + "': s outside " + where);
                 if (p.scale <= 0f) e.Add("prop placement '" + p.id + "': scale must be positive");

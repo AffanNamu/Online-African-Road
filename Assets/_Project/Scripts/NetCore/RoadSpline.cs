@@ -137,6 +137,12 @@ namespace ARO.NetCore
                 _tx[i] = (float)(dx / len); _tz[i] = (float)(dz / len);
             }
 
+            BuildGrid();
+        }
+
+        void BuildGrid()
+        {
+            int m = _x.Length;
             for (int i = 0; i < m - 1; i++)
             {
                 int cx0 = (int)Math.Floor(Math.Min(_x[i], _x[i + 1]) / Cell), cx1 = (int)Math.Floor(Math.Max(_x[i], _x[i + 1]) / Cell);
@@ -149,6 +155,31 @@ namespace ARO.NetCore
                         list.Add(i);
                     }
             }
+        }
+
+        /// <summary>A spline from a ready-made dense polyline with its own unit tangents (E5: a circle for a roundabout, whose tangent is known exactly, so it closes without a kink). Knots are the first and last point.</summary>
+        RoadSpline(float[] x, float[] z, float[] y, float[] tx, float[] tz)
+        {
+            int m = x.Length; _x = x; _z = z; _y = y; _tx = tx; _tz = tz; _s = new float[m];
+            for (int i = 1; i < m; i++) _s[i] = _s[i - 1] + (float)Dist(x[i - 1], z[i - 1], x[i], z[i]);
+            _knotS = new[] { 0f, _s[m - 1] };
+            BuildGrid();
+        }
+
+        /// <summary>A closed circle (counter-clockwise seen from above, x east, z north) of `steps` chords, starting at `startRad` radians from +x, at one constant elevation. Its right-hand side is OUTWARDS.</summary>
+        public static RoadSpline Circle(float cx, float cz, float radius, float elevation, float startRad = 0f, int steps = 0)
+        {
+            if (radius < 2f) throw new ArgumentException("a circle needs a radius of at least 2 m");
+            if (steps <= 0) steps = Math.Max(24, (int)Math.Ceiling(2.0 * Math.PI * radius / 1.5));
+            int m = steps + 1; var x = new float[m]; var z = new float[m]; var y = new float[m]; var tx = new float[m]; var tz = new float[m];
+            for (int i = 0; i < m; i++)
+            {
+                double a = startRad + 2.0 * Math.PI * (i % steps) / steps;
+                x[i] = cx + (float)(radius * Math.Cos(a)); z[i] = cz + (float)(radius * Math.Sin(a)); y[i] = elevation;
+                tx[i] = (float)(-Math.Sin(a)); tz[i] = (float)Math.Cos(a);
+            }
+            x[m - 1] = x[0]; z[m - 1] = z[0];
+            return new RoadSpline(x, z, y, tx, tz);
         }
 
         static double EndSlope(double h0, double h1, double d0, double d1)
@@ -229,6 +260,14 @@ namespace ARO.NetCore
         {
             float worst = 0f;
             for (float s = 0f; s + 20f <= Length; s += 10f) worst = Math.Max(worst, Math.Abs(ElevationAt(s + 20f) - ElevationAt(s)) / 20f);
+            return worst;
+        }
+
+        /// <summary>Largest absolute grade between two stations (samples 10 m apart, or the whole span if shorter).</summary>
+        public float MaxGradeBetween(float s0, float s1)
+        {
+            float worst = 0f; s0 = Math.Max(0f, s0); s1 = Math.Min(Length, s1);
+            for (float s = s0; s < s1 - 1e-3f; s += 10f) { float e = Math.Min(s + 10f, s1); if (e - s > 1f) worst = Math.Max(worst, Math.Abs(ElevationAt(e) - ElevationAt(s)) / (e - s)); }
             return worst;
         }
 

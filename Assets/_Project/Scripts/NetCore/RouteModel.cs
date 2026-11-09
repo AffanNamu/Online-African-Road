@@ -31,6 +31,10 @@ namespace ARO.NetCore
         public Fillet[] Fillets = new Fillet[0];                           // E3: flared corners of junction mouths
         public MarkingSymbolSpec[] Symbols = new MarkingSymbolSpec[0];     // E1 pavement symbols on this corridor (empty for every route that declares none)
         public int Seed;
+        public float StepOverride;                  // E5: ring spacing in metres for this corridor (a roundabout needs 1.5 m where a straight road needs 4 m); 0 = by surface as always
+        public bool NoStopLine;                     // E5: ring legs, extra roads and rings carry their own yield lines; the stop line every junction stub gets is not painted
+        public bool IsRing;                         // E5: the closed circulating carriageway of a roundabout
+        public bool E5;                             // E5: built from `roads` or `rings` (the network checks of E5 look at pairs that involve at least one such corridor)
         /// <summary>True when any run uses the E1 strips (kerb, walkway, planter, gutter); only then does the mesh carry the extra submeshes.</summary>
         public bool NeedsE1Strips { get { foreach (var r in Runs) if (r.Section.UsesE1Strips) return true; return false; } }
         /// <summary>The kerb and walkway are dropped (flat paving) where a side road leaves on `side` (-1 left, +1 right): the road mouth is a driveway, not a wall.</summary>
@@ -80,6 +84,10 @@ namespace ARO.NetCore
             bridge = null; return false;
         }
 
+        /// <summary>E5: true when s lies on a grade-separated deck (a flyover span): the road is not on the ground there and other roads, or the terrain, pass under it.</summary>
+        public bool OnDeck(float s) { foreach (var b in Bridges) if (b.overRoad && s >= b.startS && s <= b.endS) return true; return false; }
+        public bool HasDecks { get { foreach (var b in Bridges) if (b.overRoad) return true; return false; } }
+
         /// <summary>Surface height at lateral offset x (before scaling) and station s, including road wear.</summary>
         public float SurfaceY(float s, float lateral)
         {
@@ -96,7 +104,7 @@ namespace ARO.NetCore
             var ss = new List<float> { 0f }; float s = 0f, len = Length;
             while (s < len - 1e-3f)
             {
-                var run = RunAt(s + 1e-3f); float step = StepFor(run.Surface);
+                var run = RunAt(s + 1e-3f); float step = StepOverride > 0f ? StepOverride : StepFor(run.Surface);
                 float next = s + step;
                 float boundary = run.S1;
                 if (boundary > s + 1e-3f && next > boundary - step * 0.25f) next = boundary;      // land exactly on run boundaries
@@ -143,7 +151,7 @@ namespace ARO.NetCore
     }
 
     /// <summary>Everything derived from a RouteSpec: corridors (main road + junction side roads), terrain, lookups. Pure; unit-tested.</summary>
-    public sealed class RouteModel
+    public sealed partial class RouteModel
     {
         public RouteSpec Spec { get; private set; }
         public RoadCorridor Main { get; private set; }
@@ -218,12 +226,20 @@ namespace ARO.NetCore
                 if (j0.medianOpening) openings.Add(new MarkingGap { S0 = j0.s - widest, S1 = j0.s + widest });
             }
             main.MarkingGaps = gaps.ToArray(); main.MedianOpenings = openings.ToArray(); main.Fillets = fillets.ToArray();
+            List<Roundabout> rings = null; List<NetConnection> connections = null;
+            if ((spec.roads != null && spec.roads.Length > 0) || (spec.rings != null && spec.rings.Length > 0)) BuildE5(spec, main, sections, sides, out rings, out connections);
             if (spec.symbols != null && spec.symbols.Length > 0)
             {
-                main.Symbols = spec.symbols.Where(y => string.IsNullOrEmpty(y.corridor) || y.corridor == spec.routeId).ToArray();
-                foreach (var sc in sides) sc.Symbols = spec.symbols.Where(y => y.corridor == sc.Id).ToArray();
+                main.Symbols = main.Symbols.Concat(spec.symbols.Where(y => string.IsNullOrEmpty(y.corridor) || y.corridor == spec.routeId)).ToArray();
+                foreach (var sc in sides) sc.Symbols = sc.Symbols.Concat(spec.symbols.Where(y => y.corridor == sc.Id)).ToArray();
             }
             var model = new RouteModel { Spec = spec, Main = main, Sides = sides };
+            if (rings != null)
+            {
+                model.Rings = rings; model.Islands = rings.Select(r => r.Island).ToList(); model.Connections = connections;
+                model.HasE5Roads = spec.roads != null && spec.roads.Length > 0;
+            }
+            model.HasLevels = main.HasDecks || sides.Any(c => c.HasDecks);
             if (spec.sites != null && spec.sites.Length > 0)
             {
                 var plates = new List<SitePlate>();
@@ -237,6 +253,11 @@ namespace ARO.NetCore
                 if (problems.Count > 0) throw new ArgumentException("invalid site plates:\n" + string.Join("\n", problems));
             }
             model.Terrain = new TerrainModel(spec, model);
+            if (rings != null || model.HasLevels)
+            {
+                var net = model.CheckNetwork();
+                if (net.Count > 0) throw new ArgumentException("invalid road network:\n" + string.Join("\n", net));
+            }
             return model;
         }
 
@@ -287,7 +308,7 @@ namespace ARO.NetCore
             return true;
         }
 
-        static RoadRun[] MakeRuns(ControlPoint[] cps, RoadSpline spline, Dictionary<string, RoadCrossSection> sections)
+        internal static RoadRun[] MakeRuns(ControlPoint[] cps, RoadSpline spline, Dictionary<string, RoadCrossSection> sections)
         {
             var runs = new List<RoadRun>();
             for (int i = 0; i < cps.Length - 1; i++)
@@ -337,8 +358,40 @@ namespace ARO.NetCore
         /// <summary>Position on the road centre line at s (x, elevation, z).</summary>
         public V3 PositionAt(float s) => Main.Spline.PositionAt(s);
 
-        /// <summary>Height a vehicle or marker stands on at (x, z): the road surface (camber included, no wear) inside any road formation, otherwise the terrain.</summary>
-        public float GroundHeight(float x, float z)
+        /// <summary>
+        /// Height a vehicle or marker stands on at (x, z): the road surface (camber included, no wear) inside any road formation, otherwise the terrain. On a route with grade-separated decks (E5) several roads can
+        /// lie over each other; this form returns the LOWEST surface (what the kill floor and the lamp pools need: a vehicle on a deck is never below the floor). Routes without decks: the first corridor that
+        /// contains the point, exactly as before E5.
+        /// </summary>
+        public float GroundHeight(float x, float z) => HasLevels ? GroundHeight(x, z, float.NaN) : LegacyGroundHeight(x, z);
+
+        /// <summary>E5: the surface closest to `nearY` (the height of whatever asks: a vehicle on the upper deck gets the deck, one on the road below gets that road). nearY = NaN: the lowest surface.</summary>
+        public float GroundHeight(float x, float z, float nearY)
+        {
+            if (!HasLevels) return LegacyGroundHeight(x, z);
+            float best = float.NaN; bool anyGround = false;
+            void Consider(float y)
+            {
+                if (float.IsNaN(best)) { best = y; return; }
+                if (float.IsNaN(nearY)) { if (y < best) best = y; }
+                else if (Math.Abs(y - nearY) < Math.Abs(best - nearY)) best = y;
+            }
+            foreach (var c in CorridorsNear(x, z))
+            {
+                if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
+                if (ExactEnds && (s <= 1e-3f || s >= c.Spline.Length - 1e-3f)) continue;
+                int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s);
+                if (Math.Abs(lat) > c.Runs[ri].Section.FormationHalfWidth * k) continue;
+                Consider(c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k));
+                if (!c.OnDeck(s)) anyGround = true;
+            }
+            foreach (var isl in Islands) if (isl.Contains(x, z)) { Consider(isl.TopY); anyGround = true; }
+            foreach (var p in Sites) if (p.Contains(x, z)) { Consider(p.BaseY); anyGround = true; }
+            if (!anyGround) Consider(Terrain.HeightAt(x, z));            // no road on the ground here (nothing, or only a deck above): the terrain
+            return best;
+        }
+
+        float LegacyGroundHeight(float x, float z)
         {
             foreach (var c in CorridorsNear(x, z))
             {
@@ -347,6 +400,7 @@ namespace ARO.NetCore
                 if (Math.Abs(lat) <= c.Runs[ri].Section.FormationHalfWidth * k)
                     return c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k);
             }
+            foreach (var isl in Islands) if (isl.Contains(x, z)) return isl.TopY;
             foreach (var p in Sites) if (p.Contains(x, z)) return p.BaseY;
             return Terrain.HeightAt(x, z);
         }
@@ -428,7 +482,7 @@ namespace ARO.NetCore
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
                 // Legacy: straight beyond the end of a road the sideways offset is about zero, so the ground there counts as "inside the formation" for up to `reach` metres. That is kept as it is for routes
                 // without site plates (the golden master); a route with plates (E2) uses the exact rule, so a yard at the end of a stub is not surrounded by a flat extension of the road.
-                if (_route.Sites.Count > 0 && (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon)) continue;
+                if (_route.ExactEnds && (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon)) continue;
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s); var sec = c.Runs[ri].Section;
                 float half = sec.FormationHalfWidth * k, d = Math.Abs(lat) - half;
                 if (d >= bestD) continue;
@@ -445,12 +499,20 @@ namespace ARO.NetCore
                     float dw = Math.Max(0.5f, sec.Spec.ditchWidth);
                     if (d < dw) h -= sec.Spec.ditchDepth * (float)Math.Sin(Math.PI * d / dw) * (1f - w);
                 }
-                if (c.IsMain && c.InBridge(s, out var b))
+                if (c.InBridge(s, out var b))
                 {
                     float m = BridgeMask(b, s);
+                    if (b.overRoad && m > 0.999f) continue;                  // E5: under a flyover deck the ground is whatever lies below it (another road, or the natural terrain), not this road
                     h = Mathx.Lerp(h, nat, m);
                 }
                 bestD = d; result = h;
+            }
+            foreach (var isl in _route.Islands)
+            {
+                float d = isl.SignedDistance(x, z);
+                if (d >= bestD || d > MaxReachBeyondFormation) continue;
+                // inside: the flat island top (sunk under its own surface); outside it is the ring's kerb and formation, which win by distance
+                if (d <= 0f) { bestD = d; result = isl.TopY - SinkUnderRoad; }
             }
             foreach (var p in _route.Sites)
             {
@@ -484,8 +546,10 @@ namespace ARO.NetCore
                 float reach = c.MaxFormationHalf + 2f;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
                 if (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon) continue;     // the nearest point is an end of the centre line: this point is beyond the road, not on it
+                if (c.HasDecks && c.OnDeck(s)) continue;                                // E5: the ground under a flyover is not cut away: the deck is high above it
                 if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
             }
+            foreach (var isl in _route.Islands) if (isl.Contains(x, z, margin)) return true;
             foreach (var p in _route.Sites) if (p.Contains(x, z, margin)) return true;
             return false;
         }
@@ -500,6 +564,7 @@ namespace ARO.NetCore
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
                 if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
             }
+            foreach (var isl in _route.Islands) if (isl.Contains(x, z, margin)) return true;
             foreach (var p in _route.Sites) if (p.Contains(x, z, margin)) return true;
             return false;
         }

@@ -44,7 +44,7 @@ namespace ARO.NetCore
                 int run = c.RunIndexAt(sMid);
                 var a = GetRing(k, run); var b = GetRing(k + 1, run);
                 var sec = c.Runs[run].Section;
-                bool onBridge = c.IsMain && c.InBridge(sMid, out _);
+                bool onBridge = c.InBridge(sMid, out _);
 
                 for (int j = 0; j + 1 < sec.Points.Length; j++)
                 {
@@ -78,7 +78,7 @@ namespace ARO.NetCore
             if (c.Symbols.Length > 0) AddSymbols(mb, c, minX, minZ, maxX, maxZ, origin);
             if (c.Fillets.Length > 0) AddFillets(mb, c, minX, minZ, maxX, maxZ, origin);
             if (ground != null) AddPiers(mb, c, minX, minZ, maxX, maxZ, origin, ground);
-            if (!c.IsMain) AddStopLine(mb, c, minX, minZ, maxX, maxZ, origin);
+            if (!c.IsMain && !c.NoStopLine) AddStopLine(mb, c, minX, minZ, maxX, maxZ, origin);
             return mb;
         }
 
@@ -429,7 +429,7 @@ namespace ARO.NetCore
                 if (run.Section.Spec.edgeBarrier != "guardrail") continue;
                 for (float s = (float)Math.Ceiling(run.S0 / PostSpacing) * PostSpacing; s < run.S1; s += PostSpacing)
                 {
-                    if (c.IsMain && c.InBridge(s, out _)) continue;
+                    if (c.InBridge(s, out _)) continue;
                     c.Spline.FrameAt(s, out var pos, out var fwd, out var right);
                     float k = c.ScaleAt(c.RunIndexAt(s), s);
                     foreach (int side in new[] { -1, 1 })
@@ -446,10 +446,10 @@ namespace ARO.NetCore
 
         static void AddPiers(MeshBuffers mb, RoadCorridor c, float minX, float minZ, float maxX, float maxZ, V3 origin, Func<float, float, float> ground)
         {
-            if (!c.IsMain) return;
             foreach (var b in c.Bridges)
                 for (float s = b.startS + b.pierSpacing; s < b.endS - 4f; s += b.pierSpacing)
                 {
+                    if (InPierGap(b, s)) continue;                                       // E5: the clear span over a lower road
                     int ri = c.RunIndexAt(s); var sec = c.Runs[ri].Section; float k = c.ScaleAt(ri, s);
                     c.Spline.FrameAt(s, out var pos, out var fwd, out var right);
                     float deckBottom = pos.Y + Math.Min(sec.HeightAt(sec.PavedHalfWidth), sec.HeightAt(-sec.PavedHalfWidth)) - b.deckThickness;
@@ -462,6 +462,13 @@ namespace ARO.NetCore
                         AddBox(mb, RoadSub.Concrete, new V3(px - origin.X, g - origin.Y, pz - origin.Z), 1.2f, h, 1.2f, fwd, right);
                     }
                 }
+        }
+
+        static bool InPierGap(BridgeSpec b, float s)
+        {
+            if (b.pierGaps == null) return false;
+            foreach (var g in b.pierGaps) if (s >= g.from && s <= g.to) return true;
+            return false;
         }
 
         /// <summary>Open-bottom box standing on `basePos`, aligned to the road direction, faces wound outwards.</summary>
