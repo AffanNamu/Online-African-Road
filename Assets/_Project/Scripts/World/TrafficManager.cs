@@ -57,6 +57,13 @@ namespace ARO.World
             ApplyQuality();
         }
 
+        /// <summary>
+        /// Smoke pages only (?smoke=drive&start=... or &site=...): traffic starts with the player at the beginning of the route, so cars are spawned 350 to 800 m ahead of s = 0, and a test truck placed part way along
+        /// the route lands on one of them (CI runs 319 and 321 froze it 0.9 m above the road, perched on a car, at 398 m). Clearing the agents lets the sim spawn around the new position instead
+        /// (never closer than 350 m ahead or 120 m behind). The next Sync returns their bodies to the pool.
+        /// </summary>
+        public void ClearAgents() { if (_sim != null) _sim.Agents.Clear(); }
+
         int SegIndex(float s) { int i = 0; while (i < _cum.Length - 2 && s > _cum[i + 1]) i++; return i; }
 
         /// <summary>Speed limit in m/s: zone sets the base, surface condition scales it (damaged roads are slower).</summary>

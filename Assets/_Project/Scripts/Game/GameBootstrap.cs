@@ -60,7 +60,7 @@ namespace ARO.Game
             // Ambient traffic (pooled, quality-scaled); follows the player's vehicle once spawned.
             var traffic = new GameObject("Traffic").AddComponent<TrafficManager>();
             traffic.route = route; traffic.bodyTemplate = truckBody; traffic.tier = tier;
-            drive.VehicleSpawned += v => traffic.player = v.transform;
+            drive.VehicleSpawned += v => { traffic.player = v.transform; if (SmokeMode.Drive && (SmokeMode.StartMetres > 0f || SmokeMode.StartSite != null)) traffic.ClearAgents(); };   // a test truck placed part way along the route must not land on a car spawned for a player at s = 0
 
             // Atmosphere: live West Africa Time sky + weather that wets the roads and reduces grip.
             ARO.Core.RuntimeSettings.TestHour = ARO.NetCore.LightingHour.FromUrl(Application.absoluteURL);   // ?hour=dawn|noon|sunset|night|6.5|18:30 (tests and reviews); otherwise the setting, then the real clock
