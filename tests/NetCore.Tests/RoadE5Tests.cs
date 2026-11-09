@@ -321,3 +321,42 @@ public class RoadE5Tests
         }
     }
 }
+
+/// <summary>Swept paths: cars, the two trucks and the bus drive in, round and out of the test ring.</summary>
+public class RoadE5SweptPathTests
+{
+    [Fact] public void TheDesignVehiclesMatchTheGamesOwnPlaceholderDimensions()
+    {
+        Assert.Equal(4.2f, DesignVehicle.TruckLight.Wheelbase); Assert.Equal(8.2f, DesignVehicle.Bus.Wheelbase);
+        foreach (var v in DesignVehicle.All) { Assert.True(v.RearOverhang > 0f, v.Name); Assert.Equal(v.Length, v.FrontOverhang + v.Wheelbase + v.RearOverhang, 3); }
+        Assert.InRange(DesignVehicle.Bus.MinTurnRadius, 14f, 14.5f);
+    }
+
+    /// <summary>Every ordered (entry, exit) pair of a ring for every design vehicle; returns the failures as text (empty = all pass).</summary>
+    public static List<string> SweepAll(RouteModel m, Roundabout ring, IEnumerable<DesignVehicle> vehicles = null, int ringLane = -1)
+    {
+        var fails = new List<string>();
+        Func<DesignVehicle, float> maxWheel = v => v == DesignVehicle.Car ? 1.0f : v == DesignVehicle.TruckLight ? 1.2f : v == DesignVehicle.TruckMedium ? 1.5f : 2.4f;
+        foreach (var v in vehicles ?? DesignVehicle.All)
+            foreach (var entry in ring.Legs)
+                foreach (var exit in ring.Legs)
+                {
+                    if (entry.CorridorId == exit.CorridorId) continue;
+                    var path = SweptPath.RingPath(m, ring, entry, exit, ringLane < 0 ? ring.Lanes - 1 : ringLane, 1, v.EasyTurnRadius);
+                    var res = SweptPath.Drive(m, v, path);
+                    string tag = ring.Id + " " + v.Name + " " + entry.CorridorId + " -> " + exit.CorridorId;
+                    if (!res.Reached) fails.Add(tag + ": " + res.Why);
+                    else if (res.MaxSteerDeg > v.MaxSteerDeg) fails.Add(tag + ": needs " + res.MaxSteerDeg.ToString("0.0") + " degrees of steering (limit " + v.MaxSteerDeg + ")");
+                    else if (res.StruckMetres > 0.01f) fails.Add(tag + ": struck for " + res.StruckMetres.ToString("0.0") + " m (overrun " + res.OverrunMetres.ToString("0.0") + ")");
+                    else if (res.WheelDepth > maxWheel(v)) fails.Add(tag + ": a wheel goes " + res.WheelDepth.ToString("0.0") + " m outside the pavement (limit " + maxWheel(v) + ")");
+                }
+        return fails;
+    }
+
+    [Fact] public void EveryVehicleCanDriveInRoundAndOutOfTheBaseRingOnTheOuterLaneWithoutTouchingTheIsland()
+    {
+        var m = RouteModel.Build(RoadE5Tests.Base(s => { foreach (var r in s.rings) { r.flare = 6f; r.mouthScale = 1.6f; } }));
+        var fails = SweepAll(m, m.Rings[0]);
+        Assert.True(fails.Count == 0, string.Join("\n", fails));
+    }
+}

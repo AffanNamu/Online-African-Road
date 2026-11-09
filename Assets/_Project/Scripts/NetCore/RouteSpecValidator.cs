@@ -123,6 +123,12 @@ namespace ARO.NetCore
             {
                 if (g == null) continue;
                 foreach (var l in g.legs ?? new RingLegSpec[0]) if (l != null && l.id == name) { length = l.length; profile = l.profile; return true; }
+                if (g.id == name && g.profile != null)
+                {
+                    var pr = (spec.profiles ?? new RoadProfileSpec[0]).FirstOrDefault(q => q != null && q.id == g.profile);
+                    if (pr == null) continue;
+                    try { var sec = RoadCrossSection.Build(pr); length = 2f * (float)Math.PI * (g.radius + sec.FormationHalfWidth); profile = g.profile; return true; } catch (ArgumentException) { }
+                }
             }
             length = 0f; profile = null; return false;
         }
@@ -301,6 +307,7 @@ namespace ARO.NetCore
                 if (sec.Spec.centreLine == "double_solid") e.Add(tag + ": the centre line of a ring carriageway is a lane line (dashed or none), not a double solid line");
                 if (float.IsNaN(g.x) || float.IsNaN(g.z) || float.IsNaN(g.elevation) || float.IsInfinity(g.x) || float.IsInfinity(g.z) || float.IsInfinity(g.elevation)) e.Add(tag + ": position must be finite");
                 if (g.radius < 4f || g.radius > 80f) e.Add(tag + ": radius must be 4..80 m");
+                if (g.mouthScale < 1f || g.mouthScale > 2f) e.Add(tag + ": mouthScale must be 1..2");
                 if (!IslandCovers.Contains(g.island)) e.Add(tag + ": island must be planter, paved, grass or earth");
                 if (!RouteVocab.TryZone(g.zone, out _)) e.Add(tag + ": unknown zone '" + g.zone + "'");
                 if (!RouteVocab.TrySurface(g.surface, out _)) e.Add(tag + ": unknown surface '" + g.surface + "'");

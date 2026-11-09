@@ -14,6 +14,8 @@
     <None Include="../../Assets/_Project/Resources/WorldMap/world_map.json" Link="world_map.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../Assets/_Project/Resources/Routes/ng-lagos-ibadan.route.json" Link="ng-lagos-ibadan.route.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../Assets/_Project/Resources/Routes/ng-kano-e1-streets.route.json" Link="ng-kano-e1-streets.route.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../Assets/_Project/Resources/Routes/ng-kano-e5-roundabouts.route.json" Link="ng-kano-e5-roundabouts.route.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../Assets/_Project/Resources/Routes/ng-kano-e5-f1.route.json" Link="ng-kano-e5-f1.route.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../Assets/_Project/Resources/Props/prop_catalog.json" Link="prop_catalog.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../supabase/seed.sql" Link="seed.sql" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../supabase/seed_world.sql" Link="seed_world.sql" CopyToOutputDirectory="PreserveNewest" />

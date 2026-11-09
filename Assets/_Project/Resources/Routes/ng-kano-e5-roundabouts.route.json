@@ -1,0 +1,1821 @@
+{
+ "schemaVersion": 3,
+ "routeId": "ng-kano-e5-roundabouts",
+ "name": "Kano E5 roundabout test chain (ENGINE TEST: six roundabout designs on a fictional road, traffic off)",
+ "seed": 9051,
+ "meta": {
+  "country": "NG",
+  "to": "E5 test end",
+  "status": "planned",
+  "worldMapRouteId": "kaduna-kano",
+  "realRoadKm": 209.6,
+  "gameLengthKm": 2.54,
+  "gameCoverage": "ENGINE TEST ROUTE, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional chain of six roundabout designs (Landmark, Modern, Traditional, Large, Commercial, Green) joined by short roads, on near-flat ground, for the E5 ring engine. Not Kano.",
+  "elevationSource": "design",
+  "notes": "Fictional engine test layout. Not Kano, not a survey, not approved for production. docs/ROAD_ENGINE_E5.md.",
+  "from": "E5 test start"
+ },
+ "terrain": {
+  "baseElevation": 10.0,
+  "trendX": 0.0,
+  "trendZ": 0.0,
+  "hillAmplitude": 0.5,
+  "hillWavelength": 600.0,
+  "detailAmplitude": 0.05,
+  "detailWavelength": 60.0,
+  "maxEmbankmentSlope": 0.5,
+  "minBlendDistance": 6.0,
+  "materialByZone": ""
+ },
+ "profiles": [
+  {
+   "id": "leg2",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.6,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.0,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "leg4",
+   "roadClass": "arterial",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "double_solid",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.8,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.5,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "legrural",
+   "roadClass": "local",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 1.2,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.0,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.0,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_landmark",
+   "roadClass": "arterial",
+   "lanesPerDirection": 1,
+   "laneWidth": 4.0,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.5,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.0,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_modern",
+   "roadClass": "arterial",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.3,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_traditional",
+   "roadClass": "local",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.4,
+   "medianWidth": 0.0,
+   "centreLine": "none",
+   "centreLineColor": "white",
+   "shoulderWidth": 1.0,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.8,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.0,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_large",
+   "roadClass": "arterial",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.4,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.6,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.5,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.0,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_commercial",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.3,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 3.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_green",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.8,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 1.0,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.0,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.0,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  }
+ ],
+ "controlPoints": [
+  {
+   "id": "cp0",
+   "name": "Start of the chain",
+   "x": -520.0,
+   "z": 0,
+   "elevation": 10,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "leg2"
+  },
+  {
+   "id": "cp1",
+   "name": "First roundabout",
+   "x": 0,
+   "z": 0,
+   "elevation": 10,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "leg2"
+  }
+ ],
+ "bridges": [],
+ "junctions": [],
+ "propRules": [],
+ "props": [
+  {
+   "id": "r_landmark_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 15.51,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_landmark_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 46.53,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_landmark_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 77.54,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_landmark_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 108.56,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_landmark_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 139.58,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_landmark_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_landmark",
+   "s": 170.6,
+   "lateral": 8.22,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 11.79,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 35.37,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 58.96,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 82.54,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 106.12,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_modern_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_modern",
+   "s": 129.71,
+   "lateral": 5.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 10.58,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 31.73,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 52.88,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 74.04,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 95.19,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_traditional_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_traditional",
+   "s": 116.34,
+   "lateral": 5.8,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 15.91,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 47.74,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 79.56,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 111.39,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 143.21,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 175.03,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light6",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 206.86,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_large_light7",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_large",
+   "s": 238.68,
+   "lateral": 11.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 11.27,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 33.8,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 56.34,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 78.87,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 101.41,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_commercial_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_commercial",
+   "s": 123.95,
+   "lateral": 8.12,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light0",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 15.6,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light1",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 46.81,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light2",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 78.02,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light3",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 109.22,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light4",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 140.43,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  },
+  {
+   "id": "r_green_light5",
+   "prop": "street_light",
+   "text": "",
+   "corridor": "r_green",
+   "s": 171.64,
+   "lateral": 6.4,
+   "yawDeg": -90.0,
+   "scale": 1.0
+  }
+ ],
+ "traffic": {
+  "densityScale": 0.0,
+  "speedLimitScale": 1.0,
+  "vehicleMix": []
+ },
+ "waypoints": [
+  {
+   "id": "wp_start",
+   "name": "Chain start",
+   "kind": "district",
+   "s": 0.0
+  },
+  {
+   "id": "wp_ring1",
+   "name": "First roundabout",
+   "kind": "district",
+   "s": 520.0
+  }
+ ],
+ "symbols": [
+  {
+   "id": "bay_n1",
+   "kind": "bay",
+   "corridor": "r_commercial_n1",
+   "s": 60.0,
+   "side": "right",
+   "lane": 0,
+   "length": 0.0,
+   "count": 2,
+   "yellow": false
+  },
+  {
+   "id": "bay_s1",
+   "kind": "bay",
+   "corridor": "r_commercial_s1",
+   "s": 60.0,
+   "side": "right",
+   "lane": 0,
+   "length": 0.0,
+   "count": 2,
+   "yellow": false
+  }
+ ],
+ "sites": [],
+ "roads": [
+  {
+   "id": "link1",
+   "name": "Link 1",
+   "role": "road",
+   "controlPoints": [
+    {
+     "id": "a",
+     "name": "a",
+     "x": 68.24,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    },
+    {
+     "id": "b",
+     "name": "b",
+     "x": 328.24,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    }
+   ],
+   "decks": [],
+   "joins": []
+  },
+  {
+   "id": "link2",
+   "name": "Link 2",
+   "role": "road",
+   "controlPoints": [
+    {
+     "id": "a",
+     "name": "a",
+     "x": 381.28,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    },
+    {
+     "id": "b",
+     "name": "b",
+     "x": 641.28,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    }
+   ],
+   "decks": [],
+   "joins": []
+  },
+  {
+   "id": "link3",
+   "name": "Link 3",
+   "role": "road",
+   "controlPoints": [
+    {
+     "id": "a",
+     "name": "a",
+     "x": 690.48,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "legrural"
+    },
+    {
+     "id": "b",
+     "name": "b",
+     "x": 950.48,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "legrural"
+    }
+   ],
+   "decks": [],
+   "joins": []
+  },
+  {
+   "id": "link4",
+   "name": "Link 4",
+   "role": "road",
+   "controlPoints": [
+    {
+     "id": "a",
+     "name": "a",
+     "x": 1046.32,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg4"
+    },
+    {
+     "id": "b",
+     "name": "b",
+     "x": 1306.32,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg4"
+    }
+   ],
+   "decks": [],
+   "joins": []
+  },
+  {
+   "id": "link5",
+   "name": "Link 5",
+   "role": "road",
+   "controlPoints": [
+    {
+     "id": "a",
+     "name": "a",
+     "x": 1357.36,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    },
+    {
+     "id": "b",
+     "name": "b",
+     "x": 1617.36,
+     "z": 0,
+     "elevation": 10,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "leg2"
+    }
+   ],
+   "decks": [],
+   "joins": []
+  }
+ ],
+ "rings": [
+  {
+   "id": "r_landmark",
+   "name": "Landmark roundabout (civic island, five legs)",
+   "design": "landmark",
+   "profile": "ring_landmark",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "ng-kano-e5-roundabouts",
+   "attachEnd": "end",
+   "radius": 22.0,
+   "apron": 0.0,
+   "island": "paved",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 0.0,
+   "mouthScale": 1.9,
+   "splitterLength": 16.0,
+   "splitterWidth": 3.4,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_landmark_n1",
+     "profile": "leg2",
+     "angleDeg": 60.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_landmark_n2",
+     "profile": "leg2",
+     "angleDeg": 120.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_landmark_s1",
+     "profile": "leg2",
+     "angleDeg": 270.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "link1"
+   ],
+   "props": [
+    {
+     "id": "mast",
+     "prop": "junction_mast",
+     "text": "",
+     "x": 0,
+     "z": 0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm0",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 13.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm1",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 9.192,
+     "z": 9.192,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm2",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 0.0,
+     "z": 13.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm3",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -9.192,
+     "z": 9.192,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm4",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -13.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm5",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -9.192,
+     "z": -9.192,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm6",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -0.0,
+     "z": -13.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm7",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 9.192,
+     "z": -9.192,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "r_modern",
+   "name": "Modern urban roundabout (two lanes, mountable apron)",
+   "design": "modern",
+   "profile": "ring_modern",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "link1",
+   "attachEnd": "end",
+   "radius": 18.0,
+   "apron": 2.0,
+   "island": "planter",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 0.0,
+   "mouthScale": 1.9,
+   "splitterLength": 14.0,
+   "splitterWidth": 3.0,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_modern_n1",
+     "profile": "leg2",
+     "angleDeg": 90.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_modern_s1",
+     "profile": "leg2",
+     "angleDeg": 270.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "link2"
+   ],
+   "props": [
+    {
+     "id": "t0",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 6.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t1",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 1.854,
+     "z": 5.706,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t2",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -4.854,
+     "z": 3.527,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t3",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -4.854,
+     "z": -3.527,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t4",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 1.854,
+     "z": -5.706,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b0",
+     "prop": "bush",
+     "text": "",
+     "x": 8.09,
+     "z": 5.878,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b1",
+     "prop": "bush",
+     "text": "",
+     "x": -3.09,
+     "z": 9.511,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b2",
+     "prop": "bush",
+     "text": "",
+     "x": -10.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b3",
+     "prop": "bush",
+     "text": "",
+     "x": -3.09,
+     "z": -9.511,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b4",
+     "prop": "bush",
+     "text": "",
+     "x": 8.09,
+     "z": -5.878,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "r_traditional",
+   "name": "Traditional roundabout (three legs, one wide lane, earth island with a ring of palms)",
+   "design": "traditional",
+   "profile": "ring_traditional",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "link2",
+   "attachEnd": "end",
+   "radius": 15.0,
+   "apron": 1.5,
+   "island": "earth",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 9.0,
+   "mouthScale": 1.8,
+   "splitterLength": 12.0,
+   "splitterWidth": 2.6,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_traditional_s1",
+     "profile": "legrural",
+     "angleDeg": 270.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "link3"
+   ],
+   "props": [
+    {
+     "id": "palm0",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 9.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm1",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 7.794,
+     "z": 4.5,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm2",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 4.5,
+     "z": 7.794,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm3",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 0.0,
+     "z": 9.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm4",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -4.5,
+     "z": 7.794,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm5",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -7.794,
+     "z": 4.5,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm6",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -9.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm7",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -7.794,
+     "z": -4.5,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm8",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -4.5,
+     "z": -7.794,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm9",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -0.0,
+     "z": -9.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm10",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 4.5,
+     "z": -7.794,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "palm11",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 7.794,
+     "z": -4.5,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "r_large",
+   "name": "Large multi-lane roundabout (four circulating lanes, six legs)",
+   "design": "large",
+   "profile": "ring_large",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "link3",
+   "attachEnd": "end",
+   "radius": 30.0,
+   "apron": 0.0,
+   "island": "planter",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 0.0,
+   "mouthScale": 1.6,
+   "splitterLength": 22.0,
+   "splitterWidth": 4.0,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_large_n1",
+     "profile": "leg4",
+     "angleDeg": 60.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_large_n2",
+     "profile": "leg4",
+     "angleDeg": 120.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_large_s1",
+     "profile": "leg4",
+     "angleDeg": 240.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_large_s2",
+     "profile": "leg4",
+     "angleDeg": 300.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "link4"
+   ],
+   "props": [
+    {
+     "id": "t0",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 16.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t1",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 13.856,
+     "z": 8.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t2",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 8.0,
+     "z": 13.856,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t3",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 0.0,
+     "z": 16.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t4",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -8.0,
+     "z": 13.856,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t5",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -13.856,
+     "z": 8.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t6",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -16.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t7",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -13.856,
+     "z": -8.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t8",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -8.0,
+     "z": -13.856,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t9",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -0.0,
+     "z": -16.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t10",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 8.0,
+     "z": -13.856,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t11",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 13.856,
+     "z": -8.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "r_commercial",
+   "name": "Commercial roundabout (wide market walkways, bus bays on the legs)",
+   "design": "commercial",
+   "profile": "ring_commercial",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "link4",
+   "attachEnd": "end",
+   "radius": 14.0,
+   "apron": 1.5,
+   "island": "paved",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 0.0,
+   "mouthScale": 1.9,
+   "splitterLength": 12.0,
+   "splitterWidth": 2.8,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_commercial_n1",
+     "profile": "leg2",
+     "angleDeg": 90.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_commercial_s1",
+     "profile": "leg2",
+     "angleDeg": 270.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "link5"
+   ],
+   "props": [
+    {
+     "id": "k0",
+     "prop": "kiosk",
+     "text": "",
+     "x": 4.243,
+     "z": 4.243,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "k1",
+     "prop": "kiosk",
+     "text": "",
+     "x": -4.243,
+     "z": 4.243,
+     "yawDeg": 90,
+     "scale": 1.0
+    },
+    {
+     "id": "k2",
+     "prop": "kiosk",
+     "text": "",
+     "x": -4.243,
+     "z": -4.243,
+     "yawDeg": 180,
+     "scale": 1.0
+    },
+    {
+     "id": "k3",
+     "prop": "kiosk",
+     "text": "",
+     "x": 4.243,
+     "z": -4.243,
+     "yawDeg": 270,
+     "scale": 1.0
+    },
+    {
+     "id": "p0",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 3.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "p1",
+     "prop": "palm_tree",
+     "text": "",
+     "x": 0.0,
+     "z": 3.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "p2",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -3.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "p3",
+     "prop": "palm_tree",
+     "text": "",
+     "x": -0.0,
+     "z": -3.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "r_green",
+   "name": "Green roundabout (grass island, one wide lane, rising exit on sloping ground)",
+   "design": "green",
+   "profile": "ring_green",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "attachTo": "link5",
+   "attachEnd": "end",
+   "radius": 24.0,
+   "apron": 0.0,
+   "island": "grass",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 11.0,
+   "mouthScale": 1.8,
+   "splitterLength": 14.0,
+   "splitterWidth": 3.0,
+   "yieldLines": true,
+   "zebra": true,
+   "legs": [
+    {
+     "id": "r_green_n1",
+     "profile": "legrural",
+     "angleDeg": 90.0,
+     "length": 150.0,
+     "rise": 4.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "r_green_s1",
+     "profile": "legrural",
+     "angleDeg": 270.0,
+     "length": 140.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [],
+   "props": [
+    {
+     "id": "t0",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 15.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t1",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 12.135,
+     "z": 8.817,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t2",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 4.635,
+     "z": 14.266,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t3",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -4.635,
+     "z": 14.266,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t4",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -12.135,
+     "z": 8.817,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t5",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -15.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t6",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -12.135,
+     "z": -8.817,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t7",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -4.635,
+     "z": -14.266,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t8",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 4.635,
+     "z": -14.266,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "t9",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 12.135,
+     "z": -8.817,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b0",
+     "prop": "bush",
+     "text": "",
+     "x": 8.0,
+     "z": 0.0,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b1",
+     "prop": "bush",
+     "text": "",
+     "x": 7.308,
+     "z": 3.254,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b2",
+     "prop": "bush",
+     "text": "",
+     "x": 5.353,
+     "z": 5.945,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b3",
+     "prop": "bush",
+     "text": "",
+     "x": 2.472,
+     "z": 7.608,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b4",
+     "prop": "bush",
+     "text": "",
+     "x": -0.836,
+     "z": 7.956,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b5",
+     "prop": "bush",
+     "text": "",
+     "x": -4.0,
+     "z": 6.928,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b6",
+     "prop": "bush",
+     "text": "",
+     "x": -6.472,
+     "z": 4.702,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b7",
+     "prop": "bush",
+     "text": "",
+     "x": -7.825,
+     "z": 1.663,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b8",
+     "prop": "bush",
+     "text": "",
+     "x": -7.825,
+     "z": -1.663,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b9",
+     "prop": "bush",
+     "text": "",
+     "x": -6.472,
+     "z": -4.702,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b10",
+     "prop": "bush",
+     "text": "",
+     "x": -4.0,
+     "z": -6.928,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b11",
+     "prop": "bush",
+     "text": "",
+     "x": -0.836,
+     "z": -7.956,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b12",
+     "prop": "bush",
+     "text": "",
+     "x": 2.472,
+     "z": -7.608,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b13",
+     "prop": "bush",
+     "text": "",
+     "x": 5.353,
+     "z": -5.945,
+     "yawDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "id": "b14",
+     "prop": "bush",
+     "text": "",
+     "x": 7.308,
+     "z": -3.254,
+     "yawDeg": 0,
+     "scale": 1.0
+    }
+   ]
+  }
+ ]
+}

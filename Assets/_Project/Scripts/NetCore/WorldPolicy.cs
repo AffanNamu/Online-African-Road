@@ -364,6 +364,7 @@ namespace ARO.NetCore
                 res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
             }
             foreach (var site in m.Sites) res.AddRange(site.Props(minX, minZ, maxX, maxZ));
+            foreach (var isl in m.Islands) res.AddRange(isl.Props(minX, minZ, maxX, maxZ));       // E5: the props of a roundabout island
         }
 
         static HashSet<Zone> ParseZones(string z)

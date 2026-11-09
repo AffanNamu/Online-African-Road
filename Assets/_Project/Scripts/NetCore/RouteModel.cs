@@ -53,6 +53,8 @@ namespace ARO.NetCore
         /// <summary>Largest formation half width on this corridor (cached; used to bound spatial queries).</summary>
         public float MaxFormationHalf { get { if (_maxHalf <= 0f) _maxHalf = Runs.Max(r => r.Section.FormationHalfWidth * Math.Max(1f, Math.Max(r.ScaleAtStart, r.ScaleAtEnd))); return _maxHalf; } }
         float _maxHalf;
+        /// <summary>E5 widens the ends of legs after the corridor is built; anything cached from the widths is forgotten.</summary>
+        public void InvalidateCaches() { _maxHalf = 0f; }
 
         public int RunIndexAt(float s)
         {
@@ -83,6 +85,9 @@ namespace ARO.NetCore
             foreach (var b in Bridges) if (s >= b.startS && s <= b.endS) { bridge = b; return true; }
             bridge = null; return false;
         }
+
+        /// <summary>True when the nearest point of the centre line is one of its two ends: the point is then beyond the road, not on it. A ring is closed: its seam is not an end.</summary>
+        public bool IsEnd(float s) => !IsRing && (s <= 1e-3f || s >= Spline.Length - 1e-3f);
 
         /// <summary>E5: true when s lies on a grade-separated deck (a flyover span): the road is not on the ground there and other roads, or the terrain, pass under it.</summary>
         public bool OnDeck(float s) { foreach (var b in Bridges) if (b.overRoad && s >= b.startS && s <= b.endS) return true; return false; }
@@ -287,7 +292,7 @@ namespace ARO.NetCore
                         foreach (var c in AllCorridors)
                         {
                             if (!c.Spline.Nearest(w.X, w.Z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
-                            if (s <= 1e-3f || s >= c.Spline.Length - 1e-3f) continue;               // beyond the end of a road is not on it
+                            if (c.IsEnd(s)) continue;               // beyond the end of a road is not on it
                             if (Math.Abs(lat) < c.HalfFormationAt(s) - 0.5f) { e.Add("site '" + a.Id + "' lies on road '" + c.Id + "' at s=" + s.ToString("0") + " m"); goto next; }
                         }
                     }
@@ -379,7 +384,7 @@ namespace ARO.NetCore
             foreach (var c in CorridorsNear(x, z))
             {
                 if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
-                if (ExactEnds && (s <= 1e-3f || s >= c.Spline.Length - 1e-3f)) continue;
+                if (ExactEnds && c.IsEnd(s)) continue;
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s);
                 if (Math.Abs(lat) > c.Runs[ri].Section.FormationHalfWidth * k) continue;
                 Consider(c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k));
@@ -396,6 +401,7 @@ namespace ARO.NetCore
             foreach (var c in CorridorsNear(x, z))
             {
                 if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
+                if (ExactEnds && c.IsEnd(s)) continue;                         // E5 and site-plate routes: beyond the end of a road is not on it (old routes keep the legacy rule)
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s);
                 if (Math.Abs(lat) <= c.Runs[ri].Section.FormationHalfWidth * k)
                     return c.Spline.ElevationAt(s) + c.Runs[ri].Section.HeightAt(lat / k);
@@ -482,7 +488,7 @@ namespace ARO.NetCore
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
                 // Legacy: straight beyond the end of a road the sideways offset is about zero, so the ground there counts as "inside the formation" for up to `reach` metres. That is kept as it is for routes
                 // without site plates (the golden master); a route with plates (E2) uses the exact rule, so a yard at the end of a stub is not surrounded by a flat extension of the road.
-                if (_route.ExactEnds && (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon)) continue;
+                if (_route.ExactEnds && c.IsEnd(s)) continue;
                 int ri = c.RunIndexAt(s); float k = c.ScaleAt(ri, s); var sec = c.Runs[ri].Section;
                 float half = sec.FormationHalfWidth * k, d = Math.Abs(lat) - half;
                 if (d >= bestD) continue;
@@ -545,7 +551,7 @@ namespace ARO.NetCore
             {
                 float reach = c.MaxFormationHalf + 2f;
                 if (!c.Spline.Nearest(x, z, reach, out float s, out float lat, out _)) continue;
-                if (s <= EndEpsilon || s >= c.Spline.Length - EndEpsilon) continue;     // the nearest point is an end of the centre line: this point is beyond the road, not on it
+                if (c.IsEnd(s)) continue;     // the nearest point is an end of the centre line: this point is beyond the road, not on it
                 if (c.HasDecks && c.OnDeck(s)) continue;                                // E5: the ground under a flyover is not cut away: the deck is high above it
                 if (Math.Abs(lat) <= c.HalfFormationAt(s) + margin) return true;
             }

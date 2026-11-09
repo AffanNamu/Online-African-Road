@@ -135,6 +135,7 @@ namespace ARO.NetCore
         public string island = "planter";       // planter | paved | grass | earth: what the island is covered with
         public string zone = "urban", surface = "good";
         public float flare = 0f;                // flared entries (the E3 fillet) at every leg; unkerbed rings only
+        public float mouthScale = 1f;           // 1..2: every leg is widened to this multiple of its normal width where it meets the ring and eases back over 20 m (the flare of a kerbed entry: buses and trucks need it)
         public float splitterLength = 14f, splitterWidth = 3f;     // raised splitter island on every leg (length 0 = none)
         public bool yieldLines = true, zebra = true;
         public RingLegSpec[] legs = new RingLegSpec[0];

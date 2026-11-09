@@ -115,8 +115,10 @@ namespace ARO.NetCore
             var gaps = new List<MarkingGap>(); var fillets = new List<Fillet>();
             void AddLeg(RoadCorridor c, bool atStart, float angle, bool generated)
             {
-                var lsec = c.Runs[0].Section;
-                var leg = new RingLegInfo { CorridorId = c.Id, AtStart = atStart, Angle = angle, RingS = rb.AngleToS(angle), HalfPaved = lsec.PavedHalfWidth, HalfFormation = lsec.FormationHalfWidth, Generated = generated };
+                var runAtRing = atStart ? c.Runs[0] : c.Runs[c.Runs.Length - 1];
+                var lsec = runAtRing.Section; float k = rs.mouthScale > 1.001f ? rs.mouthScale : 1f;
+                if (k > 1f) { if (atStart) runAtRing.ScaleAtStart = k; else runAtRing.ScaleAtEnd = k; c.InvalidateCaches(); }
+                var leg = new RingLegInfo { CorridorId = c.Id, AtStart = atStart, Angle = angle, RingS = rb.AngleToS(angle), HalfPaved = lsec.PavedHalfWidth * k, HalfFormation = lsec.FormationHalfWidth * k, Generated = generated };
                 rb.Legs.Add(leg);
                 float reach = (leg.HalfFormation + Math.Max(0f, rs.flare)) * rc / rout;
                 AddWrapped(gaps, leg.RingS - reach, leg.RingS + reach, 1, ring.Length);

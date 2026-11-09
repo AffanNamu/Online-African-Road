@@ -25,7 +25,7 @@ namespace ARO.NetCore
             foreach (var c in CorridorsNear(x, z))
             {
                 if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out float lat, out _)) continue;
-                if (s <= 1e-3f || s >= c.Spline.Length - 1e-3f) continue;
+                if (c.IsEnd(s)) continue;
                 if (Math.Abs(lat) <= c.HalfPavedAt(s)) return true;
             }
             foreach (var r in Rings)
@@ -34,6 +34,26 @@ namespace ARO.NetCore
                 if (r.Island.Apron > 0.01f && d <= r.Island.Radius && d >= r.Island.Radius - r.Island.Apron) return true;
             }
             return false;
+        }
+
+        /// <summary>How far (x, z) lies outside the nearest paved surface, in metres (0 = on the pavement or on a roundabout apron). Far from every road it is large.</summary>
+        public float PavedExcess(float x, float z)
+        {
+            float best = float.MaxValue;
+            foreach (var c in CorridorsNear(x, z))
+            {
+                if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 4f, out float s, out float lat, out _)) continue;
+                if (c.IsEnd(s)) continue;
+                float ex = Math.Abs(lat) - c.HalfPavedAt(s);
+                if (ex < best) best = ex;
+            }
+            foreach (var r in Rings)
+            {
+                float d = (float)Math.Sqrt((x - r.Cx) * (x - r.Cx) + (z - r.Cz) * (z - r.Cz));
+                if (r.Island.Apron > 0.01f && d <= r.Island.Radius && d >= r.Island.Radius - r.Island.Apron) return 0f;
+                if (r.Island.Apron > 0.01f && d < r.Island.Radius - r.Island.Apron) best = Math.Min(best, r.Island.Radius - r.Island.Apron - d + 100f);   // the island core is never "nearly paved"
+            }
+            return best <= 0f ? 0f : best;
         }
 
         /// <summary>Why this network cannot be built: legs that do not meet their ring, roads that cross or overlap without a deck, decks that leave too little headroom, ramps that are too steep, piers that stand on a road.</summary>
@@ -138,7 +158,7 @@ namespace ARO.NetCore
                     {
                         var p = a.Spline.PositionAt(s);
                         if (!b.Spline.Nearest(p.X, p.Z, b.MaxFormationHalf + 1f, out float sb, out float lat, out _)) continue;
-                        if (sb <= 1e-3f || sb >= b.Length - 1e-3f) continue;           // beyond the end of b is not on b
+                        if (b.IsEnd(sb)) continue;           // beyond the end of b is not on b
                         float half = b.HalfPavedAt(sb);
                         if (Math.Abs(lat) > half) continue;
                         if (Connected(a, b, p.X, p.Z)) continue;
@@ -174,7 +194,7 @@ namespace ARO.NetCore
                             {
                                 if (o == c) continue;
                                 if (!o.Spline.Nearest(px, pz, o.MaxFormationHalf + 1f, out float so, out float lat, out _)) continue;
-                                if (so <= 1e-3f || so >= o.Length - 1e-3f) continue;
+                                if (o.IsEnd(so)) continue;
                                 if (Math.Abs(lat) <= o.HalfFormationAt(so)) e.Add("deck '" + b.id + "' of '" + c.Id + "': a pier at s=" + s.ToString("0") + " stands on road '" + o.Id + "' (add a pierGap over it)");
                             }
                         }
