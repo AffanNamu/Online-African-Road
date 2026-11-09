@@ -1,0 +1,1813 @@
+{
+ "schemaVersion": 3,
+ "routeId": "ng-kano-city-e1",
+ "name": "Kano city street corridor (densification test route; the E1 corridor with frontage rules)",
+ "seed": 8842,
+ "meta": {
+  "country": "NG",
+  "from": "E1 test start",
+  "to": "E1 test end",
+  "status": "planned",
+  "worldMapRouteId": "kaduna-kano",
+  "realRoadKm": 209.6,
+  "gameLengthKm": 1.5,
+  "gameCoverage": "ENGINE TEST CORRIDOR, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional 1.5 km corridor that exercises the E1 road cross-sections (kerbs, walkways, gutters, planter median, dropped kerbs, pavement symbols) the E2 site plates (a logistics yard and a bus terminal) and the E3 junction forms (a four-way crossing with a median opening) in the game. realRoadKm repeats the Kaduna-Kano great-circle lower bound only because the field is required. Nothing here is a real street. See docs/KANO_TRANSPORT_EXPANSION_PLAN.md.",
+  "elevationSource": "design (flat test corridor)",
+  "notes": "Not registered in the world map and not reachable in the live game: it exists for engine tests, the golden master and the E1 verification pages."
+ },
+ "terrain": {
+  "baseElevation": 0.0,
+  "trendX": 0.0,
+  "trendZ": 0.0,
+  "hillAmplitude": 0.6,
+  "hillWavelength": 700.0,
+  "detailAmplitude": 0.1,
+  "detailWavelength": 60.0,
+  "maxEmbankmentSlope": 0.5,
+  "minBlendDistance": 6.0,
+  "materialByZone": ""
+ },
+ "profiles": [
+  {
+   "id": "kano_arterial",
+   "roadClass": "arterial",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.5,
+   "medianWidth": 3.0,
+   "centreLine": "none",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.3,
+   "vergeWidth": 1.0,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.5,
+   "drainWidth": 0.4,
+   "medianStyle": "planter"
+  },
+  {
+   "id": "kano_collector",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.8,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "none",
+   "sidewalkWidth": 2.0,
+   "drainWidth": 0.3,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "kano_local",
+   "roadClass": "local",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.0,
+   "medianWidth": 0.0,
+   "centreLine": "none",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 0.3,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.6,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.1,
+   "kerbPaint": "none",
+   "sidewalkWidth": 1.5,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "kano_service",
+   "roadClass": "service",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.75,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 2.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.2,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.15,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  }
+ ],
+ "controlPoints": [
+  {
+   "id": "cp00",
+   "name": "Start of the arterial",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "kano_arterial"
+  },
+  {
+   "id": "cp01",
+   "name": "",
+   "x": 300.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "kano_arterial"
+  },
+  {
+   "id": "cp02",
+   "name": "",
+   "x": 600.0,
+   "z": 14.0,
+   "elevation": 0.0,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "kano_arterial"
+  },
+  {
+   "id": "cp03",
+   "name": "End of the arterial",
+   "x": 760.0,
+   "z": 14.0,
+   "elevation": 0.0,
+   "zone": "commercial",
+   "surface": "good",
+   "profile": "kano_collector"
+  },
+  {
+   "id": "cp04",
+   "name": "",
+   "x": 1000.0,
+   "z": 14.0,
+   "elevation": 0.0,
+   "zone": "commercial",
+   "surface": "good",
+   "profile": "kano_collector"
+  },
+  {
+   "id": "cp05",
+   "name": "",
+   "x": 1250.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "zone": "commercial",
+   "surface": "good",
+   "profile": "kano_collector"
+  },
+  {
+   "id": "cp06",
+   "name": "End of the street",
+   "x": 1500.0,
+   "z": 0.0,
+   "elevation": 0.0,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "kano_collector"
+  }
+ ],
+ "bridges": [],
+ "junctions": [
+  {
+   "id": "j_cross",
+   "name": "Cross street (four-way, median opening)",
+   "kind": "four_way",
+   "profile": "kano_collector",
+   "s": 420.0,
+   "angleDeg": 90.0,
+   "length": 190.0,
+   "rise": 0.0,
+   "profileLeft": "kano_collector",
+   "lengthLeft": 150.0,
+   "fillet": 0.0,
+   "medianOpening": true
+  },
+  {
+   "id": "j_local",
+   "name": "Local street",
+   "kind": "t_junction",
+   "profile": "kano_local",
+   "s": 840.0,
+   "angleDeg": 90.0,
+   "length": 180.0,
+   "rise": 0.0
+  },
+  {
+   "id": "j_service",
+   "name": "Service road (logistics)",
+   "kind": "t_junction",
+   "profile": "kano_service",
+   "s": 1020.0,
+   "angleDeg": -90.0,
+   "length": 220.0,
+   "rise": 0.0
+  },
+  {
+   "id": "j_collector",
+   "name": "Cross street",
+   "kind": "t_junction",
+   "profile": "kano_collector",
+   "s": 1250.0,
+   "angleDeg": 90.0,
+   "length": 200.0,
+   "rise": 0.0
+  },
+  {
+   "id": "j_terminal",
+   "name": "Bus terminal access",
+   "kind": "t_junction",
+   "profile": "kano_collector",
+   "s": 1420.0,
+   "angleDeg": 90.0,
+   "length": 180.0,
+   "rise": 0.0
+  }
+ ],
+ "propRules": [
+  {
+   "id": "lights_arterial_median",
+   "prop": "highway_light",
+   "zones": "",
+   "profiles": "kano_arterial",
+   "side": "median",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 0,
+   "offsetMax": 0,
+   "spacingMin": 38,
+   "spacingMax": 44,
+   "presence": 1.0,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 0.0,
+   "faceRoad": true,
+   "fixedDensity": true,
+   "exclusionMargin": -1.0
+  },
+  {
+   "id": "lights_collector",
+   "prop": "street_light",
+   "zones": "",
+   "profiles": "kano_collector",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 0.6,
+   "offsetMax": 1.0,
+   "spacingMin": 28,
+   "spacingMax": 34,
+   "presence": 0.95,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 0.0,
+   "faceRoad": true,
+   "fixedDensity": true,
+   "exclusionMargin": 0.4
+  },
+  {
+   "id": "lights_service",
+   "prop": "street_light",
+   "zones": "",
+   "profiles": "kano_service",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 0.6,
+   "offsetMax": 1.0,
+   "spacingMin": 30,
+   "spacingMax": 36,
+   "presence": 0.95,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 0.0,
+   "faceRoad": true,
+   "fixedDensity": true,
+   "exclusionMargin": 0.4
+  },
+  {
+   "id": "lights_local",
+   "prop": "street_light_village",
+   "zones": "",
+   "profiles": "kano_local",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 0.6,
+   "offsetMax": 1.0,
+   "spacingMin": 36,
+   "spacingMax": 44,
+   "presence": 0.9,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 0.0,
+   "faceRoad": true,
+   "fixedDensity": true,
+   "exclusionMargin": 0.4
+  },
+  {
+   "id": "trees_arterial",
+   "prop": "palm_tree",
+   "zones": "",
+   "profiles": "kano_arterial",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 1.5,
+   "offsetMax": 3.0,
+   "spacingMin": 22,
+   "spacingMax": 30,
+   "presence": 0.8,
+   "scaleMin": 0.9,
+   "scaleMax": 1.2,
+   "yawJitterDeg": 10.0,
+   "faceRoad": true,
+   "fixedDensity": false,
+   "exclusionMargin": -1.0
+  },
+  {
+   "id": "kiosks_collector",
+   "prop": "kiosk",
+   "zones": "",
+   "profiles": "kano_collector",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 1.2,
+   "offsetMax": 2.0,
+   "spacingMin": 20,
+   "spacingMax": 30,
+   "presence": 0.5,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 8.0,
+   "faceRoad": true,
+   "fixedDensity": false,
+   "exclusionMargin": -1.0
+  },
+  {
+   "id": "busstops_collector",
+   "prop": "bus_stop",
+   "zones": "",
+   "profiles": "kano_collector",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "offsetMin": 1.0,
+   "offsetMax": 1.6,
+   "spacingMin": 180,
+   "spacingMax": 260,
+   "presence": 0.9,
+   "scaleMin": 1.0,
+   "scaleMax": 1.0,
+   "yawJitterDeg": 0.0,
+   "faceRoad": true,
+   "fixedDensity": false,
+   "exclusionMargin": -1.0
+  }
+ ],
+ "props": [],
+ "traffic": {
+  "densityScale": 1.0,
+  "speedLimitScale": 1.0,
+  "vehicleMix": [
+   "saloon_car",
+   "minibus",
+   "motorcycle",
+   "tricycle_taxi",
+   "truck"
+  ]
+ },
+ "waypoints": [
+  {
+   "id": "wp_arterial",
+   "name": "Arterial",
+   "kind": "district",
+   "s": 100.0
+  },
+  {
+   "id": "wp_collector",
+   "name": "Collector street",
+   "kind": "district",
+   "s": 900.0
+  }
+ ],
+ "symbols": [
+  {
+   "id": "sy_arrow_a1",
+   "kind": "arrow_straight",
+   "corridor": "",
+   "s": 120.0,
+   "side": "right",
+   "lane": 1,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_a2",
+   "kind": "arrow_straight",
+   "corridor": "",
+   "s": 120.0,
+   "side": "right",
+   "lane": 2,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_a3",
+   "kind": "arrow_straight",
+   "corridor": "",
+   "s": 120.0,
+   "side": "left",
+   "lane": 1,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_a4",
+   "kind": "arrow_straight",
+   "corridor": "",
+   "s": 120.0,
+   "side": "left",
+   "lane": 2,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_zebra_a",
+   "kind": "zebra",
+   "corridor": "",
+   "s": 300.0,
+   "side": "both",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_stop_a1",
+   "kind": "stop_line",
+   "corridor": "",
+   "s": 293.0,
+   "side": "right",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_stop_a2",
+   "kind": "stop_line",
+   "corridor": "",
+   "s": 307.0,
+   "side": "left",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_turn_r",
+   "kind": "arrow_right",
+   "corridor": "",
+   "s": 520.0,
+   "side": "right",
+   "lane": 2,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_turn_l",
+   "kind": "arrow_left",
+   "corridor": "",
+   "s": 520.0,
+   "side": "right",
+   "lane": 1,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_turn_r2",
+   "kind": "arrow_right",
+   "corridor": "",
+   "s": 520.0,
+   "side": "left",
+   "lane": 2,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_arrow_turn_l2",
+   "kind": "arrow_left",
+   "corridor": "",
+   "s": 520.0,
+   "side": "left",
+   "lane": 1,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_zebra_c",
+   "kind": "zebra",
+   "corridor": "",
+   "s": 930.0,
+   "side": "both",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_zebra_local",
+   "kind": "zebra",
+   "corridor": "j_local",
+   "s": 40.0,
+   "side": "both",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_yield_service",
+   "kind": "yield",
+   "corridor": "j_service",
+   "s": 36.0,
+   "side": "right",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_bay_service",
+   "kind": "bay",
+   "corridor": "j_service",
+   "s": 120.0,
+   "side": "right",
+   "lane": 0,
+   "length": 3.0,
+   "count": 5,
+   "yellow": false
+  },
+  {
+   "id": "sy_zebra_cross",
+   "kind": "zebra",
+   "corridor": "j_cross",
+   "s": 45.0,
+   "side": "both",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  },
+  {
+   "id": "sy_zebra_cross_l",
+   "kind": "zebra",
+   "corridor": "j_cross_left",
+   "s": 45.0,
+   "side": "both",
+   "lane": 0,
+   "length": 0.0,
+   "count": 1,
+   "yellow": false
+  }
+ ],
+ "sites": [
+  {
+   "id": "site_yard",
+   "name": "Logistics yard",
+   "corridor": "j_service",
+   "s": 220.0,
+   "lateral": 0.0,
+   "forward": 50.0,
+   "widthM": 80.0,
+   "depthM": 100.0,
+   "yawDeg": 0.0,
+   "surface": "concrete",
+   "kerb": "plain",
+   "kerbHeight": 0.12,
+   "heightOffset": 0.0,
+   "dropRoadKerb": true,
+   "entrances": [
+    {
+     "edge": "back",
+     "from": -9.0,
+     "to": 9.0
+    }
+   ],
+   "marks": [
+    {
+     "kind": "line",
+     "x": -9.0,
+     "z": -44.0,
+     "angleDeg": 90.0,
+     "length": 18.0,
+     "width": 0.4,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_straight",
+     "x": -1.75,
+     "z": -36.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_straight",
+     "x": 1.75,
+     "z": -36.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "bay_row",
+     "x": -35.0,
+     "z": 12.0,
+     "angleDeg": 0.0,
+     "length": 14.0,
+     "width": 3.5,
+     "count": 8,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "bay_row",
+     "x": 7.0,
+     "z": 12.0,
+     "angleDeg": 0.0,
+     "length": 14.0,
+     "width": 3.5,
+     "count": 8,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "hatch",
+     "x": 0.0,
+     "z": 19.0,
+     "angleDeg": 0.0,
+     "length": 12.0,
+     "width": 6.0,
+     "count": 1,
+     "closed": false,
+     "yellow": true
+    },
+    {
+     "kind": "line",
+     "x": -35.0,
+     "z": 26.0,
+     "angleDeg": 90.0,
+     "length": 70.0,
+     "width": 0.15,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    }
+   ],
+   "props": [
+    {
+     "id": "wh_a",
+     "prop": "warehouse",
+     "text": "",
+     "x": -20.0,
+     "z": 36.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "wh_b",
+     "prop": "warehouse",
+     "text": "",
+     "x": 20.0,
+     "z": 36.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "sign",
+     "prop": "road_sign",
+     "text": "LOGISTICS YARD\nGATE 1",
+     "x": -12.0,
+     "z": -40.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "office",
+     "prop": "kiosk",
+     "text": "",
+     "x": -30.0,
+     "z": -38.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l1",
+     "prop": "street_light",
+     "text": "",
+     "x": -38.0,
+     "z": -30.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l2",
+     "prop": "street_light",
+     "text": "",
+     "x": 38.0,
+     "z": -30.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l3",
+     "prop": "street_light",
+     "text": "",
+     "x": -38.0,
+     "z": 6.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l4",
+     "prop": "street_light",
+     "text": "",
+     "x": 38.0,
+     "z": 6.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l5",
+     "prop": "street_light",
+     "text": "",
+     "x": -38.0,
+     "z": 40.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l6",
+     "prop": "street_light",
+     "text": "",
+     "x": 38.0,
+     "z": 40.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "mast",
+     "prop": "junction_mast",
+     "text": "",
+     "x": 0.0,
+     "z": 2.0,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "id": "site_terminal",
+   "name": "Bus terminal",
+   "corridor": "j_terminal",
+   "s": 180.0,
+   "lateral": 0.0,
+   "forward": 30.0,
+   "widthM": 90.0,
+   "depthM": 60.0,
+   "yawDeg": 0.0,
+   "surface": "concrete",
+   "kerb": "black_white",
+   "kerbHeight": 0.12,
+   "heightOffset": 0.0,
+   "dropRoadKerb": true,
+   "entrances": [
+    {
+     "edge": "back",
+     "from": -9.0,
+     "to": 9.0
+    }
+   ],
+   "marks": [
+    {
+     "kind": "line",
+     "x": -9.0,
+     "z": -24.0,
+     "angleDeg": 90.0,
+     "length": 18.0,
+     "width": 0.4,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_straight",
+     "x": -1.75,
+     "z": -18.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_straight",
+     "x": 1.75,
+     "z": -18.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_left",
+     "x": -1.75,
+     "z": -8.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "arrow_right",
+     "x": 1.75,
+     "z": -8.0,
+     "angleDeg": 0.0,
+     "length": 0.0,
+     "width": 0.0,
+     "count": 1,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "bay_row",
+     "x": -24.0,
+     "z": 6.0,
+     "angleDeg": 0.0,
+     "length": 14.0,
+     "width": 4.0,
+     "count": 12,
+     "closed": false,
+     "yellow": false
+    },
+    {
+     "kind": "line",
+     "x": -24.0,
+     "z": 20.0,
+     "angleDeg": 90.0,
+     "length": 48.0,
+     "width": 0.15,
+     "count": 1,
+     "closed": false,
+     "yellow": true
+    },
+    {
+     "kind": "hatch",
+     "x": 0.0,
+     "z": -1.0,
+     "angleDeg": 0.0,
+     "length": 6.0,
+     "width": 6.0,
+     "count": 1,
+     "closed": false,
+     "yellow": true
+    }
+   ],
+   "props": [
+    {
+     "id": "board",
+     "prop": "billboard",
+     "text": "KANO NORTH\nBUS TERMINAL",
+     "x": -36.0,
+     "z": -18.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "sh1",
+     "prop": "bus_stop",
+     "text": "BAY 1-3",
+     "x": -20.0,
+     "z": 24.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "sh2",
+     "prop": "bus_stop",
+     "text": "BAY 4-6",
+     "x": -8.0,
+     "z": 24.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "sh3",
+     "prop": "bus_stop",
+     "text": "BAY 7-9",
+     "x": 4.0,
+     "z": 24.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "sh4",
+     "prop": "bus_stop",
+     "text": "BAY 10-12",
+     "x": 16.0,
+     "z": 24.0,
+     "yawDeg": 180.0,
+     "scale": 1.0
+    },
+    {
+     "id": "ticket1",
+     "prop": "kiosk",
+     "text": "",
+     "x": 32.0,
+     "z": 10.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "ticket2",
+     "prop": "kiosk",
+     "text": "",
+     "x": 32.0,
+     "z": 16.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "stall1",
+     "prop": "market_stall",
+     "text": "",
+     "x": -38.0,
+     "z": 16.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "stall2",
+     "prop": "market_stall",
+     "text": "",
+     "x": -38.0,
+     "z": 10.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "stall3",
+     "prop": "market_stall",
+     "text": "",
+     "x": -38.0,
+     "z": 4.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l1",
+     "prop": "street_light",
+     "text": "",
+     "x": -42.0,
+     "z": -20.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l2",
+     "prop": "street_light",
+     "text": "",
+     "x": 42.0,
+     "z": -20.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l3",
+     "prop": "street_light",
+     "text": "",
+     "x": -42.0,
+     "z": 12.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l4",
+     "prop": "street_light",
+     "text": "",
+     "x": 42.0,
+     "z": 12.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l5",
+     "prop": "street_light",
+     "text": "",
+     "x": -42.0,
+     "z": 26.0,
+     "yawDeg": 90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "l6",
+     "prop": "street_light",
+     "text": "",
+     "x": 42.0,
+     "z": 26.0,
+     "yawDeg": -90.0,
+     "scale": 1.0
+    },
+    {
+     "id": "tree1",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -40.0,
+     "z": 27.0,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "tree2",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 40.0,
+     "z": 27.0,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    }
+   ]
+  }
+ ],
+ "frontage": [
+  {
+   "id": "arterial_major",
+   "corridor": "",
+   "zones": "",
+   "profiles": "kano_arterial",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "setbackMin": 10.0,
+   "setbackMax": 15.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 150.0,
+   "blockMargin": 3.0,
+   "presence": 0.92,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 2,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_office_block_a",
+     "weight": 1.0,
+     "widthM": 22.56,
+     "depthM": 21.2,
+     "tag": "office"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 1.2,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.5,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 0.4,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "kano_mosque_grand_a",
+     "weight": 1.0,
+     "widthM": 46.68,
+     "depthM": 37.94,
+     "tag": "mosque_grand"
+    },
+    {
+     "prop": "kano_mosque_grand_b",
+     "weight": 1.0,
+     "widthM": 60.61,
+     "depthM": 39.64,
+     "tag": "mosque_grand"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_a",
+     "weight": 0.6,
+     "widthM": 26.68,
+     "depthM": 25.14,
+     "tag": "mosque_medium"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_c",
+     "weight": 0.6,
+     "widthM": 28.68,
+     "depthM": 26.84,
+     "tag": "mosque_medium"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": -1
+  },
+  {
+   "id": "collector_main",
+   "corridor": "",
+   "zones": "",
+   "profiles": "kano_collector",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "setbackMin": 4.5,
+   "setbackMax": 8.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 110.0,
+   "blockMargin": 3.0,
+   "presence": 0.92,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
+     "weight": 1.5,
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.8,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 0.7,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.6,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_medium_a",
+     "weight": 1.0,
+     "widthM": 26.68,
+     "depthM": 25.14,
+     "tag": "mosque_medium"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_b",
+     "weight": 1.0,
+     "widthM": 30.87,
+     "depthM": 23.14,
+     "tag": "mosque_medium"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_c",
+     "weight": 1.0,
+     "widthM": 28.68,
+     "depthM": 26.84,
+     "tag": "mosque_medium"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.2,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.2,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_a",
+     "weight": 0.8,
+     "widthM": 26.0,
+     "depthM": 21.15,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 3,
+   "anchorPhase": -1
+  },
+  {
+   "id": "cross_street_right",
+   "corridor": "j_cross",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 100.0,
+   "sTo": 0.0,
+   "setbackMin": 4.5,
+   "setbackMax": 7.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 90.0,
+   "blockMargin": 3.0,
+   "presence": 0.9,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
+     "weight": 1.5,
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.8,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 0.7,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.6,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.68,
+     "depthM": 11.84,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.0,
+     "depthM": 14.55,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": -1
+  },
+  {
+   "id": "cross_street_left",
+   "corridor": "j_cross_left",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 100.0,
+   "sTo": 0.0,
+   "setbackMin": 4.5,
+   "setbackMax": 7.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 90.0,
+   "blockMargin": 3.0,
+   "presence": 0.9,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
+     "weight": 1.5,
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.8,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 0.7,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.6,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.68,
+     "depthM": 11.84,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.0,
+     "depthM": 14.55,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": -1
+  },
+  {
+   "id": "local_street",
+   "corridor": "j_local",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 60.0,
+   "sTo": 0.0,
+   "setbackMin": 3.5,
+   "setbackMax": 6.0,
+   "gapMin": 1.0,
+   "gapMax": 4.0,
+   "blockLength": 80.0,
+   "blockMargin": 3.0,
+   "presence": 0.92,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 1.2,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 1.2,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 1.0,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 1.2,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_a",
+     "weight": 1.2,
+     "widthM": 8.84,
+     "depthM": 7.92,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_b",
+     "weight": 1.0,
+     "widthM": 10.84,
+     "depthM": 7.49,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_block_corrugated_a",
+     "weight": 1.0,
+     "widthM": 10.24,
+     "depthM": 7.24,
+     "tag": "house"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.68,
+     "depthM": 11.84,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.0,
+     "depthM": 14.55,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": -1
+  },
+  {
+   "id": "service_road",
+   "corridor": "j_service",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 60.0,
+   "sTo": 0.0,
+   "setbackMin": 8.0,
+   "setbackMax": 14.0,
+   "gapMin": 3.0,
+   "gapMax": 8.0,
+   "blockLength": 100.0,
+   "blockMargin": 3.0,
+   "presence": 0.9,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "rg_ngn_warehouse_hall_a",
+     "weight": 1.0,
+     "widthM": 49.0,
+     "depthM": 24.92,
+     "tag": "warehouse"
+    },
+    {
+     "prop": "rg_ngn_warehouse_hall_b",
+     "weight": 1.4,
+     "widthM": 36.4,
+     "depthM": 21.04,
+     "tag": "warehouse"
+    },
+    {
+     "prop": "rg_ngn_warehouse_cold_a",
+     "weight": 0.8,
+     "widthM": 30.66,
+     "depthM": 18.02,
+     "tag": "warehouse"
+    }
+   ],
+   "anchors": [],
+   "anchorEveryBlocks": 0,
+   "anchorPhase": -1
+  },
+  {
+   "id": "collector_cross_2",
+   "corridor": "j_collector",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 72.0,
+   "sTo": 0.0,
+   "setbackMin": 4.5,
+   "setbackMax": 7.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 90.0,
+   "blockMargin": 3.0,
+   "presence": 0.9,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
+     "weight": 1.5,
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.8,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 0.7,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.6,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.68,
+     "depthM": 11.84,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.0,
+     "depthM": 14.55,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": -1
+  },
+  {
+   "id": "terminal_access",
+   "corridor": "j_terminal",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 72.0,
+   "sTo": 140.0,
+   "setbackMin": 4.5,
+   "setbackMax": 7.0,
+   "gapMin": 1.5,
+   "gapMax": 6.0,
+   "blockLength": 90.0,
+   "blockMargin": 3.0,
+   "presence": 0.85,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
+     "weight": 1.5,
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.8,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.4,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 0.7,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.6,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
+    }
+   ],
+   "anchors": [],
+   "anchorEveryBlocks": 0,
+   "anchorPhase": -1
+  }
+ ]
+}

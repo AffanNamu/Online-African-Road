@@ -54,12 +54,15 @@ namespace ARO.Game
             var n0 = _route.nodes[0].position;
             var dir = (_route.nodes[1].position - n0).normalized;
             float sStart = at == null ? SmokeMode.StartMetres : -1f;      // test pages only: start part way along the route (?smoke=drive&start=metres)
+            float lateralOffset = -1f;
             if (sStart > 0f && _route.Model != null)
             {
-                _route.Model.Main.Spline.FrameAt(Mathf.Min(sStart, _route.Model.Length - 60f), out var sp, out var sf, out _);
-                n0 = new Vector3(sp.X, sp.Y, sp.Z); dir = new Vector3(sf.X, 0f, sf.Z).normalized;
+                var corridor = at == null && SmokeMode.StartCorridor != null ? _route.Model.CorridorById(SmokeMode.StartCorridor) : null;       // test pages only: measure `start` along a junction stub, road or ring (?corridor=id)
+                if (corridor != null) { corridor.Spline.FrameAt(Mathf.Min(sStart, corridor.Length - 20f), out var cp, out var cf, out _); n0 = new Vector3(cp.X, cp.Y, cp.Z); dir = new Vector3(cf.X, 0f, cf.Z).normalized; lateralOffset = 2.0f; }
+                else { _route.Model.Main.Spline.FrameAt(Mathf.Min(sStart, _route.Model.Length - 60f), out var sp, out var sf, out _); n0 = new Vector3(sp.X, sp.Y, sp.Z); dir = new Vector3(sf.X, 0f, sf.Z).normalized; }
+                if (at == null && SmokeMode.StartBack) dir = -dir;                                                                             // test pages only: face the other way (?facing=back); the lane is then the right-hand lane of that direction
             }
-            var start = n0 + Vector3.Cross(Vector3.up, new Vector3(dir.x, 0f, dir.z).normalized) * _route.LaneOffset(Mathf.Max(0f, sStart), 0);   // in the right-hand lane, not on the centre line
+            var start = n0 + Vector3.Cross(Vector3.up, new Vector3(dir.x, 0f, dir.z).normalized) * (lateralOffset >= 0f ? lateralOffset : _route.LaneOffset(Mathf.Max(0f, sStart), 0));   // in the right-hand lane, not on the centre line
             var siteId = at == null ? SmokeMode.StartSite : null;           // test pages only: start on a site plate of the route (?smoke=drive&site=id)
             if (siteId != null && _route.Model != null)
                 foreach (var plate in _route.Model.Sites)

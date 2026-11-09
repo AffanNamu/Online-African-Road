@@ -725,6 +725,579 @@
      }
     ]
    }
+  },
+  {
+   "id": "aro_villa_2storey_hip_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:aro_villa_2storey_hip_a",
+   "collider": "box",
+   "heightM": 10.45,
+   "widthM": 13.6,
+   "depthM": 12.9,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    4802,
+    965,
+    58
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "aro_villa_2storey_hip_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:aro_villa_2storey_hip_b",
+   "collider": "box",
+   "heightM": 9.11,
+   "widthM": 16.48,
+   "depthM": 13.2,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    4289,
+    803,
+    70
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "kano_midrise_apartments_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_midrise_apartments_a",
+   "collider": "box",
+   "heightM": 19.2,
+   "widthM": 24.3,
+   "depthM": 17.9,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    1226,
+    484,
+    12
+   ],
+   "castShadow": true,
+   "tags": [
+    "apartments",
+    "generic_design",
+    "kano_city_test",
+    "mid_rise",
+    "residential"
+   ]
+  },
+  {
+   "id": "kano_mosque_grand_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_mosque_grand_a",
+   "collider": "box",
+   "heightM": 33.2,
+   "widthM": 46.68,
+   "depthM": 37.94,
+   "cullDistance": 600.0,
+   "lodTriangles": [
+    5410,
+    2168,
+    108
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "grand_mosque",
+    "kano_city_test",
+    "landmark_class",
+    "mosque"
+   ]
+  },
+  {
+   "id": "kano_mosque_grand_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_mosque_grand_b",
+   "collider": "box",
+   "heightM": 30.02,
+   "widthM": 60.61,
+   "depthM": 39.64,
+   "cullDistance": 600.0,
+   "lodTriangles": [
+    5370,
+    2450,
+    108
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "grand_mosque",
+    "kano_city_test",
+    "landmark_class",
+    "mosque"
+   ]
+  },
+  {
+   "id": "kano_office_block_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_office_block_a",
+   "collider": "box",
+   "heightM": 34.6,
+   "widthM": 22.56,
+   "depthM": 21.2,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    916,
+    268,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "kano_city_test",
+    "mid_rise",
+    "office"
+   ]
+  },
+  {
+   "id": "kano_shopping_parade_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_shopping_parade_a",
+   "collider": "box",
+   "heightM": 18.1,
+   "widthM": 36.5,
+   "depthM": 16.9,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    1300,
+    214,
+    24
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "kano_city_test",
+    "mid_rise",
+    "shop_house"
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_compound_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_hausa_compound_a",
+   "collider": "box",
+   "heightM": 7.21,
+   "widthM": 20.14,
+   "depthM": 16.18,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    2364,
+    108
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_hausa_compound_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_hausa_compound_b",
+   "collider": "box",
+   "heightM": 4.59,
+   "widthM": 14.14,
+   "depthM": 12.18,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    1958,
+    96
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_house_block_corrugated_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_house_block_corrugated_a",
+   "collider": "box",
+   "heightM": 4.26,
+   "widthM": 10.24,
+   "depthM": 7.24,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    1022,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_house_mudbrick_a",
+   "collider": "box",
+   "heightM": 4.46,
+   "widthM": 8.84,
+   "depthM": 7.92,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    582,
+    38
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_house_mudbrick_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_house_mudbrick_b",
+   "collider": "box",
+   "heightM": 3.96,
+   "widthM": 10.84,
+   "depthM": 7.49,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    776,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_medium_a",
+   "collider": "box",
+   "heightM": 19.42,
+   "widthM": 26.68,
+   "depthM": 25.14,
+   "cullDistance": 450.0,
+   "lodTriangles": [
+    2850,
+    1238,
+    96
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "mosque",
+    "neighbourhood_mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_medium_b",
+   "collider": "box",
+   "heightM": 20.48,
+   "widthM": 30.87,
+   "depthM": 23.14,
+   "cullDistance": 450.0,
+   "lodTriangles": [
+    2904,
+    1444,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "mosque",
+    "neighbourhood_mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_c",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_medium_c",
+   "collider": "box",
+   "heightM": 19.42,
+   "widthM": 28.68,
+   "depthM": 26.84,
+   "cullDistance": 450.0,
+   "lodTriangles": [
+    3300,
+    1440,
+    96
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "mosque",
+    "neighbourhood_mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_small_a",
+   "collider": "box",
+   "heightM": 13.06,
+   "widthM": 18.68,
+   "depthM": 15.64,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    1774,
+    780,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "local_mosque",
+    "mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_small_b",
+   "collider": "box",
+   "heightM": 12.0,
+   "widthM": 20.68,
+   "depthM": 15.64,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    1768,
+    906,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "local_mosque",
+    "mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_c",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_small_c",
+   "collider": "box",
+   "heightM": 9.88,
+   "widthM": 14.68,
+   "depthM": 11.84,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    1526,
+    728,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "local_mosque",
+    "mosque"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_traditional_a",
+   "collider": "box",
+   "heightM": 15.9,
+   "widthM": 26.0,
+   "depthM": 21.15,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    1358,
+    472,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "flagged_interpretation",
+    "hausa_inspired",
+    "kano_city_test",
+    "mosque",
+    "traditional"
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_mosque_traditional_b",
+   "collider": "box",
+   "heightM": 11.4,
+   "widthM": 17.0,
+   "depthM": 14.55,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    730,
+    234,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "flagged_interpretation",
+    "hausa_inspired",
+    "kano_city_test",
+    "mosque",
+    "traditional"
+   ]
+  },
+  {
+   "id": "rg_ngn_shed_market_corrugated_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_shed_market_corrugated_a",
+   "collider": "box",
+   "heightM": 4.36,
+   "widthM": 15.4,
+   "depthM": 9.44,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    2708,
+    92
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_shop_row_roadside_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_shop_row_roadside_a",
+   "collider": "box",
+   "heightM": 3.4,
+   "widthM": 15.81,
+   "depthM": 6.77,
+   "cullDistance": 220.0,
+   "lodTriangles": [
+    1304,
+    28
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_cold_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_warehouse_cold_a",
+   "collider": "box",
+   "heightM": 9.97,
+   "widthM": 30.66,
+   "depthM": 18.02,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    1294,
+    244,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "cold_store",
+    "industrial",
+    "kano_city_test",
+    "logistics"
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_hall_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_warehouse_hall_a",
+   "collider": "box",
+   "heightM": 10.1,
+   "widthM": 49.0,
+   "depthM": 24.92,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    1450,
+    396,
+    58
+   ],
+   "castShadow": true,
+   "tags": [
+    "industrial",
+    "kano_city_test",
+    "logistics",
+    "warehouse"
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_hall_b",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_warehouse_hall_b",
+   "collider": "box",
+   "heightM": 8.0,
+   "widthM": 36.4,
+   "depthM": 21.04,
+   "cullDistance": 300.0,
+   "lodTriangles": [
+    1048,
+    370,
+    70
+   ],
+   "castShadow": true,
+   "tags": [
+    "industrial",
+    "kano_city_test",
+    "logistics",
+    "warehouse"
+   ]
   }
  ]
 }

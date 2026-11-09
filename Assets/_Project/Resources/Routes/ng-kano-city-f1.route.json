@@ -1,0 +1,924 @@
+{
+ "schemaVersion": 3,
+ "routeId": "ng-kano-city-f1",
+ "name": "Kano city flyover interchange (densification test route; the F1 interchange with frontage rules)",
+ "seed": 9317,
+ "meta": {
+  "country": "NG",
+  "to": "E5 test end",
+  "status": "planned",
+  "worldMapRouteId": "kaduna-kano",
+  "realRoadKm": 209.6,
+  "gameLengthKm": 1.8,
+  "gameCoverage": "ENGINE TEST ROUTE, NOT A SURVEY AND NOT A PLAYABLE ROUTE. A fictional grade-separated interchange: a four-lane ground roundabout with arterial and local legs, a dual expressway (the main road) flying over it on a deck, and an off ramp and an on ramp between them. Not Kano.",
+  "elevationSource": "design",
+  "notes": "Fictional engine test layout. Not Kano, not a survey, not approved for production. docs/ROAD_ENGINE_E5.md.",
+  "from": "E5 test start"
+ },
+ "terrain": {
+  "baseElevation": 10.0,
+  "trendX": 0.0,
+  "trendZ": 0.0,
+  "hillAmplitude": 0.3,
+  "hillWavelength": 600.0,
+  "detailAmplitude": 0.05,
+  "detailWavelength": 60.0,
+  "maxEmbankmentSlope": 0.5,
+  "minBlendDistance": 6.0,
+  "materialByZone": ""
+ },
+ "profiles": [
+  {
+   "id": "xway",
+   "roadClass": "expressway",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.5,
+   "medianWidth": 1.2,
+   "centreLine": "none",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 2.5,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.0,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.0,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ring_hwy",
+   "roadClass": "arterial",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.3,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "white",
+   "shoulderWidth": 0.8,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.8,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "arterial_x",
+   "roadClass": "arterial",
+   "lanesPerDirection": 2,
+   "laneWidth": 3.5,
+   "medianWidth": 0.0,
+   "centreLine": "double_solid",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 0.6,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.0,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 2.0,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "local_x",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 3.7,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 1.2,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 0.6,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.12,
+   "kerbPaint": "black_white",
+   "sidewalkWidth": 1.8,
+   "drainWidth": 0.4,
+   "medianStyle": "jersey"
+  },
+  {
+   "id": "ramp",
+   "roadClass": "collector",
+   "lanesPerDirection": 1,
+   "laneWidth": 4.2,
+   "medianWidth": 0.0,
+   "centreLine": "dashed",
+   "centreLineColor": "yellow",
+   "shoulderWidth": 1.8,
+   "innerShoulderWidth": 0.6,
+   "vergeWidth": 1.2,
+   "camberPercent": 2.0,
+   "edgeBarrier": "none",
+   "ditchWidth": 2.0,
+   "ditchDepth": 0.4,
+   "laneLineDash": 3.0,
+   "laneLineGap": 9.0,
+   "kerbHeight": 0.0,
+   "kerbPaint": "none",
+   "sidewalkWidth": 0.0,
+   "drainWidth": 0.0,
+   "medianStyle": "jersey"
+  }
+ ],
+ "controlPoints": [
+  {
+   "id": "cp0",
+   "name": "Expressway 0",
+   "x": 0,
+   "z": -900,
+   "elevation": 10.0,
+   "zone": "highway",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp1",
+   "name": "Expressway 1",
+   "x": 0,
+   "z": -600,
+   "elevation": 10.0,
+   "zone": "highway",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp2",
+   "name": "Expressway 2",
+   "x": 0,
+   "z": -340,
+   "elevation": 17.8,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp3",
+   "name": "Expressway 3",
+   "x": 0,
+   "z": 340,
+   "elevation": 17.8,
+   "zone": "urban",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp4",
+   "name": "Expressway 4",
+   "x": 0,
+   "z": 470.0,
+   "elevation": 13.9,
+   "zone": "highway",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp5",
+   "name": "Expressway 5",
+   "x": 0,
+   "z": 600,
+   "elevation": 10.0,
+   "zone": "highway",
+   "surface": "good",
+   "profile": "xway"
+  },
+  {
+   "id": "cp6",
+   "name": "Expressway 6",
+   "x": 0,
+   "z": 900,
+   "elevation": 10.0,
+   "zone": "highway",
+   "surface": "good",
+   "profile": "xway"
+  }
+ ],
+ "bridges": [
+  {
+   "id": "f1_deck",
+   "name": "F1 flyover over the ground roundabout",
+   "startS": 600.0,
+   "endS": 1200.0,
+   "valleyDepth": 0.0,
+   "deckThickness": 1.2,
+   "pierSpacing": 24.0,
+   "pierGaps": [
+    {
+     "from": 841.2,
+     "to": 866.0
+    },
+    {
+     "from": 934.0,
+     "to": 958.8
+    }
+   ],
+   "overRoad": true
+  }
+ ],
+ "junctions": [],
+ "propRules": [],
+ "props": [],
+ "traffic": {
+  "densityScale": 0.0,
+  "speedLimitScale": 1.0,
+  "vehicleMix": []
+ },
+ "waypoints": [
+  {
+   "id": "wp_south",
+   "name": "Expressway south",
+   "kind": "district",
+   "s": 0.0
+  },
+  {
+   "id": "wp_over",
+   "name": "Over the roundabout",
+   "kind": "district",
+   "s": 900.0
+  },
+  {
+   "id": "wp_north",
+   "name": "Expressway north",
+   "kind": "district",
+   "s": 1800.0
+  }
+ ],
+ "symbols": [],
+ "sites": [],
+ "roads": [
+  {
+   "id": "ramp_off",
+   "name": "Off ramp (expressway to the roundabout)",
+   "role": "ramp",
+   "decks": [],
+   "controlPoints": [
+    {
+     "id": "o0",
+     "name": "o0",
+     "x": 10.7,
+     "z": -340.0,
+     "elevation": 17.573,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o1",
+     "name": "o1",
+     "x": 30.0,
+     "z": -295.0,
+     "elevation": 16.351,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o2",
+     "name": "o2",
+     "x": 50.0,
+     "z": -235.0,
+     "elevation": 14.772,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o3",
+     "name": "o3",
+     "x": 57.0,
+     "z": -190.0,
+     "elevation": 13.636,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o4",
+     "name": "o4",
+     "x": 52.61,
+     "z": -144.544,
+     "elevation": 12.496,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o5",
+     "name": "o5",
+     "x": 33.798,
+     "z": -92.86,
+     "elevation": 11.123,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "o6",
+     "name": "o6",
+     "x": 18.408,
+     "z": -50.574,
+     "elevation": 10.0,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    }
+   ],
+   "joins": [
+    {
+     "end": "start",
+     "corridor": "ng-kano-city-f1",
+     "s": 560.0,
+     "side": 1,
+     "gap": 30.0
+    }
+   ]
+  },
+  {
+   "id": "ramp_on",
+   "name": "On ramp (roundabout to the expressway)",
+   "role": "ramp",
+   "decks": [],
+   "controlPoints": [
+    {
+     "id": "n0",
+     "name": "n0",
+     "x": 18.408,
+     "z": 50.574,
+     "elevation": 10.0,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n1",
+     "name": "n1",
+     "x": 33.798,
+     "z": 92.86,
+     "elevation": 10.383,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n2",
+     "name": "n2",
+     "x": 52.61,
+     "z": 144.544,
+     "elevation": 10.851,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n3",
+     "name": "n3",
+     "x": 57.0,
+     "z": 235.0,
+     "elevation": 11.622,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n4",
+     "name": "n4",
+     "x": 50.0,
+     "z": 325.0,
+     "elevation": 12.39,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n5",
+     "name": "n5",
+     "x": 30.0,
+     "z": 420.0,
+     "elevation": 13.217,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    },
+    {
+     "id": "n6",
+     "name": "n6",
+     "x": 10.7,
+     "z": 470.0,
+     "elevation": 13.673,
+     "zone": "urban",
+     "surface": "good",
+     "profile": "ramp"
+    }
+   ],
+   "joins": [
+    {
+     "end": "end",
+     "corridor": "ng-kano-city-f1",
+     "s": 1370.0,
+     "side": 1,
+     "gap": 30.0
+    }
+   ]
+  }
+ ],
+ "rings": [
+  {
+   "id": "r_highway",
+   "name": "Highway interchange roundabout F1 (ground ring under the expressway deck)",
+   "design": "highway",
+   "profile": "ring_hwy",
+   "x": 0.0,
+   "z": 0.0,
+   "elevation": 10.156,
+   "attachTo": "",
+   "attachEnd": "end",
+   "radius": 38.0,
+   "apron": 0.0,
+   "island": "planter",
+   "zone": "urban",
+   "surface": "good",
+   "flare": 0.0,
+   "mouthScale": 1.65,
+   "splitterLength": 26.0,
+   "splitterWidth": 4.5,
+   "yieldLines": true,
+   "zebra": false,
+   "legs": [
+    {
+     "id": "hw_e",
+     "profile": "arterial_x",
+     "angleDeg": 0.0,
+     "length": 420.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "hw_w",
+     "profile": "arterial_x",
+     "angleDeg": 180.0,
+     "length": 420.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "hw_ne",
+     "profile": "local_x",
+     "angleDeg": 40.0,
+     "length": 250.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "hw_nw",
+     "profile": "local_x",
+     "angleDeg": 140.0,
+     "length": 250.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "hw_sw",
+     "profile": "local_x",
+     "angleDeg": 220.0,
+     "length": 250.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    },
+    {
+     "id": "hw_se",
+     "profile": "local_x",
+     "angleDeg": 320.0,
+     "length": 250.0,
+     "rise": 0.0,
+     "zone": "",
+     "surface": ""
+    }
+   ],
+   "connect": [
+    "ramp_off",
+    "ramp_on"
+   ],
+   "props": [
+    {
+     "id": "t0",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 24.0,
+     "z": 0.0,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t1",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 22.553,
+     "z": 8.208,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t2",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 18.385,
+     "z": 15.427,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t3",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 12.0,
+     "z": 20.785,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t7",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -18.385,
+     "z": 15.427,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t8",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -22.553,
+     "z": 8.208,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t9",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -24.0,
+     "z": 0.0,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t10",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -22.553,
+     "z": -8.208,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t11",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -18.385,
+     "z": -15.427,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t12",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": -12.0,
+     "z": -20.785,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t15",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 12.0,
+     "z": -20.785,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t16",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 18.385,
+     "z": -15.427,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    },
+    {
+     "id": "t17",
+     "prop": "tropical_tree",
+     "text": "",
+     "x": 22.553,
+     "z": -8.208,
+     "yawDeg": 0.0,
+     "scale": 1.0
+    }
+   ]
+  }
+ ],
+ "frontage": [
+  {
+   "id": "flank_urban",
+   "corridor": "",
+   "zones": "urban",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "setbackMin": 32.0,
+   "setbackMax": 44.0,
+   "gapMin": 2.0,
+   "gapMax": 8.0,
+   "blockLength": 150.0,
+   "blockMargin": 3.0,
+   "presence": 0.95,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 3,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_office_block_a",
+     "weight": 1.0,
+     "widthM": 22.56,
+     "depthM": 21.2,
+     "tag": "office"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 1.4,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.5,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 0.5,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 0.5,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "kano_mosque_grand_a",
+     "weight": 1.0,
+     "widthM": 46.68,
+     "depthM": 37.94,
+     "tag": "mosque_grand"
+    },
+    {
+     "prop": "kano_mosque_grand_b",
+     "weight": 1.0,
+     "widthM": 60.61,
+     "depthM": 39.64,
+     "tag": "mosque_grand"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_a",
+     "weight": 0.6,
+     "widthM": 26.68,
+     "depthM": 25.14,
+     "tag": "mosque_medium"
+    },
+    {
+     "prop": "rg_ngn_mosque_medium_c",
+     "weight": 0.6,
+     "widthM": 28.68,
+     "depthM": 26.84,
+     "tag": "mosque_medium"
+    }
+   ],
+   "anchorEveryBlocks": 2,
+   "anchorPhase": 1
+  },
+  {
+   "id": "flank_highway",
+   "corridor": "",
+   "zones": "highway",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "setbackMin": 34.0,
+   "setbackMax": 50.0,
+   "gapMin": 6.0,
+   "gapMax": 20.0,
+   "blockLength": 150.0,
+   "blockMargin": 3.0,
+   "presence": 0.5,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 1.2,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 1.2,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 1.0,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_b",
+     "weight": 1.2,
+     "widthM": 14.14,
+     "depthM": 12.18,
+     "tag": "hausa_compound"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_a",
+     "weight": 1.2,
+     "widthM": 8.84,
+     "depthM": 7.92,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_b",
+     "weight": 1.0,
+     "widthM": 10.84,
+     "depthM": 7.49,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_block_corrugated_a",
+     "weight": 1.0,
+     "widthM": 10.24,
+     "depthM": 7.24,
+     "tag": "house"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.68,
+     "depthM": 15.64,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.68,
+     "depthM": 11.84,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.0,
+     "depthM": 14.55,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 4,
+   "anchorPhase": -1
+  },
+  {
+   "id": "ring_edge",
+   "corridor": "r_highway",
+   "zones": "",
+   "profiles": "",
+   "side": "both",
+   "sFrom": 0.0,
+   "sTo": 0.0,
+   "setbackMin": 14.0,
+   "setbackMax": 22.0,
+   "gapMin": 2.0,
+   "gapMax": 8.0,
+   "blockLength": 120.0,
+   "blockMargin": 3.0,
+   "presence": 0.9,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_office_block_a",
+     "weight": 1.0,
+     "widthM": 22.56,
+     "depthM": 21.2,
+     "tag": "office"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 1.4,
+     "widthM": 24.3,
+     "depthM": 17.9,
+     "tag": "apartments"
+    },
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 1.2,
+     "widthM": 36.5,
+     "depthM": 16.9,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.5,
+     "widthM": 13.6,
+     "depthM": 12.9,
+     "tag": "villa"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 0.5,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
+    },
+    {
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 0.5,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
+    }
+   ],
+   "anchors": [],
+   "anchorEveryBlocks": 0,
+   "anchorPhase": -1
+  }
+ ]
+}
