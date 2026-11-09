@@ -6,8 +6,8 @@
 # REVIEW (only when the commit message contains [kano-review], or a manual run sets review): after the import tests the job also builds the 14 residential kit assets FROM THE CODE with the toolchain (validated),
 # stages them under Assets/ThirdParty/ARO, builds the game with ARO.Editor.BuildScript.BuildKanoReviewWebGL (no backend is baked in: no -supabaseUrl/-supabaseAnonKey, nothing live is touched), drives the WebGL
 # build in headless Chromium (?smoke=kanostreet) and keeps the screenshots as an artifact (default 7 days; the manual input retention_days overrides it). The assets exist only inside the job; no picture or build is
-# written to the log or uploaded beyond that artifact. Since 2026-11-09 the review also builds the 64 assets of the TRANSPORT KIT (tools/blender/transport_kit, families A, B, C, D) in a separate workspace, stages them with
-# four review scenes (logistics yard, bus terminal, road furniture lineup, roundabout kit: env_*_dry placement files of the same format as the environmental scenes) and takes 16 more pictures of them. The review also builds the five merged-frontage PROTOTYPE assets (kano_kit/frontage.py, a content-side draw-call experiment; the frozen v002 assets are
+# written to the log or uploaded beyond that artifact. Since 2026-11-09 the review also builds the 78 assets of the TRANSPORT KIT (tools/blender/transport_kit, families A, B, C, D, E mosques, F city buildings) in a separate workspace, stages them with
+# six review scenes (logistics yard, bus terminal, road furniture lineup, roundabout kit, mosque family, city row: env_*_dry placement files of the same format as the environmental scenes) and takes 24 more pictures of them; then tools/webgl-kanocity.js drives the two Kano CITY test routes (ng-kano-city-e1, ng-kano-city-f1) in the built game and takes the pictures of the frontage engine's buildings along driven roads (kanocity-sheet.png and kanocity-report.json in the same artifact). The review also builds the five merged-frontage PROTOTYPE assets (kano_kit/frontage.py, a content-side draw-call experiment; the frozen v002 assets are
 # unchanged) and shows the street with them as the "merged" variant, and the game's own draw-call numbers are split into kit and rest (KanoReviewStats).
 name: Blender import into Unity
 on:
@@ -176,7 +176,7 @@ jobs:
           print(f"{len(r)} E4 assets built; failed validation: {bad or 'none'}")
           sys.exit(1 if bad or len(r) != 6 else 0)
           PY
-      - name: Review - build the transport kit (families A logistics, B bus terminals, C road furniture, D roundabout and flyover components; 64 assets) FROM THE CODE in its own workspace (toolchain validation and the 4-material cap must pass for every one)
+      - name: Review - build the transport kit (families A logistics, B bus terminals, C road furniture, D roundabout and flyover components, E mosques, F city buildings; 78 assets) FROM THE CODE in its own workspace (toolchain validation and the 4-material cap must pass for every one)
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws-tk", PYTHONPATH: tools/blender }
         run: |
@@ -187,13 +187,13 @@ jobs:
           bad = [x["id"] for x in r if not x["passed"]]
           for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"), "materials", len(x["stats"].get("materials", [])))
           print(f"{len(r)} transport-kit assets built; failed validation: {bad or 'none'}")
-          sys.exit(1 if bad or len(r) != 64 else 0)
+          sys.exit(1 if bad or len(r) != 78 else 0)
           PY
       - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws", PYTHONPATH: tools/blender, ARO_ENV_KIT: "${{ steps.gate.outputs.env_kit }}" }
         run: python -m kano_kit.stage_unity --out Assets/ThirdParty/ARO
-      - name: Review - stage the transport kit and its four review scenes (logistics yard, bus terminal, road furniture, roundabout kit) next to the other kits (the material lists are merged, nothing staged is replaced)
+      - name: Review - stage the transport kit and its six review scenes (logistics yard, bus terminal, road furniture, roundabout kit, mosque family, city row) next to the other kits (the material lists are merged, nothing staged is replaced)
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws-tk", PYTHONPATH: tools/blender }
         run: python -m transport_kit.stage_unity --out Assets/ThirdParty/ARO
@@ -220,14 +220,20 @@ jobs:
       - name: Review - install Playwright and Chromium
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: |
-          npm install --no-save playwright@1.49.1
+          npm install --no-save playwright@1.49.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
       - name: Review - drive the built game and take one screenshot per view (the numbers come from the game's own [Perf] lines)
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: |
           sudo chown -R "$USER" Builds || true; mkdir -p kano-review
           echo "WebGL build size (E0): $(du -sm Builds/WebGL | cut -f1) MB on disk"; ls -l Builds/WebGL/Build | awk '{print $5, $9}'
-          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top,ref:merged,street1:merged,side:merged,street2:merged,ref:noshadow,ref:shadowsmall,ref:low,street1:low,drive@env_hausa_quarter_dry,aerial@env_hausa_quarter_dry,drive@env_hausa_quarter_wet,aerial@env_hausa_quarter_wet,drive@env_village_dry,aerial@env_village_dry,drive@env_village_wet,aerial@env_village_wet,drive@env_market_street_dry,aerial@env_market_street_dry,drive@env_market_street_wet,aerial@env_market_street_wet,wall@env_hausa_quarter_dry,wall@env_hausa_quarter_wet,ruts@env_hausa_quarter_wet,ruts@env_village_dry,ruts@env_village_wet,potholes@env_market_street_dry,potholes@env_market_street_wet,flood@env_market_street_wet,drive@env_logistics_yard_dry,aerial@env_logistics_yard_dry,docks@env_logistics_yard_dry,yard@env_logistics_yard_dry,drive@env_bus_terminal_dry,aerial@env_bus_terminal_dry,front@env_bus_terminal_dry,close@env_bus_terminal_dry,front@env_road_furniture_dry,aerial@env_road_furniture_dry,signs@env_road_furniture_dry,lights@env_road_furniture_dry,front@env_roundabout_kit_dry,aerial@env_roundabout_kit_dry,kit@env_roundabout_kit_dry,flyover@env_roundabout_kit_dry" || { echo "review script reported failures"; exit 1; }
+          node tools/webgl-kanoreview.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanoreview" "ref,front,side,street1,street2,top,ref:merged,street1:merged,side:merged,street2:merged,ref:noshadow,ref:shadowsmall,ref:low,street1:low,drive@env_hausa_quarter_dry,aerial@env_hausa_quarter_dry,drive@env_hausa_quarter_wet,aerial@env_hausa_quarter_wet,drive@env_village_dry,aerial@env_village_dry,drive@env_village_wet,aerial@env_village_wet,drive@env_market_street_dry,aerial@env_market_street_dry,drive@env_market_street_wet,aerial@env_market_street_wet,wall@env_hausa_quarter_dry,wall@env_hausa_quarter_wet,ruts@env_hausa_quarter_wet,ruts@env_village_dry,ruts@env_village_wet,potholes@env_market_street_dry,potholes@env_market_street_wet,flood@env_market_street_wet,drive@env_logistics_yard_dry,aerial@env_logistics_yard_dry,docks@env_logistics_yard_dry,yard@env_logistics_yard_dry,drive@env_bus_terminal_dry,aerial@env_bus_terminal_dry,front@env_bus_terminal_dry,close@env_bus_terminal_dry,front@env_road_furniture_dry,aerial@env_road_furniture_dry,signs@env_road_furniture_dry,lights@env_road_furniture_dry,front@env_roundabout_kit_dry,aerial@env_roundabout_kit_dry,kit@env_roundabout_kit_dry,flyover@env_roundabout_kit_dry,front@env_kano_mosques_dry,aerial@env_kano_mosques_dry,grand@env_kano_mosques_dry,small@env_kano_mosques_dry,drive@env_kano_city_row_dry,aerial@env_kano_city_row_dry,mosque@env_kano_city_row_dry,monument@env_kano_city_row_dry" || { echo "review script reported failures"; exit 1; }
+        shell: bash {0}
+      - name: Review - the Kano city routes in the running game (frontage engine buildings and mosques along driven roads - single carriageway, commercial road, residential street, arterial, the flyover from the cab in both directions, wide density views)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: |
+          node tools/webgl-kanocity.js --selftest
+          node tools/webgl-kanocity.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanocity" low || { echo "city script reported failures"; exit 1; }
         shell: bash {0}
       - name: Review - the numbers (no pictures are written to this public log)
         if: ${{ always() && steps.gate.outputs.on == 'true' }}

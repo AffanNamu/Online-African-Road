@@ -1,0 +1,858 @@
+{
+ "freeze": "transport_kit_family_e_mosques v001",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-09T10:37:48Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "ce53dc6fcc2deb4fc3c584d2f02c5a9b303385ad",
+  "producerCodeLastChangedIn": "c6d9c430625ca8c54dfe1735369b34093187bc87",
+  "uncommittedChangesUnderToolsBlender": true
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 10,
+ "assets": [
+  {
+   "id": "kano_mosque_grand_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     5410,
+     2168,
+     108
+    ],
+    "sizeM": [
+     46.68,
+     37.94,
+     33.2
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/kano_mosque_grand_a.blend",
+     "bytes": 1523148,
+     "sha256": "05d4cdcfd25e2274bcbc4d9f78029fa610aa0727f985a58b37f2fe0d94076c5f"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/project.json",
+     "bytes": 357,
+     "sha256": "9991f2b2d5218b10107faa7d7fccd3af776ff7f06a68315fa6ddab41e52d63c2"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_a/v001/kano_mosque_grand_a.fbx",
+     "bytes": 170028,
+     "sha256": "9c06f8c422936cdaef93d55463622b1d48f71a335f7f1eec6053e1699d768428"
+    },
+    {
+     "path": "exports/glb/kano_mosque_grand_a/v001/kano_mosque_grand_a.glb",
+     "bytes": 473940,
+     "sha256": "b0e0ccac316c4007b5767fed32fb420c45908766ecffafe639a9cb0473d9ea6f"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_a/v001/kano_mosque_grand_a.manifest.json",
+     "bytes": 4692,
+     "sha256": "cec28d2634409c3e1050230e242cf4d6219a736a8f87f44c78d472bbd4249035"
+    },
+    {
+     "path": "validation/kano_mosque_grand_a/v001.json",
+     "bytes": 1006,
+     "sha256": "25b49d1d67dd21dd9dcdd863c937adff0c91864c541981182f7c78787fbadeed"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "kano_mosque_grand_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     5370,
+     2450,
+     108
+    ],
+    "sizeM": [
+     60.608,
+     39.64,
+     30.02
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/kano_mosque_grand_b.blend",
+     "bytes": 1522097,
+     "sha256": "9db81c8a6627a557004bbc0e0bb62048ef099a78c50e5db635b47d67f646e967"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/project.json",
+     "bytes": 372,
+     "sha256": "302e5ed2fa4116dcb62b94974a594195005b681a33f516545cfcd9044e520dad"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_b/v001/kano_mosque_grand_b.fbx",
+     "bytes": 170124,
+     "sha256": "c57ab0ceab6d5a47ab7c2162b818e2b0a1cac5b23a8f0fadb45262e28b0c18e9"
+    },
+    {
+     "path": "exports/glb/kano_mosque_grand_b/v001/kano_mosque_grand_b.glb",
+     "bytes": 486292,
+     "sha256": "4ee2ce340bd28c1f73730a228d7dc29024c58b531b02975c4d60e19509ddb64c"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_b/v001/kano_mosque_grand_b.manifest.json",
+     "bytes": 4727,
+     "sha256": "3f2cc3933f9f73f071bc3d536b9f4cb1128d4664e6240ec95ef74188ee1182f3"
+    },
+    {
+     "path": "validation/kano_mosque_grand_b/v001.json",
+     "bytes": 1012,
+     "sha256": "db0843221fe8f855fa762f037aeec180c4a2ada7904d2c0ffb61b8bf84f49d4f"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2850,
+     1238,
+     96
+    ],
+    "sizeM": [
+     26.68,
+     25.14,
+     19.42
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/rg_ngn_mosque_medium_a.blend",
+     "bytes": 1479357,
+     "sha256": "eb62d6b3765c35a592c5e0e98a213ff1f3dc7b14720f0e2d5ef6951dbd812198"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/project.json",
+     "bytes": 307,
+     "sha256": "9e8820b5ea5410ae558ee029b7f3718b50826a7986448d6651a1ea3b7c23ee08"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_a/v001/rg_ngn_mosque_medium_a.fbx",
+     "bytes": 106044,
+     "sha256": "227618cb5ed8d0669a87d2f083d14d42fc75eca0216292a533a705d7e599ad32"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_a/v001/rg_ngn_mosque_medium_a.glb",
+     "bytes": 268220,
+     "sha256": "04861593c8d812d3e74a72f8e5f0eb19ded02616bada5c68f0e27b5eb10782d2"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_a/v001/rg_ngn_mosque_medium_a.manifest.json",
+     "bytes": 4042,
+     "sha256": "369ad372d658df7370f60a7ab14882a4f2925674dbe9359c5ee4fe22fc5a7205"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_a/v001.json",
+     "bytes": 1016,
+     "sha256": "bdaaea4189da80f62139b205c4cf4a5b3d6787c07c324bc1656e29a291deb748"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2904,
+     1444,
+     36
+    ],
+    "sizeM": [
+     30.868,
+     23.14,
+     20.48
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/rg_ngn_mosque_medium_b.blend",
+     "bytes": 1479274,
+     "sha256": "cd93aef2d5a9cc86a91091cc5ae77b29b2409097fe4485e637444bbe05c04d16"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/project.json",
+     "bytes": 312,
+     "sha256": "b06859d43a6fa23527487f4edd925a62cc86870f30c089054c162fc8e34a4fc3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_b/v001/rg_ngn_mosque_medium_b.fbx",
+     "bytes": 106860,
+     "sha256": "4472f438a08a345c634f24ade0dd61fc27cb8292d1feee4ced023b740d28f9b0"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_b/v001/rg_ngn_mosque_medium_b.glb",
+     "bytes": 276540,
+     "sha256": "6620cd7f35b77ce9447c219f05a12f710df36978679b929253a84da424c70965"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_b/v001/rg_ngn_mosque_medium_b.manifest.json",
+     "bytes": 4050,
+     "sha256": "2ee05fd32d7677ef6d79c1436de7e21c99ce9f767940a85f9b8bc2a6dac7832a"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_b/v001.json",
+     "bytes": 1018,
+     "sha256": "f499d4e397e9843378f5a03eea2843a7ad5c5d05157be7e3eeea65d5379dca6c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_c",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     3300,
+     1440,
+     96
+    ],
+    "sizeM": [
+     28.68,
+     26.836,
+     19.42
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/rg_ngn_mosque_medium_c.blend",
+     "bytes": 1488067,
+     "sha256": "9a7c824945fd446ab12fcebd720e8436a35574a20c0605783f793d933103e1ef"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/project.json",
+     "bytes": 317,
+     "sha256": "552c434fa70e5867979a9c2287ec4710abd11b3f77eb2a17404e712ee86ebbae"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_c/v001/rg_ngn_mosque_medium_c.fbx",
+     "bytes": 117228,
+     "sha256": "bd41ec8f3b3341e7eb61afa24427835110f1f8f202117ccaa7c2593d9a31b9fa"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_c/v001/rg_ngn_mosque_medium_c.glb",
+     "bytes": 294032,
+     "sha256": "f09aaf19edabad11ed5cf6bf1ce0505e3a4db339bdab775b3bb37afa4ab40c5f"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_c/v001/rg_ngn_mosque_medium_c.manifest.json",
+     "bytes": 4069,
+     "sha256": "77f6713301be13efc6cccb83fc0bcae998ee19ee017e5b76a8e0304437b27519"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_c/v001.json",
+     "bytes": 1019,
+     "sha256": "57bfe8192927d302a8876f04eb25ec82679abeaa532b17eda13c6f508c2e5b74"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1774,
+     780,
+     36
+    ],
+    "sizeM": [
+     18.68,
+     15.64,
+     13.06
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/rg_ngn_mosque_small_a.blend",
+     "bytes": 1461826,
+     "sha256": "fe300a0ae9249ef8aac214a55284c0047dade50ca404df982d7aaeadeaf31b86"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/project.json",
+     "bytes": 296,
+     "sha256": "06ad64e88197cf485be2ad6bdf9f0c80e199cc62ddb89c2a6a4c7bffdc7b4222"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_a/v001/rg_ngn_mosque_small_a.fbx",
+     "bytes": 80012,
+     "sha256": "e763bae2907211b9ff3de0a19427bcdb3b99c704704895bf0ea4aba358471787"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_a/v001/rg_ngn_mosque_small_a.glb",
+     "bytes": 170456,
+     "sha256": "97d3b4e9a7420b79b25fff1c5a704573c0c41e1e79139dbe8cf7516bc779fbff"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_a/v001/rg_ngn_mosque_small_a.manifest.json",
+     "bytes": 3811,
+     "sha256": "6f9abee8cf461a7d843c3060525f9fe1045558a71da307dce4d71d0b4624a81a"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_a/v001.json",
+     "bytes": 1007,
+     "sha256": "d649fc745635797ff3b8cc83c1b458f2d6cd688a0c374fd67199ec2c34d7efe2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1768,
+     906,
+     36
+    ],
+    "sizeM": [
+     20.68,
+     15.64,
+     12.0
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/rg_ngn_mosque_small_b.blend",
+     "bytes": 1459495,
+     "sha256": "f862238a43e37943aa0e3745bf78a962895dfa8478b418e8deb9e26c447471bf"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/project.json",
+     "bytes": 292,
+     "sha256": "9a5abe2b9f545c864642e602fe6e5b1d5c0912f928450dd08982b2571fc21ca7"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_b/v001/rg_ngn_mosque_small_b.fbx",
+     "bytes": 79596,
+     "sha256": "5ef51a4300bd5466562490694078be3214add37f6ddc18b1626283105a13fd01"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_b/v001/rg_ngn_mosque_small_b.glb",
+     "bytes": 186172,
+     "sha256": "31fdee8adc079f443eedda228fa2e7adf5c63777c474e3d4a440eb7da059e8de"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_b/v001/rg_ngn_mosque_small_b.manifest.json",
+     "bytes": 3801,
+     "sha256": "89b04c546667a96a4d532886b2c7da2b2742df07545ee28417f04bc105232f6d"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_b/v001.json",
+     "bytes": 1006,
+     "sha256": "7e616ea16c233706ee4347bc78e3f206cb224f80cf5951880b81515881e17ee8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_c",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1526,
+     728,
+     36
+    ],
+    "sizeM": [
+     14.68,
+     11.84,
+     9.88
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/rg_ngn_mosque_small_c.blend",
+     "bytes": 1457475,
+     "sha256": "38b5259fff21d1da2ccfaa3038af46f10346614e0678572f0f5ffbfb943b1156"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/project.json",
+     "bytes": 307,
+     "sha256": "ad47ea955cd3fc04a1f83440abc9ea7e2cbfdafd0dc4ba82eb577b2e5164a687"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_c/v001/rg_ngn_mosque_small_c.fbx",
+     "bytes": 74732,
+     "sha256": "0e2a444fbc207035c63cd8e1f11a005d65b8cf6fa2712cdacd2d8331a4c097e3"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_c/v001/rg_ngn_mosque_small_c.glb",
+     "bytes": 154460,
+     "sha256": "c456e0aa232608368a9fd580a43548629d48db085844ac3b5c0031c233991e1e"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_c/v001/rg_ngn_mosque_small_c.manifest.json",
+     "bytes": 3829,
+     "sha256": "206867ae92c58c560bfad88b082dc50c555f2cb5dc9d7771ba57185fce415ef5"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_c/v001.json",
+     "bytes": 1004,
+     "sha256": "365a5e50f7f58def86f2528dcda78ae8d73064d51fe9d0dda640c0c7d7c860a6"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v001/T_tk_paintext2_Palette.png",
+     "bytes": 802,
+     "sha256": "83c5d094a136774e1f854d8e7384e54d7453552cd86600bacb04422706abe1a5"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1358,
+     472,
+     36
+    ],
+    "sizeM": [
+     26.0,
+     21.15,
+     15.9
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/rg_ngn_mosque_traditional_a.blend",
+     "bytes": 1452040,
+     "sha256": "bfc23b81f604f91d5433ceffb15f3db4f0ffd43f9dc72189e8085ade6556e51d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/project.json",
+     "bytes": 370,
+     "sha256": "0cc51d6660ad68bb543fe40f8853bdb132be44f1cf40aa754ce179749fe3a76b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_a/v001/rg_ngn_mosque_traditional_a.fbx",
+     "bytes": 67788,
+     "sha256": "a92a860b1a05294075df883eaf2de65885e8ed0c5ed5cdf8edd9244c949a9481"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_traditional_a/v001/rg_ngn_mosque_traditional_a.glb",
+     "bytes": 131688,
+     "sha256": "211c7d57435f7bde57426bb3d3364bdaad26ce74afe0afd94dcdb760e74f69ca"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_a/v001/rg_ngn_mosque_traditional_a.manifest.json",
+     "bytes": 4094,
+     "sha256": "ace7c0220497996bd2bb5e5e2f546855f62b63610c7d308a4753419ebf1ac566"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_traditional_a/v001.json",
+     "bytes": 1020,
+     "sha256": "21c94016f6a6316d96fe71a4ab3c059e7d1af43923600192744e07e28e1e1af3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v001/T_tk_paintext_Palette.png",
+     "bytes": 778,
+     "sha256": "89c3462913a3af53bf83be1d2f58a28f116d061d8326699188c635d6f26941ea"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     730,
+     234,
+     36
+    ],
+    "sizeM": [
+     17.0,
+     14.55,
+     11.4
+    ],
+    "materials": [
+     "M_tk_paint",
+     "M_tk_paint_ext"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/rg_ngn_mosque_traditional_b.blend",
+     "bytes": 1442685,
+     "sha256": "9e1459acf6aa0e57fab49d0c333b7e76e0cbaf48a8432b92d97ef24a5de1ad2c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/project.json",
+     "bytes": 343,
+     "sha256": "e6461fec6b8684fa279da1ee6df248468b2f2d661a82c2aaaa93b20e33785e52"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_b/v001/rg_ngn_mosque_traditional_b.fbx",
+     "bytes": 53836,
+     "sha256": "82ae787cef79078d3527a88ee53a85399d7b959fd2b8d8f8870578a47bba8206"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_traditional_b/v001/rg_ngn_mosque_traditional_b.glb",
+     "bytes": 74256,
+     "sha256": "18b732fff49fb23d7b07a3b99c8ccad2363c76b19a0e9a7ea5621351ee24f3f1"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_b/v001/rg_ngn_mosque_traditional_b.manifest.json",
+     "bytes": 4028,
+     "sha256": "d061ed9b8ac50f112f0a2f23f48a1189abea6575e172912eef5b73a9d3f88b8a"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_traditional_b/v001.json",
+     "bytes": 1014,
+     "sha256": "5d5c14167b1463e8fdec7deadaae6d43d5bada32ba27c4295868011c0592d384"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v001/T_tk_paintext_Palette.png",
+     "bytes": 778,
+     "sha256": "89c3462913a3af53bf83be1d2f58a28f116d061d8326699188c635d6f26941ea"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}

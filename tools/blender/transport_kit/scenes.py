@@ -124,8 +124,32 @@ def roundabout_kit(b: dict) -> Scene:
     return s
 
 
+def kano_mosques(b: dict) -> Scene:
+    """The mosque family of the Kano densification directive laid out for review: three rows seen from the front (the compound walls face the camera): the small mosques and the small traditional one, the medium ones and the larger
+    traditional one, and the two grand mosques at the back. Generic designs (owner decision C1): none of them is a real mosque."""
+    s = Scene("kano_mosques", "grass_green", "mosque family from family E, in three rows (review composition, not game content)", b)
+    for aid, x in (("rg_ngn_mosque_small_c", -30.0), ("rg_ngn_mosque_small_a", -8.0), ("rg_ngn_mosque_small_b", 16.0), ("rg_ngn_mosque_traditional_b", 40.0)): s.add(aid, x, 0.0, 0, tag="small")
+    for aid, x in (("rg_ngn_mosque_medium_a", -40.0), ("rg_ngn_mosque_medium_b", -8.0), ("rg_ngn_mosque_medium_c", 24.0), ("rg_ngn_mosque_traditional_a", 54.0)): s.add(aid, x, 36.0, 0, tag="medium")
+    s.add("kano_mosque_grand_a", -26.0, 88.0, 0, tag="grand"); s.add("kano_mosque_grand_b", 34.0, 88.0, 0, tag="grand")
+    s.view("front", (10.0, -45.0, 6.0), (10.0, 50.0, 8.0), 28); s.view("aerial", (10.0, -60.0, 90.0), (10.0, 45.0, 0.0), 30)
+    s.view("grand", (10.0, 56.0, 4.0), (-10.0, 88.0, 12.0), 30); s.view("small", (4.0, -14.0, 2.2), (4.0, 0.0, 5.0), 32)
+    return s
+
+
+def kano_city_row(b: dict) -> Scene:
+    """A city street composed of the densification assets: on the right a shop-house parade, an office block and an apartment block, on the left a medium mosque, a small mosque and a second parade, and the twin-arch monument
+    standing at the end of the street. Buildings face the street (x = 0, along +Y). Review composition, not game content: the game places buildings with the frontage engine, not from this file."""
+    s = Scene("kano_city_row", "asphalt_worn", "city street from families E and F (review composition, not game content)", b)
+    s.add("kano_shopping_parade_a", 24.0, 0.0, -90, tag="parade"); s.add("kano_office_block_a", 25.0, 36.0, -90, tag="office"); s.add("kano_midrise_apartments_a", 23.0, 64.0, -90, tag="apartments")
+    s.add("rg_ngn_mosque_medium_a", -27.0, 10.0, 90, tag="mosque"); s.add("rg_ngn_mosque_small_b", -23.0, 45.0, 90, tag="mosque"); s.add("kano_shopping_parade_a", -23.0, 75.0, 90, tag="parade")
+    s.add("lmk_kano_roundabout_monument_b", 0.0, 120.0, 0, tag="monument")
+    s.view("drive", (3.0, -35.0, 2.4), (3.0, 80.0, 8.0), 24); s.view("aerial", (-50.0, -50.0, 70.0), (0.0, 60.0, 0.0), 30)
+    s.view("mosque", (-5.0, -5.0, 2.4), (-27.0, 10.0, 8.0), 30); s.view("monument", (0.0, 95.0, 2.5), (0.0, 120.0, 12.0), 28)
+    return s
+
+
 def all_scenes(bounds: dict | None = None) -> list[Scene]:
-    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b), roundabout_kit(b)]
+    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b), roundabout_kit(b), kano_mosques(b), kano_city_row(b)]
 
 
 def asset_ids(bounds: dict | None = None) -> set:

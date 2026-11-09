@@ -1,0 +1,366 @@
+{
+ "freeze": "transport_kit_family_f_city_buildings v001",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-09T10:37:48Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "ce53dc6fcc2deb4fc3c584d2f02c5a9b303385ad",
+  "producerCodeLastChangedIn": "c6d9c430625ca8c54dfe1735369b34093187bc87",
+  "uncommittedChangesUnderToolsBlender": true
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 4,
+ "assets": [
+  {
+   "id": "kano_shopping_parade_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1300,
+     214,
+     24
+    ],
+    "sizeM": [
+     36.5,
+     16.9,
+     18.1
+    ],
+    "materials": [
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/kano_shopping_parade_a.blend",
+     "bytes": 1451898,
+     "sha256": "b6fbf6bd4bb80744f818e25aafccd975185a77bb2630f5f9a0c1b1087d4e6abb"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/project.json",
+     "bytes": 357,
+     "sha256": "d7ac6fd295b496734da21273825d885bfd72dc7c0eafdda561ce45ebf371210e"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_parade_a/v001/kano_shopping_parade_a.fbx",
+     "bytes": 60460,
+     "sha256": "57e3d56a3c8f811bf7110716c4d9ff2e7973abfb3eedc310d4f6b2f879e88b5d"
+    },
+    {
+     "path": "exports/glb/kano_shopping_parade_a/v001/kano_shopping_parade_a.glb",
+     "bytes": 118684,
+     "sha256": "b6a5c9d9824dac451bebe75fcfa751f3be6669ef07e266aa796d1265c0053d78"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_parade_a/v001/kano_shopping_parade_a.manifest.json",
+     "bytes": 4578,
+     "sha256": "b11c8ce8391996244be5d11ecd8f3657e86482f69771d739e25b1ed38651bfbc"
+    },
+    {
+     "path": "validation/kano_shopping_parade_a/v001.json",
+     "bytes": 1019,
+     "sha256": "ef04750f2346760444db453d68fab0c9ecb655398c3cf5a019e88d7cf98b5421"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_office_block_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     916,
+     268,
+     24
+    ],
+    "sizeM": [
+     22.56,
+     21.2,
+     34.6
+    ],
+    "materials": [
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/kano_office_block_a.blend",
+     "bytes": 1447184,
+     "sha256": "28cbccf5f00888d35e377d55f7ffeb5df968886bdde2bf2037a938835daeb34b"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/project.json",
+     "bytes": 338,
+     "sha256": "ecb90c422636d8ba036ec75a754b8da6974f99b1201eca40752596dba53ab1d3"
+    },
+    {
+     "path": "exports/fbx/kano_office_block_a/v001/kano_office_block_a.fbx",
+     "bytes": 57180,
+     "sha256": "aa7225f91a62d40d10436d1e711f27665368e94ceebb5218f25853dd0af642a6"
+    },
+    {
+     "path": "exports/glb/kano_office_block_a/v001/kano_office_block_a.glb",
+     "bytes": 95272,
+     "sha256": "f886d7e3f1373b45c9cd0fc9dc76f2c2baaf1d91d4f998d01c62641c998912b8"
+    },
+    {
+     "path": "exports/fbx/kano_office_block_a/v001/kano_office_block_a.manifest.json",
+     "bytes": 4339,
+     "sha256": "ae650879342fc071bbeac1e48ca6fefcac9e3536fc9afaffa65cf36f8532d3b5"
+    },
+    {
+     "path": "validation/kano_office_block_a/v001.json",
+     "bytes": 1011,
+     "sha256": "a8f0a83c11a9a239bd7d52e591fcfb1b022bae3042a8533e3dd39e735b0af74a"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_midrise_apartments_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1226,
+     484,
+     12
+    ],
+    "sizeM": [
+     24.3,
+     17.9,
+     19.2
+    ],
+    "materials": [
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/kano_midrise_apartments_a.blend",
+     "bytes": 1451738,
+     "sha256": "2b7cf8874bf998bee88730d1ab290498e962a8eb1ac384c54e71c36500972d00"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/project.json",
+     "bytes": 337,
+     "sha256": "13814fbe0f722647e52d7925c3ee7ef5386a6243ae1d08a8b29310e23c46d5b3"
+    },
+    {
+     "path": "exports/fbx/kano_midrise_apartments_a/v001/kano_midrise_apartments_a.fbx",
+     "bytes": 63276,
+     "sha256": "9cf29d49443993538770bd01f6a04cea644a025688bca6c57c62c64c98b22dea"
+    },
+    {
+     "path": "exports/glb/kano_midrise_apartments_a/v001/kano_midrise_apartments_a.glb",
+     "bytes": 131628,
+     "sha256": "0befbf8c943bd0baabf96218eb8f9acfccf2533263ab2e869df9b9737184d2d9"
+    },
+    {
+     "path": "exports/fbx/kano_midrise_apartments_a/v001/kano_midrise_apartments_a.manifest.json",
+     "bytes": 4207,
+     "sha256": "543b3960a14d58b6788864cc03496da1ca6536bd122b2a0ec5b8fc132de68cd9"
+    },
+    {
+     "path": "validation/kano_midrise_apartments_a/v001.json",
+     "bytes": 1028,
+     "sha256": "9ae97b7b94799801caa3133f14983bf3476667b25d8d33ae809ff52f32598c30"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "lmk_kano_roundabout_monument_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     474,
+     222,
+     36
+    ],
+    "sizeM": [
+     12.0,
+     12.0,
+     24.5
+    ],
+    "materials": [
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/lmk_kano_roundabout_monument_b.blend",
+     "bytes": 1438371,
+     "sha256": "e2499f153560bdfe1ac361472d14bf3271a90a516c059cb8d40c2c77f6598f9c"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/project.json",
+     "bytes": 349,
+     "sha256": "5d6d5b293894fff90c9ca4bef730a46f0b7b22fe8649c460ed6b6509aaff33f9"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_b/v001/lmk_kano_roundabout_monument_b.fbx",
+     "bytes": 50956,
+     "sha256": "c5450b8e6c579f87c78e87882bfe39af72faafc82a4abbe9afb526963c7b7000"
+    },
+    {
+     "path": "exports/glb/lmk_kano_roundabout_monument_b/v001/lmk_kano_roundabout_monument_b.glb",
+     "bytes": 62052,
+     "sha256": "06f3cf44228cae277f7b7023e45a6081d7159c66e43e2ed83743576fa2a0a68b"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_b/v001/lmk_kano_roundabout_monument_b.manifest.json",
+     "bytes": 4302,
+     "sha256": "c1a1b8e5f5b1d25a5e2341dcd3574945dc5d09537a17b9470317d9801f58d405"
+    },
+    {
+     "path": "validation/lmk_kano_roundabout_monument_b/v001.json",
+     "bytes": 995,
+     "sha256": "96a4ee93339c254818269c43fb83508f0712d9f1ae1d468c6f70d39a02417ecc"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}
