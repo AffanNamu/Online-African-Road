@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://*.supabase.co http://127.0.0.1:* http://localhost:*; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Advertise on African Roads Online</title>
+<link rel="stylesheet" href="advertise.css">
+</head>
+<body>
+<main>
+  <h1>Advertise on African Roads Online</h1>
+  <p class="lead">Put your business on the roadside billboards of a driving game. Tell us about your business and what you have in mind. A person on our team replies to you by e-mail or phone. <strong>Nothing is published automatically, and nothing is charged through this form.</strong></p>
+  <form id="enquiry" novalidate>
+    <div class="row"><div><label for="business_name">Business name *</label><input id="business_name" maxlength="120" required autocomplete="organization"></div>
+      <div><label for="contact_name">Contact person *</label><input id="contact_name" maxlength="80" required autocomplete="name"></div></div>
+    <div class="row"><div><label for="email">E-mail *</label><input id="email" type="email" maxlength="120" required autocomplete="email"></div>
+      <div><label for="phone">Phone</label><input id="phone" type="tel" maxlength="24" autocomplete="tel" placeholder="+234..."></div>
+      <div><label for="whatsapp">WhatsApp</label><input id="whatsapp" type="tel" maxlength="24" placeholder="+234..."></div></div>
+    <p class="hint">Give a phone or a WhatsApp number.</p>
+    <div class="row"><div><label for="category">Business category *</label><select id="category" required></select></div>
+      <div><label for="preferred_city">Preferred city or area</label><input id="preferred_city" maxlength="60" placeholder="for example Kano"></div></div>
+    <div class="row"><div><label for="preferred_placement">Preferred placement</label><select id="preferred_placement"></select></div>
+      <div><label for="duration_days">How long</label><select id="duration_days"></select></div></div>
+    <label for="description">About your business and your advertisement *</label><textarea id="description" rows="4" maxlength="1000" required></textarea>
+    <label for="message">Anything else</label><textarea id="message" rows="3" maxlength="1000"></textarea>
+    <label for="artwork">Artwork, if you have it (JPEG, PNG or WebP, at most 300 KB)</label><input id="artwork" type="file" accept="image/jpeg,image/png,image/webp">
+    <div class="trap" aria-hidden="true"><label for="website_url">Leave this empty</label><input id="website_url" tabindex="-1" autocomplete="off"></div>
+    <label class="check"><input id="rights" type="checkbox"> I confirm that I have the right to use the brand names, logos and artwork I am sending. *</label>
+    <details><summary>What we cannot advertise</summary><p>We do not accept gambling, tobacco or nicotine products, alcohol, adult content, weapons, scams or misleading claims, or political advertising. Advertisements are labelled <em>Sponsored</em> in the game. Our team reviews every enquiry and every image before anything is shown to players.</p></details>
+    <p id="error" class="err" role="alert"></p>
+    <button id="send" type="submit">Send enquiry</button>
+  </form>
+  <div id="done" class="ok" hidden role="status"><h2>Thank you</h2><p>We received your enquiry. Your reference is <strong id="ref"></strong>. We will contact you using the details you gave.</p></div>
+  <p class="muted">Your contact details are used only to reply to you about advertising.</p>
+</main>
+<script src="config.js"></script>
+<script src="advertise.js"></script>
+</body>
+</html>
