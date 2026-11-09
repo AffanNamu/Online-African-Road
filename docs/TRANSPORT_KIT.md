@@ -1,4 +1,4 @@
-# Transport kit: asset families A, B, C and D (built 2026-11-09)
+# Transport kit: asset families A, B, C, D, E and F (built 2026-11-09)
 
 **Authorised by the owner on 2026-11-09** (asset families A logistics, B bus terminals, C road furniture; reusable assets first; family D, which "follows E5", was built in the same session as a reuse-first subset (section 3b); GLOBAL / REGIONAL / CITY_SPECIFIC / LANDMARK classes kept; family D follows E5; family E on hold, see `KANO_FAMILY_E_BREAKDOWN.md`). The approved rows are in `KANO_TRANSPORT_ASSET_BREAKDOWN.md`; this document says what was actually built and what is and is not proven.
 
@@ -6,9 +6,9 @@
 
 | Level | Result |
 |---|---|
-| 1. Implemented | **64 asset ids** (family A 21, B 8, C 23, D 12) built by parametric Blender code (`tools/blender/transport_kit/`), four review scenes (`scenes.py`), Unity staging (`stage_unity.py`), the review-workflow steps. All 64 export to FBX and GLB with a manifest. The `aro_bus_bay_marking_set` row is road-plate data (E2 marks), not a mesh: no model was made. |
-| 2. Automated tests passed | `tests/test_transport_kit.py` (every asset passes the toolchain validator, at most 4 materials, three strictly decreasing LODs with the last at most 10% of LOD0, the game's own triangle budgets, the breakdown's expected triangle counts (no row exceeded by more than 25%), sizes against the approved rows apart from the documented deviations, light heads and text faces on the model, colliders on the model, classification prefixes, no brand names, vehicle clearances) and `tests/test_transport_scenes.py` (the review scenes): **94 kit and scene tests pass**; the whole Blender suite passes (280 tests, run locally after family D was added). |
-| 3. Imported into Unity | **pending.** The review workflow (`blender-unity.yml`, a `[kano-review]` commit) now builds the 52 assets from the code, stages them with the three scenes and takes 12 pictures; **it has not been run**. The Unity licence queue was busy (CI runs 325 and 326) when this was written. |
+| 1. Implemented | **78 asset ids** (family A 21, B 8, C 23, D 12, **E 10 mosques, F 4 city buildings**, sections 3e and 3f) built by parametric Blender code (`tools/blender/transport_kit/`), four review scenes (`scenes.py`), Unity staging (`stage_unity.py`), the review-workflow steps. All 64 export to FBX and GLB with a manifest. The `aro_bus_bay_marking_set` row is road-plate data (E2 marks), not a mesh: no model was made. |
+| 2. Automated tests passed | `tests/test_transport_kit.py` (every asset passes the toolchain validator, at most 4 materials, three strictly decreasing LODs with the last at most 10% of LOD0, the game's own triangle budgets, the breakdown's expected triangle counts (no row exceeded by more than 25%), sizes against the approved rows apart from the documented deviations, light heads and text faces on the model, colliders on the model, classification prefixes, no brand names, vehicle clearances) and `tests/test_transport_scenes.py` (the review scenes): **94 kit and scene tests pass for families A to D; with families E and F the kit tests are 192** (`test_mosque_family.py` 66, `test_city_family.py` 18, the scene tests 22); **the whole Blender suite passes: 384 tests** (run locally on 2026-11-09 after families E and F). |
+| 3. Imported into Unity | **families A to D: yes** (review run 42591610483 on commit d320e1e: all 64 assets built from the code, validated, staged, the game built with them in Unity 6 and 16 pictures taken; the job concluded success). **The pictures were not read**: the artifact's storage host (`productionresultssa11.blob.core.windows.net`) is not on this environment's allow-list and the approval to add it could not be shown on the owner's app. **Families E and F: pending** (they were added after that run; the next `[kano-review]` run builds all 78 and the six review scenes). |
 | 4. Verified in actual gameplay | **no.** Nothing in the game places these assets. The shipped `prop_catalog.json` and the routes are unchanged. |
 | 5. Visually reviewed | **no.** I (the agent) looked at Blender renders of the three scenes and of single assets (Cycles, CPU) and corrected the one thing they showed (fully metallic steel rendering black); that is not the owner's review. **Nothing is approved; `production_approved` is the owner's alone.** |
 
@@ -177,3 +177,34 @@ The approved breakdown (`KANO_TRANSPORT_ASSET_BREAKDOWN.md`) was written from th
 * **Not merged into the game**: the catalogue entries, routes that use the assets, replacing the E1 corridor's placeholder props (`warehouse`, `fuel_station`, `bus_stop`).
 * Night look of the lit assets (heads declared, nothing seen at night), the colour and size of signs against real Nigerian sign standards (generic shapes only; **no regulatory accuracy is claimed**), and the use of the aerial concept references R-009, R-013 to R-015 and R-022 (generated, not Kano-verified) are open.
 * Decisions for the owner: whether the first-pass steel (0.55 metallic) and palette colours are acceptable once seen in the game; whether the kit's catalogue may be merged after the review.
+
+## 8. Families E and F: the mosque family and the city buildings (owner directive "Kano city densification and mosque integration", 2026-11-09)
+
+### 3e. Family E: ten mosques (`transport_kit/mosque.py`, `tests/test_mosque_family.py`: 66 tests)
+
+Genuine 3D geometry, none a model of a real mosque (**owner decision C1: the Kano Central Mosque is a real landmark, blocked on M-11, and is not touched**; no id contains central, great, emir or palace; the tests refuse it). Every asset includes its forecourt (red pavers) and its **railed boundary wall along the road** (capped piers with lanterns, green railing, a gate gap), so a placed mosque belongs to its street; front at -Y, origin at the footprint centre, three LODs, two palette materials. References: R-037, R-038 (large mosque beside a divided road: cream stone, green ribbed dome on a drum of windows, four minarets, pointed-arch entrance, railed wall), R-039 (skyline), R-009; the traditional pair R-024 to R-029.
+
+| Id | Class | Footprint | Height | LOD0 / LOD1 / LOD2 triangles | What it is |
+|---|---|---|---|---|---|
+| `kano_mosque_grand_a` | CITY_SPECIFIC, generic | 46.7 x 37.9 | 33.2 | 5,410 / 2,168 / 108 | after R-037: tall pointed iwan, large ribbed green dome on a windowed drum, two tall front minarets and two smaller rear ones, wings with arched windows and green corner domes |
+| `kano_mosque_grand_b` | CITY_SPECIFIC, generic | 60.6 x 39.6 | 30.0 | 5,370 / 2,450 / 108 | after R-038: wide symmetrical façade, central iwan with steps, green dome, four minarets (two octagonal), long arcades, wing domes |
+| `rg_ngn_mosque_medium_a / b / c` | REGIONAL, generic | 26.7 x 25.1 / 30.9 x 23.1 / 28.7 x 26.8 | 19.4 / 20.5 / 19.4 | 2,850 / 2,904 / 3,300 (LOD0) | a domed hall with two minarets; an arcaded flat-roofed hall with three small domes and one octagonal minaret; a pointed dome with corner domes and twin rear minarets |
+| `rg_ngn_mosque_small_a / b / c` | REGIONAL, generic | 18.7 x 15.6 / 20.7 x 15.6 / 14.7 x 11.8 | 13.1 / 12.0 / 9.9 | 1,774 / 1,768 / 1,526 (LOD0) | compact halls with a small dome or a flat roof, a porch, a short minaret, a low wall |
+| `rg_ngn_mosque_traditional_a / b` | REGIONAL, **flagged interpretation** | 26.0 x 21.2 / 17.0 x 14.6 | 15.9 / 11.4 | 1,358 / 730 (LOD0) | earth (kasa) render, battered walls, corner pinnacles, relief panels, a tapering stepped minaret, a decorated gateway: Hausa-inspired from documentary sources, no licensed photograph (M-01 partly open), every proportion a design choice |
+
+New palette `tk_paint_ext2` (ivory stone, dome green, gold trim, railing green, red pavers) so the staged palettes stay byte for byte. Colliders: the building, each minaret and the road-side wall. The planned registry ids `kano_neighbourhood_mosque_a` (M-03) and `lmk_kano_great_mosque` (M-11) are **not replaced** (the medium and small mosques list the first under `overlapsPlanned`; the owner decides which id the game uses).
+
+### 3f. Family F: city buildings and the monument after R-034 (`transport_kit/city.py`, `tests/test_city_family.py`: 18 tests)
+
+| Id | Footprint | Height | LOD0 triangles | What it is |
+|---|---|---|---|---|
+| `kano_shopping_parade_a` | 36.5 x 16.9 | 18.1 | 1,300 | four-storey shop-house parade: an arcade with nine shutter shopfronts, three floors of windows with sunshades, roof tanks; **blank sign bands** (no brand, no billboard text) |
+| `kano_office_block_a` | 22.6 x 21.2 | 34.6 | 916 | seven-storey office block: concrete frame with glazed bands, a glass lobby with a canopy, plant enclosure and mast |
+| `kano_midrise_apartments_a` | 24.3 x 17.9 | 19.2 | 1,226 | five-storey residential block with a balcony on every floor, shutters on the ground floor, a rear stair core |
+| `lmk_kano_roundabout_monument_b` | 12.0 x 12.0 | 24.5 | 474 | **fictional** civic monument after R-034: two tall crossing arches on a dark plinth with blank lettering bands (the game draws the name); no real Kano monument is claimed. The shaft monument `_a` of family D is kept as a second design. |
+
+Preview renders (Blender, Cycles, CPU) were looked at by the agent: they showed that the collision boxes hid the walls and minarets (preview artefact, fixed: collision boxes are hidden in preview renders), four coplanar overlaps, two zero-thickness iwans (found by the validator) and an over-budget triangle count (the grand mosques were 7,498 and 8,050 triangles and were cut to 5,410 and 5,370). That is not a review by the owner.
+
+### 3g. Staging and review
+
+Staged into ARO-CONTENT branch `assets/transport-kit-v1` (commit cc8f426, 14 assets, registry validator and its 52 tests pass, nothing marked imported, reviewed or approved). Freeze manifests: `docs/kano/TRANSPORT_KIT_E.freeze.json`, `TRANSPORT_KIT_F.freeze.json`. Review scenes `env_kano_mosques_dry` (three rows: small, medium, grand) and `env_kano_city_row_dry` (a street of parades, an office block, apartments, two mosques and the monument). Placement of these assets along roads is the frontage engine: `KANO_CITY_FRONTAGE.md`.
