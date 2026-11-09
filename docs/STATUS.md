@@ -1,4 +1,16 @@
-# Status (updated 2026-10-21; earlier note: backend foundation written and verified on local Postgres; its CI run (api-e2e, Unity compile, WebGL E2E) is pending, rows marked LOCAL below)
+# Status
+
+## 2026-11-09 (owner decisions executed in one session; read this block first, the older table below is from 2026-10-21)
+
+| Area | State (levels: 1 implemented, 2 automated tests, 3 imported into Unity, 4 verified in gameplay, 5 visually reviewed) |
+|---|---|
+| **Road engine E5** (seven roundabout designs, flagship interchange F1 with independently drivable upper and lower roads, ramps; `docs/ROAD_ENGINE_E5.md`) | Level 1 and 2: **1,368 .NET tests pass**, the golden master of the existing routes is unchanged, 568 swept-path checks (car, light truck, medium truck, bus) on the isolated test routes `ng-kano-e5-roundabouts` and `ng-kano-e5-f1`. Level 3: **yes** (CI run 325: Unity tests and the WebGL build pass). **Automated drive in the real build: 74 of 74 checks** (bus over the F1 deck, truck under it, both ramps, four roundabouts, the vehicle stayed within 0.02 to 0.23 m of its lane, on the right level). Not a person's play; the camera under the deck, a real GPU and multiplayer are unverified. **Level 5: no.** Isolated routes only: **nothing connected to the production Kano network**. No mud, flooding or seasonal physics. |
+| **Advertising A1 to A5** (`docs/ADVERTISING_SYSTEM.md`) | Level 1 and 2 (database suite 53, structural guards, 44 of 45 mutants killed, API contract, admin and public-form checks, 15 game-side tests). Level 3 pending (CI). **Level 4 and 5: no. Not applied to any Supabase project** (a deliberate owner step); no payment provider; no cross-session tracking. |
+| **Transport kit** (families A logistics, B bus terminals, C road furniture; `docs/TRANSPORT_KIT.md`) | Level 1 and 2: 52 assets built and exported, validated, at most 4 materials each, 78 kit tests. Level 3 pending: the `[kano-review]` run is wired (three review scenes) but not run. **Level 4 and 5: no; the catalogue is not merged into the game**; nothing approved. Family D follows E5 (not started); **Family E on hold** (`docs/KANO_FAMILY_E_BREAKDOWN.md`). |
+
+---
+
+# Earlier status (updated 2026-10-21; earlier note: backend foundation written and verified on local Postgres; its CI run (api-e2e, Unity compile, WebGL E2E) is pending, rows marked LOCAL below)
 
 **Everything that is a placeholder, a stand-in, authored-for-now or unbuilt is listed in [`docs/PLACEHOLDERS.md`](PLACEHOLDERS.md) (ids `P-xx`, what "real" means, where the real thing plugs in, what it is blocked on). It is the to-do list for making the game real.**
 
