@@ -1,0 +1,4666 @@
+{
+ "freeze": "transport_kit_v001",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-09T08:59:03Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "31480e720e9f9dd0571cffdbf1866c582c029f23",
+  "producerCodeLastChangedIn": "31480e720e9f9dd0571cffdbf1866c582c029f23",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 52,
+ "assets": [
+  {
+   "id": "rg_ngn_warehouse_hall_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1450,
+     396,
+     58
+    ],
+    "sizeM": [
+     49.0,
+     24.925,
+     10.1
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/rg_ngn_warehouse_hall_a.blend",
+     "bytes": 1967279,
+     "sha256": "300b32f3e60e6e93558306f1f5c4b3599bd82cbc30449739e3d7f90e96df5647"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/project.json",
+     "bytes": 276,
+     "sha256": "50b07a0d12bbdaf7996a7c7cc18a875fcc8afde86dbc132a220dc3cccad8899d"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_a/v001/rg_ngn_warehouse_hall_a.fbx",
+     "bytes": 71180,
+     "sha256": "629681a976735800e6a389773b18eaba35052324bd79a4f339b19629f2a0ed9f"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_hall_a/v001/rg_ngn_warehouse_hall_a.glb",
+     "bytes": 655560,
+     "sha256": "9b0c9ac484e4b4b49237c824e5fa779aa2fa04caacb656bd261245d649f829c3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_a/v001/rg_ngn_warehouse_hall_a.manifest.json",
+     "bytes": 4955,
+     "sha256": "6f602b83e30faadc38f385c3f2a924a84a1425a781d27bf538a56593bb898734"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_hall_a/v001.json",
+     "bytes": 1047,
+     "sha256": "379a42a1fdacdb00f14743183a8391fe8b550a350c2333d5b7f308ef0dea930c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_hall_b",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1048,
+     370,
+     70
+    ],
+    "sizeM": [
+     36.4,
+     21.04,
+     8.0
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/rg_ngn_warehouse_hall_b.blend",
+     "bytes": 1962414,
+     "sha256": "1f662fb89374543aedf3773ab5402bd0e5dabb9c12775d9721193199db6fa097"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/project.json",
+     "bytes": 276,
+     "sha256": "046c44fd96187b858fbc92463094f6846362a0c931581432c859565c0904c9a0"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_b/v001/rg_ngn_warehouse_hall_b.fbx",
+     "bytes": 62684,
+     "sha256": "323bdabecdc6011651a171292b4a5608273b94a79e029313823fed6e291b40ac"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_hall_b/v001/rg_ngn_warehouse_hall_b.glb",
+     "bytes": 625428,
+     "sha256": "0582606157ac8a1835b00931b045c22ac33496ada202ec2cb5401cd7b60386be"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_b/v001/rg_ngn_warehouse_hall_b.manifest.json",
+     "bytes": 4584,
+     "sha256": "68a56f17f56ea13afed1d5d857feac6d799cbd90c9f1809f8ad677cc3fea6175"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_hall_b/v001.json",
+     "bytes": 1041,
+     "sha256": "fda0d861c2797283b64c2fb74b5da4c18d07742257a11c45592d41d0cb1ab47c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_cold_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1294,
+     244,
+     40
+    ],
+    "sizeM": [
+     30.661,
+     18.025,
+     9.97
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/rg_ngn_warehouse_cold_a.blend",
+     "bytes": 1961065,
+     "sha256": "ab108205b3d862f6bc490d37d0b3b83e5aba04100c2d02c4cb03edb7917b2872"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/project.json",
+     "bytes": 268,
+     "sha256": "379e5cb5d48c0fe32ecc89955a574c82f1af4d30fb78e4f4644bfe17e39c82e8"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_cold_a/v001/rg_ngn_warehouse_cold_a.fbx",
+     "bytes": 60396,
+     "sha256": "fedfac1149a514a29a6945be2cb30d920ca36a14be81a5d701518e442529311a"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_cold_a/v001/rg_ngn_warehouse_cold_a.glb",
+     "bytes": 625412,
+     "sha256": "ef482b3863f5305d52cfb1a73b0eb73f3791f6cc321d88460bf91de44f7c919a"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_cold_a/v001/rg_ngn_warehouse_cold_a.manifest.json",
+     "bytes": 4011,
+     "sha256": "2c9c72e8a74eb6182e872bdf384e0997a6d7219f0573d7337ad5e08933b8bdbb"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_cold_a/v001.json",
+     "bytes": 1030,
+     "sha256": "4ca1a6d43d6681fe1c7b8c7f035f16c45e32abf78cd9e9b6b2e7b315c8b020bf"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_dock_leveller_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     348,
+     64,
+     30
+    ],
+    "sizeM": [
+     3.5,
+     1.47,
+     4.4
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/aro_dock_leveller_set.blend",
+     "bytes": 1948824,
+     "sha256": "24d1ee7333a8500ca57185aeda5d965c99c00ebe8f3fd25efeba2a017f68e0ba"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/project.json",
+     "bytes": 287,
+     "sha256": "b9372118685aabf1dcb131d078de792b0cfbe92a856dd01defc90f4df7476dd1"
+    },
+    {
+     "path": "exports/fbx/aro_dock_leveller_set/v001/aro_dock_leveller_set.fbx",
+     "bytes": 42492,
+     "sha256": "adfc9b46ff21245db00837bf268c1b842100050f8eac5ac606c1cd03bf042cd6"
+    },
+    {
+     "path": "exports/glb/aro_dock_leveller_set/v001/aro_dock_leveller_set.glb",
+     "bytes": 550412,
+     "sha256": "003554a185a812bf15bd445d3255ebdfb4994afa00b500c1c46e6dd6c000dc60"
+    },
+    {
+     "path": "exports/fbx/aro_dock_leveller_set/v001/aro_dock_leveller_set.manifest.json",
+     "bytes": 2836,
+     "sha256": "e9d2d867b17195fa6a9bbdd8bc462049a8d50ec773315ed059e9874f54ab0570"
+    },
+    {
+     "path": "validation/aro_dock_leveller_set/v001.json",
+     "bytes": 995,
+     "sha256": "8f2be36ce3b51e3953f0a3169563b6a5f44a3e6f8ba8e237d43e6dd26530dd9f"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_dock_leveller_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     322,
+     82,
+     10
+    ],
+    "sizeM": [
+     6.068,
+     2.438,
+     2.591
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/aro_container_20ft_a.blend",
+     "bytes": 1436399,
+     "sha256": "1aecc93b0bccae77b4a81e8838ca9dd1ba6c79f7c6f846d173d917d2c4094479"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/project.json",
+     "bytes": 248,
+     "sha256": "ab16dbd6bd5a872d0c4cc41c80fd2e2a9562584419a4459dc2139c7ab045ed2d"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_a/v001/aro_container_20ft_a.fbx",
+     "bytes": 37836,
+     "sha256": "ea2b1893efdff00d6dfbf7b81cd1dff64d42b363835526b3f52b909e692653e5"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_a/v001/aro_container_20ft_a.glb",
+     "bytes": 36728,
+     "sha256": "d85b2656fefe856ff75f95c38299d1d1ad4bd13178f146aa4c2e5006714731b6"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_a/v001/aro_container_20ft_a.manifest.json",
+     "bytes": 2741,
+     "sha256": "6076168fd363652f41c235f441450a4180729238938995a2627019c93d39b6b5"
+    },
+    {
+     "path": "validation/aro_container_20ft_a/v001.json",
+     "bytes": 983,
+     "sha256": "7689901452f797dd2d5dd189cdfb4a11fea2682a6eeedb06b3a370c216903096"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_b",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     322,
+     82,
+     10
+    ],
+    "sizeM": [
+     6.068,
+     2.438,
+     2.591
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/aro_container_20ft_b.blend",
+     "bytes": 1436422,
+     "sha256": "1ca27f2b8bc706671d26813a4a1a67191fc7c380af167c5f71b6f3252a59493c"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/project.json",
+     "bytes": 248,
+     "sha256": "0326bab82a7b1eefee2c291324a4b1e0bfab197c97e8b38f08e81da30a616f28"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_b/v001/aro_container_20ft_b.fbx",
+     "bytes": 37836,
+     "sha256": "2851d1c19dd3ee380856b1a712f217312be0e2e240e4af101eab38cef192e2ac"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_b/v001/aro_container_20ft_b.glb",
+     "bytes": 36728,
+     "sha256": "f601f30fdc2ad0dbb84ed93cd109221a62cf56dc6eda2b1b94e22195e5d8a8c7"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_b/v001/aro_container_20ft_b.manifest.json",
+     "bytes": 2741,
+     "sha256": "c39ef757f26b7446b60eef56f40bdb17ff0d2545cc20b4fe63e90221eed6b0b0"
+    },
+    {
+     "path": "validation/aro_container_20ft_b/v001.json",
+     "bytes": 983,
+     "sha256": "56d12424a91a481205814787efbe5b58c65979a2ca4bdac8d237a13ab7ed3c18"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_c",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     322,
+     82,
+     10
+    ],
+    "sizeM": [
+     6.068,
+     2.438,
+     2.591
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/aro_container_20ft_c.blend",
+     "bytes": 1436381,
+     "sha256": "3f49e290bec8ce2ebc0a72de9e88e5a49d5e3639f7afe6c8aac760e4a51d8333"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/project.json",
+     "bytes": 248,
+     "sha256": "8f0b5a9edeb23e417fc17066304ad0b1e9bca018274341a1f6953a7509372f38"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_c/v001/aro_container_20ft_c.fbx",
+     "bytes": 37836,
+     "sha256": "273f5e46a36bf09e49dd67ce18dc5531161fb74eb2a235c3695f63abed66714b"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_c/v001/aro_container_20ft_c.glb",
+     "bytes": 36728,
+     "sha256": "15a34a8ca4a1d8129427dfeaceadfd387adb888e9be81244d143bbdde59f0f44"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_c/v001/aro_container_20ft_c.manifest.json",
+     "bytes": 2741,
+     "sha256": "8a61dd89a4772771bae8535277fe265fa39a8104cfff5d06f478c0cf1a5c26fd"
+    },
+    {
+     "path": "validation/aro_container_20ft_c/v001.json",
+     "bytes": 983,
+     "sha256": "097b00e7a11e9cfb5613f42a1da488d2726b1ec17edb1f6c072d995392d7c833"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_40ft_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     322,
+     82,
+     10
+    ],
+    "sizeM": [
+     12.202,
+     2.438,
+     2.591
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/aro_container_40ft_a.blend",
+     "bytes": 1436411,
+     "sha256": "606fd67f9d360f39eae926ff5fbf5cdca127a8abc039f6ecea3bcac6f25c7ee9"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/project.json",
+     "bytes": 248,
+     "sha256": "26195e41ae6e149769e1931118ee6771b0960b4b56c67cc57c1b273e1f18d581"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_a/v001/aro_container_40ft_a.fbx",
+     "bytes": 37836,
+     "sha256": "ded0653ab46dce6a15fe77fd26f8370004ef9f5f1a477ed1c705e59067970ea6"
+    },
+    {
+     "path": "exports/glb/aro_container_40ft_a/v001/aro_container_40ft_a.glb",
+     "bytes": 36724,
+     "sha256": "8f3a264445db34035509539fc59788e4c3855e351ed0a55348366464af434962"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_a/v001/aro_container_40ft_a.manifest.json",
+     "bytes": 2742,
+     "sha256": "0e9663a846045d128b58cb65f019092a0f020a9b6c2ec4d9a5ceff9e8f6533d5"
+    },
+    {
+     "path": "validation/aro_container_40ft_a/v001.json",
+     "bytes": 984,
+     "sha256": "af21034f1c41fc4a170665d22fe56040c29745325934b40ec08c66e967c14aca"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_40ft_b",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     322,
+     82,
+     10
+    ],
+    "sizeM": [
+     12.202,
+     2.438,
+     2.591
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/aro_container_40ft_b.blend",
+     "bytes": 1436469,
+     "sha256": "d849e46e82eb57f0bff4df1b61f20a39b5863ad090d1b73c3a96e20421300798"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/project.json",
+     "bytes": 248,
+     "sha256": "84c3d00bf6bc6cb273364dee22dc72dda7a97c8dc4ed4072b1459e87bce782c3"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_b/v001/aro_container_40ft_b.fbx",
+     "bytes": 37788,
+     "sha256": "3dd33da0329d2de4a5dad0545dae8d3e80cb838ce2387d3de5bbd38ea0416393"
+    },
+    {
+     "path": "exports/glb/aro_container_40ft_b/v001/aro_container_40ft_b.glb",
+     "bytes": 36724,
+     "sha256": "afc12493d9f530ea45d9e73e511d85c3d4e617c8def53fa65eb9fee286ad81f3"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_b/v001/aro_container_40ft_b.manifest.json",
+     "bytes": 2742,
+     "sha256": "994c84a242a20fc6096d2bb0ded425f01ceca88e35f9f64f1e81140de67204e0"
+    },
+    {
+     "path": "validation/aro_container_40ft_b/v001.json",
+     "bytes": 984,
+     "sha256": "aaae618473cf72fbe8e4ef72e6cfd57667a7599ef6a2679b3c1f53df4eda3255"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_stack_3",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     754,
+     274,
+     34
+    ],
+    "sizeM": [
+     12.212,
+     2.438,
+     7.8
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_stack_3/v001/aro_container_stack_3.blend",
+     "bytes": 1442766,
+     "sha256": "4985ae2be92fde101b92a1992933fce9afea990ef31105de5c939deb436958be"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/project.json",
+     "bytes": 253,
+     "sha256": "dad13aad21f792f14272a9b7be46dec0a83bf6ce01286adc4fca6c7964850524"
+    },
+    {
+     "path": "exports/fbx/aro_container_stack_3/v001/aro_container_stack_3.fbx",
+     "bytes": 47564,
+     "sha256": "d9718705e77c7d354f369657c0be2bc24a98811eca4f9b111a43e4751eb10a62"
+    },
+    {
+     "path": "exports/glb/aro_container_stack_3/v001/aro_container_stack_3.glb",
+     "bytes": 82084,
+     "sha256": "d521d1e9b7abfec2f85e95a1ccb682dc28e151b037dd5ef4dd36efa5ba1a6a65"
+    },
+    {
+     "path": "exports/fbx/aro_container_stack_3/v001/aro_container_stack_3.manifest.json",
+     "bytes": 2759,
+     "sha256": "7744d715219763b7d3340b26354ce093fc7cd075d6ac2e5418af589141e17b13"
+    },
+    {
+     "path": "validation/aro_container_stack_3/v001.json",
+     "bytes": 986,
+     "sha256": "0969488412a9659161f143be827e24f292ddff337198aa3d378747d4ac716ad4"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_pallet_stack_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1102,
+     160,
+     88
+    ],
+    "sizeM": [
+     2.7,
+     2.12,
+     1.83
+    ],
+    "materials": [
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/aro_pallet_stack_a.blend",
+     "bytes": 1445098,
+     "sha256": "54abad0225883ac7bd8246cbd49ceab27a8c83b9b0d5180c42f48895ae996fe5"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/project.json",
+     "bytes": 241,
+     "sha256": "5ce80574a89199f571608457edbce31e07524c4c29cc6684c38017d46d55d8e6"
+    },
+    {
+     "path": "exports/fbx/aro_pallet_stack_a/v001/aro_pallet_stack_a.fbx",
+     "bytes": 48988,
+     "sha256": "5a9932f5d7f2ea50027858e545e6728ad28ffe5350e9d6a3bd3d129b2c1ebf3c"
+    },
+    {
+     "path": "exports/glb/aro_pallet_stack_a/v001/aro_pallet_stack_a.glb",
+     "bytes": 100296,
+     "sha256": "c9643179dfa2583e40839ff3710a7572078fad7e8cd3494ec08368120c642ec2"
+    },
+    {
+     "path": "exports/fbx/aro_pallet_stack_a/v001/aro_pallet_stack_a.manifest.json",
+     "bytes": 2680,
+     "sha256": "0b83612c1415e9afca22a73be621e698e258ca46a92e4f9d1d3a473a5b39231f"
+    },
+    {
+     "path": "validation/aro_pallet_stack_a/v001.json",
+     "bytes": 952,
+     "sha256": "de33a4bd225975dc1118bbfdfe6e634f40a029d1fd8bea3a41fc0c2d7a70d52c"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_pallet_stack_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_gate_sliding_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     918,
+     298,
+     54
+    ],
+    "sizeM": [
+     16.85,
+     4.0,
+     3.12
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/aro_gate_sliding_a.blend",
+     "bytes": 1959005,
+     "sha256": "96a3ebb8a06e46707f903bef8675aa7d0352e66c13478545d41fb3853924ad7f"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/project.json",
+     "bytes": 260,
+     "sha256": "d6d168f484337675c91e3b69c075c6bb7e0ba5f73bf8ce0b2e8aba1b957549e2"
+    },
+    {
+     "path": "exports/fbx/aro_gate_sliding_a/v001/aro_gate_sliding_a.fbx",
+     "bytes": 61132,
+     "sha256": "09e78873b894f1a44badb6049e4163ac9a1eb7800de8d888fd2609b652b21670"
+    },
+    {
+     "path": "exports/glb/aro_gate_sliding_a/v001/aro_gate_sliding_a.glb",
+     "bytes": 608256,
+     "sha256": "8899bed0433e9faa5e8e063762c351b85cfea748b36563331f652754489b7b80"
+    },
+    {
+     "path": "exports/fbx/aro_gate_sliding_a/v001/aro_gate_sliding_a.manifest.json",
+     "bytes": 3868,
+     "sha256": "6c3126acab24ce8aaba0689f965fdd956c01ac0c6cbfec70ec297a1a02571033"
+    },
+    {
+     "path": "validation/aro_gate_sliding_a/v001.json",
+     "bytes": 1012,
+     "sha256": "8d6d029e7285f0f5c3f5c7d3f71473a44b935fa84c3dec5a1a94fd9d5f349aac"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_gate_sliding_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_fence_palisade_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     188,
+     98,
+     12
+    ],
+    "sizeM": [
+     4.02,
+     0.12,
+     2.55
+    ],
+    "materials": [
+     "M_tk_metal"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/aro_fence_palisade_set.blend",
+     "bytes": 1432567,
+     "sha256": "e2d3be6d048cc5a495cc1328e7b48ff42eeb2559a1dd4bf9d26f9c160a409a17"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/project.json",
+     "bytes": 230,
+     "sha256": "f04a9f4a84fcd9b0580bfe3a0bc598eeb47c2560330f14da82fe7662fb1cc078"
+    },
+    {
+     "path": "exports/fbx/aro_fence_palisade_set/v001/aro_fence_palisade_set.fbx",
+     "bytes": 34284,
+     "sha256": "ffff4dfd2e54cac7844fa325e3409bdfafddc8c01d57153b12219b64b1d31cbf"
+    },
+    {
+     "path": "exports/glb/aro_fence_palisade_set/v001/aro_fence_palisade_set.glb",
+     "bytes": 26232,
+     "sha256": "dd0d53d74d76bbaa7db50f1f7de2c3e81f86b0eb03a594d33e34ee6c46ccf0f5"
+    },
+    {
+     "path": "exports/fbx/aro_fence_palisade_set/v001/aro_fence_palisade_set.manifest.json",
+     "bytes": 2684,
+     "sha256": "317d412253d8eab704abc5d362412b44fbfbb6a03bedb7a8adf2114f2ef3b688"
+    },
+    {
+     "path": "validation/aro_fence_palisade_set/v001.json",
+     "bytes": 960,
+     "sha256": "1ed7e95a30428795008378a6a1d73b7f3bf41b765e7a9aa61398efb70f2058fc"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_fence_palisade_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    }
+   ]
+  },
+  {
+   "id": "aro_wall_plot_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     186,
+     30,
+     12
+    ],
+    "sizeM": [
+     4.02,
+     0.28,
+     2.48
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/aro_wall_plot_set.blend",
+     "bytes": 1945148,
+     "sha256": "676ffb08e64b0ea76a48dfe06933ab297098be0332cd3cb81405f32c089110e0"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/project.json",
+     "bytes": 223,
+     "sha256": "79f77482fe51ae3c5477a50082881beafe6f3a64910b655b8b3c90d90c1111d0"
+    },
+    {
+     "path": "exports/fbx/aro_wall_plot_set/v001/aro_wall_plot_set.fbx",
+     "bytes": 36940,
+     "sha256": "f9154133831a098aa6f6a55bbc06e27bea9d89d53580429a38aaae6da6ad74ad"
+    },
+    {
+     "path": "exports/glb/aro_wall_plot_set/v001/aro_wall_plot_set.glb",
+     "bytes": 532924,
+     "sha256": "d50ba9895336ff655ca584da171c492c19bb0da2194c4f2b235769b4503ec1b7"
+    },
+    {
+     "path": "exports/fbx/aro_wall_plot_set/v001/aro_wall_plot_set.manifest.json",
+     "bytes": 2658,
+     "sha256": "3884dfc1f2ac89bbbe2c96ef26d4a3de59b929731c6cb028c7e646b50017a052"
+    },
+    {
+     "path": "validation/aro_wall_plot_set/v001.json",
+     "bytes": 965,
+     "sha256": "b5b6242b75efacc25562428af194d96900fbc7e97b37c54cf2d14b47754202de"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_wall_plot_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_weighbridge_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     528,
+     82,
+     30
+    ],
+    "sizeM": [
+     19.34,
+     6.72,
+     3.3
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/aro_weighbridge_a.blend",
+     "bytes": 1953436,
+     "sha256": "fab0a0030778426909af7a2bb990e79b22e28a738282c23f3f36cb0b7552589f"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/project.json",
+     "bytes": 281,
+     "sha256": "a8d92f1975b748207c5b168790bddeddf36e82db5b2cabc1db6d17d64174f6f7"
+    },
+    {
+     "path": "exports/fbx/aro_weighbridge_a/v001/aro_weighbridge_a.fbx",
+     "bytes": 47820,
+     "sha256": "90f44caf871989d7fdf032ae23de1e7b136f85ca541648469dd4ba2a7749cd1b"
+    },
+    {
+     "path": "exports/glb/aro_weighbridge_a/v001/aro_weighbridge_a.glb",
+     "bytes": 563060,
+     "sha256": "de4de0e28ebd78fd0b07de4f99665f807f4687a2d93c9dcf132a85f0cdfbff3e"
+    },
+    {
+     "path": "exports/fbx/aro_weighbridge_a/v001/aro_weighbridge_a.manifest.json",
+     "bytes": 3912,
+     "sha256": "04ac0d4c0bd5336831b2ea71ce254012c51c44d1c9c42e39005a99b49e82b83e"
+    },
+    {
+     "path": "validation/aro_weighbridge_a/v001.json",
+     "bytes": 1005,
+     "sha256": "3903de872b61df5ac27c692ab2f97ec52d23b0a77f66b8a3147cb9373e2d9acb"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_weighbridge_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_fuel_island_truck",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1034,
+     174,
+     86
+    ],
+    "sizeM": [
+     16.0,
+     8.02,
+     6.5
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/aro_fuel_island_truck.blend",
+     "bytes": 1961598,
+     "sha256": "12830e81f4bf2b6e79ea895304308f11ee469d71e4220d4dfab2dd6a3432ca4d"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/project.json",
+     "bytes": 254,
+     "sha256": "561b49a43e62065825093f2f404c79b0bc173151efd4b59912f3f7ee931c8262"
+    },
+    {
+     "path": "exports/fbx/aro_fuel_island_truck/v001/aro_fuel_island_truck.fbx",
+     "bytes": 66748,
+     "sha256": "c372e6cc72e7f3535e9efa323a010f045da676181b338ac43b0f98bf24746fd7"
+    },
+    {
+     "path": "exports/glb/aro_fuel_island_truck/v001/aro_fuel_island_truck.glb",
+     "bytes": 606412,
+     "sha256": "ec58a83d1330ddd2cfe3d3b1951b9a2a41c790c850519926ff6b6e94af97fe02"
+    },
+    {
+     "path": "exports/fbx/aro_fuel_island_truck/v001/aro_fuel_island_truck.manifest.json",
+     "bytes": 4378,
+     "sha256": "d6507c4f314fda027b1c10b03a5e85e8c13c8e2ae787be3521df8d145267a26d"
+    },
+    {
+     "path": "validation/aro_fuel_island_truck/v001.json",
+     "bytes": 998,
+     "sha256": "67838e8dcca93fd8c8a3eb6dd268d906cab9855032740cb9596f5e5d31c80631"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_fuel_island_truck/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_forklift_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     794,
+     286,
+     22
+    ],
+    "sizeM": [
+     1.3,
+     3.379,
+     2.38
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_forklift_a/v001/aro_forklift_a.blend",
+     "bytes": 1442471,
+     "sha256": "3f0bcc2046fe82877a8b4842f205ca83b4915f264edb4ffd90d982e6d3ea4d25"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/project.json",
+     "bytes": 221,
+     "sha256": "f4ff37837ca6e8d77bdbd3a68865049df867e8c7162c20338c963c2bcd8bb281"
+    },
+    {
+     "path": "exports/fbx/aro_forklift_a/v001/aro_forklift_a.fbx",
+     "bytes": 46268,
+     "sha256": "f7d934b44af61d8aea0a9cdf5c31ee2f2468543b02e80cff7e7db310285b1655"
+    },
+    {
+     "path": "exports/glb/aro_forklift_a/v001/aro_forklift_a.glb",
+     "bytes": 67868,
+     "sha256": "b8df3d210182fb827cc1099aa8322d64b7537d146c031b8c291b7a06b62504ff"
+    },
+    {
+     "path": "exports/fbx/aro_forklift_a/v001/aro_forklift_a.manifest.json",
+     "bytes": 2628,
+     "sha256": "d760b5ca3b785a294b1afe4cbbca025fddef690338475a4dc00d958f05ed1df4"
+    },
+    {
+     "path": "validation/aro_forklift_a/v001.json",
+     "bytes": 958,
+     "sha256": "8eb6dc0d482ea72d9b59e1fb5b1902306dc117a20f62eeb0e9821dc3d1d21ed4"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_forklift_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     572,
+     240,
+     42
+    ],
+    "sizeM": [
+     2.56,
+     13.0,
+     2.7
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/aro_truck_trailer_parked_a.blend",
+     "bytes": 1440073,
+     "sha256": "cc040ed0a4b22ff4d44b3d8e2b031c65d7db2ee67b11a55573f6d16b8354527e"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/project.json",
+     "bytes": 241,
+     "sha256": "8119c2e8ad359477e59ef974c6832250e0707673420779dcfa8d5d1f8215bcb2"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_a/v001/aro_truck_trailer_parked_a.fbx",
+     "bytes": 44876,
+     "sha256": "875bffeea59e7f0c56a7cb5f684a162bbcdb0dd45366e5814f7e449a7e71553e"
+    },
+    {
+     "path": "exports/glb/aro_truck_trailer_parked_a/v001/aro_truck_trailer_parked_a.glb",
+     "bytes": 55936,
+     "sha256": "353b5d7e7794f53b9e5521a71b3f6467c2323c5d8cffb77d58bace9f05e7a471"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_a/v001/aro_truck_trailer_parked_a.manifest.json",
+     "bytes": 2790,
+     "sha256": "6f058fb91089e4821f64fbad04e543f66f2782b84892785f1f4cffa99865dc97"
+    },
+    {
+     "path": "validation/aro_truck_trailer_parked_a/v001.json",
+     "bytes": 990,
+     "sha256": "9553eeec293e8b572b7b0e1ecf4e77d367bcb959a868874784f40d1b3569eab7"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_b",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     576,
+     160,
+     32
+    ],
+    "sizeM": [
+     2.58,
+     13.0,
+     4.0
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/aro_truck_trailer_parked_b.blend",
+     "bytes": 1440078,
+     "sha256": "bc2bfe0ba8d8f85e8f339d7a746ad64ba442395c539ea009c1746445d7444e84"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/project.json",
+     "bytes": 237,
+     "sha256": "334d82020b5bb2107ac02c61380471f2169e3211c9029a078c611e88a7f4737d"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_b/v001/aro_truck_trailer_parked_b.fbx",
+     "bytes": 42348,
+     "sha256": "1f4475be3f935098563d68e98f1ee9db9030ad0ee30c2a022c6676bfe6c2e894"
+    },
+    {
+     "path": "exports/glb/aro_truck_trailer_parked_b/v001/aro_truck_trailer_parked_b.glb",
+     "bytes": 54352,
+     "sha256": "a646f4ccbc4c7b09badf5c59e6e3afa8bdb62c86367df785d3cf81bb3f6f3e5f"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_b/v001/aro_truck_trailer_parked_b.manifest.json",
+     "bytes": 2774,
+     "sha256": "e9e8408ea378303cbd2fc211f5afd1ae954f52d6560a0ff40b5cdaff8e5d9d86"
+    },
+    {
+     "path": "validation/aro_truck_trailer_parked_b/v001.json",
+     "bytes": 990,
+     "sha256": "8b424abece86feb3145354ae1c13f6594a8528a8b4a2b7ac61b2cb75435e960c"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_yard_mast_light",
+   "kind": "lights",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     612,
+     236,
+     44
+    ],
+    "sizeM": [
+     1.904,
+     1.904,
+     19.9
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/aro_yard_mast_light.blend",
+     "bytes": 1952868,
+     "sha256": "603b97f968a37091874849bb51b4acb709142fdc6cd9a9ef21686f6743d16dcd"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/project.json",
+     "bytes": 241,
+     "sha256": "b8a14a10ed78215ccbb1776eee46129f716c9f9af5f85adcdd268ea839011a6a"
+    },
+    {
+     "path": "exports/fbx/aro_yard_mast_light/v001/aro_yard_mast_light.fbx",
+     "bytes": 48444,
+     "sha256": "8ed3de9ab1b6e48a4680d18014b5deba759fab1bc13c138f92ab0c0f1d81c38d"
+    },
+    {
+     "path": "exports/glb/aro_yard_mast_light/v001/aro_yard_mast_light.glb",
+     "bytes": 569512,
+     "sha256": "7cf29033a11596051138b464d83cfeb8290c70b3e5513a27a18b0018d20d010e"
+    },
+    {
+     "path": "exports/fbx/aro_yard_mast_light/v001/aro_yard_mast_light.manifest.json",
+     "bytes": 4069,
+     "sha256": "c3f2d50ac1a2d268983307d4eb9d32d850a1a4c322e5ab9531a8cae34bfab494"
+    },
+    {
+     "path": "validation/aro_yard_mast_light/v001.json",
+     "bytes": 1001,
+     "sha256": "88a141a295d57506ae599a160aab78750a40fbcd15681a7e650a2cc612c8e15e"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/lights/aro_yard_mast_light/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_bollard_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     150,
+     76,
+     12
+    ],
+    "sizeM": [
+     0.3,
+     0.3,
+     1.0
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_bollard_set/v001/aro_bollard_set.blend",
+     "bytes": 1946195,
+     "sha256": "76adbdf466fbe91fe7407769c03b2b2e0bc4b3efea651e74148003b835286fa1"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/project.json",
+     "bytes": 235,
+     "sha256": "9dc4520716f6c365480179b1880d909d34d6291aa107155805d08eed54c922c8"
+    },
+    {
+     "path": "exports/fbx/aro_bollard_set/v001/aro_bollard_set.fbx",
+     "bytes": 37932,
+     "sha256": "4a22f75e174bc614c028d8abaf8a9ac78f44a7c1af1c64f50efa9fa4eedffccd"
+    },
+    {
+     "path": "exports/glb/aro_bollard_set/v001/aro_bollard_set.glb",
+     "bytes": 534372,
+     "sha256": "af1b9e0a4f17159e9de30958933ad58ea098fd326800f5f073fd9cf8f475a05a"
+    },
+    {
+     "path": "exports/fbx/aro_bollard_set/v001/aro_bollard_set.manifest.json",
+     "bytes": 2675,
+     "sha256": "59790a4c706fbdc62bb772dfc74213cf2b0d5997c01aa5d8b0c3fd7b8172ae03"
+    },
+    {
+     "path": "validation/aro_bollard_set/v001.json",
+     "bytes": 973,
+     "sha256": "32c3f901464b75a1fb42480967d1dfc35650f13f813edc8a01cad7fcbc1ab2f5"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_bollard_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_bus_terminal_hall_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2388,
+     364,
+     60
+    ],
+    "sizeM": [
+     40.6,
+     22.3,
+     10.5
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/kano_bus_terminal_hall_a.blend",
+     "bytes": 1982934,
+     "sha256": "a826ef0eeeaee72de5a85864df6ffccae2562e6a48b77a35338c493d27286d6e"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/project.json",
+     "bytes": 307,
+     "sha256": "537b2720af02d03243ab6b667b811ca0496b176ed849531e8d1a5c20144f9958"
+    },
+    {
+     "path": "exports/fbx/kano_bus_terminal_hall_a/v001/kano_bus_terminal_hall_a.fbx",
+     "bytes": 99980,
+     "sha256": "a30d771c2415e84358d65d4bc4c080ed80801603d8b327cb446de47417e2f335"
+    },
+    {
+     "path": "exports/glb/kano_bus_terminal_hall_a/v001/kano_bus_terminal_hall_a.glb",
+     "bytes": 716532,
+     "sha256": "03280e0c1d65063c6d4f87b5bdb567b20aa64a570d700c206a34328be4454368"
+    },
+    {
+     "path": "exports/fbx/kano_bus_terminal_hall_a/v001/kano_bus_terminal_hall_a.manifest.json",
+     "bytes": 5372,
+     "sha256": "9d850c96d69ac10f76bc1d102d7270545261b6e9dddb71a254d3d4dd76ad866d"
+    },
+    {
+     "path": "validation/kano_bus_terminal_hall_a/v001.json",
+     "bytes": 1045,
+     "sha256": "e85034a163439c233ab4496f9d7ed0dc10a219bf81caa551336970c214876910"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_bus_shelter_long_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1042,
+     442,
+     24
+    ],
+    "sizeM": [
+     18.1,
+     4.1,
+     4.2
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/kano_bus_shelter_long_a.blend",
+     "bytes": 1959650,
+     "sha256": "4096e21c2cb6092989e6813318d07331541624616db12d36e259e46a93d2ec55"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/project.json",
+     "bytes": 308,
+     "sha256": "69320cf708a210f6ccc5441550e488e58ec47f703a266e4c2676f422e816c962"
+    },
+    {
+     "path": "exports/fbx/kano_bus_shelter_long_a/v001/kano_bus_shelter_long_a.fbx",
+     "bytes": 55836,
+     "sha256": "dba1b2fd4b910d24ad4334f3eabb399261fa2ebf24ccf51817a5a69a0ab11aeb"
+    },
+    {
+     "path": "exports/glb/kano_bus_shelter_long_a/v001/kano_bus_shelter_long_a.glb",
+     "bytes": 607844,
+     "sha256": "72cf661a8fb958e21f679e66c97b82a7b545e829ca605c7da7bc258230f4c012"
+    },
+    {
+     "path": "exports/fbx/kano_bus_shelter_long_a/v001/kano_bus_shelter_long_a.manifest.json",
+     "bytes": 4338,
+     "sha256": "a7ea7747646f11921d1226feb7f9ca3dd08d1cd027d7c64a5720e1e57f6263f4"
+    },
+    {
+     "path": "validation/kano_bus_shelter_long_a/v001.json",
+     "bytes": 1005,
+     "sha256": "c349e0f33f734ff5a2c8e267d68408b1fcfcd6e2995d34e92019215b94d240d1"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_bus_shelter_long_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_bus_shelter_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     346,
+     164,
+     22
+    ],
+    "sizeM": [
+     5.67,
+     2.04,
+     3.04
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/aro_bus_shelter_a.blend",
+     "bytes": 1950890,
+     "sha256": "d0d869651944d182e88eefd80f8e86b90206e3ed29e8098d1affb06a8be584fb"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/project.json",
+     "bytes": 263,
+     "sha256": "6569ac79e07154955f49ed1e11675da50076a6cb15d855eee16898fb8ce14a9b"
+    },
+    {
+     "path": "exports/fbx/aro_bus_shelter_a/v001/aro_bus_shelter_a.fbx",
+     "bytes": 43916,
+     "sha256": "51408b120229ad82472e665706f8ea2f25415a9e5e5416b69faa823f1dfdd984"
+    },
+    {
+     "path": "exports/glb/aro_bus_shelter_a/v001/aro_bus_shelter_a.glb",
+     "bytes": 553564,
+     "sha256": "80f14acf47470f6d3d0bb7f90ccf631b88a6b3f69f3525ee49dbd5175d98cb4d"
+    },
+    {
+     "path": "exports/fbx/aro_bus_shelter_a/v001/aro_bus_shelter_a.manifest.json",
+     "bytes": 3868,
+     "sha256": "de706f83dd09f035c78ab32a5d1e861044bd98c7da33ccfcc52c70d2d988b3fa"
+    },
+    {
+     "path": "validation/aro_bus_shelter_a/v001.json",
+     "bytes": 1008,
+     "sha256": "abcbaf7fbb22bb350603a1275381a65a172caa3ad2300f82b0c832cce6dfdea1"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_bus_shelter_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_ticket_kiosk_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     200,
+     52,
+     20
+    ],
+    "sizeM": [
+     2.5,
+     3.38,
+     2.8
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_glass",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/kano_ticket_kiosk_a.blend",
+     "bytes": 1948788,
+     "sha256": "78625c5aabbd72330c6c2122356060c4b7df089013737d5b2b0b98c1c2cc46f9"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/project.json",
+     "bytes": 247,
+     "sha256": "146f39210e2bfb3390245218cf9cbc9447aedbef27443b72b8fe1efd7a32154c"
+    },
+    {
+     "path": "exports/fbx/kano_ticket_kiosk_a/v001/kano_ticket_kiosk_a.fbx",
+     "bytes": 41868,
+     "sha256": "06fe5c1393201e8f6fc7a91291e199b70c3caa1f6d97e2454a76826177876896"
+    },
+    {
+     "path": "exports/glb/kano_ticket_kiosk_a/v001/kano_ticket_kiosk_a.glb",
+     "bytes": 537252,
+     "sha256": "43a8967dec36711060f4d410596f833d54c3fa6b679f757a78c28dbd9bdafae0"
+    },
+    {
+     "path": "exports/fbx/kano_ticket_kiosk_a/v001/kano_ticket_kiosk_a.manifest.json",
+     "bytes": 3856,
+     "sha256": "4a9b960fe6447df395419cd672a81c5c815085bd586882b3b314edb2dc2e5680"
+    },
+    {
+     "path": "validation/kano_ticket_kiosk_a/v001.json",
+     "bytes": 1007,
+     "sha256": "dc27127cd1821fc6605ed9a0c642f9965dcbe8153e534e3af9809cb1c5302355"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_tk_glass_Palette.png",
+     "bytes": 782,
+     "sha256": "1e1c6b41404773022e2a10d1f72f913612256ebb825ca128d95fbf651e2d721b"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_ticket_kiosk_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_departure_board_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     462,
+     118,
+     26
+    ],
+    "sizeM": [
+     3.0,
+     0.4,
+     4.7
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_departure_board_a/v001/kano_departure_board_a.blend",
+     "bytes": 1950385,
+     "sha256": "b84350df43a1883749fc649b41ae1dcc0596e59fe22e579fc24e3cbf4cfae35e"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/project.json",
+     "bytes": 243,
+     "sha256": "0df7e0a02f77a98eb1ac8d6e5300209d2662cbdd2a6e991bb7d6a32f61dd11e3"
+    },
+    {
+     "path": "exports/fbx/kano_departure_board_a/v001/kano_departure_board_a.fbx",
+     "bytes": 45932,
+     "sha256": "9ec0f24ce3b13601a38976ec4cfea9028bc5bafd1da5c7d2ef3da46b043990c7"
+    },
+    {
+     "path": "exports/glb/kano_departure_board_a/v001/kano_departure_board_a.glb",
+     "bytes": 555648,
+     "sha256": "a5c4181baa92dbeba1c7a096d2b5b6d0a81838af8842198b725ee5e4af0d340b"
+    },
+    {
+     "path": "exports/fbx/kano_departure_board_a/v001/kano_departure_board_a.manifest.json",
+     "bytes": 3843,
+     "sha256": "7396fd0d81088c94f3704e83e10911385185a7308b81a4dfc48e472141823a25"
+    },
+    {
+     "path": "validation/kano_departure_board_a/v001.json",
+     "bytes": 992,
+     "sha256": "3bf2ca1e6a45aa6ae8a5ce0e06add49e65dce7eec3ab9ac5972ec9d77c9d7d8a"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_departure_board_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_minibus_stand_canopy_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     872,
+     292,
+     24
+    ],
+    "sizeM": [
+     12.0,
+     6.0,
+     3.66
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/kano_minibus_stand_canopy_a.blend",
+     "bytes": 1443891,
+     "sha256": "85f31c32b7b33b852d298d7c2a0a1ebe577440fc220e7633c4dad5915316a106"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/project.json",
+     "bytes": 272,
+     "sha256": "23ccd6de8823549c816aea9f17409048453d103f4531531d42a20d33d84a6c25"
+    },
+    {
+     "path": "exports/fbx/kano_minibus_stand_canopy_a/v001/kano_minibus_stand_canopy_a.fbx",
+     "bytes": 49148,
+     "sha256": "2a01122ff165a2f07074467c2d9c1e848ed761917b2d417ba5fdbb1bea7ceb70"
+    },
+    {
+     "path": "exports/glb/kano_minibus_stand_canopy_a/v001/kano_minibus_stand_canopy_a.glb",
+     "bytes": 78316,
+     "sha256": "b461763313f1526f05dc55194b1a299a370cae1cc4ce5f0889fee957323fb642"
+    },
+    {
+     "path": "exports/fbx/kano_minibus_stand_canopy_a/v001/kano_minibus_stand_canopy_a.manifest.json",
+     "bytes": 4083,
+     "sha256": "32bbf7a08f50a6ee4e1229bb22d8113a6f3db6b598f1e71bd019b4b89f40046b"
+    },
+    {
+     "path": "validation/kano_minibus_stand_canopy_a/v001.json",
+     "bytes": 993,
+     "sha256": "7e78a90dfaee500124228d711af15fdfe950122add3bb0cd9676ce52d5400fa7"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_minibus_stand_canopy_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_tricycle_rank_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     388,
+     188,
+     22
+    ],
+    "sizeM": [
+     8.5,
+     5.0,
+     2.96
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/kano_tricycle_rank_a.blend",
+     "bytes": 1438133,
+     "sha256": "a683ba2fb03be9303e1e5ba0790ad16f6925bce19544ccb413969162eb610fdc"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/project.json",
+     "bytes": 275,
+     "sha256": "9a7f9088f40270b7e2df0871474a10f6e7e3105379218b551f584bb78d268d6d"
+    },
+    {
+     "path": "exports/fbx/kano_tricycle_rank_a/v001/kano_tricycle_rank_a.fbx",
+     "bytes": 38652,
+     "sha256": "babd95190c56eb84365cdcdf884b0c2c67cd9b61b4c0e1d86b41be8f6b07a5c8"
+    },
+    {
+     "path": "exports/glb/kano_tricycle_rank_a/v001/kano_tricycle_rank_a.glb",
+     "bytes": 45160,
+     "sha256": "337e0383e10cc3ce5fa1d8d992361552af1c450f7bb0fcb7b208be5a9a8430d1"
+    },
+    {
+     "path": "exports/fbx/kano_tricycle_rank_a/v001/kano_tricycle_rank_a.manifest.json",
+     "bytes": 3494,
+     "sha256": "ec0f1a45a277e3f3c424953f757869cdf83d94297bf1dfa8b42b2c5281ab1948"
+    },
+    {
+     "path": "validation/kano_tricycle_rank_a/v001.json",
+     "bytes": 969,
+     "sha256": "b6f51bd71e052977a1523993f3ea915d5e6505cbf1ceb86679ca76a73697b2cb"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_tricycle_rank_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_parking_bay_barrier_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     156,
+     92,
+     12
+    ],
+    "sizeM": [
+     2.4,
+     0.72,
+     0.68
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/aro_parking_bay_barrier_set.blend",
+     "bytes": 1944363,
+     "sha256": "58ddcf7ef0569b6042cd453b7df0413fe20fb7d04aaac6947e75acb8849fbb5d"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/project.json",
+     "bytes": 268,
+     "sha256": "b3ff487bc7f2e0d4284ce203060835f915bac1de3e99db103b974b964c85c418"
+    },
+    {
+     "path": "exports/fbx/aro_parking_bay_barrier_set/v001/aro_parking_bay_barrier_set.fbx",
+     "bytes": 37468,
+     "sha256": "e786a78b3e50f01e93d34d40048e2eeefb66972253eef5a3fdeadbbe2ad000cf"
+    },
+    {
+     "path": "exports/glb/aro_parking_bay_barrier_set/v001/aro_parking_bay_barrier_set.glb",
+     "bytes": 532168,
+     "sha256": "50484c695586a0e23ac4d8eae713737157c506f115b4b68b3eb7eb09796d10ae"
+    },
+    {
+     "path": "exports/fbx/aro_parking_bay_barrier_set/v001/aro_parking_bay_barrier_set.manifest.json",
+     "bytes": 2803,
+     "sha256": "a47580d51b59bbcb62c3b8683b552eb97f48da9011e834c1dc23cdb230ed1914"
+    },
+    {
+     "path": "validation/aro_parking_bay_barrier_set/v001.json",
+     "bytes": 991,
+     "sha256": "1ace434b161bf58835e7c693e06cb61ae6ce1c2afffdf26fc34368050065a3f5"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_parking_bay_barrier_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_streetlight_arm_single_a",
+   "kind": "lights",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     356,
+     106,
+     34
+    ],
+    "sizeM": [
+     0.48,
+     3.29,
+     9.37
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/aro_streetlight_arm_single_a.blend",
+     "bytes": 1437185,
+     "sha256": "2db152e9534fd290ffc758d01ad3e178021d11ef867e7d5372d9cc13e36efcd2"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/project.json",
+     "bytes": 264,
+     "sha256": "46e3c0ae56e0d3f82a854c05a7017df7d28d8f3af6127961db60617eb8c560a5"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_arm_single_a/v001/aro_streetlight_arm_single_a.fbx",
+     "bytes": 38716,
+     "sha256": "754cde62c42cf3c26a2c933d4234767dfe2252c8b234e3fb319fada3d9cb6227"
+    },
+    {
+     "path": "exports/glb/aro_streetlight_arm_single_a/v001/aro_streetlight_arm_single_a.glb",
+     "bytes": 29944,
+     "sha256": "504581007f8103a096ebaa381af318748a11c95e6b518559ac6be4fa317b2fb4"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_arm_single_a/v001/aro_streetlight_arm_single_a.manifest.json",
+     "bytes": 3846,
+     "sha256": "63754f7cac3a91bbccb09cf9ae57303380755608aa24212d8df970e8b87eba27"
+    },
+    {
+     "path": "validation/aro_streetlight_arm_single_a/v001.json",
+     "bytes": 1167,
+     "sha256": "e3312a95e373089f2f81c834cfe87539411fb3c846b1c1fe84bc21fc1293d46f"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_arm_single_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_streetlight_double_median_a",
+   "kind": "lights",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     542,
+     132,
+     44
+    ],
+    "sizeM": [
+     5.202,
+     0.9,
+     12.17
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/aro_streetlight_double_median_a.blend",
+     "bytes": 1951767,
+     "sha256": "8ba211d45b6ecf56325e61ecdcd28e16a5ad31c8b2c59300672a32f6832f0b36"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/project.json",
+     "bytes": 259,
+     "sha256": "e9a4125a7aa6208b3b6ff48c07d409eefbb72729323a38d29687904514b10804"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_double_median_a/v001/aro_streetlight_double_median_a.fbx",
+     "bytes": 46412,
+     "sha256": "8249e6b874d64e373406a95c1bbdbe721f2d7e9ed7db7d01ec025985b48d4c2c"
+    },
+    {
+     "path": "exports/glb/aro_streetlight_double_median_a/v001/aro_streetlight_double_median_a.glb",
+     "bytes": 550336,
+     "sha256": "c39b5a58fe8a209ae9d0d93fa26c091df497148b84cc5f6f0a897dd56dc14703"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_double_median_a/v001/aro_streetlight_double_median_a.manifest.json",
+     "bytes": 3839,
+     "sha256": "ec6cae3b524541999549d577bbd78a3b93db618ed844ed851f60ffa5f1939a44"
+    },
+    {
+     "path": "validation/aro_streetlight_double_median_a/v001.json",
+     "bytes": 1036,
+     "sha256": "b7cdb8be9bffc0ee9ed70f2c29d4aa69406984ad9c3bf60e37809c0298e956c3"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_double_median_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_streetlight_ornamental_a",
+   "kind": "lights",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     358,
+     150,
+     20
+    ],
+    "sizeM": [
+     0.928,
+     0.8,
+     6.1
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/aro_streetlight_ornamental_a.blend",
+     "bytes": 1949075,
+     "sha256": "7bbde04a002f49c696cc26af32d67670b478d9c9dbbe518626eabcd6df832f54"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/project.json",
+     "bytes": 259,
+     "sha256": "faa1080cbe29424713b3ed586243665a5a615ab5feb63bed5eab88212be430b8"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_ornamental_a/v001/aro_streetlight_ornamental_a.fbx",
+     "bytes": 42156,
+     "sha256": "d7f8d04ea80862a2e4ceff1674f2e541237d187160bfccd595e5d3d2c2cfa681"
+    },
+    {
+     "path": "exports/glb/aro_streetlight_ornamental_a/v001/aro_streetlight_ornamental_a.glb",
+     "bytes": 549668,
+     "sha256": "d895bfad4424dd834d1586983fd0c9d099e00b9c311430991d544ebdcb44272d"
+    },
+    {
+     "path": "exports/fbx/aro_streetlight_ornamental_a/v001/aro_streetlight_ornamental_a.manifest.json",
+     "bytes": 3622,
+     "sha256": "6b489fefaeabe4b8937e11c2945fda32072106d1b8660126f2793c6e2744f205"
+    },
+    {
+     "path": "validation/aro_streetlight_ornamental_a/v001.json",
+     "bytes": 1020,
+     "sha256": "0189f069a5e0854c5d02711bb9db173e459d950fadfd4334ef2f4ca4ba7b7fa1"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/lights/aro_streetlight_ornamental_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_stop_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     402,
+     100,
+     20
+    ],
+    "sizeM": [
+     0.76,
+     0.114,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/aro_road_sign_stop_a.blend",
+     "bytes": 1438249,
+     "sha256": "74f4771408dd32caa217a82d18d4d4704a69bdfcad640ba9d1dd6993f9c91f66"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/project.json",
+     "bytes": 287,
+     "sha256": "911bb7bf7cfe5c865d4833f0a83d581d038423fbe6e0b31ed0f8e867ff7658a9"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_stop_a/v001/aro_road_sign_stop_a.fbx",
+     "bytes": 38764,
+     "sha256": "4fd7885e1ec718ea37949d4e8e89eae06bb7b64f6efb9dd12b611ef8d60e94c0"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_stop_a/v001/aro_road_sign_stop_a.glb",
+     "bytes": 43516,
+     "sha256": "3ccce01bff6da3cb13345195801f06712bab3cdb478b824b4ea42fcd71ddb07d"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_stop_a/v001/aro_road_sign_stop_a.manifest.json",
+     "bytes": 2848,
+     "sha256": "5fe222b17eddb2ff48574357408b135b56a51e0301f6c50a73b3f72bced08d42"
+    },
+    {
+     "path": "validation/aro_road_sign_stop_a/v001.json",
+     "bytes": 978,
+     "sha256": "9b0833c4f78c0e3d77c6a3ad6ef118b83acaafceb3dacd55d9aa4527e96ac8ae"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_stop_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_yield_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     310,
+     56,
+     20
+    ],
+    "sizeM": [
+     0.94,
+     0.126,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/aro_road_sign_yield_a.blend",
+     "bytes": 1435671,
+     "sha256": "2c01db8b16841cdc7d48f22587f24c7f564855011581639a493bbfebf77b92ff"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/project.json",
+     "bytes": 289,
+     "sha256": "64aa1dc0362c85fe703f73eb0e78392f6ba2f6a59be60abc491b083813e23789"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_yield_a/v001/aro_road_sign_yield_a.fbx",
+     "bytes": 35516,
+     "sha256": "a617083a1872d65c95df4016470a9755153177296417417ac10977ebd4451c49"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_yield_a/v001/aro_road_sign_yield_a.glb",
+     "bytes": 32124,
+     "sha256": "295a8c1667ed2b87bd16a718c8fe55ddfb89e285e80c1ccebd319ba60c550b9c"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_yield_a/v001/aro_road_sign_yield_a.manifest.json",
+     "bytes": 2856,
+     "sha256": "92c47b6756375ae7300cc8e05d010f244a2c64e15995fd3572d2d10e3aa9d9ea"
+    },
+    {
+     "path": "validation/aro_road_sign_yield_a/v001.json",
+     "bytes": 979,
+     "sha256": "948c4743252978bb7513ce7042a472f9da3a652b55c9b8d565e99a378fd0fdd0"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_yield_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_speed50_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     546,
+     200,
+     20
+    ],
+    "sizeM": [
+     0.72,
+     0.122,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/aro_road_sign_speed50_a.blend",
+     "bytes": 1440005,
+     "sha256": "591139f383a3af460142e86c9162d7bad44462c8d9037bf550c811a2e448d399"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/project.json",
+     "bytes": 293,
+     "sha256": "0307690ec283cd44f783395de87f73cca8a32639de0d318f2caa13ad9a1ab726"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_speed50_a/v001/aro_road_sign_speed50_a.fbx",
+     "bytes": 42428,
+     "sha256": "ff6e20ee4bfffddadf70caadc297bbd695b07116ba3d0c48e131d2525df127e8"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_speed50_a/v001/aro_road_sign_speed50_a.glb",
+     "bytes": 54748,
+     "sha256": "0d5d6b9faff21be9bd41464ca4d9217218e6b02d37fe731a3fc06ad5b2b7ac71"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_speed50_a/v001/aro_road_sign_speed50_a.manifest.json",
+     "bytes": 2881,
+     "sha256": "17dadd3d88fa48ae71cdaf30ef72a937d89efa335e77bf6eb3508d50d411b4bc"
+    },
+    {
+     "path": "validation/aro_road_sign_speed50_a/v001.json",
+     "bytes": 987,
+     "sha256": "b70e60e48b818b1a1576bf8c6256ab9f5b096b59ced13629dd05453a68b5801c"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed50_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_speed80_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     570,
+     200,
+     20
+    ],
+    "sizeM": [
+     0.72,
+     0.122,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/aro_road_sign_speed80_a.blend",
+     "bytes": 1441400,
+     "sha256": "f02c98bf05873782efbcceb9489a53ffe929c92c6e6b282b80fb091c856ea52b"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/project.json",
+     "bytes": 293,
+     "sha256": "1ba457f9f2dfb5a62e85c44b811768211ed6eb950b651c782dba9da14cb67e39"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_speed80_a/v001/aro_road_sign_speed80_a.fbx",
+     "bytes": 43148,
+     "sha256": "b44e52f8b90c630e7a6f6af91e6052ddfac48964f8fa833c8f32b49b6ca78944"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_speed80_a/v001/aro_road_sign_speed80_a.glb",
+     "bytes": 56940,
+     "sha256": "adc2ad177bedb7709949f5daffe400455bda465ad5ba19a4b758cd5cdf1c201b"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_speed80_a/v001/aro_road_sign_speed80_a.manifest.json",
+     "bytes": 2881,
+     "sha256": "c3655241c4e4ead4b6466b0dc12970f3f507fa0bcba80f215b1628e9e5ca88b8"
+    },
+    {
+     "path": "validation/aro_road_sign_speed80_a/v001.json",
+     "bytes": 987,
+     "sha256": "3203e87418e5e51025053e9556800a3b39d9c4e09a459b4c75a6725172512369"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_speed80_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_no_entry_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     390,
+     160,
+     20
+    ],
+    "sizeM": [
+     0.72,
+     0.124,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/aro_road_sign_no_entry_a.blend",
+     "bytes": 1437592,
+     "sha256": "0aff357e56bf8eaf06cd7c1a6a49912a1ca0e94209812b4bfa8cf7be2f69ae02"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/project.json",
+     "bytes": 295,
+     "sha256": "e15b6c20def2e78ebe72516184e5f62837462f592d79c0bbc4eba2f80972366c"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_no_entry_a/v001/aro_road_sign_no_entry_a.fbx",
+     "bytes": 38620,
+     "sha256": "c718b238d0ffc178290a07788797c46fc05efeedf120e3fc5ec49a32f874b330"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_no_entry_a/v001/aro_road_sign_no_entry_a.glb",
+     "bytes": 41808,
+     "sha256": "848094b284f03ad3dc482e132cb070ec53535f1c17ece689a7311b33a215227f"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_no_entry_a/v001/aro_road_sign_no_entry_a.manifest.json",
+     "bytes": 2892,
+     "sha256": "ec8417f5120f619e1468513688fe4c7174c3b604c50f64b28b6232d3ce895c4e"
+    },
+    {
+     "path": "validation/aro_road_sign_no_entry_a/v001.json",
+     "bytes": 990,
+     "sha256": "28141427511815ef0b29039b3f2195f572c162a1ed1e340ba1d82ada4a7da66d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_entry_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_bus_stop_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     336,
+     74,
+     20
+    ],
+    "sizeM": [
+     0.6,
+     0.13,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/aro_road_sign_bus_stop_a.blend",
+     "bytes": 1436315,
+     "sha256": "53e3c66819eee3694bd026fe621f1ca14596437d402247e79c80e1c7d88609ba"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/project.json",
+     "bytes": 295,
+     "sha256": "255317e26f0c320d3bfb4b31585a0a1b87dd9951ed6f799bad024b803c5543bb"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_bus_stop_a/v001/aro_road_sign_bus_stop_a.fbx",
+     "bytes": 35788,
+     "sha256": "d92ec2ee7bb15609b064c9baf6ddffac5892d6025d9c57d6819a6429932fa6b5"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_bus_stop_a/v001/aro_road_sign_bus_stop_a.glb",
+     "bytes": 33792,
+     "sha256": "0c2d04c9910b6d93202f6d61c80058062d4a9bddda78819a62a35f0c3a8cada1"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_bus_stop_a/v001/aro_road_sign_bus_stop_a.manifest.json",
+     "bytes": 2884,
+     "sha256": "8f382fba4430dab1b233644f2d14a839a8fce5f3c4dc69248a716521ae727d8d"
+    },
+    {
+     "path": "validation/aro_road_sign_bus_stop_a/v001.json",
+     "bytes": 982,
+     "sha256": "e4afd4e4a2a6a30eee917b1a1e1cb58e8e69dc8ae0e35bc806d3711c964a39f4"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_bus_stop_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_zebra_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     316,
+     80,
+     20
+    ],
+    "sizeM": [
+     0.6,
+     0.136,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/aro_road_sign_zebra_a.blend",
+     "bytes": 1436428,
+     "sha256": "9c863afe2d7bd8f793d5f975347aa9fe83cacce14a34d955b9d3e028e730aa0b"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/project.json",
+     "bytes": 289,
+     "sha256": "53119d015097731cac2ca90a376403cce9af77bfe3dc28b51030f83bfff21cec"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_zebra_a/v001/aro_road_sign_zebra_a.fbx",
+     "bytes": 35948,
+     "sha256": "148905d94af3dc8844d9a43362d60146c086eb5fa2d4baa05ab3e302fa4eb608"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_zebra_a/v001/aro_road_sign_zebra_a.glb",
+     "bytes": 34060,
+     "sha256": "7e66a90cf76e3106b5e0144dd835e72eff0d23fec7fef2d28534e72e767689ba"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_zebra_a/v001/aro_road_sign_zebra_a.manifest.json",
+     "bytes": 2845,
+     "sha256": "8ad6913dd77ddb7a76faca99cf34a5a7717147e6c3f6a903d19c94c40ef2fa92"
+    },
+    {
+     "path": "validation/aro_road_sign_zebra_a/v001.json",
+     "bytes": 975,
+     "sha256": "3a5f0ad9ef144d06216bce78256cb682eb1f2c6b7860ed157f462bdbaf5802b1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_zebra_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_no_left_turn_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     506,
+     224,
+     20
+    ],
+    "sizeM": [
+     0.72,
+     0.132,
+     2.93
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/aro_road_sign_no_left_turn_a.blend",
+     "bytes": 1439436,
+     "sha256": "2643dd976c1a41a720862534599f4e89157f31d130e3902f6cbecbda096c9416"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/project.json",
+     "bytes": 303,
+     "sha256": "29a42f7e7b959e094a8ae2ffaa82bc88a6eb40cd2e53b17bc14eb5beb3ceaaff"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_no_left_turn_a/v001/aro_road_sign_no_left_turn_a.fbx",
+     "bytes": 41804,
+     "sha256": "34d14d4ce5397c9bfd0e47209036c0c08f314b16529c484e6d600fe0f4405b02"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_no_left_turn_a/v001/aro_road_sign_no_left_turn_a.glb",
+     "bytes": 52144,
+     "sha256": "f35ee50e180e526964f0f3a0a85655a36090411a46609edc3d785cb40872177c"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_no_left_turn_a/v001/aro_road_sign_no_left_turn_a.manifest.json",
+     "bytes": 2936,
+     "sha256": "704ff724e95404b316d36842626b17b8129f5034789b22b2fab7d7bbdfd81cc8"
+    },
+    {
+     "path": "validation/aro_road_sign_no_left_turn_a/v001.json",
+     "bytes": 1002,
+     "sha256": "52f93e788814d4034a0c4fbec10130c47c9b2df50f984b4c9ffd45d39636df76"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_no_left_turn_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_road_sign_direction_a",
+   "kind": "signs",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     308,
+     110,
+     26
+    ],
+    "sizeM": [
+     3.0,
+     0.16,
+     3.95
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/aro_road_sign_direction_a.blend",
+     "bytes": 1435893,
+     "sha256": "746e86eeace69cae7f76347cd63959bfec0505ac62159b2be32c93418c42de78"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/project.json",
+     "bytes": 269,
+     "sha256": "2138ae3d4d52586a28b3faea2ef24796c5945cd0e43ae6de45fbeccbd14d0130"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_direction_a/v001/aro_road_sign_direction_a.fbx",
+     "bytes": 36220,
+     "sha256": "8b0d5a9f1921eff37bb91ae5114cb466ea6e3a97c634d6de7c17c8e6ec704296"
+    },
+    {
+     "path": "exports/glb/aro_road_sign_direction_a/v001/aro_road_sign_direction_a.glb",
+     "bytes": 34484,
+     "sha256": "84bc97c63ff7afb7e1f2362253dda9de3eccb9f633fdca0b5660dd47a47fddee"
+    },
+    {
+     "path": "exports/fbx/aro_road_sign_direction_a/v001/aro_road_sign_direction_a.manifest.json",
+     "bytes": 3215,
+     "sha256": "96ad1f63ab0962a753c86b0e686a8e264e2e721e9a6f6b24981c0ebf802acf38"
+    },
+    {
+     "path": "validation/aro_road_sign_direction_a/v001.json",
+     "bytes": 990,
+     "sha256": "f37fe9209e44831810a1b8d76d273f6c56392be1582aee7d56e572e29e3eb0e8"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/signs/aro_road_sign_direction_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_gantry_sign_a",
+   "kind": "environments",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1008,
+     284,
+     64
+    ],
+    "sizeM": [
+     25.0,
+     1.0,
+     7.0
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/aro_gantry_sign_a.blend",
+     "bytes": 1956639,
+     "sha256": "54a51a1fed9b83cbebff1f498a41c56031620d7b195ea46050294599d2fdcea3"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/project.json",
+     "bytes": 295,
+     "sha256": "1142e93fc19da24a428d585f5570a6ed4403aeac17f59cda337e31f601b3e835"
+    },
+    {
+     "path": "exports/fbx/aro_gantry_sign_a/v001/aro_gantry_sign_a.fbx",
+     "bytes": 56316,
+     "sha256": "16df6af4d6ae283fe3b745c404afced175ab9db41f9d6d3c4e556d6934c700bd"
+    },
+    {
+     "path": "exports/glb/aro_gantry_sign_a/v001/aro_gantry_sign_a.glb",
+     "bytes": 595020,
+     "sha256": "55e45e1be5e1d78744373ed3f9537aa1de1adcfea5321b40016b74a30faa8991"
+    },
+    {
+     "path": "exports/fbx/aro_gantry_sign_a/v001/aro_gantry_sign_a.manifest.json",
+     "bytes": 3284,
+     "sha256": "cf4fe786146795d16eb2ebbfe6915cc269024dff8b0ec481d9255e297751df35"
+    },
+    {
+     "path": "validation/aro_gantry_sign_a/v001.json",
+     "bytes": 1004,
+     "sha256": "838cb061ce380e9c34bdeb8d727a2a0ddca56192704476b7e0704411a0411aee"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/environments/aro_gantry_sign_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_traffic_signal_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     462,
+     226,
+     28
+    ],
+    "sizeM": [
+     0.6,
+     4.48,
+     6.0
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/aro_traffic_signal_a.blend",
+     "bytes": 1951229,
+     "sha256": "5e12645d2128939b8af06bc169dd3c681f41519a1b5832ffb5ea56fabd8e107a"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/project.json",
+     "bytes": 273,
+     "sha256": "9bfa200db232aa69de97d1cc68771ecfa85658af26ef2e706fd32b68347c8b51"
+    },
+    {
+     "path": "exports/fbx/aro_traffic_signal_a/v001/aro_traffic_signal_a.fbx",
+     "bytes": 43436,
+     "sha256": "694809bc20d5d239bde7ab971456431af0b19a538bde914be5112ff581c36e4c"
+    },
+    {
+     "path": "exports/glb/aro_traffic_signal_a/v001/aro_traffic_signal_a.glb",
+     "bytes": 562820,
+     "sha256": "22f2345e48e6928119d90ef4e5eeea2c3980edb128b9dcf27957475b1337b29e"
+    },
+    {
+     "path": "exports/fbx/aro_traffic_signal_a/v001/aro_traffic_signal_a.manifest.json",
+     "bytes": 3902,
+     "sha256": "a80c01391356a836b37ca15e019683a89800a73d6fdddae1fe273bf0d8310eaa"
+    },
+    {
+     "path": "validation/aro_traffic_signal_a/v001.json",
+     "bytes": 1152,
+     "sha256": "ef5ff70d45b73b4d0d47daffcb1302ba15b9896e0d64f9b5cad6e78f67a7e0ba"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_traffic_signal_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_guardrail_post_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     150,
+     88,
+     12
+    ],
+    "sizeM": [
+     4.095,
+     0.26,
+     0.9
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/aro_guardrail_post_set.blend",
+     "bytes": 1434095,
+     "sha256": "f9f8c355003575e381d4d20415837b0c0adac503ab39e1006be12f191e16cba3"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/project.json",
+     "bytes": 255,
+     "sha256": "33d6fb544c3856a6cdec02f7d4283bf5b8ce90204eb5778ed056fc55210f5c0c"
+    },
+    {
+     "path": "exports/fbx/aro_guardrail_post_set/v001/aro_guardrail_post_set.fbx",
+     "bytes": 35596,
+     "sha256": "6a92bfd000539daff45f05976a0be821a23baf9174bb3debf82df4f832c934c0"
+    },
+    {
+     "path": "exports/glb/aro_guardrail_post_set/v001/aro_guardrail_post_set.glb",
+     "bytes": 23932,
+     "sha256": "9c8344ed144f527488ed99a45d612bfc8e01a6f041f5453f86c6629c5585b0c2"
+    },
+    {
+     "path": "exports/fbx/aro_guardrail_post_set/v001/aro_guardrail_post_set.manifest.json",
+     "bytes": 2779,
+     "sha256": "f4355e2d06daf701fd2325b32cc08683ca2f0cbfaba57ffa01d73b9330b96440"
+    },
+    {
+     "path": "validation/aro_guardrail_post_set/v001.json",
+     "bytes": 981,
+     "sha256": "86225b434b4d5759956d33b067c43f06d59e8643356347ef584ec27c6d3393eb"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_guardrail_post_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_jersey_barrier_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     124,
+     52,
+     12
+    ],
+    "sizeM": [
+     3.0,
+     0.64,
+     0.8
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/aro_jersey_barrier_a.blend",
+     "bytes": 1944115,
+     "sha256": "cf5beb0dc0c768a717da1672b31bd986f738705ed1c16157f9db1af896702b1e"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/project.json",
+     "bytes": 234,
+     "sha256": "aaf3df9a63be69a531cb6524d24d54b1ec75bce915cac1b443f5cd4b0c752196"
+    },
+    {
+     "path": "exports/fbx/aro_jersey_barrier_a/v001/aro_jersey_barrier_a.fbx",
+     "bytes": 35996,
+     "sha256": "87ae060a8701f14e39bd54a0d21fa2db227c8e1988821aa4da1c84da0cdf7490"
+    },
+    {
+     "path": "exports/glb/aro_jersey_barrier_a/v001/aro_jersey_barrier_a.glb",
+     "bytes": 529468,
+     "sha256": "14712a611224925a8d08204d340cca72cddf417734e4ebd18513dc5cf5f07c08"
+    },
+    {
+     "path": "exports/fbx/aro_jersey_barrier_a/v001/aro_jersey_barrier_a.manifest.json",
+     "bytes": 2717,
+     "sha256": "3d20c2ad14e663f97930f783f3dfc08ceb49fbfd9345a08e158d6ab8e8751db8"
+    },
+    {
+     "path": "validation/aro_jersey_barrier_a/v001.json",
+     "bytes": 968,
+     "sha256": "fb0cbe667a8adda48be42d3b93f3f8794535aa5d05d07f8fe5bf2309591d48e7"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_jersey_barrier_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_kerb_painted_run_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     100,
+     40,
+     10
+    ],
+    "sizeM": [
+     2.0,
+     0.26,
+     0.15
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/aro_kerb_painted_run_a.blend",
+     "bytes": 1942994,
+     "sha256": "f1b3a8a44ab7ed2fcb3f97ce763160547a9b43fcb7023e35065644325011f946"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/project.json",
+     "bytes": 229,
+     "sha256": "50762acc9b5f4c4260f68ed7d9cf5aa5eeea91be4a353f67645a9ed149438ed4"
+    },
+    {
+     "path": "exports/fbx/aro_kerb_painted_run_a/v001/aro_kerb_painted_run_a.fbx",
+     "bytes": 35100,
+     "sha256": "479d21a2a1810dba292e8bc0b8413ce74cb982b6ac9f7965ad11dabfb60c46cd"
+    },
+    {
+     "path": "exports/glb/aro_kerb_painted_run_a/v001/aro_kerb_painted_run_a.glb",
+     "bytes": 526104,
+     "sha256": "c276964f4b98d3c4960c4b82bfd9cafe0f1ac9a35c03fc7c0736afbda8883162"
+    },
+    {
+     "path": "exports/fbx/aro_kerb_painted_run_a/v001/aro_kerb_painted_run_a.manifest.json",
+     "bytes": 2719,
+     "sha256": "b05b21f360d44397286b3d482fa924e578ecfb730326b044e7c8b1c5ad566674"
+    },
+    {
+     "path": "validation/aro_kerb_painted_run_a/v001.json",
+     "bytes": 977,
+     "sha256": "b7866e29b4a64f7a02d66f3987a8f90403c85b37614b65192f1e331d5788b5a6"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_kerb_painted_run_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_drain_grate_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     270,
+     128,
+     12
+    ],
+    "sizeM": [
+     1.2,
+     0.7,
+     0.037
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/aro_drain_grate_set.blend",
+     "bytes": 1435128,
+     "sha256": "99346f42b64cd81406f04b29c17e2b3d25bd9d6b512c3540745678a336918e34"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/project.json",
+     "bytes": 256,
+     "sha256": "7bf625e5d9ec90b873499004d397391a54711b80b05639902c66e01aabdc8beb"
+    },
+    {
+     "path": "exports/fbx/aro_drain_grate_set/v001/aro_drain_grate_set.fbx",
+     "bytes": 35788,
+     "sha256": "d5bbc949867c89f1a89b4b7dc71e915b948e36fc41e299786d045b027d480415"
+    },
+    {
+     "path": "exports/glb/aro_drain_grate_set/v001/aro_drain_grate_set.glb",
+     "bytes": 34896,
+     "sha256": "29264b2e5fefc612861d56143a61475d105eeab174c72d1fa4d1c09f4ed1f143"
+    },
+    {
+     "path": "exports/fbx/aro_drain_grate_set/v001/aro_drain_grate_set.manifest.json",
+     "bytes": 2727,
+     "sha256": "3a5260eb40785f9c08e83823719eb43a8ab86324777f36e94bfafc548a6c4a09"
+    },
+    {
+     "path": "validation/aro_drain_grate_set/v001.json",
+     "bytes": 970,
+     "sha256": "736b749ead298b8886915c703911bec843a570dcb2223287ba8330e88d926319"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_drain_grate_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_bench_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     308,
+     100,
+     12
+    ],
+    "sizeM": [
+     1.84,
+     0.6,
+     0.9
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_bench_a/v001/aro_bench_a.blend",
+     "bytes": 1948744,
+     "sha256": "f72d9c429236944269bf2f4f1f8af2b50deea1a64f2a3b27fcde3a8116b647af"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/project.json",
+     "bytes": 203,
+     "sha256": "1cc45f5f2b83bdbcc3017e1cc585a176245e4717e8badd03ff2f14548db6d605"
+    },
+    {
+     "path": "exports/fbx/aro_bench_a/v001/aro_bench_a.fbx",
+     "bytes": 41372,
+     "sha256": "092fa244cecb54ef3d1ad82428b2953ef5b7601f2d07b27f00943ad8c0ba4f19"
+    },
+    {
+     "path": "exports/glb/aro_bench_a/v001/aro_bench_a.glb",
+     "bytes": 547036,
+     "sha256": "3e4f5948f7241f9c798318157e8cee1388e210c86871d476d82aac0d420cef52"
+    },
+    {
+     "path": "exports/fbx/aro_bench_a/v001/aro_bench_a.manifest.json",
+     "bytes": 2599,
+     "sha256": "e2ea10ec3556483a06f367dbdde2988ffc58bfeaa648e6c872a5f7c9d8d03eb7"
+    },
+    {
+     "path": "validation/aro_bench_a/v001.json",
+     "bytes": 963,
+     "sha256": "8885793eb8a86d2af3652127ba42c3a684dbdda0651410c2b10063486e34c6e6"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_bench_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_litter_bin_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     190,
+     66,
+     12
+    ],
+    "sizeM": [
+     0.5,
+     0.52,
+     0.9
+    ],
+    "materials": [
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/aro_litter_bin_a.blend",
+     "bytes": 1434722,
+     "sha256": "d170c5e3d5cb3c943c288f2cfdacb13bf4bb5004ed79556bb4ea33d189a9a263"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/project.json",
+     "bytes": 213,
+     "sha256": "418b167616a423fb806f890a7f8fb6de8ea657d0bb5b16bce788d34166d17024"
+    },
+    {
+     "path": "exports/fbx/aro_litter_bin_a/v001/aro_litter_bin_a.fbx",
+     "bytes": 35532,
+     "sha256": "2be2eb9ed55c91c8d1e2210d4b79ded2a54648f3426277b9f2b1aa26224281af"
+    },
+    {
+     "path": "exports/glb/aro_litter_bin_a/v001/aro_litter_bin_a.glb",
+     "bytes": 24652,
+     "sha256": "87d8c4cb5ab4355d8408678a4353fe563a90d159b29d9c26e71b6a0f5f899281"
+    },
+    {
+     "path": "exports/fbx/aro_litter_bin_a/v001/aro_litter_bin_a.manifest.json",
+     "bytes": 2630,
+     "sha256": "7eb12d1c1a841be8fe427777f42a5624da4b62f2717c61cf0f6b936db39a7fb2"
+    },
+    {
+     "path": "validation/aro_litter_bin_a/v001.json",
+     "bytes": 958,
+     "sha256": "357485f1de73f8dbb3a3ef5b95a7a5c936d1bded67803193dd166a3abed6b7fc"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/aro_litter_bin_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_planter_island_a",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     218,
+     90,
+     12
+    ],
+    "sizeM": [
+     4.08,
+     2.01,
+     0.84
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_planter_island_a/v001/aro_planter_island_a.blend",
+     "bytes": 1945825,
+     "sha256": "d444e6ccc0bc985e058bc3e49c6f8b78a82d2b643ac34cfbd483398c55c61e9c"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/project.json",
+     "bytes": 223,
+     "sha256": "7eb36ac921efe6326c1671dcfb91f8387f55c0837a75cadf96f4acfd71934ebe"
+    },
+    {
+     "path": "exports/fbx/aro_planter_island_a/v001/aro_planter_island_a.fbx",
+     "bytes": 39420,
+     "sha256": "5c34cc26abfbe3dea25e3b7c7c7d6673f8ec9932a020587e141621ab02795404"
+    },
+    {
+     "path": "exports/glb/aro_planter_island_a/v001/aro_planter_island_a.glb",
+     "bytes": 544532,
+     "sha256": "4f68cdd4a1512d005764fe4d36f15488b7263bd3b77ade41b0d7c0d8f86782b2"
+    },
+    {
+     "path": "exports/fbx/aro_planter_island_a/v001/aro_planter_island_a.manifest.json",
+     "bytes": 2735,
+     "sha256": "d29ee7c6a886441112c3880750cadc6e1ccb7ac8a6cae498c30dd3042a7ed295"
+    },
+    {
+     "path": "validation/aro_planter_island_a/v001.json",
+     "bytes": 974,
+     "sha256": "69634381ba411011548c216cc73ea5006b6182d9cce13b38aea34a664fd2e30d"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_planter_island_a/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "aro_planter_island_b",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     378,
+     130,
+     12
+    ],
+    "sizeM": [
+     8.08,
+     2.01,
+     0.84
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_planter_island_b/v001/aro_planter_island_b.blend",
+     "bytes": 1948883,
+     "sha256": "d5627fd0251eb3f25f4b18ef3a2fe1894fff27cbfd5cbed75cee4f7c7b8f3125"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/project.json",
+     "bytes": 223,
+     "sha256": "00531befd154a5188a10ba96285200b1942fdaa453f502c46e96c7c594e6373d"
+    },
+    {
+     "path": "exports/fbx/aro_planter_island_b/v001/aro_planter_island_b.fbx",
+     "bytes": 43340,
+     "sha256": "2684dca9e7eb768340663fe9ba3eac787a3a02b3ba1a60d1132c93e0737bff84"
+    },
+    {
+     "path": "exports/glb/aro_planter_island_b/v001/aro_planter_island_b.glb",
+     "bytes": 564928,
+     "sha256": "ce0622aa930992a0001ea023b954fac76cdfbb6a927cafff129d3067a39edbd2"
+    },
+    {
+     "path": "exports/fbx/aro_planter_island_b/v001/aro_planter_island_b.manifest.json",
+     "bytes": 2738,
+     "sha256": "fb2af7a6ca2ecbe7633d1c8699879960c52aca794d694b16ad92c7ff56d0fc08"
+    },
+    {
+     "path": "validation/aro_planter_island_b/v001.json",
+     "bytes": 976,
+     "sha256": "809ec40632058cfc1e74238997745ef7a74bc95ea032db4850d0faccec351ebd"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/aro_planter_island_b/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  },
+  {
+   "id": "kano_utility_pole_set",
+   "kind": "props",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     434,
+     272,
+     20
+    ],
+    "sizeM": [
+     14.003,
+     1.08,
+     11.0
+    ],
+    "materials": [
+     "M_concrete",
+     "M_tk_metal",
+     "M_tk_paint"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/kano_utility_pole_set.blend",
+     "bytes": 1949433,
+     "sha256": "578d831ac7dcb92af9474af475717b6cf10403949d6643c6670c0503f95d63d2"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/project.json",
+     "bytes": 265,
+     "sha256": "42d429bb0f8297e06032eda7d61c11da4448b75b4fdc4313604e79a1306f08f0"
+    },
+    {
+     "path": "exports/fbx/kano_utility_pole_set/v001/kano_utility_pole_set.fbx",
+     "bytes": 45388,
+     "sha256": "700b67379fe6a95cfdb9ae8fb58adb2db999f853e8a275f6986bae81116043bc"
+    },
+    {
+     "path": "exports/glb/kano_utility_pole_set/v001/kano_utility_pole_set.glb",
+     "bytes": 559692,
+     "sha256": "de89a4825b21913b85a92a1059a04bd17b33cfce0dde9078d0f75d44b98e92ce"
+    },
+    {
+     "path": "exports/fbx/kano_utility_pole_set/v001/kano_utility_pole_set.manifest.json",
+     "bytes": 3035,
+     "sha256": "ec2ec1ef1d653e08f940ec75fb598f6603e814ae1c8829ffc574f1112bd59573"
+    },
+    {
+     "path": "validation/kano_utility_pole_set/v001.json",
+     "bytes": 1167,
+     "sha256": "c0387c62bdd688abfc8ce9cab79bc5cbaed82c50054750f1ea895b503fe81056"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_concrete_BaseColor.png",
+     "bytes": 174602,
+     "sha256": "751f11077142ad3e5d9061a1c7f9cf6b14359cbf7d54a77542ce7353446ebf91"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_concrete_Normal.png",
+     "bytes": 334821,
+     "sha256": "e9da0c017d14b3a037c5a8339e497be9b4479abd6ab827a57fd63f3de709bb63"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_tk_metal_Palette.png",
+     "bytes": 809,
+     "sha256": "89dd43c004b2ea7a94309c586a29e4e44c2d439184e9d04c027b94d3f31b3c45"
+    },
+    {
+     "path": "projects/props/kano_utility_pole_set/v001/T_tk_paint_Palette.png",
+     "bytes": 1233,
+     "sha256": "0253215f038307115b55f610a9ea843f6c1942a4afd4f828fa9cb2973e46bfe3"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}
