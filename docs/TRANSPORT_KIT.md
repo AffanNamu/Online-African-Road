@@ -115,6 +115,38 @@ The owner asked that logistics sites support **enter, collect, park, load, unloa
 | Bus bays and boarding | `BAY_W` 3.6 x `BAY_D` 13.5 m against a 12 x 2.55 x 3.5 m coach (a test checks the margins); arrivals canopy clearance 5.0 m; long platform canopy for three bays; sockets `bus_bay_stop`, `passenger_board`, `ticket_queue`, `minibus_load`, `tricycle_queue` |
 | Turning and reversing | **not tested here.** The swept-path numbers of E5 (`ROAD_ENGINE_E5.md`) cover the roads, not these yards: yard geometry is a placement decision on the E2 site plate, and a bus-terminal turning test needs a layout. |
 
+## 5b. Overlap with the library plan (found while registering the kit: please decide)
+
+The approved breakdown (`KANO_TRANSPORT_ASSET_BREAKDOWN.md`) was written from the transport plan and uses its own ids. The **asset registry of the private library** (`ARO-CONTENT`, 137 entries from the master plan and the earlier kits) was **not checked against it when the kit was designed**, and it already lists, as planned or built, many of the same things under other ids. "Reuse before create" was therefore not fully honoured: 23 of the 52 new ids overlap another entry, one of them (`aro_streetlight_arm_single_a`) duplicates an asset that is **already built and imported** (`aro_streetlight_single_arm_a`, residential v003), and two ids are identical to planned entries. Nothing was merged or dropped: each overlapping entry carries `overlapsPlanned` and an OPEN flag in the registry, and the **owner decides which id the game uses** (the sensible default is the built or planned library id where its design is the same, and this kit's asset where it is better or already approved by the breakdown).
+
+| New id (approved breakdown row) | Planned or built registry id(s) for the same thing |
+|---|---|
+| `rg_ngn_warehouse_hall_a` | `aro_warehouse_steel_large_a` |
+| `aro_dock_leveller_set` | `aro_dock_door_bay_a` |
+| `aro_gate_sliding_a` | `aro_gate_sliding_steel_a`, `aro_barrier_arm_gate_a` |
+| `aro_fuel_island_truck` | `aro_fuel_canopy_truck_a`, `aro_fuel_pump_a` |
+| `aro_truck_trailer_parked_b` | `aro_trailer_box_a` |
+| `aro_yard_mast_light` | `aro_streetlight_pole_tall_yard_a` |
+| `aro_bollard_set` | `aro_bollard_yellow_a` |
+| `aro_wall_plot_set` | `aro_wall_perimeter_plain_a` |
+| `kano_bus_terminal_hall_a` | `aro_bus_terminal_hall_a`, `kano_bus_terminal_a` |
+| `kano_bus_shelter_long_a` | `aro_canopy_bus_bay_solar_a` |
+| `aro_streetlight_arm_single_a` | `aro_streetlight_single_arm_a` |
+| `aro_streetlight_double_median_a` | `aro_streetlight_double_arm_median_a` |
+| `aro_gantry_sign_a` | `aro_gantry_truss_a`, `aro_sign_panel_overhead_green_a` |
+| `aro_road_sign_direction_a` | `aro_sign_km_marker_a` |
+| `aro_guardrail_post_set` | `aro_guardrail_wbeam_a` |
+| `aro_jersey_barrier_a` | `aro_median_barrier_jersey_a` |
+| `aro_kerb_painted_run_a` | `aro_kerb_painted_blackwhite_a`, `aro_kerb_painted_yellowblack_a` |
+| `aro_drain_grate_set` | `aro_drain_grating_strip_a` |
+| `aro_litter_bin_a` | `aro_bin_a` |
+| `aro_planter_island_a` | `aro_planter_island_kerbed_a`, `aro_median_planter_kerbed_a` |
+| `aro_planter_island_b` | `aro_planter_island_kerbed_a`, `aro_median_planter_kerbed_a` |
+| `kano_utility_pole_set` | `aro_pole_electric_concrete_span_a`, `rg_ngn_pole_timber_span_a` |
+| `aro_truck_trailer_parked_a` | `aro_trailer_box_a` |
+| `aro_bench_a` | **same id**: the registry's planned entry moves to this version |
+| `aro_pallet_stack_a` | **same id**: the registry's planned entry moves to this version |
+
 ## 6. Review scenes
 
 `transport_kit/scenes.py` composes three review scenes from the kit only: **`env_logistics_yard_dry`** (a walled yard behind the two-lane gate, weighbridge in the entry lane, two halls and a cold store, fuel island, trailers, containers, forklift and pallets at the docks, mast lights), **`env_bus_terminal_dry`** (the terminal, its platform canopy, kiosk, board, minibus stand, tricycle rank, shelter, barriers, lights and signs along a road) and **`env_road_furniture_dry`** (a lineup of all the furniture). They are placement files of the same format as the environmental scenes, built by the same Unity code (`KanoReviewBuilder`) and shown with `?smoke=kanostreet&scene=env_<name>_dry&view=<view>`; the workflow step lists their 12 views. **They are review compositions, not game content**: nothing in the game places them. Layouts are design choices.

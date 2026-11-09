@@ -11,7 +11,7 @@ from . import build_all
 
 PRODUCERS = ["tools/blender/kano_kit/villa3.py", "tools/blender/kano_kit/palette.py", "tools/blender/kano_kit/veg3.py", "tools/blender/kano_kit/coplanar.py", "tools/blender/kano_kit/build3.py", "tools/blender/kano_kit/frontage.py",
              "tools/blender/aro_blender", "tools/blender/kano_kit/geo.py", "tools/blender/kano_kit/street.py", "tools/blender/kano_kit/walls.py", "tools/blender/kano_kit/villa.py", "tools/blender/kano_kit/lights.py",
-             "tools/blender/kano_kit/veg.py", "tools/blender/kano_kit/textures.py", "tools/blender/kano_kit/assemble.py", "tools/blender/kano_kit/build_all.py", "tools/blender/env_kit"]
+             "tools/blender/kano_kit/veg.py", "tools/blender/kano_kit/textures.py", "tools/blender/kano_kit/assemble.py", "tools/blender/kano_kit/build_all.py", "tools/blender/env_kit", "tools/blender/transport_kit"]
 
 
 def git(root: Path, *a: str) -> str:
@@ -23,7 +23,7 @@ def sha(p: Path) -> str: return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--version", default="", help="one version label for every asset; omitted: the LATEST version of each asset"); ap.add_argument("--out", required=True); ap.add_argument("--renders", default="")
-    ap.add_argument("--kit", default="kano", choices=["kano", "env", "v3", "e4"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
+    ap.add_argument("--kit", default="kano", choices=["kano", "env", "v3", "e4", "transport"]); ap.add_argument("--only", default="", help="comma-separated asset ids (default: the whole kit)"); ap.add_argument("--label", default=""); a = ap.parse_args()
     repo = Path(__file__).resolve().parents[3]; W = ws.default_root(); only = set(a.only.split(",")) if a.only else None
     producers_commit = git(repo, "log", "-1", "--format=%H", "--", *PRODUCERS); head = git(repo, "rev-parse", "HEAD"); dirty = bool(git(repo, "status", "--porcelain", "--", "tools/blender"))
     assets = []; all_pass = True
@@ -33,6 +33,9 @@ def main() -> int:
     elif a.kit == "e4":
         from env_kit import e4
         specs = e4.SPECS_E4                                                                 # batch E4: the corrections of the in-game review, frozen as the LATEST version of each asset
+    elif a.kit == "transport":
+        from transport_kit.build_transport import SPECS as TSPECS, load_all
+        load_all(); specs = TSPECS                                                          # the transport kit (families A, B, C), v001 of every id
     elif a.kit == "v3":
         from . import build3
         specs = {**build3.SPECS, **build3.FRONTAGE}
