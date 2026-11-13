@@ -2,6 +2,8 @@
 
 **Authorised by the owner on 2026-11-09** (asset families A logistics, B bus terminals, C road furniture; reusable assets first; family D, which "follows E5", was built in the same session as a reuse-first subset (section 3b); GLOBAL / REGIONAL / CITY_SPECIFIC / LANDMARK classes kept; family D follows E5; family E on hold, see `KANO_FAMILY_E_BREAKDOWN.md`). The approved rows are in `KANO_TRANSPORT_ASSET_BREAKDOWN.md`; this document says what was actually built and what is and is not proven.
 
+**Update 2026-11-13: realism pass.** 35 of the 78 assets now have a **v002** painted by the surface bake (`tools/blender/transport_kit/surface.py`). These are the warehouses, terminal hall, containers, trailers, fountain, island wall, pattern and pier panels, piers, both monuments, the ten mosques (geometry v2 too) and the three city buildings (geometry v2 too). Each has one texture atlas per LOD with material patterns, baked occlusion, weathering, a normal map and smoothness; coplanar faces are resolved and hidden faces removed. The other 43 assets keep v001 on the palettes. The numbers of the tables below are those of **v001**; v002's are in `ASSET_REALISM_PASS.md` section 3, the document of that pass.
+
 ## 1. Verification levels (what is true today)
 
 | Level | Result |
@@ -208,3 +210,12 @@ Preview renders (Blender, Cycles, CPU) were looked at by the agent: they showed 
 ### 3g. Staging and review
 
 Staged into ARO-CONTENT branch `assets/transport-kit-v1` (commit cc8f426, 14 assets, registry validator and its 52 tests pass, nothing marked imported, reviewed or approved). Freeze manifests: `docs/kano/TRANSPORT_KIT_E.freeze.json`, `TRANSPORT_KIT_F.freeze.json`. Review scenes `env_kano_mosques_dry` (three rows: small, medium, grand) and `env_kano_city_row_dry` (a street of parades, an office block, apartments, two mosques and the monument). Placement of these assets along roads is the frontage engine: `KANO_CITY_FRONTAGE.md`.
+
+## 9. Realism pass: v002 of 35 assets (2026-11-13)
+
+See `ASSET_REALISM_PASS.md`. In short:
+* **Build.** `spec(..., surface=(LOD0, LOD1, LOD2 atlas px))` makes an asset baked, and its design version becomes 2 (`registry.REALISM_VERSION`). The version is in its material and texture names, and a fresh workspace labels it v002.
+* **Library.** ARO-CONTENT commit a57f9fc holds the v002 folders beside v001; the hashes are in `docs/kano/TRANSPORT_KIT_REALISM_v002.freeze.json`.
+* **Importer.** The Unity importer reads `smoothness_alpha` from the material kit.
+* **Regenerated.** The catalogue, the 25 city prop entries and the two city routes were regenerated from the v002 footprints; the city golden digests changed deliberately.
+

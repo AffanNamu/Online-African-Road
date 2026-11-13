@@ -1,5 +1,11 @@
 # Status
 
+## 2026-11-13: asset realism pass (read this first; `docs/ASSET_REALISM_PASS.md`)
+
+| Area | State (levels: 1 implemented, 2 automated tests, 3 imported into Unity, 4 verified in gameplay, 5 visually reviewed) |
+|---|---|
+| **Realism pass of the transport kit** (35 solid assets → v002) | **Level 1 and 2.** Surface bake (`tools/blender/transport_kit/surface.py`): one painted atlas per LOD, material patterns, baked occlusion, weathering, normal map and smoothness. 906 flickering coplanar face pairs were resolved and hidden faces removed. Geometry v2 of the ten mosques and three city buildings. 402 Blender tests, 1,406 .NET tests, 78 of 78 assets validated. The catalogue and the two city routes were regenerated, and the city golden digests changed deliberately. **Library:** ARO-CONTENT a57f9fc (v002 beside v001, nothing overwritten); fresh-clone check 1,383 of 1,383 LFS objects and 1,343 of 1,343 frozen files. **Level 3:** **Running at the time of writing**: review run 43523565815 on commit bf2705e built all 78 transport-kit assets from the code in CI (validation passed for every one, the 35 baked ones as v002), staged them, and is building the game in Unity 6. Its result is recorded here when it ends.. **Level 5: no.** Nothing approved. **Not covered:** the 43 palette assets (glass shelters, signs, lights, small props), the residential kit v3 (black window glass remains; a v004 through the same bake is the next step) and the environmental kit. |
+
 ## 2026-11-09 (owner decisions executed in one session; read this block first, the older table below is from 2026-10-21)
 
 | Area | State (levels: 1 implemented, 2 automated tests, 3 imported into Unity, 4 verified in gameplay, 5 visually reviewed) |

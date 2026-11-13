@@ -1,0 +1,3693 @@
+{
+ "freeze": "transport_kit_realism v002 (surface-baked solid assets of families A, B, D, E, F)",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-13T23:02:01Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "bf2705e24586c8d5a818ef6b721b7952ba6c24c3",
+  "producerCodeLastChangedIn": "a8614e5e86cdc1619f9387706b3b5a06263e38fc",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 35,
+ "assets": [
+  {
+   "id": "rg_ngn_warehouse_hall_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1060,
+     290,
+     42
+    ],
+    "sizeM": [
+     49.003,
+     24.925,
+     10.1
+    ],
+    "materials": [
+     "M_sb_rg_ngn_warehouse_hall_a_v002_l0",
+     "M_sb_rg_ngn_warehouse_hall_a_v002_l1",
+     "M_sb_rg_ngn_warehouse_hall_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/rg_ngn_warehouse_hall_a.blend",
+     "bytes": 2678959,
+     "sha256": "f8b92b85967c26cdfb19c5a7c3fcb9a6927b56c55baa9b9199f80f25c4f28bf8"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/project.json",
+     "bytes": 276,
+     "sha256": "cb22116cee865e67ce2331baada4fc76b3cad8fb6c7a18c864ee03019c12b754"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_a/v002/rg_ngn_warehouse_hall_a.fbx",
+     "bytes": 74524,
+     "sha256": "dfc533ecf1f0e053a42f87e5683c55074f750b967924210ca9b53ae374408ede"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_hall_a/v002/rg_ngn_warehouse_hall_a.glb",
+     "bytes": 1525040,
+     "sha256": "45af4051698c3c007bea176f526c96e84aa9c62bed3bacbee5d941454efdc7a3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_a/v002/rg_ngn_warehouse_hall_a.manifest.json",
+     "bytes": 5016,
+     "sha256": "cf9957ea8208526582e01670617495a4b753fc0a630ac1022341c2d5bb4a6411"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_hall_a/v002.json",
+     "bytes": 1109,
+     "sha256": "548fe74256bf6b355c763a8f4c1c528acb6c0eab05eb713c15072e4d5d4fe3b1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l0_BaseColor.png",
+     "bytes": 869900,
+     "sha256": "28143050d6ff2ae577341ca9c186b55997b410a60f710a44d1e96a27115c9a79"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l0_Normal.png",
+     "bytes": 42584,
+     "sha256": "f2d9dc143c9c5ad8ced0836a495e4c7d17708d00ece87a0f5884c495979ddeeb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l1_BaseColor.png",
+     "bytes": 269111,
+     "sha256": "57d5acc0415d8d74314d967446adec17b48459090c5652e2a29ca259060de6b9"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l1_Normal.png",
+     "bytes": 12067,
+     "sha256": "9b53adc0881ccd05a2b2001145c1fa67cb079f6bcfdd1513791db174f41edafe"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l2_BaseColor.png",
+     "bytes": 26099,
+     "sha256": "e1ac2f73a6a9d0a9450cdd6196d31475375ed872729dd85491e867fb06ede3bd"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_a/v002/T_rg_ngn_warehouse_hall_a_v002_l2_Normal.png",
+     "bytes": 1252,
+     "sha256": "fb924fcfc6f3b7f20f11ea290eac987d18eb12f743b0189f4a16f8e5b2587a84"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_hall_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     744,
+     272,
+     54
+    ],
+    "sizeM": [
+     36.4,
+     21.04,
+     8.0
+    ],
+    "materials": [
+     "M_sb_rg_ngn_warehouse_hall_b_v002_l0",
+     "M_sb_rg_ngn_warehouse_hall_b_v002_l1",
+     "M_sb_rg_ngn_warehouse_hall_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/rg_ngn_warehouse_hall_b.blend",
+     "bytes": 2582130,
+     "sha256": "78c34f94d8c62a1fa9a9a155251d2b875607f2cb0cc9e58482f42c0ec87a5e7f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/project.json",
+     "bytes": 276,
+     "sha256": "76e57596c16458cc256b7bec5acabfe873d99d1b754bfc427b6548edd558237f"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_b/v002/rg_ngn_warehouse_hall_b.fbx",
+     "bytes": 65436,
+     "sha256": "731b27d7983092e7915128c114aec1ef511d4779131345d0acf9e451d982429e"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_hall_b/v002/rg_ngn_warehouse_hall_b.glb",
+     "bytes": 1401864,
+     "sha256": "4a818a1280e364f7d72752676d2b09d6d09849ee09d7d04d1f556fef5b40ad01"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_hall_b/v002/rg_ngn_warehouse_hall_b.manifest.json",
+     "bytes": 4637,
+     "sha256": "118e5f68327b806df6f8386847675606fec838e84ad2d9b99cdd57c09f7a8ade"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_hall_b/v002.json",
+     "bytes": 1096,
+     "sha256": "f89a8cd77b3a3f87df5e49015515535d26145986ae955938dc1c4f58fa7b4dea"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l0_BaseColor.png",
+     "bytes": 811638,
+     "sha256": "d8c639302f7924c2e9fe6774b79272d6ab1474f7c12bd4cd752d5371b0af3108"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l0_Normal.png",
+     "bytes": 35460,
+     "sha256": "470d1ed1278271c05340196d81d1a29b747c98bdbcad37c67508d6af8abb5a43"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l1_BaseColor.png",
+     "bytes": 252233,
+     "sha256": "67ccd232ad6d7a74cdaa8e57f024dd114a0a1cadcaec14681cb647165d0c31c3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l1_Normal.png",
+     "bytes": 9240,
+     "sha256": "3e3361b1a42d463001021fb0783e51216170b0b411cb49bc4f15b0476663c240"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l2_BaseColor.png",
+     "bytes": 22013,
+     "sha256": "961e58afb73acef7317620cfe1a3234b074597a9b9c76a828b34576299c96079"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_hall_b/v002/T_rg_ngn_warehouse_hall_b_v002_l2_Normal.png",
+     "bytes": 990,
+     "sha256": "1d40818f40d6239a18d209a31c0859fb7668c04a121b013fdf9e6a8fb515ffeb"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_warehouse_cold_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     952,
+     192,
+     34
+    ],
+    "sizeM": [
+     30.661,
+     18.025,
+     9.97
+    ],
+    "materials": [
+     "M_sb_rg_ngn_warehouse_cold_a_v002_l0",
+     "M_sb_rg_ngn_warehouse_cold_a_v002_l1",
+     "M_sb_rg_ngn_warehouse_cold_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/rg_ngn_warehouse_cold_a.blend",
+     "bytes": 2916168,
+     "sha256": "e75cbaa5ba44347c811f0b6c52efeef3d8cf7f6e5f089fa97fc8b4e9be3743de"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/project.json",
+     "bytes": 268,
+     "sha256": "35ef1ebeef50f514d5a13fcf377b1a591c80580fdb3f7b83635973b6335e2fbe"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_cold_a/v002/rg_ngn_warehouse_cold_a.fbx",
+     "bytes": 66556,
+     "sha256": "32825effed3f9008257ac3563160cdcc3c9d3ffe4f6cde2cbefdcaa5347346f1"
+    },
+    {
+     "path": "exports/glb/rg_ngn_warehouse_cold_a/v002/rg_ngn_warehouse_cold_a.glb",
+     "bytes": 1597752,
+     "sha256": "221ae37247f81c6b3353cc0f25aecc1c3ae27b8af216dcd701c2633476e4eac3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_warehouse_cold_a/v002/rg_ngn_warehouse_cold_a.manifest.json",
+     "bytes": 4086,
+     "sha256": "48bdd08bb869b19aa72f4fa5b5d371b4bc429feba7f90e4d2e37ee1a7602e32f"
+    },
+    {
+     "path": "validation/rg_ngn_warehouse_cold_a/v002.json",
+     "bytes": 1105,
+     "sha256": "132220a64bfd127bef098edd38c1d6b08eb576580e0b56753e4fb44d858624c2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l0_BaseColor.png",
+     "bytes": 961753,
+     "sha256": "d1b1cf91cfd28001f5bfaeb42e44f6a76e02e8bf40ba45e3ed559dfe8a7cc12e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l0_Normal.png",
+     "bytes": 188461,
+     "sha256": "05dcf7b693d5027cd9b9405b81d19a1f283f5bd9c467b0b6b1038934944eb94d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l1_BaseColor.png",
+     "bytes": 251589,
+     "sha256": "0cf8ad0e1cc8ee8c556acc10b01860bf82ae0339757c8e4562425949f6cdd143"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l1_Normal.png",
+     "bytes": 39258,
+     "sha256": "25d2db978d14845cc9b9bb6d501c0155d7c1dd9d564f83ab65a4a508bfbd951c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l2_BaseColor.png",
+     "bytes": 18771,
+     "sha256": "0031f7fb8b6cf3acfdd3377c6aa7bc0cae8a23cd967524545eefb74178c150d0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_warehouse_cold_a/v002/T_rg_ngn_warehouse_cold_a_v002_l2_Normal.png",
+     "bytes": 2986,
+     "sha256": "efb97a84fe6778902e7c8706db3add6bb382a277f3820a3d59ea9bca961b57ec"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     312,
+     80,
+     10
+    ],
+    "sizeM": [
+     6.071,
+     2.444,
+     2.591
+    ],
+    "materials": [
+     "M_sb_aro_container_20ft_a_v002_l0",
+     "M_sb_aro_container_20ft_a_v002_l1",
+     "M_sb_aro_container_20ft_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/aro_container_20ft_a.blend",
+     "bytes": 1524314,
+     "sha256": "cf0d0f22adfdc334122e61dc69f33e9dc8a59c97b49596bcd8b80e48cea5fca3"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/project.json",
+     "bytes": 248,
+     "sha256": "4914f2ceb0153d4fd51f49377efae132b06b5740d2753100b04a91ba1e5eec29"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_a/v002/aro_container_20ft_a.fbx",
+     "bytes": 47500,
+     "sha256": "bbc7e0206f699ef7ca7daf5dbb86aef4d593b051b6cfb624a6eed4afdf3d2ef4"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_a/v002/aro_container_20ft_a.glb",
+     "bytes": 140876,
+     "sha256": "6216ee4c08e3555b0dc9752c4027e726f97bcbe249fe6d2f84788bad922f06dd"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_a/v002/aro_container_20ft_a.manifest.json",
+     "bytes": 2833,
+     "sha256": "b5a060118637c2db14bbd3091e56bc8914f870ebb00d706b514528a1dce74dcb"
+    },
+    {
+     "path": "validation/aro_container_20ft_a/v002.json",
+     "bytes": 1072,
+     "sha256": "a5067a0a53334e5aece0ffc375ea7771014d7d35fa4328f43f93aa2a0156b53e"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l0_BaseColor.png",
+     "bytes": 57789,
+     "sha256": "c905d41e1230689617891fb79f9bc53172fe884cf3579689cfb41137f6089bba"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l0_Normal.png",
+     "bytes": 2600,
+     "sha256": "1f20b21af91384e70cead98e529a2961bc8cfc02baab73fad122dc6d45bd1f8e"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l1_BaseColor.png",
+     "bytes": 17517,
+     "sha256": "1fc72a44c665858908099f9ed6757acac9fcec207b5bdd0d35c5d80a1e96e3ab"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l1_Normal.png",
+     "bytes": 1182,
+     "sha256": "31cb13ecc88048c541bce012813610f0aef02ff6cd9d9b42fd5ffd9af0224151"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l2_BaseColor.png",
+     "bytes": 5040,
+     "sha256": "b8185267654189ae0f649d40206939b1f93131e4e128cd5b082e3a73029180f5"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_aro_container_20ft_a_v002_l2_Normal.png",
+     "bytes": 542,
+     "sha256": "aa1e7fe77f314f4dde3c240c02557f532e670d1072332dac6dc8c7ce7507b6ac"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_b",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     312,
+     80,
+     10
+    ],
+    "sizeM": [
+     6.071,
+     2.444,
+     2.591
+    ],
+    "materials": [
+     "M_sb_aro_container_20ft_b_v002_l0",
+     "M_sb_aro_container_20ft_b_v002_l1",
+     "M_sb_aro_container_20ft_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/aro_container_20ft_b.blend",
+     "bytes": 1519741,
+     "sha256": "776acd102acbecacea0db077135265c7e652bdff475ee8f065ea35dbb77d6978"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/project.json",
+     "bytes": 248,
+     "sha256": "bd5336dce5ee5506e8fcb1c5b8cdc5fe243d4d44d032ab9566d047e461b6c8e0"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_b/v002/aro_container_20ft_b.fbx",
+     "bytes": 47500,
+     "sha256": "eeada304b6a42f2c4170611a2a2a525d3646b86870aac8e745feb93e45955c2c"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_b/v002/aro_container_20ft_b.glb",
+     "bytes": 136544,
+     "sha256": "5eda0224146ada720f424c9623d2bd1602473efb8c8b36f7d4357f8031c507f6"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_b/v002/aro_container_20ft_b.manifest.json",
+     "bytes": 2833,
+     "sha256": "70c1af5e10cc653442210535d56a4b9654f175613434389ad4d1e4fb7fc6f3af"
+    },
+    {
+     "path": "validation/aro_container_20ft_b/v002.json",
+     "bytes": 1072,
+     "sha256": "731027817d48844b5d9dd74922b5d1febc153e7f11ca7d971f8b991c17b8b584"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l0_BaseColor.png",
+     "bytes": 54733,
+     "sha256": "cce2749103b15c3b3c66a895c2c27e2d466e25ec5237b49b353fc74d65d71176"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l0_Normal.png",
+     "bytes": 2600,
+     "sha256": "1f20b21af91384e70cead98e529a2961bc8cfc02baab73fad122dc6d45bd1f8e"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l1_BaseColor.png",
+     "bytes": 16413,
+     "sha256": "9b650c0cbd75abbab5bace75feca29501b0b52967b94b56cc6d440213c4f6cfe"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l1_Normal.png",
+     "bytes": 1182,
+     "sha256": "31cb13ecc88048c541bce012813610f0aef02ff6cd9d9b42fd5ffd9af0224151"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l2_BaseColor.png",
+     "bytes": 4869,
+     "sha256": "c4b3a2b514758d4ab1186989dfc08ce07f2dcb871090bf23072026381426642a"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_aro_container_20ft_b_v002_l2_Normal.png",
+     "bytes": 542,
+     "sha256": "aa1e7fe77f314f4dde3c240c02557f532e670d1072332dac6dc8c7ce7507b6ac"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_20ft_c",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     312,
+     80,
+     10
+    ],
+    "sizeM": [
+     6.071,
+     2.444,
+     2.591
+    ],
+    "materials": [
+     "M_sb_aro_container_20ft_c_v002_l0",
+     "M_sb_aro_container_20ft_c_v002_l1",
+     "M_sb_aro_container_20ft_c_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/aro_container_20ft_c.blend",
+     "bytes": 1519940,
+     "sha256": "67a96b3e643a206c1c34759e3ba220d02d367b42b602ec7158da9e6872f51f04"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/project.json",
+     "bytes": 248,
+     "sha256": "37c504b7678024498f016c5b2857118b3c1b7fc8c3d7a30d8e7438efecb49eb0"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_c/v002/aro_container_20ft_c.fbx",
+     "bytes": 47500,
+     "sha256": "4534f95e0926620ccc756048f3b9da27449132f2ceb14f891907f6f85545d225"
+    },
+    {
+     "path": "exports/glb/aro_container_20ft_c/v002/aro_container_20ft_c.glb",
+     "bytes": 136860,
+     "sha256": "3a7607b66be35a178be2e6f18a1560a293103954dc329987f1cb6197c37bab0e"
+    },
+    {
+     "path": "exports/fbx/aro_container_20ft_c/v002/aro_container_20ft_c.manifest.json",
+     "bytes": 2833,
+     "sha256": "979a893e80bb90e9299cc1352ab9c1d54aa77b9ca20d54adba87fa80cc50f63f"
+    },
+    {
+     "path": "validation/aro_container_20ft_c/v002.json",
+     "bytes": 1072,
+     "sha256": "5c5215258453271bddec0c08463bb1c359b5c351f7cd773c3b40f5e3a038ddb6"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l0_BaseColor.png",
+     "bytes": 54881,
+     "sha256": "c0db456751fdd78c2455346b5841e36c2c48cde851ba0e5707a802efd73a22d5"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l0_Normal.png",
+     "bytes": 2600,
+     "sha256": "1f20b21af91384e70cead98e529a2961bc8cfc02baab73fad122dc6d45bd1f8e"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l1_BaseColor.png",
+     "bytes": 16596,
+     "sha256": "0b7cf16b963347100f09455bdfb8960fef1fcc1fbada03f5a9f4b0bcd074fdb8"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l1_Normal.png",
+     "bytes": 1182,
+     "sha256": "31cb13ecc88048c541bce012813610f0aef02ff6cd9d9b42fd5ffd9af0224151"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l2_BaseColor.png",
+     "bytes": 4857,
+     "sha256": "fff5de649f222f465c99206ac6884d5728cf9af9a81ae392e3483260225d8f82"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_aro_container_20ft_c_v002_l2_Normal.png",
+     "bytes": 542,
+     "sha256": "aa1e7fe77f314f4dde3c240c02557f532e670d1072332dac6dc8c7ce7507b6ac"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_20ft_c/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_40ft_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     312,
+     80,
+     10
+    ],
+    "sizeM": [
+     12.205,
+     2.444,
+     2.594
+    ],
+    "materials": [
+     "M_sb_aro_container_40ft_a_v002_l0",
+     "M_sb_aro_container_40ft_a_v002_l1",
+     "M_sb_aro_container_40ft_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/aro_container_40ft_a.blend",
+     "bytes": 1655191,
+     "sha256": "2c9fae18f46a1a556a339c862c83a82bcae72ee9b51e6511ca3283efd2e13548"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/project.json",
+     "bytes": 248,
+     "sha256": "929f208f4ffb9ad00539c7b36e6b951d2acd30f7d0bed056faaf1a067e8b8c63"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_a/v002/aro_container_40ft_a.fbx",
+     "bytes": 47340,
+     "sha256": "88ba89d2d98c3c6215114df3f1a47a783814ec6b85cdd89ab18ec27e3690c538"
+    },
+    {
+     "path": "exports/glb/aro_container_40ft_a/v002/aro_container_40ft_a.glb",
+     "bytes": 302604,
+     "sha256": "4a44941898e10c57bf81aa17a0f33d226c6cc2c4ca0cb42bb8e61f3bc29e444d"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_a/v002/aro_container_40ft_a.manifest.json",
+     "bytes": 2834,
+     "sha256": "1df2d223354b72ee6f933587230cbdb8240616471c48fceec3672c65d0b18749"
+    },
+    {
+     "path": "validation/aro_container_40ft_a/v002.json",
+     "bytes": 1073,
+     "sha256": "2a848afc274352cd07b5fcbe20a164cba15b14d9320caac17f235ffc7c3794bd"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l0_BaseColor.png",
+     "bytes": 181348,
+     "sha256": "bb87b57c3bd2fb0c163b54aa0e70ad268f26b09bbda3d7664de934b42e287984"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l0_Normal.png",
+     "bytes": 6341,
+     "sha256": "d5cf6a57311e3025e2ee4c45c4935eed10e42bd30a61d666a283ae8d6e126dac"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l1_BaseColor.png",
+     "bytes": 22073,
+     "sha256": "de6e0a2853c9931948541c4780ad369048f34cc975f790b6451554409403ae74"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l1_Normal.png",
+     "bytes": 940,
+     "sha256": "b8f0b3dd66a472c62719da7b92cac782960c5b4860df0561943fc345523ed606"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l2_BaseColor.png",
+     "bytes": 4961,
+     "sha256": "e9cece0d31237a836229d6daddd1115835fcb0ea78665d44ac502daf324d3f83"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_aro_container_40ft_a_v002_l2_Normal.png",
+     "bytes": 648,
+     "sha256": "1f6edd0132f0ef414c364aa8a361b6e636cd7ebdc6ed669a8f58e95a2e8506e6"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_40ft_b",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     312,
+     80,
+     10
+    ],
+    "sizeM": [
+     12.205,
+     2.444,
+     2.594
+    ],
+    "materials": [
+     "M_sb_aro_container_40ft_b_v002_l0",
+     "M_sb_aro_container_40ft_b_v002_l1",
+     "M_sb_aro_container_40ft_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/aro_container_40ft_b.blend",
+     "bytes": 1677948,
+     "sha256": "cdc5dfd200a2ed515eb04b5bb47fc19644608563ac8ec79c06d0ea7d88ad1d6c"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/project.json",
+     "bytes": 248,
+     "sha256": "0253485175ef38b6eda54533ad2d862bdf3a6c152371328711e07dfedb0d0ef0"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_b/v002/aro_container_40ft_b.fbx",
+     "bytes": 47340,
+     "sha256": "0ed9ba3293bdf45731ec69d2989eefa9a5f7d521eefc1855129b8434d540d96c"
+    },
+    {
+     "path": "exports/glb/aro_container_40ft_b/v002/aro_container_40ft_b.glb",
+     "bytes": 325144,
+     "sha256": "9bcfac00c772958edd848b09c8cd4ec72f72eb79a78807239cfc2f87c804fb27"
+    },
+    {
+     "path": "exports/fbx/aro_container_40ft_b/v002/aro_container_40ft_b.manifest.json",
+     "bytes": 2834,
+     "sha256": "c959582bb2e5ba03b4e0281e15c4743222a8d001f47555380c8f855253016a1e"
+    },
+    {
+     "path": "validation/aro_container_40ft_b/v002.json",
+     "bytes": 1073,
+     "sha256": "1bb4e72b76f35a9e725267a61fb5220408511984b6a3c638eab5b39d6fe2111a"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l0_BaseColor.png",
+     "bytes": 203047,
+     "sha256": "7768d10151f3f96adcbe4661a4c68f820fdd10d96f1c84bc9e09352f7778bdfb"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l0_Normal.png",
+     "bytes": 6341,
+     "sha256": "d5cf6a57311e3025e2ee4c45c4935eed10e42bd30a61d666a283ae8d6e126dac"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l1_BaseColor.png",
+     "bytes": 22682,
+     "sha256": "e164ca5086b56111edcd8823da6a1126a6eafd9fabe05295635ff46afaf4718e"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l1_Normal.png",
+     "bytes": 940,
+     "sha256": "b8f0b3dd66a472c62719da7b92cac782960c5b4860df0561943fc345523ed606"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l2_BaseColor.png",
+     "bytes": 5193,
+     "sha256": "d42ae49f591d69e23784ccd08f731f0886cbdd96714e0a65a7da8a0379ade102"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_aro_container_40ft_b_v002_l2_Normal.png",
+     "bytes": 648,
+     "sha256": "1f6edd0132f0ef414c364aa8a361b6e636cd7ebdc6ed669a8f58e95a2e8506e6"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_40ft_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_container_stack_3",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     672,
+     216,
+     34
+    ],
+    "sizeM": [
+     12.212,
+     2.444,
+     7.803
+    ],
+    "materials": [
+     "M_sb_aro_container_stack_3_v002_l0",
+     "M_sb_aro_container_stack_3_v002_l1",
+     "M_sb_aro_container_stack_3_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_container_stack_3/v002/aro_container_stack_3.blend",
+     "bytes": 1698614,
+     "sha256": "1f2ac99aadb93cba93e7fba02e7e24d4d45898f3faea2de8d50beef5285023f0"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/project.json",
+     "bytes": 253,
+     "sha256": "cdf1446050935d455ad45c5e6cff0f9ca94f3abb7df55bf0db94d25996a78c89"
+    },
+    {
+     "path": "exports/fbx/aro_container_stack_3/v002/aro_container_stack_3.fbx",
+     "bytes": 59084,
+     "sha256": "7fbeffeb39482c53208347d87046a2471cceba6dd329ccacca3a19592bcdd14d"
+    },
+    {
+     "path": "exports/glb/aro_container_stack_3/v002/aro_container_stack_3.glb",
+     "bytes": 397048,
+     "sha256": "2739590a07fd1184c7dd948686ea2befea547bae85588afbf5a2ad59580fb464"
+    },
+    {
+     "path": "exports/fbx/aro_container_stack_3/v002/aro_container_stack_3.manifest.json",
+     "bytes": 2858,
+     "sha256": "ac1fbae863695b1b10d8ca1a961f6275b7f7b7218d97295fc38eb02c57352fc1"
+    },
+    {
+     "path": "validation/aro_container_stack_3/v002.json",
+     "bytes": 1082,
+     "sha256": "3ddd1449fed1dae19169f0e1c7b275d3aa2d5ab3d74e5dedc120f14a5f179f14"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l0_BaseColor.png",
+     "bytes": 177412,
+     "sha256": "13db5fc70a25ee698d5aa1deec0d1644fa9c0a499a822ee48bc5ebcdaa717aaa"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l0_Normal.png",
+     "bytes": 6508,
+     "sha256": "9c1ab3e1a53cf1be0828376c5839ea49fe4280ba77d6d77c93e918d072d2d431"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l1_BaseColor.png",
+     "bytes": 62684,
+     "sha256": "2be2d9a810534c0bf978e253f67c2f1c2895ef88f87877713bc53352f977fd2a"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l1_Normal.png",
+     "bytes": 2093,
+     "sha256": "c55156f4ec50b03af6c32e45bb327beaab30c14c3a7e933e76f1e73567c55f31"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l2_BaseColor.png",
+     "bytes": 5246,
+     "sha256": "2a5becec4990193e8158e35f698a37fe886161fc66755201572be6db7e1080d5"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_aro_container_stack_3_v002_l2_Normal.png",
+     "bytes": 607,
+     "sha256": "b511dea824acda95e5d3df5e4c86958675116cc25859bd9df5ad14f6d9df77c1"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_container_stack_3/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     528,
+     230,
+     12
+    ],
+    "sizeM": [
+     2.56,
+     13.003,
+     2.7
+    ],
+    "materials": [
+     "M_sb_aro_truck_trailer_parked_a_v002_l0",
+     "M_sb_aro_truck_trailer_parked_a_v002_l1",
+     "M_sb_aro_truck_trailer_parked_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/aro_truck_trailer_parked_a.blend",
+     "bytes": 1488693,
+     "sha256": "b73b6d3eb8bf44c2734519cd286637c15a9ea18a2bc15df53f20afadca24f73d"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/project.json",
+     "bytes": 241,
+     "sha256": "5ad48fac688c0cda69894cca8a8ece2fad97a29bd83fc07129ba0934568f26e6"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_a/v002/aro_truck_trailer_parked_a.fbx",
+     "bytes": 56748,
+     "sha256": "466241b3824904491461351278729d8e45490fb2c5587651cdf942720c262959"
+    },
+    {
+     "path": "exports/glb/aro_truck_trailer_parked_a/v002/aro_truck_trailer_parked_a.glb",
+     "bytes": 116076,
+     "sha256": "916b6a4834d98b56c02db2ce90967d1a0fc82f3a2848e4c000e21cd62178a889"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_a/v002/aro_truck_trailer_parked_a.manifest.json",
+     "bytes": 2904,
+     "sha256": "ec729362b770b3439caa71ad802be49c8539a996adb4bbad630cd98696656d6d"
+    },
+    {
+     "path": "validation/aro_truck_trailer_parked_a/v002.json",
+     "bytes": 1101,
+     "sha256": "c6278a6f892b9d319f74429d6ebf11e1ddf9cc1e15536141dad1e9946874aa35"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l0_BaseColor.png",
+     "bytes": 28777,
+     "sha256": "ee304c765acec7976b3c562b10c5df013670550456ac0ac5082fedbd49d02231"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l0_Normal.png",
+     "bytes": 1634,
+     "sha256": "23a5a5b0e2ac39f1da9f47d0a0f8c73a4496cbae56b1d8695e128532131ee2f8"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l1_BaseColor.png",
+     "bytes": 11577,
+     "sha256": "da4a24d11183918bb38c08c65ca24943f833d798bbaf8dcbc45fc949a6711854"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l1_Normal.png",
+     "bytes": 805,
+     "sha256": "6e6f9ac9db0205b8b84264f8b904b1b2f44e2582018152159ed164a89ae90167"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l2_BaseColor.png",
+     "bytes": 2692,
+     "sha256": "e8fbf271e475be96ac7d85471e69a50a611726d22c11222713a52d54609e0539"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_aro_truck_trailer_parked_a_v002_l2_Normal.png",
+     "bytes": 600,
+     "sha256": "11e7e920763cd70e5b392d21e244fb9ac80d1807b7f86df3821d8639b533b934"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_truck_trailer_parked_b",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     466,
+     146,
+     12
+    ],
+    "sizeM": [
+     2.58,
+     13.003,
+     4.0
+    ],
+    "materials": [
+     "M_sb_aro_truck_trailer_parked_b_v002_l0",
+     "M_sb_aro_truck_trailer_parked_b_v002_l1",
+     "M_sb_aro_truck_trailer_parked_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/aro_truck_trailer_parked_b.blend",
+     "bytes": 1751534,
+     "sha256": "e35c9603bf0570498082f11f4ac0a9764da694b81cac986ac323b6ad4fae7127"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/project.json",
+     "bytes": 237,
+     "sha256": "b75a75392f65c8b49e44a170f4dc5e5e8bd2b7f895b95bfdb8dbf093b4444e34"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_b/v002/aro_truck_trailer_parked_b.fbx",
+     "bytes": 51836,
+     "sha256": "693d4b297a51f8d41e46836386a39f5b87e72ef242e73edf4ad8ba474df3a4a7"
+    },
+    {
+     "path": "exports/glb/aro_truck_trailer_parked_b/v002/aro_truck_trailer_parked_b.glb",
+     "bytes": 368464,
+     "sha256": "3a868f5c21aac9a6beea55b33e0ba564fd14bb96c54586cbe8ef2c741b8bfa3c"
+    },
+    {
+     "path": "exports/fbx/aro_truck_trailer_parked_b/v002/aro_truck_trailer_parked_b.manifest.json",
+     "bytes": 2888,
+     "sha256": "cda6a9642325cb08ec8cf35b11f429ebe789cd2deb2396773a927c5807505b80"
+    },
+    {
+     "path": "validation/aro_truck_trailer_parked_b/v002.json",
+     "bytes": 1101,
+     "sha256": "65605ae4cd0b71aec8eb04ad22bdee22814a0389b3a5569a4f40a2ea70cf9a70"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l0_BaseColor.png",
+     "bytes": 219294,
+     "sha256": "1759c0d20a7128e8f551e74d86dc4a7e06e51c47d245853b794e10f06c4c149a"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l0_Normal.png",
+     "bytes": 60469,
+     "sha256": "74ba41304d55228e1c506be3f37c3fa2207e3019d0000b00745543fa7b3d144f"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l1_BaseColor.png",
+     "bytes": 16223,
+     "sha256": "7ced2080ceab8a66fefda91049e02c980574fa196aad9588babc4e1bc12b92a4"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l1_Normal.png",
+     "bytes": 2435,
+     "sha256": "a1d5839944f7777c33761dcd537808f44b11ea11dbc6493eb183e67f7f7041f5"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l2_BaseColor.png",
+     "bytes": 6069,
+     "sha256": "9fcb844672cf362e0ab1e983e0d032febf9db4e6c9b8bdac1ebbdd67174f3b46"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_aro_truck_trailer_parked_b_v002_l2_Normal.png",
+     "bytes": 3296,
+     "sha256": "14f4ac2b81b199d9c91dde012a00b472a4dbb6c3b3492102c8ff5350a1c48d53"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_truck_trailer_parked_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_bus_terminal_hall_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2094,
+     286,
+     56
+    ],
+    "sizeM": [
+     40.6,
+     22.3,
+     10.5
+    ],
+    "materials": [
+     "M_sb_kano_bus_terminal_hall_a_v002_l0",
+     "M_sb_kano_bus_terminal_hall_a_v002_l1",
+     "M_sb_kano_bus_terminal_hall_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/kano_bus_terminal_hall_a.blend",
+     "bytes": 3146524,
+     "sha256": "cb575d083489dee66388fa040af5268e416d5f7b6f2949b1564218853f8a75d2"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/project.json",
+     "bytes": 307,
+     "sha256": "546a2633d676acdf595300a62871ed0cc3a4d990233959d75c35097414d26dd7"
+    },
+    {
+     "path": "exports/fbx/kano_bus_terminal_hall_a/v002/kano_bus_terminal_hall_a.fbx",
+     "bytes": 110316,
+     "sha256": "ef70558515271bf39b7a3d971da821fd051c200447a3cdf7e4f2181c2d4f765f"
+    },
+    {
+     "path": "exports/glb/kano_bus_terminal_hall_a/v002/kano_bus_terminal_hall_a.glb",
+     "bytes": 1924072,
+     "sha256": "17386ac9364de0855eba833ba79442799f6533da0d035bdf885f591a9b5903a3"
+    },
+    {
+     "path": "exports/fbx/kano_bus_terminal_hall_a/v002/kano_bus_terminal_hall_a.manifest.json",
+     "bytes": 5433,
+     "sha256": "3f53e428300c42431c9e9d722976217b0693c6c209d86a91b6f6997135f0ed1f"
+    },
+    {
+     "path": "validation/kano_bus_terminal_hall_a/v002.json",
+     "bytes": 1106,
+     "sha256": "3caa8c39ff6186a3ef26f53f390fd03f097b92b364ce6bbc9728c804a6c1a728"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l0_BaseColor.png",
+     "bytes": 1147516,
+     "sha256": "23e2f7555dfd47b43944036ed3f829171a79cb6ee48aa16f3ba5b1de0403c08a"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l0_Normal.png",
+     "bytes": 184857,
+     "sha256": "ed2edd5db4b1ebb6bf8f79a9d1540da7ecbe19005ab40252fbdedac9beda0300"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l1_BaseColor.png",
+     "bytes": 278678,
+     "sha256": "8379205bd1cc381a72bbe90426f3cf8406363081064a944ffeafb6aba0a74600"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l1_Normal.png",
+     "bytes": 35934,
+     "sha256": "fc64f8ceacba94b543af45a3df9a3ff3068154427d6b87c679c0d8ad6b43c2c9"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l2_BaseColor.png",
+     "bytes": 19434,
+     "sha256": "2ad2835b9845bf0e1c24c2798ab6f12130a59f335cc2252aba3751913879218e"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_bus_terminal_hall_a_v002_l2_Normal.png",
+     "bytes": 2622,
+     "sha256": "d1985123c2626aebdd45b97a7e7b55fe01df00dbfa8924dc17a2443c46ab301e"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_bus_terminal_hall_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_roundabout_fountain_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     738,
+     300,
+     28
+    ],
+    "sizeM": [
+     7.8,
+     7.8,
+     1.95
+    ],
+    "materials": [
+     "M_sb_aro_roundabout_fountain_a_v002_l0",
+     "M_sb_aro_roundabout_fountain_a_v002_l1",
+     "M_sb_aro_roundabout_fountain_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/aro_roundabout_fountain_a.blend",
+     "bytes": 1836407,
+     "sha256": "2b1777b35baeaeb840c081604f75800ff874db3cf22d58f4ae54cb6f418d0bbd"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/project.json",
+     "bytes": 271,
+     "sha256": "13cbafe3eef913db3017959ab0e3f61a196cd7bb5257f25a1ffbf471db187463"
+    },
+    {
+     "path": "exports/fbx/aro_roundabout_fountain_a/v002/aro_roundabout_fountain_a.fbx",
+     "bytes": 63580,
+     "sha256": "d05509056879390e9063a29b4fc7b87c2f7ad651881eaaf7c6f600d41c52bcda"
+    },
+    {
+     "path": "exports/glb/aro_roundabout_fountain_a/v002/aro_roundabout_fountain_a.glb",
+     "bytes": 491164,
+     "sha256": "af55dc6de97c165c0ce837d55ac84a7aeda02cf8c32fe63b24b956927fb5dfe7"
+    },
+    {
+     "path": "exports/fbx/aro_roundabout_fountain_a/v002/aro_roundabout_fountain_a.manifest.json",
+     "bytes": 4236,
+     "sha256": "7ee6f5655bdfa71f08a0a2bdb2c93ae655b556700893d0897f9bfb2ef982bbb6"
+    },
+    {
+     "path": "validation/aro_roundabout_fountain_a/v002.json",
+     "bytes": 1088,
+     "sha256": "1c20ce9d366492c514f1cef0a8f9c55ce3921137519688648f5a124cc5bc833f"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l0_BaseColor.png",
+     "bytes": 231334,
+     "sha256": "7ef53bfa02ed2fb97dc9937acda0c273b2932dcb370a0437d71e241ac9bc58dd"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l0_Normal.png",
+     "bytes": 61081,
+     "sha256": "c0a7cb1fba858e65783d6170d7b265fe7990ebbba8b001629fff773462a74cf0"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l1_BaseColor.png",
+     "bytes": 70109,
+     "sha256": "31914f08532c1af2ed1191ad98b287f5fbb50c10e987f894ba37def24171ae7e"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l1_Normal.png",
+     "bytes": 14416,
+     "sha256": "97fa71f230433509d44d520ea11b0c2a5b8611c070a32d09ed0d817c0900ccdc"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l2_BaseColor.png",
+     "bytes": 5027,
+     "sha256": "79eb389365c51bd097f9a6ec5731c2b91dcbf1c277b9384195db8d63a769cb1c"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_aro_roundabout_fountain_a_v002_l2_Normal.png",
+     "bytes": 2781,
+     "sha256": "4488a776c589fe0e540fe6f38cd69d50a4ddf5b785b183cb4cc842e487085b19"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_roundabout_fountain_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_island_wall_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     146,
+     24,
+     12
+    ],
+    "sizeM": [
+     3.04,
+     0.48,
+     1.28
+    ],
+    "materials": [
+     "M_sb_rg_ngn_island_wall_a_v002_l0",
+     "M_sb_rg_ngn_island_wall_a_v002_l1",
+     "M_sb_rg_ngn_island_wall_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/rg_ngn_island_wall_a.blend",
+     "bytes": 1535849,
+     "sha256": "b2a947ce5e24445d3b61bdcd53c2f0ce2f4600037d05ce7e4e3addfd343e1586"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/project.json",
+     "bytes": 250,
+     "sha256": "857d619f7e24fc0f2c43e34c8c7381dc60689862d38415da327dda63c0c67c0e"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_island_wall_a/v002/rg_ngn_island_wall_a.fbx",
+     "bytes": 42924,
+     "sha256": "c09071831248ab68a631911cb8dd72636840cb478c809d5025b120fe9bf938c8"
+    },
+    {
+     "path": "exports/glb/rg_ngn_island_wall_a/v002/rg_ngn_island_wall_a.glb",
+     "bytes": 125248,
+     "sha256": "1b2932facacd46264e0d679472314b1bd377687f8d69beb1da4d70697ad8b81a"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_island_wall_a/v002/rg_ngn_island_wall_a.manifest.json",
+     "bytes": 2850,
+     "sha256": "2f0de45678a12c7875d19ed28395be94eb364ad2a46da0ef640e942fd924f75b"
+    },
+    {
+     "path": "validation/rg_ngn_island_wall_a/v002.json",
+     "bytes": 1063,
+     "sha256": "31630042e01b49e3a87724c78df259763b7f943abc9cd80bb6f9f2dd24dcd73e"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l0_BaseColor.png",
+     "bytes": 55544,
+     "sha256": "2aeb4b1debf6a622c10ff97d72e26781c8557ef9db9f056c1e484a3089c0599d"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l0_Normal.png",
+     "bytes": 18817,
+     "sha256": "523aedd82566a95887ad7021e23ec7193241f2194965057b5b5dd94f09fc953a"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l1_BaseColor.png",
+     "bytes": 16741,
+     "sha256": "8050d85d2f16923194197a17f4a7bea7b1bbcd0edc84ff578e1b7e030a1bc056"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l1_Normal.png",
+     "bytes": 5292,
+     "sha256": "9b6fcd53934ee476b5f46d4afe3963d503a499b2fe27f9d5167b45fc50e851cb"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l2_BaseColor.png",
+     "bytes": 1762,
+     "sha256": "8274477fd26326bc0d84595cf05e4bb553f5b1e69fdb665df7f448037c91e990"
+    },
+    {
+     "path": "projects/props/rg_ngn_island_wall_a/v002/T_rg_ngn_island_wall_a_v002_l2_Normal.png",
+     "bytes": 1246,
+     "sha256": "024b85b0a3233a61e5c32415b8566881eb6137a57820c44310cc07a94925acb0"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     268,
+     34,
+     12
+    ],
+    "sizeM": [
+     3.1,
+     0.37,
+     1.4
+    ],
+    "materials": [
+     "M_sb_rg_ngn_pattern_panel_a_v002_l0",
+     "M_sb_rg_ngn_pattern_panel_a_v002_l1",
+     "M_sb_rg_ngn_pattern_panel_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/rg_ngn_pattern_panel_a.blend",
+     "bytes": 1533070,
+     "sha256": "12b02a6d5a2d5a9cbf94b5d8b561e5ac9aa6c9325256f239e905b5e93500caa8"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/project.json",
+     "bytes": 270,
+     "sha256": "b79cb613cc0696659ddd83603212f4f6af830da258d28c8293c3dc6da6d7da1b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_a/v002/rg_ngn_pattern_panel_a.fbx",
+     "bytes": 46684,
+     "sha256": "9eb4a3955e37356a1a2478d2f81637a482f9a10f8b216934ea7732ec3f1818e2"
+    },
+    {
+     "path": "exports/glb/rg_ngn_pattern_panel_a/v002/rg_ngn_pattern_panel_a.glb",
+     "bytes": 128588,
+     "sha256": "18e0b95df600c469e1393daeaf27bd9595b9d6fe5081716b92a5baee0293ff71"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_a/v002/rg_ngn_pattern_panel_a.manifest.json",
+     "bytes": 2986,
+     "sha256": "e3d9f3418f2e67e7dafbad2fd3abfedb1197b23d62d70c6cf1401a6f05cbaacb"
+    },
+    {
+     "path": "validation/rg_ngn_pattern_panel_a/v002.json",
+     "bytes": 1071,
+     "sha256": "0391e1775a24f4b10df3bed6721bc91a92620b007ac20a5cbd6fd9cafabd7f9b"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l0_BaseColor.png",
+     "bytes": 55043,
+     "sha256": "d183051f7db05a0e23e315497aeb423ba484c16d1ea5da34d01f821210e8dbd4"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l0_Normal.png",
+     "bytes": 18241,
+     "sha256": "e3ee2fe21d9bed02ae17e98f20144755c36861ed5399ebd7a6fb1244287f636f"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l1_BaseColor.png",
+     "bytes": 14334,
+     "sha256": "beae485a0fee8dae174b7fd09ea2e49664a0b980dcd5447ca572b8dbe455ae1b"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l1_Normal.png",
+     "bytes": 3781,
+     "sha256": "fd71083252ab82754b3afd2085e32b3c31fae8af0407f2daee9e3e33314bf0f5"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l2_BaseColor.png",
+     "bytes": 1552,
+     "sha256": "f0bf838bfd09d430c20815f453b974dbbb52d6682df94724d805c30c03c97ad0"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_a/v002/T_rg_ngn_pattern_panel_a_v002_l2_Normal.png",
+     "bytes": 1162,
+     "sha256": "a6365bd9f3474ade90f8e61399af411a4c860525f6fb5f37138d37322299c2d7"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_b",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     424,
+     34,
+     12
+    ],
+    "sizeM": [
+     3.1,
+     0.35,
+     1.4
+    ],
+    "materials": [
+     "M_sb_rg_ngn_pattern_panel_b_v002_l0",
+     "M_sb_rg_ngn_pattern_panel_b_v002_l1",
+     "M_sb_rg_ngn_pattern_panel_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/rg_ngn_pattern_panel_b.blend",
+     "bytes": 1532665,
+     "sha256": "d0cec7b7d4d7da70f7b6d087404f8b5e17f31e580f1a4ea5e8cd74536419e7eb"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/project.json",
+     "bytes": 270,
+     "sha256": "d3ff9d2e5a0d43241db3df21cce659faecd9335945df32498cbf51f5e6c53afe"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_b/v002/rg_ngn_pattern_panel_b.fbx",
+     "bytes": 48940,
+     "sha256": "68024e2b6fd6e4e85ff8423a80059e6cbb337465af3e865e96d2210b75c6ce3c"
+    },
+    {
+     "path": "exports/glb/rg_ngn_pattern_panel_b/v002/rg_ngn_pattern_panel_b.glb",
+     "bytes": 137068,
+     "sha256": "c4af31e9c2c9cce4fb60cf684776ebfb63462fd1e1a44ae8b7be0d4d66743543"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_b/v002/rg_ngn_pattern_panel_b.manifest.json",
+     "bytes": 2983,
+     "sha256": "bf009c72dd4d391c6b01a1e05252b984f72d5d8bbda1b67320c823b62fc060e9"
+    },
+    {
+     "path": "validation/rg_ngn_pattern_panel_b/v002.json",
+     "bytes": 1068,
+     "sha256": "dd4b314d8324f8d8a979d6bd8a5cd0871e16b0780c069a9e59ceb64d2c241aa3"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l0_BaseColor.png",
+     "bytes": 53130,
+     "sha256": "788873a8782642dd947e4f5cf9e39b775abedae5528ef2db2cedf86837f0b3c5"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l0_Normal.png",
+     "bytes": 17471,
+     "sha256": "f740d9d5a477e8cde0c258ac94f2205481a880670d19094ad5563b9f2dd095ec"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l1_BaseColor.png",
+     "bytes": 14334,
+     "sha256": "beae485a0fee8dae174b7fd09ea2e49664a0b980dcd5447ca572b8dbe455ae1b"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l1_Normal.png",
+     "bytes": 3781,
+     "sha256": "fd71083252ab82754b3afd2085e32b3c31fae8af0407f2daee9e3e33314bf0f5"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l2_BaseColor.png",
+     "bytes": 1552,
+     "sha256": "f0bf838bfd09d430c20815f453b974dbbb52d6682df94724d805c30c03c97ad0"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_b/v002/T_rg_ngn_pattern_panel_b_v002_l2_Normal.png",
+     "bytes": 1162,
+     "sha256": "a6365bd9f3474ade90f8e61399af411a4c860525f6fb5f37138d37322299c2d7"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_pattern_panel_c",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     230,
+     34,
+     12
+    ],
+    "sizeM": [
+     3.0,
+     0.4,
+     1.4
+    ],
+    "materials": [
+     "M_sb_rg_ngn_pattern_panel_c_v002_l0",
+     "M_sb_rg_ngn_pattern_panel_c_v002_l1",
+     "M_sb_rg_ngn_pattern_panel_c_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/rg_ngn_pattern_panel_c.blend",
+     "bytes": 1526942,
+     "sha256": "412042c690ce54cdeb34c5b78d2e5d4a5a3896bd8c66cdefeb89da43c307c762"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/project.json",
+     "bytes": 270,
+     "sha256": "9f6428fec64fb5d69d47637cf8e31ea42a0ccd8eb7e25d9158ef1a085cd0d5bc"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_c/v002/rg_ngn_pattern_panel_c.fbx",
+     "bytes": 45516,
+     "sha256": "56b976161330ebf0aeae48c1720d0a1bcfb6d0299665f4c19a756d661dcfb658"
+    },
+    {
+     "path": "exports/glb/rg_ngn_pattern_panel_c/v002/rg_ngn_pattern_panel_c.glb",
+     "bytes": 119216,
+     "sha256": "c332703e9f2060c8993a46f1496edec88d46f8d8fe64323efc0a9272cc5040f3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pattern_panel_c/v002/rg_ngn_pattern_panel_c.manifest.json",
+     "bytes": 2981,
+     "sha256": "4b10e6d1280f3d86c903998c92cf3087f15ccb2bee39a10524e38f37fccc24d5"
+    },
+    {
+     "path": "validation/rg_ngn_pattern_panel_c/v002.json",
+     "bytes": 1067,
+     "sha256": "91aa599ffff6d84fde35b84bba7e2cbee9c361c55df1fcfb676e7a3a68297bc0"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l0_BaseColor.png",
+     "bytes": 50870,
+     "sha256": "d699358fd5de996dce67e636c8222e79cf2c419600b183bec5c29a3de88c1c8f"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l0_Normal.png",
+     "bytes": 17239,
+     "sha256": "c9dfb2be904a0b8c1d70acf4a6af2abb03dcc09abf74ad2fc557279546cde2c8"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l1_BaseColor.png",
+     "bytes": 14334,
+     "sha256": "beae485a0fee8dae174b7fd09ea2e49664a0b980dcd5447ca572b8dbe455ae1b"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l1_Normal.png",
+     "bytes": 3781,
+     "sha256": "fd71083252ab82754b3afd2085e32b3c31fae8af0407f2daee9e3e33314bf0f5"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l2_BaseColor.png",
+     "bytes": 1552,
+     "sha256": "f0bf838bfd09d430c20815f453b974dbbb52d6682df94724d805c30c03c97ad0"
+    },
+    {
+     "path": "projects/props/rg_ngn_pattern_panel_c/v002/T_rg_ngn_pattern_panel_c_v002_l2_Normal.png",
+     "bytes": 1162,
+     "sha256": "a6365bd9f3474ade90f8e61399af411a4c860525f6fb5f37138d37322299c2d7"
+    }
+   ]
+  },
+  {
+   "id": "aro_flyover_pier_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     232,
+     70,
+     22
+    ],
+    "sizeM": [
+     2.5,
+     2.5,
+     7.003
+    ],
+    "materials": [
+     "M_sb_aro_flyover_pier_a_v002_l0",
+     "M_sb_aro_flyover_pier_a_v002_l1",
+     "M_sb_aro_flyover_pier_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/aro_flyover_pier_a.blend",
+     "bytes": 1529826,
+     "sha256": "0ad5f390bd5e896bfa9eeae46c1138b9c0bd5e9c7f7e2db458f5077bae685fb9"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/project.json",
+     "bytes": 252,
+     "sha256": "7ef0b8bd2dc3864d8bd48f730fc3a6f1eed9b10ac6b7b5f9cd7426d360d2b48f"
+    },
+    {
+     "path": "exports/fbx/aro_flyover_pier_a/v002/aro_flyover_pier_a.fbx",
+     "bytes": 45708,
+     "sha256": "facbce65edb24d59cbcab0a64b3f11130f55b0e3355db5af08d5ce56ed865386"
+    },
+    {
+     "path": "exports/glb/aro_flyover_pier_a/v002/aro_flyover_pier_a.glb",
+     "bytes": 124932,
+     "sha256": "cf8984948a863ffa2eb0ce54353174fe5280c9d8062e63922c89a8606115b10e"
+    },
+    {
+     "path": "exports/fbx/aro_flyover_pier_a/v002/aro_flyover_pier_a.manifest.json",
+     "bytes": 2751,
+     "sha256": "7cfaee4cc25c0a1cb5db165e322bab315f82dfcdd6fc8ec79d18b3ffa9b8d84b"
+    },
+    {
+     "path": "validation/aro_flyover_pier_a/v002.json",
+     "bytes": 1049,
+     "sha256": "654a7c74356d1409f85a63b3c0715a94b22984121b670e97a099c553ec01595a"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l0_BaseColor.png",
+     "bytes": 55615,
+     "sha256": "957ffc62b8d1fdc660c6e3e81ffe9d545a0c4bb3359fc6c4d8115176a71a1029"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l0_Normal.png",
+     "bytes": 12475,
+     "sha256": "da87c3876d6586038d00d3229d4cc5aa0bd94857e41b5b0ac3698bad37c07d43"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l1_BaseColor.png",
+     "bytes": 17984,
+     "sha256": "c515afb4985baee8c8e717c94185eceefec1d4dad4b8124703bba5148c6c512b"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l1_Normal.png",
+     "bytes": 3268,
+     "sha256": "961937715759284a7c82d1eac35a3a00bc8d6b71e1e646dacaf4290e9018f9ba"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l2_BaseColor.png",
+     "bytes": 1592,
+     "sha256": "a96bccb34341940b54e743bd6c4583e64bd0924a31c6e6446cfdb035f9d2b2c9"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_aro_flyover_pier_a_v002_l2_Normal.png",
+     "bytes": 912,
+     "sha256": "d787dfbc7e5463bfaf81be57e603ff8bba9315e477e794e2b5b0a914a2ee33b5"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "aro_flyover_pier_b",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     244,
+     36,
+     22
+    ],
+    "sizeM": [
+     2.4,
+     2.4,
+     8.003
+    ],
+    "materials": [
+     "M_sb_aro_flyover_pier_b_v002_l0",
+     "M_sb_aro_flyover_pier_b_v002_l1",
+     "M_sb_aro_flyover_pier_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/aro_flyover_pier_b.blend",
+     "bytes": 1546206,
+     "sha256": "35bbc5e8338629afc6bba68e02df7ae7cd233ae7778b9bfe4edeff971f27cae2"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/project.json",
+     "bytes": 224,
+     "sha256": "d09911e1073230dd79c92bfa7816f55a20c671047354e9bb6c657c5345589232"
+    },
+    {
+     "path": "exports/fbx/aro_flyover_pier_b/v002/aro_flyover_pier_b.fbx",
+     "bytes": 44940,
+     "sha256": "69384634584ea358bec9765b9b008ed916fc69fadd4ed1c70af4007b90bc06e9"
+    },
+    {
+     "path": "exports/glb/aro_flyover_pier_b/v002/aro_flyover_pier_b.glb",
+     "bytes": 140692,
+     "sha256": "663cd14c8507afe010e53c1e1231fc6b935315a9b856b2cc41ffb97705d93bcf"
+    },
+    {
+     "path": "exports/fbx/aro_flyover_pier_b/v002/aro_flyover_pier_b.manifest.json",
+     "bytes": 2691,
+     "sha256": "f6e6342354122182066bc63a78f0ba8645273b98f7b995d66b325b3218190b2f"
+    },
+    {
+     "path": "validation/aro_flyover_pier_b/v002.json",
+     "bytes": 1045,
+     "sha256": "3407f620932e8283191ffeccee3745d357a06832038661f4ee41eafc4b88c831"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l0_BaseColor.png",
+     "bytes": 68192,
+     "sha256": "0766d382cdac7f34356a461bb2529163ac062d27887089a28587cf6df5698248"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l0_Normal.png",
+     "bytes": 14925,
+     "sha256": "2c6c23374210307900073d986692f3445402e7dacbb4376656614a3fc02f5c43"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l1_BaseColor.png",
+     "bytes": 18753,
+     "sha256": "159366077313a5ee023a03f7ff835614505570195621d42b9d133ce260368f00"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l1_Normal.png",
+     "bytes": 3512,
+     "sha256": "b051a1559d344ecb99670f139e091672345dc01de64c018db8ebbb1ea9335124"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l2_BaseColor.png",
+     "bytes": 1635,
+     "sha256": "22d0da6f190046823b7bbe9a8a32d1dcbad6ac82a06b2689dd9df5e0cc02f0a6"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_aro_flyover_pier_b_v002_l2_Normal.png",
+     "bytes": 961,
+     "sha256": "97e8f046b8a9c0ef9646b8b88637c8cc680cafdd4eb34047c12be0ea7472fc54"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/aro_flyover_pier_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_pier_panel_a",
+   "kind": "props",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     480,
+     18,
+     10
+    ],
+    "sizeM": [
+     3.0,
+     0.35,
+     6.0
+    ],
+    "materials": [
+     "M_sb_rg_ngn_pier_panel_a_v002_l0",
+     "M_sb_rg_ngn_pier_panel_a_v002_l1",
+     "M_sb_rg_ngn_pier_panel_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/rg_ngn_pier_panel_a.blend",
+     "bytes": 1543905,
+     "sha256": "8c60125eb271154376b198fa78bbf9407ef03b7ef7dad30457331ed12b135e83"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/project.json",
+     "bytes": 272,
+     "sha256": "15aee90b6356f9a77f0a54f50d889e13ef064a1b49951377eda35ef0ce8333fa"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pier_panel_a/v002/rg_ngn_pier_panel_a.fbx",
+     "bytes": 50876,
+     "sha256": "5b19a15b6ba50e6ecd98372a4cecc616789fa285e965d92c98aaa22c45a36547"
+    },
+    {
+     "path": "exports/glb/rg_ngn_pier_panel_a/v002/rg_ngn_pier_panel_a.glb",
+     "bytes": 148436,
+     "sha256": "d11343011ec91f29afce923f2d598836c4cc398606a2997b6aa3a4f2f9022b38"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pier_panel_a/v002/rg_ngn_pier_panel_a.manifest.json",
+     "bytes": 3003,
+     "sha256": "5b23bb2a42463327c0251bedd404c4b786b4bced6601ad45afc08bdaf0b74346"
+    },
+    {
+     "path": "validation/rg_ngn_pier_panel_a/v002.json",
+     "bytes": 1050,
+     "sha256": "c906cad1ab04d31723c8d893561ec1ebfe1a2cd234f5a0ab01ab88143b173a27"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l0_BaseColor.png",
+     "bytes": 65848,
+     "sha256": "998a0b20f0c3b1b597825685e4e07c98b80b6ab83bea19915fbd89ef6a869130"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l0_Normal.png",
+     "bytes": 16183,
+     "sha256": "1ad87caed620fa70a34da5b32acea3c3b493ca552a0886ed2ecab1cc184492e6"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l1_BaseColor.png",
+     "bytes": 14467,
+     "sha256": "43077416e91a0f05184858f675316db80a71cc20887998141497336a76bf615c"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l1_Normal.png",
+     "bytes": 2820,
+     "sha256": "c6df63f30745550abf6a7403c3bda98ccbc5f61cf4ae8d28f3c6fa5683d8afbe"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l2_BaseColor.png",
+     "bytes": 1666,
+     "sha256": "3a70e20a86d9b96d34e6962254f7b75fc676f7c410e08968847ea4b2c001bc97"
+    },
+    {
+     "path": "projects/props/rg_ngn_pier_panel_a/v002/T_rg_ngn_pier_panel_a_v002_l2_Normal.png",
+     "bytes": 1001,
+     "sha256": "7822eca5ffd8e5419b6500b22d7424e4e51803facfcfdf9bc9fc8ffeb224f969"
+    }
+   ]
+  },
+  {
+   "id": "lmk_kano_roundabout_monument_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1650,
+     180,
+     22
+    ],
+    "sizeM": [
+     10.902,
+     10.902,
+     22.003
+    ],
+    "materials": [
+     "M_sb_lmk_kano_roundabout_monument_a_v002_l0",
+     "M_sb_lmk_kano_roundabout_monument_a_v002_l1",
+     "M_sb_lmk_kano_roundabout_monument_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/lmk_kano_roundabout_monument_a.blend",
+     "bytes": 1896927,
+     "sha256": "bb4a8f7d53e3f397cde77e6c978cd2608180fae1174fb5764d95f1921fb94319"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/project.json",
+     "bytes": 294,
+     "sha256": "5d6bbfe37b6657c07b8708a5772218cabdd0ee578ab9800fa38935606a0fbab4"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_a/v002/lmk_kano_roundabout_monument_a.fbx",
+     "bytes": 88156,
+     "sha256": "dae4405046b7b97d7a421685c34bb1f9c270b920017f9a5a32d36c876168933d"
+    },
+    {
+     "path": "exports/glb/lmk_kano_roundabout_monument_a/v002/lmk_kano_roundabout_monument_a.glb",
+     "bytes": 580752,
+     "sha256": "5dffccfa86dd99fcfa13c737f8b27660499c83a41e570a9cbe23fd699c1b831b"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_a/v002/lmk_kano_roundabout_monument_a.manifest.json",
+     "bytes": 5088,
+     "sha256": "608b13c44223399366232b7f9c65302d1ece233dea732d2263a7ad53fa072d92"
+    },
+    {
+     "path": "validation/lmk_kano_roundabout_monument_a/v002.json",
+     "bytes": 1155,
+     "sha256": "9b65aa79555fc5fda1f31b3d1b311a7310e5d364f386b0331a47a167d459c8bf"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l0_BaseColor.png",
+     "bytes": 301188,
+     "sha256": "b32a7188dd416ff1b7a29528e4fe7ea990048deb291dcd618a3d196c263b7223"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l0_Normal.png",
+     "bytes": 44063,
+     "sha256": "cd4d908ee4c5e5abbe19be1548ac29c4f8bb4ccfcf351b5879a45c816d5b25ba"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l1_BaseColor.png",
+     "bytes": 65720,
+     "sha256": "de4cb56569384185b5dcb0835e1d0eaf484138b0fbd4ee7707d47cd9b7ba4d7d"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l1_Normal.png",
+     "bytes": 9390,
+     "sha256": "af278cc84fffdbbe15e38cfc9d681805fe6a28c146c2b6aab673918dd40b1e68"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l2_BaseColor.png",
+     "bytes": 5445,
+     "sha256": "5f803c84b19b6ab6101c47f3e615c6d55bc8852cc8d808b54de413065bf8ecb9"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_a/v002/T_lmk_kano_roundabout_monument_a_v002_l2_Normal.png",
+     "bytes": 2891,
+     "sha256": "3ffea7efd96fbc923af060edff4a900526e4f3509164b7c475f548d5deb88cbb"
+    }
+   ]
+  },
+  {
+   "id": "kano_mosque_grand_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     4936,
+     1487,
+     108
+    ],
+    "sizeM": [
+     46.72,
+     40.4,
+     33.2
+    ],
+    "materials": [
+     "M_sb_kano_mosque_grand_a_v002_l0",
+     "M_sb_kano_mosque_grand_a_v002_l1",
+     "M_sb_kano_mosque_grand_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/kano_mosque_grand_a.blend",
+     "bytes": 7090102,
+     "sha256": "0bfd41d97ba2c58b5429bc8220d98bd0ac1f263d1e259281587ff6c2af171e3f"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/project.json",
+     "bytes": 357,
+     "sha256": "efb64736d905d7e602640f847dca5974ec10b78e47187bfd1ea1030bcfb22a1f"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_a/v002/kano_mosque_grand_a.fbx",
+     "bytes": 222140,
+     "sha256": "136176e033b996e97af168c5b6e5464cf0f402ccfbbb7ab8036be19ba3d36bcc"
+    },
+    {
+     "path": "exports/glb/kano_mosque_grand_a/v002/kano_mosque_grand_a.glb",
+     "bytes": 6219740,
+     "sha256": "d6340a92821e9517abbe5469b74d39857e2e1a1f6454ed6d6d0ee44f240e91f2"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_a/v002/kano_mosque_grand_a.manifest.json",
+     "bytes": 4772,
+     "sha256": "aeae34e1254b80f80b6f004591c1042858752c0a3117e3fc8e6bd8b3101fbf4a"
+    },
+    {
+     "path": "validation/kano_mosque_grand_a/v002.json",
+     "bytes": 1084,
+     "sha256": "54b5310512d497f43f17465c49f83feaef0f3bef2780dce045a11b5b0222c33a"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l0_BaseColor.png",
+     "bytes": 4475542,
+     "sha256": "1b03678201afd4c71d495262c4c3512246d023d1fbc5cdec89ce2fe346f4bbb5"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l0_Normal.png",
+     "bytes": 652856,
+     "sha256": "f6ecf2a34ed4ce64b1aa58c8ec2efc3473cefc7e52182163b2a573664ea069bc"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l1_BaseColor.png",
+     "bytes": 345583,
+     "sha256": "b4a7cf3caedb5b2e87cbb53389667211fd25fe452a01e19c3b27265fc7f4af46"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l1_Normal.png",
+     "bytes": 37252,
+     "sha256": "614316170fedbfe68fde5061f567e5b37dd243d7db44afad90cc4e9775bcc71f"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l2_BaseColor.png",
+     "bytes": 24891,
+     "sha256": "56635b221773d712e0b570811124c436fe1a915ba98c43f4782ba9b64883cdd0"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_mosque_grand_a_v002_l2_Normal.png",
+     "bytes": 2867,
+     "sha256": "f764efa902e4121330342befb5dc24464031eb48725f07fbc2e2b030be7c096a"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_mosque_grand_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     5109,
+     1737,
+     106
+    ],
+    "sizeM": [
+     60.608,
+     42.4,
+     30.02
+    ],
+    "materials": [
+     "M_sb_kano_mosque_grand_b_v002_l0",
+     "M_sb_kano_mosque_grand_b_v002_l1",
+     "M_sb_kano_mosque_grand_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/kano_mosque_grand_b.blend",
+     "bytes": 7112418,
+     "sha256": "ebe71fd9e6e088d52a2977e591b817410a0966c9711d8ceb0854bdfba4461a64"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/project.json",
+     "bytes": 372,
+     "sha256": "8381657e8c2f54481560e0b934971b4299cd63e2a1105c3ed8d2800d605a6bda"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_b/v002/kano_mosque_grand_b.fbx",
+     "bytes": 225644,
+     "sha256": "d0904ef5fca8acecce66f8ab3545019d8b1733068654e15c47ea3ec97f2482e4"
+    },
+    {
+     "path": "exports/glb/kano_mosque_grand_b/v002/kano_mosque_grand_b.glb",
+     "bytes": 6282228,
+     "sha256": "d61623404f497a17b2f1972f3fb62269708c59df83249bccdb227880ebeb3b72"
+    },
+    {
+     "path": "exports/fbx/kano_mosque_grand_b/v002/kano_mosque_grand_b.manifest.json",
+     "bytes": 4807,
+     "sha256": "582aef17766d1dfe2e0b0ccf37d44b4175c212bb321ee952c260745405f708f8"
+    },
+    {
+     "path": "validation/kano_mosque_grand_b/v002.json",
+     "bytes": 1090,
+     "sha256": "5107a5ba3ee1064de003fd2725ebac724e1a6d467052baff56287b63776c4247"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l0_BaseColor.png",
+     "bytes": 4491169,
+     "sha256": "1756b7155b5b56f3da2b71725c9198360f05414ed8c72652913459f1b02fe4fd"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l0_Normal.png",
+     "bytes": 654539,
+     "sha256": "7b1f1a3d9fbd269baf6ea2a0aa4d144b25ce26309331f0201382a103bac1bb63"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l1_BaseColor.png",
+     "bytes": 351175,
+     "sha256": "bfccbe569f9830f2067c8dfd62fe555f316e612b2b8bd07aadf3f51c4692ec66"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l1_Normal.png",
+     "bytes": 36550,
+     "sha256": "38fff3d3559a51076b13572e94b1ab108c452c7b52791f48712bbd5db8c6dc6b"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l2_BaseColor.png",
+     "bytes": 24933,
+     "sha256": "68661ea4a8d4932323f5907d73f970c554bc9fa836b1e1e34d709e719bf61535"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_mosque_grand_b_v002_l2_Normal.png",
+     "bytes": 2913,
+     "sha256": "b928747b83dc79ba3f548a9f6d5c8d3f7a103e62f568da128254cc8e45203669"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_mosque_grand_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2923,
+     867,
+     96
+    ],
+    "sizeM": [
+     26.72,
+     26.4,
+     19.42
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_medium_a_v002_l0",
+     "M_sb_rg_ngn_mosque_medium_a_v002_l1",
+     "M_sb_rg_ngn_mosque_medium_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/rg_ngn_mosque_medium_a.blend",
+     "bytes": 3267007,
+     "sha256": "67d7a20e2653e24ba99b370ea9a6ed94c6fb0abe20efba9a05d7c530c2201368"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/project.json",
+     "bytes": 307,
+     "sha256": "6b68d46a6f9074cb6ba68d20ca1ea2ace97a48f0d616f16094a437333f59a562"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_a/v002/rg_ngn_mosque_medium_a.fbx",
+     "bytes": 144988,
+     "sha256": "06c23c6b21a2623d8af70aecbf56af61750d4249a92b0e4f4120462d1e3a05c3"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_a/v002/rg_ngn_mosque_medium_a.glb",
+     "bytes": 2145224,
+     "sha256": "a6b266e7029b94fff3e062b35c0aff1fb6285846065efb739be13bb8121e0e2b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_a/v002/rg_ngn_mosque_medium_a.manifest.json",
+     "bytes": 4128,
+     "sha256": "8b4850e8a3cfc4cdfd3aa568741f80113bafee2a03ae018dea639bafe738a491"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_a/v002.json",
+     "bytes": 1101,
+     "sha256": "ddbdd161800cf4385b64f6d2c341afb811bd16e6a5cc7ffe4f93a35f2fc1bce7"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l0_BaseColor.png",
+     "bytes": 1209785,
+     "sha256": "788d861971d12cc19568185acd1cc40659fd0e194d480e68008ae9f447996907"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l0_Normal.png",
+     "bytes": 157120,
+     "sha256": "3ba41e914a350006cdb1c94ffbb7698f2d5aefc2cf3eead5340c8330b823f5d7"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l1_BaseColor.png",
+     "bytes": 329632,
+     "sha256": "102d8a4724b095a601bb9a19b6504cb23f7d82245630a29775841952c0988b62"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l1_Normal.png",
+     "bytes": 39037,
+     "sha256": "e24804c13235d9fd3792012a4e21e8bd23fcefee41ac7249f3dec7989004a99e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l2_BaseColor.png",
+     "bytes": 23554,
+     "sha256": "15793c9c5b4fd555734a2e0ad5e9c90c075a7a8ec9bcb142b7341bfa3302bdf9"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_a/v002/T_rg_ngn_mosque_medium_a_v002_l2_Normal.png",
+     "bytes": 3045,
+     "sha256": "3f7bfafb823ef1532372ebceab22d8210f18b06eb6e08ae787a371e713fc4154"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2833,
+     992,
+     36
+    ],
+    "sizeM": [
+     30.888,
+     24.4,
+     20.48
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_medium_b_v002_l0",
+     "M_sb_rg_ngn_mosque_medium_b_v002_l1",
+     "M_sb_rg_ngn_mosque_medium_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/rg_ngn_mosque_medium_b.blend",
+     "bytes": 3197128,
+     "sha256": "b40cf864e6216f246fb3ac279a29067b547f29550a2bd07967c15449a37d6723"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/project.json",
+     "bytes": 312,
+     "sha256": "ea3c455fa35d883cdda44355838a9a5e66944b82ac6d05b2f83ee57b7f4a2d46"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_b/v002/rg_ngn_mosque_medium_b.fbx",
+     "bytes": 141676,
+     "sha256": "da5d6e32f8cd5efd2c077f12cba7d0283a787fdd4ee5216753ed54ffd85edf88"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_b/v002/rg_ngn_mosque_medium_b.glb",
+     "bytes": 2068800,
+     "sha256": "0914c94916e49f40d1d78fd9bd6ab48f061d88e50a2a84f7ee5bc1d5ad44dd19"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_b/v002/rg_ngn_mosque_medium_b.manifest.json",
+     "bytes": 4136,
+     "sha256": "f34b18482db55aac90254ab1cf2ca1dd0ce99763e34a0fe7247c304e9551089b"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_b/v002.json",
+     "bytes": 1103,
+     "sha256": "3181acac755a676ea0fef7fd22f80807a50d04b24dbca3511c3fc1f3592c52ab"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l0_BaseColor.png",
+     "bytes": 1166034,
+     "sha256": "892d97b442512982c769cb9367b8ef3bd6e67705b03af28c67cbc79a7044bfba"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l0_Normal.png",
+     "bytes": 152096,
+     "sha256": "1973059be4c98259d08b724059253dbdd47a17b32bdc0798286952972d6660cc"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l1_BaseColor.png",
+     "bytes": 315193,
+     "sha256": "b5e4cacc4814cdac26263bd51a9d996d739574b01d26bb94197882988cffc846"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l1_Normal.png",
+     "bytes": 35999,
+     "sha256": "8db5c63e2bfc63e24d0980af4cb4351f5a434f17dba92cfaf335f3066f6793da"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l2_BaseColor.png",
+     "bytes": 20572,
+     "sha256": "cffff6173b0dfc4ffdde45465df4458238695e8fc8c120b34d0b059761c9170a"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_b/v002/T_rg_ngn_mosque_medium_b_v002_l2_Normal.png",
+     "bytes": 2847,
+     "sha256": "fcd47518164a59928ac162e29948e934564202487348c231ceca851123ecfccb"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_medium_c",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     3309,
+     1073,
+     96
+    ],
+    "sizeM": [
+     28.72,
+     28.4,
+     19.42
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_medium_c_v002_l0",
+     "M_sb_rg_ngn_mosque_medium_c_v002_l1",
+     "M_sb_rg_ngn_mosque_medium_c_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/rg_ngn_mosque_medium_c.blend",
+     "bytes": 3275810,
+     "sha256": "37e148a6f0a6c0f0ef115de997bb979d7c2d091ae6bda881c8c13f44dda45e32"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/project.json",
+     "bytes": 317,
+     "sha256": "1dc0670ea8f9bd75fcbd95fb634a4ced23926991eaeaa0f66f8f5be1f40016d9"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_c/v002/rg_ngn_mosque_medium_c.fbx",
+     "bytes": 160892,
+     "sha256": "73912c8c53f5d6d5b6f22dabbd7574675222b0dda3a4f15e7a142162c28a9bba"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_medium_c/v002/rg_ngn_mosque_medium_c.glb",
+     "bytes": 2181232,
+     "sha256": "5537eacb81d84476c2e48e5a9e965509d9fc0ff868d5d2b6ebdbf876b2f5fda8"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_medium_c/v002/rg_ngn_mosque_medium_c.manifest.json",
+     "bytes": 4155,
+     "sha256": "b67e86a0607c3d28be7724bab22a2207e4ab87e8aaea73168163ab3abf8a03e0"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_medium_c/v002.json",
+     "bytes": 1103,
+     "sha256": "64724d5727df46b0013c22986922543b50a62572f10b60e95dc4d01d8475d52e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l0_BaseColor.png",
+     "bytes": 1200526,
+     "sha256": "044049d9c7b7d2e3dc1ebe8953160c9735a35f855f3088a275a09836a3847c8e"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l0_Normal.png",
+     "bytes": 158902,
+     "sha256": "aa6694f185310482e1c7aefc11b5a5a420615dfd3a1e335ecaae1cb93e77f4e4"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l1_BaseColor.png",
+     "bytes": 331600,
+     "sha256": "54ff2da9c9564b8cba50033d4887a904719a207ca697ae26b4f8252524e8a9cb"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l1_Normal.png",
+     "bytes": 39129,
+     "sha256": "bd2084262d75a48f3cb48392b84a3f987d4edb18943883cd9ee5843de6391685"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l2_BaseColor.png",
+     "bytes": 24791,
+     "sha256": "a23dee72b8661001f81e9b062c475e0dff8e9019b4ff505e1f35a6d2b378a557"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_medium_c/v002/T_rg_ngn_mosque_medium_c_v002_l2_Normal.png",
+     "bytes": 3197,
+     "sha256": "569fd7c21cb34380a93c2023da4a70f3dc0562e2d4475bacc34efa27af9c3651"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1694,
+     525,
+     36
+    ],
+    "sizeM": [
+     18.72,
+     16.7,
+     13.06
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_small_a_v002_l0",
+     "M_sb_rg_ngn_mosque_small_a_v002_l1",
+     "M_sb_rg_ngn_mosque_small_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/rg_ngn_mosque_small_a.blend",
+     "bytes": 3142274,
+     "sha256": "70387068f28847ba0a64cb6f1fa41262449e5c9db35690abbcf29985c42f0f93"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/project.json",
+     "bytes": 296,
+     "sha256": "5550503a159e5df15c763f80a49a4e8da73b1d4656a0b2b02d41517e700e94fe"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_a/v002/rg_ngn_mosque_small_a.fbx",
+     "bytes": 102252,
+     "sha256": "3843ea163683b381cd56b560f598684f5439d2c0b1416cecf9b0ad06424114ff"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_a/v002/rg_ngn_mosque_small_a.glb",
+     "bytes": 1929880,
+     "sha256": "fd63ea539ead712224cb68af28642dad3dfbe5f0ba03c0bab14e9295eed1b4b5"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_a/v002/rg_ngn_mosque_small_a.manifest.json",
+     "bytes": 3898,
+     "sha256": "da258983ec8fc363a9962c095bf3c5c12a0ec1e34a2372e5a388dc3ede416add"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_a/v002.json",
+     "bytes": 1091,
+     "sha256": "430ddffd4e3c0bb3818c9a9abc1f621a494430ee4eb38ddf291d0bcc9aec4c40"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l0_BaseColor.png",
+     "bytes": 1094337,
+     "sha256": "8fd955357d7c67f3c57b2040f758b18374f0b0e4e1c2060bb7d9f17db1d8a93d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l0_Normal.png",
+     "bytes": 198013,
+     "sha256": "d0fb747ac6c69cdfc63bc0d86cd2205c78a98c33c89728179b0a3181283b6616"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l1_BaseColor.png",
+     "bytes": 305243,
+     "sha256": "60b0ac55a7995f1fa02490291c52e5c6b07021bc30abf033e973c5046e01a1d0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l1_Normal.png",
+     "bytes": 43801,
+     "sha256": "0a65116b9b9befa7017a8cf891fe93d47cbd57b161b0ac10ec204ad8ad6b3197"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l2_BaseColor.png",
+     "bytes": 21241,
+     "sha256": "ef62e91a9326d10d5eaae0e2665363df6d5d483bdb5b9fa66f8416c70a13305b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_a/v002/T_rg_ngn_mosque_small_a_v002_l2_Normal.png",
+     "bytes": 2985,
+     "sha256": "90e9ac0cc079f6622e469276445ec1de4b0f3cd0ebde5f3d488d01669603c8c7"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1654,
+     573,
+     36
+    ],
+    "sizeM": [
+     20.72,
+     16.7,
+     12.0
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_small_b_v002_l0",
+     "M_sb_rg_ngn_mosque_small_b_v002_l1",
+     "M_sb_rg_ngn_mosque_small_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/rg_ngn_mosque_small_b.blend",
+     "bytes": 3206579,
+     "sha256": "c2fdbd867deb1ab9f22a79702918e690a0f7e9fa668f2240660ec227c413caa4"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/project.json",
+     "bytes": 292,
+     "sha256": "f587de8420f9680608f09743761e4b3fd2b77358dbc10e694e34c9aa70bb8fa2"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_b/v002/rg_ngn_mosque_small_b.fbx",
+     "bytes": 99884,
+     "sha256": "8a21dd63e807fc103c3fde1a8f504099ae19ce9cb5c489c8b33d4d50ab44e249"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_b/v002/rg_ngn_mosque_small_b.glb",
+     "bytes": 2004516,
+     "sha256": "a9187e2437a47fd6d790b2d22764c44acd8b815a143c91b88102e07cc80479ea"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_b/v002/rg_ngn_mosque_small_b.manifest.json",
+     "bytes": 3887,
+     "sha256": "d96c2938a478f94bd4b82c01b9778ed98da793aef64d0a5308654ea4a5336812"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_b/v002.json",
+     "bytes": 1090,
+     "sha256": "38e1ba4d2a8ee5e3c1b077f1d8d8117a36b79e55c19a3fc367b396d0dad91aa0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l0_BaseColor.png",
+     "bytes": 1164010,
+     "sha256": "cc92336b9d5dfdd6a8cc5b36509d359ab3bdb663a1f0ab03a14d683f3c62c6f1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l0_Normal.png",
+     "bytes": 205196,
+     "sha256": "5c963c00f11e95fa3adc1b42991ec309d3b85bcc062b63725a0b89585b7bec44"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l1_BaseColor.png",
+     "bytes": 297665,
+     "sha256": "9194d47bf7b14a0a39a7708cc20ae382721d952be3ea096782c393f1f14a2e12"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l1_Normal.png",
+     "bytes": 39916,
+     "sha256": "4d45c9295b517734268b763eb9695e4eb19560e0646ea5c2e49e203cb3ecce41"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l2_BaseColor.png",
+     "bytes": 22649,
+     "sha256": "a98a17c3be4119be181b252aa09908038fbc888af4efc871a796548c9c969c18"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_b/v002/T_rg_ngn_mosque_small_b_v002_l2_Normal.png",
+     "bytes": 3133,
+     "sha256": "222c030af3c92999f2cdd04196bd49f63d84dff4884c457f9ac54194356694a2"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_small_c",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1477,
+     542,
+     36
+    ],
+    "sizeM": [
+     14.72,
+     12.9,
+     9.88
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_small_c_v002_l0",
+     "M_sb_rg_ngn_mosque_small_c_v002_l1",
+     "M_sb_rg_ngn_mosque_small_c_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/rg_ngn_mosque_small_c.blend",
+     "bytes": 3213140,
+     "sha256": "75b3ea5242accf48594b3203e7f54a9cb03c1ba61bd78e3ca026492a8a8d6b41"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/project.json",
+     "bytes": 307,
+     "sha256": "84898a8eac137d3632c1615292d39ac93a684060aefab8495c88f14c7b41868a"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_c/v002/rg_ngn_mosque_small_c.fbx",
+     "bytes": 96972,
+     "sha256": "4440bb2ec3b132e36780cd15b2e9ca892bd91ff35a7f3d198b894afb8bcafb2b"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_small_c/v002/rg_ngn_mosque_small_c.glb",
+     "bytes": 1984684,
+     "sha256": "c5ff8c334160e4af823063b0eac0efe883dd39e5d6f73b5242b99bae2b990a74"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_small_c/v002/rg_ngn_mosque_small_c.manifest.json",
+     "bytes": 3915,
+     "sha256": "776d5f73cd24285c5486baa62b493c3386ee5a25d6e4254d02615656a5c08366"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_small_c/v002.json",
+     "bytes": 1088,
+     "sha256": "190af59be58b021b6985cab97e06f5eec5e03302d855b725318ba6b0af8642f4"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l0_BaseColor.png",
+     "bytes": 1104192,
+     "sha256": "d6ba9a8fd7402d02cf58084642d6bed0d024eb5ae5c151b0dc59526c833c672b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l0_Normal.png",
+     "bytes": 239629,
+     "sha256": "565d082ecfdaf476c018e46fb52494e2d805743999bd3b0a5c445a5c2c06b592"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l1_BaseColor.png",
+     "bytes": 317168,
+     "sha256": "f8845d635d649501a83a28083b42022ac9a584af534f5d7e9a7bd56ae1a5580d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l1_Normal.png",
+     "bytes": 53924,
+     "sha256": "c9f9241ab540ad78bd2c8c0d6f53decba0cd3b6aa7e968af6313e6be96abcfbe"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l2_BaseColor.png",
+     "bytes": 22594,
+     "sha256": "8c35146eacec7c619b2333bfaed2e624e89f867e822315477afa005089f6b926"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_small_c/v002/T_rg_ngn_mosque_small_c_v002_l2_Normal.png",
+     "bytes": 3274,
+     "sha256": "a7b58c321dff1e7f368cfec75c613c0d854bd6c111b33152bbe4e90155869953"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1358,
+     268,
+     36
+    ],
+    "sizeM": [
+     26.006,
+     22.453,
+     15.9
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_traditional_a_v002_l0",
+     "M_sb_rg_ngn_mosque_traditional_a_v002_l1",
+     "M_sb_rg_ngn_mosque_traditional_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/rg_ngn_mosque_traditional_a.blend",
+     "bytes": 3119681,
+     "sha256": "e22e7eac38e64b47adffad4fc32943f4d6e4f74cc21543507db3177d150ec248"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/project.json",
+     "bytes": 370,
+     "sha256": "d23bb132334491bb57dd79c44bbfecb381aa45a8d131c694bbc29a6d797051b0"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_a/v002/rg_ngn_mosque_traditional_a.fbx",
+     "bytes": 85708,
+     "sha256": "4665ee1c25948f0847d7f6a677e28d81f81281a807bf72961415d6986f2e725f"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_traditional_a/v002/rg_ngn_mosque_traditional_a.glb",
+     "bytes": 1838260,
+     "sha256": "e9816bd03bbbf99d1af9b14281bdca282406543d74193f21249d83d15e3e5122"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_a/v002/rg_ngn_mosque_traditional_a.manifest.json",
+     "bytes": 4215,
+     "sha256": "88e82109ea7d8042db2cd9a820db8976c6b89117ae9e03ba95a3cae0aa08d30a"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_traditional_a/v002.json",
+     "bytes": 1137,
+     "sha256": "3091c7fbc25c6dc2cd51a42b9963fdeed450d951cf997a7a80125b2a44ea6c41"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l0_BaseColor.png",
+     "bytes": 1057466,
+     "sha256": "d27caa202e23f315eaafea93603674fec8817c4f01417478ad4d6589bd4cc466"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l0_Normal.png",
+     "bytes": 239231,
+     "sha256": "4ef278984b592d345849c8239f483582e0caa1e4d192bbf5707c1ee5a1338890"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l1_BaseColor.png",
+     "bytes": 283245,
+     "sha256": "22938c472588f3aad963b961226bd576f305f3b43465cd2811e6fbb82162ec9c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l1_Normal.png",
+     "bytes": 51788,
+     "sha256": "04512caf63efe5f13a9d0c471546f266bf565916ec170313d518f558acc530ad"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l2_BaseColor.png",
+     "bytes": 21601,
+     "sha256": "d09551afdf11193c0f39ad9b3ca1bd1de742b71526c2c78d3316af4ff1d46511"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_a/v002/T_rg_ngn_mosque_traditional_a_v002_l2_Normal.png",
+     "bytes": 3088,
+     "sha256": "d034be8c94b42508ac791736e00d5c76ce21319f0eb5308221e838e90c5e180c"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_mosque_traditional_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     753,
+     216,
+     36
+    ],
+    "sizeM": [
+     17.006,
+     15.95,
+     11.4
+    ],
+    "materials": [
+     "M_sb_rg_ngn_mosque_traditional_b_v002_l0",
+     "M_sb_rg_ngn_mosque_traditional_b_v002_l1",
+     "M_sb_rg_ngn_mosque_traditional_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/rg_ngn_mosque_traditional_b.blend",
+     "bytes": 3202032,
+     "sha256": "c4b764788ecc6fda576975523a28790a7fdf4cc8dfe8f03492b7bbf1f2118a80"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/project.json",
+     "bytes": 343,
+     "sha256": "44e4b1371f2f7fc1dd26a0a4102e33ae13591d7c868069bad35bc42bfdd85685"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_b/v002/rg_ngn_mosque_traditional_b.fbx",
+     "bytes": 69884,
+     "sha256": "c2cd463dc9088c1dc8d64da03a2c764f9add09dc1b9265336c9fbb8b642dd34e"
+    },
+    {
+     "path": "exports/glb/rg_ngn_mosque_traditional_b/v002/rg_ngn_mosque_traditional_b.glb",
+     "bytes": 1880540,
+     "sha256": "124c97adfbb31fe5e811355e15e06be9c9ac6acb4a63b8db1583e0e8d2e3b3b8"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_mosque_traditional_b/v002/rg_ngn_mosque_traditional_b.manifest.json",
+     "bytes": 4146,
+     "sha256": "b9ce824da796b0d8fa08cede3b1f78f792b17a137e21875233c3f30ac8944d1e"
+    },
+    {
+     "path": "validation/rg_ngn_mosque_traditional_b/v002.json",
+     "bytes": 1127,
+     "sha256": "37a7839dc772e2ff2a3e0811e31df69bbfa92591c3ca3d1466d400d8b475d5bf"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l0_BaseColor.png",
+     "bytes": 1082507,
+     "sha256": "83aba6df5286e5bb4aac56c067e6a2b88fb7f1d0c8c5163c82654838b71874c0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l0_Normal.png",
+     "bytes": 289515,
+     "sha256": "63f5765a997d4522c53e5e70cf0487f005081578633da1915b50d815c85b60ea"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l1_BaseColor.png",
+     "bytes": 286851,
+     "sha256": "bc70840cd881f0ca9448aa695127a186bdc610bf19ff5279911ef28e39ac6eb6"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l1_Normal.png",
+     "bytes": 60399,
+     "sha256": "8e575ddbcd5ca4b4689adc2ff2386b28078e46418063a43ea8b33de5c5532021"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l2_BaseColor.png",
+     "bytes": 24027,
+     "sha256": "25e1c93fc831600d1304942e98c725f9932c235c510aa52a0ee6c6fa64cac0ed"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_mosque_traditional_b/v002/T_rg_ngn_mosque_traditional_b_v002_l2_Normal.png",
+     "bytes": 3608,
+     "sha256": "e3878be29ce07176675e35621227b7391a326324d82e72ba96e00492786c9e74"
+    }
+   ]
+  },
+  {
+   "id": "kano_shopping_parade_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1194,
+     280,
+     22
+    ],
+    "sizeM": [
+     36.68,
+     17.04,
+     17.7
+    ],
+    "materials": [
+     "M_sb_kano_shopping_parade_a_v002_l0",
+     "M_sb_kano_shopping_parade_a_v002_l1",
+     "M_sb_kano_shopping_parade_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/kano_shopping_parade_a.blend",
+     "bytes": 2895707,
+     "sha256": "f4c6b19698c37da894a7fbff07f27918fd1e0bdd3b33ca6accfc16bef5d848aa"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/project.json",
+     "bytes": 357,
+     "sha256": "8a3c3fe09987a190a65f46c05c4ac9f168afff134401aef6b515110748900786"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_parade_a/v002/kano_shopping_parade_a.fbx",
+     "bytes": 77996,
+     "sha256": "6e82e36f37bdeb100ed1a9066cbe20596463c7b442e8b238126f1f883bcbb32b"
+    },
+    {
+     "path": "exports/glb/kano_shopping_parade_a/v002/kano_shopping_parade_a.glb",
+     "bytes": 1593928,
+     "sha256": "57e471292a8d2cf9f7825c485cfa6159616d45a7d24537e3639c9feec8716773"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_parade_a/v002/kano_shopping_parade_a.manifest.json",
+     "bytes": 4661,
+     "sha256": "4625424e7205ba50ec039821594f8c2a18258aa73d49beda08f4b5895d3aa830"
+    },
+    {
+     "path": "validation/kano_shopping_parade_a/v002.json",
+     "bytes": 1099,
+     "sha256": "c422591b488f5d3eec79204c6dfcbe3d1c17aa33db39386456b234a761cd217b"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l0_BaseColor.png",
+     "bytes": 978568,
+     "sha256": "12647b3b9a30d1cde92f31f5673b06a698a01fb24d04e378924a4b1b6dc37c51"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l0_Normal.png",
+     "bytes": 142780,
+     "sha256": "d4ad7135fae5df2488e686e868bdb7e6952d53d510a3a8cd9577e2094c62965e"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l1_BaseColor.png",
+     "bytes": 258427,
+     "sha256": "a28377d68b93ca231064aa75e577f1b782fc15261a9d6be68915fbbcd7415454"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l1_Normal.png",
+     "bytes": 33821,
+     "sha256": "be5b6feeca319ccbe965dbb69f603cc08818792df5ac1a4c041b02e96a88fd64"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l2_BaseColor.png",
+     "bytes": 20425,
+     "sha256": "ca37d8afdb63b223c7e2ad570ed1dd7d9b52fa4ccdcafb43804cff12167b35bb"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_parade_a/v002/T_kano_shopping_parade_a_v002_l2_Normal.png",
+     "bytes": 3035,
+     "sha256": "005f918a30d539df82447eae16301939b5b97a81cb56aff3db09d261cdd3b4ce"
+    }
+   ]
+  },
+  {
+   "id": "kano_office_block_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     870,
+     232,
+     22
+    ],
+    "sizeM": [
+     22.56,
+     21.25,
+     34.6
+    ],
+    "materials": [
+     "M_sb_kano_office_block_a_v002_l0",
+     "M_sb_kano_office_block_a_v002_l1",
+     "M_sb_kano_office_block_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/kano_office_block_a.blend",
+     "bytes": 2940413,
+     "sha256": "2d02c1dbcc6a2ddb50c869e97d06966b52734d8d3f62b10bb7be506d54f96b9d"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/project.json",
+     "bytes": 338,
+     "sha256": "ab6b4a03280df5b78cebc1c00ddb227fc1a67f555a84a4c456cb4fe7174a95fd"
+    },
+    {
+     "path": "exports/fbx/kano_office_block_a/v002/kano_office_block_a.fbx",
+     "bytes": 69996,
+     "sha256": "7323d4f252f57f22d899e9bb579580aaa120d44a4affd919f34d6ed57b560d5d"
+    },
+    {
+     "path": "exports/glb/kano_office_block_a/v002/kano_office_block_a.glb",
+     "bytes": 1623364,
+     "sha256": "90b1b329076f6cced1aea359c29d321a371eb88b0033a753b836a9a7526371b6"
+    },
+    {
+     "path": "exports/fbx/kano_office_block_a/v002/kano_office_block_a.manifest.json",
+     "bytes": 4411,
+     "sha256": "39eeeab2d67ae4c7ecd51b752909d59363fcc46b2a17b70c31174699c81aec39"
+    },
+    {
+     "path": "validation/kano_office_block_a/v002.json",
+     "bytes": 1080,
+     "sha256": "2c2b3260cda7d1ba9813bb7c701bdf819441d6f457c4b7e63aa10cfccd1e274b"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l0_BaseColor.png",
+     "bytes": 1044313,
+     "sha256": "06ef0a5f4b426a3d70e9de02e80bba5f1cc5cac55cfb4d8b033bd3c9958c9b35"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l0_Normal.png",
+     "bytes": 116777,
+     "sha256": "a9171f1eb3bca47ea4a9e588d7047b43edc04c52fc3742cf91c215b5f959deab"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l1_BaseColor.png",
+     "bytes": 278073,
+     "sha256": "19b15005bb0d435672f1b9aa1592f47a9373ecb4dd70cc03f86a4e919eec2a60"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l1_Normal.png",
+     "bytes": 30424,
+     "sha256": "8523514ad6ca894dcb1a2a1d5368634baecca87117cbccc8c606ac57808803b3"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l2_BaseColor.png",
+     "bytes": 19657,
+     "sha256": "e1c35845d33171ae72033142d5726b97c08c6513101bfc5e16a9a80f2e82f0b5"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_office_block_a_v002_l2_Normal.png",
+     "bytes": 3187,
+     "sha256": "671be7fc3b5f00a3eb779b6b36abf57087aab7fbf20f04f3c3102154dfaf7c71"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_office_block_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_midrise_apartments_a",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1368,
+     612,
+     12
+    ],
+    "sizeM": [
+     24.49,
+     17.95,
+     19.2
+    ],
+    "materials": [
+     "M_sb_kano_midrise_apartments_a_v002_l0",
+     "M_sb_kano_midrise_apartments_a_v002_l1",
+     "M_sb_kano_midrise_apartments_a_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/kano_midrise_apartments_a.blend",
+     "bytes": 3120288,
+     "sha256": "1a6abb5ccf03da763337cc221ee5a4869e2fd5305c1cbc83be854234f4e432cf"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/project.json",
+     "bytes": 337,
+     "sha256": "8bd0bb71edf1701598464c45eea0e085c7f56eb35085a40703c845a1e70da12f"
+    },
+    {
+     "path": "exports/fbx/kano_midrise_apartments_a/v002/kano_midrise_apartments_a.fbx",
+     "bytes": 89740,
+     "sha256": "c8989cb18370c68c496f06d5acd62383b2993a3a4d22a3564b8e305b6001b653"
+    },
+    {
+     "path": "exports/glb/kano_midrise_apartments_a/v002/kano_midrise_apartments_a.glb",
+     "bytes": 1847868,
+     "sha256": "6c04c57cb264d08ee7cde7989a40f183c5c57bf9b5afce38432b911ba25b843d"
+    },
+    {
+     "path": "exports/fbx/kano_midrise_apartments_a/v002/kano_midrise_apartments_a.manifest.json",
+     "bytes": 4299,
+     "sha256": "ba8d5d9a92fe0654ce12b5e1cc978d0d341ab4cd084d099a47dba2aaa57b2e9e"
+    },
+    {
+     "path": "validation/kano_midrise_apartments_a/v002.json",
+     "bytes": 1117,
+     "sha256": "00945d80f6613b74578a955984d1bafa7979f40780d3d65f12958626794ddf2c"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l0_BaseColor.png",
+     "bytes": 1116188,
+     "sha256": "c3810de602f5cd542fe4b8e2adf5f8fa10d8c27cc04f84b8feca37856401567b"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l0_Normal.png",
+     "bytes": 175838,
+     "sha256": "9fe5d13307f7912ce0e88af3583840e0b032071f2cbd75769ebd50b9d4e1d53c"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l1_BaseColor.png",
+     "bytes": 306313,
+     "sha256": "f00c55ba2f37c977b688a802b49f2d846009c8c73d8d7c3784bffdcb4c145b77"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l1_Normal.png",
+     "bytes": 38999,
+     "sha256": "ef16f7a0bdf969f4d5cbe8a0ed0cb82ad8c2e58c627babb3c68a26439a542320"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l2_BaseColor.png",
+     "bytes": 15585,
+     "sha256": "326793bcdf3a343492aaf82f41b4256e6564884bd7b245b9f3cddf3e4ff00fa1"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_midrise_apartments_a_v002_l2_Normal.png",
+     "bytes": 2449,
+     "sha256": "e77e64732d8666c612b878c94f019e44751943be4304bb7307383aa69931e70c"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_midrise_apartments_a/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "lmk_kano_roundabout_monument_b",
+   "kind": "buildings",
+   "version": "v002",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     366,
+     162,
+     32
+    ],
+    "sizeM": [
+     12.0,
+     12.0,
+     24.6
+    ],
+    "materials": [
+     "M_sb_lmk_kano_roundabout_monument_b_v002_l0",
+     "M_sb_lmk_kano_roundabout_monument_b_v002_l1",
+     "M_sb_lmk_kano_roundabout_monument_b_v002_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/lmk_kano_roundabout_monument_b.blend",
+     "bytes": 1946112,
+     "sha256": "f163355c6c0b5df4b74a640b48894d833f63c704b096f58de6dc2fec2e38d0d3"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/project.json",
+     "bytes": 349,
+     "sha256": "9039d4ad21c9fd3543cbe05a79bd857777ebee07ff8a258ae3e11e54d2733e15"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_b/v002/lmk_kano_roundabout_monument_b.fbx",
+     "bytes": 63420,
+     "sha256": "2829c25eef73744b62db1404109888bd3e653060f6ed637f12039294342731e8"
+    },
+    {
+     "path": "exports/glb/lmk_kano_roundabout_monument_b/v002/lmk_kano_roundabout_monument_b.glb",
+     "bytes": 565468,
+     "sha256": "799a69d3709ad5aa1c544b70567595e875ebd6e8c09312d044d68d0ac47d78a0"
+    },
+    {
+     "path": "exports/fbx/lmk_kano_roundabout_monument_b/v002/lmk_kano_roundabout_monument_b.manifest.json",
+     "bytes": 4446,
+     "sha256": "9b1e42c8b67c0142329168ae8da89c432643d0d624c3d6120005076b6aa563c2"
+    },
+    {
+     "path": "validation/lmk_kano_roundabout_monument_b/v002.json",
+     "bytes": 1134,
+     "sha256": "ca9e749aec4f8091dec61edbee7f518e1ed4459b12577c3493437b2d9df89951"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l0_BaseColor.png",
+     "bytes": 334613,
+     "sha256": "26366417dedda85f87445b66a8404ff72808138aa7fd973d4e145247587e65ac"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l0_Normal.png",
+     "bytes": 55744,
+     "sha256": "6c6e228d23e6f7f4d673fbeaae36303a48d49ea5fe5ae7bee49ebc811c7f07ed"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l1_BaseColor.png",
+     "bytes": 88914,
+     "sha256": "4d1fa32c816d04d8637eadf9ac714905a39e9b8f599fe209337c771a385b44d9"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l1_Normal.png",
+     "bytes": 12686,
+     "sha256": "9cb6a09f071bfccbd4f92a5a954c09ddee259cdb6bc6aea1e0e99b93911ba1ec"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l2_BaseColor.png",
+     "bytes": 5870,
+     "sha256": "1164cf3639a545decfd46a72ce606af41d055f273a46e3b793f0011458bcecc1"
+    },
+    {
+     "path": "projects/buildings/lmk_kano_roundabout_monument_b/v002/T_lmk_kano_roundabout_monument_b_v002_l2_Normal.png",
+     "bytes": 2925,
+     "sha256": "548352b19bbad6479460f853c205742978f07db658b7e189a8023cce7a24c04d"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}
