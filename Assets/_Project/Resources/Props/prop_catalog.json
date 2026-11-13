@@ -776,12 +776,12 @@
    "source": "dev:kano_midrise_apartments_a",
    "collider": "box",
    "heightM": 19.2,
-   "widthM": 24.3,
-   "depthM": 17.9,
+   "widthM": 24.49,
+   "depthM": 17.95,
    "cullDistance": 500.0,
    "lodTriangles": [
-    1226,
-    484,
+    1368,
+    612,
     12
    ],
    "castShadow": true,
@@ -801,12 +801,12 @@
    "source": "dev:kano_mosque_grand_a",
    "collider": "box",
    "heightM": 33.2,
-   "widthM": 46.68,
-   "depthM": 37.94,
+   "widthM": 46.72,
+   "depthM": 40.4,
    "cullDistance": 600.0,
    "lodTriangles": [
-    5410,
-    2168,
+    4936,
+    1487,
     108
    ],
    "castShadow": true,
@@ -827,12 +827,12 @@
    "collider": "box",
    "heightM": 30.02,
    "widthM": 60.61,
-   "depthM": 39.64,
+   "depthM": 42.4,
    "cullDistance": 600.0,
    "lodTriangles": [
-    5370,
-    2450,
-    108
+    5109,
+    1737,
+    106
    ],
    "castShadow": true,
    "tags": [
@@ -852,12 +852,12 @@
    "collider": "box",
    "heightM": 34.6,
    "widthM": 22.56,
-   "depthM": 21.2,
+   "depthM": 21.25,
    "cullDistance": 500.0,
    "lodTriangles": [
-    916,
-    268,
-    24
+    870,
+    232,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -875,14 +875,14 @@
    "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
    "source": "dev:kano_shopping_parade_a",
    "collider": "box",
-   "heightM": 18.1,
-   "widthM": 36.5,
-   "depthM": 16.9,
+   "heightM": 17.7,
+   "widthM": 36.68,
+   "depthM": 17.04,
    "cullDistance": 500.0,
    "lodTriangles": [
-    1300,
-    214,
-    24
+    1194,
+    280,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -1001,12 +1001,12 @@
    "source": "dev:rg_ngn_mosque_medium_a",
    "collider": "box",
    "heightM": 19.42,
-   "widthM": 26.68,
-   "depthM": 25.14,
+   "widthM": 26.72,
+   "depthM": 26.4,
    "cullDistance": 450.0,
    "lodTriangles": [
-    2850,
-    1238,
+    2923,
+    867,
     96
    ],
    "castShadow": true,
@@ -1025,12 +1025,12 @@
    "source": "dev:rg_ngn_mosque_medium_b",
    "collider": "box",
    "heightM": 20.48,
-   "widthM": 30.87,
-   "depthM": 23.14,
+   "widthM": 30.89,
+   "depthM": 24.4,
    "cullDistance": 450.0,
    "lodTriangles": [
-    2904,
-    1444,
+    2833,
+    992,
     36
    ],
    "castShadow": true,
@@ -1049,12 +1049,12 @@
    "source": "dev:rg_ngn_mosque_medium_c",
    "collider": "box",
    "heightM": 19.42,
-   "widthM": 28.68,
-   "depthM": 26.84,
+   "widthM": 28.72,
+   "depthM": 28.4,
    "cullDistance": 450.0,
    "lodTriangles": [
-    3300,
-    1440,
+    3309,
+    1073,
     96
    ],
    "castShadow": true,
@@ -1073,12 +1073,12 @@
    "source": "dev:rg_ngn_mosque_small_a",
    "collider": "box",
    "heightM": 13.06,
-   "widthM": 18.68,
-   "depthM": 15.64,
+   "widthM": 18.72,
+   "depthM": 16.7,
    "cullDistance": 350.0,
    "lodTriangles": [
-    1774,
-    780,
+    1694,
+    525,
     36
    ],
    "castShadow": true,
@@ -1097,12 +1097,12 @@
    "source": "dev:rg_ngn_mosque_small_b",
    "collider": "box",
    "heightM": 12.0,
-   "widthM": 20.68,
-   "depthM": 15.64,
+   "widthM": 20.72,
+   "depthM": 16.7,
    "cullDistance": 350.0,
    "lodTriangles": [
-    1768,
-    906,
+    1654,
+    573,
     36
    ],
    "castShadow": true,
@@ -1121,12 +1121,12 @@
    "source": "dev:rg_ngn_mosque_small_c",
    "collider": "box",
    "heightM": 9.88,
-   "widthM": 14.68,
-   "depthM": 11.84,
+   "widthM": 14.72,
+   "depthM": 12.9,
    "cullDistance": 350.0,
    "lodTriangles": [
-    1526,
-    728,
+    1477,
+    542,
     36
    ],
    "castShadow": true,
@@ -1145,12 +1145,12 @@
    "source": "dev:rg_ngn_mosque_traditional_a",
    "collider": "box",
    "heightM": 15.9,
-   "widthM": 26.0,
-   "depthM": 21.15,
+   "widthM": 26.01,
+   "depthM": 22.45,
    "cullDistance": 350.0,
    "lodTriangles": [
     1358,
-    472,
+    268,
     36
    ],
    "castShadow": true,
@@ -1170,12 +1170,12 @@
    "source": "dev:rg_ngn_mosque_traditional_b",
    "collider": "box",
    "heightM": 11.4,
-   "widthM": 17.0,
-   "depthM": 14.55,
+   "widthM": 17.01,
+   "depthM": 15.95,
    "cullDistance": 350.0,
    "lodTriangles": [
-    730,
-    234,
+    753,
+    216,
     36
    ],
    "castShadow": true,
@@ -1239,9 +1239,9 @@
    "depthM": 18.02,
    "cullDistance": 300.0,
    "lodTriangles": [
-    1294,
-    244,
-    40
+    952,
+    192,
+    34
    ],
    "castShadow": true,
    "tags": [
@@ -1263,9 +1263,9 @@
    "depthM": 24.92,
    "cullDistance": 300.0,
    "lodTriangles": [
-    1450,
-    396,
-    58
+    1060,
+    290,
+    42
    ],
    "castShadow": true,
    "tags": [
@@ -1287,9 +1287,9 @@
    "depthM": 21.04,
    "cullDistance": 300.0,
    "lodTriangles": [
-    1048,
-    370,
-    70
+    744,
+    272,
+    54
    ],
    "castShadow": true,
    "tags": [

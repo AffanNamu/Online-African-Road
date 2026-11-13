@@ -352,7 +352,8 @@ public class FrontageTests
 
     [Theory, MemberData(nameof(Cities))] public void TheCityLotsHaveAGoldenDigestSoALaterChangeIsDeliberate(string id)
     {
-        string want = id == "ng-kano-city-e1" ? "afc3661a654d088b" : "175daddbe5a0cc47";
+        // 2026-11-13, deliberate: the realism pass (v002 of the mosques and city buildings) changed their footprints (the mosque compounds are 1.1 to 2.8 m deeper), so the lots move (was afc3661a654d088b / 175daddbe5a0cc47)
+        string want = id == "ng-kano-city-e1" ? "17f062f1c1b0a646" : "4f24743abe3955be";
         Assert.Equal(want, Digest(All(Model(id))));
     }
 }

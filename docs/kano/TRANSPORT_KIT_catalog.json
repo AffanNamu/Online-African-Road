@@ -14,9 +14,9 @@
    "depthM": 24.92,
    "cullDistance": 250,
    "lodTriangles": [
-    1450,
-    396,
-    58
+    1060,
+    290,
+    42
    ],
    "castShadow": true,
    "tags": [
@@ -92,9 +92,9 @@
    "depthM": 21.04,
    "cullDistance": 250,
    "lodTriangles": [
-    1048,
-    370,
-    70
+    744,
+    272,
+    54
    ],
    "castShadow": true,
    "tags": [
@@ -160,9 +160,9 @@
    "depthM": 18.02,
    "cullDistance": 250,
    "lodTriangles": [
-    1294,
-    244,
-    40
+    952,
+    192,
+    34
    ],
    "castShadow": true,
    "tags": [
@@ -235,8 +235,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    322,
-    82,
+    312,
+    80,
     10
    ],
    "castShadow": true,
@@ -257,8 +257,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    322,
-    82,
+    312,
+    80,
     10
    ],
    "castShadow": true,
@@ -279,8 +279,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    322,
-    82,
+    312,
+    80,
     10
    ],
    "castShadow": true,
@@ -301,8 +301,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    322,
-    82,
+    312,
+    80,
     10
    ],
    "castShadow": true,
@@ -323,8 +323,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    322,
-    82,
+    312,
+    80,
     10
    ],
    "castShadow": true,
@@ -345,8 +345,8 @@
    "depthM": 2.44,
    "cullDistance": 140,
    "lodTriangles": [
-    754,
-    274,
+    672,
+    216,
     34
    ],
    "castShadow": true,
@@ -623,9 +623,9 @@
    "depthM": 13.0,
    "cullDistance": 140,
    "lodTriangles": [
-    572,
-    240,
-    42
+    528,
+    230,
+    12
    ],
    "castShadow": true,
    "tags": [
@@ -646,9 +646,9 @@
    "depthM": 13.0,
    "cullDistance": 140,
    "lodTriangles": [
-    576,
-    160,
-    32
+    466,
+    146,
+    12
    ],
    "castShadow": true,
    "tags": [
@@ -748,9 +748,9 @@
    "depthM": 22.3,
    "cullDistance": 250,
    "lodTriangles": [
-    2388,
-    364,
-    60
+    2094,
+    286,
+    56
    ],
    "castShadow": true,
    "tags": [
@@ -1786,7 +1786,7 @@
    "depthM": 7.8,
    "cullDistance": 140,
    "lodTriangles": [
-    978,
+    738,
     300,
     28
    ],
@@ -1843,8 +1843,8 @@
    "depthM": 0.48,
    "cullDistance": 140,
    "lodTriangles": [
-    242,
-    30,
+    146,
+    24,
     12
    ],
    "castShadow": true,
@@ -1866,7 +1866,7 @@
    "depthM": 0.37,
    "cullDistance": 140,
    "lodTriangles": [
-    374,
+    268,
     34,
     12
    ],
@@ -1889,7 +1889,7 @@
    "depthM": 0.35,
    "cullDistance": 140,
    "lodTriangles": [
-    426,
+    424,
     34,
     12
    ],
@@ -1912,7 +1912,7 @@
    "depthM": 0.4,
    "cullDistance": 140,
    "lodTriangles": [
-    302,
+    230,
     34,
     12
    ],
@@ -2002,9 +2002,9 @@
    "depthM": 2.5,
    "cullDistance": 140,
    "lodTriangles": [
-    280,
-    76,
-    24
+    232,
+    70,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -2024,9 +2024,9 @@
    "depthM": 2.4,
    "cullDistance": 140,
    "lodTriangles": [
-    274,
-    38,
-    24
+    244,
+    36,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -2046,7 +2046,7 @@
    "depthM": 0.35,
    "cullDistance": 140,
    "lodTriangles": [
-    582,
+    480,
     18,
     10
    ],
@@ -2134,8 +2134,8 @@
    "depthM": 10.9,
    "cullDistance": 250,
    "lodTriangles": [
-    1788,
-    186,
+    1650,
+    180,
     22
    ],
    "castShadow": true,
@@ -2208,12 +2208,12 @@
    "source": "Props/kano_mosque_grand_a",
    "collider": "box",
    "heightM": 33.2,
-   "widthM": 46.68,
-   "depthM": 37.94,
+   "widthM": 46.72,
+   "depthM": 40.4,
    "cullDistance": 250,
    "lodTriangles": [
-    5410,
-    2168,
+    4936,
+    1487,
     108
    ],
    "castShadow": true,
@@ -2263,7 +2263,7 @@
      {
       "x": 11.0,
       "y": 15.0,
-      "z": -18.0
+      "z": -15.0
      }
     ]
    }
@@ -2277,12 +2277,12 @@
    "collider": "box",
    "heightM": 30.02,
    "widthM": 60.61,
-   "depthM": 39.64,
+   "depthM": 42.4,
    "cullDistance": 250,
    "lodTriangles": [
-    5370,
-    2450,
-    108
+    5109,
+    1737,
+    106
    ],
    "castShadow": true,
    "tags": [
@@ -2344,12 +2344,12 @@
    "source": "Props/rg_ngn_mosque_medium_a",
    "collider": "box",
    "heightM": 19.42,
-   "widthM": 26.68,
-   "depthM": 25.14,
+   "widthM": 26.72,
+   "depthM": 26.4,
    "cullDistance": 250,
    "lodTriangles": [
-    2850,
-    1238,
+    2923,
+    867,
     96
    ],
    "castShadow": true,
@@ -2396,12 +2396,12 @@
    "source": "Props/rg_ngn_mosque_medium_b",
    "collider": "box",
    "heightM": 20.48,
-   "widthM": 30.87,
-   "depthM": 23.14,
+   "widthM": 30.89,
+   "depthM": 24.4,
    "cullDistance": 250,
    "lodTriangles": [
-    2904,
-    1444,
+    2833,
+    992,
     36
    ],
    "castShadow": true,
@@ -2448,12 +2448,12 @@
    "source": "Props/rg_ngn_mosque_medium_c",
    "collider": "box",
    "heightM": 19.42,
-   "widthM": 28.68,
-   "depthM": 26.84,
+   "widthM": 28.72,
+   "depthM": 28.4,
    "cullDistance": 250,
    "lodTriangles": [
-    3300,
-    1440,
+    3309,
+    1073,
     96
    ],
    "castShadow": true,
@@ -2500,12 +2500,12 @@
    "source": "Props/rg_ngn_mosque_small_a",
    "collider": "box",
    "heightM": 13.06,
-   "widthM": 18.68,
-   "depthM": 15.64,
+   "widthM": 18.72,
+   "depthM": 16.7,
    "cullDistance": 250,
    "lodTriangles": [
-    1774,
-    780,
+    1694,
+    525,
     36
    ],
    "castShadow": true,
@@ -2547,12 +2547,12 @@
    "source": "Props/rg_ngn_mosque_small_b",
    "collider": "box",
    "heightM": 12.0,
-   "widthM": 20.68,
-   "depthM": 15.64,
+   "widthM": 20.72,
+   "depthM": 16.7,
    "cullDistance": 250,
    "lodTriangles": [
-    1768,
-    906,
+    1654,
+    573,
     36
    ],
    "castShadow": true,
@@ -2594,12 +2594,12 @@
    "source": "Props/rg_ngn_mosque_small_c",
    "collider": "box",
    "heightM": 9.88,
-   "widthM": 14.68,
-   "depthM": 11.84,
+   "widthM": 14.72,
+   "depthM": 12.9,
    "cullDistance": 250,
    "lodTriangles": [
-    1526,
-    728,
+    1477,
+    542,
     36
    ],
    "castShadow": true,
@@ -2641,12 +2641,12 @@
    "source": "Props/rg_ngn_mosque_traditional_a",
    "collider": "box",
    "heightM": 15.9,
-   "widthM": 26.0,
-   "depthM": 21.15,
+   "widthM": 26.01,
+   "depthM": 22.45,
    "cullDistance": 250,
    "lodTriangles": [
     1358,
-    472,
+    268,
     36
    ],
    "castShadow": true,
@@ -2689,12 +2689,12 @@
    "source": "Props/rg_ngn_mosque_traditional_b",
    "collider": "box",
    "heightM": 11.4,
-   "widthM": 17.0,
-   "depthM": 14.55,
+   "widthM": 17.01,
+   "depthM": 15.95,
    "cullDistance": 250,
    "lodTriangles": [
-    730,
-    234,
+    753,
+    216,
     36
    ],
    "castShadow": true,
@@ -2736,14 +2736,14 @@
    "description": "Blender-authored transport kit, family F, class CITY_SPECIFIC: four-storey shop-house parade: an arcade with shutter shopfronts, three floors of windows with sunshades, roof tanks (generic design, blank sign bands) References: R-034, R-039, R-022, R-009. No brand, plate or logo.",
    "source": "Props/kano_shopping_parade_a",
    "collider": "box",
-   "heightM": 18.1,
-   "widthM": 36.5,
-   "depthM": 16.9,
+   "heightM": 17.7,
+   "widthM": 36.68,
+   "depthM": 17.04,
    "cullDistance": 250,
    "lodTriangles": [
-    1300,
-    214,
-    24
+    1194,
+    280,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -2802,12 +2802,12 @@
    "collider": "box",
    "heightM": 34.6,
    "widthM": 22.56,
-   "depthM": 21.2,
+   "depthM": 21.25,
    "cullDistance": 250,
    "lodTriangles": [
-    916,
-    268,
-    24
+    870,
+    232,
+    22
    ],
    "castShadow": true,
    "tags": [
@@ -2860,12 +2860,12 @@
    "source": "Props/kano_midrise_apartments_a",
    "collider": "box",
    "heightM": 19.2,
-   "widthM": 24.3,
-   "depthM": 17.9,
+   "widthM": 24.49,
+   "depthM": 17.95,
    "cullDistance": 250,
    "lodTriangles": [
-    1226,
-    484,
+    1368,
+    612,
     12
    ],
    "castShadow": true,
@@ -2913,14 +2913,14 @@
    "description": "Blender-authored transport kit, family F, class LANDMARK: fictional civic monument after R-034: two tall crossing arches on a dark plinth with lettering bands (no real Kano monument is claimed) References: R-034, R-035. No brand, plate or logo.",
    "source": "Props/lmk_kano_roundabout_monument_b",
    "collider": "box",
-   "heightM": 24.5,
+   "heightM": 24.6,
    "widthM": 12.0,
    "depthM": 12.0,
    "cullDistance": 250,
    "lodTriangles": [
-    474,
-    222,
-    36
+    366,
+    162,
+    32
    ],
    "castShadow": true,
    "tags": [
@@ -2968,7 +2968,7 @@
  "bounds": {
   "rg_ngn_warehouse_hall_a": [
    [
-    -24.5,
+    -24.503,
     -12.925,
     0.0
    ],
@@ -3016,74 +3016,74 @@
   ],
   "aro_container_20ft_a": [
    [
-    -3.029,
-    -1.219,
+    -3.032,
+    -1.222,
     0.0
    ],
    [
     3.039,
-    1.219,
+    1.222,
     2.591
    ]
   ],
   "aro_container_20ft_b": [
    [
-    -3.029,
-    -1.219,
+    -3.032,
+    -1.222,
     0.0
    ],
    [
     3.039,
-    1.219,
+    1.222,
     2.591
    ]
   ],
   "aro_container_20ft_c": [
    [
-    -3.029,
-    -1.219,
+    -3.032,
+    -1.222,
     0.0
    ],
    [
     3.039,
-    1.219,
+    1.222,
     2.591
    ]
   ],
   "aro_container_40ft_a": [
    [
-    -6.096,
-    -1.219,
+    -6.099,
+    -1.222,
     0.0
    ],
    [
     6.106,
-    1.219,
-    2.591
+    1.222,
+    2.594
    ]
   ],
   "aro_container_40ft_b": [
    [
-    -6.096,
-    -1.219,
+    -6.099,
+    -1.222,
     0.0
    ],
    [
     6.106,
-    1.219,
-    2.591
+    1.222,
+    2.594
    ]
   ],
   "aro_container_stack_3": [
    [
     -6.106,
-    -1.219,
+    -1.222,
     0.0
    ],
    [
     6.106,
-    1.219,
-    7.8
+    1.222,
+    7.803
    ]
   ],
   "aro_pallet_stack_a": [
@@ -3178,7 +3178,7 @@
    ],
    [
     1.28,
-    6.5,
+    6.503,
     2.7
    ]
   ],
@@ -3190,7 +3190,7 @@
    ],
    [
     1.29,
-    6.5,
+    6.503,
     4.0
    ]
   ],
@@ -3671,7 +3671,7 @@
    [
     1.25,
     1.25,
-    7.0
+    7.003
    ]
   ],
   "aro_flyover_pier_b": [
@@ -3683,7 +3683,7 @@
    [
     1.2,
     1.2,
-    8.0
+    8.003
    ]
   ],
   "rg_ngn_pier_panel_a": [
@@ -3726,7 +3726,7 @@
    [
     -5.451,
     -5.451,
-    0.0
+    -0.003
    ],
    [
     5.451,
@@ -3736,134 +3736,134 @@
   ],
   "kano_mosque_grand_a": [
    [
-    -23.34,
-    -20.34,
+    -23.36,
+    -20.4,
     0.0
    ],
    [
-    23.34,
-    17.6,
+    23.36,
+    20.0,
     33.2
    ]
   ],
   "kano_mosque_grand_b": [
    [
     -30.304,
-    -21.34,
+    -21.4,
     0.0
    ],
    [
     30.304,
-    18.3,
+    21.0,
     30.02
    ]
   ],
   "rg_ngn_mosque_medium_a": [
    [
-    -13.34,
-    -13.34,
+    -13.36,
+    -13.4,
     0.0
    ],
    [
-    13.34,
-    11.8,
+    13.36,
+    13.0,
     19.42
    ]
   ],
   "rg_ngn_mosque_medium_b": [
    [
-    -15.34,
-    -12.34,
+    -15.36,
+    -12.4,
     0.0
    ],
    [
     15.528,
-    10.8,
+    12.0,
     20.48
    ]
   ],
   "rg_ngn_mosque_medium_c": [
    [
-    -14.34,
-    -14.34,
+    -14.36,
+    -14.4,
     0.0
    ],
    [
-    14.34,
-    12.496,
+    14.36,
+    14.0,
     19.42
    ]
   ],
   "rg_ngn_mosque_small_a": [
    [
-    -9.34,
-    -8.34,
+    -9.36,
+    -8.4,
     0.0
    ],
    [
-    9.34,
-    7.3,
+    9.36,
+    8.3,
     13.06
    ]
   ],
   "rg_ngn_mosque_small_b": [
    [
-    -10.34,
-    -8.34,
+    -10.36,
+    -8.4,
     0.0
    ],
    [
-    10.34,
-    7.3,
+    10.36,
+    8.3,
     12.0
    ]
   ],
   "rg_ngn_mosque_small_c": [
    [
-    -7.34,
-    -6.34,
+    -7.36,
+    -6.4,
     0.0
    ],
    [
-    7.34,
-    5.5,
+    7.36,
+    6.5,
     9.88
    ]
   ],
   "rg_ngn_mosque_traditional_a": [
    [
-    -13.0,
+    -13.003,
     -11.45,
     0.0
    ],
    [
-    13.0,
-    9.7,
+    13.003,
+    11.003,
     15.9
    ]
   ],
   "rg_ngn_mosque_traditional_b": [
    [
-    -8.5,
-    -7.85,
+    -8.503,
+    -7.95,
     0.0
    ],
    [
-    8.5,
-    6.7,
+    8.503,
+    8.0,
     11.4
    ]
   ],
   "kano_shopping_parade_a": [
    [
-    -18.25,
+    -18.34,
     -8.7,
     0.0
    ],
    [
-    18.25,
-    8.2,
-    18.1
+    18.34,
+    8.34,
+    17.7
    ]
   ],
   "kano_office_block_a": [
@@ -3874,7 +3874,7 @@
    ],
    [
     11.28,
-    10.2,
+    10.25,
     34.6
    ]
   ],
@@ -3885,8 +3885,8 @@
     0.0
    ],
    [
-    12.15,
-    9.6,
+    12.34,
+    9.65,
     19.2
    ]
   ],
@@ -3899,7 +3899,7 @@
    [
     6.0,
     6.0,
-    24.5
+    24.6
    ]
   ]
  },

@@ -1116,21 +1116,21 @@
      "prop": "kano_office_block_a",
      "weight": 1.0,
      "widthM": 22.56,
-     "depthM": 21.2,
+     "depthM": 21.25,
      "tag": "office"
     },
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 1.2,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.5,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1152,29 +1152,29 @@
     {
      "prop": "kano_mosque_grand_a",
      "weight": 1.0,
-     "widthM": 46.68,
-     "depthM": 37.94,
+     "widthM": 46.72,
+     "depthM": 40.4,
      "tag": "mosque_grand"
     },
     {
      "prop": "kano_mosque_grand_b",
      "weight": 1.0,
      "widthM": 60.61,
-     "depthM": 39.64,
+     "depthM": 42.4,
      "tag": "mosque_grand"
     },
     {
      "prop": "rg_ngn_mosque_medium_a",
      "weight": 0.6,
-     "widthM": 26.68,
-     "depthM": 25.14,
+     "widthM": 26.72,
+     "depthM": 26.4,
      "tag": "mosque_medium"
     },
     {
      "prop": "rg_ngn_mosque_medium_c",
      "weight": 0.6,
-     "widthM": 28.68,
-     "depthM": 26.84,
+     "widthM": 28.72,
+     "depthM": 28.4,
      "tag": "mosque_medium"
     }
    ],
@@ -1206,8 +1206,8 @@
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.2,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1220,8 +1220,8 @@
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 0.8,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
@@ -1250,43 +1250,43 @@
     {
      "prop": "rg_ngn_mosque_medium_a",
      "weight": 1.0,
-     "widthM": 26.68,
-     "depthM": 25.14,
+     "widthM": 26.72,
+     "depthM": 26.4,
      "tag": "mosque_medium"
     },
     {
      "prop": "rg_ngn_mosque_medium_b",
      "weight": 1.0,
-     "widthM": 30.87,
-     "depthM": 23.14,
+     "widthM": 30.89,
+     "depthM": 24.4,
      "tag": "mosque_medium"
     },
     {
      "prop": "rg_ngn_mosque_medium_c",
      "weight": 1.0,
-     "widthM": 28.68,
-     "depthM": 26.84,
+     "widthM": 28.72,
+     "depthM": 28.4,
      "tag": "mosque_medium"
     },
     {
      "prop": "rg_ngn_mosque_small_a",
      "weight": 1.2,
-     "widthM": 18.68,
-     "depthM": 15.64,
+     "widthM": 18.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_b",
      "weight": 1.2,
-     "widthM": 20.68,
-     "depthM": 15.64,
+     "widthM": 20.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_traditional_a",
      "weight": 0.8,
-     "widthM": 26.0,
-     "depthM": 21.15,
+     "widthM": 26.01,
+     "depthM": 22.45,
      "tag": "mosque_traditional"
     }
    ],
@@ -1318,8 +1318,8 @@
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.2,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1332,8 +1332,8 @@
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 0.8,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
@@ -1362,29 +1362,29 @@
     {
      "prop": "rg_ngn_mosque_small_a",
      "weight": 1.0,
-     "widthM": 18.68,
-     "depthM": 15.64,
+     "widthM": 18.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_b",
      "weight": 1.0,
-     "widthM": 20.68,
-     "depthM": 15.64,
+     "widthM": 20.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_c",
      "weight": 1.0,
-     "widthM": 14.68,
-     "depthM": 11.84,
+     "widthM": 14.72,
+     "depthM": 12.9,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_traditional_b",
      "weight": 1.0,
-     "widthM": 17.0,
-     "depthM": 14.55,
+     "widthM": 17.01,
+     "depthM": 15.95,
      "tag": "mosque_traditional"
     }
    ],
@@ -1416,8 +1416,8 @@
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.2,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1430,8 +1430,8 @@
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 0.8,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
@@ -1460,29 +1460,29 @@
     {
      "prop": "rg_ngn_mosque_small_a",
      "weight": 1.0,
-     "widthM": 18.68,
-     "depthM": 15.64,
+     "widthM": 18.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_b",
      "weight": 1.0,
-     "widthM": 20.68,
-     "depthM": 15.64,
+     "widthM": 20.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_c",
      "weight": 1.0,
-     "widthM": 14.68,
-     "depthM": 11.84,
+     "widthM": 14.72,
+     "depthM": 12.9,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_traditional_b",
      "weight": 1.0,
-     "widthM": 17.0,
-     "depthM": 14.55,
+     "widthM": 17.01,
+     "depthM": 15.95,
      "tag": "mosque_traditional"
     }
    ],
@@ -1565,29 +1565,29 @@
     {
      "prop": "rg_ngn_mosque_small_a",
      "weight": 1.0,
-     "widthM": 18.68,
-     "depthM": 15.64,
+     "widthM": 18.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_b",
      "weight": 1.0,
-     "widthM": 20.68,
-     "depthM": 15.64,
+     "widthM": 20.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_c",
      "weight": 1.0,
-     "widthM": 14.68,
-     "depthM": 11.84,
+     "widthM": 14.72,
+     "depthM": 12.9,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_traditional_b",
      "weight": 1.0,
-     "widthM": 17.0,
-     "depthM": 14.55,
+     "widthM": 17.01,
+     "depthM": 15.95,
      "tag": "mosque_traditional"
     }
    ],
@@ -1667,8 +1667,8 @@
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.2,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1681,8 +1681,8 @@
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 0.8,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
@@ -1711,29 +1711,29 @@
     {
      "prop": "rg_ngn_mosque_small_a",
      "weight": 1.0,
-     "widthM": 18.68,
-     "depthM": 15.64,
+     "widthM": 18.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_b",
      "weight": 1.0,
-     "widthM": 20.68,
-     "depthM": 15.64,
+     "widthM": 20.72,
+     "depthM": 16.7,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_small_c",
      "weight": 1.0,
-     "widthM": 14.68,
-     "depthM": 11.84,
+     "widthM": 14.72,
+     "depthM": 12.9,
      "tag": "mosque_small"
     },
     {
      "prop": "rg_ngn_mosque_traditional_b",
      "weight": 1.0,
-     "widthM": 17.0,
-     "depthM": 14.55,
+     "widthM": 17.01,
+     "depthM": 15.95,
      "tag": "mosque_traditional"
     }
    ],
@@ -1765,8 +1765,8 @@
     {
      "prop": "kano_shopping_parade_a",
      "weight": 1.2,
-     "widthM": 36.5,
-     "depthM": 16.9,
+     "widthM": 36.68,
+     "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
@@ -1779,8 +1779,8 @@
     {
      "prop": "kano_midrise_apartments_a",
      "weight": 0.8,
-     "widthM": 24.3,
-     "depthM": 17.9,
+     "widthM": 24.49,
+     "depthM": 17.95,
      "tag": "apartments"
     },
     {
