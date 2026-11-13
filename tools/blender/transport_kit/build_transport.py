@@ -7,7 +7,7 @@ from pathlib import Path
 import bpy, bmesh, mathutils
 from aro_blender import workspace as ws, validate, export as exp, materials as AMat
 from kano_kit import geo, textures
-from . import common as C, palette as PAL
+from . import common as C, palette as PAL, surface as SB
 
 from .registry import SPECS, spec  # noqa: F401
 
@@ -17,10 +17,15 @@ def _collision(asset, box, suffix):
     mesh = bpy.data.meshes.new(name); p.bm.to_mesh(mesh); p.bm.free(); o = bpy.data.objects.new(name, mesh); bpy.context.scene.collection.objects.link(o); o.parent = asset.root; o.display_type = "WIRE"
 
 
-def build_scene(sp):
-    a = geo.Asset(sp["id"], sp["kind"]); textures.paver_material(); textures.asphalt_material()
+def build_scene(sp, version=None):
+    """`version`: the version folder this build will be saved in (names of the baked materials and textures carry it); default the spec's design version."""
+    a = geo.Asset(sp["id"], sp["kind"]); textures.paver_material(); textures.asphalt_material(); a.version = int(version or sp.get("version", 1))
+    a.bake = {}
     for lv, fn in sorted(sp["lods"].items()):
-        part = fn(); PAL.palettize(part); a.lod(lv, part)                      # flat colours go to the three shared palette materials (at most 4 materials per asset)
+        part = fn()
+        if sp.get("surface"): a.bake[lv] = SB.apply(part, sp["id"], lv, sp["surface"][min(lv, len(sp["surface"]) - 1)], sp.get("ground", True), a.version)      # painted atlas: one material per LOD (transport_kit.surface)
+        else: PAL.palettize(part)                                               # flat colours go to the shared palette materials (at most 4 materials per asset)
+        a.lod(lv, part)
     textures.apply_pbr(); PAL.apply_palettes()
     for i, box in enumerate(sp["cols"]): _collision(a, box, "" if i == 0 else f"_{chr(ord('a') + i)}")
     return a
@@ -36,15 +41,22 @@ def catalog_entry(sp, res):
     return e
 
 
+def next_version(root: Path, sp: dict) -> int:
+    """The version folder the next save of this asset gets: after the workspace's last one, and never below the spec's design version (so a fresh workspace, as in the CI review, labels a v002 design v002)."""
+    return max(max(ws.versions(root, sp["kind"], sp["id"]), default=0) + 1, int(sp.get("version", 1)), int(__import__("os").environ.get("ARO_VERSION_FLOOR") or 0))
+
+
 def produce(root: Path, sp: dict, do_export: bool = True) -> dict:
-    a = build_scene(sp)
+    nv = next_version(root, sp); a = build_scene(sp, nv)
     bad = {o.name: [round(v, 3) for v in geo.shell_volumes(o) if v <= 0] for o in a.lods.values()}; bad = {k: v for k, v in bad.items() if v}
     res = validate.run(bpy, mathutils, sp["kind"], True, None, sp["id"])
     cap = [] if len(res["stats"].get("materials", [])) <= 4 else [{"severity": "error", "rule": "materials", "message": f"{len(res['stats']['materials'])} materials; the approved breakdown allows at most 4 per asset"}]
     out = {"id": sp["id"], "kind": sp["kind"], "passed": res["passed"] and not bad and not cap, "inside_out_shells": bad, "stats": res["stats"], "target": sp["target"],
-           "errors": [f for f in res["findings"] if f["severity"] == "error"] + cap, "warnings": [f for f in res["findings"] if f["severity"] == "warning"], "catalog_entry": catalog_entry(sp, res)}
+           "errors": [f for f in res["findings"] if f["severity"] == "error"] + cap, "warnings": [f for f in res["findings"] if f["severity"] == "warning"], "catalog_entry": catalog_entry(sp, res),
+           "design_version": int(sp.get("version", 1)), "bake": {str(k): v for k, v in a.bake.items()}}
     if not out["passed"] or not do_export: return out
-    v, d = ws.new_version_dir(root, sp["kind"], sp["id"]); blend = d / f"{sp['id']}.blend"
+    v, d = ws.new_version_dir(root, sp["kind"], sp["id"], floor=nv); blend = d / f"{sp['id']}.blend"
+    if v != nv: raise SystemExit(f"{sp['id']}: built as v{nv:03d} but the workspace gave v{v:03d}")
     textures.write_images(d); bpy.ops.wm.save_as_mainfile(filepath=str(blend), compress=True)
     (d / "project.json").write_text(json.dumps({"asset": sp["id"], "kind": sp["kind"], "version": f"v{v:03d}", "blender": bpy.app.version_string, "notes": sp["note"], "builder": "tools/blender/transport_kit",
                                                 "saved_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}, indent=2))

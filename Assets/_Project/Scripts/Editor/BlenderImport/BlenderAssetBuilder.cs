@@ -10,7 +10,7 @@ namespace ARO.Editor.BlenderImport
 {
     /// <summary>The material kit as the Blender toolchain writes it (aro_materials.json): the library's sRGB colours, roughness and metallic, one entry per surface.</summary>
     [Serializable] public sealed class MaterialKitFile { public int schema; public MaterialKitEntry[] materials; }
-    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; public string texture, normal; public float cutout, alpha = 1f; public bool two_sided; }
+    [Serializable] public sealed class MaterialKitEntry { public string name; public float[] base_color_srgb; public float roughness, metallic; public string note; public string texture, normal; public float cutout, alpha = 1f; public bool two_sided; public bool smoothness_alpha; }
 
     /// <summary>
     /// Turns a model imported from the Blender toolchain (FBX, or GLB through glTFast) into the structure the game needs from a production prop prefab (see PropPrefabPlan):
@@ -65,6 +65,14 @@ namespace ARO.Editor.BlenderImport
             ti.alphaIsTransparency = true; ti.mipmapEnabled = true; ti.mipMapsPreserveCoverage = true; ti.alphaTestReferenceValue = cutoff; ti.SaveAndReimport();
         }
 
+        /// <summary>A painted atlas: colour in sRGB, alpha kept as data (smoothness), mip maps, anisotropic filtering (walls are seen at grazing angles from a road), clamped (an atlas never tiles).</summary>
+        static void ConfigureAtlasTexture(Texture2D tex)
+        {
+            var path = AssetDatabase.GetAssetPath(tex); var ti = AssetImporter.GetAtPath(path) as TextureImporter; if (ti == null) return;
+            if (ti.sRGBTexture && !ti.alphaIsTransparency && ti.mipmapEnabled && ti.anisoLevel == 4 && ti.wrapMode == TextureWrapMode.Clamp && ti.alphaSource == TextureImporterAlphaSource.FromInput) return;
+            ti.sRGBTexture = true; ti.alphaIsTransparency = false; ti.alphaSource = TextureImporterAlphaSource.FromInput; ti.mipmapEnabled = true; ti.anisoLevel = 4; ti.wrapMode = TextureWrapMode.Clamp; ti.SaveAndReimport();
+        }
+
         /// <summary>A normal map must be imported as one (not as colour), or the lighting is wrong.</summary>
         static void ConfigureNormalTexture(Texture2D tex)
         {
@@ -86,6 +94,11 @@ namespace ARO.Editor.BlenderImport
             m.SetColor("_BaseColor", KitColour(e)); m.SetFloat("_Metallic", e.metallic); m.SetFloat("_Smoothness", 1f - e.roughness); m.enableInstancing = true;
             var tex = string.IsNullOrEmpty(e.texture) ? null : FindTexture(e.texture);
             if (tex != null) { m.SetTexture("_BaseMap", tex); m.SetColor("_BaseColor", Color.white); if (e.cutout > 0f) ConfigureCutoutTexture(tex, e.cutout); }
+            if (tex != null && e.smoothness_alpha)
+            {   // a painted atlas of the surface bake (tools/blender/transport_kit/surface.py): the base map's alpha is the SMOOTHNESS of each texel (glass, glazed tile, paint, raw render), not transparency
+                ConfigureAtlasTexture(tex); tex = FindTexture(e.texture); m.SetTexture("_BaseMap", tex);
+                m.SetFloat("_SmoothnessTextureChannel", 1f); m.EnableKeyword("_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A"); m.SetFloat("_Smoothness", 1f); m.SetFloat("_Metallic", 0f);
+            }
             if (e.cutout > 0f)
             {
                 m.SetFloat("_AlphaClip", 1f); m.SetFloat("_Cutoff", e.cutout); m.EnableKeyword("_ALPHATEST_ON"); m.SetOverrideTag("RenderType", "TransparentCutout");

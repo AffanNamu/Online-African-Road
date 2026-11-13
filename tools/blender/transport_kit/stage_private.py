@@ -7,6 +7,9 @@ imported, reviewed or approved). What it adds to the checkout:
   LICENSES.md (one row per id)   registry/asset_registry.json (52 new entries, two existing planned entries `aro_bench_a` and `aro_pallet_stack_a` moved to this version)   manifests/transport_kit.release.json (+ the freeze manifest)
 **Overlap with the library plan.** The registry already lists planned or built assets that are the same thing under another id (OVERLAP below). Nothing is merged or dropped here: each new entry carries the planned id(s) in
 `overlapsPlanned` and an OPEN flag saying the owner decides which id the game uses.
+**Later versions** (`--only`/`--family` with a new `--release`): an asset whose workspace version is v00N (N > 1) must have exactly v001..v00(N-1) in the library; the new folders are added beside the old ones (never over
+them), the registry entry is updated in place to point at the new version (status back to `blender_validation_passed`, Unity import and review reset: the new version has not been imported), the licence row gains the version
+number, and the batch writes its OWN release and freeze manifests (`manifests/<release>.release.json`, `.freeze.json`); a release name that already exists is refused (frozen records are never rewritten).
 Run from tools/blender:  PYTHONPATH=. ~/.aro/venv/bin/python -m transport_kit.stage_private --content <ARO-CONTENT checkout> --game-docs <game repository docs/kano> --previews <dir of render_tk output>"""
 from __future__ import annotations
 import argparse, hashlib, json, shutil, sys, time
@@ -34,6 +37,12 @@ OVERLAP = {
     "aro_flyover_deck_segment_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_a": ["aro_flyover_deck_pier_a"], "aro_flyover_pier_b": ["aro_flyover_deck_pier_a"],
 }
 SAME_ID = {"aro_bench_a", "aro_pallet_stack_a"}                  # the registry already has an entry with this id: it moves to this version
+# what a later version changes (written at the head of the registry flags and in the release manifest)
+CHANGE = {2: "v002 (realism pass, 2026-11-13): painted by the surface bake (tools/blender/transport_kit/surface.py): one texture atlas per LOD instead of flat palette colours, with material patterns (stone courses and joints, "
+             "render, corrugated sheet, painted steel, glazing with frames, mullions, sky reflection and curtains, timber doors, roller shutters, pavers, glazed dome tiles), baked ambient occlusion and weathering (dust "
+             "splashed up the foot of walls, rain streaks, roof stains, dirt in corners), a normal map and smoothness in the atlas alpha; faces buried inside other volumes removed",
+          "E2": "; geometry v2 of the mosque family: relief window surrounds with lattice glazing, corbelled minaret balconies with rails (no floating slab), windows on every wall, cornices, plinths, parapet bands and merlons, an iwan with a recessed door and steps, a compound wall with a gate",
+          "F2": "; geometry v2 of the city buildings: windows with sills on every wall, blank sign boards, roller shutters, back doors, air-conditioning units, downpipes, black roof water tanks and satellite dishes"}
 
 
 def library_of(aid: str, x: dict) -> str:
@@ -56,6 +65,15 @@ def name_of(sp: dict) -> str:
     n = sp["note"].split(";")[0].strip(); return n[:1].upper() + n[1:]
 
 
+def textures_of(materials, W: Path) -> list:
+    """The textures the asset's materials reference (base colour, normal), from the material kit the build wrote; empty if a material is unknown there."""
+    kit = {m["name"]: m for m in json.loads((W / "exports" / "unity" / "aro_materials.json").read_text())["materials"]}; out = set()
+    for m in materials:
+        if m not in kit: return []
+        out |= {kit[m][k] for k in ("texture", "normal") if kit[m].get(k)}
+    return sorted(out)
+
+
 def sha(p: Path) -> str:
     h = hashlib.sha256(); h.update(p.read_bytes()); return h.hexdigest()
 
@@ -69,16 +87,17 @@ def put(src: Path, dst: Path, log: list):
 
 
 def freeze(C: Path, ids, version="v001") -> dict:
-    """SHA-256 of every file this release stages (a text file: the game repository keeps it as docs/kano/TRANSPORT_KIT.freeze.json)."""
-    out = {}
-    for aid in sorted(ids):
-        d = C / "unity" / "Models" / aid / version
+    """SHA-256 of every file this release stages (a text file: the game repository keeps it as docs/kano/TRANSPORT_KIT.freeze.json). `ids` is a list (all at `version`) or a dict id -> version."""
+    out = {}; vers = ids if isinstance(ids, dict) else {i: version for i in ids}
+    for aid in sorted(vers):
+        version = vers[aid]; d = C / "unity" / "Models" / aid / version
         for f in sorted(d.iterdir()): out[f"unity/Models/{aid}/{version}/{f.name}"] = {"sha256": sha(f), "bytes": f.stat().st_size}
     return out
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--content", required=True); ap.add_argument("--game-docs", required=True); ap.add_argument("--previews", default=""); ap.add_argument("--commit", default=""); ap.add_argument("--family", default="", help="only the assets of this family (A, B, C, D or E); a batch staged later")
+    ap.add_argument("--only", default="", help="comma-separated ids (a later batch, e.g. the v002 of the realism pass)"); ap.add_argument("--release", default="", help="name of this batch's release and freeze manifests (required for a batch of later versions)")
     a = ap.parse_args()
     from PIL import Image
     from .build_transport import SPECS, load_all
@@ -87,11 +106,15 @@ def main() -> int:
     reg_path = C / "registry" / "asset_registry.json"; reg = json.loads(reg_path.read_text()); by_id = {x["id"]: x for x in reg["assets"]}; lic = (C / "LICENSES.md").read_text()
     cat = json.loads((G / "TRANSPORT_KIT_catalog.json").read_text()); scenes = {s.name: s for s in SC.all_scenes()}; rows = []; staged = []
     tex_have = {p.name: p for p in (C / "unity" / "Textures").rglob("T_*.png")}
+    if a.release and any((C / "manifests" / f"{a.release}.{k}.json").exists() for k in ("freeze", "release")): raise SystemExit(f"REFUSED: release {a.release} already exists (frozen records are never rewritten)")
     for aid, sp in SPECS.items():
         x = C_.EXTRAS[aid]
         if a.family and x["family"] != a.family: continue
+        if a.only and aid not in a.only.split(","): continue
         kind = sp["kind"]; v = sorted(p.name for p in (W / "exports" / "fbx" / aid).iterdir() if p.is_dir())[-1]; n = int(v[1:])
-        if v != "v001": raise SystemExit(f"{aid}: expected v001, the workspace has {v}")
+        lib = C / "unity" / "Models" / aid; have_v = sorted(p.name for p in lib.iterdir() if p.is_dir()) if lib.is_dir() else []
+        if have_v != [f"v{i:03d}" for i in range(1, n)]: raise SystemExit(f"{aid}: the workspace has {v}, the library has {have_v}: versions must follow on without gaps")
+        if n > 1 and (not a.release or aid not in by_id): raise SystemExit(f"{aid}: a later version needs --release and an existing registry entry")
         proj = W / "projects" / kind / aid / v; val = W / "validation" / aid / f"{v}.json"; stats = json.loads(val.read_text())["stats"]; entry = next(e for e in cat["props"] if e["id"] == aid)
         if (C / "unity" / "Models" / aid / v).exists(): raise SystemExit(f"REFUSED: {aid} {v} is already in the library")
         for f in proj.iterdir():
@@ -110,7 +133,11 @@ def main() -> int:
                     "licence": {"kind": "owner-owned", "evidence": LICENCE_EVIDENCE.format(refs=", ".join(refs)), "thirdParty": THIRD_PARTY}, "references": refs, "budgets": {"lodTriangles": stats["lod_triangles"]},
                     "catalogEntry": entry, "sockets": x.get("sockets", []), "approval": None}
         (u / f"{aid}.manifest.json").write_text(json.dumps(manifest, indent=2)); added.append(str(u / f"{aid}.manifest.json"))
-        rows.append(f"| {aid} | {n} | Claude (code), owner (direction) | {', '.join(refs)} | original geometry and procedural textures; design references {', '.join(refs)} (generated concepts, not Kano-verified); ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending, 2026-11-09 |")
+        if n > 1:
+            row = next((ln for ln in lic.splitlines() if ln.startswith(f"| {aid} | ")), None)
+            if row is None: raise SystemExit(f"{aid}: no licence row to extend")
+            cells = row.split(" | "); cells[1] = cells[1] + f", {n}"; lic = lic.replace(row, " | ".join(cells))
+        else: rows.append(f"| {aid} | {n} | Claude (code), owner (direction) | {', '.join(refs)} | original geometry and procedural textures; design references {', '.join(refs)} (generated concepts, not Kano-verified); ownership confirmed by the owner 2026-11-01 (third-party tools listed in the registry) | pending, 2026-11-09 |")
         pv = []
         if a.previews:
             for k in ("iso", "front"):
@@ -128,12 +155,19 @@ def main() -> int:
                "validation": {"blender": f"blender/validation/{aid}/{v}.json", "unityImport": None, "visualReview": None}, "approvedBy": None,
                "plannedBudget": {"lod0TrisMax": stats["budget_triangles"], "note": "validator ceiling for the category; the approved breakdown row (docs/KANO_TRANSPORT_ASSET_BREAKDOWN.md) gives the expected count"},
                "engineDependencies": [], "flags": flag, "library": library_of(aid, x), "dimensions": stats["size_m"], "lodTriangles": stats["lod_triangles"], "collision": collision,
-               "lods": [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])], "materials": stats["materials"], "textures": sorted(f.stem for f in proj.glob("T_*.png")),
+               "lods": [{"level": i, "triangles": t} for i, t in enumerate(stats["lod_triangles"])], "materials": stats["materials"], "textures": textures_of(stats["materials"], W) or sorted(f.stem for f in proj.glob("T_*.png")),
                "licence": manifest["licence"], "unity": {"imported": False, "compiled": False, "inGameVerified": False, "prefab": None, "note": f"{v} is not imported into Unity yet (the review workflow is wired, not run); the in-game visual review is for the owner and has NOT happened; not approved"},
                "previews": pv}
         if aid in OVERLAP: new["overlapsPlanned"] = OVERLAP[aid]
         if x.get("sockets"): new["sockets"] = x["sockets"]
-        if aid in SAME_ID:
+        if n > 1:
+            old = by_id[aid]; note = CHANGE[n] + CHANGE.get(f"{x['family']}{n}", "")
+            for k in ("name", "concepts", "districts", "breakdownApproved", "overlapsPlanned", "approvedCities", "region", "city", "library"):
+                if k in old: new[k] = old[k]
+            new["flags"] = "OPEN: " + note + "; not imported into Unity, not reviewed, not approved | previous: " + (old.get("flags") or "")
+            new["previousVersions"] = sorted(set(old.get("previousVersions", [])) | {old["export"].split("/")[-2]})
+            reg["assets"][reg["assets"].index(old)] = {**old, **new}
+        elif aid in SAME_ID:
             old = by_id[aid]; new["concepts"] = sorted(set(old.get("concepts", [])) | set(concepts)); new["districts"] = sorted(set(old.get("districts", [])) | set(new["districts"])); new["name"] = old.get("name", new["name"])
             new["flags"] = (old.get("flags") or "").split(" | OPEN: ")[0] + (" | " if old.get("flags") else "") + new["flags"]
             reg["assets"][reg["assets"].index(old)] = {**old, **new}
@@ -147,13 +181,16 @@ def main() -> int:
             if have[m["name"]] != m: raise SystemExit(f"REFUSED: material {m['name']} differs from the library's definition")
         else: add.append(m)
     libm["materials"] = sorted(libm["materials"] + add, key=lambda m: m["name"]); mk.write_text(json.dumps(libm, indent=1)); print("materials added:", len(add))
-    (C / "LICENSES.md").write_text(lic.rstrip("\n") + "\n" + "\n".join(rows) + "\n"); reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n")
+    (C / "LICENSES.md").write_text(lic.rstrip("\n") + "\n" + "".join(r + "\n" for r in rows)); reg_path.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n")
     for s in scenes.values(): j = s.as_json(); (C / "unity" / "placements").mkdir(parents=True, exist_ok=True); (C / "unity" / "placements" / f"{j['scene']}.json").write_text(json.dumps(j, indent=1)); added.append(f"unity/placements/{j['scene']}.json")
-    fr = freeze(C, [i for i, _, _ in staged]); (C / "manifests").mkdir(exist_ok=True)
-    (C / "manifests" / ("transport_kit" + (("_family_" + a.family.lower()) if a.family else "") + ".freeze.json")).write_text(json.dumps({"release": "transport_kit_v001", "date": time.strftime("%Y-%m-%d", time.gmtime()), "producingCommit": a.commit, "files": fr}, indent=1))
-    rel = {"release": "transport_kit" + (("_family_" + a.family.lower()) if a.family else ""), "date": time.strftime("%Y-%m-%d", time.gmtime()), "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry); not imported into Unity until a review run says so",
-           "note": "Families A (logistics), B (bus terminals) and C (road furniture) of the owner's decision of 2026-11-09, as built by tools/blender/transport_kit. Nothing is reviewed or approved. 24 of the 52 overlap an asset the library plan lists under another id (registry field overlapsPlanned)."}
-    (C / "manifests" / ("transport_kit" + (("_family_" + a.family.lower()) if a.family else "") + ".release.json")).write_text(json.dumps(rel, indent=2))
+    fr = freeze(C, {i: v for i, v, _ in staged}); (C / "manifests").mkdir(exist_ok=True)
+    rname = a.release or ("transport_kit" + (("_family_" + a.family.lower()) if a.family else ""))
+    (C / "manifests" / f"{rname}.freeze.json").write_text(json.dumps({"release": rname if a.release else "transport_kit_v001", "date": time.strftime("%Y-%m-%d", time.gmtime()), "producingCommit": a.commit, "files": fr}, indent=1))
+    later = sorted({int(v[1:]) for _, v, _ in staged if v != "v001"})
+    rel = {"release": rname, "date": time.strftime("%Y-%m-%d", time.gmtime()), "assets": [{"id": i, "version": v, "lodTriangles": t} for i, v, t in staged], "status": "blender_validation_passed (see registry); not imported into Unity until a review run says so",
+           "note": (" ".join(CHANGE[k] for k in later) + ". Earlier versions are kept unchanged beside the new ones. Nothing is reviewed or approved.") if later else
+                   "Families A (logistics), B (bus terminals) and C (road furniture) of the owner's decision of 2026-11-09, as built by tools/blender/transport_kit. Nothing is reviewed or approved. 24 of the 52 overlap an asset the library plan lists under another id (registry field overlapsPlanned)."}
+    (C / "manifests" / f"{rname}.release.json").write_text(json.dumps(rel, indent=2))
     ref_src = G / "REFERENCE_REGISTER.md"
     if ref_src.is_file(): shutil.copy2(ref_src, C / "references" / "REFERENCE_REGISTER.md")
     print(f"staged {len(staged)} assets; {len(added)} files added; {len(fr)} files in the freeze manifest"); return 0

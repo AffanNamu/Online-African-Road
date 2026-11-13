@@ -31,8 +31,11 @@ def built():
     out = {}
     for aid in MOSQUES:
         sp = SPECS[aid]; a = build_scene(sp); res = validate.run(bpy, mathutils, sp["kind"], True, None, aid)
-        out[aid] = (res, catalog_entry(sp, res))
+        out[aid] = (res, catalog_entry(sp, res)); PAINTED[aid] = a.bake[0]["painted_m2"]
     return out
+
+
+PAINTED = {}     # LOD0 bake: square metres painted per source colour (the mosques are surface-baked: one atlas material per LOD, so the palette rules are checked on what the atlas was painted from)
 
 
 def test_the_family_is_ten_mosques_of_four_classes():
@@ -118,8 +121,20 @@ def test_lamp_heads_are_on_the_mosque_and_the_catalogue_is_complete(aid, built):
 
 
 def test_traditional_mosques_use_the_earth_palette_and_the_others_the_stone_palette(built):
-    for aid in TRAD: assert "M_tk_paint_ext" in built[aid][0]["stats"]["materials"] and "M_tk_paint_ext2" not in built[aid][0]["stats"]["materials"], aid
-    for aid in GRAND + MEDIUM + SMALL: assert "M_tk_paint_ext2" in built[aid][0]["stats"]["materials"], aid
+    """Was: material M_tk_paint_ext (earth) on the traditional pair, M_tk_paint_ext2 (stone) on the others. Since the surface bake the materials are one atlas per LOD, so the same rule is checked on the colours the
+    atlas was painted from: the traditional pair is mud render (kasa_render) and never ivory stone; the others are ivory stone and never mud render; and the dominant wall colour is the class colour."""
+    walls = lambda p: {k: v for k, v in p.items() if not k.startswith(("window", "glass", "pavement", "paver", "tile", "dome", "earth", "wood", "metal", "sheet", "timber", "trim", "railing", "water", "lamp"))}
+    for aid in TRAD:
+        p = PAINTED[aid]; assert p.get("kasa_render", 0) > 100 and "stone_ivory" not in p, f"{aid}: {p}"
+        assert max(walls(p), key=walls(p).get) == "kasa_render", f"{aid}: {p}"
+    for aid in GRAND + MEDIUM + SMALL:
+        p = PAINTED[aid]; assert p.get("stone_ivory", 0) > 100 and "kasa_render" not in p, f"{aid}: {p}"
+        assert max(walls(p), key=walls(p).get) in ("stone_ivory", "plaster_cream", "paint_white", "paint_cream"), f"{aid}: {p}"     # ivory stone or a cream render: never an earth colour
+
+
+def test_every_mosque_is_surface_baked_with_one_material_per_lod(built):
+    for aid in MOSQUES:
+        mats = built[aid][0]["stats"]["materials"]; assert mats == [f"M_sb_{aid}_v002_l{lv}" for lv in (0, 1, 2)], f"{aid}: {mats}"     # the validator lists the materials of every LOD
 
 
 def test_palettes_staged_earlier_are_unchanged():

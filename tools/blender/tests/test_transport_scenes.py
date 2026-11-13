@@ -95,3 +95,19 @@ def test_stage_copies_the_exports_and_writes_the_placements(tmp_path):
     assert [m["name"] for m in json.loads((out / "Materials" / "aro_materials.json").read_text())["materials"]] == ["M_concrete", "M_tk_paint"]
     assert {p.name for p in (out / "placements").glob("*.json")} == {"env_logistics_yard_dry.json", "env_bus_terminal_dry.json", "env_road_furniture_dry.json", "env_roundabout_kit_dry.json", "env_kano_mosques_dry.json", "env_kano_city_row_dry.json"}
     with pytest.raises(SystemExit): ST.stage(W, out, ["aro_missing_a"], SCENES)
+
+
+def test_private_staging_freezes_each_asset_at_its_own_version_and_lists_the_textures_its_materials_use(tmp_path):
+    """A later batch (the v002 of the realism pass) freezes each asset at the version it stages, and the registry lists only the textures the asset's materials reference (not every image the Blender file held)."""
+    from transport_kit import stage_private as SPV
+    C = tmp_path / "lib"
+    for aid, v in (("a_x", "v001"), ("b_y", "v002")):
+        d = C / "unity" / "Models" / aid / v; d.mkdir(parents=True); (d / f"{aid}.fbx").write_bytes(aid.encode())
+    fr = SPV.freeze(C, {"a_x": "v001", "b_y": "v002"})
+    assert sorted(fr) == ["unity/Models/a_x/v001/a_x.fbx", "unity/Models/b_y/v002/b_y.fbx"] and fr["unity/Models/b_y/v002/b_y.fbx"]["bytes"] == 3
+    assert SPV.freeze(C, ["a_x"]) == {"unity/Models/a_x/v001/a_x.fbx": fr["unity/Models/a_x/v001/a_x.fbx"]}
+    W = tmp_path / "ws"; (W / "exports" / "unity").mkdir(parents=True)
+    (W / "exports" / "unity" / "aro_materials.json").write_text(json.dumps({"schema": 3, "materials": [{"name": "M_sb_b_y_v002_l0", "texture": "T_b_y_v002_l0_BaseColor", "normal": "T_b_y_v002_l0_Normal"}, {"name": "M_flat", "texture": "", "normal": ""}]}))
+    assert SPV.textures_of(["M_sb_b_y_v002_l0", "M_flat"], W) == ["T_b_y_v002_l0_BaseColor", "T_b_y_v002_l0_Normal"]
+    assert SPV.textures_of(["M_unknown"], W) == []
+    assert 2 in SPV.CHANGE and "surface bake" in SPV.CHANGE[2] and "not" not in SPV.CHANGE[2].split("surface bake")[0]

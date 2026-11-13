@@ -54,12 +54,12 @@ def is_approved(root: Path, kind: str, name: str, version: int) -> bool:
     return (root / "projects" / kind / name / f"v{version:03d}" / "approval.json").is_file()
 
 
-def new_version_dir(root: Path, kind: str, name: str) -> tuple[int, Path]:
-    """Creates the next version folder and returns (number, path). Never reuses a number."""
+def new_version_dir(root: Path, kind: str, name: str, floor: int | None = None) -> tuple[int, Path]:
+    """Creates the next version folder and returns (number, path). Never reuses a number. `floor`: the lowest number acceptable (a builder that knows the design version of what it builds)."""
     check_name(kind, name)
     v = (max(versions(root, kind, name), default=0)) + 1
-    floor = int(os.environ.get("ARO_VERSION_FLOOR") or 0)             # optional: the first version folder of an asset in a FRESH workspace gets this number (rebuilding a historical version with its historical label: docs/AGENT_HANDOVER.md)
-    v = max(v, floor)
+    env_floor = int(os.environ.get("ARO_VERSION_FLOOR") or 0)         # optional: the first version folder of an asset in a FRESH workspace gets this number (rebuilding a historical version with its historical label: docs/AGENT_HANDOVER.md)
+    v = max(v, env_floor, int(floor or 0))
     d = root / "projects" / kind / name / f"v{v:03d}"
     d.mkdir(parents=True, exist_ok=False)
     return v, d
