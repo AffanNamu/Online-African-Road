@@ -32,6 +32,17 @@ namespace ARO.Game
             // Route data first (the streamer, traffic and the vehicle spawn all depend on it), then the rendering foundation.
             var testRoute = SmokeMode.TestRoute;     // smoke pages only: an engine test corridor (Resources/Routes) instead of Lagos to Ibadan
             if (testRoute != null) { var ta = Resources.Load<TextAsset>("Routes/" + testRoute + ".route"); if (ta != null) { route.specJson = ta; Debug.Log("[Smoke] driving the test corridor " + testRoute); } else Debug.LogWarning("[Smoke] no route data for " + testRoute); }
+            DriveRegionStore.SetCurrent(null);                       // static: a world reload must not keep the previous world's region
+            if (testRoute == null && !SmokeMode.Drive && !SmokeMode.WorldMap && !SmokeMode.KanoStreet)
+            {   // the player's choice of where to drive (Kano city or Lagos to Ibadan); test pages ignore it
+                var choice = DriveRegionStore.Stored();
+                if (choice.RouteId != ARO.NetCore.DriveRegions.Shipped)
+                {
+                    var ta = Resources.Load<TextAsset>("Routes/" + choice.RouteId + ".route");
+                    if (ta != null) { route.specJson = ta; DriveRegionStore.SetCurrent(choice); Debug.Log("[Route] the player chose " + choice.Name + " (" + choice.RouteId + ")"); }
+                    else Debug.LogWarning("[Route] no route data for the stored choice " + choice.RouteId + "; driving the shipped road");
+                }
+            }
             bool haveModel = route.Prepare();
             Light sun = null;
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) { sun = l; break; }

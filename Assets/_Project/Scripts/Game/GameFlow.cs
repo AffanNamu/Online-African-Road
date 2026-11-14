@@ -71,11 +71,22 @@ namespace ARO.Game
             {   // CI only (loopback pages): sign in with throw-away test credentials so the browser test can reach the dashboard on a real backend
                 Toast("Signing in...");
                 var si = await _svc.Api.SignIn(email, password);
-                if (si.Ok) { await EnterMenu(); if (SmokeMode.PumpStart) { Debug.Log("[Smoke] pump scenario: free drive with the player's own truck"); StartDrive(null); } return; }
+                if (si.Ok)
+                {
+                    await EnterMenu();
+                    if (SmokeMode.PumpStart) { Debug.Log("[Smoke] pump scenario: free drive with the player's own truck"); StartDrive(null); }
+                    else if (DriveRegionStore.TakeDriveAfterLoad() && _svc.Profile != null) { Debug.Log("[Route] driving " + DriveRegionStore.Current.Name + " after the world reload"); StartDrive(null); }
+                    return;
+                }
                 ShowLogin(si.UserMessage); return;
             }
             Toast("Checking saved session...");
-            if (await _svc.Api.TryCompleteOAuthRedirect(url) || await _svc.Api.TryRestoreSession()) await EnterMenu(); else ShowLogin(null);
+            if (await _svc.Api.TryCompleteOAuthRedirect(url) || await _svc.Api.TryRestoreSession())
+            {
+                await EnterMenu();
+                if (DriveRegionStore.TakeDriveAfterLoad() && _svc.Api.IsSignedIn && _svc.Profile != null) { Debug.Log("[Route] driving " + DriveRegionStore.Current.Name + " after the world reload"); StartDrive(null); }
+            }
+            else ShowLogin(null);
         }
 
         void Update()
@@ -220,6 +231,7 @@ namespace ARO.Game
                 Jobs = () => { CloseMap(); ShowMenu(); if (_dash != null) _dash.OpenJobs(); },
                 Bus = () => { CloseMap(); ShowMenu(); if (_dash != null) _dash.OpenBusRoutes(); },
                 FreeDrive = () => { CloseMap(); if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } },
+                DriveRegion = SwitchRegion,
                 AcceptJob = job => _ = AcceptJob(job, false),
             }, _fixtureJobs);
         }
@@ -241,6 +253,7 @@ namespace ARO.Game
         async Task QuickJob()
         {
             if (_busy) return; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return; }
+            { var blocked = DriveRegions.Blocked(DriveRegionStore.Current, "job"); if (blocked != null) { Toast(blocked, 7f, NoticeLevel.Bad); return; } }
             Toast("Finding a job...");
             var r = await _svc.Jobs.LoadBoard();
             if (!r.Ok) { Toast(r.UserMessage, 5f); return; }
@@ -268,6 +281,7 @@ namespace ARO.Game
         async Task<bool> AcceptJob(JobDto job, bool showBoardOnError = true)
         {
             if (_busy) return false; if (_drive.Job != null) { Toast("Finish or abandon your current job first."); return false; }
+            var blocked = DriveRegions.Blocked(DriveRegionStore.Current, "job"); if (blocked != null) { Toast(blocked, 7f, NoticeLevel.Bad); return false; }
             var owned = FindVehicleFor(job.required_category);
             if (owned == null) { Toast("You have no " + job.required_category + " for this job."); return false; }
             _busy = true; var r = await _svc.Jobs.Accept(job.id, owned.id); _busy = false;
@@ -290,6 +304,7 @@ namespace ARO.Game
         async Task ConvoyDriveFlow(ConvoyInfo c)
         {
             if (_busy || c == null) return;
+            { var blocked = DriveRegions.Blocked(DriveRegionStore.Current, "convoy"); if (blocked != null) { Toast(blocked, 7f, NoticeLevel.Bad); return; } }
             if (FirstTruckOrAny() == null) { Toast("You need a vehicle to drive with the convoy.", 5f, NoticeLevel.Bad); return; }
             _busy = true; if (_dash != null && c.is_leader && !c.Driving) _dash.SetStarting(true);
             try
@@ -320,11 +335,33 @@ namespace ARO.Game
             finally { _busy = false; if (_dash != null) _dash.SetStarting(false); }
         }
 
+        // ---------------------------------------------------------------- where to drive (owner decision 2026-11-14: Kano in the route selection)
+        /// <summary>
+        /// Drive the chosen region. The one already loaded: free drive as before. Another one: the choice is stored and the world is reloaded (every world system is built for one route); the saved
+        /// session signs the player straight back in and the drive starts. Not while a job, a bus route or a convoy is running.
+        /// </summary>
+        void SwitchRegion(string routeId)
+        {
+            var target = DriveRegions.Get(routeId);
+            if (target.RouteId == DriveRegionStore.Current.RouteId) { CloseMap(); if (_drive.Vehicle != null) Resume(); else { HideMenus(); StartDrive(null); } return; }
+            if (_drive.Job != null || _bus.Active) { Toast("Finish or abandon your job or bus route first.", 6f, NoticeLevel.Bad); return; }
+            if (_svc.Convoys.CurrentConvoyId != null) { Toast("Leave your convoy first: convoys drive " + DriveRegions.Get(null).Name + ".", 6f, NoticeLevel.Bad); return; }
+            if (!_svc.Api.RememberSession) { Toast("Turn on \"remember me\" to switch region: the world reloads and signs you back in.", 7f, NoticeLevel.Bad); return; }
+            DriveRegionStore.Choose(target.RouteId);
+            Debug.Log("[Route] switching to " + target.Name + " (" + target.RouteId + "): reloading the world");
+            Toast("Loading " + target.Name + "...", 30f);
+            _ = _svc.Presence.EndSession();
+            var nm = Unity.Netcode.NetworkManager.Singleton;                  // it keeps itself across scene loads; with no live session the reloaded scene's own one takes over
+            if (nm != null && !nm.IsListening) Destroy(nm.gameObject);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
+
         // ---------------------------------------------------------------- bus (the routes page is part of the dashboard: DashboardBusRoutes)
         /// <summary>Asks the server to start a run and puts the player in the bus. Returns an error message, or null once the route has started.</summary>
         async Task<string> StartBusRoute(BusRouteDto route, OwnedVehicleDto bus)
         {
             if (_busy) return "One moment...";
+            { var blocked = DriveRegions.Blocked(DriveRegionStore.Current, "bus"); if (blocked != null) return blocked; }
             _busy = true; Toast("Starting route...");
             string err = await _bus.Begin(route, bus); _busy = false;
             if (err != null) return err;

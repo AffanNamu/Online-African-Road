@@ -45,7 +45,7 @@ The economic range of the homes runs from the low-cost "face-me-I-face-you" row 
 | Unity prefab | Made by the review build. The four review scenes `env_kano_fuel_dry`, `env_kano_commerce_dry`, `env_kano_civic_dry` and `env_kano_homes_dry` carry all 28, so the review build makes their prefabs and photographs them (16 new views). |
 | City placement | The catalogue entries and the frontage rules of both city routes; a .NET test fails if any of the 28 is never placed. |
 | Refuel | Every pump of the three stations works in the game (P1, `docs/REFUEL_AT_A_PUMP.md`). Their catalogue entries carry the pump sockets and the model's own collision boxes, so the forecourt can be driven into. In the public build the station placeholder is drawn from those boxes. |
-| Playable | Drivable today in the WebGL build at `?smoke=drive&route=ng-kano-city-e1` or `ng-kano-city-f1` (add `&start=<metres>`). In the public build they draw as footprint boxes; the review build draws the real models. **Not in the player's route selection**: the shipped route is Lagos to Ibadan, and exposing Kano there is a production-configuration change that needs your decision (section 6). |
+| Playable | Drivable today in the WebGL build at `?smoke=drive&route=ng-kano-city-e1` or `ng-kano-city-f1` (add `&start=<metres>`). In the public build they draw as footprint boxes; the review build draws the real models. **In the player's route selection since 2026-11-14** (owner decision): the world map's Kano panel, free drive (section 6). |
 
 ## 3. The city: district mixes on the two city routes
 
@@ -97,7 +97,7 @@ The 28 v001 assets are staged into ARO-CONTENT `assets/transport-kit-v1` (commit
 
 ## 6. Decisions that are yours
 
-1. **Expose Kano in the game.** The city routes are engine test routes, reached through the drive URL. Adding Kano to the player's route selection or job board is a production-configuration change, and the repository rules leave it to you. Nothing was changed.
+1. **Expose Kano in the game.** *Decided by the owner on 2026-11-14: yes.* Done on the client: the world map's Kano panel has a **DRIVE HERE** section with the two city routes (`NetCore/DriveRegions.cs`, `Game/DriveRegionStore.cs`). The choice is kept on the device; choosing reloads the world and the saved session signs the player back in and starts the drive. Free drive only (the fuel station pumps work): jobs, bus routes and convoys in Kano are refused with a message until the server has Kano data (P3). The server's world state for Kano stays PLANNED; nothing on the server changed. Lagos to Ibadan's Free drive button switches back.
 2. **The brand.** Is KANO OIL the chain the game should carry? It is your concept's name; it should pass a trademark search first.
 3. **Approval** of any of the 28 after you have looked at the in-game pictures (`production_approved` is yours alone).
 

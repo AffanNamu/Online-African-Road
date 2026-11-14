@@ -97,6 +97,8 @@ const ASPECT = 1672 / 941;
   check(!tg['Btn_NotAvailable'] && !tg['Btn_ViewJobs'] && !tg['Btn_FreeDrive'] && !Object.keys(tg).some(k => k.startsWith('Btn_Accept_')), 'a planned route offers no way to drive it (no jobs, no free drive, no accept)');
   m = mark(); await click('Btn_PanelBack'); await waitLog(/panel mode=Overview/, m, 20); await sleep(1200);
   m = mark(); await click('City_kano'); await waitLog(/selected city=kano/, m, 20); await sleep(1200);
+  { const kt = targets(); console.log(`${kt['Btn_Drive_ng_kano_city_e1'] && kt['Btn_Drive_ng_kano_city_f1'] ? 'PASS' : 'INFO'}  Kano city offers its two city routes to drive (owner decision 2026-11-14; informational until two runs agree)`); }
+  await page.screenshot({ path: `${prefix}-5b-city-kano-drive.png` });
   m = mark(); await click('Route_kaduna-kano'); hit = await waitLog(/selected route=kaduna-kano state=PlannedLocked/, m, 25);
   check(!!hit, 'route Kaduna -> Kano at level 5 is locked (needs level 9)');
 

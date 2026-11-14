@@ -1210,6 +1210,26 @@ const allErrors = [], allExc = [];
     note(db(`select count(*) || ':' || coalesce(sum(amount), 0) from transactions where player_id = '${pat.id}' and kind = 'FUEL_PURCHASE'`) === '1:-180', 'pump: one ledger row of -180', db(`select count(*) || ':' || coalesce(sum(amount), 0) from transactions where player_id = '${pat.id}' and kind = 'FUEL_PURCHASE'`));
   }
 
+  // =========================================================================================== 2q. Kano in the route selection: the world map's Kano panel, a world reload, signed back in, driving the Kano city streets; jobs refused there
+  // Informational until two runs agree. Exceptions on the page still fail the job.
+  {
+    const note = (ok, what, detail) => console.log(`${ok ? 'PASS' : 'INFO'}  ${what}${!ok && detail !== undefined ? '  -> ' + String(detail).slice(0, 300) : ''}`);
+    const kay = await signup('BrowserKano');
+    await open(kay, '', async c => {
+      note(!!(await c.waitLog(/\[Dashboard\] built for BrowserKano/, 0, 150)), 'kano: the dashboard opens'); await c.settle();
+      const wm = await c.clickUntil('Btn_RoutesMap', /\[WorldMap\] opened\./, 40); note(!!wm, 'kano: the world map opens', wm);
+      let m = c.logs.length; await c.click('City_kano'); note(!!(await c.waitLog(/\[WorldMap\] selected city=kano/, m, 30)), 'kano: the Kano panel opens'); await c.settle();
+      note(!!c.targets()['Btn_Drive_ng_kano_city_e1'] && !!c.targets()['Btn_Drive_ng_kano_city_f1'], 'kano: the panel offers the city streets and the flyover interchange', Object.keys(c.targets()).filter(k => /Drive/.test(k)).join(','));
+      await c.page.screenshot({ path: `${prefix}-14-kano-panel.png` });
+      m = c.logs.length; await c.click('Btn_Drive_ng_kano_city_e1');
+      note(!!(await c.waitLog(/\[Route\] switching to Kano city streets \(ng-kano-city-e1\)/, m, 30)), 'kano: choosing it reloads the world');
+      const chose = await c.waitLog(/\[Route\] the player chose Kano city streets \(ng-kano-city-e1\)/, m, 180); note(!!chose, 'kano: the reloaded game loads the Kano city route', chose);
+      const drv = await c.waitLog(/\[Route\] driving Kano city streets after the world reload/, m, 180); note(!!drv, 'kano: the player is signed back in and drives there', drv);
+      const ground = await c.waitLog(/\[Drive\] ground ready/, m, 150); note(!!ground, 'kano: the truck lands on the Kano road', ground);
+      await sleep(4000); await c.page.screenshot({ path: `${prefix}-15-kano-drive.png` });
+    });
+  }
+
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });
   const ivy = await signup('BrowserIvy');

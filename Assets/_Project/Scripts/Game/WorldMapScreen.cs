@@ -10,7 +10,7 @@ using UInput = UnityEngine.Input;
 
 namespace ARO.Game
 {
-    public sealed class WorldMapActions { public Action Back, Jobs, Bus, FreeDrive; public Action<JobDto> AcceptJob; }
+    public sealed class WorldMapActions { public Action Back, Jobs, Bus, FreeDrive; public Action<JobDto> AcceptJob; /** drive a region of ARO.NetCore.DriveRegions (Kano city or Lagos to Ibadan); null hides the choice */ public Action<string> DriveRegion; }
 
     /// <summary>
     /// The strategic world map: the supplied artwork in a zoomable, pannable viewport with selectable cities and routes.
@@ -452,7 +452,20 @@ namespace ARO.Game
                 y = Para(p, _jobs == null ? (_jobsFailed ? "Jobs are unavailable right now." : "Loading jobs...") : $"{n} open job{(n == 1 ? "" : "s")} touch {c.name}.", 17, White, W, y, "SemiBold");
                 y = Btn(p, "Btn_ViewJobs", "View jobs", W, y + 4, true, true, () => _act.Jobs());
             }
-            else y = Para(p, st == CityState.Unavailable ? "The server has not told us what is open yet, so nothing here can be started. Check your connection." : st == CityState.Locked ? "Not discovered yet. Keep levelling up to reveal the routes here." : "Planned. The road, terrain, vehicles and traffic for this region are not built yet, so nothing here can be driven.", 16, Muted, W, y + 6);
+            else if (!(DriveRegions.InCity(c.id).Any() && _act.DriveRegion != null)) y = Para(p, st == CityState.Unavailable ? "The server has not told us what is open yet, so nothing here can be started. Check your connection." : st == CityState.Locked ? "Not discovered yet. Keep levelling up to reveal the routes here." : "Planned. The road, terrain, vehicles and traffic for this region are not built yet, so nothing here can be driven.", 16, Muted, W, y + 6);
+            var regions = DriveRegions.InCity(c.id).ToList();
+            if (regions.Count > 0 && _act.DriveRegion != null)
+            {   // owner decision 2026-11-14: Kano in the player's route selection (free drive in the city until the server has Kano jobs and a bus route)
+                y = Section(p, "DRIVE HERE", y + 10);
+                foreach (var reg in regions)
+                {
+                    bool here = DriveRegionStore.Current.RouteId == reg.RouteId; string rid = reg.RouteId;
+                    y = Para(p, reg.Name + (here ? "  ·  loaded now" : ""), 17, White, W, y, "SemiBold");
+                    y = Para(p, reg.Note + (reg.Jobs ? "" : " Jobs, bus routes and convoys here come with the server's Kano data."), 15, Muted, W, y);
+                    y = Btn(p, "Btn_Drive_" + rid.Replace('-', '_'), here ? "Drive" : "Drive " + reg.Name, W, y + 2, true, true, () => _act.DriveRegion(rid));
+                }
+                if (regions.Any(r => !r.Jobs)) y = Para(p, "Prototype: in the public build the city's buildings are simple blocks of their real size; the fuel station pumps work.", 14, Muted, W, y);
+            }
             return y;
         }
 
@@ -486,7 +499,7 @@ namespace ARO.Game
                 foreach (var j in jobs.Take(3)) y = JobRow(p, j, W, y);
                 y = Btn(p, "Btn_ViewJobs", "View all jobs", W, y + 6, true, true, () => _act.Jobs());
                 y = Btn(p, "Btn_BusRoutes", "Bus routes", W, y - 6, false, true, () => _act.Bus());
-                y = Btn(p, "Btn_FreeDrive", "Free drive (prototype)", W, y - 6, false, true, () => _act.FreeDrive());
+                y = Btn(p, "Btn_FreeDrive", "Free drive (prototype)", W, y - 6, false, true, () => { if (_act.DriveRegion != null && DriveRegionStore.Current.RouteId != DriveRegions.Shipped) _act.DriveRegion(DriveRegions.Shipped); else _act.FreeDrive(); });   // from Kano: back to this road (a world reload)
             }
             else
             {
