@@ -152,7 +152,7 @@ namespace ARO.Game
             bool found = Streamer.GroundBelow(pos, Vehicle.transform, out float gy, _route != null && _route.Model != null && _route.Model.HasLevels ? pos.y : float.MaxValue);
             // Smoke pages on a two-level route (a flyover deck): when the chunk's deck is not built yet only the ground under it exists, 10 m or more below the spawn point, and releasing there would drop the truck under the deck.
             // Keep holding until the deck's collider is there (or the hold times out). Never applies to a live game: smoke pages and routes with levels only.
-            bool belowTheIntendedLevel = found && SmokeMode.Drive && _route != null && _route.Model != null && _route.Model.HasLevels && gy < pos.y - 4f;
+            bool belowTheIntendedLevel = found && SmokeMode.Drive && _route != null && _route.Model != null && _route.Model.HasLevels && (gy < pos.y - 4f || !LevelUnderWholeLength(pos));
             if (found && !belowTheIntendedLevel)
             {
                 Vehicle.transform.position = new Vector3(pos.x, gy + 1.4f, pos.z);
@@ -166,6 +166,26 @@ namespace ARO.Game
                 _holdRb.constraints = RigidbodyConstraints.None; _holding = false; _spawnPos = pos;
                 Debug.LogError("[Drive] no ground after " + HoldTimeout + "s; releasing the vehicle anyway");
             }
+        }
+
+        /// <summary>
+        /// Smoke pages on a two-level route only: the deck must be built under the WHOLE vehicle, its front and rear ends as well as its centre. A chunk boundary can run under the truck and the next chunk's deck
+        /// collider may come seconds later (review run 43523565815: released 2 m from the chunk edge at z = -200, the rear dropped through the deck that was not built yet and the truck ended on its side, half under
+        /// the deck surface, at every retry). Uses the vehicle's own colliders for its length.
+        /// </summary>
+        bool LevelUnderWholeLength(Vector3 pos)
+        {
+            var f = Vehicle.transform.forward; f.y = 0f; if (f.sqrMagnitude < 1e-4f) return true; f.Normalize();
+            float half = 0f;
+            foreach (var c in Vehicle.GetComponentsInChildren<Collider>())
+            {
+                if (c.isTrigger) continue; var b = c.bounds; var d = b.center - pos; d.y = 0f;
+                half = Mathf.Max(half, Mathf.Abs(Vector3.Dot(d, f)) + Mathf.Abs(f.x) * b.extents.x + Mathf.Abs(f.z) * b.extents.z);
+            }
+            if (half < 0.5f) return true;
+            foreach (var k in new[] { -1f, 1f })
+                if (!Streamer.GroundBelow(pos + f * (k * (half - 0.3f)), Vehicle.transform, out float g, pos.y) || g < pos.y - 4f) return false;
+            return true;
         }
 
         float _freezeAt = -1f; int _freezeTries, _freezeWaits; Quaternion _spawnRot = Quaternion.identity;
