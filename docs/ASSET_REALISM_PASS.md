@@ -143,8 +143,12 @@ How to read the table:
 |---|---|
 | 1 and 2 | **Yes.** Pipeline and tests as in section 4. 78 of 78 transport-kit assets build and pass the validator; 35 are v002. The catalogue, the city prop entries and the two city routes are regenerated from them. |
 | Private library | **Yes.** ARO-CONTENT `assets/transport-kit-v1` commit a57f9fc: 461 new files beside the v001 ones (nothing overwritten or deleted), release `transport_kit_realism_v002`. The game repository keeps the hashes as `docs/kano/TRANSPORT_KIT_REALISM_v002.freeze.json`: 35 assets, 560 files. |
-| 3 Unity | **Running at the time of writing**: review run 43523565815 on commit bf2705e built all 78 transport-kit assets from the code in CI (validation passed for every one, the 35 baked ones as v002), staged them, and is building the game in Unity 6. Its result is recorded here when it ends. |
-| 4 gameplay | **Not yet.** The city routes are driven in the same review run (the eight places of `tools/webgl-kanocity.js`). Pictures and numbers follow when it ends. |
+| 3 Unity | **Yes.** Review run 43523565815 (commit bf2705e) built all 78 transport-kit assets from the code in CI, the 35 baked ones as v002, staged them, and built the game in Unity 6 with them. The importer made the atlas materials, and the 24 scene views were taken. The repeat run 43551897286 (commit 6205b8d) passed every step. The full CI on bf2705e passed all 8 jobs. **Pictures read** (artifact `kano-review-in-game` of run 43523565815; the host `productionresultssa10` was allowed for it):
+  * the mosques show their ashlar courses, framed lattice windows, railed minaret balconies and glazed domes;
+  * the city row shows windows and sills on every wall, shutters, shopfronts and roof tanks;
+  * the logistics docks show weathered sheet walls and shutters;
+  * the domes, and the earth-coloured island and pattern pieces, read darker in the game (low tier, software renderer) than in Blender. The owner should judge this in the pictures. |
+| 4 gameplay | **Driven, not seen by a person.** The eight city places of `tools/webgl-kanocity.js`. Run 43523565815 passed 34 of 35 checks: at the north flyover place the truck tipped over. The cause was in the test harness, not the assets: it was released 2 m from a chunk edge while the next chunk's deck collider was not built yet. The fix is commit 6205b8d (the smoke hold waits for the deck under the whole vehicle), and the repeat run 43551897286 passed every check. The game's own numbers at tier low, compared with run 42684305591: the draw estimate falls by 0 to 11 per place (single carriageway 158 → 152, commercial road 197 → 189, arterial with a grand mosque 178 → 167), and the visible triangles by 0 to 1,006. The realism pass costs no draw calls. |
 | 5 visual | **No.** Blender previews and agent reading only; the owner decides. `production_approved` is not set on anything. |
 
 ## 6. What this pass did not polish, and why
