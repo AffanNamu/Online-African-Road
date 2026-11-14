@@ -59,6 +59,7 @@ namespace ARO.World
             public readonly List<GameObject> productionProps = new List<GameObject>();
             public readonly List<Object> owned = new List<Object>();
             public List<PropInstance> instances;
+            public List<ServicePoint> services;          // the sockets of the chunk's props (pumps, entries, exits): P1 refuel at a pump
             public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
             public bool hasCollision, lampsRegistered, facesReported;
             public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
@@ -76,6 +77,21 @@ namespace ARO.World
         /// <summary>Advertising faces of the props placed in a chunk (the chunk, the faces) and the chunk unloading. Raised only for chunks that hold billboards; nothing is raised when nobody listens (the ad service is optional).</summary>
         public System.Action<Vector2Int, List<AdFace>> FacesLoaded; public System.Action<Vector2Int> FacesUnloaded;
         void Start() { StartCoroutine(Pump()); }
+
+        /// <summary>
+        /// The pump a vehicle at `pos` moving at `kmh` can refuel at (P1, see ServicePoints): searched in the loaded chunk under the vehicle and its neighbours. False when moving, when no pump is near,
+        /// or before the chunk's props are placed.
+        /// </summary>
+        public bool PumpAt(Vector3 pos, float kmh, out ServicePoint pump)
+        {
+            pump = default; if (!UsesRouteModel) return false;
+            int cx = Mathf.FloorToInt(pos.x / chunkSize), cz = Mathf.FloorToInt(pos.z / chunkSize); var near = _pumpScratch; near.Clear();
+            for (int dz = -1; dz <= 1; dz++) for (int dx = -1; dx <= 1; dx++)
+                    if (_chunks.TryGetValue(new Vector2Int(cx + dx, cz + dz), out var ch) && ch.services != null) foreach (var p in ch.services) if (p.IsFuel) near.Add(p);
+            int i = ServicePoints.PumpAt(near, new V3(pos.x, pos.y, pos.z), kmh); if (i < 0) return false;
+            pump = near[i]; return true;
+        }
+        readonly List<ServicePoint> _pumpScratch = new List<ServicePoint>();
 
         /// <summary>True when something solid (other than `ignore`'s own colliders) lies under p; y receives the highest such surface.</summary>
         public bool GroundBelow(Vector3 p, Transform ignore, out float y, float maxY = float.MaxValue)
@@ -314,7 +330,7 @@ namespace ARO.World
         void StageProps(Chunk ch)
         {
             var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
-            if (ch.instances == null) ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity);
+            if (ch.instances == null) { ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity); ch.services = ServicePoints.FromInstances(ch.instances, PropLibrary.Def); }
             if (lamps != null && !ch.lampsRegistered)
             {
                 ch.lampsRegistered = true;      // all lamps of the chunk, whatever the prop LOD or cull distance: the glow layer is what makes far lamps readable at night
@@ -365,7 +381,11 @@ namespace ARO.World
                     go.transform.localPosition = new Vector3(inst.Pos.X - o.x, inst.Pos.Y, inst.Pos.Z - o.z); go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg, 0f); go.transform.localScale *= inst.Scale;
                     var def = PropLibrary.Def(inst.Prop);
                     if (def != null && def.collider == "box" && ring <= 1 && go.GetComponentInChildren<Collider>() == null)      // E2 (RB-10): a catalogued solid prefab without a collider of its own gets the box of its catalogue size
-                    { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(def.widthM, def.heightM, def.depthM); bc.center = new Vector3(0f, def.heightM * 0.5f, 0f); }
+                    {
+                        if (def.HasBoxes)       // a drive-in place (P1): its model's boxes, so the forecourt stays open
+                            foreach (var b in def.boxes) { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(b.x1 - b.x0, b.y1 - b.y0, b.z1 - b.z0); bc.center = new Vector3((b.x0 + b.x1) * 0.5f, (b.y0 + b.y1) * 0.5f, (b.z0 + b.z1) * 0.5f); }
+                        else { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(def.widthM, def.heightM, def.depthM); bc.center = new Vector3(0f, def.heightM * 0.5f, 0f); }
+                    }
                     if (!string.IsNullOrEmpty(inst.Text)) MakeLabel(ch, inst, o);          // a production sign or board that declares a text face
                     ch.productionProps.Add(go);
                 }

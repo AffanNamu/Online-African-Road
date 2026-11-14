@@ -44,6 +44,7 @@ The economic range of the homes runs from the low-cost "face-me-I-face-you" row 
 | Registry | One entry per asset, at status `blender_validation_passed`. |
 | Unity prefab | Made by the review build. The four review scenes `env_kano_fuel_dry`, `env_kano_commerce_dry`, `env_kano_civic_dry` and `env_kano_homes_dry` carry all 28, so the review build makes their prefabs and photographs them (16 new views). |
 | City placement | The catalogue entries and the frontage rules of both city routes; a .NET test fails if any of the 28 is never placed. |
+| Refuel | Every pump of the three stations works in the game (P1, `docs/REFUEL_AT_A_PUMP.md`). Their catalogue entries carry the pump sockets and the model's own collision boxes, so the forecourt can be driven into. In the public build the station placeholder is drawn from those boxes. |
 | Playable | Drivable today in the WebGL build at `?smoke=drive&route=ng-kano-city-e1` or `ng-kano-city-f1` (add `&start=<metres>`). In the public build they draw as footprint boxes; the review build draws the real models. **Not in the player's route selection**: the shipped route is Lagos to Ibadan, and exposing Kano there is a production-configuration change that needs your decision (section 6). |
 
 ## 3. The city: district mixes on the two city routes

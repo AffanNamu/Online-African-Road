@@ -342,7 +342,7 @@
    "id": "fuel_station",
    "category": "buildings",
    "status": "dev",
-   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/fuel_station (same id, same real-world size and pivot).",
+   "description": "DEVELOPMENT PLACEHOLDER. Replace with a production model at Resources/Props/fuel_station (same id, same real-world size and pivot). Collision: its shop, canopy posts, pumps and pylon (not one box over the lot), so a vehicle drives under the canopy to the two pump sockets.",
    "source": "dev:fuel_station",
    "collider": "box",
    "heightM": 6,
@@ -388,7 +388,91 @@
       "z": 4.275
      }
     ]
-   }
+   },
+   "boxes": [
+    {
+     "x0": -13.44,
+     "y0": 0.0,
+     "z0": -9.18,
+     "x1": -5.6,
+     "y1": 3.7,
+     "z1": -1.62
+    },
+    {
+     "x0": -5.58,
+     "y0": 0.0,
+     "z0": -2.85,
+     "x1": -5.18,
+     "y1": 5.2,
+     "z1": -2.45
+    },
+    {
+     "x0": -5.58,
+     "y0": 0.0,
+     "z0": 6.05,
+     "x1": -5.18,
+     "y1": 5.2,
+     "z1": 6.45
+    },
+    {
+     "x0": 10.78,
+     "y0": 0.0,
+     "z0": -2.85,
+     "x1": 11.18,
+     "y1": 5.2,
+     "z1": -2.45
+    },
+    {
+     "x0": 10.78,
+     "y0": 0.0,
+     "z0": 6.05,
+     "x1": 11.18,
+     "y1": 5.2,
+     "z1": 6.45
+    },
+    {
+     "x0": 0.25,
+     "y0": 0.0,
+     "z0": 1.55,
+     "x1": 0.95,
+     "y1": 1.5,
+     "z1": 2.05
+    },
+    {
+     "x0": 4.65,
+     "y0": 0.0,
+     "z0": 1.55,
+     "x1": 5.35,
+     "y1": 1.5,
+     "z1": 2.05
+    },
+    {
+     "x0": 11.46,
+     "y0": 0.0,
+     "z0": -7.8,
+     "x1": 12.06,
+     "y1": 6.0,
+     "z1": -6.6
+    }
+   ],
+   "sockets": [
+    {
+     "name": "pump_1",
+     "kind": "fuel_pump",
+     "x": -0.5,
+     "y": 0.0,
+     "z": 1.8,
+     "yawDeg": 90
+    },
+    {
+     "name": "pump_2",
+     "kind": "fuel_pump",
+     "x": 6.1,
+     "y": 0.0,
+     "z": 1.8,
+     "yawDeg": -90
+    }
+   ]
   },
   {
    "id": "bus_stop",
@@ -1428,7 +1512,7 @@
    "id": "kano_fuel_station_large_a",
    "category": "buildings",
    "status": "dev",
-   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "description": "DEVELOPMENT PLACEHOLDER (its collision boxes over a forecourt slab) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
    "source": "dev:kano_fuel_station_large_a",
    "collider": "box",
    "heightM": 9.65,
@@ -1449,13 +1533,177 @@
     "kano_city_test",
     "roadside_service",
     "shop"
+   ],
+   "sockets": [
+    {
+     "name": "pump_1",
+     "kind": "fuel_pump",
+     "x": 8.4,
+     "y": 0.0,
+     "z": 6.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "pump_2",
+     "kind": "fuel_pump",
+     "x": 1.4,
+     "y": 0.0,
+     "z": 6.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "pump_3",
+     "kind": "fuel_pump",
+     "x": -5.6,
+     "y": 0.0,
+     "z": 6.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "pump_4",
+     "kind": "fuel_pump",
+     "x": -12.6,
+     "y": 0.0,
+     "z": 6.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "entry",
+     "kind": "drive_in",
+     "x": 19.0,
+     "y": 0.0,
+     "z": 18.0,
+     "yawDeg": 0
+    },
+    {
+     "name": "exit",
+     "kind": "drive_out",
+     "x": -19.0,
+     "y": 0.0,
+     "z": 18.0,
+     "yawDeg": 180
+    }
+   ],
+   "boxes": [
+    {
+     "x0": 4.0,
+     "y0": 0.0,
+     "z0": -14.0,
+     "x1": 22.0,
+     "y1": 5.3,
+     "z1": -3.0
+    },
+    {
+     "x0": 9.05,
+     "y0": 0.0,
+     "z0": 5.55,
+     "x1": 9.95,
+     "y1": 5.8,
+     "z1": 6.45
+    },
+    {
+     "x0": 2.05,
+     "y0": 0.0,
+     "z0": 5.55,
+     "x1": 2.95,
+     "y1": 5.8,
+     "z1": 6.45
+    },
+    {
+     "x0": -4.95,
+     "y0": 0.0,
+     "z0": 5.55,
+     "x1": -4.05,
+     "y1": 5.8,
+     "z1": 6.45
+    },
+    {
+     "x0": -11.95,
+     "y0": 0.0,
+     "z0": 5.55,
+     "x1": -11.05,
+     "y1": 5.8,
+     "z1": 6.45
+    },
+    {
+     "x0": 8.8,
+     "y0": 0.0,
+     "z0": 1.5,
+     "x1": 10.2,
+     "y1": 2.3,
+     "z1": 10.5
+    },
+    {
+     "x0": 1.8,
+     "y0": 0.0,
+     "z0": 1.5,
+     "x1": 3.2,
+     "y1": 2.3,
+     "z1": 10.5
+    },
+    {
+     "x0": -5.2,
+     "y0": 0.0,
+     "z0": 1.5,
+     "x1": -3.8,
+     "y1": 2.3,
+     "z1": 10.5
+    },
+    {
+     "x0": -12.2,
+     "y0": 0.0,
+     "z0": 1.5,
+     "x1": -10.8,
+     "y1": 2.3,
+     "z1": 10.5
+    },
+    {
+     "x0": -20.7,
+     "y0": 0.0,
+     "z0": 15.4,
+     "x1": -18.3,
+     "y1": 9.6,
+     "z1": 16.6
+    },
+    {
+     "x0": -23.0,
+     "y0": 0.0,
+     "z0": -18.1,
+     "x1": 23.0,
+     "y1": 2.6,
+     "z1": -17.7
+    },
+    {
+     "x0": 22.8,
+     "y0": 0.0,
+     "z0": -17.9,
+     "x1": 23.2,
+     "y1": 2.6,
+     "z1": -1.5
+    },
+    {
+     "x0": -23.2,
+     "y0": 0.0,
+     "z0": -17.9,
+     "x1": -22.8,
+     "y1": 2.6,
+     "z1": -1.5
+    },
+    {
+     "x0": -15.0,
+     "y0": 0.0,
+     "z0": -17.0,
+     "x1": -9.0,
+     "y1": 3.2,
+     "z1": -12.5
+    }
    ]
   },
   {
    "id": "kano_fuel_station_medium_a",
    "category": "buildings",
    "status": "dev",
-   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "description": "DEVELOPMENT PLACEHOLDER (its collision boxes over a forecourt slab) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
    "source": "dev:kano_fuel_station_medium_a",
    "collider": "box",
    "heightM": 7.25,
@@ -1477,6 +1725,114 @@
     "kano_city_test",
     "roadside_service",
     "shop"
+   ],
+   "sockets": [
+    {
+     "name": "pump_1",
+     "kind": "fuel_pump",
+     "x": 1.9,
+     "y": 0.0,
+     "z": 5.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "pump_2",
+     "kind": "fuel_pump",
+     "x": -6.1,
+     "y": 0.0,
+     "z": 5.0,
+     "yawDeg": 90
+    },
+    {
+     "name": "entry",
+     "kind": "drive_in",
+     "x": 13.0,
+     "y": 0.0,
+     "z": 13.0,
+     "yawDeg": 0
+    },
+    {
+     "name": "exit",
+     "kind": "drive_out",
+     "x": -13.0,
+     "y": 0.0,
+     "z": 13.0,
+     "yawDeg": 180
+    }
+   ],
+   "boxes": [
+    {
+     "x0": 6.0,
+     "y0": 0.0,
+     "z0": -9.0,
+     "x1": 15.0,
+     "y1": 4.7,
+     "z1": -3.0
+    },
+    {
+     "x0": 2.55,
+     "y0": 0.0,
+     "z0": 4.55,
+     "x1": 3.45,
+     "y1": 5.4,
+     "z1": 5.45
+    },
+    {
+     "x0": -5.45,
+     "y0": 0.0,
+     "z0": 4.55,
+     "x1": -4.55,
+     "y1": 5.4,
+     "z1": 5.45
+    },
+    {
+     "x0": 2.3,
+     "y0": 0.0,
+     "z0": 2.0,
+     "x1": 3.7,
+     "y1": 2.3,
+     "z1": 8.0
+    },
+    {
+     "x0": -5.7,
+     "y0": 0.0,
+     "z0": 2.0,
+     "x1": -4.3,
+     "y1": 2.3,
+     "z1": 8.0
+    },
+    {
+     "x0": -15.4,
+     "y0": 0.0,
+     "z0": 11.3,
+     "x1": -13.0,
+     "y1": 7.1,
+     "z1": 12.5
+    },
+    {
+     "x0": -16.0,
+     "y0": 0.0,
+     "z0": -13.1,
+     "x1": 16.0,
+     "y1": 2.4,
+     "z1": -12.7
+    },
+    {
+     "x0": 15.8,
+     "y0": 0.0,
+     "z0": -12.9,
+     "x1": 16.2,
+     "y1": 2.4,
+     "z1": 0.0
+    },
+    {
+     "x0": -16.2,
+     "y0": 0.0,
+     "z0": -12.9,
+     "x1": -15.8,
+     "y1": 2.4,
+     "z1": 0.0
+    }
    ]
   },
   {
@@ -1858,7 +2214,7 @@
    "id": "rg_ngn_fuel_station_small_a",
    "category": "buildings",
    "status": "dev",
-   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "description": "DEVELOPMENT PLACEHOLDER (its collision boxes over a forecourt slab) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
    "source": "dev:rg_ngn_fuel_station_small_a",
    "collider": "box",
    "heightM": 4.9,
@@ -1878,6 +2234,90 @@
     "independent",
     "kano_city_test",
     "roadside_service"
+   ],
+   "sockets": [
+    {
+     "name": "pump_1",
+     "kind": "fuel_pump",
+     "x": -1.1,
+     "y": 0.0,
+     "z": 2.3,
+     "yawDeg": 90
+    },
+    {
+     "name": "entry",
+     "kind": "drive_in",
+     "x": 6.0,
+     "y": 0.0,
+     "z": 8.0,
+     "yawDeg": 0
+    },
+    {
+     "name": "exit",
+     "kind": "drive_out",
+     "x": -6.0,
+     "y": 0.0,
+     "z": 8.0,
+     "yawDeg": 180
+    }
+   ],
+   "boxes": [
+    {
+     "x0": 5.0,
+     "y0": 0.0,
+     "z0": -6.5,
+     "x1": 9.0,
+     "y1": 3.2,
+     "z1": -2.5
+    },
+    {
+     "x0": 3.7,
+     "y0": 0.0,
+     "z0": 4.9,
+     "x1": 3.9,
+     "y1": 4.1,
+     "z1": 5.1
+    },
+    {
+     "x0": 3.7,
+     "y0": 0.0,
+     "z0": -0.1,
+     "x1": 3.9,
+     "y1": 4.1,
+     "z1": 0.1
+    },
+    {
+     "x0": -3.9,
+     "y0": 0.0,
+     "z0": 4.9,
+     "x1": -3.7,
+     "y1": 4.1,
+     "z1": 5.1
+    },
+    {
+     "x0": -3.9,
+     "y0": 0.0,
+     "z0": -0.1,
+     "x1": -3.7,
+     "y1": 4.1,
+     "z1": 0.1
+    },
+    {
+     "x0": -0.7,
+     "y0": 0.0,
+     "z0": 0.6,
+     "x1": 0.7,
+     "y1": 2.0,
+     "z1": 4.0
+    },
+    {
+     "x0": -10.0,
+     "y0": 0.0,
+     "z0": -8.0,
+     "x1": 10.0,
+     "y1": 2.0,
+     "z1": -7.8
+    }
    ]
   },
   {

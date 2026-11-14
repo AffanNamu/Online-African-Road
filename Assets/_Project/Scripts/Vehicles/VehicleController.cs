@@ -46,6 +46,8 @@ namespace ARO.Vehicles
         public event Action<float> Damaged;                  // impact damage percent added
         /// <summary>The driver asked for another camera view (key, gamepad or touch). Local presentation only: nothing here is networked or part of the vehicle state.</summary>
         public event Action<CameraRequest> CameraRequested;
+        /// <summary>The driver asked to refuel (F, gamepad east). The game decides whether a pump is there and the server whether it is paid; the vehicle only passes the request on.</summary>
+        public event Action RefuelRequested;
 
         Rigidbody _rb;
         IVehicleInput _input;
@@ -137,6 +139,7 @@ namespace ARO.Vehicles
             if (_state.CameraToggled) CameraRequested?.Invoke(CameraRequest.Next);
             if (_state.CameraPrevious) CameraRequested?.Invoke(CameraRequest.Previous);
             if (_state.CameraSelect != 0) CameraRequested?.Invoke(CameraRequest.Direct(_state.CameraSelect));
+            if (_state.RefuelPressed) RefuelRequested?.Invoke();
             UpdateVisuals();
         }
 

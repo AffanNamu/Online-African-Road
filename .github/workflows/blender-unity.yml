@@ -235,6 +235,11 @@ jobs:
           node tools/webgl-kanocity.js --selftest
           node tools/webgl-kanocity.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/kanocity" low || { echo "city script reported failures"; exit 1; }
         shell: bash {0}
+      - name: Review - refuel at a pump with the real station models (P1; the truck beside the first pump of both Kano city routes; no backend in this build, so the offline notice and no fuel added; informational until two runs agree)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        continue-on-error: true
+        run: node tools/webgl-pump.js Builds/WebGL "$GITHUB_WORKSPACE/kano-review/pump" ng-kano-city-e1 ng-kano-city-f1
+        shell: bash {0}
       - name: Review - the numbers (no pictures are written to this public log)
         if: ${{ always() && steps.gate.outputs.on == 'true' }}
         run: |

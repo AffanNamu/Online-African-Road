@@ -43,6 +43,11 @@ namespace ARO.Game
         public static float HourRate => Drive ? LightingHour.QueryNumber(Url, "hourrate", 0.001f, 2f) : -1f;
         public static bool HighBeam => Drive && Url.Contains("highbeam=1");
         public static bool Hazard => Drive && Url.Contains("hazard=1");
+        /// <summary>
+        /// "?smoke=drive&pump=1": the vehicle starts beside the first pump along the route (no backend: the prompt and the offline notice). With "&autologin=...&pump=1" on a loopback page the signed-in
+        /// player's own truck starts there, in free drive, so the browser test refuels for real against the throw-away backend. Test pages only.
+        /// </summary>
+        public static bool PumpStart => (Drive || E2E) && Url.Contains("pump=1");
         /// <summary>The page is a loopback test page that asked for a scripted sign-in on a throw-away backend.</summary>
         public static bool E2E => BackendOverride.PageIsLoopback(Url) && !string.IsNullOrEmpty(BackendOverride.Query(Url, "autologin"));
         /// <summary>The browser tests need the on-screen click positions of the current screen.</summary>

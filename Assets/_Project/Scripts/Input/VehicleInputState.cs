@@ -18,6 +18,7 @@ namespace ARO.Input
         public bool CameraToggled;       // edge: next camera view (C, gamepad Y, touch button)
         public bool CameraPrevious;      // edge: previous camera view (Shift+C)
         public int CameraSelect;         // edge: 1..8 = that camera view (number keys), 0 = none
+        public bool RefuelPressed;       // edge: refuel at the pump the vehicle stands at (F, gamepad B / east; touch: the HUD's Refuel button)
     }
 
     /// <summary>A driver's request for another camera view. Local presentation only: it is raised on the owner's machine and never networked.</summary>

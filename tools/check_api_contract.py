@@ -190,6 +190,7 @@ def main():
         # an active job for the get_my_active_job shape, accepted by user E
         as_user(E, "select accept_job((select id from jobs where code = 'CT-2'), (select id from vehicle_ownership where player_id = auth.uid()))")
         calls.append(("get_my_active_job", E, "select get_my_active_job()::text", "ActiveJobReply"))
+        calls.append(("buy_fuel(pump)", E, "select buy_fuel((select id from vehicle_ownership where player_id = auth.uid() limit 1), 9999, 40)::text", "FuelPurchase"))     # E's tank holds 60 L; the game reads 40
         failures, report = [], []
         for label, user, sql, cls in calls:
             raw = as_user(user, sql)

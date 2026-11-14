@@ -43,6 +43,16 @@ namespace ARO.NetCore
                 if (include != null && !include(inst)) continue;
                 var def = lookup(inst.Prop);
                 if (def == null || def.collider != "box") continue;
+                if (def.HasBoxes)
+                {   // a place a vehicle drives into: solid only where the model is (P1, docs/FUNCTIONAL_PLACES_PROPOSAL.md)
+                    foreach (var b in def.boxes)
+                    {
+                        var c = Place(new V3((b.x0 + b.x1) * 0.5f, b.y0, (b.z0 + b.z1) * 0.5f), inst.Pos, inst.YawDeg, inst.Scale);
+                        float sy = (b.y1 - b.y0) * inst.Scale;
+                        res.Add(new BoxCollider3 { Prop = def.id, YawDeg = inst.YawDeg, Centre = new V3(c.X, c.Y + sy * 0.5f, c.Z), Size = new V3((b.x1 - b.x0) * inst.Scale, sy, (b.z1 - b.z0) * inst.Scale) });
+                    }
+                    continue;
+                }
                 res.Add(new BoxCollider3
                 {
                     Prop = def.id, YawDeg = inst.YawDeg,

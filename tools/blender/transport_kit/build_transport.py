@@ -76,6 +76,20 @@ def load_all():
     return SPECS
 
 
+CATALOG_NOTE = ("catalogue entries measured from the models plus the light heads, text faces and tags of transport_kit.common.EXTRAS; sockets are gameplay interaction points in the game's axes "
+                "(the pumps are read by the game's service points since 2026-11-14, the rest is data for later phases); collision = the collision boxes of each spec in the game's axes (min x, y, z, max x, y, z)")
+
+
+def collision_section(ids):
+    """id -> the spec's collision boxes in the game's axes (x right, y up, z forward; Blender (x, y, z) -> (-x, z, -y)), as [x0, y0, z0, x1, y1, z1]. Pure data: the same boxes the export writes as collision."""
+    out = {}
+    for aid in sorted(ids):
+        cols = SPECS[aid].get("cols") or []
+        r = lambda v: round(float(v), 3) + 0.0                                                               # + 0.0: never a "-0.0" in the file
+        if cols: out[aid] = [[r(-c[3]), r(c[2]), r(-c[4]), r(-c[0]), r(c[5]), r(-c[1])] for c in cols]
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--only", default=""); ap.add_argument("--family", default=""); ap.add_argument("--no-export", action="store_true"); ap.add_argument("--report", default=""); ap.add_argument("--catalog", default="")
     a = ap.parse_args(); load_all(); root = ws.ensure(ws.default_root()); report = []
@@ -86,8 +100,9 @@ def main() -> int:
         print(f"{'PASS' if r['passed'] else 'FAIL'} {aid}: tris {s.get('lod_triangles')} size {s.get('size_m')} materials {len(s.get('materials', []))}" + (f" errors {[e['message'] for e in r['errors']]}" if r["errors"] else "")
               + (f" inside-out {r['inside_out_shells']}" if r["inside_out_shells"] else "") + (f" warnings {[w['message'] for w in r['warnings']]}" if r["warnings"] else ""))
     if a.report: Path(a.report).write_text(json.dumps(report, indent=1))
-    if a.catalog: Path(a.catalog).write_text(json.dumps({"schemaVersion": 1, "note": "catalogue entries measured from the models plus the light heads, text faces and tags of transport_kit.common.EXTRAS; sockets are data for a future gameplay integration (nothing reads them)",
-                                                         "props": [r["catalog_entry"] for r in report if r["passed"]], "bounds": {r["id"]: [r["stats"]["bounds_min_m"], r["stats"]["bounds_max_m"]] for r in report if r["passed"]}, "sockets": {k: v.get("sockets", []) for k, v in C.EXTRAS.items() if v.get("sockets")}}, indent=1))
+    if a.catalog: Path(a.catalog).write_text(json.dumps({"schemaVersion": 1, "note": CATALOG_NOTE,
+                                                         "props": [r["catalog_entry"] for r in report if r["passed"]], "bounds": {r["id"]: [r["stats"]["bounds_min_m"], r["stats"]["bounds_max_m"]] for r in report if r["passed"]}, "sockets": {k: v.get("sockets", []) for k, v in C.EXTRAS.items() if v.get("sockets")},
+                                                         "collision": collision_section({r["id"] for r in report if r["passed"]})}, indent=1))
     return 0 if all(r["passed"] for r in report) else 1
 
 

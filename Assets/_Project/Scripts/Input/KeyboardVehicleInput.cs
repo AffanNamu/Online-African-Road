@@ -29,6 +29,7 @@ namespace ARO.Input
                 s.IndicatorRightToggled = kb.eKey.wasPressedThisFrame;
                 s.HighBeamToggled = kb.kKey.wasPressedThisFrame;      // K and T are the keys docs/CAMERA.md reserves for high beams and hazards
                 s.HazardToggled = kb.tKey.wasPressedThisFrame;
+                s.RefuelPressed = kb.fKey.wasPressedThisFrame;          // F: refuel at a pump (P1)
                 // Camera keys come from CameraBindings (C next, Shift+C previous, 1..8 direct) so they can be rebound in one place.
                 bool shift = kb[CameraBindings.PreviousModifierLeft].isPressed || kb[CameraBindings.PreviousModifierRight].isPressed;
                 if (kb[CameraBindings.Next].wasPressedThisFrame) { if (shift) s.CameraPrevious = true; else s.CameraToggled = true; }
@@ -48,6 +49,7 @@ namespace ARO.Input
                 s.HighBeamToggled |= pad.dpad.down.wasPressedThisFrame;
                 s.HazardToggled |= pad.dpad.left.wasPressedThisFrame;
                 s.CameraToggled |= pad.buttonNorth.wasPressedThisFrame;
+                s.RefuelPressed |= pad.buttonEast.wasPressedThisFrame;
             }
 
             // Keyboard is digital; smooth it so steering is not a snap.

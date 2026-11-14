@@ -32,6 +32,7 @@ namespace ARO.Backend
             ["skin_locked"] = "You have not unlocked that paint yet.",
             ["skin_not_owned"] = "Buy that paint first.",
             ["tank_full"] = "The tank is already full.",
+            ["invalid_reading"] = "The fuel gauge reading was not valid. Try again.",
             ["nothing_to_repair"] = "There is nothing to repair.",
             ["route_not_found"] = "That route no longer exists.",
             ["not_at_stop"] = "Drive to the stop and come to a halt.",

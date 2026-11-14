@@ -27,6 +27,22 @@ CULL = {"grand": 600, "medium": 450, "small": 350, "trad": 350, "city": 500, "wa
 def lot(prop, w, d, weight, tag): return {"prop": prop, "weight": weight, "widthM": w, "depthM": d, "tag": tag}
 
 
+PUMP_KINDS = ("fuel_pump", "truck_fuel_stop")
+
+
+def service_data():
+    """id -> (sockets, collision boxes) from the transport catalogue, for the places a vehicle drives INTO (props with pump sockets, P1 of docs/FUNCTIONAL_PLACES_PROPOSAL.md). Their collision is the
+    model's own boxes (columns, islands, the shop, walls) instead of one box over the whole lot, so the forecourt can be driven into in the public build as well."""
+    tk = json.loads(TK.read_text()); out = {}
+    for pid, socks in tk.get("sockets", {}).items():
+        if any(s["kind"] in PUMP_KINDS for s in socks) and tk.get("collision", {}).get(pid):
+            out[pid] = (socks, [dict(zip(("x0", "y0", "z0", "x1", "y1", "z1"), b)) for b in tk["collision"][pid]])
+    return out
+
+
+SERVICE = service_data()
+
+
 def dims():
     """id -> (width, depth, height, lods, entry or None) from the transport catalogue (E, F, warehouses) and KIT."""
     out = {}
@@ -132,6 +148,9 @@ def catalog_entries():
              "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
              "source": "dev:" + pid, "collider": "box", "heightM": round(h, 2), "widthM": round(w, 2), "depthM": round(d, 2), "cullDistance": float(cull), "lodTriangles": lods, "castShadow": True,
              "tags": sorted(set((entry or {}).get("tags", []) + ["kano_city_test"]))}
+        if pid in SERVICE:
+            e["description"] = e["description"].replace("(a box of the real footprint)", "(its collision boxes over a forecourt slab)")
+            e["sockets"], e["boxes"] = SERVICE[pid]
         out.append(e)
     return out
 

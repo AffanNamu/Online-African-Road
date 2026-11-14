@@ -71,7 +71,7 @@ namespace ARO.Game
             {   // CI only (loopback pages): sign in with throw-away test credentials so the browser test can reach the dashboard on a real backend
                 Toast("Signing in...");
                 var si = await _svc.Api.SignIn(email, password);
-                if (si.Ok) { await EnterMenu(); return; }
+                if (si.Ok) { await EnterMenu(); if (SmokeMode.PumpStart) { Debug.Log("[Smoke] pump scenario: free drive with the player's own truck"); StartDrive(null); } return; }
                 ShowLogin(si.UserMessage); return;
             }
             Toast("Checking saved session...");

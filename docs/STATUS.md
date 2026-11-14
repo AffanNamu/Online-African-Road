@@ -1,5 +1,11 @@
 # Status
 
+## 2026-11-14: refuel at a pump (P1 of the functional places; `docs/REFUEL_AT_A_PUMP.md`)
+
+| Area | State |
+|---|---|
+| **Refuel at a pump** (owner approval of 2026-11-14) | **Level 1 and 2.** Stop beside a pump of any station on the Kano city routes or the shipped route's station, press F (gamepad B, or the REFUEL button). The server sells the litres (`buy_fuel` with the game's fuel reading, used only when lower); then the hose, the meter and the gauge run. With no server the game says it is offline and fills nothing. Stations are now solid only where their model is (shop, columns, islands), so a vehicle can drive in. Database suite with `54_pump_refuel.sql`, mutation test with 6 new mutants (all killed), API contract, 20 new .NET tests (1,427 in all). Browser checks (offline in the public and review builds, a real purchase in the end-to-end run) are informational until two runs agree. **Level 3 to 5: not yet.** The Supabase migration is not applied to any live project. |
+
 ## 2026-11-14: Kano city construction (read this first; `docs/KANO_CITY_CONSTRUCTION.md`)
 
 | Area | State |

@@ -50,7 +50,8 @@ namespace ARO.NetCore
                 case "billboard": Billboard(mb, w, h, d, detail); break;
                 case "telecom_mast": Mast(mb, h, w, detail); break;
                 default:
-                    if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
+                    if (def.category == "buildings" && def.HasBoxes) Site(mb, def, detail);      // a place a vehicle drives into (a fuel station): its collision boxes, a canopy over the columns, the forecourt
+                    else if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
                     else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
                     break;
             }
@@ -119,6 +120,39 @@ namespace ARO.NetCore
         }
 
         /// <summary>A plain building of its real footprint: lod 2 (detail 0) one box; detail 1 adds a roof slab (24 triangles); detail 2 adds a door and a grid of non-emissive windows on the front. No lamp geometry: a prop with no light spec must have none.</summary>
+        /// <summary>
+        /// A drive-in site until its production prefab is staged (P1 refuel at a pump): what is solid is drawn where it is solid (the catalogue's collision boxes: shop, columns, islands, walls),
+        /// with a roof slab over the canopy columns (tall thin boxes) and a painted forecourt, so the open forecourt reads as open and the pumps as islands. Rule: drawn = collision.
+        /// </summary>
+        static void Site(MeshBuffers mb, PropDef def, int detail)
+        {
+            float w = def.widthM, d = def.depthM;
+            if (detail >= 1) Box(mb, PropSub.Accent, 0, 0.0f, 0, w - 0.2f, 0.03f, d - 0.2f);                                     // the forecourt: a paint-thin slab (the terrain under a lot is level)
+            float cx0 = float.MaxValue, cz0 = float.MaxValue, cx1 = float.MinValue, cz1 = float.MinValue, top = 0f;
+            foreach (var b in def.boxes)
+            {
+                float bw = b.x1 - b.x0, bh = b.y1 - b.y0, bd = b.z1 - b.z0;
+                bool column = bw < 1.2f && bd < 1.2f && b.y1 > 4.0f;
+                int sub = column ? PropSub.Metal : bh < 2.6f && (bw < 2f || bd < 2f) ? PropSub.Accent : PropSub.Wall;    // columns, islands and wall runs, buildings
+                if (column) { cx0 = Math.Min(cx0, b.x0); cz0 = Math.Min(cz0, b.z0); cx1 = Math.Max(cx1, b.x1); cz1 = Math.Max(cz1, b.z1); top = Math.Max(top, b.y1); }
+                if (detail == 0 && (column || bh <= 3f)) continue;                                                              // far away: the buildings, the totem and the canopy only
+                Box(mb, sub, (b.x0 + b.x1) * 0.5f, b.y0, (b.z0 + b.z1) * 0.5f, bw, bh, bd);
+            }
+            if (detail == 2 && def.HasSockets)
+                foreach (var k in def.sockets)
+                    if (k != null && ServicePoints.IsFuel(k.kind))
+                    {   // the pump's display and nozzle face, on the island side the vehicle stands at
+                        float r = k.yawDeg * (float)Math.PI / 180f;
+                        Box(mb, PropSub.SignPanel, k.x + (float)Math.Sin(r) * 0.32f, 1.0f, k.z + (float)Math.Cos(r) * 0.32f, 0.12f, 0.9f, 0.7f);
+                    }
+            if (top > 0f)
+            {
+                const float overX = 3.5f, overZ = 5f;                                                                               // the islands reach about 4.5 m either side of the column line
+                Box(mb, PropSub.Roof, (cx0 + cx1) * 0.5f, top, (cz0 + cz1) * 0.5f, cx1 - cx0 + 2f * overX, 0.9f, cz1 - cz0 + 2f * overZ);   // the canopy
+                if (detail == 2 && def.HasLight) FlatDown(mb, PropSub.Glow, (cx0 + cx1) * 0.5f, top - 0.01f, (cz0 + cz1) * 0.5f, cx1 - cx0 + overX, cz1 - cz0 + overZ);   // its lit soffit
+            }
+        }
+
         static void CityBuilding(MeshBuffers mb, float w, float d, float h, int detail)
         {
             Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);

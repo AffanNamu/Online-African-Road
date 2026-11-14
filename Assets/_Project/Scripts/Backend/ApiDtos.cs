@@ -77,6 +77,8 @@ namespace ARO.Backend
         public long balance, repair_cost, refuel_cost; public bool repair_needed, can_repair, can_refuel;
     }
     [Serializable] public class RepairResult { public long cost; }
+    /// <summary>buy_fuel's answer: the litres sold, their price and the tank level right after the pump (what the game shows).</summary>
+    [Serializable] public class FuelPurchase { public double liters, fuel_l; public long cost; }
 
     [Serializable] public class SummaryProfile { public string id, display_name, username, avatar_id, country_code; public int level; }
     [Serializable] public class JobsSummary { public int available; public long best_reward; }

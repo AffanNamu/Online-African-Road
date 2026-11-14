@@ -234,6 +234,7 @@ namespace ARO.NetCore
             new Binding { Device = "Keyboard", Action = "Hazard lights", Keys = "T", KeyProps = new[] { "tKey" } },
             new Binding { Device = "Keyboard", Action = "Left indicator", Keys = "Q", KeyProps = new[] { "qKey" } },
             new Binding { Device = "Keyboard", Action = "Right indicator", Keys = "E", KeyProps = new[] { "eKey" } },
+            new Binding { Device = "Keyboard", Action = "Refuel (stopped at a pump)", Keys = "F", KeyProps = new[] { "fKey" } },
             new Binding { Device = "Keyboard", Action = "Next camera", Keys = "C", KeyProps = new[] { "cKey" }, Mapped = true },
             new Binding { Device = "Keyboard", Action = "Previous camera", Keys = "Shift + C", KeyProps = new[] { "cKey", "leftShiftKey", "rightShiftKey" }, Mapped = true },
             new Binding { Device = "Keyboard", Action = "Select camera", Keys = "1 - 8", KeyProps = new[] { "digit1Key", "digit2Key", "digit3Key", "digit4Key", "digit5Key", "digit6Key", "digit7Key", "digit8Key" }, Mapped = true },
@@ -247,6 +248,7 @@ namespace ARO.NetCore
             new Binding { Device = "Gamepad", Action = "High beam", Keys = "D-pad down", KeyProps = new[] { "dpad.down" } },
             new Binding { Device = "Gamepad", Action = "Hazard lights", Keys = "D-pad left", KeyProps = new[] { "dpad.left" } },
             new Binding { Device = "Gamepad", Action = "Change camera", Keys = "Y (north)", KeyProps = new[] { "buttonNorth" } },
+            new Binding { Device = "Gamepad", Action = "Refuel (stopped at a pump)", Keys = "B (east)", KeyProps = new[] { "buttonEast" } },
         };
     }
 }

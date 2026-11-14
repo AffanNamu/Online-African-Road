@@ -221,6 +221,12 @@ namespace ARO.Backend
         public Task<Result<ServiceQuote>> Quote(string vehicleId) => Api.Call<ServiceQuote>("get_vehicle_service_quote", JsonArgs.Obj(("p_vehicle", vehicleId)));
         public Task<Result<string>> Repair(string vehicleId) => Api.Rpc("repair_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId)));
         public Task<Result<string>> Refuel(string vehicleId) => Api.Rpc("buy_fuel", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_liters", 9999)));
+        /// <summary>
+        /// Refuel at a pump (P1): a full tank, with the game's current fuel reading. The server uses the reading only when it is LOWER than its own level (claiming less only means paying for more) and
+        /// answers the litres, the price and the level after the pump. A purchase: never retried by the client (idempotent: false), so a lost answer cannot charge twice.
+        /// </summary>
+        public Task<Result<FuelPurchase>> RefuelAtPump(string vehicleId, double currentL) =>
+            Api.Call<FuelPurchase>("buy_fuel", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_liters", 9999), ("p_current_l", System.Math.Round(System.Math.Max(0.0, currentL), 2))), idempotent: false);
         public Task<Result<string>> SetActive(string vehicleId) => Api.Rpc("set_active_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId)));
         public Task<Result<string>> Rename(string vehicleId, string name) => Api.Rpc("rename_vehicle", JsonArgs.Obj(("p_vehicle", vehicleId), ("p_name", name)));
         public Task<Result<string>> Customize(string vehicleId, string colorHex, string livery, string plate)

@@ -18,6 +18,9 @@ namespace ARO.Game
         DrivingSession _s; GameServices _svc; MinimapView _map;
         /// <summary>Optional: when a bus run is active the job card shows the route instead.</summary>
         public BusSession Bus;
+        /// <summary>Optional: refuel at a pump (P1). The HUD shows its line and a Refuel button (touch and mouse) while the vehicle stands at a pump.</summary>
+        public PumpStop Pump;
+        Text _pumpLine; GameObject _refuelBtn; bool _refuelLogged;
         Text _jobTitle;
         Text _unit, _speed, _gear, _job1, _job2, _jobReward, _eta, _wallet, _convoy, _indicators, _prompt;
         Image _arc, _fuelFill, _dmgFill, _progress; RectTransform _needle; GameObject _root, _jobCard, _convoyPanel;
@@ -34,7 +37,8 @@ namespace ARO.Game
 
             // Contextual prompt (centre-bottom), e.g. "Stop to load cargo".
             _prompt = UIKit.Label(t, "", 30, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0.25f, 0.16f), new Vector2(0.75f, 0.24f), Vector2.zero, Vector2.zero);
-            UIKit.Label(t, "W/S drive   A/D steer   Space brake   L lights   Q/E indicators   H horn   C / Shift+C / 1-8 camera   Esc menu", 16,
+            BuildPump(t);
+            UIKit.Label(t, "W/S drive   A/D steer   Space brake   L lights   Q/E indicators   H horn   F refuel   C / Shift+C / 1-8 camera   Esc menu", 16,
                 new Color(1, 1, 1, 0.35f), TextAnchor.LowerCenter, new Vector2(0, 0), new Vector2(1, 0.035f), Vector2.zero, Vector2.zero);
             SetVisible(false);
         }
@@ -124,6 +128,21 @@ namespace ARO.Game
             UIKit.Label(go.transform, "CAMERA", 16, UIKit.Accent, TextAnchor.UpperCenter, new Vector2(0, 0.5f), new Vector2(1, 1), new Vector2(4, 0), new Vector2(-4, -8));
             _camName = UIKit.Label(go.transform, "", 22, UIKit.TextCol, TextAnchor.MiddleCenter, new Vector2(0, 0), new Vector2(1, 0.62f), new Vector2(4, 4), new Vector2(-4, 0));
             _camName.horizontalOverflow = HorizontalWrapMode.Overflow;
+        }
+
+        /// <summary>The pump line (above the contextual prompt) and the Refuel button beside it, for touch and mouse; F and gamepad B do the same.</summary>
+        void BuildPump(Transform t)
+        {
+            _pumpLine = UIKit.Label(t, "", 26, UIKit.Accent, TextAnchor.MiddleCenter, new Vector2(0.2f, 0.245f), new Vector2(0.8f, 0.30f), Vector2.zero, Vector2.zero);
+            _pumpLine.horizontalOverflow = HorizontalWrapMode.Overflow;
+            var go = new GameObject("Btn_Refuel", typeof(RectTransform), typeof(Image), typeof(Button)); go.transform.SetParent(t, false);
+            var rt = (RectTransform)go.transform; rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.31f); rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchoredPosition = new Vector2(0f, 4f); rt.sizeDelta = new Vector2(190f, 64f);
+            var img = go.GetComponent<Image>(); img.sprite = UIGfx.Glass; img.type = Image.Type.Sliced; img.color = new Color(0.10f, 0.42f, 0.20f, 0.88f);
+            var b = go.GetComponent<Button>(); b.targetGraphic = img;
+            b.onClick.AddListener(() => { Debug.Log("[Hud] refuel button clicked"); if (Pump != null) Pump.Request(); });
+            UIKit.Label(go.transform, "REFUEL", 24, UIKit.TextCol, TextAnchor.MiddleCenter, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            _refuelBtn = go; go.SetActive(false);
         }
 
         void BuildConvoy(Transform t)
@@ -238,6 +257,16 @@ namespace ARO.Game
                     ? (deliver ? "Come to a stop to deliver" : "Come to a stop to load cargo") : "";
             }
             _map.SetTarget(v.transform); _map.Tick(dest);
+            if (Pump != null)
+            {
+                _pumpLine.text = Pump.Line;
+                bool show = Pump.AtPump && !Pump.Filling; if (_refuelBtn.activeSelf != show) _refuelBtn.SetActive(show);
+                if (show && !_refuelLogged)
+                {   // where the button is, for the browser test (fractions of the screen, origin top-left)
+                    _refuelLogged = true; var k = new Vector3[4]; ((RectTransform)_refuelBtn.transform).GetWorldCorners(k);   // overlay canvas: world == screen pixels
+                    Debug.Log($"[Hud] refuel button x={(k[0].x + k[2].x) * 0.5f / Screen.width:0.000} y={1f - (k[0].y + k[2].y) * 0.5f / Screen.height:0.000}");
+                }
+            }
 
             DrawConvoy();
         }

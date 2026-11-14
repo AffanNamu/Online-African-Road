@@ -227,3 +227,16 @@ def test_the_catalogue_file_matches_the_model_data(built):
     for aid, (res, a, entry) in built.items():
         assert aid in by, aid
         assert by[aid]["lodTriangles"] == entry["lodTriangles"] and by[aid]["collider"] == entry["collider"], aid
+
+
+def test_the_catalogue_carries_every_specs_collision_boxes_in_game_axes_and_the_sockets():
+    """The game reads the pump sockets and, for the drive-in places, the collision boxes from this catalogue (tools/kano/make_city_routes.py, P1 refuel at a pump). Both must be what the specs say."""
+    from transport_kit.build_transport import collision_section
+    p = ROOT / "docs" / "kano" / "TRANSPORT_KIT_catalog.json"
+    d = json.loads(p.read_text()); ids = {e["id"] for e in d["props"]}
+    assert d["collision"] == collision_section(ids)
+    assert d["sockets"] == {k: v.get("sockets", []) for k, v in C.EXTRAS.items() if v.get("sockets")}
+    big = d["collision"]["kano_fuel_station_large_a"]; mart = big[0]
+    assert mart == [4.0, 0.0, -14.0, 22.0, 5.3, -3.0], "Blender (-22..-4, 3..14, 0..5.3) is game x 4..22, z -14..-3 (x -> -x, y -> -z)"
+    for aid, boxes in d["collision"].items():
+        for b in boxes: assert b[0] < b[3] and b[1] < b[4] and b[2] < b[5], (aid, b)

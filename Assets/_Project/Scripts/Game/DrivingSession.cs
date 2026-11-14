@@ -72,6 +72,12 @@ namespace ARO.Game
                         Debug.Log("[Smoke] starting on site plate " + siteId);
                         break;
                     }
+            if (at == null && SmokeMode.PumpStart && _route.Model != null && ARO.NetCore.ServicePoints.FirstPump(_route.Model, PropLibrary.Def, Streamer.chunkSize, 25000f, out var pump))
+            {   // test pages only (?pump=1): beside the first pump along the route, heading along its island
+                ARO.NetCore.ServicePoints.StandingPlace(pump, out var sp, out float heading);
+                start = new Vector3(sp.X, _route.GroundY(sp.X, sp.Z), sp.Z); dir = Quaternion.Euler(0f, heading, 0f) * Vector3.forward;
+                Debug.Log($"[Smoke] starting beside {pump.Prop} {pump.Name} at ({sp.X:F1}, {sp.Z:F1}) heading {heading:F0}");
+            }
             ARO.NetCore.AutoPath autoPath = null; ARO.NetCore.DesignVehicle autoVehicle = null;
             if (at == null && SmokeMode.Autopilot != null && _route.Model != null)       // test pages only: start at the beginning of an E5 autopilot path
             {

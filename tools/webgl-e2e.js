@@ -1182,6 +1182,34 @@ const allErrors = [], allExc = [];
   await stressRun('Off', '&frchurn=0.9&pointerguard=off', false);
   await stressRun('On', '&frchurn=0.9', true);
 
+  // =========================================================================================== 2p. Refuel at a pump (P1): the player's own truck beside the station pump of the shipped route, a real purchase
+  // Informational until two runs agree (the repository's rule for a new browser scenario): its lines print INFO instead of failing the job. Exceptions on the page still fail it.
+  {
+    const note = (ok, what, detail) => console.log(`${ok ? 'PASS' : 'INFO'}  ${what}${!ok && detail !== undefined ? '  -> ' + String(detail).slice(0, 300) : ''}`);
+    const pat = await signup('BrowserPump'); const veh = db(`select id from vehicle_ownership where player_id = '${pat.id}'`);
+    db(`update vehicle_ownership set fuel_l = 30 where id = '${veh}'`);
+    const bal0 = +db(`select balance from player_wallets where player_id = '${pat.id}'`);
+    await open(pat, '&pump=1', async c => {
+      note(!!(await c.waitLog(/\[Smoke\] pump scenario: free drive/, 0, 150)), 'pump: the signed-in player drives off in free drive');
+      const beside = await c.waitLog(/\[Smoke\] starting beside fuel_station pump_/, 0, 150);
+      note(!!beside, 'pump: the truck starts beside a pump of the station on the shipped route', beside);
+      const at = await c.waitLog(/\[Pump\] at fuel_station pump_\d .*fuel=30\.0 of 120 L/, 0, 180);
+      note(!!at, 'pump: the game says the truck is at the pump, with the 30 L the server holds', at || c.logs.filter(l => /\[Pump\]|\[Drive\] ground/.test(l)).slice(-3).join(' | '));
+      await sleep(3000);                                                                  // the price quote
+      await c.page.screenshot({ path: `${prefix}-11-pump-prompt.png` });
+      const m = c.logs.length; let paid = null;
+      for (let i = 0; i < 3 && !paid; i++) { await c.page.keyboard.press('f', { delay: 200 }); paid = await c.waitLog(/\[Pump\] paid /, m, 20); }
+      note(!!paid && /paid 180 coins for 90\.00 L; the server's level after the pump 120\.00 L/.test(paid), "pump: F buys the missing 90 L for 180 coins (the server's price, 2 coins a litre)", paid || c.logs.slice(m).filter(l => /\[Pump\]/.test(l)).join(' | '));
+      await sleep(1600); await c.page.screenshot({ path: `${prefix}-12-pump-filling.png` });      // the hose and the meter
+      const filled = await c.waitLog(/\[Pump\] filled 90\.00 L for 180 coins; tank 120\.00 L/, m, 40);
+      note(!!filled, 'pump: the pump runs and the tank reaches 120 L', filled);
+      await c.page.screenshot({ path: `${prefix}-13-pump-filled.png` });
+    });
+    note(db(`select round(fuel_l, 2) from vehicle_ownership where id = '${veh}'`) === '120.00', 'pump: the database holds a full tank', db(`select fuel_l from vehicle_ownership where id = '${veh}'`));
+    note(+db(`select balance from player_wallets where player_id = '${pat.id}'`) === bal0 - 180, 'pump: the wallet paid 180 coins', db(`select balance from player_wallets where player_id = '${pat.id}'`));
+    note(db(`select count(*) || ':' || coalesce(sum(amount), 0) from transactions where player_id = '${pat.id}' and kind = 'FUEL_PURCHASE'`) === '1:-180', 'pump: one ledger row of -180', db(`select count(*) || ':' || coalesce(sum(amount), 0) from transactions where player_id = '${pat.id}' and kind = 'FUEL_PURCHASE'`));
+  }
+
   // =========================================================================================== 3. a session that cannot be renewed sends the player back to sign-in
   await fetch(BASE + '/e2e/ttl?seconds=60', { method: 'POST' });
   const ivy = await signup('BrowserIvy');

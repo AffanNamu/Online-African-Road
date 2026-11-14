@@ -56,6 +56,7 @@ namespace ARO.Game
             if (haveModel) new GameObject("AdService").AddComponent<AdService>().Init(svc, route, streamer, SmokeMode.AdTest);      // advertising is optional: off without a backend, silent when the service is down
             var hud = new GameObject("Hud").AddComponent<Hud>(); hud.Init(drive, svc);
             var bus = new GameObject("BusSession").AddComponent<BusSession>(); bus.Init(svc, drive); hud.Bus = bus;
+            var pump = new GameObject("PumpStop").AddComponent<PumpStop>(); pump.Init(drive, svc, truckWheel); hud.Pump = pump;     // P1: refuel at a pump (the hose takes the tyre rubber's material)
             new GameObject("GameFlow").AddComponent<GameFlow>().Init(svc, drive, hud, bus);
 
             // Ambient traffic (pooled, quality-scaled); follows the player's vehicle once spawned.

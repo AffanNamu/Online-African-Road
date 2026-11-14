@@ -221,6 +221,10 @@ jobs:
         continue-on-error: true
         env: { DRIVE_QUERY: "&route=ng-kano-e1-streets&start=640" }
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive-e1
+      - name: "Refuel at a pump without a server (P1: the truck beside the first pump of the Kano city E1 route and of the shipped route; the prompt, the Refuel button, the offline notice, no fuel added; informational until two runs agree)"
+        if: always()
+        continue-on-error: true
+        run: node tools/webgl-pump.js Builds/WebGL webgl-pump
       - name: Install PostgREST
         if: always()
         run: tools/e2e/install_postgrest.sh

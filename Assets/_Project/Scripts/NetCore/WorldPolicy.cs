@@ -158,6 +158,30 @@ namespace ARO.NetCore
         /// <summary>Optional text face (E2, RB-07): where a prop shows the text of a placement (sign, destination board, terminal name). JsonUtility gives a missing object a default instance, so test <see cref="HasLabel"/>.</summary>
         public LabelSpec label;
         public bool HasLabel => label != null && label.width > 0.01f && label.height > 0.01f;
+        /// <summary>Gameplay interaction points (P1: the pumps a vehicle refuels at; entries and exits; later docks and bus bays), in the prop's local axes. Data from the transport kit catalogue. See <see cref="ServicePoints"/>.</summary>
+        public SocketSpec[] sockets;
+        public bool HasSockets => sockets != null && sockets.Length > 0;
+        /// <summary>
+        /// Collision boxes in the prop's local axes (metres before the instance scale). When present they REPLACE the single catalogue box: a place a vehicle drives into (a forecourt under a canopy, between
+        /// pump islands) is solid only where the model is (columns, islands, the shop, walls). Only with collider "box".
+        /// </summary>
+        public BoxSpec[] boxes;
+        public bool HasBoxes => boxes != null && boxes.Length > 0;
+    }
+
+    /// <summary>An interaction point on a prop, in the prop's local axes (x right, y up, z forward), metres before the instance scale. kind: fuel_pump, truck_fuel_stop, drive_in, drive_out, dock, bus_bay, ...</summary>
+    [Serializable]
+    public class SocketSpec
+    {
+        public string name, kind;
+        public float x, y, z, yawDeg;
+    }
+
+    /// <summary>An axis-aligned box in the prop's local axes (min corner x0, y0, z0 and max corner x1, y1, z1), metres before the instance scale.</summary>
+    [Serializable]
+    public class BoxSpec
+    {
+        public float x0, y0, z0, x1, y1, z1;
     }
 
     /// <summary>A text face on a prop, in the prop's local axes (x right, y up, z forward = the way the prop faces), metres before the instance scale. The text reads from in front of the prop.</summary>
@@ -234,8 +258,43 @@ namespace ARO.NetCore
                 else if (p.status == "production" && !p.source.StartsWith("Props/")) e.Add(tag + ": a production prop's source must be a Resources path under 'Props/'");
                 if (p.HasLight) ValidateLight(p, tag, e);
                 if (p.HasLabel) ValidateLabel(p, tag, e);
+                if (p.HasSockets) ValidateSockets(p, tag, e);
+                if (p.HasBoxes) ValidateBoxes(p, tag, e);
             }
             return e;
+        }
+
+        public static readonly string[] SocketKinds = { "fuel_pump", "truck_fuel_stop", "drive_in", "drive_out", "dock", "bus_bay", "boarding", "loading" };
+
+        static bool Finite(float v) => !float.IsNaN(v) && !float.IsInfinity(v);
+
+        static void ValidateSockets(PropDef p, string tag, List<string> e)
+        {
+            var names = new HashSet<string>(); tag += " socket";
+            foreach (var s in p.sockets)
+            {
+                if (s == null) { e.Add(tag + ": a socket is null"); continue; }
+                if (string.IsNullOrEmpty(s.name) || !IdRx.IsMatch(s.name)) e.Add(tag + " '" + s.name + "': name must be lowercase_snake_case");
+                else if (!names.Add(s.name)) e.Add(tag + " '" + s.name + "': duplicate name");
+                if (!SocketKinds.Contains(s.kind)) e.Add(tag + " '" + s.name + "': kind must be one of " + string.Join(", ", SocketKinds));
+                if (!Finite(s.x) || !Finite(s.y) || !Finite(s.z) || Math.Abs(s.x) > p.widthM * 0.5f + 3f || Math.Abs(s.z) > p.depthM * 0.5f + 3f || s.y < -0.5f || s.y > p.heightM)
+                    e.Add(tag + " '" + s.name + "': the point must lie within the prop's footprint (3 m margin) and height");
+                if (!Finite(s.yawDeg) || s.yawDeg < -360f || s.yawDeg > 360f) e.Add(tag + " '" + s.name + "': yawDeg must be -360..360");
+            }
+        }
+
+        static void ValidateBoxes(PropDef p, string tag, List<string> e)
+        {
+            tag += " box"; int i = 0;
+            if (p.collider != "box") e.Add(tag + "es need collider \"box\"");
+            foreach (var b in p.boxes)
+            {
+                string t = tag + " " + i++;
+                if (b == null) { e.Add(t + ": null"); continue; }
+                if (!(Finite(b.x0) && Finite(b.y0) && Finite(b.z0) && Finite(b.x1) && Finite(b.y1) && Finite(b.z1)) || b.x1 - b.x0 < 0.05f || b.y1 - b.y0 < 0.05f || b.z1 - b.z0 < 0.05f) e.Add(t + ": min must be below max on every axis (at least 5 cm)");
+                if (b.x0 < -p.widthM * 0.5f - 1f || b.x1 > p.widthM * 0.5f + 1f || b.z0 < -p.depthM * 0.5f - 1f || b.z1 > p.depthM * 0.5f + 1f || b.y0 < -0.5f || b.y1 > p.heightM + 0.5f)
+                    e.Add(t + ": the box must lie within the prop's footprint and height (1 m margin)");
+            }
         }
 
         public static readonly string[] LabelColours = { "white", "black", "yellow", "red", "green" };

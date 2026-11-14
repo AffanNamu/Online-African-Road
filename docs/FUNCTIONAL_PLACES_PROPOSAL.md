@@ -1,6 +1,8 @@
 # Proposal: places that WORK (fuel stations, warehouses, bus terminals, people)
 
-**Status: PROPOSAL, nothing implemented.** Written 2026-11-14 for the owner's request: *"The filling station ... cars will enter and refuel. It's not just a building. Warehouse ... someone who has taken a job can go there and drop it. Bus terminal ... people moving around ... passengers until passengers fill the bus. We are building reality."* These are gameplay and engine changes. Under the repository rules (CLAUDE.md) they need this written proposal and the owner's explicit approval. Nothing below changes driving physics, vehicle behaviour, the weather or road generation.
+**Status (2026-11-14, later the same day): the owner approved P1 and P2 (P3 later). P1 is implemented, see `docs/REFUEL_AT_A_PUMP.md`.** P1 needed one server change, which the owner approved: `buy_fuel` takes the game's fuel reading. Without it, a pump could not sell the right litres mid-job. Two corrections to the text below: the truck fuel island is not placed on any route yet, so it does not work in the game; and there is no engine on or off, so the vehicle must only be stopped.
+
+Original text: Written 2026-11-14 for the owner's request: *"The filling station ... cars will enter and refuel. It's not just a building. Warehouse ... someone who has taken a job can go there and drop it. Bus terminal ... people moving around ... passengers until passengers fill the bus. We are building reality."* These are gameplay and engine changes. Under the repository rules (CLAUDE.md) they need this written proposal and the owner's explicit approval. Nothing below changes driving physics, vehicle behaviour, the weather or road generation.
 
 ## 1. What already exists (read from the code)
 
