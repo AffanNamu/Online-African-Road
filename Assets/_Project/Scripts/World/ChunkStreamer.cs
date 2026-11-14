@@ -60,6 +60,7 @@ namespace ARO.World
             public readonly List<Object> owned = new List<Object>();
             public List<PropInstance> instances;
             public List<ServicePoint> services;          // the sockets of the chunk's props (pumps, entries, exits): P1 refuel at a pump
+            public List<CrowdAgent> crowd;               // the people anchored in the chunk (P2): deterministic, from the props and the walkways
             public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
             public bool hasCollision, lampsRegistered, facesReported;
             public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
@@ -92,6 +93,9 @@ namespace ARO.World
             pump = near[i]; return true;
         }
         readonly List<ServicePoint> _pumpScratch = new List<ServicePoint>();
+
+        /// <summary>The people of every loaded chunk (P2; drawn by CrowdRenderer).</summary>
+        public void CollectCrowd(List<CrowdAgent> into) { foreach (var ch in _chunks.Values) if (ch.crowd != null) into.AddRange(ch.crowd); }
 
         /// <summary>True when something solid (other than `ignore`'s own colliders) lies under p; y receives the highest such surface.</summary>
         public bool GroundBelow(Vector3 p, Transform ignore, out float y, float maxY = float.MaxValue)
@@ -330,7 +334,11 @@ namespace ARO.World
         void StageProps(Chunk ch)
         {
             var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
-            if (ch.instances == null) { ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity); ch.services = ServicePoints.FromInstances(ch.instances, PropLibrary.Def); }
+            if (ch.instances == null)
+            {
+                ch.instances = PropScatter.PlaceChunk(m, o.x, o.z, o.x + chunkSize, o.z + chunkSize, tier.PropDensity); ch.services = ServicePoints.FromInstances(ch.instances, PropLibrary.Def);
+                ch.crowd = CrowdPlanner.PlaceChunk(m, ch.instances, PropLibrary.Def, o.x, o.z, o.x + chunkSize, o.z + chunkSize);
+            }
             if (lamps != null && !ch.lampsRegistered)
             {
                 ch.lampsRegistered = true;      // all lamps of the chunk, whatever the prop LOD or cull distance: the glow layer is what makes far lamps readable at night

@@ -35,7 +35,7 @@ const fuelOf = line => { const m = /fuel=([\d.]+)/.exec(line || ''); return m ? 
     const waitFor = async (re, secs, from = 0) => { for (let i = 0; i < secs * 4; i++) { if (has(re, from)) return true; await page.waitForTimeout(250); } return false; };
     console.log(`\n=== ${route}: the first pump along the road ===`);
     const q = route === 'ng-lagos-ibadan' ? '' : `&route=${route}`;          // the shipped route is the default one
-    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&pump=1&quality=low&hour=noon${q}`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&pump=1&people=1&quality=low&hour=noon${q}`);
     const started = await waitFor(/\[Smoke\] drive scenario/, 150);
     const beside = started && await waitFor(/\[Smoke\] starting beside /, 60), ground = beside && await waitFor(/\[Drive\] ground ready/, 120);
     check(`${route}: the truck starts beside a pump`, beside, (find(/\[Smoke\] starting beside /) || 'no "starting beside" line').slice(0, 160));
@@ -55,6 +55,11 @@ const fuelOf = line => { const m = /fuel=([\d.]+)/.exec(line || ''); return m ? 
       const after = fuelOf(logs.filter(l => /\[Drive\] t=/.test(l)).pop());
       check(`${route}: the tank was not filled`, Number.isFinite(before) && Number.isFinite(after) && Math.abs(after - before) < 0.05, `fuel ${before} L before, ${after} L after`);
     }
+    // P2: the people (informational until two runs agree): the station's attendant and customer, and whoever else is near
+    const crowd = await waitFor(/\[Crowd\] agents=\d+ visible=[1-9]/, 20);
+    const cl = logs.filter(l => /\[Crowd\] agents=/.test(l)).pop() || 'no [Crowd] line';
+    console.log(`  ${crowd ? 'PASS' : 'INFO'}  ${route}: people are drawn near the station (${cl.slice(0, 140)})`);
+    if (crowd) fs.writeFileSync(`${prefix}-${route}-people.png`, await page.screenshot());
     check(`${route}: the vehicle did not leave the world`, !has(/left the world/), '');
     const bad = logs.filter(l => /exception|NullReference|IndexOutOfRange|invalid route data|could not build/i.test(l) && !/GLib|swiftshader/i.test(l));
     check(`${route}: no exception`, bad.length === 0 && errors.length === 0, bad[0] ? bad[0].slice(0, 200) : errors[0] ? errors[0].slice(0, 200) : '');

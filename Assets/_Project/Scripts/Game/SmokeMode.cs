@@ -48,6 +48,8 @@ namespace ARO.Game
         /// player's own truck starts there, in free drive, so the browser test refuels for real against the throw-away backend. Test pages only.
         /// </summary>
         public static bool PumpStart => (Drive || E2E) && Url.Contains("pump=1");
+        /// <summary>"?smoke=drive&people=1": the crowd at the day's density whatever the hour (test pages; the screenshots then show people at night too).</summary>
+        public static bool People => Drive && Url.Contains("people=1");
         /// <summary>The page is a loopback test page that asked for a scripted sign-in on a throw-away backend.</summary>
         public static bool E2E => BackendOverride.PageIsLoopback(Url) && !string.IsNullOrEmpty(BackendOverride.Query(Url, "autologin"));
         /// <summary>The browser tests need the on-screen click positions of the current screen.</summary>

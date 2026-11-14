@@ -25,6 +25,8 @@ namespace ARO.Game
         public readonly BusRunState State = new BusRunState();
         public bool Active => RunId != null && Route != null;
         public System.Action<ServeStopResult> RunCompleted;
+        /// <summary>A stop was served: the server's boarded and alighted numbers (P2: the passengers walk in and out of the bus).</summary>
+        public System.Action<ServeStopResult> StopServed;
 
         public int NextIndex => State.NextIndex;
         public BusStopDto NextStop => Route.stops[Mathf.Clamp(State.NextIndex, 0, Route.stops.Length - 1)];
@@ -122,6 +124,7 @@ namespace ARO.Game
             }
 
             var v = r.Value;
+            StopServed?.Invoke(v);
             if (v.completed)
             {
                 _drive.Say($"Route complete! {v.passengers_carried} passengers carried. +{v.revenue:N0} coins, +{v.xp} XP", 10f, Severity.Success);

@@ -89,6 +89,13 @@ namespace ARO.Game
             if (SmokeMode.Weather != null && ARO.NetCore.WeatherLook.TryPreset(SmokeMode.Weather, out var testWeather)) { weather.ApplyTestState(testWeather); Debug.Log($"[Weather] test weather '{testWeather.Name}': rain={testWeather.Rain:0.00} wetness={testWeather.Wetness:0.00} cloud={testWeather.Cloud:0.00}"); }
             StreetLightSystem lamps = null;
             if (haveModel && worldMats != null) { lamps = new GameObject("StreetLights").AddComponent<StreetLightSystem>(); lamps.Init(tod, weather, route, worldMats, tier, null); streamer.lamps = lamps; }   // the night: lamps, glow, puddles, real lights (docs/NIGHT_LIGHTING_PLAN.md)
+            CrowdRenderer crowd = null;
+            if (haveModel && worldMats != null)
+            {   // P2: the people you can see (deterministic crowd of the loaded chunks; the bus fills up with the server's numbers)
+                crowd = new GameObject("Crowd").AddComponent<CrowdRenderer>(); crowd.streamer = streamer; crowd.timeOfDay = tod; crowd.tier = tier;
+                crowd.Init(worldMats.Prop[ARO.NetCore.PropSub.Wall]); if (SmokeMode.People) crowd.DensityOverride = 1f;
+                bus.StopServed += v => { if (crowd != null && drive.Vehicle != null) { var vp = drive.Vehicle.transform.position; crowd.BusStop(drive.Vehicle.transform, 5.0f, v.boarded, v.alighted, route.GroundY(vp.x, vp.z)); } };
+            }
             var probe = new GameObject("PerfProbe").AddComponent<PerfProbe>(); probe.streamer = streamer; probe.tier = tier;
             drive.VehicleSpawned += v => { weather.vehicle = v.transform; v.SetLights(tod.IsNight || tod.LampsAreOn); if (lamps != null) lamps.SetTarget(v.transform); if (SmokeMode.HighBeam) { v.SetLights(true); v.SetHighBeam(true); } if (SmokeMode.Hazard) v.SetHazard(true); };
             tod.LampsChanged += on => { if (drive.Vehicle != null) drive.Vehicle.SetLights(on); };      // headlights follow the same lamp factor as the street lights (on from the middle of dusk, off in the morning); L still toggles by hand
