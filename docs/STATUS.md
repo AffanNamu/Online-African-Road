@@ -1,5 +1,11 @@
 # Status
 
+## 2026-11-14: Kano city construction (read this first; `docs/KANO_CITY_CONSTRUCTION.md`)
+
+| Area | State |
+|---|---|
+| **28 new buildings, families G to J** (3 fuel stations after the owner's concept R-040, 12 commercial, 8 public, 5 residential) | **Level 1 and 2.** Built in Blender, baked, validated, exported (v001), staged in ARO-CONTENT and frozen; 32 family tests, 1,407 .NET tests. **Placed:** both Kano city routes now have a district mix on every road class, and every one of the 28 stands somewhere (E1: 151 lots, 12 fuel stations, 18 mosques; F1: 114 lots). **Level 3:** the review run with four new scenes (16 views) follows this commit. **Not in the player's route selection** (production configuration: the owner decides). Nothing is approved. |
+
 ## 2026-11-13: asset realism pass (read this first; `docs/ASSET_REALISM_PASS.md`)
 
 | Area | State (levels: 1 implemented, 2 automated tests, 3 imported into Unity, 4 verified in gameplay, 5 visually reviewed) |

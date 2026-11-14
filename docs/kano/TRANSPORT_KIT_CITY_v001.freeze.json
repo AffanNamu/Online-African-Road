@@ -1,0 +1,2958 @@
+{
+ "freeze": "transport_kit_city v001 (families G fuel stations, H commercial, I public, J residential)",
+ "status": "frozen candidate for in-game review: NOT approved (production_approved needs the in-game review and a person)",
+ "date": "2026-11-14T09:19:08Z",
+ "gameRepository": {
+  "repo": "AffanNamu/Online-African-Road",
+  "branch": "work/kano-residential",
+  "head": "8e0434bb2e055d9c6199412ca227aa8d9b5611c5",
+  "producerCodeLastChangedIn": "8e0434bb2e055d9c6199412ca227aa8d9b5611c5",
+  "uncommittedChangesUnderToolsBlender": false
+ },
+ "blender": "5.2.3 LTS",
+ "allAssetsPassedBlenderValidation": true,
+ "assetCount": 28,
+ "assets": [
+  {
+   "id": "kano_fuel_station_large_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     4406,
+     796,
+     90
+    ],
+    "sizeM": [
+     46.82,
+     36.145,
+     9.65
+    ],
+    "materials": [
+     "M_sb_kano_fuel_station_large_a_v001_l0",
+     "M_sb_kano_fuel_station_large_a_v001_l1",
+     "M_sb_kano_fuel_station_large_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/kano_fuel_station_large_a.blend",
+     "bytes": 5531834,
+     "sha256": "8e9a478f54abd6d124c27f26f9473aecfd85925bf5f7b90b28e7dfd19eb9870d"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/project.json",
+     "bytes": 508,
+     "sha256": "4bd88131cf2d9165b10aadc5ecd7e206db3aac6261c65607e31076c5b0f8a52d"
+    },
+    {
+     "path": "exports/fbx/kano_fuel_station_large_a/v001/kano_fuel_station_large_a.fbx",
+     "bytes": 210300,
+     "sha256": "3dc8138c50696668c5ed51cd995d7c04adce581596ca83b4c6901efffd1fe2b6"
+    },
+    {
+     "path": "exports/glb/kano_fuel_station_large_a/v001/kano_fuel_station_large_a.glb",
+     "bytes": 4688180,
+     "sha256": "69137b5153e2e7cf49bc76326ee408f8e279f8a39eac86a9fc60f62c96898409"
+    },
+    {
+     "path": "exports/fbx/kano_fuel_station_large_a/v001/kano_fuel_station_large_a.manifest.json",
+     "bytes": 5157,
+     "sha256": "fa6f05691c5905e962ef11db7845074b0f55e9a841a66015fb2b539c3e82696d"
+    },
+    {
+     "path": "validation/kano_fuel_station_large_a/v001.json",
+     "bytes": 1122,
+     "sha256": "18900ef38325c33024e0877cd6e83ba96438a63fa8a4bf85179da4f53c22fd27"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l0_BaseColor.png",
+     "bytes": 3117179,
+     "sha256": "5d338e6cec9a6292a53be8769e330ff624e7a390162494d312b676d0eb876312"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l0_Normal.png",
+     "bytes": 542529,
+     "sha256": "9409b0f6d942b46455142c72bfd1b6167738386e1bb5f1bdb8f9d002d395bd80"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l1_BaseColor.png",
+     "bytes": 284256,
+     "sha256": "af7f99b1063ebbe9b67020be17271fe3dc2d1ff67d24e4ee99a739d35aeef4f8"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l1_Normal.png",
+     "bytes": 30394,
+     "sha256": "30b01382811ac42c46fcc90ffcc7e4c5c93d47d21d9a10d061c5df247dfba074"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l2_BaseColor.png",
+     "bytes": 21463,
+     "sha256": "f1436d63f211bc5392513faf3af7d6481dbdfe456d54d9d562a2c009403d48d4"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_fuel_station_large_a_v001_l2_Normal.png",
+     "bytes": 1973,
+     "sha256": "cc0d0141058ea3f007c6ffbab01d4c5a7789e35efde5f31b869b4dc49f1e3a52"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_large_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_fuel_station_medium_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2610,
+     544,
+     74
+    ],
+    "sizeM": [
+     32.44,
+     26.145,
+     7.25
+    ],
+    "materials": [
+     "M_sb_kano_fuel_station_medium_a_v001_l0",
+     "M_sb_kano_fuel_station_medium_a_v001_l1",
+     "M_sb_kano_fuel_station_medium_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/kano_fuel_station_medium_a.blend",
+     "bytes": 2865403,
+     "sha256": "877414532261ee2449cea0a726b156b998b289f090dd7fc6fffa16bee4af143b"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/project.json",
+     "bytes": 370,
+     "sha256": "596011c9b2c430873fbce39227d3c4bf1994d5a3d49c101840578a19d4a1a701"
+    },
+    {
+     "path": "exports/fbx/kano_fuel_station_medium_a/v001/kano_fuel_station_medium_a.fbx",
+     "bytes": 144764,
+     "sha256": "e7ed63681b73e4e74fd7139243fd0344ec987f0ab88a465d17fff4e3af068554"
+    },
+    {
+     "path": "exports/glb/kano_fuel_station_medium_a/v001/kano_fuel_station_medium_a.glb",
+     "bytes": 1738724,
+     "sha256": "74cfcb676579dd431fbcca81101ec8de40e99014e4deaabaaa890e8bb6e751a3"
+    },
+    {
+     "path": "exports/fbx/kano_fuel_station_medium_a/v001/kano_fuel_station_medium_a.manifest.json",
+     "bytes": 4583,
+     "sha256": "a22af482fbb44a0227942c9c07aa5145b3761eb4d3394fb14333b450032e214d"
+    },
+    {
+     "path": "validation/kano_fuel_station_medium_a/v001.json",
+     "bytes": 1128,
+     "sha256": "e5cc9497fd35d843248b9873564fd2729a466d57beaa44fd9486bb2869440e8a"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l0_BaseColor.png",
+     "bytes": 918730,
+     "sha256": "201c67d5eba545310519611a3267578ec7340f8ca7a515eb22b464fd6f5b5783"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l0_Normal.png",
+     "bytes": 125258,
+     "sha256": "26dd10207e9d6f1b7d773d28b2b66126f3fc565159c441f855cadcc98ff679c9"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l1_BaseColor.png",
+     "bytes": 268653,
+     "sha256": "783f913aa3dfc19918b83d8d59386eadf094916c2e3bef8f0c2af424caeff672"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l1_Normal.png",
+     "bytes": 32044,
+     "sha256": "954ef4f140c473186c4c953075318930b76fe352fefd021e91a01466c30a89d3"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l2_BaseColor.png",
+     "bytes": 20921,
+     "sha256": "b548337709284f8f42f03219c774815f6f8f5541c509fc044129d33f75b01e0d"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_fuel_station_medium_a_v001_l2_Normal.png",
+     "bytes": 1819,
+     "sha256": "27442b19a15b20ff88bcb4fffef58a5cd647ff0cd6e6fe8f39d831beaedf7855"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_fuel_station_medium_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_fuel_station_small_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1046,
+     136,
+     62
+    ],
+    "sizeM": [
+     20.44,
+     16.12,
+     4.9
+    ],
+    "materials": [
+     "M_sb_rg_ngn_fuel_station_small_a_v001_l0",
+     "M_sb_rg_ngn_fuel_station_small_a_v001_l1",
+     "M_sb_rg_ngn_fuel_station_small_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/rg_ngn_fuel_station_small_a.blend",
+     "bytes": 2888641,
+     "sha256": "46efb3624f9c71be81f6ea3593ffe1643bfe0a31afffbd6a5fe2ae2864192918"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/project.json",
+     "bytes": 469,
+     "sha256": "843a99e77e6919c6bf1e1ecd68f0f79d34f84c37c8bf9c302afd3e6926f5ed13"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_fuel_station_small_a/v001/rg_ngn_fuel_station_small_a.fbx",
+     "bytes": 82396,
+     "sha256": "273e21fa255c31b7396a95879ba851cf673e1771e3b45108fdcc7bcf9509260c"
+    },
+    {
+     "path": "exports/glb/rg_ngn_fuel_station_small_a/v001/rg_ngn_fuel_station_small_a.glb",
+     "bytes": 1636628,
+     "sha256": "5e2c6502647010652c37da93ac072619824c934ff3e13f60e18b83b66597a0a5"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_fuel_station_small_a/v001/rg_ngn_fuel_station_small_a.manifest.json",
+     "bytes": 4539,
+     "sha256": "073695efef3c8c1242f9258521ecaf0a71159135f517ecec3016c8621cf70e83"
+    },
+    {
+     "path": "validation/rg_ngn_fuel_station_small_a/v001.json",
+     "bytes": 1126,
+     "sha256": "dc04e29f5e80027b3da3373ad22d7a8949694d24b2530f10b7432be21f48f78d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l0_BaseColor.png",
+     "bytes": 902942,
+     "sha256": "8037ca01d6bdb87718c8cb1f958a83111208067c7102cae42ce465c85e895ef2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l0_Normal.png",
+     "bytes": 185557,
+     "sha256": "88b31f47d2e25b9d8d37797e9904000355682db58023448c42b8530c84a1a149"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l1_BaseColor.png",
+     "bytes": 268951,
+     "sha256": "8d427a8100e1968f4fd04b10dca8354a6b4505c8e56bac85fa28c8114ead7212"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l1_Normal.png",
+     "bytes": 48886,
+     "sha256": "22cba68adaf367db5cf875eab05cb4e7ad281657795959fd77785cb333e316d3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l2_BaseColor.png",
+     "bytes": 21176,
+     "sha256": "8aeac0c320f7dde2940a87cbab9b8b926565dd5101f391f8a9927d41ec5a0c43"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_fuel_station_small_a/v001/T_rg_ngn_fuel_station_small_a_v001_l2_Normal.png",
+     "bytes": 2949,
+     "sha256": "88c548f933b24f6c888fb0e1b55ee1d6531698c1104e0266f1c15e3e4e2c62dd"
+    }
+   ]
+  },
+  {
+   "id": "kano_supermarket_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1086,
+     204,
+     40
+    ],
+    "sizeM": [
+     44.44,
+     36.12,
+     8.2
+    ],
+    "materials": [
+     "M_sb_kano_supermarket_a_v001_l0",
+     "M_sb_kano_supermarket_a_v001_l1",
+     "M_sb_kano_supermarket_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/kano_supermarket_a.blend",
+     "bytes": 2651471,
+     "sha256": "38ae22b16dbf8aecee446d63fa2adc0c0734b0371405241cc483b4fc6170688d"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/project.json",
+     "bytes": 382,
+     "sha256": "f0abc7bff8682ba5f2e98abb59fb118c0f556cb405588c7e80e04bf9cea86e39"
+    },
+    {
+     "path": "exports/fbx/kano_supermarket_a/v001/kano_supermarket_a.fbx",
+     "bytes": 80268,
+     "sha256": "0b00e5ca1e9f5a22e727055c7540cba19b4cbc69463ebf5532262db9760145bc"
+    },
+    {
+     "path": "exports/glb/kano_supermarket_a/v001/kano_supermarket_a.glb",
+     "bytes": 1398024,
+     "sha256": "99e530c457c6f2d713e34da2ae31dd99c309626a63e2315ed11b5a10a6148036"
+    },
+    {
+     "path": "exports/fbx/kano_supermarket_a/v001/kano_supermarket_a.manifest.json",
+     "bytes": 4157,
+     "sha256": "ac0d2a26c2034213fecca5999cfa39ae01ab2886d572192f59dfcf479edc73a0"
+    },
+    {
+     "path": "validation/kano_supermarket_a/v001.json",
+     "bytes": 1074,
+     "sha256": "10735ba34006052d41dc2462af47a9547b0cbf4cda5cdfa53bbb0b55aef2a0de"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l0_BaseColor.png",
+     "bytes": 854304,
+     "sha256": "0a6b76e93eaefa08d9d945a7e6592f4a06f20165d07ec28cf45807cd6ac20fe5"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l0_Normal.png",
+     "bytes": 93206,
+     "sha256": "50c6a576e245fc784f1b1e1639fbd4524e1360de95f1c2dcee85bc6cf9bfa4b3"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l1_BaseColor.png",
+     "bytes": 207560,
+     "sha256": "cb7805cbc29c7484c700791a529a53c3cda6b9ed928c3b6be646a5718008f06d"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l1_Normal.png",
+     "bytes": 17276,
+     "sha256": "3dc31bb18cc2a47598ed54981220294136df16822708e7fd4a29c8cd021d6528"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l2_BaseColor.png",
+     "bytes": 17492,
+     "sha256": "d3fdd30d725134785e71c162eeba05069de8c42d6328ec7e07e4e8f3f6a99bcf"
+    },
+    {
+     "path": "projects/buildings/kano_supermarket_a/v001/T_kano_supermarket_a_v001_l2_Normal.png",
+     "bytes": 1020,
+     "sha256": "0244bd4c517750c6b08a36dea8334ecc6c97ad0c356a858a7710208afb15d10c"
+    }
+   ]
+  },
+  {
+   "id": "kano_restaurant_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1135,
+     82,
+     26
+    ],
+    "sizeM": [
+     24.44,
+     22.12,
+     7.65
+    ],
+    "materials": [
+     "M_sb_kano_restaurant_a_v001_l0",
+     "M_sb_kano_restaurant_a_v001_l1",
+     "M_sb_kano_restaurant_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/kano_restaurant_a.blend",
+     "bytes": 3007045,
+     "sha256": "50225145c057489bfeb677a35f863cd188cc7487011ea1759a2dc1b942809ad1"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/project.json",
+     "bytes": 317,
+     "sha256": "d2dd1201543f7e0c4449989a383c0755af07cf5535d9c321c780486b507eb0a2"
+    },
+    {
+     "path": "exports/fbx/kano_restaurant_a/v001/kano_restaurant_a.fbx",
+     "bytes": 74572,
+     "sha256": "101760ab517dbcf7080f76d5f6d12edc9bfc48b5fcadc5385cabbd7a3a9125e3"
+    },
+    {
+     "path": "exports/glb/kano_restaurant_a/v001/kano_restaurant_a.glb",
+     "bytes": 1733884,
+     "sha256": "7d7de2449e66210474cd70960c4a59589906ab3232fd65a5c3d9d9914b5494b4"
+    },
+    {
+     "path": "exports/fbx/kano_restaurant_a/v001/kano_restaurant_a.manifest.json",
+     "bytes": 4016,
+     "sha256": "63b769ebf9e0347a3d0828deb403e94cf9549f7483065d5e3b6a9b025f446447"
+    },
+    {
+     "path": "validation/kano_restaurant_a/v001.json",
+     "bytes": 1069,
+     "sha256": "d4031fe8f990e881c064f622aee668c49d5e6aa67119b7e4def0499c0daad987"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l0_BaseColor.png",
+     "bytes": 994635,
+     "sha256": "540ff39c27bcc0ed719ada0ff32c350c0220dc8083077bc347f1b6f25179e689"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l0_Normal.png",
+     "bytes": 180771,
+     "sha256": "efa718680f1fadf32ace513abcea285887452a69a27a9f341d63e02b41198014"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l1_BaseColor.png",
+     "bytes": 303351,
+     "sha256": "fee99f198a3c22ab4709ef135d1647ca38bdb4b26c25f655741689b1c620d452"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l1_Normal.png",
+     "bytes": 46588,
+     "sha256": "2266e62885ad8a4486f28703639c3c3b7163086d317d87e0c4f4afcfa9b2a8c9"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l2_BaseColor.png",
+     "bytes": 19301,
+     "sha256": "a224f02664c36d7efab128707f337d8cd1af5ce0f966c8e59ad7a20988c44167"
+    },
+    {
+     "path": "projects/buildings/kano_restaurant_a/v001/T_kano_restaurant_a_v001_l2_Normal.png",
+     "bytes": 2454,
+     "sha256": "13f4284ec5698f1e426ea14d8f56410106781887ae595da61579df429e2e2361"
+    }
+   ]
+  },
+  {
+   "id": "kano_fastfood_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     616,
+     158,
+     20
+    ],
+    "sizeM": [
+     26.0,
+     24.0,
+     6.8
+    ],
+    "materials": [
+     "M_sb_kano_fastfood_a_v001_l0",
+     "M_sb_kano_fastfood_a_v001_l1",
+     "M_sb_kano_fastfood_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/kano_fastfood_a.blend",
+     "bytes": 1707391,
+     "sha256": "b97a9d4864442904d23b5500c3cff18eee92dbcc8e6364033fb8e5cc1f5407de"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/project.json",
+     "bytes": 330,
+     "sha256": "a79293ece2b0bdcf5887a2175f447ded2abdcb1781588c0ecefd3fc91781b0f2"
+    },
+    {
+     "path": "exports/fbx/kano_fastfood_a/v001/kano_fastfood_a.fbx",
+     "bytes": 59516,
+     "sha256": "b70b401ba02e09311cf02de03758d0c3300e83dd12576f3cc9d8f15f68ff8e0d"
+    },
+    {
+     "path": "exports/glb/kano_fastfood_a/v001/kano_fastfood_a.glb",
+     "bytes": 354036,
+     "sha256": "0c72c554672bbb92da7a876e8181bb4a16d18e2ea82b787ba50ba96f8385396e"
+    },
+    {
+     "path": "exports/fbx/kano_fastfood_a/v001/kano_fastfood_a.manifest.json",
+     "bytes": 4018,
+     "sha256": "a682ddcd8b2ae5424fdbbcd0df262775d093cb330ed403c318a03be2856cd98f"
+    },
+    {
+     "path": "validation/kano_fastfood_a/v001.json",
+     "bytes": 1045,
+     "sha256": "6cca94223a7c72831e9e938f9ecb17641346f766a19f5eaa25af5436e192836a"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l0_BaseColor.png",
+     "bytes": 178414,
+     "sha256": "ed75c2a7b295ec6cb04f3d6ef6ff292a3ce9c67222b450046f583d381926d647"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l0_Normal.png",
+     "bytes": 17540,
+     "sha256": "3143311f1bd4292403f5e3d83358860cfa09e698e43f94ca24b48a4c36ba3e11"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l1_BaseColor.png",
+     "bytes": 51005,
+     "sha256": "23571e3543e12b8a8b25fa357b5b24f6cbd5ad021f259035232ed9de238339d4"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l1_Normal.png",
+     "bytes": 5122,
+     "sha256": "459fdffba183218a798e4a2be248643f714834b478e448ce7937a69f080eda59"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l2_BaseColor.png",
+     "bytes": 5142,
+     "sha256": "5bd4214e838ac6ccc9c2a91707a35a1a261b0242e0f04b2621d77cd1c87817c0"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_fastfood_a_v001_l2_Normal.png",
+     "bytes": 1812,
+     "sha256": "5c896f6101f0cf15cb608c8c37daa95fb8078998a9c7fc9d2a95cf732b9931bb"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_fastfood_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_hotel_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2473,
+     412,
+     34
+    ],
+    "sizeM": [
+     36.0,
+     32.0,
+     34.2
+    ],
+    "materials": [
+     "M_sb_kano_hotel_a_v001_l0",
+     "M_sb_kano_hotel_a_v001_l1",
+     "M_sb_kano_hotel_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/kano_hotel_a.blend",
+     "bytes": 3043029,
+     "sha256": "e3d230a7bdfdd67d48aa2b15432057aa9a92aaf9c00233c4e472fc33a9a2d3eb"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/project.json",
+     "bytes": 347,
+     "sha256": "7b30e6b783b8dff819c20d2d71c2272ec9fa29be0433f3957fd254c202cd6853"
+    },
+    {
+     "path": "exports/fbx/kano_hotel_a/v001/kano_hotel_a.fbx",
+     "bytes": 115228,
+     "sha256": "4c41916a1aa03b77c70d9f90d4e051caf76474c2a0bf59910856c90f6c5d332f"
+    },
+    {
+     "path": "exports/glb/kano_hotel_a/v001/kano_hotel_a.glb",
+     "bytes": 1842168,
+     "sha256": "cb6cc982327f694eae472e62e472457ef8ce0a14b9294a0f63b5037b10ae90b1"
+    },
+    {
+     "path": "exports/fbx/kano_hotel_a/v001/kano_hotel_a.manifest.json",
+     "bytes": 4187,
+     "sha256": "1101ddaca5ffa4d24a9e303b99246ff0d714de5114615b2a9693c8487a5757b1"
+    },
+    {
+     "path": "validation/kano_hotel_a/v001.json",
+     "bytes": 1034,
+     "sha256": "545c6956660de13ef654668ac75b46abcf1f674c3b58eee2a4bfda08a5f084bb"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l0_BaseColor.png",
+     "bytes": 1089696,
+     "sha256": "3ba6f1f6a0683e208a8f6573ba1c4a7a89bf90a9e27db6ce362392b5fb6f6eef"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l0_Normal.png",
+     "bytes": 127492,
+     "sha256": "c4f25ab1ecf42e4c9de4cbf1b4d9e557689c70d78b5c771d7c6b8934d280c709"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l1_BaseColor.png",
+     "bytes": 285805,
+     "sha256": "715e2e1ece0d398536c3bb1f6efff589ae95f7640b90a596fc42df1c2b55d618"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l1_Normal.png",
+     "bytes": 31527,
+     "sha256": "f27820eedcd6f7e289d3b547507972133ab058f48dbe447443c5599331deb1aa"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l2_BaseColor.png",
+     "bytes": 19065,
+     "sha256": "405b169ed5c966605840ea5454ed28b598b9b10ce95b94a5cd63b419071d95de"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_hotel_a_v001_l2_Normal.png",
+     "bytes": 2944,
+     "sha256": "5cca7a097b855b86fa9deb60c8ec6c06577053ee57287e155fbc26c817c24cef"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_hotel_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_bank_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     550,
+     116,
+     26
+    ],
+    "sizeM": [
+     28.0,
+     24.0,
+     11.63
+    ],
+    "materials": [
+     "M_sb_kano_bank_a_v001_l0",
+     "M_sb_kano_bank_a_v001_l1",
+     "M_sb_kano_bank_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_bank_a/v001/kano_bank_a.blend",
+     "bytes": 2922738,
+     "sha256": "8e1758d0cf9c3a99c42dc03863c5c12c05e67c7f876c10bf093a14f065341824"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/project.json",
+     "bytes": 336,
+     "sha256": "7397d9595bebdbfa5e01b2bd93b28ec23867119c357e29eb621a2030b16a2d7d"
+    },
+    {
+     "path": "exports/fbx/kano_bank_a/v001/kano_bank_a.fbx",
+     "bytes": 56220,
+     "sha256": "e66e714f9551e8031298fc5f3f42ff2d4a5408bd07808244837c4558b76c9796"
+    },
+    {
+     "path": "exports/glb/kano_bank_a/v001/kano_bank_a.glb",
+     "bytes": 1595044,
+     "sha256": "68a301f1963da96318872076f2ba3007a82ebc1dd5149045e63a5ae38906da7a"
+    },
+    {
+     "path": "exports/fbx/kano_bank_a/v001/kano_bank_a.manifest.json",
+     "bytes": 3974,
+     "sha256": "1aa711a575074f6911156b7dec55745f9e034a303f99ceaed25e9725a6a1c3b8"
+    },
+    {
+     "path": "validation/kano_bank_a/v001.json",
+     "bytes": 1028,
+     "sha256": "1a52a18c79e1d899b3d7df17c29afa943f2758fb18e42d0c7a16bff121f0c9f4"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l0_BaseColor.png",
+     "bytes": 999083,
+     "sha256": "758ac59171b58374762c9b2dbe416f39dd7bf36d81094d2d407048096ab0904f"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l0_Normal.png",
+     "bytes": 152618,
+     "sha256": "7e64e42fd4be5219f90f179025c37e2cffc43f3e755c14f8402b5daba96ed3e6"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l1_BaseColor.png",
+     "bytes": 268786,
+     "sha256": "c28d64721f1f78b9a33f5088b7932a7db94210b8320cc5d97c025021403dbddb"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l1_Normal.png",
+     "bytes": 32945,
+     "sha256": "05edca76d3e0ce626f7f13daf6a630776f5046859d6ece4d63e5287ee93ebfee"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l2_BaseColor.png",
+     "bytes": 19152,
+     "sha256": "074a9c291727f88347024bba5a8b9e97fa3fcee7545cd327aa4addd31abe8630"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_bank_a_v001_l2_Normal.png",
+     "bytes": 2481,
+     "sha256": "6c62d11bc6e0e9191c82026c8714ada9d651593ed03ed7576f0e04a8f52fad3b"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_bank_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_pharmacy_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     242,
+     68,
+     20
+    ],
+    "sizeM": [
+     14.0,
+     13.05,
+     9.75
+    ],
+    "materials": [
+     "M_sb_rg_ngn_pharmacy_a_v001_l0",
+     "M_sb_rg_ngn_pharmacy_a_v001_l1",
+     "M_sb_rg_ngn_pharmacy_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/rg_ngn_pharmacy_a.blend",
+     "bytes": 1817127,
+     "sha256": "908b87735b05d0e622159e53e1e621edc4cb1374e734ac424ecb0685f7485bc5"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/project.json",
+     "bytes": 325,
+     "sha256": "a70baac4520d5d8cb281da8e190781b2c443d93eae849155ea5fc5dd324c68ad"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pharmacy_a/v001/rg_ngn_pharmacy_a.fbx",
+     "bytes": 46668,
+     "sha256": "224aae5c28a622be5206ce94893beb8c7f3b4face354cde8a8ce7dc9a2cd3873"
+    },
+    {
+     "path": "exports/glb/rg_ngn_pharmacy_a/v001/rg_ngn_pharmacy_a.glb",
+     "bytes": 423912,
+     "sha256": "b9fdd0f667d2f6340546085c36a648e8c7ec0ad6a45aa1949122fcdb7f03d9fc"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_pharmacy_a/v001/rg_ngn_pharmacy_a.manifest.json",
+     "bytes": 3839,
+     "sha256": "a0d6dc7218733e5aa38f2c66f64c316d4a932d4bfe5c6e6a7c8ccb3e0ba2ab2b"
+    },
+    {
+     "path": "validation/rg_ngn_pharmacy_a/v001.json",
+     "bytes": 1057,
+     "sha256": "bb60cbbc5351eb9fe4b548ea042ce2789da016329f1c3566ab89a9d2e0406196"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l0_BaseColor.png",
+     "bytes": 249204,
+     "sha256": "b9a139c30608deaaa40d08392d4aba80b0f5284b1d26252fd3e4921b108d52e3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l0_Normal.png",
+     "bytes": 43565,
+     "sha256": "7907f4ea110513e036df2a2890cd416c829cd9c0bbad7b5b531b4c505a63a861"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l1_BaseColor.png",
+     "bytes": 67166,
+     "sha256": "dd37f9dd6433ce1f7c8a07f335b7dc43d1b764c6b2279426b920d0badc601897"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l1_Normal.png",
+     "bytes": 9748,
+     "sha256": "1a4a531927b0a8a150ccca197590a511f6d46d6e0c9b305cafed6afb12603482"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l2_BaseColor.png",
+     "bytes": 5387,
+     "sha256": "7faa11542782a2f0bd21b46ba28a0702953527f54cf5616c1a2af6519084ce4b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_pharmacy_a/v001/T_rg_ngn_pharmacy_a_v001_l2_Normal.png",
+     "bytes": 2306,
+     "sha256": "ecff856831758152da64dc4e0ecc534383a55fa722232b3f3097cc268f67e662"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_phone_shops_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     376,
+     88,
+     10
+    ],
+    "sizeM": [
+     20.6,
+     12.2,
+     5.2
+    ],
+    "materials": [
+     "M_sb_rg_ngn_phone_shops_a_v001_l0",
+     "M_sb_rg_ngn_phone_shops_a_v001_l1",
+     "M_sb_rg_ngn_phone_shops_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/rg_ngn_phone_shops_a.blend",
+     "bytes": 1828352,
+     "sha256": "6f8cf4492ca9689ecc23a781b89be071df475ee8e6fd245ff610c585b169dfd2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/project.json",
+     "bytes": 322,
+     "sha256": "0194bbc81090a9d246da27da0ba6f9fd48c84efb57e30b8a27d2b3b04592c4b8"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_phone_shops_a/v001/rg_ngn_phone_shops_a.fbx",
+     "bytes": 50316,
+     "sha256": "4c4122b947ae28c5284a5ee62d4bee9b3a60af6e5b9082ebc5dcf6b739b98947"
+    },
+    {
+     "path": "exports/glb/rg_ngn_phone_shops_a/v001/rg_ngn_phone_shops_a.glb",
+     "bytes": 459556,
+     "sha256": "4a3a918715146b71715613bbcc8d92c97e4e36fb61926c2a698e037abe58b7fd"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_phone_shops_a/v001/rg_ngn_phone_shops_a.manifest.json",
+     "bytes": 4063,
+     "sha256": "3a8138bc924221d3a613c8b17be55480f4b3d132ddc527247d48a47c18019262"
+    },
+    {
+     "path": "validation/rg_ngn_phone_shops_a/v001.json",
+     "bytes": 1071,
+     "sha256": "ae1bc4e4fcb74ef567d0fedf06436f5df96f22f1ae1fa6b93c91d0d06b22be31"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l0_BaseColor.png",
+     "bytes": 259167,
+     "sha256": "232067d1fb9d4c32767ce821ef2273f708d06728b44312b1af3188554e011a12"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l0_Normal.png",
+     "bytes": 32736,
+     "sha256": "04ea48942ee9fe13993d94c18c830c052f202f7b242d336ea409cf65d71ba160"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l1_BaseColor.png",
+     "bytes": 76279,
+     "sha256": "bf53b78fdb43725cafd7c6c68fb7c8f00dae78d2c2490f579ca25d1e1b1198e1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l1_Normal.png",
+     "bytes": 8845,
+     "sha256": "9c50e90ee3631e8b0406b6f3927f3b4f9c78050941e96e7239626bed18ff1829"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l2_BaseColor.png",
+     "bytes": 6075,
+     "sha256": "73b813e842373af16f1add4eff2ff26af3e117ec2c706ce6fbf513a52b2ada18"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_phone_shops_a/v001/T_rg_ngn_phone_shops_a_v001_l2_Normal.png",
+     "bytes": 3000,
+     "sha256": "899ab2b1f57ef8b91880e2738ed924a2f118326bebd8d4db61422bca1aa26515"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_spare_parts_row_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     776,
+     88,
+     10
+    ],
+    "sizeM": [
+     22.6,
+     10.7,
+     5.2
+    ],
+    "materials": [
+     "M_sb_rg_ngn_spare_parts_row_a_v001_l0",
+     "M_sb_rg_ngn_spare_parts_row_a_v001_l1",
+     "M_sb_rg_ngn_spare_parts_row_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/rg_ngn_spare_parts_row_a.blend",
+     "bytes": 1824975,
+     "sha256": "db843adbf1c3f3a69f4bd04460e72413b2e48d68fe84dac5e1f16fce928b8d53"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/project.json",
+     "bytes": 326,
+     "sha256": "5aa058048d8592ecb8a3a4e775b6be4715d91e3608073b2bf477e79e4267e28a"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_spare_parts_row_a/v001/rg_ngn_spare_parts_row_a.fbx",
+     "bytes": 57596,
+     "sha256": "481bf5a8051869998df838119f611f3b43368551135700dac5b3d5bd47d1d78e"
+    },
+    {
+     "path": "exports/glb/rg_ngn_spare_parts_row_a/v001/rg_ngn_spare_parts_row_a.glb",
+     "bytes": 482920,
+     "sha256": "bf2ac5406bb7bf0bf6cd2b6aa15aeefe2ba10bacbaacc9ac3d6129910a89201b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_spare_parts_row_a/v001/rg_ngn_spare_parts_row_a.manifest.json",
+     "bytes": 4109,
+     "sha256": "8524c63c61223fc0df398a037e939470ad93021b0f0351f48015d971b8180f3c"
+    },
+    {
+     "path": "validation/rg_ngn_spare_parts_row_a/v001.json",
+     "bytes": 1095,
+     "sha256": "594e8b4536d15e96cf43100154f55766b3e88ede3a097a74dbfe16df1a1a389f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l0_BaseColor.png",
+     "bytes": 251629,
+     "sha256": "92f2651f7f17837606b3c2f5477bdf2f47909aba145979361c586fd7734c5da0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l0_Normal.png",
+     "bytes": 31837,
+     "sha256": "ad4a3119246400440d5ad587bb7255ed6b1bf9badb2e54cd32e20f6bc682d89b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l1_BaseColor.png",
+     "bytes": 77101,
+     "sha256": "f7a2d424a00abb2ceab884afda3d5614d8130fb1e3df8d4ae6b35781cad5a1a2"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l1_Normal.png",
+     "bytes": 9085,
+     "sha256": "7111f07b1231c59c626d82e4a4b5369a7c96c56b0d6267fd1f6c160637a1da3b"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l2_BaseColor.png",
+     "bytes": 5191,
+     "sha256": "685a7c06746fb7d9b4efdde0aefb1d4b309d9d0dfb6d12a0d839e6a39af06af3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_spare_parts_row_a/v001/T_rg_ngn_spare_parts_row_a_v001_l2_Normal.png",
+     "bytes": 2646,
+     "sha256": "a9bff58e322edf0602aba6c3b622918c9be0ba1ef121eb9a96e64a57bf7752ed"
+    }
+   ]
+  },
+  {
+   "id": "kano_car_showroom_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     340,
+     86,
+     32
+    ],
+    "sizeM": [
+     36.0,
+     30.0,
+     8.7
+    ],
+    "materials": [
+     "M_sb_kano_car_showroom_a_v001_l0",
+     "M_sb_kano_car_showroom_a_v001_l1",
+     "M_sb_kano_car_showroom_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/kano_car_showroom_a.blend",
+     "bytes": 2415969,
+     "sha256": "38e8e088838eed68f2d9fe7d47fffa6591a8cc43c246025ab1edd33f341f6092"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/project.json",
+     "bytes": 329,
+     "sha256": "cb0e74c250c0541a40dafbc5491c15c907b5be3f8ce79944ed22ea87b91407c4"
+    },
+    {
+     "path": "exports/fbx/kano_car_showroom_a/v001/kano_car_showroom_a.fbx",
+     "bytes": 53068,
+     "sha256": "4850c860ef4024d25d05190ca21c5d319444b550fa09179d8f06556f7ad66509"
+    },
+    {
+     "path": "exports/glb/kano_car_showroom_a/v001/kano_car_showroom_a.glb",
+     "bytes": 1104180,
+     "sha256": "45289bfc90ae519de2846f8b70e0ad1f277e1e73fea239f09c3fbc4c716f414f"
+    },
+    {
+     "path": "exports/fbx/kano_car_showroom_a/v001/kano_car_showroom_a.manifest.json",
+     "bytes": 4224,
+     "sha256": "ab1a80da931f896dc9bbaf5de07905cd4a50b1a93098e45d12ecab3d36bc08b6"
+    },
+    {
+     "path": "validation/kano_car_showroom_a/v001.json",
+     "bytes": 1067,
+     "sha256": "94ccbd1be5e1b020fa32b4738885f81dc9c81d74d60a0c336638c374d34be932"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l0_BaseColor.png",
+     "bytes": 683865,
+     "sha256": "01e868e2b7985c5741082e5033a7017811b2a27f73a4b3aaa01230b9f6a0d377"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l0_Normal.png",
+     "bytes": 36747,
+     "sha256": "28b325428da5403d076b7ba047885cca87a468715040e96752882ad1ca1b3892"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l1_BaseColor.png",
+     "bytes": 223119,
+     "sha256": "75ca7351d322a57d06dbdd6b09be97953518ff9d4641ea2c6e9b431eeff9d091"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l1_Normal.png",
+     "bytes": 10989,
+     "sha256": "07ac682063219a8b8c7841ccc88f76b87021d59a7412eb394687bd1d8a055f4a"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l2_BaseColor.png",
+     "bytes": 20731,
+     "sha256": "80b1748c4d440668787147d5007e8ff8b92159ce80b04dce2cf23c28ab0bc4a2"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_car_showroom_a_v001_l2_Normal.png",
+     "bytes": 1304,
+     "sha256": "6b9eba19fec2e83c798ec6af4ff85427a792b7dc56ddad9dc00c76603b3449f8"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_car_showroom_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_auto_workshop_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     764,
+     128,
+     30
+    ],
+    "sizeM": [
+     22.44,
+     18.12,
+     6.2
+    ],
+    "materials": [
+     "M_sb_rg_ngn_auto_workshop_a_v001_l0",
+     "M_sb_rg_ngn_auto_workshop_a_v001_l1",
+     "M_sb_rg_ngn_auto_workshop_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/rg_ngn_auto_workshop_a.blend",
+     "bytes": 1793375,
+     "sha256": "e0966574b8c826fdca059bbafcbdd191f5dbfc6e6277993ebcae85caa53efd19"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/project.json",
+     "bytes": 331,
+     "sha256": "c3ffd9a27878e30c74cd0f395f7b1ae0ac2afbfdf110779a6055e0d37910d7f3"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_auto_workshop_a/v001/rg_ngn_auto_workshop_a.fbx",
+     "bytes": 62268,
+     "sha256": "b4618b62a32d6bc1fca69aa24badf9db5e70cd7592efb67e025cad3e50e2e075"
+    },
+    {
+     "path": "exports/glb/rg_ngn_auto_workshop_a/v001/rg_ngn_auto_workshop_a.glb",
+     "bytes": 468616,
+     "sha256": "e41c6810aa2553902ef067b27ca9ab105be285216e87bfdd2993b29b21cc910d"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_auto_workshop_a/v001/rg_ngn_auto_workshop_a.manifest.json",
+     "bytes": 3905,
+     "sha256": "eb771ff1670fdd7d06d20f6efad40d4dbc562500f01945055b1736cba27b0506"
+    },
+    {
+     "path": "validation/rg_ngn_auto_workshop_a/v001.json",
+     "bytes": 1092,
+     "sha256": "10795a3ede384f26dda1cb593e145c73e6e0d38e422bf3ce7b43c2cec6192018"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l0_BaseColor.png",
+     "bytes": 238399,
+     "sha256": "c00905238ed969f19b7530a6f5d56fc1e0509a6eb44712ea902b81f17f9c03c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l0_Normal.png",
+     "bytes": 26089,
+     "sha256": "7202f604af80c390e28fecdbff24310d112fe89a67102262d6348e733c630cbf"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l1_BaseColor.png",
+     "bytes": 68115,
+     "sha256": "b03ff3d47c4e50d0e2eae0cd5db8b4729e815b373fc236ceeb2ce0dbb5f1b396"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l1_Normal.png",
+     "bytes": 6462,
+     "sha256": "b687eb5cee98ee3c800f45bc871ef8c660e1ecae0d124e44e8731f5c3bbcc7aa"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l2_BaseColor.png",
+     "bytes": 5460,
+     "sha256": "2d2d1b5ef3d8c10a5487a5825f5d039fbbf0e52a444971634db3ddd819ababfa"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_auto_workshop_a/v001/T_rg_ngn_auto_workshop_a_v001_l2_Normal.png",
+     "bytes": 2135,
+     "sha256": "051882e03798d382fffcc6b5a523c173ed4ed886f1cda7a1aa6d036ec1d1ccf6"
+    }
+   ]
+  },
+  {
+   "id": "kano_shopping_plaza_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1038,
+     216,
+     28
+    ],
+    "sizeM": [
+     42.0,
+     25.05,
+     11.25
+    ],
+    "materials": [
+     "M_sb_kano_shopping_plaza_a_v001_l0",
+     "M_sb_kano_shopping_plaza_a_v001_l1",
+     "M_sb_kano_shopping_plaza_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/kano_shopping_plaza_a.blend",
+     "bytes": 2673818,
+     "sha256": "a37aafa291dfcc49d99428384d41aaccd4656c48e27a3d7729d0defc063061b6"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/project.json",
+     "bytes": 336,
+     "sha256": "5d254f604b072b5ba5151266836c40e253c34133f7a8d96e7e7660e5eabb5285"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_plaza_a/v001/kano_shopping_plaza_a.fbx",
+     "bytes": 68796,
+     "sha256": "7567448f73ff94a665cb2db6899fb7179bc318ffae0b64007c43600bc7b32067"
+    },
+    {
+     "path": "exports/glb/kano_shopping_plaza_a/v001/kano_shopping_plaza_a.glb",
+     "bytes": 1373824,
+     "sha256": "c57862a5948ae11adf8173c5652bc3e227a39dd5958a27c03a15da6cd98f0fe2"
+    },
+    {
+     "path": "exports/fbx/kano_shopping_plaza_a/v001/kano_shopping_plaza_a.manifest.json",
+     "bytes": 4280,
+     "sha256": "0f64b8f24a338d8f5cf0c3a5287d6aa6ee5802458c222718b19e0301cdb4b3ba"
+    },
+    {
+     "path": "validation/kano_shopping_plaza_a/v001.json",
+     "bytes": 1094,
+     "sha256": "2b2f0445584f141384f33e1ae383dffeb9031f6ab3ae84cec124510e8aad5f7a"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l0_BaseColor.png",
+     "bytes": 817581,
+     "sha256": "78e7904d6d3b41f76d67dee85d3021e835b8773ad09e7fb8788ae7c01fe729e7"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l0_Normal.png",
+     "bytes": 108873,
+     "sha256": "43dd138c4ddc3c8e00b43074e1e9b45ed2ea07d5eb1977c9fc359225323b355e"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l1_BaseColor.png",
+     "bytes": 239012,
+     "sha256": "2a47e3c4f932af4a89ed534d836097da7e1341927bb3e3219aadaad30ea2be8f"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l1_Normal.png",
+     "bytes": 29548,
+     "sha256": "d0c0dfe6f061d877ae32b8505a88b550ecec7c6f84790603b8da73408abdd7c1"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l2_BaseColor.png",
+     "bytes": 21015,
+     "sha256": "65b440140e4740c6c781acfc6b61984361b280961fa3e70fd572ab91bec0f77b"
+    },
+    {
+     "path": "projects/buildings/kano_shopping_plaza_a/v001/T_kano_shopping_plaza_a_v001_l2_Normal.png",
+     "bytes": 2726,
+     "sha256": "0db1dd502a67c2c4dc0d33e72f1026ef83c53ed1642ee569c4eb25473572bb78"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_wholesale_depot_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     580,
+     146,
+     20
+    ],
+    "sizeM": [
+     32.44,
+     24.58,
+     8.4
+    ],
+    "materials": [
+     "M_sb_rg_ngn_wholesale_depot_a_v001_l0",
+     "M_sb_rg_ngn_wholesale_depot_a_v001_l1",
+     "M_sb_rg_ngn_wholesale_depot_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/rg_ngn_wholesale_depot_a.blend",
+     "bytes": 2821523,
+     "sha256": "e0a7fb5e86494b4fc256d7f34ba505f13007027f2ebab5d103b14c2349ca9971"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/project.json",
+     "bytes": 349,
+     "sha256": "155c040a33a0f640e48396ce54124564220ebd23292df97de7e1642821e2db34"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_wholesale_depot_a/v001/rg_ngn_wholesale_depot_a.fbx",
+     "bytes": 66364,
+     "sha256": "3649f000f1fc96b63288a27f8772df667f5900699ed0223d7a717d56fdce4510"
+    },
+    {
+     "path": "exports/glb/rg_ngn_wholesale_depot_a/v001/rg_ngn_wholesale_depot_a.glb",
+     "bytes": 1576564,
+     "sha256": "6cfafc1e76a1209b6bf3174fedbfaf59b195951aeec102aeba3d9d02ddfe975d"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_wholesale_depot_a/v001/rg_ngn_wholesale_depot_a.manifest.json",
+     "bytes": 4142,
+     "sha256": "956f6e49fa61521d4c6fb06a424aed55517c0f089a41114e118c9e2fcf901ed0"
+    },
+    {
+     "path": "validation/rg_ngn_wholesale_depot_a/v001.json",
+     "bytes": 1108,
+     "sha256": "b9361ab7d15b72c09d5e09357e70205cda86361988e88d27c828c80ba3dd91d7"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l0_BaseColor.png",
+     "bytes": 964257,
+     "sha256": "ed0eedd500d5bd48f5a2459d3b633d30c30d843d628058488a65971816addc06"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l0_Normal.png",
+     "bytes": 112741,
+     "sha256": "face7c795db7de2888d9ebe2fcf305e3f9bcce12eea9ac378bb344b7b7d0ce14"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l1_BaseColor.png",
+     "bytes": 252785,
+     "sha256": "131351b71b10ef932eff433022fba5808545bce3b266d772d26b39232fb2987d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l1_Normal.png",
+     "bytes": 22419,
+     "sha256": "696616612b162f4c0f02bb7ce8a8ba92f36356cd96bbe054fe4bd32fd2113d05"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l2_BaseColor.png",
+     "bytes": 19341,
+     "sha256": "06da72a493d8e61e1f6a053849517e47378939e960e424af2d534a91a98dbcba"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_wholesale_depot_a/v001/T_rg_ngn_wholesale_depot_a_v001_l2_Normal.png",
+     "bytes": 1455,
+     "sha256": "bef8f03c77fdcf98b3e5f07f08f27a850469b9f52cb5f6e121035f140f4c254c"
+    }
+   ]
+  },
+  {
+   "id": "kano_hospital_general_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2687,
+     414,
+     28
+    ],
+    "sizeM": [
+     48.627,
+     38.58,
+     19.2
+    ],
+    "materials": [
+     "M_sb_kano_hospital_general_a_v001_l0",
+     "M_sb_kano_hospital_general_a_v001_l1",
+     "M_sb_kano_hospital_general_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/kano_hospital_general_a.blend",
+     "bytes": 3151214,
+     "sha256": "f4131c5fd28192112c696533f6f891189ba4f36b6e5ba45de4a2f7d9449568a9"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/project.json",
+     "bytes": 378,
+     "sha256": "3a02b7fa3e5d27913bd6e741365206ec669633678175a91fa6077c988be764d1"
+    },
+    {
+     "path": "exports/fbx/kano_hospital_general_a/v001/kano_hospital_general_a.fbx",
+     "bytes": 128940,
+     "sha256": "1c2cc7dd08ea7e3242b549fbfa21a2411da94e1eebd53be1038b82aa193e6671"
+    },
+    {
+     "path": "exports/glb/kano_hospital_general_a/v001/kano_hospital_general_a.glb",
+     "bytes": 1979392,
+     "sha256": "53b16e9ced7305884d083e020969d0ae785494936855ce2f46362d6d3627292a"
+    },
+    {
+     "path": "exports/fbx/kano_hospital_general_a/v001/kano_hospital_general_a.manifest.json",
+     "bytes": 4369,
+     "sha256": "2b0a47c577f41c93d04924831967797cf91a9656d7d8146d3237d562bdc2882e"
+    },
+    {
+     "path": "validation/kano_hospital_general_a/v001.json",
+     "bytes": 1110,
+     "sha256": "d508ec7b5da8f2582a64462ccc18fd19985e24cd2bfd6c64aded332bee53c0c4"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l0_BaseColor.png",
+     "bytes": 1146668,
+     "sha256": "55b661a2fa7b5d4709de8226f438c56798321416c53ff1c29f04bdf36f7ff4f0"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l0_Normal.png",
+     "bytes": 150459,
+     "sha256": "5cd0f253879ff4cfdfe07ffeac0a1635e844f594b51729e84beec7f04892b7aa"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l1_BaseColor.png",
+     "bytes": 307230,
+     "sha256": "1ce5fe3454d46e82c7186040505584e9641282a78c1390aff4faece8391f41d3"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l1_Normal.png",
+     "bytes": 35861,
+     "sha256": "c72e4524de0ecebc18da080e4bcae761a52fe640ff25688a3999e214c43a558b"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l2_BaseColor.png",
+     "bytes": 19044,
+     "sha256": "841705ed226e38b25137f367a88f311cd117104c416d4a90c136b370c8ff57e0"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_hospital_general_a_v001_l2_Normal.png",
+     "bytes": 2936,
+     "sha256": "d5ef340a67860fcf2358d1d889337dd355cbec67ebdc595f5dc5a534c5e00fc7"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_hospital_general_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_clinic_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     688,
+     138,
+     20
+    ],
+    "sizeM": [
+     24.44,
+     20.58,
+     6.313
+    ],
+    "materials": [
+     "M_sb_rg_ngn_clinic_a_v001_l0",
+     "M_sb_rg_ngn_clinic_a_v001_l1",
+     "M_sb_rg_ngn_clinic_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/rg_ngn_clinic_a.blend",
+     "bytes": 3027642,
+     "sha256": "61e4f25217f0dff8563ca85bc9a2bca217f705a3b394b970fae1f0d2779ba5a0"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/project.json",
+     "bytes": 329,
+     "sha256": "bca0edca3ff12369d691515d64b92a2a54dfeb1ace1cc97ea94547d3c9113e2f"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_clinic_a/v001/rg_ngn_clinic_a.fbx",
+     "bytes": 69260,
+     "sha256": "16e3d956fe6397865fc693b9fe9fb0c4f6656a691a47ca56518bb9b0d3575e71"
+    },
+    {
+     "path": "exports/glb/rg_ngn_clinic_a/v001/rg_ngn_clinic_a.glb",
+     "bytes": 1757232,
+     "sha256": "bc4efbecf0cfdd9ffc94e1c40359ba3a4ce363d4ebfd5acf03ce25da7ba774f4"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_clinic_a/v001/rg_ngn_clinic_a.manifest.json",
+     "bytes": 4000,
+     "sha256": "7cc9751c7e65f4854774469ef28f267552c5280fda6a57c8ae9082ade7762d7f"
+    },
+    {
+     "path": "validation/rg_ngn_clinic_a/v001.json",
+     "bytes": 1061,
+     "sha256": "9bf3f9f4846e0e09d130be08e896fcfc1c4c7e77784d5353068da88f4ccb8881"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l0_BaseColor.png",
+     "bytes": 1056930,
+     "sha256": "5c8c6b21085e656bbff90d61f6665246d754c117e2a2e9ea425008fc7b93fdd9"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l0_Normal.png",
+     "bytes": 188864,
+     "sha256": "06afc80f1a440aa2fd680e79fabe4c946d13856728d9ff4a0048b695f7f5a2a3"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l1_BaseColor.png",
+     "bytes": 269436,
+     "sha256": "501940e6ce2cdbc3f886230951d1b723ac5c416bba0209009ae6eaf68de6710f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l1_Normal.png",
+     "bytes": 39384,
+     "sha256": "40d9cd657e324af90372e111bdf2e4ca7b78d13f4d527657fe21187e7685828f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l2_BaseColor.png",
+     "bytes": 19404,
+     "sha256": "db1d27b69714c4ffbefb82bf7c300b041cd02a84d24b10d3b2469e7c65ca1aaf"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_clinic_a/v001/T_rg_ngn_clinic_a_v001_l2_Normal.png",
+     "bytes": 2861,
+     "sha256": "e8991aafeddc966963fe55d9caf7de0f8c3af907c2e4dda142b7b684fcca6a45"
+    }
+   ]
+  },
+  {
+   "id": "kano_school_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1476,
+     262,
+     30
+    ],
+    "sizeM": [
+     50.44,
+     36.58,
+     9.0
+    ],
+    "materials": [
+     "M_sb_kano_school_a_v001_l0",
+     "M_sb_kano_school_a_v001_l1",
+     "M_sb_kano_school_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_school_a/v001/kano_school_a.blend",
+     "bytes": 3099215,
+     "sha256": "5c6c7012bdeef0f6f0b593f225bf91833c5ede4ee7bf44da7bea6884a4cf1252"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/project.json",
+     "bytes": 353,
+     "sha256": "fa626ed14727170f65304c84bffe929fc686dacdfedc8474eb827b56725730e4"
+    },
+    {
+     "path": "exports/fbx/kano_school_a/v001/kano_school_a.fbx",
+     "bytes": 94204,
+     "sha256": "f847ee2f78a69d5baa70c079599030456e423fa653fede578cb25baa211e271a"
+    },
+    {
+     "path": "exports/glb/kano_school_a/v001/kano_school_a.glb",
+     "bytes": 1882020,
+     "sha256": "d9a4ff04fb7bcd7a23e20aba381645d647b6def750c3507b635d07f8282ddba4"
+    },
+    {
+     "path": "exports/fbx/kano_school_a/v001/kano_school_a.manifest.json",
+     "bytes": 4042,
+     "sha256": "c8c1079043845d70f6e059add87a84f7b0b4e56867c7ec4712727944cdbe8a65"
+    },
+    {
+     "path": "validation/kano_school_a/v001.json",
+     "bytes": 1045,
+     "sha256": "9aba8ab6992104f1975dac3d4fe6c950c0edfb997d9b2f8a201978542ba394e7"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l0_BaseColor.png",
+     "bytes": 1119823,
+     "sha256": "6e7c5da8ed57fa9f5a581ac91cb9263bda5c3e5ed2f1270f6c74d1965c9f749d"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l0_Normal.png",
+     "bytes": 156199,
+     "sha256": "4a18e1891e45fa00b8eeaccfa7477bad648e5ec514e6bd675b0ff5cd9b8c2080"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l1_BaseColor.png",
+     "bytes": 296684,
+     "sha256": "b9799bf84ecd0a8cfda1aed96000ef234bdef23fdcee0cddf9f4745b3f5af9d0"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l1_Normal.png",
+     "bytes": 35264,
+     "sha256": "b1e17726860fd25c9d9cc309062ab4a509091fe2dc9275ddf8f3737bdbada7a5"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l2_BaseColor.png",
+     "bytes": 19970,
+     "sha256": "cd09ba8afe2e0e0521170693527adfa0a17ba35699e689303a412feed715c95c"
+    },
+    {
+     "path": "projects/buildings/kano_school_a/v001/T_kano_school_a_v001_l2_Normal.png",
+     "bytes": 2909,
+     "sha256": "8574faddb6e239cc96afec791cf0b429b5ab07e85cf8e64e6dff97a1bf9a8dd5"
+    }
+   ]
+  },
+  {
+   "id": "kano_police_division_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     892,
+     198,
+     20
+    ],
+    "sizeM": [
+     28.44,
+     24.58,
+     9.953
+    ],
+    "materials": [
+     "M_sb_kano_police_division_a_v001_l0",
+     "M_sb_kano_police_division_a_v001_l1",
+     "M_sb_kano_police_division_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/kano_police_division_a.blend",
+     "bytes": 2981446,
+     "sha256": "4e2ce3567dc7e9381a8673029cc71fc2d7e708c5999d05c33a54e1aed4040c00"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/project.json",
+     "bytes": 373,
+     "sha256": "70cd649d83c56171c06865023f206a28b4b704c4aa6961b822ce1b33db0b70db"
+    },
+    {
+     "path": "exports/fbx/kano_police_division_a/v001/kano_police_division_a.fbx",
+     "bytes": 77436,
+     "sha256": "2f26929461df6769e56a07497c44bda0f344d2ce4681be19147e349d6cf91245"
+    },
+    {
+     "path": "exports/glb/kano_police_division_a/v001/kano_police_division_a.glb",
+     "bytes": 1709908,
+     "sha256": "16260b54af3fab331d35580becb9c7949996dc5bcf3fcc6ae6480f7cf7f8dec2"
+    },
+    {
+     "path": "exports/fbx/kano_police_division_a/v001/kano_police_division_a.manifest.json",
+     "bytes": 4172,
+     "sha256": "8d580e25bab277bf0a40ddedf4520e17f4a83d1cb6bf8233179da75b4b8ad693"
+    },
+    {
+     "path": "validation/kano_police_division_a/v001.json",
+     "bytes": 1103,
+     "sha256": "46c897c47bd0e5002f531d79070f3e3ed75d6afedd27c4ee2956fbae5fc4f88f"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l0_BaseColor.png",
+     "bytes": 1027382,
+     "sha256": "7fd76e278b3576f6ee8585783e9fea8769ee0d38200795a5b9004f5bacdbba0d"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l0_Normal.png",
+     "bytes": 175995,
+     "sha256": "bb5ef8eb71d9a96607fc75b62889d049fb8adc4f78903c30760566fd3dac5c1b"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l1_BaseColor.png",
+     "bytes": 267938,
+     "sha256": "828a571a569d12f3f566eadcc3a87df6fe89d7fa770b310256a667465387c0b2"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l1_Normal.png",
+     "bytes": 35884,
+     "sha256": "89b6c20bf00c68da11d885b9df4513bb8aa380477b89a76af171e4e338d9e23e"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l2_BaseColor.png",
+     "bytes": 17151,
+     "sha256": "23a822ee400e334d549202d4d6d394a00dbf5e3a17f3510bf4aa1dbdb61caf85"
+    },
+    {
+     "path": "projects/buildings/kano_police_division_a/v001/T_kano_police_division_a_v001_l2_Normal.png",
+     "bytes": 2680,
+     "sha256": "0bd37059e89f02863a14b8d955a8e93a2bf4ea9a4ced128f6c45171fd4e80554"
+    }
+   ]
+  },
+  {
+   "id": "kano_fire_station_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     376,
+     124,
+     36
+    ],
+    "sizeM": [
+     30.44,
+     24.117,
+     14.3
+    ],
+    "materials": [
+     "M_sb_kano_fire_station_a_v001_l0",
+     "M_sb_kano_fire_station_a_v001_l1",
+     "M_sb_kano_fire_station_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/kano_fire_station_a.blend",
+     "bytes": 2898670,
+     "sha256": "587cbd38a4091f1e1859d49360d7695992baa4fdee7dbfd32f8c841d58ad0834"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/project.json",
+     "bytes": 318,
+     "sha256": "b2abbc20974b04b7b82bb875ecf687c3fdc7e6ab1136ab7fee585ef802a515be"
+    },
+    {
+     "path": "exports/fbx/kano_fire_station_a/v001/kano_fire_station_a.fbx",
+     "bytes": 55404,
+     "sha256": "bb0f0239b8b2332c82bb8db7ece4b1af148d11c01dea3c58830ba60975cf018c"
+    },
+    {
+     "path": "exports/glb/kano_fire_station_a/v001/kano_fire_station_a.glb",
+     "bytes": 1572568,
+     "sha256": "b710e170badaf2df0f98782478f322313f5d26a3f2b9c22ffcf8a9fa3bd544b8"
+    },
+    {
+     "path": "exports/fbx/kano_fire_station_a/v001/kano_fire_station_a.manifest.json",
+     "bytes": 3867,
+     "sha256": "5e35b2d33f7876a719fe3006818948a163fe086474102e002daa9e66d3065cbc"
+    },
+    {
+     "path": "validation/kano_fire_station_a/v001.json",
+     "bytes": 1082,
+     "sha256": "5b48a39a18939f7e87c4096ed43eabb1cb740e4fe7a4bdc8729ba9a3efeb141e"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l0_BaseColor.png",
+     "bytes": 946162,
+     "sha256": "c3c265ca811c79853e6f94f868d77796479659007441e54b7c3e88c3b4285738"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l0_Normal.png",
+     "bytes": 179255,
+     "sha256": "23eb3008b2d0e61740c437a550159b1055914cad8befbaa4f1a218f3341fd7b5"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l1_BaseColor.png",
+     "bytes": 265217,
+     "sha256": "8d03201cae56b58d37497f09680006758d9918b268ad480acdbdd60eec9c61a2"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l1_Normal.png",
+     "bytes": 40564,
+     "sha256": "c5240ae33e1658962141849c18cf586a32d225e0d77657e0b4fa4237a516accb"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l2_BaseColor.png",
+     "bytes": 19621,
+     "sha256": "283d030549a64037bf89e999ca0b8ae454d46618eda4cfde6c790b86a2a4048c"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_fire_station_a_v001_l2_Normal.png",
+     "bytes": 2922,
+     "sha256": "35bc34d2376e1d166bd4fcc60ddd85ec0b213e955d81651402f628c2606b3d28"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_fire_station_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_government_offices_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     2043,
+     316,
+     20
+    ],
+    "sizeM": [
+     48.44,
+     34.58,
+     13.2
+    ],
+    "materials": [
+     "M_sb_kano_government_offices_a_v001_l0",
+     "M_sb_kano_government_offices_a_v001_l1",
+     "M_sb_kano_government_offices_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/kano_government_offices_a.blend",
+     "bytes": 3258439,
+     "sha256": "9606a960ff74c813d03c880a24763920cc95257bf89ba2cece31fec4056f18cd"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/project.json",
+     "bytes": 394,
+     "sha256": "a15401f0d8b77f59a35443e27de6e9b3f17c946043e657e470a7ca42f5d70ab4"
+    },
+    {
+     "path": "exports/fbx/kano_government_offices_a/v001/kano_government_offices_a.fbx",
+     "bytes": 110348,
+     "sha256": "d4d0a92c990b3be2d098245656c496b66e4ecafe78e2f6b87f8cfe7b8ba3263e"
+    },
+    {
+     "path": "exports/glb/kano_government_offices_a/v001/kano_government_offices_a.glb",
+     "bytes": 2057296,
+     "sha256": "881632a6c37c8cfd5c9ad109a822c2c66b70a0efd4866c7f2720d71c05ef3cea"
+    },
+    {
+     "path": "exports/fbx/kano_government_offices_a/v001/kano_government_offices_a.manifest.json",
+     "bytes": 4249,
+     "sha256": "64a69403014b49a51cc7d05f61b8a3b1c779580cf127b2e1f8c85ebf5c519fbd"
+    },
+    {
+     "path": "validation/kano_government_offices_a/v001.json",
+     "bytes": 1120,
+     "sha256": "fbc5db3487a587d8237b7c5ab5a1ab1b76de95cbb5fdd36ec863e293e79e197a"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l0_BaseColor.png",
+     "bytes": 1232845,
+     "sha256": "d63f62156d94788d11ffd583f9962e739bf6e06259d3caed301c9db24be3dbda"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l0_Normal.png",
+     "bytes": 173043,
+     "sha256": "b3ebcd341bd99e95346dedafc435d7eedda62447406237016db51cd350481b42"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l1_BaseColor.png",
+     "bytes": 316140,
+     "sha256": "1b440c613231a0b1a1842b5def55f05b9b5604812234c5166b81686bc91293ca"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l1_Normal.png",
+     "bytes": 38626,
+     "sha256": "ecff78d423dd3565ed04d89a3e05f4aa6d1fdc671a9e2385320b057c03c6efec"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l2_BaseColor.png",
+     "bytes": 17614,
+     "sha256": "875b94e3062985bd9a3d0a6fab435be8a924932dd33c29341ca347470bc85bc8"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_government_offices_a_v001_l2_Normal.png",
+     "bytes": 2514,
+     "sha256": "87f7eb62d06691387a3ad6e51daae2639779db56c699171663f82bcea7e24994"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_government_offices_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_motor_park_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     916,
+     182,
+     52
+    ],
+    "sizeM": [
+     46.44,
+     36.12,
+     7.732
+    ],
+    "materials": [
+     "M_sb_kano_motor_park_a_v001_l0",
+     "M_sb_kano_motor_park_a_v001_l1",
+     "M_sb_kano_motor_park_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/kano_motor_park_a.blend",
+     "bytes": 2941784,
+     "sha256": "03df2153c460ae0baec64a8ed93f49b3f7a4fdbd1c5360de0822f29a089a1977"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/project.json",
+     "bytes": 351,
+     "sha256": "16c2383a6641fea7046451b789c543ee01c637fd164e67f8c5454a1541bf78d1"
+    },
+    {
+     "path": "exports/fbx/kano_motor_park_a/v001/kano_motor_park_a.fbx",
+     "bytes": 72620,
+     "sha256": "1e0a02dd424faf474437b45c491b7e1c4ca80feea6ec56182223b7c15a7c6007"
+    },
+    {
+     "path": "exports/glb/kano_motor_park_a/v001/kano_motor_park_a.glb",
+     "bytes": 1699528,
+     "sha256": "ea96dd89c6029b5010242cf9e03239ceb0996fbd15895d5e1b05c5c64a72d609"
+    },
+    {
+     "path": "exports/fbx/kano_motor_park_a/v001/kano_motor_park_a.manifest.json",
+     "bytes": 4259,
+     "sha256": "a6b9204f41c8236cbeaa5adc5732f79f3c459ba0d3e7a5e9aeb2fb1ab6a59f28"
+    },
+    {
+     "path": "validation/kano_motor_park_a/v001.json",
+     "bytes": 1070,
+     "sha256": "b190cc6f80ca1db02ce43dd220efcc8faf8bba3bd5c0014fd6461272fafa6917"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l0_BaseColor.png",
+     "bytes": 1007319,
+     "sha256": "a99a5f3ffb50af8853dc1018d50e87ed63c65746658d48becceaa286070c8dc3"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l0_Normal.png",
+     "bytes": 156406,
+     "sha256": "b46a8b2f506b90fae0596a47a9848320d857992f23012e5ba71bc63a55cd9783"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l1_BaseColor.png",
+     "bytes": 266967,
+     "sha256": "5e12826ed48dd66aaa998818e431315f5f8367a7a5f412509a00256161483ab3"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l1_Normal.png",
+     "bytes": 36044,
+     "sha256": "88e50514006642623f60563d0d60b296f42df41a685e0612929be25a88ddf9bd"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l2_BaseColor.png",
+     "bytes": 19312,
+     "sha256": "5db4a1d64094b755679b43b8059504c215264e4625e16c39d604e2de73243fe1"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_motor_park_a_v001_l2_Normal.png",
+     "bytes": 2349,
+     "sha256": "4d17a5f022519ec82baf68165917d68c8be5bc2e5b18ca35363f7b2d41e4b9b9"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_motor_park_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_factory_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     856,
+     338,
+     30
+    ],
+    "sizeM": [
+     46.44,
+     34.58,
+     20.0
+    ],
+    "materials": [
+     "M_sb_rg_ngn_factory_a_v001_l0",
+     "M_sb_rg_ngn_factory_a_v001_l1",
+     "M_sb_rg_ngn_factory_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/rg_ngn_factory_a.blend",
+     "bytes": 2801760,
+     "sha256": "78b9d529797b3edfc0305f9f035c262f0a89cfd7800db41e8725fd8067d77206"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/project.json",
+     "bytes": 327,
+     "sha256": "e6ff6012f47a7230683abb39d426ce13176c761556fea526d0cceaea5316d5fd"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_factory_a/v001/rg_ngn_factory_a.fbx",
+     "bytes": 80540,
+     "sha256": "f48e5680a379d9b6a0bd4cc8ced954d001c8a359fd823e3bc77bfd0b635207df"
+    },
+    {
+     "path": "exports/glb/rg_ngn_factory_a/v001/rg_ngn_factory_a.glb",
+     "bytes": 1588232,
+     "sha256": "5be4763a59c4cf04b02aec077f22ca1dd980947f70dfd212e571c071f1351034"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_factory_a/v001/rg_ngn_factory_a.manifest.json",
+     "bytes": 3978,
+     "sha256": "54b2eec07397f11987414a8afff60ca3b69fae2bf13c5ad72990107e25c32cdf"
+    },
+    {
+     "path": "validation/rg_ngn_factory_a/v001.json",
+     "bytes": 1063,
+     "sha256": "1fab9b2dc7cb869096a070cbad3434318e78a91ebf9a0bc80e3fdfa5a31ade02"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l0_BaseColor.png",
+     "bytes": 946899,
+     "sha256": "5d2aff8109ba10f262899137cfe8c83458051b7baa4b6e413816eeb5db7f023d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l0_Normal.png",
+     "bytes": 85646,
+     "sha256": "8cc82591e7a688bccd419dbaff037ae4e45c7745bc71da1a54a4fae03c0137c7"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l1_BaseColor.png",
+     "bytes": 266873,
+     "sha256": "08a6c10ff140756e1fb8727bb189db1e2a58cfba8c5d4ebec8fb100578ac5e23"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l1_Normal.png",
+     "bytes": 22888,
+     "sha256": "e486279cf472d6a85edb4bd3bed592877c6f7e2796c7f5e76fd52ab8f59534ec"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l2_BaseColor.png",
+     "bytes": 21909,
+     "sha256": "f449bc4abdff91e5e03bd4c75d9b66eb8795c54a770c4d2a8916893831b2d841"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_factory_a/v001/T_rg_ngn_factory_a_v001_l2_Normal.png",
+     "bytes": 2108,
+     "sha256": "83cfe741915b3857cd31bf9a9afae8633d7ae2e942011eba9d6ff732bd20906e"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_lowcost_row_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     324,
+     76,
+     20
+    ],
+    "sizeM": [
+     22.0,
+     14.0,
+     4.0
+    ],
+    "materials": [
+     "M_sb_rg_ngn_lowcost_row_a_v001_l0",
+     "M_sb_rg_ngn_lowcost_row_a_v001_l1",
+     "M_sb_rg_ngn_lowcost_row_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/rg_ngn_lowcost_row_a.blend",
+     "bytes": 1813842,
+     "sha256": "d5e73abf7b42dd53cc9db931575ba8d7e7bec3183ea16e19c3fe8563c09a0740"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/project.json",
+     "bytes": 336,
+     "sha256": "4ae579b5cecf1dc7b51ef2bbf824c7589c9ab78f27488fe242ea4f08f465a07b"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_lowcost_row_a/v001/rg_ngn_lowcost_row_a.fbx",
+     "bytes": 49276,
+     "sha256": "d4a0be66990db54a01c6f95b1a4cdfd86afb98a2e85a2a6172461b5c17c7fd6a"
+    },
+    {
+     "path": "exports/glb/rg_ngn_lowcost_row_a/v001/rg_ngn_lowcost_row_a.glb",
+     "bytes": 450656,
+     "sha256": "39eedb37f07bdb078c5dc86ea6a50c26b98d82bf681e410326b7fbd49e1b14db"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_lowcost_row_a/v001/rg_ngn_lowcost_row_a.manifest.json",
+     "bytes": 4043,
+     "sha256": "bb78c96e72f59cab3b88fa8b72fba52d2de359f26b3083d0f52dc7144f3524b0"
+    },
+    {
+     "path": "validation/rg_ngn_lowcost_row_a/v001.json",
+     "bytes": 1071,
+     "sha256": "94c25eecf396aecebd1aac021695ab49ca37067c8ed74a805f8a2bc489e8935a"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l0_BaseColor.png",
+     "bytes": 245050,
+     "sha256": "f9f0f04b82bde9b2e6397463e7b037d0648be81040f7b9df16084ab15063054c"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l0_Normal.png",
+     "bytes": 36618,
+     "sha256": "efcb43dcda6b077aab49a39bbd6f7fa894b04adeba8e88a67f8c3bf149d2c780"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l1_BaseColor.png",
+     "bytes": 72726,
+     "sha256": "451ead14d6382e0ee461ff018dead89fa4a6b6436e4cf11eb1e44e513b5471d4"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l1_Normal.png",
+     "bytes": 9468,
+     "sha256": "1ffff0891ebaa9501113cb6347a4e0bedcc150bdbcdc1fd86446cfbebda1316a"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l2_BaseColor.png",
+     "bytes": 5452,
+     "sha256": "59a2cce3e33d32896243e640f70557f031e5c1febf9f86e174798881fc0b62b7"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_lowcost_row_a/v001/T_rg_ngn_lowcost_row_a_v001_l2_Normal.png",
+     "bytes": 2667,
+     "sha256": "1bcb787e713844b70f03b77e146c96c0a2e9d54aec5a8c53174bd18541ed7cfb"
+    }
+   ]
+  },
+  {
+   "id": "rg_ngn_bungalow_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     829,
+     148,
+     36
+    ],
+    "sizeM": [
+     24.44,
+     24.58,
+     8.663
+    ],
+    "materials": [
+     "M_sb_rg_ngn_bungalow_a_v001_l0",
+     "M_sb_rg_ngn_bungalow_a_v001_l1",
+     "M_sb_rg_ngn_bungalow_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/rg_ngn_bungalow_a.blend",
+     "bytes": 2896457,
+     "sha256": "3f0d9aa13bdfcb1c9262c61e0e3ff57ea7cbeb90050f9f73fb3f14b9c6b74183"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/project.json",
+     "bytes": 313,
+     "sha256": "2644c17d6c3321b2334a240e2003b71311557eecf95dc0f7888c5d26868e1757"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_bungalow_a/v001/rg_ngn_bungalow_a.fbx",
+     "bytes": 74812,
+     "sha256": "14d0564507c87c31a90a35bd11604168b675189c851a50be53b3100048913bdd"
+    },
+    {
+     "path": "exports/glb/rg_ngn_bungalow_a/v001/rg_ngn_bungalow_a.glb",
+     "bytes": 1621880,
+     "sha256": "734f2760aa3f2f75158d7c9d9474a740d7b54ccd2ee56de23e13a8f4532e48f5"
+    },
+    {
+     "path": "exports/fbx/rg_ngn_bungalow_a/v001/rg_ngn_bungalow_a.manifest.json",
+     "bytes": 3986,
+     "sha256": "5d200dd66d0d0a77199258786eed492121c8e81812646875903cf88180bc0807"
+    },
+    {
+     "path": "validation/rg_ngn_bungalow_a/v001.json",
+     "bytes": 1071,
+     "sha256": "9377f9aec98b4d247b8c5546b2e687c7641a4ae8f59bd44fe9350d96ef671fc6"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l0_BaseColor.png",
+     "bytes": 968639,
+     "sha256": "ad3c891fee62d64d0587865833b3ca74519cb4dbc7e40584eb72ce0e7ca6ba9f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l0_Normal.png",
+     "bytes": 167160,
+     "sha256": "f28a3e74e1e8ecf3d21d5f05478fbec82e88faab56dba358dc55a07faf4b5c7f"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l1_BaseColor.png",
+     "bytes": 252551,
+     "sha256": "853207e8f4f10d816cdecddbaa22210cff5b37850616341f3fb8ac769fed1653"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l1_Normal.png",
+     "bytes": 35330,
+     "sha256": "3a18b51a0cf3afa068a58261f6090e066db5144cabececab5f4e41acdef236ed"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l2_BaseColor.png",
+     "bytes": 21937,
+     "sha256": "268ccdb74edff3dfb795d0280fc2942934156ca762b26d55247720cfd957c884"
+    },
+    {
+     "path": "projects/buildings/rg_ngn_bungalow_a/v001/T_rg_ngn_bungalow_a_v001_l2_Normal.png",
+     "bytes": 2602,
+     "sha256": "a582bb1a48e140eb7e3ca6c45a5b4ddf66f95715d659117aa155263677dc00a8"
+    }
+   ]
+  },
+  {
+   "id": "kano_semidetached_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     932,
+     202,
+     34
+    ],
+    "sizeM": [
+     26.44,
+     22.58,
+     8.803
+    ],
+    "materials": [
+     "M_sb_kano_semidetached_a_v001_l0",
+     "M_sb_kano_semidetached_a_v001_l1",
+     "M_sb_kano_semidetached_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/kano_semidetached_a.blend",
+     "bytes": 3056645,
+     "sha256": "266e32800a43e72a6001f8e92f82ee0c6f1c21972e1df9589504f70d4e84b215"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/project.json",
+     "bytes": 325,
+     "sha256": "f17460b4a64a65a5d1d3e74e49810afa84cd8ad1f91ee95cfade342f4f9cb207"
+    },
+    {
+     "path": "exports/fbx/kano_semidetached_a/v001/kano_semidetached_a.fbx",
+     "bytes": 77772,
+     "sha256": "dca28a3aaef4c066c6bdbb4fc7b99ac4cbc1b78ef3e386cdff08c04c97031b0a"
+    },
+    {
+     "path": "exports/glb/kano_semidetached_a/v001/kano_semidetached_a.glb",
+     "bytes": 1779372,
+     "sha256": "8535f7a741e2a5f855770fc7b8097316d7fb95e18b8c8292437e436d59fb6d1c"
+    },
+    {
+     "path": "exports/fbx/kano_semidetached_a/v001/kano_semidetached_a.manifest.json",
+     "bytes": 4029,
+     "sha256": "60d44e32db64894bfbc77ee847acb25b3d2766fbf91dc64cc2d5495cb92a7aae"
+    },
+    {
+     "path": "validation/kano_semidetached_a/v001.json",
+     "bytes": 1083,
+     "sha256": "e4007adbf2843dd185b6456d532ed3abeebfcdf8f5adb21c5ab4ab5493676967"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l0_BaseColor.png",
+     "bytes": 1075902,
+     "sha256": "600999fe352335d56eb2d6ea8ab238711032e9ef6c1d34b4a1438818d0179ab7"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l0_Normal.png",
+     "bytes": 184083,
+     "sha256": "68bbe120577a1ccacc85552670612655887e2b971d3b3f0edf3074b1194275e4"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l1_BaseColor.png",
+     "bytes": 278321,
+     "sha256": "01257b119dca9b4ed3fbfa9369a008452aa575bff16b68b616e159b61028ccf0"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l1_Normal.png",
+     "bytes": 37500,
+     "sha256": "1fae635e21bd3beb908079838a0f2c1bc25b18a6e5782efe71d274a72dc2899c"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l2_BaseColor.png",
+     "bytes": 21677,
+     "sha256": "58300f7e6c8261f16d7b2eb5a32edd64d39d7a13142cbf32c1273b4c912eba84"
+    },
+    {
+     "path": "projects/buildings/kano_semidetached_a/v001/T_kano_semidetached_a_v001_l2_Normal.png",
+     "bytes": 2592,
+     "sha256": "36b8cb54810f2e4367f91480d6f8c0af2a59c18183e37002dfabacb3922a0801"
+    }
+   ]
+  },
+  {
+   "id": "kano_duplex_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1112,
+     238,
+     38
+    ],
+    "sizeM": [
+     30.44,
+     28.58,
+     11.03
+    ],
+    "materials": [
+     "M_sb_kano_duplex_a_v001_l0",
+     "M_sb_kano_duplex_a_v001_l1",
+     "M_sb_kano_duplex_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/kano_duplex_a.blend",
+     "bytes": 3116467,
+     "sha256": "b4731b51539cbedfc347e4154590465bd08761e6a82fa63e415332c7904752b2"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/project.json",
+     "bytes": 363,
+     "sha256": "8c47eb9d48d567bff7ffd303e90a0dc9d3b9def2b368fa01d80d8111049dff5d"
+    },
+    {
+     "path": "exports/fbx/kano_duplex_a/v001/kano_duplex_a.fbx",
+     "bytes": 86396,
+     "sha256": "30e8f25e9d594805223dfddf40122bc557744c5558c6dbffa2f0ae729e68a7c6"
+    },
+    {
+     "path": "exports/glb/kano_duplex_a/v001/kano_duplex_a.glb",
+     "bytes": 1849004,
+     "sha256": "8bba22b977c31cbfb83404c7fde77a3c271b63ef756fccdab0cf46be4f1ed253"
+    },
+    {
+     "path": "exports/fbx/kano_duplex_a/v001/kano_duplex_a.manifest.json",
+     "bytes": 4028,
+     "sha256": "7cd490d33b8effde40ba05e287de3353c0abad2665a983e13c4e9d089d08032d"
+    },
+    {
+     "path": "validation/kano_duplex_a/v001.json",
+     "bytes": 1051,
+     "sha256": "d1cf1684f5631728e55734db277aac81b9941cfc47b33298bd81c108cd85fdb6"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l0_BaseColor.png",
+     "bytes": 1141787,
+     "sha256": "57678d04b451532ebb77a95456bbdb073dfbfd0665e51b25b5605fefbeb7caae"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l0_Normal.png",
+     "bytes": 185890,
+     "sha256": "d0829c5d9a42bef8a0af5a60b16a96324988cd065492b62a1f57c7f9472fae6f"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l1_BaseColor.png",
+     "bytes": 269436,
+     "sha256": "25407086aa04aacc8e992b6c04daee8e535ffb892567f755bbefb49c425c97f2"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l1_Normal.png",
+     "bytes": 35389,
+     "sha256": "baa6e9cc7268094cea5294839003ff9fbc6f8c9e755d4ec547ba36737a7c27c6"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l2_BaseColor.png",
+     "bytes": 20246,
+     "sha256": "cbf80e851bf8ab81e48cdf7f6497613b4286f7c0589cae5333a44e946a4e7e16"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_duplex_a_v001_l2_Normal.png",
+     "bytes": 2672,
+     "sha256": "f3b84f2378a2d903116c38c0ea85e7f2823e19384dd2d7fc4020769676054c5e"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_duplex_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  },
+  {
+   "id": "kano_mansion_a",
+   "kind": "buildings",
+   "version": "v001",
+   "validation": {
+    "passed": true,
+    "lodTriangles": [
+     1486,
+     218,
+     46
+    ],
+    "sizeM": [
+     42.44,
+     36.58,
+     8.061
+    ],
+    "materials": [
+     "M_sb_kano_mansion_a_v001_l0",
+     "M_sb_kano_mansion_a_v001_l1",
+     "M_sb_kano_mansion_a_v001_l2"
+    ]
+   },
+   "files": [
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/kano_mansion_a.blend",
+     "bytes": 3108118,
+     "sha256": "3e242d07ad798eae5d740961a385c167e9b5240affd865ec9b22c05f8a31ab02"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/project.json",
+     "bytes": 392,
+     "sha256": "6a9c7f6a82444788f60bf683346c318e6085ffc9edac22e825fc1fd4a6f5439d"
+    },
+    {
+     "path": "exports/fbx/kano_mansion_a/v001/kano_mansion_a.fbx",
+     "bytes": 100012,
+     "sha256": "045a25150192c49a6053dddf9153765127fa03edce27ea760cddbea740d4f73b"
+    },
+    {
+     "path": "exports/glb/kano_mansion_a/v001/kano_mansion_a.glb",
+     "bytes": 1876980,
+     "sha256": "e6159b9427f310f58d789c8029a7285b060651e4951607611e004546c507efe3"
+    },
+    {
+     "path": "exports/fbx/kano_mansion_a/v001/kano_mansion_a.manifest.json",
+     "bytes": 4305,
+     "sha256": "d8f6734b0e460e337f9d8b0fdc6fb0d972fdb466be777b9117d3143a85c143fe"
+    },
+    {
+     "path": "validation/kano_mansion_a/v001.json",
+     "bytes": 1056,
+     "sha256": "a90a25532a1d223af2cf6699aea1f44ff4c6a127a2fa92fbbc006d24b091b46d"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_asphalt_BaseColor.png",
+     "bytes": 276091,
+     "sha256": "56a1e7861e5662d6dba952c8982001af9ed34041867ee6d9dff69933eff0e469"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_asphalt_Normal.png",
+     "bytes": 416832,
+     "sha256": "d5e2863921d67f3ee9b6fa28c75f567820982321905488dcc1b4437f3d445736"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l0_BaseColor.png",
+     "bytes": 1146509,
+     "sha256": "626523b642b51dad7d7bd82a2306f22607c826501cc3b54937f76935c4bf4a43"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l0_Normal.png",
+     "bytes": 154587,
+     "sha256": "f1e53b60a0d12b9a9623dfb4505d01c28fc17e1a3a2c5a3a7cb50c824840c0f6"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l1_BaseColor.png",
+     "bytes": 279440,
+     "sha256": "f96b4b42d936dd7b9b9e9c776e85b2f8d37856eea4068faf6e740071ae2743ae"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l1_Normal.png",
+     "bytes": 32763,
+     "sha256": "1abc22ab719089e1b8f918d27c5b69be7b43f02df3e495668cfd61385dbe84de"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l2_BaseColor.png",
+     "bytes": 21254,
+     "sha256": "90da43fc901eff57a35d7c4b01d1c2c5cd2090b28b7e5b79757f64523fb43a8e"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_mansion_a_v001_l2_Normal.png",
+     "bytes": 2522,
+     "sha256": "fa47f283e393dd47584daee7cc4b45b661c72d8b2e3bf9318c120128e4966350"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_paver_BaseColor.png",
+     "bytes": 482406,
+     "sha256": "b356dde1d6dd0f91096e469b417f4e3ad11dfe843e71a90a39f15ebb72dcae8d"
+    },
+    {
+     "path": "projects/buildings/kano_mansion_a/v001/T_kano_paver_Normal.png",
+     "bytes": 162482,
+     "sha256": "8a508574a6da7268d3a9c6c24cd133045ceac9b1d5601335a56c1f8752b393c1"
+    }
+   ]
+  }
+ ],
+ "rule": "A frozen version is never edited. A correction is the next version. The files live in the asset workspace and in the private asset repository ARO-CONTENT; this manifest holds only their hashes."
+}

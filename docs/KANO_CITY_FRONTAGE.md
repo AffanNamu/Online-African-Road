@@ -54,6 +54,8 @@ Gaps measured by the tests on E1: a mosque at least every 420 m on each side of 
 * only F1 `flank_urban`'s mix moved (table above);
 * every structural test still passes on the new footprints.
 
+**2026-11-14 (city construction, `KANO_CITY_CONSTRUCTION.md`).** The mixes of section 4 have been replaced by district mixes with the 28 new buildings, and the F1 highway flank was split: the left side is the edge of town, the right side a civic and premium edge in two stretches clear of the urban rows. The current counts are in `KANO_CITY_CONSTRUCTION.md` section 3; the table of section 4 is the state of 2026-11-09.
+
 ## 5. Catalogue and prefabs
 
 `prop_catalog.json` gained 25 entries (text data, all `dev` placeholders of the real footprint: **additions only, no existing entry changed**, nothing in the Lagos to Ibadan route uses them). In the shipped build, which has no private prefab, they draw as plain volumes (`DevPropGeometry.CityBuilding`: one box, a roof slab, a door and windows, no lamp geometry); in the review build the production prefab with the same id replaces the placeholder. The review scenes `env_kano_mosques_dry` and `env_kano_city_row_dry` carry all 14 new assets so that the review build makes prefabs for them.

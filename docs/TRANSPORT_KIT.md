@@ -219,3 +219,7 @@ See `ASSET_REALISM_PASS.md`. In short:
 * **Importer.** The Unity importer reads `smoothness_alpha` from the material kit.
 * **Regenerated.** The catalogue, the 25 city prop entries and the two city routes were regenerated from the v002 footprints; the city golden digests changed deliberately.
 
+## 10. Families G to J: the city construction directive (2026-11-14)
+
+28 new v001 assets: fuel stations (G, `fuel.py`, after R-040), commercial (H), public (I) and residential (J) buildings from the parametric generator `blocks.py`. The kit now holds 106 assets. Numbers, placement and the open decisions are in `KANO_CITY_CONSTRUCTION.md`.
+
