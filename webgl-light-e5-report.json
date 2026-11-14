@@ -1,0 +1,553 @@
+{
+ "quality": "low",
+ "scenarios": [
+  {
+   "id": "f1-upper-bus",
+   "route": "ng-kano-e5-f1",
+   "path": "upper",
+   "vehicle": "bus_city_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "upper",
+    "reached": true,
+    "maxErr": 0.02,
+    "minY": 12.28,
+    "maxY": 17.88,
+    "seconds": 80.9
+   },
+   "line": "[Autopilot] done path=upper reached=true maxErr=0.02 minY=12.28 maxY=17.88 seconds=80.9 end=(3.0,12.28,516.0)\n",
+   "progress": [
+    "[Autopilot] progress 92% pos=(3.0,15.17,436.7) ground=15.04 kmh=48.0 err=-0.02 \n",
+    "[Autopilot] progress 95% pos=(3.0,14.12,465.4) ground=14.00 kmh=47.5 err=-0.02 \n",
+    "[Autopilot] progress 98% pos=(3.0,13.16,493.6) ground=13.04 kmh=50.3 err=-0.02 \n"
+   ]
+  },
+  {
+   "id": "f1-lower-truck",
+   "route": "ng-kano-e5-f1",
+   "path": "lower",
+   "vehicle": "truck_medium_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "lower",
+    "reached": true,
+    "maxErr": 0.22,
+    "minY": 9.92,
+    "maxY": 11.42,
+    "seconds": 53
+   },
+   "line": "[Autopilot] done path=lower reached=true maxErr=0.22 minY=9.92 maxY=11.42 seconds=53.0 end=(137.5,10.09,-1.8)\n",
+   "progress": [
+    "[Autopilot] progress 89% pos=(102.1,10.09,-1.8) ground=9.96 kmh=28.2 err=-0.02 \n",
+    "[Autopilot] progress 94% pos=(118.7,10.09,-1.8) ground=9.96 kmh=28.3 err=-0.02 \n",
+    "[Autopilot] progress 98% pos=(134.9,10.09,-1.8) ground=9.96 kmh=28.4 err=-0.01 \n"
+   ]
+  },
+  {
+   "id": "f1-ramp-off-bus",
+   "route": "ng-kano-e5-f1",
+   "path": "ramp_off",
+   "vehicle": "bus_city_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ramp_off",
+    "reached": true,
+    "maxErr": 0.04,
+    "minY": 10.34,
+    "maxY": 18.86,
+    "seconds": 39.4
+   },
+   "line": "[Autopilot] done path=ramp_off reached=true maxErr=0.04 minY=10.34 maxY=18.86 seconds=39.4 end=(24.7,10.34,-59.4)\n",
+   "progress": [
+    "[Autopilot] progress 84% pos=(39.5,11.47,-101.8) ground=11.34 kmh=29.3 err=-0.01 \n",
+    "[Autopilot] progress 90% pos=(33.5,11.04,-85.8) ground=10.91 kmh=30.8 err=-0.02 \n",
+    "[Autopilot] progress 95% pos=(28.5,10.67,-72.1) ground=10.55 kmh=26.0 err=0.00 \n"
+   ]
+  },
+  {
+   "id": "f1-ramp-on-truck",
+   "route": "ng-kano-e5-f1",
+   "path": "ramp_on",
+   "vehicle": "truck_light_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ramp_on",
+    "reached": true,
+    "maxErr": 0.03,
+    "minY": 9.94,
+    "maxY": 13.68,
+    "seconds": 61.8
+   },
+   "line": "[Autopilot] done path=ramp_on reached=true maxErr=0.03 minY=9.94 maxY=13.68 seconds=61.8 end=(16.1,13.68,462.3)\n",
+   "progress": [
+    "[Autopilot] progress 91% pos=(30.1,13.35,426.8) ground=13.23 kmh=24.7 err=-0.02 \n",
+    "[Autopilot] progress 94% pos=(25.2,13.48,440.4) ground=13.35 kmh=25.0 err=-0.01 \n",
+    "[Autopilot] progress 97% pos=(19.7,13.60,453.7) ground=13.47 kmh=25.0 err=-0.01 \n"
+   ]
+  },
+  {
+   "id": "rb-landmark-bus",
+   "route": "ng-kano-e5-roundabouts",
+   "path": "ring:r_landmark",
+   "vehicle": "bus_city_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ring:r_landmark",
+    "reached": true,
+    "maxErr": 0.09,
+    "minY": 9.91,
+    "maxY": 11.47,
+    "seconds": 48.8
+   },
+   "line": "[Autopilot] done path=ring:r_landmark reached=true maxErr=0.09 minY=9.91 maxY=11.47 seconds=48.8 end=(-8.5,10.09,77.4)\n",
+   "progress": [
+    "[Autopilot] progress 87% pos=(9.7,10.08,46.8) ground=9.96 kmh=24.0 err=-0.01 \n",
+    "[Autopilot] progress 92% pos=(1.7,10.09,59.8) ground=9.96 kmh=27.3 err=-0.02 \n",
+    "[Autopilot] progress 98% pos=(-6.5,10.09,73.8) ground=9.96 kmh=27.8 err=-0.01 \n"
+   ]
+  },
+  {
+   "id": "rb-large-bus",
+   "route": "ng-kano-e5-roundabouts",
+   "path": "ring:r_large",
+   "vehicle": "bus_city_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ring:r_large",
+    "reached": true,
+    "maxErr": 0.08,
+    "minY": 9.99,
+    "maxY": 11.5,
+    "seconds": 56.2
+   },
+   "line": "[Autopilot] done path=ring:r_large reached=true maxErr=0.08 minY=9.99 maxY=11.50 seconds=56.2 end=(949.6,10.09,88.1)\n",
+   "progress": [
+    "[Autopilot] progress 87% pos=(972.3,10.07,52.3) ground=9.95 kmh=17.9 err=-0.01 \n",
+    "[Autopilot] progress 91% pos=(965.1,10.08,62.0) ground=9.96 kmh=25.4 err=-0.03 \n",
+    "[Autopilot] progress 95% pos=(957.0,10.09,75.3) ground=9.96 kmh=28.1 err=-0.02 \n"
+   ]
+  },
+  {
+   "id": "rb-traditional-truck",
+   "route": "ng-kano-e5-roundabouts",
+   "path": "ring:r_traditional",
+   "vehicle": "truck_medium_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ring:r_traditional",
+    "reached": true,
+    "maxErr": 0.18,
+    "minY": 9.92,
+    "maxY": 11.5,
+    "seconds": 35
+   },
+   "line": "[Autopilot] done path=ring:r_traditional reached=true maxErr=0.18 minY=9.92 maxY=11.50 seconds=35.0 end=(746.0,10.09,-1.8)\n",
+   "progress": [
+    "[Autopilot] progress 74% pos=(700.6,10.09,-2.7) ground=9.96 kmh=23.6 err=-0.09 \n",
+    "[Autopilot] progress 82% pos=(715.2,10.09,-1.8) ground=9.96 kmh=27.4 err=-0.05 \n",
+    "[Autopilot] progress 91% pos=(731.1,10.09,-1.8) ground=9.96 kmh=28.6 err=-0.02 \n"
+   ]
+  },
+  {
+   "id": "rb-green-truck",
+   "route": "ng-kano-e5-roundabouts",
+   "path": "ring:r_green",
+   "vehicle": "truck_light_01",
+   "result": {
+    "ok": true,
+    "why": "done",
+    "path": "ring:r_green",
+    "reached": true,
+    "maxErr": 0.09,
+    "minY": 9.93,
+    "maxY": 11.58,
+    "seconds": 46.1
+   },
+   "line": "[Autopilot] done path=ring:r_green reached=true maxErr=0.09 minY=9.93 maxY=11.58 seconds=46.1 end=(1653.7,11.58,90.3)\n",
+   "progress": [
+    "[Autopilot] progress 82% pos=(1654.7,10.32,43.3) ground=10.19 kmh=24.6 err=-0.05 \n",
+    "[Autopilot] progress 88% pos=(1653.8,10.74,59.2) ground=10.62 kmh=27.8 err=-0.03 \n",
+    "[Autopilot] progress 94% pos=(1653.7,11.17,75.3) ground=11.05 kmh=27.3 err=-0.01 \n"
+   ]
+  }
+ ],
+ "checks": [
+  {
+   "name": "f1-upper-bus: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-f1: 7 control points, 1.8 km (real road 210 km), 3 profile runs, 1 bridges, 9 junctions, 74 polyline nodes\n"
+  },
+  {
+   "name": "f1-upper-bus: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 1.3s at y=14.07; vehicle released\n"
+  },
+  {
+   "name": "f1-upper-bus: frame 1 (at 22 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 65"
+  },
+  {
+   "name": "f1-upper-bus: frame 2 (at 51 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 66"
+  },
+  {
+   "name": "f1-upper-bus: frame 3 (at 81 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 66"
+  },
+  {
+   "name": "f1-upper-bus: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=upper reached=true maxErr=0.02 minY=12.28 maxY=17.88 seconds=80.9 end=(3.0,12.28,516.0)\n"
+  },
+  {
+   "name": "f1-upper-bus: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.02 m"
+  },
+  {
+   "name": "f1-upper-bus: the vehicle was on the deck (17 m or more) and never below the road",
+   "ok": true,
+   "detail": "height 12.28 to 17.88 m"
+  },
+  {
+   "name": "f1-upper-bus: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-upper-bus: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-lower-truck: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-f1: 7 control points, 1.8 km (real road 210 km), 3 profile runs, 1 bridges, 9 junctions, 74 polyline nodes\n"
+  },
+  {
+   "name": "f1-lower-truck: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 1.4s at y=9.64; vehicle released\n"
+  },
+  {
+   "name": "f1-lower-truck: frame 1 (at 20 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 57"
+  },
+  {
+   "name": "f1-lower-truck: frame 2 (at 51 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 42"
+  },
+  {
+   "name": "f1-lower-truck: frame 3 (at 84 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 59"
+  },
+  {
+   "name": "f1-lower-truck: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=lower reached=true maxErr=0.22 minY=9.92 maxY=11.42 seconds=53.0 end=(137.5,10.09,-1.8)\n"
+  },
+  {
+   "name": "f1-lower-truck: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.22 m"
+  },
+  {
+   "name": "f1-lower-truck: the vehicle stayed on the ground road under the deck (9 to 11.5 m)",
+   "ok": true,
+   "detail": "height 9.92 to 11.42 m"
+  },
+  {
+   "name": "f1-lower-truck: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-lower-truck: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-ramp-off-bus: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-f1: 7 control points, 1.8 km (real road 210 km), 3 profile runs, 1 bridges, 9 junctions, 74 polyline nodes\n"
+  },
+  {
+   "name": "f1-ramp-off-bus: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 2.0s at y=16.89; vehicle released\n"
+  },
+  {
+   "name": "f1-ramp-off-bus: frame 1 (at 24 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 62"
+  },
+  {
+   "name": "f1-ramp-off-bus: frame 2 (at 51 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 63"
+  },
+  {
+   "name": "f1-ramp-off-bus: frame 3 (at 84 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 62"
+  },
+  {
+   "name": "f1-ramp-off-bus: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ramp_off reached=true maxErr=0.04 minY=10.34 maxY=18.86 seconds=39.4 end=(24.7,10.34,-59.4)\n"
+  },
+  {
+   "name": "f1-ramp-off-bus: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.04 m"
+  },
+  {
+   "name": "f1-ramp-off-bus: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-ramp-off-bus: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-ramp-on-truck: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-f1: 7 control points, 1.8 km (real road 210 km), 3 profile runs, 1 bridges, 9 junctions, 74 polyline nodes\n"
+  },
+  {
+   "name": "f1-ramp-on-truck: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 0.8s at y=9.62; vehicle released\n"
+  },
+  {
+   "name": "f1-ramp-on-truck: frame 1 (at 23 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 62"
+  },
+  {
+   "name": "f1-ramp-on-truck: frame 2 (at 50 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 63"
+  },
+  {
+   "name": "f1-ramp-on-truck: frame 3 (at 80 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 66"
+  },
+  {
+   "name": "f1-ramp-on-truck: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ramp_on reached=true maxErr=0.03 minY=9.94 maxY=13.68 seconds=61.8 end=(16.1,13.68,462.3)\n"
+  },
+  {
+   "name": "f1-ramp-on-truck: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.03 m"
+  },
+  {
+   "name": "f1-ramp-on-truck: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "f1-ramp-on-truck: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-landmark-bus: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-roundabouts: 2 control points, 0.5 km (real road 210 km), 1 profile runs, 0 bridges, 25 junctions, 22 polyline nodes\n"
+  },
+  {
+   "name": "rb-landmark-bus: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 1.7s at y=9.96; vehicle released\n"
+  },
+  {
+   "name": "rb-landmark-bus: frame 1 (at 20 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 60"
+  },
+  {
+   "name": "rb-landmark-bus: frame 2 (at 53 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 60"
+  },
+  {
+   "name": "rb-landmark-bus: frame 3 (at 82 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 60"
+  },
+  {
+   "name": "rb-landmark-bus: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ring:r_landmark reached=true maxErr=0.09 minY=9.91 maxY=11.47 seconds=48.8 end=(-8.5,10.09,77.4)\n"
+  },
+  {
+   "name": "rb-landmark-bus: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.09 m"
+  },
+  {
+   "name": "rb-landmark-bus: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-landmark-bus: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-large-bus: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-roundabouts: 2 control points, 0.5 km (real road 210 km), 1 profile runs, 0 bridges, 25 junctions, 22 polyline nodes\n"
+  },
+  {
+   "name": "rb-large-bus: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 0.7s at y=9.72; vehicle released\n"
+  },
+  {
+   "name": "rb-large-bus: frame 1 (at 20 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 67"
+  },
+  {
+   "name": "rb-large-bus: frame 2 (at 51 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 62"
+  },
+  {
+   "name": "rb-large-bus: frame 3 (at 81 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 61"
+  },
+  {
+   "name": "rb-large-bus: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ring:r_large reached=true maxErr=0.08 minY=9.99 maxY=11.50 seconds=56.2 end=(949.6,10.09,88.1)\n"
+  },
+  {
+   "name": "rb-large-bus: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.08 m"
+  },
+  {
+   "name": "rb-large-bus: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-large-bus: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-traditional-truck: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-roundabouts: 2 control points, 0.5 km (real road 210 km), 1 profile runs, 0 bridges, 25 junctions, 22 polyline nodes\n"
+  },
+  {
+   "name": "rb-traditional-truck: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 0.8s at y=9.73; vehicle released\n"
+  },
+  {
+   "name": "rb-traditional-truck: frame 1 (at 23 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 57"
+  },
+  {
+   "name": "rb-traditional-truck: frame 2 (at 54 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 57"
+  },
+  {
+   "name": "rb-traditional-truck: frame 3 (at 82 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 56"
+  },
+  {
+   "name": "rb-traditional-truck: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ring:r_traditional reached=true maxErr=0.18 minY=9.92 maxY=11.50 seconds=35.0 end=(746.0,10.09,-1.8)\n"
+  },
+  {
+   "name": "rb-traditional-truck: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.18 m"
+  },
+  {
+   "name": "rb-traditional-truck: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-traditional-truck: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-green-truck: the route loaded and the autopilot path exists",
+   "ok": true,
+   "detail": "[Route] ng-kano-e5-roundabouts: 2 control points, 0.5 km (real road 210 km), 1 profile runs, 0 bridges, 25 junctions, 22 polyline nodes\n"
+  },
+  {
+   "name": "rb-green-truck: the vehicle stood on real ground and was released",
+   "ok": true,
+   "detail": "[Drive] ground ready after 0.7s at y=9.72; vehicle released\n"
+  },
+  {
+   "name": "rb-green-truck: frame 1 (at 22 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 59"
+  },
+  {
+   "name": "rb-green-truck: frame 2 (at 53 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 57"
+  },
+  {
+   "name": "rb-green-truck: frame 3 (at 82 percent of the path) shows a rendered scene",
+   "ok": true,
+   "detail": "sd 63"
+  },
+  {
+   "name": "rb-green-truck: the autopilot reached the end of the path",
+   "ok": true,
+   "detail": "[Autopilot] done path=ring:r_green reached=true maxErr=0.09 minY=9.93 maxY=11.58 seconds=46.1 end=(1653.7,11.58,90.3)\n"
+  },
+  {
+   "name": "rb-green-truck: the vehicle stayed within 3 m of its lane",
+   "ok": true,
+   "detail": "largest distance from the lane 0.09 m"
+  },
+  {
+   "name": "rb-green-truck: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rb-green-truck: no exception, no invalid route or road network",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

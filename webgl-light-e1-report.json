@@ -1,0 +1,481 @@
+{
+ "quality": "low",
+ "places": [
+  {
+   "id": "arterial-arrows",
+   "start": 90,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=30 halos=30 pools=30 streaks=30 glowVerts=750 puddles=2 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=16\n"
+  },
+  {
+   "id": "zebra",
+   "start": 262,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=34 lamps=43 halos=43 pools=43 streaks=40 glowVerts=1039 puddles=4 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=18\n"
+  },
+  {
+   "id": "cross-opening",
+   "start": 398,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=43 halos=43 pools=43 streaks=40 glowVerts=1039 puddles=4 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=16\n"
+  },
+  {
+   "id": "turn-arrows",
+   "start": 480,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=78 halos=78 pools=78 streaks=55 glowVerts=1674 puddles=6 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=14\n"
+  },
+  {
+   "id": "class-change",
+   "start": 700,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=111 halos=111 pools=111 streaks=75 glowVerts=2343 puddles=7 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=1"
+  },
+  {
+   "id": "local-mouth",
+   "start": 800,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=111 halos=111 pools=111 streaks=75 glowVerts=2343 puddles=7 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=1"
+  },
+  {
+   "id": "service-mouth",
+   "start": 975,
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=124 halos=124 pools=124 streaks=78 glowVerts=2548 puddles=10 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds="
+  },
+  {
+   "id": "yard",
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=126 halos=126 pools=124 streaks=73 glowVerts=2496 puddles=10 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds="
+  },
+  {
+   "id": "yard-ground",
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=30 lamps=126 halos=126 pools=124 streaks=73 glowVerts=2496 puddles=10 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds="
+  },
+  {
+   "id": "terminal",
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=25 lamps=86 halos=86 pools=84 streaks=42 glowVerts=1604 puddles=5 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=14\n"
+  },
+  {
+   "id": "terminal-ground",
+   "hour": "noon",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=0.000 clock=0.000 hour=12.00 mode=Auto chunks=25 lamps=86 halos=86 pools=84 streaks=42 glowVerts=1604 puddles=5 wet=0.00 realLights=0/0 beacons=0 glowDraw=off puddleDraw=off rebuilds=14\n"
+  },
+  {
+   "id": "arterial-night",
+   "start": 90,
+   "hour": "night",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=1.000 clock=1.000 hour=23.00 mode=Auto chunks=30 lamps=30 halos=30 pools=30 streaks=30 glowVerts=750 puddles=2 wet=0.00 realLights=0/0 beacons=0 glowDraw=on puddleDraw=off rebuilds=16\n"
+  },
+  {
+   "id": "collector-night",
+   "start": 880,
+   "hour": "night",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=1.000 clock=1.000 hour=23.00 mode=Auto chunks=30 lamps=124 halos=124 pools=124 streaks=78 glowVerts=2548 puddles=10 wet=0.00 realLights=0/0 beacons=0 glowDraw=on puddleDraw=off rebuilds=1"
+  },
+  {
+   "id": "yard-night",
+   "hour": "night",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=1.000 clock=1.000 hour=23.00 mode=Auto chunks=30 lamps=126 halos=126 pools=124 streaks=73 glowVerts=2496 puddles=10 wet=0.00 realLights=0/0 beacons=0 glowDraw=on puddleDraw=off rebuilds=1"
+  },
+  {
+   "id": "terminal-night",
+   "hour": "night",
+   "route": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n",
+   "lamp": "[Lamp] level=1.000 clock=1.000 hour=23.00 mode=Auto chunks=25 lamps=86 halos=86 pools=84 streaks=42 glowVerts=1604 puddles=5 wet=0.00 realLights=0/0 beacons=0 glowDraw=on puddleDraw=off rebuilds=16\n"
+  }
+ ],
+ "checks": [
+  {
+   "name": "arterial-arrows: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "arterial-arrows: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.5 pos=(90.0,0.08,-4.1) kmh=0.0 dist=1.0 ground=-0.04 fuel=120.0 chunks=30 yaw=90 cam=RearChase\n"
+  },
+  {
+   "name": "arterial-arrows: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 111 sd 47, bumper mean 100 sd 41"
+  },
+  {
+   "name": "arterial-arrows: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "arterial-arrows: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "zebra: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "zebra: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.0 pos=(262.0,0.09,-4.3) kmh=0.0 dist=1.0 ground=-0.04 fuel=120.0 chunks=34 yaw=89 cam=RearChase\n"
+  },
+  {
+   "name": "zebra: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 113 sd 45, bumper mean 101 sd 41"
+  },
+  {
+   "name": "zebra: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "zebra: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cross-opening: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "cross-opening: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.3 pos=(398.4,0.25,0.8) kmh=1.4 dist=0.9 ground=-0.03 fuel=120.0 chunks=30 yaw=76 cam=RearChase\n"
+  },
+  {
+   "name": "cross-opening: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 112 sd 47, bumper mean 102 sd 40"
+  },
+  {
+   "name": "cross-opening: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cross-opening: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "turn-arrows: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "turn-arrows: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=4.8 pos=(480.0,0.08,4.9) kmh=0.0 dist=1.0 ground=-0.04 fuel=120.0 chunks=30 yaw=87 cam=RearChase\n"
+  },
+  {
+   "name": "turn-arrows: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 110 sd 46, bumper mean 99 sd 41"
+  },
+  {
+   "name": "turn-arrows: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "turn-arrows: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "class-change: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "class-change: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=5.5 pos=(699.6,0.08,10.8) kmh=0.0 dist=0.9 ground=-0.04 fuel=120.0 chunks=30 yaw=91 cam=RearChase\n"
+  },
+  {
+   "name": "class-change: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 112 sd 45, bumper mean 100 sd 40"
+  },
+  {
+   "name": "class-change: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "class-change: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "local-mouth: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "local-mouth: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=4.4 pos=(799.7,0.09,12.4) kmh=0.0 dist=0.9 ground=-0.03 fuel=120.0 chunks=30 yaw=90 cam=RearChase\n"
+  },
+  {
+   "name": "local-mouth: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 114 sd 45, bumper mean 101 sd 42"
+  },
+  {
+   "name": "local-mouth: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "local-mouth: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "service-mouth: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "service-mouth: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=4.2 pos=(974.6,0.09,12.8) kmh=0.0 dist=1.0 ground=-0.03 fuel=120.0 chunks=30 yaw=91 cam=RearChase\n"
+  },
+  {
+   "name": "service-mouth: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 111 sd 46, bumper mean 93 sd 40"
+  },
+  {
+   "name": "service-mouth: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "service-mouth: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "yard: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=2.5 pos=(1029.2,0.04,251.1) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=30 yaw=2 cam=RearChase\n"
+  },
+  {
+   "name": "yard: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 147 sd 43, bumper mean 166 sd 34"
+  },
+  {
+   "name": "yard: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard-ground: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "yard-ground: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=2.6 pos=(1029.2,0.04,251.1) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=30 yaw=2 cam=RearChase\n"
+  },
+  {
+   "name": "yard-ground: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 147 sd 43, bumper mean 141 sd 43"
+  },
+  {
+   "name": "yard-ground: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard-ground: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "terminal: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=2.2 pos=(1421.0,0.04,-198.5) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=25 yaw=179 cam=RearChase\n"
+  },
+  {
+   "name": "terminal: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 148 sd 44, bumper mean 167 sd 34"
+  },
+  {
+   "name": "terminal: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal-ground: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "terminal-ground: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.2 pos=(1421.0,0.04,-198.5) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=25 yaw=179 cam=RearChase\n"
+  },
+  {
+   "name": "terminal-ground: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 148 sd 44, bumper mean 140 sd 45"
+  },
+  {
+   "name": "terminal-ground: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal-ground: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "arterial-night: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "arterial-night: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=2.5 pos=(90.0,0.09,-4.1) kmh=0.0 dist=1.0 ground=-0.04 fuel=120.0 chunks=30 yaw=90 cam=RearChase\n"
+  },
+  {
+   "name": "arterial-night: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 39 sd 32, bumper mean 46 sd 34"
+  },
+  {
+   "name": "arterial-night: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "arterial-night: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "collector-night: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "collector-night: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.2 pos=(879.6,0.09,13.1) kmh=0.0 dist=1.0 ground=-0.03 fuel=120.0 chunks=30 yaw=90 cam=RearChase\n"
+  },
+  {
+   "name": "collector-night: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 41 sd 31, bumper mean 58 sd 27"
+  },
+  {
+   "name": "collector-night: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "collector-night: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard-night: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "yard-night: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=2.6 pos=(1029.2,0.04,251.1) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=30 yaw=2 cam=RearChase\n"
+  },
+  {
+   "name": "yard-night: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 46 sd 30, bumper mean 33 sd 24"
+  },
+  {
+   "name": "yard-night: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "yard-night: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal-night: the drive scenario started on the corridor",
+   "ok": true,
+   "detail": "[Route] ng-kano-e1-streets: 7 control points, 1.5 km (real road 210 km), 2 profile runs, 0 bridges, 6 junctions, 62 polyline nodes\n"
+  },
+  {
+   "name": "terminal-night: the truck stood on real ground and was held",
+   "ok": true,
+   "detail": "[Drive] t=3.3 pos=(1421.0,0.04,-198.5) kmh=0.0 dist=0.9 ground=-0.09 fuel=120.0 chunks=25 yaw=179 cam=RearChase\n"
+  },
+  {
+   "name": "terminal-night: the frames show a rendered scene",
+   "ok": true,
+   "detail": "chase mean 46 sd 30, bumper mean 33 sd 25"
+  },
+  {
+   "name": "terminal-night: the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "terminal-night: no exception, no invalid route data",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

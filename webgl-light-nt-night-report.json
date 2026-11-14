@@ -1,0 +1,249 @@
+{
+ "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+ "gpu": false,
+ "quality": "low",
+ "results": [
+  {
+   "scenario": "beams",
+   "name": "the K key switches the game to the high beam",
+   "ok": true,
+   "detail": "[Light] beam=High lights=2 highBeamLamps=2\n"
+  },
+  {
+   "scenario": "beams",
+   "name": "the road ahead is brighter with the high beam (far bands)",
+   "ok": true,
+   "detail": "far two bands 127.0 -> 148.3"
+  },
+  {
+   "scenario": "beams",
+   "name": "the whole frame is not darker with the high beam",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "scenario": "beams",
+   "name": "K again returns to the low beam",
+   "ok": true,
+   "detail": "[Light] beam=Low lights=2 highBeamLamps=0\n"
+  },
+  {
+   "scenario": "rear",
+   "name": "the brake lamps are brighter than the rear lamps",
+   "ok": true,
+   "detail": "red pixels 340 -> 478"
+  },
+  {
+   "scenario": "rear",
+   "name": "the game logged the brake lamp turning on (Space)",
+   "ok": true,
+   "detail": "1 line(s)"
+  },
+  {
+   "scenario": "rear",
+   "name": "the rear lamps go dark with the lights off",
+   "ok": true,
+   "detail": "red pixels 340 -> 0"
+  },
+  {
+   "scenario": "rear",
+   "name": "hazard lights (T): the game's lamps flash (on and off edges in the log)",
+   "ok": true,
+   "detail": "left-on 41, right-on 41, off 40"
+  },
+  {
+   "scenario": "rear",
+   "name": "hazard lights (T): the side that should not flash stays dark",
+   "ok": true,
+   "detail": "left-on 41, right-on 41"
+  },
+  {
+   "scenario": "rear",
+   "name": "hazard lights (T): the picture shows amber lamps in some frames and none in others",
+   "ok": true,
+   "detail": "8 lit frame(s), 2 dark"
+  },
+  {
+   "scenario": "rear",
+   "name": "left indicator (Q): the game's lamps flash (on and off edges in the log)",
+   "ok": true,
+   "detail": "left-on 41, right-on 0, off 41"
+  },
+  {
+   "scenario": "rear",
+   "name": "left indicator (Q): the side that should not flash stays dark",
+   "ok": true,
+   "detail": "left-on 41, right-on 0"
+  },
+  {
+   "scenario": "rear",
+   "name": "left indicator (Q): the picture shows amber lamps in some frames and none in others",
+   "ok": true,
+   "detail": "4 lit frame(s), 6 dark"
+  },
+  {
+   "scenario": "rear",
+   "name": "right indicator (E): the game's lamps flash (on and off edges in the log)",
+   "ok": true,
+   "detail": "left-on 0, right-on 41, off 41"
+  },
+  {
+   "scenario": "rear",
+   "name": "right indicator (E): the side that should not flash stays dark",
+   "ok": true,
+   "detail": "left-on 0, right-on 41"
+  },
+  {
+   "scenario": "rear",
+   "name": "right indicator (E): the picture shows amber lamps in some frames and none in others",
+   "ok": true,
+   "detail": "6 lit frame(s), 4 dark"
+  },
+  {
+   "scenario": "beacons",
+   "name": "the game has beacons loaded",
+   "ok": true,
+   "detail": [
+    "beacons=4"
+   ]
+  },
+  {
+   "scenario": "beacons",
+   "name": "red beacon light appears in some frames",
+   "ok": true,
+   "detail": "max 4"
+  },
+  {
+   "scenario": "beacons",
+   "name": "and is absent in others (it flashes)",
+   "ok": true,
+   "detail": "min 0, max 4"
+  },
+  {
+   "scenario": "traffic",
+   "name": "traffic bodies existed during the run",
+   "ok": true,
+   "detail": "15 [Traffic] line(s)"
+  },
+  {
+   "scenario": "traffic",
+   "name": "traffic bodies carry head and tail lamp boxes with the shared lit material",
+   "ok": true,
+   "detail": "[Traffic] active=9 pooled=1 lampBoxes=36 lampMaterials=ok\n"
+  },
+  {
+   "scenario": "traffic",
+   "name": "the lamp system reports traffic lamps available",
+   "ok": true,
+   "detail": "trafficLamps=ok"
+  },
+  {
+   "scenario": "transition",
+   "name": "dusk: the lamp level moves one way only",
+   "ok": true,
+   "detail": "24 samples"
+  },
+  {
+   "scenario": "transition",
+   "name": "dusk: the lamp level is the one the unit-tested model gives for the game's hour",
+   "ok": true,
+   "detail": "worst difference 0.006"
+  },
+  {
+   "scenario": "transition",
+   "name": "dusk: it covers the whole range (day to night)",
+   "ok": true,
+   "detail": "level 0.00 to 1.00"
+  },
+  {
+   "scenario": "transition",
+   "name": "dusk: the headlights switch automatically on inside the lamp ramp",
+   "ok": true,
+   "detail": "hour 17.774"
+  },
+  {
+   "scenario": "transition",
+   "name": "dawn: the lamp level moves one way only",
+   "ok": true,
+   "detail": "23 samples"
+  },
+  {
+   "scenario": "transition",
+   "name": "dawn: the lamp level is the one the unit-tested model gives for the game's hour",
+   "ok": true,
+   "detail": "worst difference 0.006"
+  },
+  {
+   "scenario": "transition",
+   "name": "dawn: it covers the whole range (day to night)",
+   "ok": true,
+   "detail": "level 0.00 to 1.00"
+  },
+  {
+   "scenario": "transition",
+   "name": "dawn: the headlights switch automatically off inside the lamp ramp",
+   "ok": true,
+   "detail": "hour 6.308"
+  },
+  {
+   "scenario": "wet",
+   "name": "low: rain makes the game draw streaks and puddles",
+   "ok": true,
+   "detail": "streaks=71 glowVerts=3062 puddles=30 wet=0.90"
+  },
+  {
+   "scenario": "wet",
+   "name": "low: dry weather draws no puddles",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "scenario": "wet",
+   "name": "low: the road in the picture changes in rain",
+   "ok": true,
+   "detail": "road luminance 16.1 -> 20.7"
+  },
+  {
+   "scenario": "wet",
+   "name": "medium: rain makes the game draw streaks and puddles",
+   "ok": true,
+   "detail": "streaks=66 glowVerts=3704 puddles=27 wet=0.90"
+  },
+  {
+   "scenario": "wet",
+   "name": "medium: dry weather draws no puddles",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "scenario": "wet",
+   "name": "medium: the road in the picture changes in rain",
+   "ok": true,
+   "detail": "road luminance 13.3 -> 18.1"
+  },
+  {
+   "scenario": "wet",
+   "name": "high: rain makes the game draw streaks and puddles",
+   "ok": true,
+   "detail": "streaks=42 glowVerts=2831 puddles=16 wet=0.90"
+  },
+  {
+   "scenario": "wet",
+   "name": "high: dry weather draws no puddles",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "scenario": "wet",
+   "name": "high: the road in the picture changes in rain",
+   "ok": true,
+   "detail": "road luminance 21.1 -> 26.8"
+  },
+  {
+   "scenario": "pools",
+   "name": "five frames taken",
+   "ok": true,
+   "detail": "5 frame(s); look at the sheet"
+  }
+ ]
+}

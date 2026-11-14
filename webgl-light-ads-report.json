@@ -1,0 +1,42 @@
+{
+ "quality": "low",
+ "ads": [
+  "[Ads] ready (fixture: no network), route ng-lagos-ibadan, atlas 2048x1024 (8 MB)\n",
+  "[Ads] faces=0 real=0 cellsInUse=0 atlasMB=8 fixture\n",
+  "[Ads] fixture installed on 1 faces in 1 cells\n",
+  "[Ads] fixture installed on 1 faces in 1 cells\n",
+  "[Ads] fixture installed on 1 faces in 1 cells\n"
+ ],
+ "checks": [
+  {
+   "name": "the drive scenario started and the truck stood on real ground",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "the advertising service started in fixture mode",
+   "ok": true,
+   "detail": "[Ads] ready (fixture: no network), route ng-lagos-ibadan, atlas 2048x1024 (8 MB)\n"
+  },
+  {
+   "name": "boards in the loaded chunks received test images in the atlas",
+   "ok": true,
+   "detail": "[Ads] fixture installed on 1 faces in 1 cells\n"
+  },
+  {
+   "name": "a frame is rendered",
+   "ok": true,
+   "detail": "sd 56"
+  },
+  {
+   "name": "the vehicle did not leave the world",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "no exception",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
