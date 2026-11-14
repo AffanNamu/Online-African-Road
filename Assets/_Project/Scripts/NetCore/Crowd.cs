@@ -112,7 +112,8 @@ namespace ARO.NetCore
         {
             float w = d.widthM * inst.Scale, dep = d.depthM * inst.Scale;
             V3 L(float x, float z) => PropBatcher.Place(new V3(x, 0f, z), inst.Pos, inst.YawDeg, 1f);
-            bool clear(V3 p) => OffRoad(m, p.X, p.Z, 0.6f);
+            bool onPlate = OnPlate(m, inst);                                                                    // a terminal's shelters, kiosks and stalls stand on its plate: people may stand there too
+            bool clear(V3 p) => OffRoad(m, p.X, p.Z, 0.6f, plates: !onPlate);
             void Idle(V3 p, float yawLocal, int k, string src) { if (!clear(p)) return; var a = new CrowdAgent { Spot = p, Yaw = inst.YawDeg + yawLocal, Offset = U(h, 50 + k) * 4f }; Dress(a, HI(h, k, 7), src); res.Add(a); }
             if (d.HasSockets && d.sockets.Any(s => s != null && ServicePoints.IsFuel(s.kind)))
             {   // a fuel station: an attendant by the first pump, a customer between the mart and the forecourt
@@ -129,9 +130,11 @@ namespace ARO.NetCore
             }
             bool mosque = Has(d, "mosque"), busy = Busy.Any(t => Has(d, t)) || d.id == "shop_row" || d.id.Contains("market"), home = Has(d, "residential");
             if (d.id == "bus_stop")
-            {   // people waiting under the shelter, facing the road
+            {   // people waiting under the shelter, facing the road (or the bays), and someone walking behind it
                 int n = 2 + (int)(U(h, 3) * 5f);
                 for (int k = 0; k < n; k++) Idle(L((k + 0.5f) / n * (w - 0.8f) - (w - 0.8f) * 0.5f, -dep * 0.25f + U(h, 20 + k) * 0.4f), U(h, 30 + k) * 50f - 25f, k, "stop");
+                var b0 = L(-w * 0.5f - 1.5f, -dep * 0.5f - 0.9f); var b1 = L(w * 0.5f + 1.5f, -dep * 0.5f - 0.9f);
+                if (clear(b0) && clear(b1) && clear(L(0f, -dep * 0.5f - 0.9f))) { var a = CrowdAgent.Walker(new[] { b0, b1 }, 1.0f + U(h, 6) * 0.3f, U(h, 7) * 2f * (w + 3f)); Dress(a, HI(h, 9, 7), "stop:walk"); res.Add(a); }
                 return;
             }
             if (d.id == "kiosk" || d.id == "market_stall")
@@ -172,8 +175,11 @@ namespace ARO.NetCore
         /// <summary>The paved half width (carriageway and shoulders) at s as built: near a change of road class the cross-section is scaled to meet its neighbour edge to edge.</summary>
         static float PavedHalf(RoadCorridor c, float s) { int i = c.RunIndexAt(s); return c.Runs[i].Section.PavedHalfWidth * c.ScaleAt(i, s); }
 
-        /// <summary>True when (x, z) is clear of every carriageway and shoulder (plus `margin`), every roundabout island and every site plate.</summary>
-        public static bool OffRoad(RouteModel m, float x, float z, float margin)
+        /// <summary>The prop is one of a site plate's own props (a terminal's shelter, a yard's kiosk).</summary>
+        public static bool OnPlate(RouteModel m, PropInstance inst) { if (inst.Origin == null) return false; foreach (var p in m.Sites) if (inst.Origin.StartsWith(p.Spec.id + "/", StringComparison.Ordinal)) return true; return false; }
+
+        /// <summary>True when (x, z) is clear of every carriageway and shoulder (plus `margin`), every roundabout island and (unless `plates` is false) every site plate.</summary>
+        public static bool OffRoad(RouteModel m, float x, float z, float margin, bool plates = true)
         {
             foreach (var c in m.CorridorsNear(x, z))
             {
@@ -181,7 +187,7 @@ namespace ARO.NetCore
                 if (Math.Abs(lat) <= PavedHalf(c, s) + margin) return false;
             }
             foreach (var isl in m.Islands) if (isl.Contains(x, z, margin)) return false;
-            foreach (var p in m.Sites) if (p.Contains(x, z, margin)) return false;
+            if (plates) foreach (var p in m.Sites) if (p.Contains(x, z, margin)) return false;
             return true;
         }
 

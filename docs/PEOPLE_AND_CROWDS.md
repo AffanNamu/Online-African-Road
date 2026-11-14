@@ -17,7 +17,7 @@ The owner's words: *"bus terminal ... put some people, visuals of people moving 
   * In front of **shops, markets, offices, banks, hotels, restaurants, clinics, hospitals and public buildings**: one to three people chatting in pairs, and someone walking along the frontage of the larger ones.
   * In front of **mosques**: two to five people.
   * At one **home** in four: someone at the gate.
-  * At **bus stops**: two to six people waiting under the shelter, facing the road.
+  * At **bus stops** and at the **bus terminal** of the Kano city streets (its four shelters on the terminal plate): two to six people waiting under each shelter, facing the road or the bays, and someone walking behind it. People of a plate's own shelters, kiosks and stalls may stand on the plate; nobody else does.
   * At **kiosks and market stalls**: customers at the counter and the seller behind it.
   * On the **walkways of city streets**: walkers going back and forth (about 1.6 per 100 m of walkway a side). A walkway stretch ends wherever it would cross another road, a site plate or an island.
 * **The hour:** everyone is out from 07:00 to 19:00. About 60% are out in the evening, 35% early in the morning and 12% at night. It is the same people every night.
@@ -30,7 +30,7 @@ The owner's words: *"bus terminal ... put some people, visuals of people moving 
 | Proposal | Done | Why |
 |---|---|---|
 | A Blender family with vertex-animation textures | The figures are built by code in the game's own C# (NetCore), with a five-part rig posed on the CPU | They then appear in the public build as well as the review build, need no binary assets or private staging, and are fully unit-tested. One mesh still means one draw call. A Blender-built production family can replace the geometry later with the same rig (one bone per vertex). |
-| Crowds at terminals and shelters | Bus stops of the game (`bus_stop`), not the kit's terminal hall and shelters | The kit's terminal and shelter models are not in the game's catalogue yet: they stand only in review scenes. |
+| Crowds at terminals and shelters | The game's bus stops (`bus_stop`), including the four shelters of the E1 bus terminal plate; not the kit's terminal hall and long shelters | The kit's terminal and shelter models are not in the game's catalogue yet: they stand only in review scenes. |
 | Density by district and hour | By hour; the district shows through where the shops, mosques and walkways are | The simpler rule gave believable streets; a per-district factor can be added in `CrowdPlanner`. |
 
 ## 3. Tests (`tests/NetCore.Tests/PeopleTests.cs`, 12)
@@ -38,7 +38,7 @@ The owner's words: *"bus terminal ... put some people, visuals of people moving 
 * Ten designs, two of them children, three colourways each, valid palette indices.
 * Every figure in every colourway and skin tone builds within 200 to 1,000 triangles, and LOD 1 is cheaper. Adults are 1.65 to 1.9 m (2.05 m with the basin), children 1.0 to 1.35 m. The feet are on the ground and the skin tone is used.
 * The walk: at a quarter cycle the left foot is forward and the right back, the arms swing in opposition, the body bobs. The idle keeps the feet still.
-* The crowd is the same when the route is rebuilt, and every person belongs to one chunk. E1 has 150 or more people, 20 or more walkers, an attendant at each of its stations and people at its mosques. The shipped road has its station attendant and a waiting group at its bus stop.
+* The crowd is the same when the route is rebuilt, and every person belongs to one chunk. E1 has 150 or more people, 20 or more walkers, an attendant at each of its stations, people at its mosques and eight or more people waiting at the terminal's shelters. The shipped road has its station attendant and a waiting group at its bus stop.
 * **Nobody stands or walks on a carriageway, a shoulder, a site plate or an island, or inside a solid prop.** This covers every spot and every point and mid-point of every path, on E1, F1 and the shipped road.
 * Walkers stay beyond the kerb at walkway height.
 * The night has fewer people than the day, and they are among the day's people. The budget is held (60, or 20 on the low tier), nearest first.

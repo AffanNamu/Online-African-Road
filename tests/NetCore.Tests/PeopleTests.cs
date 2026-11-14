@@ -110,10 +110,14 @@ public class PeopleTests
     {
         var m = Model(route); var (agents, props) = Everything(m); var boxes = PropBatcher.BoxColliders(props, Def);
         Assert.NotEmpty(agents);
+        var plateAnchored = new HashSet<CrowdAgent>();          // people of a plate's own shelters, kiosks and stalls stand on the plate (never on a carriageway)
+        foreach (var (x0, z0) in Chunks(m)) { var inst = PropScatter.PlaceChunk(m, x0, z0, x0 + 200f, z0 + 200f).Where(i => CrowdPlanner.OnPlate(m, i)).ToList(); foreach (var a in CrowdPlanner.PlaceChunk(m, inst, Def, x0, z0, x0 + 200f, z0 + 200f)) if (!a.Source.StartsWith("walkway")) plateAnchored.Add(a); }
+        var onPlate = agents.Where(a => plateAnchored.Any(b => b.Source == a.Source && b.Anchor.X == a.Anchor.X && b.Anchor.Z == a.Anchor.Z)).ToHashSet();
+        if (route == "ng-kano-city-e1") Assert.True(onPlate.Count(a => a.Source.StartsWith("stop")) >= 8, $"the bus terminal's four shelters have people waiting ({onPlate.Count(a => a.Source.StartsWith("stop"))})");
         foreach (var a in agents)
             foreach (var p in a.Walks ? a.Path.Concat(Mid(a.Path)) : new[] { a.Spot })
             {
-                Assert.True(CrowdPlanner.OffRoad(m, p.X, p.Z, 0.25f), $"{route}: {a.Source} at ({p.X:0.0}, {p.Z:0.0}) is on a road, a plate or an island");
+                Assert.True(CrowdPlanner.OffRoad(m, p.X, p.Z, 0.25f, plates: !onPlate.Contains(a)), $"{route}: {a.Source} at ({p.X:0.0}, {p.Z:0.0}) is on a road, a plate or an island");
                 foreach (var b in boxes)
                 {
                     float r = -b.YawDeg * (float)Math.PI / 180f, dx = p.X - b.Centre.X, dz = p.Z - b.Centre.Z, lx = dx * (float)Math.Cos(r) + dz * (float)Math.Sin(r), lz = -dx * (float)Math.Sin(r) + dz * (float)Math.Cos(r);
