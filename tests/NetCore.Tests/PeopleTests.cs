@@ -65,13 +65,13 @@ public class PeopleTests
                 for (int s = 0; s < PeopleKit.SkinCount; s++)
                 {
                     var m0 = PeopleKit.Mesh(d, c, s, 0); var m1 = PeopleKit.Mesh(d, c, s, 1); string id = PeopleKit.Designs[d].Id;
-                    Assert.InRange(m0.TriangleCount, 200, 1000); Assert.True(m1.TriangleCount < m0.TriangleCount * 0.75, $"{id}: LOD1 {m1.TriangleCount} vs {m0.TriangleCount}");
+                    Assert.InRange(m0.TriangleCount, 400, 1100); Assert.True(m1.TriangleCount < m0.TriangleCount * 0.75, $"{id}: LOD1 {m1.TriangleCount} vs {m0.TriangleCount}");
                     Assert.All(m0.Bone, b => Assert.InRange(b, 0, 4)); Assert.Equal(m0.Pos.Length, m0.Uv.Length); Assert.Equal(m0.Pos.Length, m0.Bone.Length);
                     Assert.All(m0.Tris, i => Assert.InRange(i, 0, m0.Pos.Length - 1));
                     Assert.All(m0.Uv, u => { Assert.InRange(u.X, 0f, 1f); Assert.InRange(u.Y, 0f, 1f); });
                     float h = m0.Height, lo = m0.Pos.Min(p => p.Y), wx = m0.Pos.Max(p => Math.Abs(p.X)), wz = m0.Pos.Max(p => Math.Abs(p.Z));
                     if (PeopleKit.Designs[d].Child) Assert.InRange(h, 1.0f, 1.35f); else Assert.InRange(h, 1.65f, id.Contains("headload") ? 2.05f : 1.9f);
-                    Assert.InRange(lo, -0.01f, 0.01f); Assert.True(wx <= 0.45f && wz <= 0.35f, $"{id}: {wx:0.00} x {wz:0.00}");
+                    Assert.InRange(lo, -0.01f, 0.01f); Assert.True(wx <= 0.45f && wz <= 0.35f, $"{id}: {wx:0.00} x {wz:0.00}"); Assert.True(m0.Pos.Length <= 620, $"{id}: {m0.Pos.Length} vertices");
                     Assert.Contains(m0.Uv, u => Math.Abs(u.X - PeopleKit.Cell(PeopleKit.Skin0 + s).X) < 1e-4 && Math.Abs(u.Y - PeopleKit.Cell(PeopleKit.Skin0 + s).Y) < 1e-4);   // the skin tone is used
                 }
     }
@@ -79,11 +79,12 @@ public class PeopleTests
     [Fact]
     public void TheWalkSwingsLegsAndArmsInOppositionAndTheIdleKeepsTheFeetStill()
     {
-        var m = PeopleKit.Mesh(0, 0, 0, 0); var f0 = PeopleKit.Frame(0, 0, 0, 0, 0); var f2 = PeopleKit.Frame(0, 0, 0, 0, 2); var idle = PeopleKit.Frame(0, 0, 0, 0, PeopleKit.WalkFrames + 1);
+        const int man = 2;                                         // shirt and trousers: the full stride
+        var m = PeopleKit.Mesh(man, 0, 0, 0); var f0 = PeopleKit.Frame(man, 0, 0, 0, 0); var f2 = PeopleKit.Frame(man, 0, 0, 0, 2); var idle = PeopleKit.Frame(man, 0, 0, 0, PeopleKit.WalkFrames + 1);
         Assert.Equal(m.Pos.Length, f2.Length);
-        float FootZ(V3[] f, int bone) => Enumerable.Range(0, m.Pos.Length).Where(i => m.Bone[i] == bone).Min(i => f[i].Y) < 0.2f ? Enumerable.Range(0, m.Pos.Length).Where(i => m.Bone[i] == bone && m.Pos[i].Y < 0.1f).Average(i => f[i].Z) : 0f;
-        float l = FootZ(f2, PeopleKit.LegL), r = FootZ(f2, PeopleKit.LegR);
-        Assert.True(l > 0.25f && r < -0.25f, $"quarter cycle: the left foot forward ({l:0.00}), the right back ({r:0.00})");
+        float FootZ(PersonMesh mesh, V3[] f, int bone) => Enumerable.Range(0, mesh.Pos.Length).Where(i => mesh.Bone[i] == bone && mesh.Pos[i].Y < 0.1f).Average(i => f[i].Z) - Enumerable.Range(0, mesh.Pos.Length).Where(i => mesh.Bone[i] == bone && mesh.Pos[i].Y < 0.1f).Average(i => mesh.Pos[i].Z);
+        float l = FootZ(m, f2, PeopleKit.LegL), r = FootZ(m, f2, PeopleKit.LegR);
+        Assert.True(l > 0.3f && r < -0.3f, $"quarter cycle: the left foot forward ({l:0.00}), the right back ({r:0.00})");
         Assert.Equal(PeopleKit.WalkAngle(PeopleKit.ArmL, 0.25f), -PeopleKit.WalkAngle(PeopleKit.ArmR, 0.25f));
         Assert.True(PeopleKit.WalkAngle(PeopleKit.ArmL, 0.25f) < 0 && PeopleKit.WalkAngle(PeopleKit.LegL, 0.25f) > 0, "the left arm swings back while the left leg swings forward");
         for (int i = 0; i < m.Pos.Length; i++)
@@ -91,6 +92,51 @@ public class PeopleTests
             if (m.Bone[i] == PeopleKit.Body) Assert.Equal(m.Pos[i].Y + PeopleKit.WalkBob(0.25f), f2[i].Y, 4);
             if (m.Bone[i] == PeopleKit.LegL || m.Bone[i] == PeopleKit.LegR) { Assert.Equal(m.Pos[i].Z, idle[i].Z, 4); Assert.Equal(m.Pos[i].Y, f0[i].Y, 4); }
         }
+        // under a long robe the stride is short: the feet step forward, and no part of a leg leaves the hem by more than a shoe
+        foreach (int robe in new[] { 0, 3, 4, 5, 6, 7, 9 })
+        {
+            var d = PeopleKit.Designs[robe]; Assert.InRange(d.Swing, 0.25f, 0.4f);
+            var rm = PeopleKit.Mesh(robe, 0, 0, 0); var rf = PeopleKit.Frame(robe, 0, 0, 0, 2); float k = d.Child ? 0.72f : 1f;
+            float step = FootZ(rm, rf, PeopleKit.LegL); Assert.InRange(step, 0.08f * k, 0.22f * k);
+            float hemBack = Enumerable.Range(0, rm.Pos.Length).Where(i => rm.Bone[i] == PeopleKit.Body && rm.Pos[i].Y < 0.2f * k).Min(i => rm.Pos[i].Z);
+            float shinBack = Enumerable.Range(0, rm.Pos.Length).Where(i => rm.Bone[i] == PeopleKit.LegR && rm.Pos[i].Y > 0.1f * k).Min(i => rf[i].Z);
+            Assert.True(shinBack >= hemBack - 0.02f, $"{d.Id}: the rear shin is {hemBack - shinBack:0.000} m outside the hem");
+        }
+    }
+
+    /// <summary>Every face of every part looks outwards (the game culls back faces: an inverted cap would be a hole in a hat, a basin or a hem).</summary>
+    [Fact]
+    public void EveryPartFacesOutwards()
+    {
+        void Check(PeopleKit.Builder b, V3 centre, string what)
+        {
+            for (int t = 0; t < b.T.Count; t += 3)
+            {
+                V3 p0 = b.P[b.T[t]], p1 = b.P[b.T[t + 1]], p2 = b.P[b.T[t + 2]]; var n = MeshBuffers.Cross(p1 - p0, p2 - p0); var mid = (p0 + p1 + p2) * (1f / 3f);
+                Assert.True(MeshBuffers.Dot(n, mid - centre) > 0f, $"{what}: triangle {t / 3} faces inwards");
+            }
+        }
+        foreach (int sides in new[] { 10, 6 })
+        {
+            var lathe = new PeopleKit.Builder { Sides = sides }; lathe.Lathe(0, 3, 0.1f, 0.05f, new[] { 0.2f, 0.10f, 0.08f, 0f, 0.6f, 0.22f, 0.16f, 0.01f, 1.0f, 0.20f, 0.14f, 0f, 1.3f, 0.06f, 0.05f, -0.01f }); Check(lathe, new V3(0.1f, 0.7f, 0.05f), "turned shape");
+            var tube = new PeopleKit.Builder { Sides = sides }; tube.Tube(0, 3, 0.2f, -0.1f, 1.0f, 1.6f, 0.25f, 0.15f, 0.8f); Check(tube, new V3(0.2f, 1.3f, -0.1f), "capped tube");
+            var blob = new PeopleKit.Builder { Sides = sides }; blob.Blob(0, 3, new V3(0.1f, 1.5f, 0.2f), 0.10f, 0.12f, 0.11f); Check(blob, new V3(0.1f, 1.5f, 0.2f), "blob");
+            var box = new PeopleKit.Builder { Sides = sides }; box.Box(0, 3, new V3(-0.1f, 0f, -0.2f), new V3(0.3f, 0.4f, 0.1f)); Check(box, new V3(0.1f, 0.2f, -0.05f), "box");
+        }
+        for (int d = 0; d < PeopleKit.Designs.Length; d++)
+        {   // the whole figure: its enclosed volume is positive (outward faces) and that of a person
+            var m = PeopleKit.Mesh(d, 0, 0, 0); double vol = 0;
+            for (int t = 0; t < m.Tris.Length; t += 3) vol += MeshBuffers.Dot(m.Pos[m.Tris[t]], MeshBuffers.Cross(m.Pos[m.Tris[t + 1]], m.Pos[m.Tris[t + 2]])) / 6.0;
+            Assert.InRange(vol, PeopleKit.Designs[d].Child ? 0.02 : 0.05, 0.40);
+        }
+    }
+
+    [Fact]
+    public void ThePosesAreSharedByEveryColourwayAndSkinTone()
+    {
+        Assert.Same(PeopleKit.Frame(4, 0, 0, 0, 3), PeopleKit.Frame(4, 2, 1, 0, 3)); Assert.NotSame(PeopleKit.Frame(4, 0, 0, 0, 3), PeopleKit.Frame(4, 0, 0, 1, 3));
+        Assert.Equal(PeopleKit.PoseKey(4, 0, 3), PeopleKit.PoseKey(4 + PeopleKit.Designs.Length, 0, 3 + PeopleKit.WalkFrames + PeopleKit.IdleFrames));
+        Assert.Equal(PeopleKit.Mesh(4, 0, 0, 0).Pos, PeopleKit.Mesh(4, 2, 1, 0).Pos); Assert.NotEqual(PeopleKit.Mesh(4, 0, 0, 0).Uv, PeopleKit.Mesh(4, 2, 1, 0).Uv);
     }
 
     // ---------------------------------------------------------------------------------------------------------------- the crowd
@@ -124,6 +170,15 @@ public class PeopleTests
                     Assert.False(Math.Abs(lx) < b.Size.X * 0.5f - 0.05f && Math.Abs(lz) < b.Size.Z * 0.5f - 0.05f, $"{route}: {a.Source} at ({p.X:0.0}, {p.Z:0.0}) is inside the {b.Prop} box");
                 }
             }
+    }
+
+    [Theory, MemberData(nameof(Routes))]
+    public void EveryoneStandsOnTheGroundWhereTheyAre(string route)
+    {
+        var m = Model(route); var agents = Everything(m).agents;
+        foreach (var a in agents.Where(x => !x.Source.StartsWith("walkway")))
+            foreach (var p in a.Walks ? a.Path : new[] { a.Spot })
+                Assert.True(Math.Abs(p.Y - m.GroundHeight(p.X, p.Z, p.Y)) < 0.02f, $"{route}: {a.Source} at ({p.X:0.0}, {p.Z:0.0}) stands at {p.Y:0.00}, the ground is at {m.GroundHeight(p.X, p.Z, p.Y):0.00}");
     }
 
     static IEnumerable<V3> Mid(V3[] path) { for (int i = 1; i < path.Length; i++) yield return new V3((path[i].X + path[i - 1].X) * 0.5f, (path[i].Y + path[i - 1].Y) * 0.5f, (path[i].Z + path[i - 1].Z) * 0.5f); }
@@ -172,5 +227,7 @@ public class PeopleTests
         foreach (var x in a.Where(q => q.Source == "bus:alight")) { Assert.False(x.At(99.0, out _, out _, out _)); Assert.True(x.At(x.T0 + 0.5, out var p, out _, out _)); Assert.True(Math.Abs(p.X - door.X) < 1.5f); }
         Assert.True(CrowdPlanner.EndOf(a) > 100.0 && CrowdPlanner.EndOf(a) < 140.0);
         Assert.Empty(CrowdPlanner.BusStop(door, kerb, along, 0, 0, 0, 1));
+        var raised = CrowdPlanner.BusStop(door, kerb, along, 2, 2, 0, 1, (x, z) => x > door.X + 1f ? 0.45f : 0.3f);          // a kerb 15 cm above the carriageway
+        Assert.All(raised, x => { Assert.Equal(0.45f, x.Source == "bus:board" ? x.Path[0].Y : x.Path[x.Path.Length - 1].Y); Assert.Equal(0.3f, x.Source == "bus:board" ? x.Path[x.Path.Length - 1].Y : x.Path[0].Y); });
     }
 }

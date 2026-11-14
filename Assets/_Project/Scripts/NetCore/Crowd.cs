@@ -111,7 +111,7 @@ namespace ARO.NetCore
         static void FromProp(RouteModel m, PropDef d, PropInstance inst, int h, List<CrowdAgent> res)
         {
             float w = d.widthM * inst.Scale, dep = d.depthM * inst.Scale;
-            V3 L(float x, float z) => PropBatcher.Place(new V3(x, 0f, z), inst.Pos, inst.YawDeg, 1f);
+            V3 L(float x, float z) { var q = PropBatcher.Place(new V3(x, 0f, z), inst.Pos, inst.YawDeg, 1f); return new V3(q.X, m.GroundHeight(q.X, q.Z, inst.Pos.Y), q.Z); }      // on the ground where the person stands (a walkway, a plate, the terrain), not at the prop's own height
             bool onPlate = OnPlate(m, inst);                                                                    // a terminal's shelters, kiosks and stalls stand on its plate: people may stand there too
             bool clear(V3 p) => OffRoad(m, p.X, p.Z, 0.6f, plates: !onPlate);
             void Idle(V3 p, float yawLocal, int k, string src) { if (!clear(p)) return; var a = new CrowdAgent { Spot = p, Yaw = inst.YawDeg + yawLocal, Offset = U(h, 50 + k) * 4f }; Dress(a, HI(h, k, 7), src); res.Add(a); }
@@ -291,21 +291,22 @@ namespace ARO.NetCore
         /// The bus fills up (and empties) before your eyes: `boarded` people walk from where they waited beside the stop to the door, one after the other, and disappear into the bus; `alighted` people
         /// step out of the door and walk away. The numbers are the server's (serve_stop); at most 12 of each are drawn. `kerb` is the direction from the bus towards the kerb (unit, horizontal).
         /// </summary>
-        public static List<CrowdAgent> BusStop(V3 door, V3 kerb, V3 along, int boarded, int alighted, double t0, int seed)
+        public static List<CrowdAgent> BusStop(V3 door, V3 kerb, V3 along, int boarded, int alighted, double t0, int seed, Func<float, float, float> groundY = null)
         {
             var res = new List<CrowdAgent>();
+            V3 G(V3 p) => groundY == null ? p : new V3(p.X, groundY(p.X, p.Z), p.Z);                 // the kerb and the walkway are higher than the carriageway the bus stands on
             int nb = Math.Min(12, Math.Max(0, boarded)), na = Math.Min(12, Math.Max(0, alighted));
             for (int k = 0; k < na; k++)
             {   // first off, then on
                 int h = HI(seed, k, 3); float side = (U(h, 1) - 0.5f) * 6f;
-                var p0 = door; var p1 = door + kerb * 1.6f + along * (side * 0.2f); var p2 = door + kerb * (3.5f + U(h, 2) * 2f) + along * side;
+                var p0 = door; var p1 = G(door + kerb * 1.6f + along * (side * 0.2f)); var p2 = G(door + kerb * (3.5f + U(h, 2) * 2f) + along * side);
                 var a = CrowdAgent.Walker(new[] { p0, p1, p2 }, 1.2f, 0f); a.Once = true; a.T0 = t0 + 0.7 * k; a.Lead = 0f; Dress(a, h, "bus:alight"); res.Add(a);
             }
             double t1 = t0 + 0.7 * na + 0.5;
             for (int k = 0; k < nb; k++)
             {
                 int h = HI(seed, k, 5); float off = (k % 6 - 2.5f) * 0.9f, row = 2.6f + (k / 6) * 0.9f;
-                var q = door + kerb * row + along * (off - 2.0f); var near = door + kerb * 1.2f;
+                var q = G(door + kerb * row + along * (off - 2.0f)); var near = G(door + kerb * 1.2f);
                 var a = CrowdAgent.Walker(new[] { q, near, door }, 1.25f, 0f); a.Once = true; a.T0 = t1 + 0.65 * k; a.Lead = 30f; Dress(a, h, "bus:board"); res.Add(a);
             }
             return res;

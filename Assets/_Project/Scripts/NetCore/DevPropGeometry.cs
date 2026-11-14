@@ -127,7 +127,7 @@ namespace ARO.NetCore
         static void Site(MeshBuffers mb, PropDef def, int detail)
         {
             float w = def.widthM, d = def.depthM;
-            if (detail >= 1) Box(mb, PropSub.Accent, 0, 0.0f, 0, w - 0.2f, 0.03f, d - 0.2f);                                     // the forecourt: a paint-thin slab (the terrain under a lot is level)
+            if (detail >= 1) Box(mb, PropSub.Wall, 0, 0.0f, 0, w - 0.2f, 0.03f, d - 0.2f);                                       // the forecourt: a paint-thin concrete slab (the terrain under a lot is level)
             float cx0 = float.MaxValue, cz0 = float.MaxValue, cx1 = float.MinValue, cz1 = float.MinValue, top = 0f;
             foreach (var b in def.boxes)
             {
@@ -137,6 +137,7 @@ namespace ARO.NetCore
                 if (column) { cx0 = Math.Min(cx0, b.x0); cz0 = Math.Min(cz0, b.z0); cx1 = Math.Max(cx1, b.x1); cz1 = Math.Max(cz1, b.z1); top = Math.Max(top, b.y1); }
                 if (detail == 0 && (column || bh <= 3f)) continue;                                                              // far away: the buildings, the totem and the canopy only
                 Box(mb, sub, (b.x0 + b.x1) * 0.5f, b.y0, (b.z0 + b.z1) * 0.5f, bw, bh, bd);
+                if (detail >= 1 && sub == PropSub.Wall && bw >= 3f && bd >= 3f) Box(mb, PropSub.Roof, (b.x0 + b.x1) * 0.5f, b.y1, (b.z0 + b.z1) * 0.5f, bw + 0.3f, 0.25f, bd + 0.3f);   // a roof on the shop and the generator house, so they stand out from the paving
             }
             if (detail == 2 && def.HasSockets)
                 foreach (var k in def.sockets)

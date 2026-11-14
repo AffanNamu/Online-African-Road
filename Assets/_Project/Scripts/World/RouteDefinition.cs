@@ -36,6 +36,12 @@ namespace ARO.World
         bool _prepared;
         const float NodeSpacing = 25f;
 
+        /// <summary>
+        /// Gives the route other data and forgets what was prepared. This object is an asset: it stays in memory when the world is reloaded (the player switching between Lagos to Ibadan and Kano),
+        /// with its prepared model and the route id of the previous world, so the next <see cref="Prepare"/> would silently keep the old road. Call this before Prepare whenever the data is chosen.
+        /// </summary>
+        public void Use(TextAsset data) { specJson = data; _prepared = false; Model = null; Spec = null; PrepareError = null; _cum = null; }
+
         /// <summary>Loads and validates the route data and derives the polyline `nodes` used by traffic, the minimap and projection. Idempotent. Returns false (and keeps the legacy nodes) when the data is missing or invalid.</summary>
         public bool Prepare()
         {

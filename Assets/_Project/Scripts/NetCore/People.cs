@@ -14,7 +14,7 @@ namespace ARO.NetCore
     /// <summary>
     /// P2 of docs/FUNCTIONAL_PLACES_PROPOSAL.md (approved by the owner on 2026-11-14; "people built by code"): the people of the streets, built by code from tapered tubes and blobs, in Kano dress. Ten
     /// designs (kaftan and cap, babban riga, shirt and trousers, women in hijab and wrapper, an abaya, a market woman with a head-load, schoolchildren), three skin tones and three colourways each, two
-    /// levels of detail. Colours come from one small palette texture (one material, one draw call for a whole crowd). A rig of five rigid parts (body, legs, arms) gives a walk cycle and an idle sway;
+    /// levels of detail. Bodies, robes, heads and hijabs are turned shapes with smooth rings (rounded shoulders, a waist, a jaw); men have hair, caps or a beard. Colours come from one small palette texture (one material, one draw call for a whole crowd). A rig of five rigid parts (body, legs, arms) gives a walk cycle and an idle sway;
     /// the poses are computed here, so the game only copies posed vertices. Realistic proportions and dress; no faces are modelled (no photoreal people).
     /// </summary>
     public static class PeopleKit
@@ -41,6 +41,8 @@ namespace ARO.NetCore
         public sealed class Design
         {
             public string Id, What; public bool Child;
+            /// <summary>How far the legs swing in the walk, 0..1: a long robe shortens the stride (and hides the thighs), so its wearer's feet stay under the hem.</summary>
+            public float Swing = 1f;
             /// <summary>Colourways: each is the list of garment colours this design's builder uses (main, second, accent).</summary>
             public int[][] Colourways;
             internal Action<Builder, int[], int> Build;      // (builder, colourway, skin)
@@ -48,16 +50,16 @@ namespace ARO.NetCore
 
         public static readonly Design[] Designs =
         {
-            new Design { Id = "man_kaftan_cap", What = "a man in an ankle-length kaftan and a kufi cap", Colourways = new[] { new[] { White, Brown, Cream }, new[] { Sky, Navy, White }, new[] { Cream, Maroon, Brown } }, Build = (b, c, s) => Kaftan(b, c, s, wide: false) },
-            new Design { Id = "man_babban_riga", What = "a man in a wide babban riga over trousers, with a cap", Colourways = new[] { new[] { Royal, White, Maroon }, new[] { White, Cream, Gold }, new[] { Teal, Navy, Black } }, Build = (b, c, s) => Kaftan(b, c, s, wide: true) },
+            new Design { Id = "man_kaftan_cap", What = "a man in an ankle-length kaftan and a kufi cap", Swing = 0.34f, Colourways = new[] { new[] { White, Brown, Cream }, new[] { Sky, Navy, White }, new[] { Cream, Maroon, Brown } }, Build = (b, c, s) => Kaftan(b, c, s, elder: false) },
+            new Design { Id = "man_babban_riga", What = "a man in a wide babban riga over trousers, with a cap", Swing = 0.6f, Colourways = new[] { new[] { Royal, White, Gold }, new[] { White, Cream, Gold }, new[] { Teal, Navy, Gold } }, Build = Riga },
             new Design { Id = "man_shirt_trousers", What = "a man in a short-sleeved shirt and trousers", Colourways = new[] { new[] { Sky, Navy, Black }, new[] { White, DarkGrey, Brown }, new[] { Orange, Khaki, Brown } }, Build = ShirtTrousers },
-            new Design { Id = "man_kaftan_plain", What = "an older man in a plain kaftan and cap", Colourways = new[] { new[] { Grey, White, DarkGrey }, new[] { Cream, Brown, Gold }, new[] { Green, White, Brown } }, Build = (b, c, s) => Kaftan(b, c, s, wide: false, elder: true) },
-            new Design { Id = "woman_hijab_wrapper", What = "a woman in a hijab, blouse and wrapper", Colourways = new[] { new[] { Green, Gold, Black }, new[] { Purple, Pink, Black }, new[] { Maroon, Orange, Black } }, Build = (b, c, s) => Wrapper(b, c, s, headLoad: false) },
-            new Design { Id = "woman_hijab_long", What = "a woman in a long dress and a long hijab", Colourways = new[] { new[] { Teal, Teal, Black }, new[] { Pink, Purple, Black }, new[] { Navy, Sky, Black } }, Build = LongHijab },
-            new Design { Id = "woman_abaya", What = "a woman in a black abaya and hijab", Colourways = new[] { new[] { Black, Black, DarkGrey }, new[] { Navy, Black, DarkGrey }, new[] { DarkGrey, Black, Black } }, Build = LongHijab },
-            new Design { Id = "woman_market_headload", What = "a market woman in a head-tie and wrapper, carrying an enamel basin on her head", Colourways = new[] { new[] { Orange, Gold, Enamel }, new[] { Green, Gold, Enamel }, new[] { Purple, Orange, Enamel } }, Build = (b, c, s) => Wrapper(b, c, s, headLoad: true) },
+            new Design { Id = "man_kaftan_plain", What = "an older man with a grey beard in a plain kaftan and cap", Swing = 0.3f, Colourways = new[] { new[] { Grey, White, DarkGrey }, new[] { Cream, Brown, Gold }, new[] { Green, White, Brown } }, Build = (b, c, s) => Kaftan(b, c, s, elder: true) },
+            new Design { Id = "woman_hijab_wrapper", What = "a woman in a hijab, blouse and wrapper", Swing = 0.32f, Colourways = new[] { new[] { Green, Gold, Black }, new[] { Purple, Pink, Black }, new[] { Maroon, Orange, Black } }, Build = (b, c, s) => Wrapper(b, c, s, headLoad: false) },
+            new Design { Id = "woman_hijab_long", What = "a woman in a long dress and a long hijab", Swing = 0.34f, Colourways = new[] { new[] { Teal, Cream, Black }, new[] { Pink, Purple, Black }, new[] { Navy, Sky, Black } }, Build = (b, c, s) => LongHijab(b, c, s, 1f) },
+            new Design { Id = "woman_abaya", What = "a woman in a black abaya and hijab", Swing = 0.34f, Colourways = new[] { new[] { Black, Black, DarkGrey }, new[] { Navy, Black, DarkGrey }, new[] { DarkGrey, Black, Black } }, Build = (b, c, s) => LongHijab(b, c, s, 1f) },
+            new Design { Id = "woman_market_headload", What = "a market woman in a head-tie and wrapper, carrying an enamel basin on her head", Swing = 0.3f, Colourways = new[] { new[] { Orange, Gold, Enamel }, new[] { Green, Gold, Enamel }, new[] { Purple, Orange, Enamel } }, Build = (b, c, s) => Wrapper(b, c, s, headLoad: true) },
             new Design { Id = "boy_school", What = "a schoolboy in a shirt and shorts with a school bag", Child = true, Colourways = new[] { new[] { White, Navy, Brown }, new[] { Khaki, Brown, Black }, new[] { Sky, Navy, Maroon } }, Build = Schoolboy },
-            new Design { Id = "girl_school_hijab", What = "a schoolgirl in a white hijab and a long uniform", Child = true, Colourways = new[] { new[] { Navy, White, Black }, new[] { Green, White, Black }, new[] { Maroon, White, Black } }, Build = LongHijab },
+            new Design { Id = "girl_school_hijab", What = "a schoolgirl in a white hijab and a long uniform", Child = true, Swing = 0.36f, Colourways = new[] { new[] { Navy, White, Black }, new[] { Green, White, Black }, new[] { Maroon, White, Black } }, Build = (b, c, s) => LongHijab(b, c, s, ChildHead) },
         };
 
         public static int SkinCount => 3;
@@ -66,33 +68,43 @@ namespace ARO.NetCore
         internal sealed class Builder
         {
             public readonly List<V3> P = new List<V3>(); public readonly List<V2> U = new List<V2>(); public readonly List<byte> B = new List<byte>(); public readonly List<int> T = new List<int>();
-            public int Sides;    // 8 at LOD 0, 5 at LOD 1
-            public bool Coarse => Sides < 8;
+            public int Sides;    // 10 at LOD 0, 6 at LOD 1
+            public bool Coarse => Sides < 10;
             int V(V3 p, int colour, int bone) { P.Add(p); U.Add(Cell(colour)); B.Add((byte)bone); return P.Count - 1; }
+
+            /// <summary>
+            /// A turned shape about a vertical axis at (x, z): `rings` holds (y, half width, half depth, z shift) for each ring from the bottom up. The rings share their vertices, so the surface is
+            /// smooth. The bottom cap faces down and the top cap faces up.
+            /// </summary>
+            public void Lathe(int bone, int colour, float x, float z, float[] rings, bool cap0 = true, bool cap1 = true)
+            {
+                int n = Sides, k = rings.Length / 4, b0 = P.Count;
+                for (int r = 0; r < k; r++)
+                    for (int i = 0; i < n; i++)
+                    {
+                        double a = 2.0 * Math.PI * (i + 0.5) / n;
+                        V(new V3(x + (float)Math.Sin(a) * rings[r * 4 + 1], rings[r * 4], z + rings[r * 4 + 3] + (float)Math.Cos(a) * rings[r * 4 + 2]), colour, bone);
+                    }
+                int R(int r, int i) => b0 + r * n + (i % n);
+                for (int r = 0; r < k - 1; r++)
+                    for (int i = 0; i < n; i++) { int a0 = R(r, i), c0 = R(r, i + 1), a1 = R(r + 1, i), c1 = R(r + 1, i + 1); T.Add(a0); T.Add(c0); T.Add(a1); T.Add(a1); T.Add(c0); T.Add(c1); }
+                if (cap0) { int c = V(new V3(x, rings[0], z + rings[3]), colour, bone); for (int i = 0; i < n; i++) { T.Add(c); T.Add(R(0, i + 1)); T.Add(R(0, i)); } }
+                if (cap1) { int c = V(new V3(x, rings[(k - 1) * 4], z + rings[(k - 1) * 4 + 3]), colour, bone); for (int i = 0; i < n; i++) { T.Add(c); T.Add(R(k - 1, i)); T.Add(R(k - 1, i + 1)); } }
+            }
 
             /// <summary>A tapered elliptical tube along y from y0 (radius r0) to y1 (radius r1), centred at (x, z), depth scaled by sz; capped ends.</summary>
             public void Tube(int bone, int colour, float x, float z, float y0, float y1, float r0, float r1, float sz = 1f, bool cap0 = true, bool cap1 = true, float tilt = 0f)
-            {
-                int n = Sides, b0 = P.Count;
-                for (int i = 0; i < n; i++)
-                {
-                    double a = 2.0 * Math.PI * i / n; float cx = (float)Math.Sin(a), cz = (float)Math.Cos(a);
-                    V(new V3(x + cx * r0, y0, z + cz * r0 * sz), colour, bone); V(new V3(x + cx * r1, y1, z + cz * r1 * sz + tilt), colour, bone);
-                }
-                for (int i = 0; i < n; i++) { int j = (i + 1) % n, a0 = b0 + 2 * i, a1 = a0 + 1, c0 = b0 + 2 * j, c1 = c0 + 1; T.Add(a0); T.Add(c0); T.Add(a1); T.Add(a1); T.Add(c0); T.Add(c1); }
-                if (cap0) { int c = V(new V3(x, y0, z), colour, bone); for (int i = 0; i < n; i++) { int j = (i + 1) % n; T.Add(c); T.Add(b0 + 2 * i); T.Add(b0 + 2 * j); } }
-                if (cap1) { int c = V(new V3(x, y1, z + tilt), colour, bone); for (int i = 0; i < n; i++) { int j = (i + 1) % n; T.Add(c); T.Add(b0 + 2 * j + 1); T.Add(b0 + 2 * i + 1); } }
-            }
+                => Lathe(bone, colour, x, z, new[] { y0, r0, r0 * sz, 0f, y1, r1, r1 * sz, tilt }, cap0, cap1);
 
-            /// <summary>An ellipsoid of radii (rx, ry, rz) at c, as a low-poly lathe (rings x sides).</summary>
-            public void Blob(int bone, int colour, V3 c, float rx, float ry, float rz)
+            /// <summary>An ellipsoid of radii (rx, ry, rz) at c.</summary>
+            public void Blob(int bone, int colour, V3 c, float rx, float ry, float rz, int rings = 0)
             {
-                int n = Sides, rings = Coarse ? 3 : 4, b0 = P.Count;
+                int n = Sides; if (rings <= 0) rings = Coarse ? 3 : 5;
                 int top = V(new V3(c.X, c.Y + ry, c.Z), colour, bone);
                 for (int k = 1; k < rings; k++)
                 {
                     double t = Math.PI * k / rings; float y = (float)Math.Cos(t), rr = (float)Math.Sin(t);
-                    for (int i = 0; i < n; i++) { double a = 2.0 * Math.PI * i / n; V(new V3(c.X + (float)Math.Sin(a) * rr * rx, c.Y + y * ry, c.Z + (float)Math.Cos(a) * rr * rz), colour, bone); }
+                    for (int i = 0; i < n; i++) { double a = 2.0 * Math.PI * (i + 0.5) / n; V(new V3(c.X + (float)Math.Sin(a) * rr * rx, c.Y + y * ry, c.Z + (float)Math.Cos(a) * rr * rz), colour, bone); }
                 }
                 int bot = V(new V3(c.X, c.Y - ry, c.Z), colour, bone);
                 int R(int k, int i) => top + 1 + (k - 1) * n + (i % n);
@@ -113,112 +125,138 @@ namespace ARO.NetCore
             public PersonMesh Done() => new PersonMesh { Pos = P.ToArray(), Uv = U.ToArray(), Bone = B.ToArray(), Tris = T.ToArray() };
         }
 
-        // proportions of an adult of about 1.72 m (a child is the adult scaled by 0.72)
-        const float Hip = 0.92f, Shoulder = 1.43f, HeadY = 1.60f;
+        // An adult of about 1.76 m: hip joints at 0.92 m, shoulder joints at 1.40 m, the chin at 1.52 m. A child is the adult scaled by 0.72 with a larger head.
+        const float Hip = 0.92f, Sh = 1.40f, LegX = 0.09f, ChildHead = 1.14f;
+        static float[] R(params float[] v) => v;
+        static readonly (int bone, float x)[] LegSides = { (LegL, -LegX), (LegR, LegX) };
 
-        static void Legs(Builder b, int trouser, int shoe, float hemY = 0f)
+        static void Shoes(Builder b, int colour) { foreach (var (bone, x) in LegSides) b.Box(bone, colour, new V3(x - 0.048f, 0f, -0.07f), new V3(x + 0.048f, 0.08f, 0.17f)); }
+
+        /// <summary>Trouser legs from the ankle to `top` (the hip, or just above a robe's hem: under a robe only the shins exist).</summary>
+        static void Legs(Builder b, int colour, float top = Hip)
         {
-            foreach (var (bone, x) in new[] { (LegL, -0.095f), (LegR, 0.095f) })
+            foreach (var (bone, x) in LegSides)
+                if (top >= Hip - 0.01f) b.Lathe(bone, colour, x, 0f, R(0.075f, 0.052f, 0.058f, 0f, 0.48f, 0.063f, 0.067f, 0f, Hip, 0.088f, 0.092f, 0f));
+                else b.Lathe(bone, colour, x, 0f, R(0.075f, 0.05f, 0.055f, 0f, top, 0.058f, 0.062f, 0f));
+        }
+
+        /// <summary>
+        /// Arms at `ax` from the centre line: a sleeve from the shoulder down to `sleeveTo` (1.14 = short sleeve, 0.86 = to the wrist), the bare forearm below it, the hand. They hang the way arms
+        /// do: the elbow a little bent, so the forearm and the hand lie slightly forward of the shoulder.
+        /// </summary>
+        static void Arms(Builder b, int sleeve, int skin, float sleeveTo, float r = 0.05f, float ax = 0.20f)
+        {
+            float Fwd(float y) => y >= 1.12f ? 0.012f * (Sh - y) / (Sh - 1.12f) : 0.012f + 0.062f * (1.12f - y) / (1.12f - 0.79f);      // forward of the shoulder: the upper arm nearly plumb, the forearm bent forward
+            foreach (int side in new[] { -1, 1 })
             {
-                float top = hemY > 0f ? Math.Min(Hip, hemY + 0.12f) : Hip;                                                            // under a robe only the shins show
-                b.Tube(bone, trouser, x, 0f, 0.07f, top, 0.058f, 0.058f + 0.027f * (top - 0.07f) / (Hip - 0.07f), 1f, false, false);
-                b.Box(bone, shoe, new V3(x - 0.05f, 0f, -0.06f), new V3(x + 0.05f, 0.075f, 0.16f));                                   // shoe or sandal
+                int bone = side < 0 ? ArmL : ArmR; float x = side * ax;
+                if (!b.Coarse) b.Blob(bone, sleeve, new V3(x, Sh - 0.005f, 0f), r * 1.12f, r * 1.1f, r * 1.15f, 4);                           // the shoulder, rounded
+                if (sleeveTo < 1.10f) b.Lathe(bone, sleeve, x, 0f, R(sleeveTo, r * 1.02f, r * 1.02f, Fwd(sleeveTo), 1.12f, r * 1.1f, r * 1.1f, Fwd(1.12f), Sh + 0.01f, r * 1.18f, r * 1.18f, 0f));
+                else b.Lathe(bone, sleeve, x, 0f, R(sleeveTo, r * 1.05f, r * 1.05f, Fwd(sleeveTo), Sh + 0.01f, r * 1.18f, r * 1.18f, 0f));
+                if (sleeveTo > 0.9f) b.Lathe(bone, skin, x, 0f, R(0.84f, 0.034f, 0.034f, Fwd(0.84f), 1.12f, 0.043f, 0.043f, Fwd(1.12f), sleeveTo + 0.012f, 0.045f, 0.045f, Fwd(sleeveTo + 0.012f)));   // the forearm
+                b.Blob(bone, skin, new V3(x, 0.785f, Fwd(0.785f)), 0.03f, 0.062f, 0.036f, b.Coarse ? 3 : 4);                                  // the hand: a flat mitten, thumb side forward
             }
         }
 
-        static void Arms(Builder b, int sleeve, int skin, float sleeveTo, float r = 0.05f)
+        /// <summary>Neck and head in one turned shape (chin, jaw, cheek, brow, crown), with hair, a kufi cap, a head-tie or a beard. `hs` scales the head about the chin (children).</summary>
+        static void Head(Builder b, int skin, float hs = 1f, int hair = -1, int cap = -1, int headTie = -1, int beard = -1)
         {
-            foreach (var (bone, x) in new[] { (ArmL, -0.215f), (ArmR, 0.215f) })
-            {
-                b.Tube(bone, sleeve, x, 0f, sleeveTo, Shoulder, r * 1.15f, r * 1.25f, 1f, false, true);
-                if (sleeveTo > 0.86f) b.Tube(bone, skin, x, 0f, 0.80f, sleeveTo, r * 0.8f, r, 1f, true, false);                        // forearm
-                b.Blob(bone, skin, new V3(x, 0.76f, 0f), 0.04f, 0.055f, 0.035f);                                                       // hand
-            }
+            float Y(float y) => 1.50f + (y - 1.50f) * hs;
+            b.Lathe(Body, skin, 0f, 0f, R(1.43f, 0.058f, 0.06f, 0f, Y(1.52f), 0.054f * hs, 0.06f * hs, 0.004f, Y(1.555f), 0.08f * hs, 0.09f * hs, 0.008f, Y(1.625f), 0.095f * hs, 0.105f * hs, 0.006f,
+                Y(1.695f), 0.093f * hs, 0.103f * hs, 0f, Y(1.745f), 0.064f * hs, 0.072f * hs, -0.004f, Y(1.762f), 0.022f * hs, 0.026f * hs, -0.004f), false, true);
+            if (hair >= 0) b.Lathe(Body, hair, 0f, -0.014f * hs, R(Y(1.64f), 0.099f * hs, 0.108f * hs, 0f, Y(1.70f), 0.098f * hs, 0.108f * hs, 0f, Y(1.75f), 0.068f * hs, 0.076f * hs, 0f, Y(1.77f), 0.024f * hs, 0.028f * hs, 0f));   // short hair: set back, so the brow stays bare
+            if (cap >= 0) b.Lathe(Body, cap, 0f, -0.004f, R(Y(1.675f), 0.099f * hs, 0.109f * hs, 0f, Y(1.775f), 0.094f * hs, 0.103f * hs, 0f));          // a kufi cap
+            if (headTie >= 0) b.Lathe(Body, headTie, 0f, -0.006f, R(Y(1.655f), 0.101f, 0.111f, 0f, Y(1.72f), 0.125f, 0.13f, 0f, Y(1.80f), 0.15f, 0.15f, 0f, Y(1.815f), 0.11f, 0.11f, 0f));   // a head-tie (gele)
+            if (beard >= 0) b.Blob(Body, beard, new V3(0f, Y(1.535f), 0.056f), 0.052f, 0.044f, 0.036f, 3);
         }
 
-        static void Head(Builder b, int skin, int cap = -1, int hijab = -1, int headTie = -1)
+        /// <summary>A hijab as one drape: from `bottom` (the waist or the chest) over the shoulders, close round the head, with the face left open (a face oval stands just proud of the cloth).</summary>
+        static void Khimar(Builder b, int colour, int skin, float bottom, float hs = 1f)
         {
-            b.Tube(Body, skin, 0f, 0f, Shoulder - 0.02f, HeadY - 0.08f, 0.055f, 0.05f, 1f, false, false);                              // neck
-            b.Blob(Body, skin, new V3(0f, HeadY + 0.03f, 0.01f), 0.095f, 0.118f, 0.105f);                                                  // head
-            if (cap >= 0) b.Tube(Body, cap, 0f, 0.0f, HeadY + 0.09f, HeadY + 0.17f, 0.097f, 0.092f, 1f, false, true);                 // kufi cap
-            if (hijab >= 0)
-            {
-                b.Blob(Body, hijab, new V3(0f, HeadY + 0.035f, -0.04f), 0.112f, 0.135f, 0.118f);                                             // over the head, the face left open towards +z
-                b.Tube(Body, hijab, 0f, 0f, Shoulder - 0.20f, HeadY - 0.04f, 0.27f, 0.11f, 0.8f, true, false);                          // over the shoulders
-            }
-            if (headTie >= 0) b.Tube(Body, headTie, 0f, -0.01f, HeadY + 0.06f, HeadY + 0.19f, 0.112f, 0.13f, 1f, false, true);        // a head-tie (gele)
+            float Y(float y) => 1.50f + (y - 1.50f) * hs; bool longOne = bottom < 1.15f;
+            b.Lathe(Body, colour, 0f, 0f, R(bottom, longOne ? 0.268f : 0.25f, longOne ? 0.19f : 0.172f, 0f, 1.38f, 0.238f, 0.152f, 0f, 1.46f, 0.14f, 0.118f, 0f, Y(1.525f), 0.104f * hs, 0.108f * hs, 0f,
+                Y(1.61f), 0.116f * hs, 0.122f * hs, -0.004f, Y(1.70f), 0.108f * hs, 0.116f * hs, -0.006f, Y(1.76f), 0.06f * hs, 0.068f * hs, -0.006f, Y(1.775f), 0.022f * hs, 0.026f * hs, -0.006f));
+            b.Blob(Body, skin, new V3(0f, Y(1.622f), 0.078f * hs), 0.066f * hs, 0.082f * hs, 0.05f * hs, 4);                               // the face
         }
 
-        static void Kaftan(Builder b, int[] c, int skin, bool wide, bool elder = false)
+        static readonly float[] ShirtRings = { 0.90f, 0.168f, 0.118f, 0f, 1.08f, 0.152f, 0.108f, 0f, 1.28f, 0.182f, 0.128f, 0.004f, 1.395f, 0.19f, 0.116f, 0f, 1.44f, 0.14f, 0.098f, 0f, 1.465f, 0.072f, 0.066f, 0f };
+        static readonly float[] KaftanRings = { 0.10f, 0.245f, 0.215f, 0f, 0.50f, 0.215f, 0.165f, 0f, 0.92f, 0.198f, 0.142f, 0f, 1.28f, 0.192f, 0.132f, 0.004f, 1.395f, 0.195f, 0.118f, 0f, 1.44f, 0.142f, 0.098f, 0f, 1.465f, 0.072f, 0.066f, 0f };
+        static readonly float[] RigaRings = { 0.40f, 0.335f, 0.20f, 0f, 0.90f, 0.325f, 0.19f, 0f, 1.30f, 0.30f, 0.165f, 0f, 1.40f, 0.25f, 0.13f, 0f, 1.445f, 0.16f, 0.10f, 0f, 1.465f, 0.075f, 0.064f, 0f };
+        static readonly float[] WrapperRings = { 0.08f, 0.21f, 0.19f, 0f, 0.50f, 0.198f, 0.165f, 0f, 0.95f, 0.218f, 0.162f, 0f, 1.04f, 0.178f, 0.13f, 0f };
+        static readonly float[] BlouseRings = { 1.0f, 0.18f, 0.132f, 0f, 1.26f, 0.186f, 0.148f, 0.006f, 1.39f, 0.176f, 0.11f, 0f, 1.44f, 0.126f, 0.092f, 0f, 1.465f, 0.064f, 0.058f, 0f };
+        static readonly float[] DressRings = { 0.06f, 0.25f, 0.218f, 0f, 0.60f, 0.215f, 0.165f, 0f, 0.95f, 0.206f, 0.15f, 0f, 1.08f, 0.182f, 0.132f, 0f, 1.27f, 0.186f, 0.144f, 0.005f, 1.39f, 0.176f, 0.11f, 0f, 1.44f, 0.126f, 0.092f, 0f, 1.465f, 0.064f, 0.058f, 0f };
+
+        static void Kaftan(Builder b, int[] c, int skin, bool elder)
         {
-            Legs(b, wide ? c[1] : Brown, Brown, wide ? 0.4f : 0.12f);
-            if (wide)
-            {
-                b.Tube(Body, c[1], 0f, 0f, 0.12f, 0.60f, 0.16f, 0.17f, 0.8f);                                                               // the trousers' wide top under the riga
-                b.Tube(Body, c[0], 0f, 0f, 0.38f, Shoulder, 0.40f, 0.25f, 0.62f);                                                            // the babban riga: wide, to below the knee
-                b.Tube(Body, c[2], 0f, 0.10f, 1.05f, 1.36f, 0.07f, 0.05f, 0.4f, false, false);                                               // embroidery on the chest
-            }
-            else
-            {
-                b.Tube(Body, c[0], 0f, 0f, 0.10f, Shoulder, 0.25f, 0.21f, 0.72f);                                                            // the kaftan, to the ankle
-                if (!b.Coarse) b.Tube(Body, c[2], 0f, 0.155f, 1.18f, 1.40f, 0.035f, 0.03f, 0.4f, false, false);                              // the neck embroidery
-            }
-            Arms(b, c[0], skin, 0.88f, wide ? 0.075f : 0.052f);
+            Shoes(b, Brown); Legs(b, c[0], 0.15f);
+            b.Lathe(Body, c[0], 0f, 0f, KaftanRings);                                                                                           // the kaftan, to the ankle
+            if (!b.Coarse) b.Box(Body, c[2], new V3(-0.024f, 1.20f, 0.11f), new V3(0.024f, 1.41f, 0.142f));                                     // the embroidered placket
+            Arms(b, c[0], skin, 0.86f, 0.054f, 0.205f);
+            Head(b, skin, cap: c[1], beard: elder ? Enamel : -1);
+        }
+
+        static void Riga(Builder b, int[] c, int skin)
+        {
+            Shoes(b, Brown); Legs(b, c[1]);                                                                                                      // the trousers show below the knee
+            b.Lathe(Body, c[0], 0f, 0f, RigaRings);                                                                                             // the babban riga: wide, to below the knee
+            b.Box(Body, c[2], new V3(-0.065f, 1.08f, 0.14f), new V3(0.065f, 1.37f, 0.178f));                                                    // the embroidery on the chest
+            Arms(b, c[0], skin, 0.95f, 0.08f, 0.235f);                                                                                                 // its wide sleeves
             Head(b, skin, cap: c[1]);
         }
 
         static void ShirtTrousers(Builder b, int[] c, int skin)
         {
-            Legs(b, c[1], c[2]);
-            b.Tube(Body, c[1], 0f, 0f, Hip - 0.06f, Hip + 0.06f, 0.17f, 0.17f, 0.75f);                                                       // belt line
-            b.Tube(Body, c[0], 0f, 0f, Hip, Shoulder, 0.17f, 0.21f, 0.68f);                                                                  // shirt
-            Arms(b, c[0], skin, 1.20f, 0.05f);
-            Head(b, skin);
+            Shoes(b, c[2]); Legs(b, c[1]);
+            b.Lathe(Body, c[1], 0f, 0f, R(0.84f, 0.165f, 0.118f, 0f, 0.95f, 0.17f, 0.12f, 0f));                                                 // the seat and the belt line
+            b.Lathe(Body, c[0], 0f, 0f, ShirtRings);
+            Arms(b, c[0], skin, 1.14f, 0.05f, 0.20f);
+            Head(b, skin, hair: Black);
         }
 
         static void Wrapper(Builder b, int[] c, int skin, bool headLoad)
         {
-            Legs(b, Brown, Black, 0.1f);
-            b.Tube(Body, c[0], 0f, 0f, 0.08f, 1.02f, 0.21f, 0.20f, 0.75f);                                                                  // the wrapper
-            b.Tube(Body, c[1], 0f, 0f, 1.0f, Shoulder, 0.19f, 0.20f, 0.70f);                                                                 // the blouse
-            Arms(b, c[1], skin, 1.12f, 0.048f);
+            Shoes(b, Black); Legs(b, Brown, 0.14f);
+            b.Lathe(Body, c[0], 0f, 0f, WrapperRings);                                                                                          // the wrapper
+            b.Lathe(Body, c[1], 0f, 0f, BlouseRings);                                                                                           // the blouse
+            Arms(b, c[1], skin, 1.10f, 0.046f, 0.185f);
             if (headLoad)
             {
                 Head(b, skin, headTie: c[1]);
-                b.Tube(Body, c[2], 0f, 0f, HeadY + 0.19f, HeadY + 0.31f, 0.20f, 0.30f, 1f, true, true);                                     // the enamel basin
-                b.Tube(Body, Gold, 0f, 0f, HeadY + 0.31f, HeadY + 0.37f, 0.26f, 0.18f, 1f, false, true);                                    // what is in it
+                b.Lathe(Body, c[2], 0f, 0f, R(1.815f, 0.19f, 0.19f, 0f, 1.93f, 0.30f, 0.30f, 0f, 1.945f, 0.285f, 0.285f, 0f));                   // the enamel basin
+                b.Blob(Body, Gold, new V3(0f, 1.94f, 0f), 0.25f, 0.07f, 0.25f, 3);                                                              // what is in it
             }
-            else Head(b, skin, hijab: c[0]);
+            else Khimar(b, c[0], skin, 1.22f);
         }
 
-        static void LongHijab(Builder b, int[] c, int skin)
+        static void LongHijab(Builder b, int[] c, int skin, float hs)
         {
-            Legs(b, c[0], c[2], 0.06f);
-            b.Tube(Body, c[0], 0f, 0f, 0.06f, Shoulder, 0.25f, 0.20f, 0.74f);                                                                // the long dress or abaya
-            Arms(b, c[0], skin, 0.84f, 0.055f);
-            Head(b, skin, hijab: c[1]);
-            b.Tube(Body, c[1], 0f, 0f, 1.0f, Shoulder - 0.05f, 0.25f, 0.26f, 0.72f, true, false);                                          // the long hijab falls to the waist
+            Shoes(b, c[2]); Legs(b, c[0], 0.13f);
+            b.Lathe(Body, c[0], 0f, 0f, DressRings);                                                                                            // the long dress, uniform or abaya
+            Arms(b, c[0], skin, 0.86f, 0.05f, 0.188f);
+            Khimar(b, c[1], skin, 1.03f, hs);                                                                                                   // the long hijab falls to the waist
         }
 
         static void Schoolboy(Builder b, int[] c, int skin)
         {
-            foreach (var (bone, x) in new[] { (LegL, -0.095f), (LegR, 0.095f) })
+            Shoes(b, Black);
+            foreach (var (bone, x) in LegSides)
             {
-                b.Tube(bone, skin, x, 0f, 0.07f, 0.62f, 0.05f, 0.06f, 1f, false, false);                                                    // bare shins
-                b.Tube(bone, c[1], x, 0f, 0.62f, Hip, 0.085f, 0.09f, 1f, false, false);                                                     // shorts
-                b.Box(bone, Black, new V3(x - 0.05f, 0f, -0.06f), new V3(x + 0.05f, 0.075f, 0.16f));
+                b.Lathe(bone, skin, x, 0f, R(0.075f, 0.042f, 0.046f, 0f, 0.60f, 0.056f, 0.06f, 0f));                                             // bare shins
+                b.Lathe(bone, c[1], x, 0f, R(0.56f, 0.078f, 0.082f, 0f, Hip, 0.09f, 0.094f, 0f));                                                // shorts
             }
-            b.Tube(Body, c[1], 0f, 0f, Hip - 0.08f, Hip + 0.04f, 0.17f, 0.17f, 0.75f);
-            b.Tube(Body, c[0], 0f, 0f, Hip, Shoulder, 0.17f, 0.20f, 0.68f);
-            b.Box(Body, c[2], new V3(-0.15f, 1.0f, -0.29f), new V3(0.15f, 1.38f, -0.13f));                                                  // the school bag
-            Arms(b, c[0], skin, 1.20f, 0.047f);
-            Head(b, skin);
+            b.Lathe(Body, c[1], 0f, 0f, R(0.84f, 0.165f, 0.118f, 0f, 0.95f, 0.17f, 0.12f, 0f));
+            b.Lathe(Body, c[0], 0f, 0f, ShirtRings);
+            b.Box(Body, c[2], new V3(-0.14f, 1.02f, -0.26f), new V3(0.14f, 1.36f, -0.115f));                                                    // the school bag
+            Arms(b, c[0], skin, 1.14f, 0.046f, 0.195f);
+            Head(b, skin, ChildHead, hair: Black);
         }
 
         // ------------------------------------------------------------------------------------------------ meshes and poses
         static readonly Dictionary<long, PersonMesh> _meshes = new Dictionary<long, PersonMesh>();
         static readonly Dictionary<long, V3[][]> _frames = new Dictionary<long, V3[][]>();
         static long Key(int design, int colourway, int skin, int lod) => ((long)design << 24) | ((long)colourway << 16) | ((long)skin << 8) | (long)lod;
+        /// <summary>The pose cache key: a figure's geometry is the same in every colourway and skin tone (only the palette cells differ).</summary>
+        public static int PoseKey(int design, int lod, int frame) => (Mod(design, Designs.Length) << 8) | (Math.Max(0, Math.Min(1, lod)) << 4) | Mod(frame, WalkFrames + IdleFrames);
 
         /// <summary>The mesh of a design in a colourway and skin tone, at LOD 0 (8-sided) or 1 (5-sided). Cached.</summary>
         public static PersonMesh Mesh(int design, int colourway, int skin, int lod)
@@ -228,7 +266,7 @@ namespace ARO.NetCore
             lock (_meshes)
             {
                 if (_meshes.TryGetValue(k, out var m)) return m;
-                var b = new Builder { Sides = lod == 0 ? 8 : 5 };
+                var b = new Builder { Sides = lod == 0 ? 10 : 6 };
                 d.Build(b, d.Colourways[colourway], Skin0 + skin);
                 m = b.Done();
                 if (d.Child) for (int i = 0; i < m.Pos.Length; i++) m.Pos[i] = m.Pos[i] * 0.72f;
@@ -242,7 +280,7 @@ namespace ARO.NetCore
         public static V3 Pivot(int bone, bool child)
         {
             float k = child ? 0.72f : 1f;
-            switch (bone) { case LegL: return new V3(-0.095f, Hip, 0f) * k; case LegR: return new V3(0.095f, Hip, 0f) * k; case ArmL: return new V3(-0.215f, Shoulder - 0.02f, 0f) * k; case ArmR: return new V3(0.215f, Shoulder - 0.02f, 0f) * k; default: return new V3(0f, 0f, 0f); }
+            switch (bone) { case LegL: return new V3(-LegX, Hip, 0f) * k; case LegR: return new V3(LegX, Hip, 0f) * k; case ArmL: return new V3(-0.2f, Sh, 0f) * k; case ArmR: return new V3(0.2f, Sh, 0f) * k; default: return new V3(0f, 0f, 0f); }
         }
 
         /// <summary>Swing angle (degrees, about the x axis; positive moves the limb forward) of a bone at walk phase 0..1, and the body's bob (metres).</summary>
@@ -263,15 +301,15 @@ namespace ARO.NetCore
         /// <summary>Posed positions of a mesh: walk frames 0..7 then idle frames 8..11. Cached per mesh.</summary>
         public static V3[] Frame(int design, int colourway, int skin, int lod, int frame)
         {
-            design = Mod(design, Designs.Length); var d = Designs[design]; colourway = Mod(colourway, d.Colourways.Length); skin = Mod(skin, SkinCount); lod = Math.Max(0, Math.Min(1, lod));
-            long k = Key(design, colourway, skin, lod);
+            design = Mod(design, Designs.Length); var d = Designs[design]; lod = Math.Max(0, Math.Min(1, lod));
+            long k = Key(design, 0, 0, lod);
             V3[][] all;
             lock (_frames)
             {
                 if (!_frames.TryGetValue(k, out all))
                 {
-                    var m = Mesh(design, colourway, skin, lod); all = new V3[WalkFrames + IdleFrames][];
-                    for (int f = 0; f < all.Length; f++) all[f] = Pose(m, d.Child, f < WalkFrames, (f < WalkFrames ? f : f - WalkFrames) / (float)(f < WalkFrames ? WalkFrames : IdleFrames));
+                    var m = Mesh(design, 0, 0, lod); all = new V3[WalkFrames + IdleFrames][];
+                    for (int f = 0; f < all.Length; f++) all[f] = Pose(m, d.Child, f < WalkFrames, (f < WalkFrames ? f : f - WalkFrames) / (float)(f < WalkFrames ? WalkFrames : IdleFrames), d.Swing);
                     _frames[k] = all;
                 }
             }
@@ -279,11 +317,15 @@ namespace ARO.NetCore
         }
 
         /// <summary>Poses a mesh: every limb vertex is turned about its bone's pivot (x axis) by the walk or idle angle; the walk lifts the body by its bob.</summary>
-        public static V3[] Pose(PersonMesh m, bool child, bool walk, float phase)
+        public static V3[] Pose(PersonMesh m, bool child, bool walk, float phase, float swing = 1f)
         {
-            var o = new V3[m.Pos.Length]; float bob = walk ? WalkBob(phase) * (child ? 0.72f : 1f) : 0f;
+            var o = new V3[m.Pos.Length]; float bob = walk ? WalkBob(phase) * (child ? 0.72f : 1f) * swing : 0f;
             var cos = new float[5]; var sin = new float[5];
-            for (int b = 0; b < 5; b++) { double a = (walk ? WalkAngle(b, phase) : IdleAngle(b, phase)) * Math.PI / 180.0; cos[b] = (float)Math.Cos(a); sin[b] = (float)Math.Sin(a); }
+            for (int b = 0; b < 5; b++)
+            {
+                double a = (walk ? WalkAngle(b, phase) * (b == LegL || b == LegR ? swing : 0.5f + 0.5f * swing) : IdleAngle(b, phase)) * Math.PI / 180.0;      // the arms follow a short stride with a smaller swing
+                cos[b] = (float)Math.Cos(a); sin[b] = (float)Math.Sin(a);
+            }
             for (int i = 0; i < o.Length; i++)
             {
                 int b = m.Bone[i]; var p = m.Pos[i];

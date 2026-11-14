@@ -23,7 +23,7 @@ namespace ARO.Game
         /// <summary>What the HUD shows about the pump ("" when not at one).</summary>
         public string Line { get; private set; } = "";
 
-        double _price = -1; float _nextQuote, _next; bool _quoting, _buying, _filling;
+        double _price = -1, _capacity = -1; float _nextQuote, _next; bool _quoting, _buying, _filling;
         float _t0, _secs; double _from, _to, _litres; long _cost; VehicleController _fillVehicle;
         GameObject _rig; Transform[] _segs; Transform _nozzle; Text _meter; Vector3 _holster;
         const int Segs = 10; const float ReachSeconds = 0.8f;
@@ -38,8 +38,11 @@ namespace ARO.Game
         {
             if (_hooked != null) _hooked.RefuelRequested -= Request;
             _hooked = v; if (v != null) v.RefuelRequested += Request;
-            EndFill(); AtPump = false; Line = "";
+            EndFill(); AtPump = false; Line = ""; _price = -1; _capacity = -1; _nextQuote = 0f;      // another vehicle: another tank, another quote
         }
+
+        /// <summary>The tank's size: the server's (from the quote) once known, the vehicle definition's until then. The server decides what it sells either way.</summary>
+        double Capacity(VehicleController v) => _capacity > 0 ? _capacity : v.definition.fuelCapacityL;
 
         bool Online => _svc != null && _svc.Config != null && _svc.Config.IsConfigured && _svc.Api.IsSignedIn && !string.IsNullOrEmpty(_s.VehicleId) && _s.VehicleId != "smoke-truck";
 
@@ -51,7 +54,8 @@ namespace ARO.Game
             if (Time.unscaledTime >= _next)
             {
                 _next = Time.unscaledTime + 0.2f;
-                bool was = AtPump; AtPump = _s.Streamer != null && _s.Streamer.PumpAt(v.transform.position, v.SpeedKmh, out var p);
+                bool was = AtPump; ServicePoint p = default;          // assigned for the compiler: the streamer may be missing
+                AtPump = _s.Streamer != null && _s.Streamer.PumpAt(v.transform.position, v.SpeedKmh, out p);
                 if (AtPump)
                 {
                     Pump = p;
@@ -60,15 +64,16 @@ namespace ARO.Game
                 }
             }
             if (!AtPump) { Line = ""; return; }
-            double need = ServicePoints.LitresToFill(v.fuelL, v.definition.fuelCapacityL);
+            double need = ServicePoints.LitresToFill(v.fuelL, Capacity(v));
             Line = _buying ? ServicePoints.Label(Pump) + "  ·  Paying..." : ServicePoints.Prompt(ServicePoints.Label(Pump), need, ServicePoints.Cost(need, _price), _price > 0, "F");
         }
 
-        /// <summary>The price per litre, from the same server quote the Garage uses (asked once per drive).</summary>
+        /// <summary>The price per litre and the tank's size, from the same server quote the Garage uses (asked once per vehicle).</summary>
         async void Quote()
         {
             _quoting = true; var q = await _svc.Garage.Quote(_s.VehicleId); _quoting = false; if (this == null) return;
-            if (q.Ok && q.Value != null && q.Value.fuel_price_per_l > 0) _price = q.Value.fuel_price_per_l; else _nextQuote = Time.unscaledTime + 20f;
+            if (q.Ok && q.Value != null && q.Value.fuel_price_per_l > 0) { _price = q.Value.fuel_price_per_l; if (q.Value.fuel_capacity_l > 0) _capacity = q.Value.fuel_capacity_l; }
+            else _nextQuote = Time.unscaledTime + 20f;
         }
 
         /// <summary>F, gamepad B or the HUD button.</summary>
@@ -81,7 +86,7 @@ namespace ARO.Game
                 if (_s.Streamer != null && _s.Streamer.PumpAt(v.transform.position, 0f, out _)) _s.Say("Stop at the pump first.", 3f);
                 return;
             }
-            double need = ServicePoints.LitresToFill(v.fuelL, v.definition.fuelCapacityL);
+            double need = ServicePoints.LitresToFill(v.fuelL, Capacity(v));
             if (need < 0.5) { _s.Say("The tank is already full.", 3f); return; }
             if (!Online)
             {
@@ -103,7 +108,7 @@ namespace ARO.Game
         // ---------------------------------------------------------------- the pump running
         void BeginFill(VehicleController v, ServicePoint p, FuelPurchase fp)
         {
-            _fillVehicle = v; _from = v.fuelL; _to = Math.Max(v.fuelL, fp.fuel_l); _litres = fp.liters; _cost = fp.cost;
+            Pump = p; _fillVehicle = v; _from = v.fuelL; _to = Math.Max(v.fuelL, fp.fuel_l); _litres = fp.liters; _cost = fp.cost;
             _t0 = Time.unscaledTime; _secs = ServicePoints.FillSeconds(fp.liters) + ReachSeconds; _filling = true;
             BuildRig(p);
             TickFill();
@@ -113,7 +118,8 @@ namespace ARO.Game
         {
             var v = _fillVehicle; if (v == null) { EndFill(); return; }
             float t = Time.unscaledTime - _t0, run = Mathf.Max(0f, t - ReachSeconds), runSecs = _secs - ReachSeconds;
-            bool drove = v.SpeedKmh > 3f;
+            var away = v.transform.position - new Vector3(Pump.Pos.X, v.transform.position.y, Pump.Pos.Z);
+            bool drove = v.SpeedKmh > 3f || away.sqrMagnitude > (ServicePoints.PumpRadius + 2f) * (ServicePoints.PumpRadius + 2f);      // rolling, or no longer beside this pump
             double meter = ServicePoints.Meter(0.0, _litres, drove ? runSecs : run, runSecs);
             v.fuelL = (float)ServicePoints.Meter(_from, _to, drove ? runSecs : run, runSecs);
             Line = ServicePoints.FillLine(ServicePoints.Label(Pump), meter, _litres, _cost);
@@ -132,8 +138,10 @@ namespace ARO.Game
             }
         }
 
+        /// <summary>Ends the animation. The litres are paid for, so however it ends (finished, driven off, the menu opened, the vehicle replaced) the tank holds the level the server answered.</summary>
         void EndFill()
         {
+            if (_filling && _fillVehicle != null && _fillVehicle.fuelL < (float)_to) _fillVehicle.fuelL = (float)_to;
             if (_rig != null) Destroy(_rig);
             _rig = null; _segs = null; _nozzle = null; _meter = null; _filling = false; _fillVehicle = null;
         }
@@ -141,7 +149,7 @@ namespace ARO.Game
         /// <summary>The hose (a sagging chain of thin cylinders), the nozzle and the pump's meter above the dispenser.</summary>
         void BuildRig(ServicePoint p)
         {
-            EndFillVisualOnly();
+            if (_rig != null) Destroy(_rig);
             float r = p.YawDeg * Mathf.Deg2Rad; var toIsland = new Vector3(Mathf.Sin(r), 0f, Mathf.Cos(r));
             _holster = new Vector3(p.Pos.X, p.Pos.Y, p.Pos.Z) + toIsland * 0.25f + Vector3.up * 1.25f;
             _rig = new GameObject("PumpRig");
@@ -159,11 +167,10 @@ namespace ARO.Game
             _meter.fontStyle = FontStyle.Bold; _meter.resizeTextForBestFit = true; _meter.resizeTextMinSize = 8; _meter.resizeTextMaxSize = 30; _meter.raycastTarget = false;
         }
 
-        void EndFillVisualOnly() { if (_rig != null) Destroy(_rig); _rig = null; }
-
         GameObject Piece(PrimitiveType type, string name)
         {
-            var g = GameObject.CreatePrimitive(type); g.name = name; Destroy(g.GetComponent<Collider>()); g.transform.SetParent(_rig.transform, false);
+            var g = GameObject.CreatePrimitive(type); g.name = name; var col = g.GetComponent<Collider>(); if (col != null) { col.enabled = false; Destroy(col); }      // visual only: never solid, not even for the frame Destroy takes
+            g.transform.SetParent(_rig.transform, false);
             var mr = g.GetComponent<MeshRenderer>(); if (_hoseMat != null) mr.sharedMaterial = _hoseMat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             return g;
         }
@@ -172,7 +179,7 @@ namespace ARO.Game
         {
             if (_rig == null || _segs == null) return;
             var vt = v.transform; var side = Vector3.Dot(_holster - vt.position, vt.right) >= 0f ? 1f : -1f;
-            var filler = vt.position + vt.right * side * 1.15f + Vector3.up * 0.55f - vt.forward * 0.6f;               // the tank cap on the pump side of the vehicle, behind the cab
+            var filler = vt.position + vt.right * side * 1.15f + vt.up * 0.45f - vt.forward * 0.6f;                    // the tank cap on the pump side of the chassis, behind the cab
             var tip = Vector3.Lerp(_holster, filler, Mathf.SmoothStep(0f, 1f, reach));
             var mid = (_holster + tip) * 0.5f + Vector3.down * (0.35f + 0.25f * Vector3.Distance(_holster, tip) / 3f);   // the hose sags between the pump and the nozzle
             Vector3 Curve(float u) => (1 - u) * (1 - u) * _holster + 2 * (1 - u) * u * mid + u * u * tip;

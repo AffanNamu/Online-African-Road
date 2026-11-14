@@ -351,6 +351,7 @@ namespace ARO.Game
             Debug.Log("[Route] switching to " + target.Name + " (" + target.RouteId + "): reloading the world");
             Toast("Loading " + target.Name + "...", 30f);
             _ = _svc.Presence.EndSession();
+            Time.timeScale = 1f;                                              // static too: a paused drive must not leave the reloaded world frozen
             var nm = Unity.Netcode.NetworkManager.Singleton;                  // it keeps itself across scene loads; with no live session the reloaded scene's own one takes over
             if (nm != null && !nm.IsListening) Destroy(nm.gameObject);
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);

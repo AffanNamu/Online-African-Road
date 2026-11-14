@@ -31,17 +31,13 @@ namespace ARO.Game
 
             // Route data first (the streamer, traffic and the vehicle spawn all depend on it), then the rendering foundation.
             var testRoute = SmokeMode.TestRoute;     // smoke pages only: an engine test corridor (Resources/Routes) instead of Lagos to Ibadan
-            if (testRoute != null) { var ta = Resources.Load<TextAsset>("Routes/" + testRoute + ".route"); if (ta != null) { route.specJson = ta; Debug.Log("[Smoke] driving the test corridor " + testRoute); } else Debug.LogWarning("[Smoke] no route data for " + testRoute); }
-            DriveRegionStore.SetCurrent(null);                       // static: a world reload must not keep the previous world's region
-            if (testRoute == null && !SmokeMode.Drive && !SmokeMode.WorldMap && !SmokeMode.KanoStreet)
-            {   // the player's choice of where to drive (Kano city or Lagos to Ibadan); test pages ignore it
-                var choice = DriveRegionStore.Stored();
-                if (choice.RouteId != ARO.NetCore.DriveRegions.Shipped)
-                {
-                    var ta = Resources.Load<TextAsset>("Routes/" + choice.RouteId + ".route");
-                    if (ta != null) { route.specJson = ta; DriveRegionStore.SetCurrent(choice); Debug.Log("[Route] the player chose " + choice.Name + " (" + choice.RouteId + ")"); }
-                    else Debug.LogWarning("[Route] no route data for the stored choice " + choice.RouteId + "; driving the shipped road");
-                }
+            DriveRegionStore.SetCurrent(null);       // static: a world reload must not keep the previous world's region
+            if (testRoute != null) { var ta = Resources.Load<TextAsset>("Routes/" + testRoute + ".route"); if (ta != null) { route.Use(ta); Debug.Log("[Smoke] driving the test corridor " + testRoute); } else Debug.LogWarning("[Smoke] no route data for " + testRoute); }
+            else if (!SmokeMode.Drive && !SmokeMode.WorldMap && !SmokeMode.KanoStreet)
+            {   // the player's choice of where to drive (Lagos to Ibadan or Kano city); test pages ignore it. The data is always given explicitly: the route asset outlives a world reload.
+                var choice = DriveRegionStore.Stored(); var ta = Resources.Load<TextAsset>("Routes/" + choice.RouteId + ".route");
+                if (ta == null && choice.RouteId != ARO.NetCore.DriveRegions.Shipped) { Debug.LogWarning("[Route] no route data for the stored choice " + choice.RouteId + "; driving the shipped road"); choice = ARO.NetCore.DriveRegions.Get(null); ta = Resources.Load<TextAsset>("Routes/" + choice.RouteId + ".route"); }
+                if (ta != null) { route.Use(ta); DriveRegionStore.SetCurrent(choice); if (choice.RouteId != ARO.NetCore.DriveRegions.Shipped) Debug.Log("[Route] the player chose " + choice.Name + " (" + choice.RouteId + ")"); }
             }
             bool haveModel = route.Prepare();
             Light sun = null;

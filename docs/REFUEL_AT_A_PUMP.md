@@ -7,10 +7,10 @@ The owner's words: *"The filling station ... cars will enter and refuel. It's no
 ## 1. What the player does
 
 1. Drive into a station and stop beside a pump island. A pump counts when the vehicle's centre is within 5 m of the pump point, on the same level (2 m), and the vehicle is stopped (under 1 km/h).
-2. The HUD shows `Pump 2  ·  F  Refuel 63 L for 126 coins` and a green **REFUEL** button (touch and mouse). The litres come from the game's own fuel gauge; the price per litre comes from the same server quote the Garage uses.
+2. The HUD shows `Pump 2  ·  F  Refuel 63 L for 126 coins` and a green **REFUEL** button (touch and mouse). The litres come from the game's own fuel gauge and the server's tank size; the price per litre and the tank size come from the same server quote the Garage uses.
 3. Press **F** (gamepad **B / east**, or the button). The game asks the server to sell a full tank (`buy_fuel`). **The server decides the litres, the price and the money.** Only when it has answered does the pump run.
 4. The nozzle leaves the pump and the hose reaches the filler on the pump side of the vehicle. A meter above the dispenser and the HUD count the litres and the coins. The tank gauge rises to the level the server answered (2 s plus 1 s per 25 L, at most 6 s).
-5. Driving off during the animation stops it. The litres were already paid for, so the tank is set to the server's level.
+5. However the animation ends (finished, driven off, moved away from the pump, the menu opened), the tank holds the level the server answered: the litres were already paid for.
 
 **Without a server** (the public test build and the review build bake none in) the game says *"Offline: fuel is paid on the server and there is no connection. The tank was not filled."* and fills nothing. This follows the rule *no fake backend* (`docs/DECISIONS.md`).
 
@@ -56,7 +56,13 @@ Migration `supabase/migrations/20261114000001_pump_refuel.sql`:
 | `tools/webgl-pump.js` (CI, public build; review build with the real models) | `?smoke=drive&pump=1`: the truck starts beside the first pump, lands, the game says it is at the pump, and the Refuel button shows. F gives the offline notice, nothing is sold and the gauge does not move. Informational until two runs agree. |
 | `tools/webgl-e2e.js` section 2p (CI, real backend) | The signed-in player's own truck, with 30 L in the database, beside the shipped route's station. F buys 90 L for 180 coins; the pump runs to 120 L; the database holds 120 L, the wallet paid 180 and one ledger row was written. Screenshots of the prompt, the hose and the full tank. Informational until two runs agree. |
 
-## 5. Not done (honest list)
+## 5. What the first CI run found (2026-11-14)
+* Run 43584543826: the database suite, the mutation test, the API contract, the .NET tests, the Blender tests and the backend tests passed. **Unity did not compile**: `PumpStop.cs` used a variable the compiler could not prove assigned (CS0165). Fixed; nothing else in the game assembly had an error.
+* A second reading of the code found and fixed: the gauge could stay short of the paid level if the menu was opened mid-fill; the hose pieces had colliders for one frame; the prompt used the client's tank size instead of the server's.
+* The in-game checks (the browser runs) had not run yet at that point, because the build stops at the compile.
+
+## 6. Not done (honest list)
+* While a job or bus run is in progress after a pump refuel, the server's stored fuel can read above the tank size (the pending burn is deducted at completion). The Garage list would show more than 100% for that vehicle until the activity ends.
 * The truck fuel island is not placed on any route (see section 2).
 * The production station prefabs keep their 0.12 m forecourt slab without a collider, so wheels sink 0.12 m into it visually. The asset needs a collision box for the slab: a new asset version, not done.
 * No queue or other vehicles at the pumps, no attendant, no payment at the mart (P4).
