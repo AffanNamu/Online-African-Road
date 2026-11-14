@@ -148,8 +148,54 @@ def kano_city_row(b: dict) -> Scene:
     return s
 
 
+def lineup(s: Scene, ids, side: int, y: float = 0.0, edge: float = 9.0, gap: float = 6.0, tag: str = "") -> float:
+    """Buildings of the city construction directive along one side of a street (x = 0, along +Y), each facing it, their road-side edge `edge` metres from the centre line, `gap` metres between lots.
+    Returns the next free y."""
+    for aid in ids:
+        yaw = -90.0 if side > 0 else 90.0; fx0, fy0, fx1, fy1 = footprint({"asset": aid, "x": 0.0, "y": 0.0, "yawDeg": yaw}, s.b)
+        s.add(aid, (edge - fx0) if side > 0 else (-edge - fx1), y - fy0, yaw, tag=tag or aid.split("_")[1]); y += (fy1 - fy0) + gap
+    return y
+
+
+def kano_fuel(b: dict) -> Scene:
+    """The fuel station family (G, reference R-040) beside a street: the large and the small station on the right, the medium one on the left. Review composition, not game content."""
+    s = Scene("kano_fuel", "asphalt_worn", "fuel stations of family G (review composition, not game content)", b)
+    lineup(s, ["kano_fuel_station_large_a", "rg_ngn_fuel_station_small_a"], 1, y=0.0, tag="fuel"); lineup(s, ["kano_fuel_station_medium_a"], -1, y=10.0, tag="fuel")
+    s.view("drive", (3.0, -40.0, 2.4), (8.0, 40.0, 4.0), 24); s.view("aerial", (-45.0, -45.0, 55.0), (10.0, 30.0, 0.0), 30)
+    s.view("large", (2.0, -14.0, 2.0), (30.0, 22.0, 5.0), 26); s.view("small", (2.0, 46.0, 1.8), (19.0, 60.0, 2.5), 28)
+    return s
+
+
+def kano_commerce(b: dict) -> Scene:
+    """The commercial family (H) along a city street: supermarket, bank, hotel, restaurant, fast food and pharmacy on the right; plaza, showroom, phone and parts rows, workshop and depot on the left."""
+    s = Scene("kano_commerce", "asphalt_worn", "commercial buildings of family H (review composition, not game content)", b)
+    lineup(s, ["kano_supermarket_a", "kano_bank_a", "kano_hotel_a", "kano_restaurant_a", "kano_fastfood_a", "rg_ngn_pharmacy_a"], 1)
+    lineup(s, ["kano_shopping_plaza_a", "kano_car_showroom_a", "rg_ngn_phone_shops_a", "rg_ngn_spare_parts_row_a", "rg_ngn_auto_workshop_a", "rg_ngn_wholesale_depot_a"], -1)
+    s.view("drive", (3.0, -30.0, 2.4), (4.0, 120.0, 8.0), 24); s.view("aerial", (-70.0, -40.0, 80.0), (0.0, 90.0, 0.0), 28)
+    s.view("hotel", (-3.0, 60.0, 2.0), (22.0, 100.0, 18.0), 26); s.view("shops", (3.0, 70.0, 2.0), (-14.0, 95.0, 3.0), 28)
+    return s
+
+
+def kano_civic(b: dict) -> Scene:
+    """The public family (I): hospital, school, clinic and police station on the right; government offices, fire station, motor park and factory on the left."""
+    s = Scene("kano_civic", "asphalt_worn", "public buildings of family I (review composition, not game content)", b)
+    lineup(s, ["kano_hospital_general_a", "kano_school_a", "rg_ngn_clinic_a", "kano_police_division_a"], 1); lineup(s, ["kano_government_offices_a", "kano_fire_station_a", "kano_motor_park_a", "rg_ngn_factory_a"], -1)
+    s.view("drive", (3.0, -30.0, 2.4), (4.0, 120.0, 8.0), 24); s.view("aerial", (-70.0, -40.0, 85.0), (0.0, 80.0, 0.0), 28)
+    s.view("hospital", (-3.0, -12.0, 2.0), (30.0, 22.0, 8.0), 26); s.view("school", (-3.0, 52.0, 2.0), (30.0, 74.0, 4.0), 28)
+    return s
+
+
+def kano_homes(b: dict) -> Scene:
+    """The residential family (J) in a street that runs from the premium end to the low-cost end: mansion, duplex and semi-detached pair on the right, bungalow and low-cost row on the left."""
+    s = Scene("kano_homes", "asphalt_worn", "houses of family J (review composition, not game content)", b)
+    lineup(s, ["kano_mansion_a", "kano_duplex_a", "kano_semidetached_a"], 1, edge=7.0); lineup(s, ["rg_ngn_bungalow_a", "rg_ngn_lowcost_row_a"], -1, edge=7.0, y=8.0)
+    s.view("drive", (2.5, -30.0, 2.4), (3.0, 90.0, 5.0), 24); s.view("aerial", (-55.0, -35.0, 60.0), (0.0, 50.0, 0.0), 30)
+    s.view("mansion", (-2.0, -14.0, 1.8), (26.0, 16.0, 5.0), 26); s.view("lowcost", (2.0, 30.0, 1.8), (-16.0, 44.0, 2.5), 28)
+    return s
+
+
 def all_scenes(bounds: dict | None = None) -> list[Scene]:
-    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b), roundabout_kit(b), kano_mosques(b), kano_city_row(b)]
+    b = bounds or load_bounds(); return [logistics_yard(b), bus_terminal(b), furniture_lineup(b), roundabout_kit(b), kano_mosques(b), kano_city_row(b)] + ([kano_fuel(b), kano_commerce(b), kano_civic(b), kano_homes(b)] if "kano_fuel_station_large_a" in b else [])
 
 
 def asset_ids(bounds: dict | None = None) -> set:

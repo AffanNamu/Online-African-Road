@@ -2963,6 +2963,1433 @@
      }
     ]
    }
+  },
+  {
+   "id": "kano_fuel_station_large_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family G, class CITY_SPECIFIC: large modern filling station after R-040: a 30 m lit canopy with a raised brand box, four numbered islands with eight dispensers, a convenience mart, a price totem, a services board, an ATM, air and water, tank fill points, planters with bollard lights, a walled back yard (fictional brand KANO OIL) References: R-040. No brand, plate or logo.",
+   "source": "Props/kano_fuel_station_large_a",
+   "collider": "box",
+   "heightM": 9.65,
+   "widthM": 46.82,
+   "depthM": 36.15,
+   "cullDistance": 250,
+   "lodTriangles": [
+    4406,
+    796,
+    90
+   ],
+   "castShadow": true,
+   "tags": [
+    "canopy",
+    "commercial",
+    "fictional_brand",
+    "fuel_station",
+    "roadside_service",
+    "shop"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.2,
+    "range": 14,
+    "haloSize": 1.5,
+    "poolRadius": 5.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 9.5,
+      "y": 5.7,
+      "z": 6.0
+     },
+     {
+      "x": 2.5,
+      "y": 5.7,
+      "z": 6.0
+     },
+     {
+      "x": -4.5,
+      "y": 5.7,
+      "z": 6.0
+     },
+     {
+      "x": -11.5,
+      "y": 5.7,
+      "z": 6.0
+     },
+     {
+      "x": 13.0,
+      "y": 3.0,
+      "z": -2.5
+     },
+     {
+      "x": -19.5,
+      "y": 8.5,
+      "z": 16.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_fuel_station_medium_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family G, class CITY_SPECIFIC: neighbourhood filling station of the same fictional chain: a 20 m canopy, two islands, a kiosk shop, a car-wash bay, a price totem, air and water, a walled yard References: R-040. No brand, plate or logo.",
+   "source": "Props/kano_fuel_station_medium_a",
+   "collider": "box",
+   "heightM": 7.25,
+   "widthM": 32.44,
+   "depthM": 26.14,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2610,
+    544,
+    74
+   ],
+   "castShadow": true,
+   "tags": [
+    "canopy",
+    "car_wash",
+    "commercial",
+    "fictional_brand",
+    "fuel_station",
+    "roadside_service",
+    "shop"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.1,
+    "range": 12,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 3.0,
+      "y": 5.3,
+      "z": 5.0
+     },
+     {
+      "x": -5.0,
+      "y": 5.3,
+      "z": 5.0
+     },
+     {
+      "x": 10.5,
+      "y": 2.8,
+      "z": -2.5
+     },
+     {
+      "x": -8.0,
+      "y": 3.9,
+      "z": -7.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_fuel_station_small_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family G, class REGIONAL: independent roadside filling station: a pitched zinc canopy on steel posts, one island with two older pumps, a block cashier office with a painted FILLING STATION board, a hand-painted price board, oil drums, jerry cans, a generator (generic words, no brand) References: R-040, R-016. No brand, plate or logo.",
+   "source": "Props/rg_ngn_fuel_station_small_a",
+   "collider": "box",
+   "heightM": 4.9,
+   "widthM": 20.44,
+   "depthM": 16.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1046,
+    136,
+    62
+   ],
+   "castShadow": true,
+   "tags": [
+    "canopy",
+    "fuel_station",
+    "generic_words",
+    "independent",
+    "roadside_service"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 10,
+    "haloSize": 1.5,
+    "poolRadius": 4.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 2.0,
+      "y": 3.9,
+      "z": 2.5
+     },
+     {
+      "x": -2.0,
+      "y": 3.9,
+      "z": 2.5
+     },
+     {
+      "x": 7.0,
+      "y": 2.6,
+      "z": -2.3
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_supermarket_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: supermarket: a 34 m hall with a glazed front, a portal entrance and a SUPERMARKET sign band, a parking forecourt with 22 bays, a trolley shelter and a roadside sign (generic words) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_supermarket_a",
+   "collider": "box",
+   "heightM": 8.2,
+   "widthM": 44.44,
+   "depthM": 36.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1086,
+    204,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "parking",
+    "supermarket"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -7.0,
+      "y": 3.6,
+      "z": 3.5
+     },
+     {
+      "x": 4.0,
+      "y": 3.5,
+      "z": 1.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_restaurant_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: restaurant: a single-storey dining hall with a pergola terrace and tables, a RESTAURANT sign, hedges and a back wall References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_restaurant_a",
+   "collider": "box",
+   "heightM": 7.65,
+   "widthM": 24.44,
+   "depthM": 22.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1135,
+    82,
+    26
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "restaurant",
+    "terrace"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.2,
+      "z": 2.5
+     },
+     {
+      "x": 5.0,
+      "y": 2.8,
+      "z": 8.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_fastfood_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: fast-food outlet: a red-and-yellow box with a drive-through window, a menu board, parking and a roof sign (generic words FAST FOOD) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_fastfood_a",
+   "collider": "box",
+   "heightM": 6.8,
+   "widthM": 26.0,
+   "depthM": 24.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    616,
+    158,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "drive_through",
+    "fast_food",
+    "generic_design"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 2.0,
+      "y": 4.0,
+      "z": 2.5
+     },
+     {
+      "x": -7.5,
+      "y": 3.0,
+      "z": -3.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_hotel_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: eight-storey hotel: a lobby with a porte-coch\u00e8re, balconies, a vertical HOTEL sign, a lift head with a roof sign, flags, palms and a drop-off loop References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_hotel_a",
+   "collider": "box",
+   "heightM": 34.2,
+   "widthM": 36.0,
+   "depthM": 32.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2473,
+    412,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "high_rise",
+    "hotel"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 4.0,
+      "z": 8.5
+     },
+     {
+      "x": 4.0,
+      "y": 4.4,
+      "z": 2.5
+     },
+     {
+      "x": -4.0,
+      "y": 4.4,
+      "z": 2.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_bank_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: three-storey bank: a glazed front on columns, steps, a BANK sign, an ATM gallery, a security post, parking and a flag (generic, no real bank) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_bank_a",
+   "collider": "box",
+   "heightM": 11.63,
+   "widthM": 28.0,
+   "depthM": 24.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    550,
+    116,
+    26
+   ],
+   "castShadow": true,
+   "tags": [
+    "atm",
+    "bank",
+    "commercial",
+    "generic_design"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.4,
+      "z": 3.5
+     },
+     {
+      "x": -10.8,
+      "y": 2.6,
+      "z": -3.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_pharmacy_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class REGIONAL: two-storey pharmacy shop-house: a lit shopfront with a PHARMACY sign and a green-cross blade sign, a flat above, a roof tank References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_pharmacy_a",
+   "collider": "box",
+   "heightM": 9.75,
+   "widthM": 14.0,
+   "depthM": 13.05,
+   "cullDistance": 250,
+   "lodTriangles": [
+    242,
+    68,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "pharmacy",
+    "shop_house"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.6,
+      "z": 3.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_phone_shops_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class REGIONAL: row of five phone and electronics shops: half-raised shutters over lit windows, painted signs, a zinc veranda on posts References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_phone_shops_a",
+   "collider": "box",
+   "heightM": 5.2,
+   "widthM": 20.6,
+   "depthM": 12.2,
+   "cullDistance": 250,
+   "lodTriangles": [
+    376,
+    88,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "electronics",
+    "generic_design",
+    "phones",
+    "shop_row"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 6.0,
+      "y": 3.4,
+      "z": 6.0
+     },
+     {
+      "x": -2.0,
+      "y": 3.4,
+      "z": 6.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_spare_parts_row_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class REGIONAL: row of five spare-parts shops (spare parts, tyres, batteries, engine oil, auto electrical) with tyres stacked in front References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_spare_parts_row_a",
+   "collider": "box",
+   "heightM": 5.2,
+   "widthM": 22.6,
+   "depthM": 10.7,
+   "cullDistance": 250,
+   "lodTriangles": [
+    776,
+    88,
+    10
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "shop_row",
+    "spare_parts",
+    "tyres"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 6.0,
+      "y": 3.4,
+      "z": 6.0
+     },
+     {
+      "x": -2.0,
+      "y": 3.4,
+      "z": 6.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_car_showroom_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: car showroom: a tall glass box behind a portal with a CAR SHOWROOM sign, a display forecourt, feather flags, a workshop behind References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_car_showroom_a",
+   "collider": "box",
+   "heightM": 8.7,
+   "widthM": 36.0,
+   "depthM": 30.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    340,
+    86,
+    32
+   ],
+   "castShadow": true,
+   "tags": [
+    "car_showroom",
+    "commercial",
+    "dealership",
+    "generic_design"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 5.0,
+      "z": 2.5
+     },
+     {
+      "x": 6.0,
+      "y": 6.0,
+      "z": 1.5
+     },
+     {
+      "x": -6.0,
+      "y": 6.0,
+      "z": 1.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_auto_workshop_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class REGIONAL: auto workshop: an open steel shed with three bays, an office with an AUTO REPAIRS sign, tyres and drums, an oil-stained apron References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_auto_workshop_a",
+   "collider": "box",
+   "heightM": 6.2,
+   "widthM": 22.44,
+   "depthM": 18.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    764,
+    128,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "mechanic",
+    "workshop"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 4.4,
+      "z": -1.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_shopping_plaza_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class CITY_SPECIFIC: two-storey shopping plaza: sixteen lit shop units with painted signs, a gallery walkway with a rail, a SHOPPING PLAZA sign, parking References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_shopping_plaza_a",
+   "collider": "box",
+   "heightM": 11.25,
+   "widthM": 42.0,
+   "depthM": 25.05,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1038,
+    216,
+    28
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "parking",
+    "shopping_plaza"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 10.0,
+      "y": 3.6,
+      "z": 1.5
+     },
+     {
+      "x": -10.0,
+      "y": 3.6,
+      "z": 1.5
+     },
+     {
+      "x": -0.0,
+      "y": 7.8,
+      "z": 1.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_wholesale_depot_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family H, class REGIONAL: wholesale depot: a clad hall with three roller shutters onto a covered loading apron, a WHOLESALE DEPOT sign, pallets of goods, a walled yard References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_wholesale_depot_a",
+   "collider": "box",
+   "heightM": 8.4,
+   "widthM": 32.44,
+   "depthM": 24.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    580,
+    146,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "warehouse",
+    "wholesale"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 8.75,
+      "y": 4.6,
+      "z": 2.5
+     },
+     {
+      "x": -5.25,
+      "y": 4.6,
+      "z": 2.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_hospital_general_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: four-storey general hospital: sunshaded windows, an entrance canopy, an EMERGENCY bay, a blue H on the roof, a rear wing, a walled compound (generic, blue H, no red cross) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_hospital_general_a",
+   "collider": "box",
+   "heightM": 19.2,
+   "widthM": 48.63,
+   "depthM": 38.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2687,
+    414,
+    28
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "health",
+    "hospital",
+    "public"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.4,
+      "z": 9.5
+     },
+     {
+      "x": -15.5,
+      "y": 2.9,
+      "z": 7.5
+     },
+     {
+      "x": 21.0,
+      "y": 2.4,
+      "z": 18.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_clinic_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class REGIONAL: clinic and health centre: a single storey with a deep veranda on columns, a hipped roof, a CLINIC board at the gate, a walled yard References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_clinic_a",
+   "collider": "box",
+   "heightM": 6.31,
+   "widthM": 24.44,
+   "depthM": 20.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    688,
+    138,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "clinic",
+    "generic_design",
+    "health",
+    "public"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.0,
+      "z": 3.0
+     },
+     {
+      "x": -2.0,
+      "y": 2.3,
+      "z": 10.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_school_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: community school: a two-storey classroom block with open veranda corridors and rails, a hipped zinc roof, a gate board, a flag, a laterite playground, trees References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_school_a",
+   "collider": "box",
+   "heightM": 9.0,
+   "widthM": 50.44,
+   "depthM": 36.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1476,
+    262,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "education",
+    "generic_design",
+    "public",
+    "school"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.0,
+      "z": -3.5
+     },
+     {
+      "x": -0.0,
+      "y": 2.3,
+      "z": 18.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_police_division_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: police station: a two-storey block in white and blue with a POLICE STATION sign, a gate with a barrier and a guard post, a flag, a walled yard (no real force insignia) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_police_division_a",
+   "collider": "box",
+   "heightM": 9.95,
+   "widthM": 28.44,
+   "depthM": 24.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    892,
+    198,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "police",
+    "public",
+    "security"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 2.8,
+      "z": 1.5
+     },
+     {
+      "x": -5.0,
+      "y": 2.6,
+      "z": 12.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_fire_station_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: fire station: three engine bays with red doors, an office, a hose-drying tower, a FIRE STATION sign, a marked apron References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_fire_station_a",
+   "collider": "box",
+   "heightM": 14.3,
+   "widthM": 30.44,
+   "depthM": 24.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    376,
+    124,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "emergency",
+    "fire_station",
+    "generic_design",
+    "public"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 3.5,
+      "y": 4.6,
+      "z": 1.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_government_offices_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: three-storey government offices: a columned portico with a pediment and broad steps, a sign, three flags, a walled compound with a guard post, trees, parking (generic, no real ministry) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_government_offices_a",
+   "collider": "box",
+   "heightM": 13.2,
+   "widthM": 48.44,
+   "depthM": 34.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2043,
+    316,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "civic",
+    "generic_design",
+    "government",
+    "public"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 9.5,
+      "z": 5.5
+     },
+     {
+      "x": -12.0,
+      "y": 2.6,
+      "z": 17.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_motor_park_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class CITY_SPECIFIC: motor park: a laterite yard behind a gate arch with a MOTOR PARK sign, two long shelters with benches, a ticket office with route boards, bays, a wall References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_motor_park_a",
+   "collider": "box",
+   "heightM": 7.73,
+   "widthM": 46.44,
+   "depthM": 36.12,
+   "cullDistance": 250,
+   "lodTriangles": [
+    916,
+    182,
+    52
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "motor_park",
+    "public",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 5.6,
+      "z": 16.5
+     },
+     {
+      "x": 4.0,
+      "y": 3.2,
+      "z": -0.0
+     },
+     {
+      "x": 4.0,
+      "y": 3.2,
+      "z": -10.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_factory_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family I, class REGIONAL: factory: a sawtooth-roofed production hall, a three-storey office front, two silos and a chimney, a loading dock, a walled yard References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_factory_a",
+   "collider": "box",
+   "heightM": 20.0,
+   "widthM": 46.44,
+   "depthM": 34.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    856,
+    338,
+    30
+   ],
+   "castShadow": true,
+   "tags": [
+    "factory",
+    "generic_design",
+    "industrial"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 13.0,
+      "y": 3.0,
+      "z": 4.5
+     },
+     {
+      "x": -4.0,
+      "y": 2.8,
+      "z": 17.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_lowcost_row_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family J, class REGIONAL: low-cost row ('face-me-I-face-you'): six rooms with doors onto a narrow veranda, a rusty zinc roof, a tank on a stand, washing lines References: R-006, R-016, R-022. No brand, plate or logo.",
+   "source": "Props/rg_ngn_lowcost_row_a",
+   "collider": "box",
+   "heightM": 4.0,
+   "widthM": 22.0,
+   "depthM": 14.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    324,
+    76,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "face_me_i_face_you",
+    "generic_design",
+    "lowcost",
+    "residential"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 4.5,
+      "y": 2.6,
+      "z": 3.0
+     },
+     {
+      "x": -4.5,
+      "y": 2.6,
+      "z": 3.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_bungalow_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family J, class REGIONAL: middle-class bungalow: a hipped tile roof over a veranda, a carport, a walled compound with a gate, a mango tree References: R-006, R-009, R-016. No brand, plate or logo.",
+   "source": "Props/rg_ngn_bungalow_a",
+   "collider": "box",
+   "heightM": 8.66,
+   "widthM": 24.44,
+   "depthM": 24.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    829,
+    148,
+    36
+   ],
+   "castShadow": true,
+   "tags": [
+    "bungalow",
+    "generic_design",
+    "middle_class",
+    "residential"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.0,
+      "z": 2.5
+     },
+     {
+      "x": -4.75,
+      "y": 2.6,
+      "z": 12.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_semidetached_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family J, class CITY_SPECIFIC: semi-detached pair: two mirrored two-storey houses under one hipped roof, two porches, balconies, a shared walled compound References: R-006, R-009. No brand, plate or logo.",
+   "source": "Props/kano_semidetached_a",
+   "collider": "box",
+   "heightM": 8.8,
+   "widthM": 26.44,
+   "depthM": 22.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    932,
+    202,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "middle_class",
+    "residential",
+    "semi_detached"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 4.5,
+      "y": 2.4,
+      "z": 2.8
+     },
+     {
+      "x": -4.5,
+      "y": 2.4,
+      "z": 2.8
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_duplex_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family J, class CITY_SPECIFIC: premium duplex: two storeys and a roof terrace, a stone-clad feature wall, tall glazing, a glass-railed balcony, a car porch, a sliding gate, pavers, a lawn and palms References: R-006, R-009. No brand, plate or logo.",
+   "source": "Props/kano_duplex_a",
+   "collider": "box",
+   "heightM": 11.03,
+   "widthM": 30.44,
+   "depthM": 28.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1112,
+    238,
+    38
+   ],
+   "castShadow": true,
+   "tags": [
+    "duplex",
+    "generic_design",
+    "premium",
+    "residential"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -6.5,
+      "y": 2.8,
+      "z": 3.0
+     },
+     {
+      "x": 2.0,
+      "y": 3.2,
+      "z": 0.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_mansion_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family J, class CITY_SPECIFIC: luxury mansion: a large modern house with cantilevered slabs and tall glazing, a swimming pool with a tiled deck, a landscaped garden with palms, a gatehouse, a high wall with an ornamental gate References: R-006, R-009. No brand, plate or logo.",
+   "source": "Props/kano_mansion_a",
+   "collider": "box",
+   "heightM": 8.06,
+   "widthM": 42.44,
+   "depthM": 36.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    1486,
+    218,
+    46
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "mansion",
+    "pool",
+    "premium",
+    "residential"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": 2.0,
+      "y": 3.4,
+      "z": 1.0
+     },
+     {
+      "x": 18.0,
+      "y": 2.6,
+      "z": 13.0
+     },
+     {
+      "x": -16.0,
+      "y": 0.6,
+      "z": -6.0
+     }
+    ]
+   }
   }
  ],
  "bounds": {
@@ -3901,6 +5328,342 @@
     6.0,
     24.6
    ]
+  ],
+  "kano_fuel_station_large_a": [
+   [
+    -23.6,
+    -18.025,
+    0.0
+   ],
+   [
+    23.22,
+    18.12,
+    9.65
+   ]
+  ],
+  "kano_fuel_station_medium_a": [
+   [
+    -16.22,
+    -13.025,
+    0.0
+   ],
+   [
+    16.22,
+    13.12,
+    7.25
+   ]
+  ],
+  "rg_ngn_fuel_station_small_a": [
+   [
+    -10.22,
+    -8.0,
+    0.0
+   ],
+   [
+    10.22,
+    8.12,
+    4.9
+   ]
+  ],
+  "kano_supermarket_a": [
+   [
+    -22.22,
+    -18.0,
+    0.0
+   ],
+   [
+    22.22,
+    18.12,
+    8.2
+   ]
+  ],
+  "kano_restaurant_a": [
+   [
+    -12.22,
+    -11.0,
+    0.0
+   ],
+   [
+    12.22,
+    11.12,
+    7.65
+   ]
+  ],
+  "kano_fastfood_a": [
+   [
+    -13.0,
+    -12.0,
+    0.0
+   ],
+   [
+    13.0,
+    12.0,
+    6.8
+   ]
+  ],
+  "kano_hotel_a": [
+   [
+    -18.0,
+    -16.0,
+    0.0
+   ],
+   [
+    18.0,
+    16.0,
+    34.2
+   ]
+  ],
+  "kano_bank_a": [
+   [
+    -14.0,
+    -12.0,
+    0.0
+   ],
+   [
+    14.0,
+    12.0,
+    11.63
+   ]
+  ],
+  "rg_ngn_pharmacy_a": [
+   [
+    -7.0,
+    -7.0,
+    0.0
+   ],
+   [
+    7.0,
+    6.05,
+    9.75
+   ]
+  ],
+  "rg_ngn_phone_shops_a": [
+   [
+    -10.3,
+    -6.4,
+    0.0
+   ],
+   [
+    10.3,
+    5.8,
+    5.2
+   ]
+  ],
+  "rg_ngn_spare_parts_row_a": [
+   [
+    -11.3,
+    -6.4,
+    0.0
+   ],
+   [
+    11.3,
+    4.3,
+    5.2
+   ]
+  ],
+  "kano_car_showroom_a": [
+   [
+    -18.0,
+    -15.0,
+    0.0
+   ],
+   [
+    18.0,
+    15.0,
+    8.7
+   ]
+  ],
+  "rg_ngn_auto_workshop_a": [
+   [
+    -11.22,
+    -9.0,
+    0.0
+   ],
+   [
+    11.22,
+    9.12,
+    6.2
+   ]
+  ],
+  "kano_shopping_plaza_a": [
+   [
+    -21.0,
+    -13.0,
+    0.0
+   ],
+   [
+    21.0,
+    12.05,
+    11.25
+   ]
+  ],
+  "rg_ngn_wholesale_depot_a": [
+   [
+    -16.22,
+    -12.36,
+    0.0
+   ],
+   [
+    16.22,
+    12.22,
+    8.4
+   ]
+  ],
+  "kano_hospital_general_a": [
+   [
+    -24.407,
+    -19.36,
+    0.0
+   ],
+   [
+    24.22,
+    19.22,
+    19.2
+   ]
+  ],
+  "rg_ngn_clinic_a": [
+   [
+    -12.22,
+    -10.36,
+    -0.003
+   ],
+   [
+    12.22,
+    10.22,
+    6.31
+   ]
+  ],
+  "kano_school_a": [
+   [
+    -25.22,
+    -18.36,
+    0.0
+   ],
+   [
+    25.22,
+    18.22,
+    9.0
+   ]
+  ],
+  "kano_police_division_a": [
+   [
+    -14.22,
+    -12.36,
+    -0.003
+   ],
+   [
+    14.22,
+    12.22,
+    9.95
+   ]
+  ],
+  "kano_fire_station_a": [
+   [
+    -15.22,
+    -11.997,
+    0.0
+   ],
+   [
+    15.22,
+    12.12,
+    14.3
+   ]
+  ],
+  "kano_government_offices_a": [
+   [
+    -24.22,
+    -17.36,
+    0.0
+   ],
+   [
+    24.22,
+    17.22,
+    13.2
+   ]
+  ],
+  "kano_motor_park_a": [
+   [
+    -23.22,
+    -18.0,
+    0.0
+   ],
+   [
+    23.22,
+    18.12,
+    7.732
+   ]
+  ],
+  "rg_ngn_factory_a": [
+   [
+    -23.22,
+    -17.36,
+    0.0
+   ],
+   [
+    23.22,
+    17.22,
+    20.0
+   ]
+  ],
+  "rg_ngn_lowcost_row_a": [
+   [
+    -11.0,
+    -7.0,
+    0.0
+   ],
+   [
+    11.0,
+    7.0,
+    4.0
+   ]
+  ],
+  "rg_ngn_bungalow_a": [
+   [
+    -12.22,
+    -12.36,
+    0.0
+   ],
+   [
+    12.22,
+    12.22,
+    8.663
+   ]
+  ],
+  "kano_semidetached_a": [
+   [
+    -13.22,
+    -11.36,
+    -0.003
+   ],
+   [
+    13.22,
+    11.22,
+    8.8
+   ]
+  ],
+  "kano_duplex_a": [
+   [
+    -15.22,
+    -14.36,
+    0.0
+   ],
+   [
+    15.22,
+    14.22,
+    11.03
+   ]
+  ],
+  "kano_mansion_a": [
+   [
+    -21.22,
+    -18.36,
+    0.0
+   ],
+   [
+    21.22,
+    18.22,
+    8.061
+   ]
   ]
  },
  "sockets": {
@@ -4280,6 +6043,116 @@
     "y": 0.0,
     "z": 1.0,
     "yawDeg": 0
+   }
+  ],
+  "kano_fuel_station_large_a": [
+   {
+    "name": "pump_1",
+    "kind": "fuel_pump",
+    "x": 8.4,
+    "y": 0.0,
+    "z": 6.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "pump_2",
+    "kind": "fuel_pump",
+    "x": 1.4,
+    "y": 0.0,
+    "z": 6.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "pump_3",
+    "kind": "fuel_pump",
+    "x": -5.6,
+    "y": 0.0,
+    "z": 6.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "pump_4",
+    "kind": "fuel_pump",
+    "x": -12.6,
+    "y": 0.0,
+    "z": 6.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "entry",
+    "kind": "drive_in",
+    "x": 19.0,
+    "y": 0.0,
+    "z": 18.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "exit",
+    "kind": "drive_out",
+    "x": -19.0,
+    "y": 0.0,
+    "z": 18.0,
+    "yawDeg": 180
+   }
+  ],
+  "kano_fuel_station_medium_a": [
+   {
+    "name": "pump_1",
+    "kind": "fuel_pump",
+    "x": 1.9,
+    "y": 0.0,
+    "z": 5.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "pump_2",
+    "kind": "fuel_pump",
+    "x": -6.1,
+    "y": 0.0,
+    "z": 5.0,
+    "yawDeg": 90
+   },
+   {
+    "name": "entry",
+    "kind": "drive_in",
+    "x": 13.0,
+    "y": 0.0,
+    "z": 13.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "exit",
+    "kind": "drive_out",
+    "x": -13.0,
+    "y": 0.0,
+    "z": 13.0,
+    "yawDeg": 180
+   }
+  ],
+  "rg_ngn_fuel_station_small_a": [
+   {
+    "name": "pump_1",
+    "kind": "fuel_pump",
+    "x": -1.1,
+    "y": 0.0,
+    "z": 2.3,
+    "yawDeg": 90
+   },
+   {
+    "name": "entry",
+    "kind": "drive_in",
+    "x": 6.0,
+    "y": 0.0,
+    "z": 8.0,
+    "yawDeg": 0
+   },
+   {
+    "name": "exit",
+    "kind": "drive_out",
+    "x": -6.0,
+    "y": 0.0,
+    "z": 8.0,
+    "yawDeg": 180
    }
   ]
  }

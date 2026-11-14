@@ -350,10 +350,25 @@ public class FrontageTests
         Assert.True(worst < 600, $"one chunk took {worst} ms");
     }
 
+    [Fact] public void EveryBuildingOfTheCityConstructionDirectiveStandsOnACityRoute()
+    {
+        // the owner's directive of 2026-11-14: a category is not done until its models are placed in the game. Families G (fuel), H (commercial), I (public), J (residential): every design stands at least once.
+        var placed = new HashSet<string>(new[] { "ng-kano-city-e1", "ng-kano-city-f1" }.SelectMany(id => All(Model(id))).Select(l => l.Prop));
+        var designs = new[] { "kano_fuel_station_large_a", "kano_fuel_station_medium_a", "rg_ngn_fuel_station_small_a", "kano_supermarket_a", "kano_restaurant_a", "kano_fastfood_a", "kano_hotel_a", "kano_bank_a",
+            "rg_ngn_pharmacy_a", "rg_ngn_phone_shops_a", "rg_ngn_spare_parts_row_a", "kano_car_showroom_a", "rg_ngn_auto_workshop_a", "kano_shopping_plaza_a", "rg_ngn_wholesale_depot_a", "kano_hospital_general_a",
+            "rg_ngn_clinic_a", "kano_school_a", "kano_police_division_a", "kano_fire_station_a", "kano_government_offices_a", "kano_motor_park_a", "rg_ngn_factory_a", "rg_ngn_lowcost_row_a", "rg_ngn_bungalow_a",
+            "kano_semidetached_a", "kano_duplex_a", "kano_mansion_a" };
+        Assert.Equal(28, designs.Length);
+        Assert.All(designs, d => Assert.True(placed.Contains(d), d + " is built but never placed on a city route"));
+        var fuel = new[] { "ng-kano-city-e1", "ng-kano-city-f1" }.SelectMany(id => All(Model(id))).Where(l => l.Tag == "fuel_station").Select(l => l.Rule).Distinct().ToList();
+        Assert.Contains("arterial_major", fuel); Assert.Contains("collector_main", fuel);                                  // fuel stations on the arterial and on the ordinary single carriageway
+    }
+
     [Theory, MemberData(nameof(Cities))] public void TheCityLotsHaveAGoldenDigestSoALaterChangeIsDeliberate(string id)
     {
-        // 2026-11-13, deliberate: the realism pass (v002 of the mosques and city buildings) changed their footprints (the mosque compounds are 1.1 to 2.8 m deeper), so the lots move (was afc3661a654d088b / 175daddbe5a0cc47)
-        string want = id == "ng-kano-city-e1" ? "17f062f1c1b0a646" : "4f24743abe3955be";
+        // 2026-11-14, deliberate: the city construction directive gave every road class a district mix with the new fuel stations, commercial, public and residential families (was 17f062f1c1b0a646 / 4f24743abe3955be;
+        // 2026-11-13 the realism pass changed the mosque footprints: was afc3661a654d088b / 175daddbe5a0cc47)
+        string want = id == "ng-kano-city-e1" ? "2120f589e9978f8d" : "7a796a2923dbbd77";
         Assert.Equal(want, Digest(All(Model(id))));
     }
 }

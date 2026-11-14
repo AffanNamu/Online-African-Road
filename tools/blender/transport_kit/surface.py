@@ -260,7 +260,104 @@ for _k, _v in EXTRA_KEYS.items(): AM.LIBRARY.setdefault(_k, _v)
 PATTERN["window_lattice"] = lambda X, c: _glazing(X, c, 43, (0.84, 0.80, 0.70), 0.9, lattice=(0.16, 0.34, 0.25))
 PATTERN["window_plain"] = lambda X, c: _glazing(X, c, 43, (0.20, 0.21, 0.22), 0.85)
 PATTERN["window_timber"] = lambda X, c: _glazing(X, c, 43, (0.30, 0.20, 0.13), 0.6)
-WINDOWS = ("glass", "glass_dark", "window_lattice", "window_plain", "window_timber", "interior_dark", "wood_door", "shutter_steel", "board_dark", "lantern_glow")     # no wall weathering on these (they have their own)
+WINDOWS = {"glass", "glass_dark", "window_lattice", "window_plain", "window_timber", "interior_dark", "wood_door", "shutter_steel", "board_dark", "lantern_glow"}     # no wall weathering on these (they have their own)
+
+# ---- painted cladding colours of the city construction directive (2026-11-14): painted steel and aluminium composite panels (fuel station canopies, shop fascias)
+CLADDING = {"paint_navy": ((0.075, 0.11, 0.29), "navy painted cladding (fuel station canopy, fascia and totem; the fictional KANO OIL chain of the owner's concept R-040)"),
+            "paint_brand_yellow": ((0.95, 0.70, 0.10), "warm yellow painted trim (fuel station canopy edge, island ends)"),
+            "paint_green_dark": ((0.07, 0.30, 0.20), "dark green painted cladding"), "paint_maroon": ((0.42, 0.10, 0.10), "maroon painted cladding"),
+            "paint_grey_light": ((0.70, 0.71, 0.72), "light grey aluminium composite panel"), "paint_sky": ((0.36, 0.60, 0.80), "sky blue painted render")}
+for _k, (_c, _n) in CLADDING.items():
+    AM.LIBRARY.setdefault(_k, (_c, 0.45, 0.0, 0.0, "surface bake only: " + _n)); PATTERN[_k] = _painted_metal
+
+
+def _shopfront(X, c, seed=47):
+    """A lit shop window seen from the forecourt: aluminium mullions about every 1.5 m and a transom, a warm interior with rows of shelves full of coloured goods, a pale reflection of the sky across the top."""
+    u = X["u"]; v = X["v"]; fw = X["fw"]; fh = X["fh"]; e = X["edge"]; fid = X["fid"]; n = len(u)
+    fr = 1.0 - smooth(0.06, 0.075, e); npx = np.maximum(1, np.round(fw / 1.5)); pw = fw / npx
+    mull = (1.0 - smooth(0.03, 0.045, pw * 0.5 - np.abs((u / pw) % 1.0 - 0.5) * pw)) * (npx > 1); tz = np.minimum(fh * 0.82, 2.6); trans = 1.0 - smooth(0.03, 0.045, np.abs(v - tz))
+    shelf_row = np.floor(v / 0.42); on_shelf = (v > 0.25) & (v < np.minimum(tz - 0.25, 2.0))
+    goods = np.array([[0.80, 0.22, 0.16], [0.18, 0.42, 0.70], [0.92, 0.80, 0.30], [0.25, 0.60, 0.32], [0.92, 0.92, 0.88], [0.70, 0.40, 0.70], [0.95, 0.55, 0.15]])
+    gi = (cell_hash(np.floor(u / 0.18), shelf_row, fid, seed) * 6.999).astype(int); board = 1.0 - smooth(0.0, 0.035, (v % 0.42))
+    interior = np.array([0.86, 0.80, 0.66])[None, :] * (0.85 + 0.15 * smooth(0.0, 1.0, v / np.maximum(fh, 0.1)))[:, None]
+    g = np.where(on_shelf[:, None], goods[gi] * (0.75 + 0.25 * cell_hash(np.floor(u / 0.18), shelf_row, 3, seed))[:, None], interior)
+    g = g * (1.0 - 0.5 * (board * on_shelf)[:, None]) + np.array([0.55, 0.55, 0.57])[None, :] * (0.5 * board * on_shelf)[:, None]
+    refl = smooth(0.55, 1.0, v / np.maximum(fh, 0.1)) * (0.25 + 0.15 * vnoise(np.stack([u * 0.3, v * 0.3, fid * 1.0], axis=1), 1.0, seed))
+    g = g * (1.0 - refl[:, None]) + np.array([0.62, 0.72, 0.82])[None, :] * refl[:, None]
+    k = np.maximum(fr, np.maximum(mull, trans))[:, None]; fcol = np.array([0.70, 0.71, 0.72])[None, :]
+    return g * (1.0 - k) + fcol * k, 0.015 * k[:, 0] - 0.01, np.where(k[:, 0] > 0.5, 0.5, 0.9)
+
+
+AM.LIBRARY.setdefault("glass_shop", ((0.70, 0.71, 0.72), 0.1, 0.0, 0.0, "surface bake only: a lit shop window with shelves of goods behind it")); PATTERN["glass_shop"] = _shopfront; WINDOWS.add("glass_shop")
+
+
+# ---- painted signs: words and a generic flame mark painted INTO the atlas (deterministic; Pillow's built-in scalable font, Aileron, CC0: no font file in the repository). A sign key is a colour key: a board's
+# faces wider and taller than 0.25 m carry the layout, its thin edges the plain panel. Brand names are fictional (the owner's concept chain KANO OIL, R-040) or generic words (FILLING STATION, PHARMACY).
+SIGNS = {}
+
+
+def sign_key(key, bg, fg, lines=(), logo=False, accent=None, note="", layout="auto"):
+    """Registers a sign: a panel of colour `bg`, the text `lines` (top to bottom) in `fg`, an optional flame mark (`logo`), an optional accent stripe along the bottom. `layout` auto: the mark beside the text on a wide
+    face, above it on a tall one. Returns the key."""
+    SIGNS[key] = dict(bg=tuple(bg), fg=tuple(fg), lines=list(lines), logo=bool(logo), accent=None if accent is None else tuple(accent), layout=layout)
+    AM.LIBRARY.setdefault(key, (tuple(bg), 0.4, 0.0, 0.0, note or ("surface bake only: a painted sign" + (": " + " / ".join(lines) if lines else ""))))
+    PATTERN[key] = lambda X, c, _k=key: _sign(X, SIGNS[_k]); WINDOWS.add(key); return key
+
+
+def _font(px):
+    from PIL import ImageFont
+    try: return ImageFont.load_default(size=max(6, int(px)))
+    except TypeError: return ImageFont.load_default()                     # Pillow without FreeType: the small bitmap font (still legible, coarser)
+
+
+def _flame(d, x0, y0, w, h):
+    """A generic flame-in-a-drop mark (not any company's logo): an orange drop with a red tongue and a yellow core."""
+    def drop(cx, cy, rw, rh, fill):
+        pts = []
+        for i in range(48):
+            t = 2 * math.pi * i / 48; r = 1.0 - 0.55 * max(0.0, math.sin(t)) ** 3
+            pts.append((cx + rw * math.cos(t) * r, cy - rh * 0.25 - rh * 0.75 * math.sin(t) * (1.25 if math.sin(t) > 0 else 0.6)))
+        d.polygon(pts, fill=fill)
+    cx, cy = x0 + w / 2, y0 + h * 0.62
+    drop(cx, cy, w * 0.42, h * 0.62, (245, 120, 20)); drop(cx + w * 0.04, cy + h * 0.06, w * 0.28, h * 0.42, (200, 30, 25)); drop(cx + w * 0.06, cy + h * 0.14, w * 0.14, h * 0.22, (255, 214, 60))
+
+
+def _sign_image(s, W, H):
+    """The sign's layout as an RGB image of W x H pixels (row 0 = TOP of the face)."""
+    from PIL import Image, ImageDraw
+    bg = tuple(int(round(255 * x)) for x in s["bg"]); fg = tuple(int(round(255 * x)) for x in s["fg"]); im = Image.new("RGB", (W, H), bg); d = ImageDraw.Draw(im)
+    pad = int(min(W, H) * 0.08); ax0, ay0, ax1, ay1 = pad, pad, W - pad, H - pad
+    if s["accent"] is not None:
+        ah = max(2, int(H * 0.12)); d.rectangle([0, H - ah, W, H], fill=tuple(int(round(255 * x)) for x in s["accent"])); ay1 = H - ah - pad // 2
+    lines = s["lines"]; tall = s["layout"] == "stack" or (s["layout"] == "auto" and H > 0.75 * W)
+    if s["logo"]:
+        if tall or not lines: lh = int((ay1 - ay0) * (0.55 if lines else 1.0)); lw = min(ax1 - ax0, int(lh * 0.8)); _flame(d, (W - lw) / 2, ay0, lw, lh); ay0 += lh + pad // 2
+        else: lw = int((ay1 - ay0) * 0.8); _flame(d, ax0, ay0, lw, ay1 - ay0); ax0 += lw + pad
+    if lines and ay1 - ay0 > 4 and ax1 - ax0 > 4:
+        n = len(lines); slot = (ay1 - ay0) / n; size = slot * 0.8
+        for _ in range(24):                                                    # the largest size at which every line fits the width
+            f = _font(size); widest = max(d.textbbox((0, 0), ln, font=f, stroke_width=max(1, int(size * 0.05)))[2] for ln in lines)
+            if widest <= ax1 - ax0 or size < 7: break
+            size *= 0.92
+        f = _font(size); sw = max(1, int(size * 0.05))
+        for i, ln in enumerate(lines):
+            b = d.textbbox((0, 0), ln, font=f, stroke_width=sw); tw, th = b[2] - b[0], b[3] - b[1]
+            d.text(((ax0 + ax1) / 2 - tw / 2 - b[0], ay0 + slot * i + slot / 2 - th / 2 - b[1]), ln, font=f, fill=fg, stroke_width=sw, stroke_fill=fg)
+    return im
+
+
+def _sign(X, s):
+    n = len(X["u"]); rgb = np.repeat(np.array([s["bg"]], dtype=np.float64), n, axis=0); hgt = np.zeros(n); smo = np.full(n, 0.55)
+    for f in np.unique(X["fid"]):
+        m = X["fid"] == f; fw = float(X["fw"][m][0]); fh = float(X["fh"][m][0])
+        if min(fw, fh) < 0.25 or not (s["lines"] or s["logo"]): continue
+        ppm = math.sqrt(m.sum() / max(fw * fh, 1e-6)); k = min(4.0, 4096.0 / max(fw, fh) / max(ppm, 1e-6))   # supersampled 4 x (at most 4096 px a side)
+        W = max(8, int(round(fw * ppm * k))); H = max(8, int(round(fh * ppm * k))); w2 = max(2, int(round(fw * ppm))); h2 = max(2, int(round(fh * ppm)))
+        from PIL import Image
+        img = np.asarray(_sign_image(s, W, H).resize((w2, h2), Image.BOX), dtype=np.float64) / 255.0
+        ix = np.clip((X["u"][m] / fw * w2).astype(int), 0, w2 - 1); iy = np.clip(((1.0 - X["v"][m] / fh) * h2).astype(int), 0, h2 - 1)
+        rgb[m] = img[iy, ix]; mm = fbm(X["P"][m], 1.1, 2, 211) - 0.5; rgb[m] *= (0.96 + 0.06 * mm)[:, None]
+    return np.clip(rgb, 0.0, 1.0), hgt, smo
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------ the bake
@@ -351,17 +448,24 @@ def _covered(small, big):
     g = np.concatenate([g[_in_poly(g, ps)], inset]); return bool(_in_poly(g, pb).all())
 
 
-def separate_coplanar(bm, step=0.003, rounds=6):
+def _sliver(f):
+    zs = [v.co.z for v in f.verts]; return abs(f.normal.z) < 0.1 and max(zs) <= 0.16 and max(zs) - min(zs) <= 0.16
+
+
+def separate_coplanar(bm, step=0.003, rounds=6, rules=1):
     """Resolves every coplanar overlapping pair (see coplanar_overlaps): the smaller PRIMITIVE moves `step` metres out along the shared normal (a 3 mm step cannot be seen from a road, a flickering face can);
     when both faces belong to the same primitive (a frame whose jamb tops sit inside its lintel top), the smaller face is deleted if the larger one covers it completely (nothing visible is lost). Repeats until
-    nothing is left that can be resolved this way. Returns the number of primitives moved plus faces deleted."""
-    moves = 0
+    nothing is left that can be resolved this way. Returns the number of primitives moved plus faces deleted.
+    `rules` 2 (the families of 2026-11-14 onwards; the frozen v002 assets keep 1 so that they rebuild as frozen): a primitive is never pushed back against an earlier move (two pairs on opposite sides of it made
+    it oscillate), and when one face of a pair is a thin side of a ground slab (at most 16 cm high, at the ground) and the other is not, the sliver is deleted: a few centimetres of slab edge under a wall end
+    are never seen, while moving either one only shifts the coincidence to the next wall along the lot boundary."""
+    moves = 0; disp = {}                                                     # displacement so far per primitive (keyed by one of its vertices): a primitive is never moved back against an earlier move
     for _ in range(rounds):
         bm.verts.index_update(); bm.faces.index_update(); bm.faces.ensure_lookup_table(); bm.normal_update()
         pairs = coplanar_overlaps(bm)
         if not pairs: break
-        comp = _components(bm); area = {}
-        for f in bm.faces: area[comp[f.index]] = area.get(comp[f.index], 0.0) + f.calc_area()
+        comp = _components(bm); area = {}; rep = {}
+        for f in bm.faces: area[comp[f.index]] = area.get(comp[f.index], 0.0) + f.calc_area(); rep.setdefault(comp[f.index], f.verts[0])
         done = set(); drop = set(); acted = 0
         for a, b in pairs:
             ca, cb = comp[a], comp[b]
@@ -369,9 +473,17 @@ def separate_coplanar(bm, step=0.003, rounds=6):
                 fa, fb = bm.faces[a], bm.faces[b]; sm, lg = (fa, fb) if fa.calc_area() < fb.calc_area() else (fb, fa)
                 if sm.index not in drop and lg.index not in drop and _covered(sm, lg): drop.add(sm.index); acted += 1
                 continue
-            mv = ca if (area[ca], ca) < (area[cb], cb) else cb
-            if mv in done: continue
-            done.add(mv); d = bm.faces[a].normal * step; acted += 1
+            if rules >= 2:
+                fa, fb = bm.faces[a], bm.faces[b]; sa, sb_ = _sliver(fa), _sliver(fb)
+                if sa != sb_:
+                    f = fa if sa else fb
+                    if f.index not in drop: drop.add(f.index); acted += 1
+                    continue
+            n = bm.faces[a].normal; order = sorted((ca, cb), key=lambda c: (area[c], c))
+            if rules < 2: ok = [order[0]] if order[0] not in done else []                                         # rules 1: exactly the behaviour the v002 assets were frozen with
+            else: ok = [c for c in order if c not in done and disp.get(rep[c], Vector((0, 0, 0))).dot(n) > -1e-9]
+            if not ok: continue
+            mv = ok[0]; done.add(mv); d = n * step; acted += 1; disp[rep[mv]] = disp.get(rep[mv], Vector((0, 0, 0))) + d
             for v in {v for f in bm.faces if comp[f.index] == mv for v in f.verts}: v.co += d
         if drop:
             bmesh.ops.delete(bm, geom=[bm.faces[i] for i in drop], context="FACES"); loose = [v for v in bm.verts if not v.link_faces]
@@ -459,7 +571,7 @@ def _density(F, key, ao_mean):
     """Texels per metre relative to a wall: what the eye is close to gets more, what it never sees gets almost none."""
     if ao_mean < 0.06: return 0.0                                  # buried inside another volume: two texels
     nz = F["n"].z
-    if key in ("glass", "glass_dark", "window_lattice", "window_plain", "window_timber", "wood_door", "board_dark", "shutter_steel"): return 1.3
+    if key in ("glass", "glass_dark", "glass_shop", "window_lattice", "window_plain", "window_timber", "wood_door", "board_dark", "shutter_steel") or key in SIGNS: return 1.6 if key in SIGNS else 1.3
     if nz > 0.7: return 0.38 if F["z0"] > 2.5 else 0.5             # roofs and paving
     if nz < -0.5: return 0.3                                       # soffits
     return 1.0
@@ -477,10 +589,10 @@ def _pack(sizes, S):
     return pos
 
 
-def bake(part, size=1024, ground=True, pad=None, seed=0):
+def bake(part, size=1024, ground=True, pad=None, seed=0, rules=1):
     """Paints the Part into an atlas. Returns {'base': (S, S, 4) sRGB + smoothness, 'normal': (S, S, 3), 'ppm': texels per metre on walls, 'faces': n, 'fill': share of the atlas used} and writes the UVs into the
     Part's bmesh (one island per face). Does not touch materials: `apply` does."""
-    bm = part.bm; bm.normal_update(); moved = separate_coplanar(bm); bm.faces.ensure_lookup_table(); bm.normal_update(); S = int(size); pad = (2 if S >= 1024 else 1) if pad is None else pad
+    bm = part.bm; bm.normal_update(); moved = separate_coplanar(bm, rules=rules); bm.faces.ensure_lookup_table(); bm.normal_update(); S = int(size); pad = (2 if S >= 1024 else 1) if pad is None else pad
     left = coplanar_overlaps(bm); mixed = sum(1 for i, j in left if bm.faces[i].material_index != bm.faces[j].material_index)   # same colour + world-space pattern = the same texels: cannot flicker; different colours can
     frames = _frames(bm); keys = list(part.keys); ao, opened = _occlusion(bm, frames, ground)
     dens = [_density(F, keys[F["key"]], float(g.max()) if op else 0.0) for F, g, op in zip(frames, ao, opened)]
@@ -608,10 +720,10 @@ def texture_names(asset_id, lod, version=1):
     t = f"T_{asset_id}_v{int(version):03d}_l{lod}"; return f"{t}_BaseColor", f"{t}_Normal"
 
 
-def apply(part, asset_id, lod, size, ground=True, version=1):
+def apply(part, asset_id, lod, size, ground=True, version=1, rules=1):
     """Bakes the Part and replaces all its materials by the one atlas material `M_sb_<asset>_v<NNN>_l<lod>` (base colour + smoothness in alpha, normal map). Returns the bake's numbers. The version is in every name because
     the private library is append-only: a later version must not reuse a material or texture name with other content."""
-    res = bake(part, size, ground); key = material_key(asset_id, lod, version); bn, nn = texture_names(asset_id, lod, version)
+    res = bake(part, size, ground, rules=rules); key = material_key(asset_id, lod, version); bn, nn = texture_names(asset_id, lod, version)
     AM.LIBRARY[key] = ((0.8, 0.8, 0.8), 0.8, 0.0, 0.0, f"surface bake of {asset_id} LOD{lod}: painted atlas ({size} px, {res['ppm']:.0f} px per metre on walls), ambient occlusion and weathering baked in")
     AM.TEXTURED[key] = {"texture": bn, "normal": nn, "smoothness_alpha": True}
     old = bpy.data.materials.get(f"M_{key}")

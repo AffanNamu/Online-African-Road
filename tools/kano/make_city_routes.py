@@ -42,19 +42,43 @@ def L(prop, weight, tag):
     w, d, *_ = D[prop]; return lot(prop, round(w, 2), round(d, 2), weight, tag)
 
 
-# ---- the mixes (a road class's families). Weights are shares of the slots, not counts.
-MAJOR = [L("kano_office_block_a", 1.0, "office"), L("kano_midrise_apartments_a", 1.2, "apartments"), L("kano_shopping_parade_a", 1.5, "shopping_parade"), L("aro_villa_2storey_hip_a", 0.4, "villa"), L("aro_villa_2storey_hip_b", 0.4, "villa")]
+# ---- the mixes (a road class's families). Weights are shares of the slots, not counts. Since 2026-11-14 (the owner's city construction directive) every road class has the character of a DISTRICT:
+#   the arterial is the commercial centre, the collector a mixed traditional street, the cross streets an old neighbourhood, the local street a middle-class one, the second collector a premium estate,
+#   the service road the industrial district, the terminal access the transport district; on the flyover interchange the urban flanks are the city centre and the highway flanks the edge of town.
+#   Fuel stations stand on ordinary, commercial and arterial roads and on the highway (families G); every building family of 2026-11-14 (G, H, I, J) is used.
+MAJOR = [L("kano_office_block_a", 1.0, "office"), L("kano_midrise_apartments_a", 0.9, "apartments"), L("kano_shopping_parade_a", 1.0, "shopping_parade"), L("kano_hotel_a", 0.6, "hotel"),
+         L("kano_bank_a", 0.6, "bank"), L("kano_supermarket_a", 0.5, "supermarket"), L("kano_shopping_plaza_a", 0.6, "shopping_plaza"), L("kano_car_showroom_a", 0.4, "car_showroom"),
+         L("kano_fastfood_a", 0.4, "fast_food"), L("kano_restaurant_a", 0.4, "restaurant"), L("kano_fuel_station_large_a", 0.5, "fuel_station"), L("aro_villa_2storey_hip_a", 0.2, "villa")]
 GRAND = [L("kano_mosque_grand_a", 1.0, "mosque_grand"), L("kano_mosque_grand_b", 1.0, "mosque_grand"), L("rg_ngn_mosque_medium_a", 0.6, "mosque_medium"), L("rg_ngn_mosque_medium_c", 0.6, "mosque_medium")]
-COMMERCIAL = [L("kano_shopping_parade_a", 1.2, "shopping_parade"), L("rg_ngn_shop_row_roadside_a", 1.5, "shop_row"), L("kano_midrise_apartments_a", 0.8, "apartments"), L("aro_villa_2storey_hip_a", 0.4, "villa"),
-              L("rg_ngn_hausa_compound_b", 0.7, "hausa_compound"), L("rg_ngn_shed_market_corrugated_a", 0.6, "market_shed")]
+COMMERCIAL = [L("rg_ngn_shop_row_roadside_a", 1.2, "shop_row"), L("rg_ngn_phone_shops_a", 0.8, "phone_shops"), L("rg_ngn_spare_parts_row_a", 0.6, "spare_parts"), L("rg_ngn_pharmacy_a", 0.6, "pharmacy"),
+              L("kano_shopping_parade_a", 0.6, "shopping_parade"), L("rg_ngn_shed_market_corrugated_a", 0.5, "market_shed"), L("rg_ngn_hausa_compound_b", 0.7, "hausa_compound"),
+              L("rg_ngn_lowcost_row_a", 0.6, "lowcost"), L("rg_ngn_fuel_station_small_a", 0.4, "fuel_station"), L("kano_fuel_station_medium_a", 0.35, "fuel_station"), L("kano_restaurant_a", 0.3, "restaurant"),
+              L("rg_ngn_clinic_a", 0.3, "clinic"), L("kano_midrise_apartments_a", 0.4, "apartments")]
 NEIGHBOURHOOD = [L("rg_ngn_mosque_medium_a", 1.0, "mosque_medium"), L("rg_ngn_mosque_medium_b", 1.0, "mosque_medium"), L("rg_ngn_mosque_medium_c", 1.0, "mosque_medium"), L("rg_ngn_mosque_small_a", 1.2, "mosque_small"),
                  L("rg_ngn_mosque_small_b", 1.2, "mosque_small"), L("rg_ngn_mosque_traditional_a", 0.8, "mosque_traditional")]
 LOCAL_MOSQUES = [L("rg_ngn_mosque_small_a", 1.0, "mosque_small"), L("rg_ngn_mosque_small_b", 1.0, "mosque_small"), L("rg_ngn_mosque_small_c", 1.0, "mosque_small"), L("rg_ngn_mosque_traditional_b", 1.0, "mosque_traditional")]
-RESIDENTIAL = [L("aro_villa_2storey_hip_a", 1.2, "villa"), L("aro_villa_2storey_hip_b", 1.2, "villa"), L("rg_ngn_hausa_compound_a", 1.0, "hausa_compound"), L("rg_ngn_hausa_compound_b", 1.2, "hausa_compound"),
-               L("rg_ngn_house_mudbrick_a", 1.2, "house"), L("rg_ngn_house_mudbrick_b", 1.0, "house"), L("rg_ngn_house_block_corrugated_a", 1.0, "house")]
-INDUSTRIAL = [L("rg_ngn_warehouse_hall_a", 1.0, "warehouse"), L("rg_ngn_warehouse_hall_b", 1.4, "warehouse"), L("rg_ngn_warehouse_cold_a", 0.8, "warehouse")]
-FLANK = [L("kano_office_block_a", 1.0, "office"), L("kano_midrise_apartments_a", 1.4, "apartments"), L("kano_shopping_parade_a", 1.2, "shopping_parade"), L("aro_villa_2storey_hip_a", 0.5, "villa"), L("aro_villa_2storey_hip_b", 0.5, "villa"),
-         L("rg_ngn_hausa_compound_a", 0.5, "hausa_compound")]
+TRADITIONAL = [L("rg_ngn_hausa_compound_a", 1.0, "hausa_compound"), L("rg_ngn_hausa_compound_b", 1.0, "hausa_compound"), L("rg_ngn_house_mudbrick_a", 1.0, "house"), L("rg_ngn_house_mudbrick_b", 0.8, "house"),
+               L("rg_ngn_house_block_corrugated_a", 0.8, "house"), L("rg_ngn_lowcost_row_a", 1.0, "lowcost"), L("rg_ngn_shop_row_roadside_a", 0.6, "shop_row"), L("rg_ngn_pharmacy_a", 0.3, "pharmacy"),
+               L("rg_ngn_phone_shops_a", 0.3, "phone_shops"), L("rg_ngn_fuel_station_small_a", 0.3, "fuel_station")]
+MIDDLE = [L("rg_ngn_bungalow_a", 1.2, "bungalow"), L("kano_semidetached_a", 1.0, "semi_detached"), L("aro_villa_2storey_hip_a", 0.8, "villa"), L("aro_villa_2storey_hip_b", 0.8, "villa"),
+          L("kano_duplex_a", 0.4, "duplex"), L("rg_ngn_house_block_corrugated_a", 0.5, "house"), L("rg_ngn_clinic_a", 0.2, "clinic"), L("kano_school_a", 0.8, "school")]
+PREMIUM = [L("kano_mansion_a", 1.6, "mansion"), L("kano_duplex_a", 1.2, "duplex"), L("aro_villa_2storey_hip_a", 1.0, "villa"), L("aro_villa_2storey_hip_b", 1.0, "villa"), L("kano_semidetached_a", 0.5, "semi_detached")]
+INDUSTRIAL = [L("rg_ngn_warehouse_hall_a", 1.0, "warehouse"), L("rg_ngn_warehouse_hall_b", 1.2, "warehouse"), L("rg_ngn_warehouse_cold_a", 0.7, "warehouse"), L("rg_ngn_wholesale_depot_a", 0.8, "wholesale"),
+              L("rg_ngn_factory_a", 0.6, "factory"), L("rg_ngn_auto_workshop_a", 0.6, "workshop"), L("rg_ngn_spare_parts_row_a", 0.4, "spare_parts"), L("kano_fuel_station_large_a", 0.3, "fuel_station")]
+TRANSPORT = [L("kano_motor_park_a", 1.6, "motor_park"), L("rg_ngn_auto_workshop_a", 0.6, "workshop"), L("rg_ngn_spare_parts_row_a", 0.6, "spare_parts"), L("kano_fastfood_a", 0.4, "fast_food"),
+             L("rg_ngn_phone_shops_a", 0.5, "phone_shops"), L("kano_fuel_station_medium_a", 0.4, "fuel_station"), L("rg_ngn_shop_row_roadside_a", 0.6, "shop_row")]
+FLANK = [L("kano_office_block_a", 1.1, "office"), L("kano_midrise_apartments_a", 1.4, "apartments"), L("kano_shopping_parade_a", 1.0, "shopping_parade"), L("kano_hotel_a", 0.5, "hotel"),
+         L("kano_hospital_general_a", 0.35, "hospital"), L("kano_government_offices_a", 0.15, "government"), L("kano_shopping_plaza_a", 0.35, "shopping_plaza"), L("kano_bank_a", 0.5, "bank"),
+         L("kano_supermarket_a", 0.3, "supermarket"), L("kano_police_division_a", 0.2, "police"), L("kano_fire_station_a", 0.15, "fire_station"), L("aro_villa_2storey_hip_a", 0.5, "villa"),
+         L("kano_fuel_station_large_a", 0.3, "fuel_station"), L("rg_ngn_pharmacy_a", 0.5, "pharmacy"), L("rg_ngn_phone_shops_a", 0.5, "phone_shops"), L("kano_restaurant_a", 0.3, "restaurant"),
+         L("kano_fastfood_a", 0.3, "fast_food"), L("aro_villa_2storey_hip_b", 0.4, "villa"), L("rg_ngn_hausa_compound_a", 0.3, "hausa_compound")]
+# (mid-size blocks and the small fabric of shops and houses between them dominate beside the deck, R-039: a dense city on both sides; the large civic lots are rarer)
+HIGHWAY = [L("kano_fuel_station_large_a", 0.6, "fuel_station"), L("kano_fuel_station_medium_a", 0.5, "fuel_station"), L("kano_car_showroom_a", 0.4, "car_showroom"), L("rg_ngn_factory_a", 0.4, "factory"),
+           L("rg_ngn_wholesale_depot_a", 0.5, "wholesale"), L("rg_ngn_hausa_compound_a", 0.6, "hausa_compound"), L("rg_ngn_bungalow_a", 0.6, "bungalow"), L("rg_ngn_house_block_corrugated_a", 0.5, "house"),
+           L("rg_ngn_lowcost_row_a", 0.5, "lowcost"), L("rg_ngn_auto_workshop_a", 0.4, "workshop"), L("kano_motor_park_a", 0.3, "motor_park"),
+]
+EDGE = [L("kano_school_a", 1.0, "school"), L("kano_government_offices_a", 1.8, "government"), L("kano_hospital_general_a", 0.6, "hospital"), L("rg_ngn_factory_a", 0.8, "factory"), L("kano_mansion_a", 0.8, "mansion"),
+        L("kano_fuel_station_large_a", 0.5, "fuel_station"), L("rg_ngn_bungalow_a", 0.6, "bungalow")]                  # the civic and premium edge of town: the largest lots (50 x 36, 48 x 38, 42 x 36) need its deep plots
 
 
 def rule(rid, mix, anchors=None, every=0, corridor="", profiles="", zones="", side="both", s_from=0.0, s_to=0.0, setback=(5.0, 9.0), gap=(1.5, 6.0), block=120.0, presence=0.9, clearance=2.5, **kw):
@@ -71,12 +95,12 @@ def city_e1():
     r["frontage"] = [
         rule("arterial_major", MAJOR, GRAND, 2, profiles="kano_arterial", setback=(10.0, 15.0), block=150.0, presence=0.92, rows=2),
         rule("collector_main", COMMERCIAL, NEIGHBOURHOOD, 3, profiles="kano_collector", setback=(4.5, 8.0), block=110.0, presence=0.92),
-        rule("cross_street_right", COMMERCIAL, LOCAL_MOSQUES, 2, corridor="j_cross", s_from=100.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
-        rule("cross_street_left", COMMERCIAL, LOCAL_MOSQUES, 2, corridor="j_cross_left", s_from=100.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
-        rule("local_street", RESIDENTIAL, LOCAL_MOSQUES, 2, corridor="j_local", s_from=60.0, setback=(3.5, 6.0), gap=(1.0, 4.0), block=80.0, presence=0.92),
+        rule("cross_street_right", TRADITIONAL, LOCAL_MOSQUES, 2, corridor="j_cross", s_from=100.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
+        rule("cross_street_left", TRADITIONAL, LOCAL_MOSQUES, 2, corridor="j_cross_left", s_from=100.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
+        rule("local_street", MIDDLE, LOCAL_MOSQUES, 2, corridor="j_local", s_from=60.0, setback=(3.5, 6.0), gap=(1.0, 4.0), block=80.0, presence=0.92),
         rule("service_road", INDUSTRIAL, None, 0, corridor="j_service", s_from=60.0, s_to=0.0, setback=(8.0, 14.0), gap=(3.0, 8.0), block=100.0, presence=0.9),
-        rule("collector_cross_2", COMMERCIAL, LOCAL_MOSQUES, 2, corridor="j_collector", s_from=72.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
-        rule("terminal_access", COMMERCIAL, None, 0, corridor="j_terminal", s_from=72.0, s_to=140.0, setback=(4.5, 7.0), block=90.0, presence=0.85),
+        rule("collector_cross_2", PREMIUM, LOCAL_MOSQUES, 2, corridor="j_collector", s_from=72.0, setback=(4.5, 7.0), block=90.0, presence=0.9),
+        rule("terminal_access", TRANSPORT, None, 0, corridor="j_terminal", s_from=72.0, s_to=140.0, setback=(4.5, 7.0), block=90.0, presence=0.85),
     ]
     return r
 
@@ -87,7 +111,9 @@ def city_f1():
     r["name"] = "Kano city flyover interchange (densification test route; the F1 interchange with frontage rules)"
     r["frontage"] = [
         rule("flank_urban", FLANK, GRAND, 2, zones="urban", setback=(32.0, 44.0), gap=(2.0, 8.0), block=150.0, presence=0.95, rows=3, anchorPhase=1),
-        rule("flank_highway", RESIDENTIAL, LOCAL_MOSQUES, 4, zones="highway", setback=(34.0, 50.0), gap=(6.0, 20.0), block=150.0, presence=0.5),
+        rule("flank_highway", HIGHWAY, LOCAL_MOSQUES, 4, zones="highway", side="left", setback=(34.0, 50.0), gap=(6.0, 20.0), block=150.0, presence=0.5),
+        rule("flank_edge_west", EDGE, LOCAL_MOSQUES, 4, zones="highway", side="right", s_to=480.0, setback=(34.0, 50.0), gap=(6.0, 20.0), block=150.0, presence=0.7),      # clear of the urban rows (s 563 to 1366)
+        rule("flank_edge_east", EDGE, LOCAL_MOSQUES, 4, zones="highway", side="right", s_from=1450.0, setback=(34.0, 50.0), gap=(6.0, 20.0), block=150.0, presence=0.7),
         rule("ring_edge", FLANK, None, 0, corridor="r_highway", setback=(14.0, 22.0), gap=(2.0, 8.0), block=120.0, presence=0.9),
     ]
     return r
@@ -101,7 +127,7 @@ def catalog_entries():
     out = []
     for pid in sorted(used):
         w, d, h, lods, entry = D[pid]
-        cull = CULL["grand"] if "grand" in pid else CULL["medium"] if "medium" in pid else CULL["small"] if "small" in pid else CULL["trad"] if "traditional" in pid else CULL["city"] if pid.startswith("kano_") else CULL["warehouse"] if "warehouse" in pid else CULL["villa"] if "villa" in pid else CULL["house"]
+        cull = CULL["grand"] if "grand" in pid else CULL["medium"] if "medium" in pid else CULL["small"] if "small" in pid else CULL["trad"] if "traditional" in pid else CULL["city"] if pid.startswith("kano_") else CULL["warehouse"] if ("warehouse" in pid or "factory" in pid or "depot" in pid) else CULL["villa"] if "villa" in pid else CULL["house"]
         e = {"id": pid, "category": "buildings", "status": "dev",
              "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
              "source": "dev:" + pid, "collider": "box", "heightM": round(h, 2), "widthM": round(w, 2), "depthM": round(d, 2), "cullDistance": float(cull), "lodTriangles": lods, "castShadow": True,

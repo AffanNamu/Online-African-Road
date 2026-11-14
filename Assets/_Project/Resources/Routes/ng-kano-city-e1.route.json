@@ -1121,30 +1121,79 @@
     },
     {
      "prop": "kano_midrise_apartments_a",
-     "weight": 1.2,
+     "weight": 0.9,
      "widthM": 24.49,
      "depthM": 17.95,
      "tag": "apartments"
     },
     {
      "prop": "kano_shopping_parade_a",
-     "weight": 1.5,
+     "weight": 1.0,
      "widthM": 36.68,
      "depthM": 17.04,
      "tag": "shopping_parade"
     },
     {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
+     "prop": "kano_hotel_a",
+     "weight": 0.6,
+     "widthM": 36.0,
+     "depthM": 32.0,
+     "tag": "hotel"
     },
     {
-     "prop": "aro_villa_2storey_hip_b",
+     "prop": "kano_bank_a",
+     "weight": 0.6,
+     "widthM": 28.0,
+     "depthM": 24.0,
+     "tag": "bank"
+    },
+    {
+     "prop": "kano_supermarket_a",
+     "weight": 0.5,
+     "widthM": 44.44,
+     "depthM": 36.12,
+     "tag": "supermarket"
+    },
+    {
+     "prop": "kano_shopping_plaza_a",
+     "weight": 0.6,
+     "widthM": 42.0,
+     "depthM": 25.05,
+     "tag": "shopping_plaza"
+    },
+    {
+     "prop": "kano_car_showroom_a",
      "weight": 0.4,
-     "widthM": 16.48,
-     "depthM": 13.2,
+     "widthM": 36.0,
+     "depthM": 30.0,
+     "tag": "car_showroom"
+    },
+    {
+     "prop": "kano_fastfood_a",
+     "weight": 0.4,
+     "widthM": 26.0,
+     "depthM": 24.0,
+     "tag": "fast_food"
+    },
+    {
+     "prop": "kano_restaurant_a",
+     "weight": 0.4,
+     "widthM": 24.44,
+     "depthM": 22.12,
+     "tag": "restaurant"
+    },
+    {
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.5,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.2,
+     "widthM": 13.6,
+     "depthM": 12.9,
      "tag": "villa"
     }
    ],
@@ -1204,32 +1253,46 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
-     "widthM": 36.68,
-     "depthM": 17.04,
-     "tag": "shopping_parade"
-    },
-    {
      "prop": "rg_ngn_shop_row_roadside_a",
-     "weight": 1.5,
+     "weight": 1.2,
      "widthM": 15.81,
      "depthM": 6.77,
      "tag": "shop_row"
     },
     {
-     "prop": "kano_midrise_apartments_a",
+     "prop": "rg_ngn_phone_shops_a",
      "weight": 0.8,
-     "widthM": 24.49,
-     "depthM": 17.95,
-     "tag": "apartments"
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
     },
     {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
+     "prop": "rg_ngn_spare_parts_row_a",
+     "weight": 0.6,
+     "widthM": 22.6,
+     "depthM": 10.7,
+     "tag": "spare_parts"
+    },
+    {
+     "prop": "rg_ngn_pharmacy_a",
+     "weight": 0.6,
+     "widthM": 14.0,
+     "depthM": 13.05,
+     "tag": "pharmacy"
+    },
+    {
+     "prop": "kano_shopping_parade_a",
+     "weight": 0.6,
+     "widthM": 36.68,
+     "depthM": 17.04,
+     "tag": "shopping_parade"
+    },
+    {
+     "prop": "rg_ngn_shed_market_corrugated_a",
+     "weight": 0.5,
+     "widthM": 15.4,
+     "depthM": 9.44,
+     "tag": "market_shed"
     },
     {
      "prop": "rg_ngn_hausa_compound_b",
@@ -1239,11 +1302,46 @@
      "tag": "hausa_compound"
     },
     {
-     "prop": "rg_ngn_shed_market_corrugated_a",
+     "prop": "rg_ngn_lowcost_row_a",
      "weight": 0.6,
-     "widthM": 15.4,
-     "depthM": 9.44,
-     "tag": "market_shed"
+     "widthM": 22.0,
+     "depthM": 14.0,
+     "tag": "lowcost"
+    },
+    {
+     "prop": "rg_ngn_fuel_station_small_a",
+     "weight": 0.4,
+     "widthM": 20.44,
+     "depthM": 16.12,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "kano_fuel_station_medium_a",
+     "weight": 0.35,
+     "widthM": 32.44,
+     "depthM": 26.14,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "kano_restaurant_a",
+     "weight": 0.3,
+     "widthM": 24.44,
+     "depthM": 22.12,
+     "tag": "restaurant"
+    },
+    {
+     "prop": "rg_ngn_clinic_a",
+     "weight": 0.3,
+     "widthM": 24.44,
+     "depthM": 20.58,
+     "tag": "clinic"
+    },
+    {
+     "prop": "kano_midrise_apartments_a",
+     "weight": 0.4,
+     "widthM": 24.49,
+     "depthM": 17.95,
+     "tag": "apartments"
     }
    ],
    "anchors": [
@@ -1316,46 +1414,74 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
-     "widthM": 36.68,
-     "depthM": 17.04,
-     "tag": "shopping_parade"
-    },
-    {
-     "prop": "rg_ngn_shop_row_roadside_a",
-     "weight": 1.5,
-     "widthM": 15.81,
-     "depthM": 6.77,
-     "tag": "shop_row"
-    },
-    {
-     "prop": "kano_midrise_apartments_a",
-     "weight": 0.8,
-     "widthM": 24.49,
-     "depthM": 17.95,
-     "tag": "apartments"
-    },
-    {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 1.0,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
     },
     {
      "prop": "rg_ngn_hausa_compound_b",
-     "weight": 0.7,
+     "weight": 1.0,
      "widthM": 14.14,
      "depthM": 12.18,
      "tag": "hausa_compound"
     },
     {
-     "prop": "rg_ngn_shed_market_corrugated_a",
+     "prop": "rg_ngn_house_mudbrick_a",
+     "weight": 1.0,
+     "widthM": 8.84,
+     "depthM": 7.92,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_b",
+     "weight": 0.8,
+     "widthM": 10.84,
+     "depthM": 7.49,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_block_corrugated_a",
+     "weight": 0.8,
+     "widthM": 10.24,
+     "depthM": 7.24,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_lowcost_row_a",
+     "weight": 1.0,
+     "widthM": 22.0,
+     "depthM": 14.0,
+     "tag": "lowcost"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
      "weight": 0.6,
-     "widthM": 15.4,
-     "depthM": 9.44,
-     "tag": "market_shed"
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "rg_ngn_pharmacy_a",
+     "weight": 0.3,
+     "widthM": 14.0,
+     "depthM": 13.05,
+     "tag": "pharmacy"
+    },
+    {
+     "prop": "rg_ngn_phone_shops_a",
+     "weight": 0.3,
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
+    },
+    {
+     "prop": "rg_ngn_fuel_station_small_a",
+     "weight": 0.3,
+     "widthM": 20.44,
+     "depthM": 16.12,
+     "tag": "fuel_station"
     }
    ],
    "anchors": [
@@ -1414,46 +1540,74 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
-     "widthM": 36.68,
-     "depthM": 17.04,
-     "tag": "shopping_parade"
-    },
-    {
-     "prop": "rg_ngn_shop_row_roadside_a",
-     "weight": 1.5,
-     "widthM": 15.81,
-     "depthM": 6.77,
-     "tag": "shop_row"
-    },
-    {
-     "prop": "kano_midrise_apartments_a",
-     "weight": 0.8,
-     "widthM": 24.49,
-     "depthM": 17.95,
-     "tag": "apartments"
-    },
-    {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
+     "prop": "rg_ngn_hausa_compound_a",
+     "weight": 1.0,
+     "widthM": 20.14,
+     "depthM": 16.18,
+     "tag": "hausa_compound"
     },
     {
      "prop": "rg_ngn_hausa_compound_b",
-     "weight": 0.7,
+     "weight": 1.0,
      "widthM": 14.14,
      "depthM": 12.18,
      "tag": "hausa_compound"
     },
     {
-     "prop": "rg_ngn_shed_market_corrugated_a",
+     "prop": "rg_ngn_house_mudbrick_a",
+     "weight": 1.0,
+     "widthM": 8.84,
+     "depthM": 7.92,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_mudbrick_b",
+     "weight": 0.8,
+     "widthM": 10.84,
+     "depthM": 7.49,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_house_block_corrugated_a",
+     "weight": 0.8,
+     "widthM": 10.24,
+     "depthM": 7.24,
+     "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_lowcost_row_a",
+     "weight": 1.0,
+     "widthM": 22.0,
+     "depthM": 14.0,
+     "tag": "lowcost"
+    },
+    {
+     "prop": "rg_ngn_shop_row_roadside_a",
      "weight": 0.6,
-     "widthM": 15.4,
-     "depthM": 9.44,
-     "tag": "market_shed"
+     "widthM": 15.81,
+     "depthM": 6.77,
+     "tag": "shop_row"
+    },
+    {
+     "prop": "rg_ngn_pharmacy_a",
+     "weight": 0.3,
+     "widthM": 14.0,
+     "depthM": 13.05,
+     "tag": "pharmacy"
+    },
+    {
+     "prop": "rg_ngn_phone_shops_a",
+     "weight": 0.3,
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
+    },
+    {
+     "prop": "rg_ngn_fuel_station_small_a",
+     "weight": 0.3,
+     "widthM": 20.44,
+     "depthM": 16.12,
+     "tag": "fuel_station"
     }
    ],
    "anchors": [
@@ -1512,53 +1666,60 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "aro_villa_2storey_hip_a",
+     "prop": "rg_ngn_bungalow_a",
      "weight": 1.2,
+     "widthM": 24.44,
+     "depthM": 24.58,
+     "tag": "bungalow"
+    },
+    {
+     "prop": "kano_semidetached_a",
+     "weight": 1.0,
+     "widthM": 26.44,
+     "depthM": 22.58,
+     "tag": "semi_detached"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_a",
+     "weight": 0.8,
      "widthM": 13.6,
      "depthM": 12.9,
      "tag": "villa"
     },
     {
      "prop": "aro_villa_2storey_hip_b",
-     "weight": 1.2,
+     "weight": 0.8,
      "widthM": 16.48,
      "depthM": 13.2,
      "tag": "villa"
     },
     {
-     "prop": "rg_ngn_hausa_compound_a",
-     "weight": 1.0,
-     "widthM": 20.14,
-     "depthM": 16.18,
-     "tag": "hausa_compound"
-    },
-    {
-     "prop": "rg_ngn_hausa_compound_b",
-     "weight": 1.2,
-     "widthM": 14.14,
-     "depthM": 12.18,
-     "tag": "hausa_compound"
-    },
-    {
-     "prop": "rg_ngn_house_mudbrick_a",
-     "weight": 1.2,
-     "widthM": 8.84,
-     "depthM": 7.92,
-     "tag": "house"
-    },
-    {
-     "prop": "rg_ngn_house_mudbrick_b",
-     "weight": 1.0,
-     "widthM": 10.84,
-     "depthM": 7.49,
-     "tag": "house"
+     "prop": "kano_duplex_a",
+     "weight": 0.4,
+     "widthM": 30.44,
+     "depthM": 28.58,
+     "tag": "duplex"
     },
     {
      "prop": "rg_ngn_house_block_corrugated_a",
-     "weight": 1.0,
+     "weight": 0.5,
      "widthM": 10.24,
      "depthM": 7.24,
      "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_clinic_a",
+     "weight": 0.2,
+     "widthM": 24.44,
+     "depthM": 20.58,
+     "tag": "clinic"
+    },
+    {
+     "prop": "kano_school_a",
+     "weight": 0.8,
+     "widthM": 50.44,
+     "depthM": 36.58,
+     "tag": "school"
     }
    ],
    "anchors": [
@@ -1625,17 +1786,52 @@
     },
     {
      "prop": "rg_ngn_warehouse_hall_b",
-     "weight": 1.4,
+     "weight": 1.2,
      "widthM": 36.4,
      "depthM": 21.04,
      "tag": "warehouse"
     },
     {
      "prop": "rg_ngn_warehouse_cold_a",
-     "weight": 0.8,
+     "weight": 0.7,
      "widthM": 30.66,
      "depthM": 18.02,
      "tag": "warehouse"
+    },
+    {
+     "prop": "rg_ngn_wholesale_depot_a",
+     "weight": 0.8,
+     "widthM": 32.44,
+     "depthM": 24.58,
+     "tag": "wholesale"
+    },
+    {
+     "prop": "rg_ngn_factory_a",
+     "weight": 0.6,
+     "widthM": 46.44,
+     "depthM": 34.58,
+     "tag": "factory"
+    },
+    {
+     "prop": "rg_ngn_auto_workshop_a",
+     "weight": 0.6,
+     "widthM": 22.44,
+     "depthM": 18.12,
+     "tag": "workshop"
+    },
+    {
+     "prop": "rg_ngn_spare_parts_row_a",
+     "weight": 0.4,
+     "widthM": 22.6,
+     "depthM": 10.7,
+     "tag": "spare_parts"
+    },
+    {
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.3,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
     }
    ],
    "anchors": [],
@@ -1665,46 +1861,39 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "kano_shopping_parade_a",
+     "prop": "kano_mansion_a",
+     "weight": 1.6,
+     "widthM": 42.44,
+     "depthM": 36.58,
+     "tag": "mansion"
+    },
+    {
+     "prop": "kano_duplex_a",
      "weight": 1.2,
-     "widthM": 36.68,
-     "depthM": 17.04,
-     "tag": "shopping_parade"
-    },
-    {
-     "prop": "rg_ngn_shop_row_roadside_a",
-     "weight": 1.5,
-     "widthM": 15.81,
-     "depthM": 6.77,
-     "tag": "shop_row"
-    },
-    {
-     "prop": "kano_midrise_apartments_a",
-     "weight": 0.8,
-     "widthM": 24.49,
-     "depthM": 17.95,
-     "tag": "apartments"
+     "widthM": 30.44,
+     "depthM": 28.58,
+     "tag": "duplex"
     },
     {
      "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
+     "weight": 1.0,
      "widthM": 13.6,
      "depthM": 12.9,
      "tag": "villa"
     },
     {
-     "prop": "rg_ngn_hausa_compound_b",
-     "weight": 0.7,
-     "widthM": 14.14,
-     "depthM": 12.18,
-     "tag": "hausa_compound"
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 1.0,
+     "widthM": 16.48,
+     "depthM": 13.2,
+     "tag": "villa"
     },
     {
-     "prop": "rg_ngn_shed_market_corrugated_a",
-     "weight": 0.6,
-     "widthM": 15.4,
-     "depthM": 9.44,
-     "tag": "market_shed"
+     "prop": "kano_semidetached_a",
+     "weight": 0.5,
+     "widthM": 26.44,
+     "depthM": 22.58,
+     "tag": "semi_detached"
     }
    ],
    "anchors": [
@@ -1763,46 +1952,53 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
-     "widthM": 36.68,
-     "depthM": 17.04,
-     "tag": "shopping_parade"
+     "prop": "kano_motor_park_a",
+     "weight": 1.6,
+     "widthM": 46.44,
+     "depthM": 36.12,
+     "tag": "motor_park"
+    },
+    {
+     "prop": "rg_ngn_auto_workshop_a",
+     "weight": 0.6,
+     "widthM": 22.44,
+     "depthM": 18.12,
+     "tag": "workshop"
+    },
+    {
+     "prop": "rg_ngn_spare_parts_row_a",
+     "weight": 0.6,
+     "widthM": 22.6,
+     "depthM": 10.7,
+     "tag": "spare_parts"
+    },
+    {
+     "prop": "kano_fastfood_a",
+     "weight": 0.4,
+     "widthM": 26.0,
+     "depthM": 24.0,
+     "tag": "fast_food"
+    },
+    {
+     "prop": "rg_ngn_phone_shops_a",
+     "weight": 0.5,
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
+    },
+    {
+     "prop": "kano_fuel_station_medium_a",
+     "weight": 0.4,
+     "widthM": 32.44,
+     "depthM": 26.14,
+     "tag": "fuel_station"
     },
     {
      "prop": "rg_ngn_shop_row_roadside_a",
-     "weight": 1.5,
+     "weight": 0.6,
      "widthM": 15.81,
      "depthM": 6.77,
      "tag": "shop_row"
-    },
-    {
-     "prop": "kano_midrise_apartments_a",
-     "weight": 0.8,
-     "widthM": 24.49,
-     "depthM": 17.95,
-     "tag": "apartments"
-    },
-    {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 0.4,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
-    },
-    {
-     "prop": "rg_ngn_hausa_compound_b",
-     "weight": 0.7,
-     "widthM": 14.14,
-     "depthM": 12.18,
-     "tag": "hausa_compound"
-    },
-    {
-     "prop": "rg_ngn_shed_market_corrugated_a",
-     "weight": 0.6,
-     "widthM": 15.4,
-     "depthM": 9.44,
-     "tag": "market_shed"
     }
    ],
    "anchors": [],

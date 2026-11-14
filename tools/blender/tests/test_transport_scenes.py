@@ -58,6 +58,9 @@ def test_the_scenes_use_the_whole_kit_that_makes_sense_to_show():
     for a in ([f"rg_ngn_mosque_{k}" for k in ("medium_a", "medium_b", "medium_c", "small_a", "small_b", "small_c", "traditional_a", "traditional_b")]
               + ["kano_mosque_grand_a", "kano_mosque_grand_b", "kano_shopping_parade_a", "kano_office_block_a", "kano_midrise_apartments_a", "lmk_kano_roundabout_monument_b"]):
         assert a in used, f"{a} is not in any review scene, so the review build would make no prefab for it"
+    cat = json.loads(SC.CATALOG.read_text())["props"]; new = [e["id"] for e in cat if any(f"family {f}," in e["description"] for f in "GHIJ")]
+    assert len(new) == 28, len(new)                                                               # every asset of the city construction directive (families G to J) is shown, so the review build makes its prefab
+    for a in new: assert a in used, f"{a} is not in any review scene"
 
 
 def test_scene_geometry_makes_sense_for_vehicles():
@@ -93,7 +96,8 @@ def test_stage_copies_the_exports_and_writes_the_placements(tmp_path):
     assert staged == {"aro_bench_a": "v001", "aro_litter_bin_a": "v001"}
     assert (out / "Models" / "aro_bench_a" / "v001" / "aro_bench_a.fbx").is_file() and (out / "Textures" / "kano_kit" / "T_tk_paint_Palette.png").is_file()
     assert [m["name"] for m in json.loads((out / "Materials" / "aro_materials.json").read_text())["materials"]] == ["M_concrete", "M_tk_paint"]
-    assert {p.name for p in (out / "placements").glob("*.json")} == {"env_logistics_yard_dry.json", "env_bus_terminal_dry.json", "env_road_furniture_dry.json", "env_roundabout_kit_dry.json", "env_kano_mosques_dry.json", "env_kano_city_row_dry.json"}
+    assert {p.name for p in (out / "placements").glob("*.json")} == {"env_logistics_yard_dry.json", "env_bus_terminal_dry.json", "env_road_furniture_dry.json", "env_roundabout_kit_dry.json", "env_kano_mosques_dry.json", "env_kano_city_row_dry.json",
+                                                                    "env_kano_fuel_dry.json", "env_kano_commerce_dry.json", "env_kano_civic_dry.json", "env_kano_homes_dry.json"}
     with pytest.raises(SystemExit): ST.stage(W, out, ["aro_missing_a"], SCENES)
 
 

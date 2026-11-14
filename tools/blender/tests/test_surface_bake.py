@@ -15,6 +15,9 @@ from transport_kit.build_transport import SPECS, build_scene, load_all
 
 load_all()
 BAKED = sorted(a for a, sp in SPECS.items() if sp.get("surface"))
+from transport_kit import common as _C
+REALISM = sorted(a for a in BAKED if _C.EXTRAS[a]["family"] in "ABCDEF")           # the realism pass of 2026-11-13 (version 2 of assets that had a version 1)
+CITY_NEW = sorted(a for a in SPECS if _C.EXTRAS[a]["family"] in "GHIJ")             # the city construction directive of 2026-11-14 (new ids, version 1)
 
 
 def house():
@@ -84,7 +87,7 @@ def test_a_bake_that_cannot_fit_says_so():
 
 
 def test_the_baked_assets_are_the_solid_ones_and_the_glass_shelters_stay_on_the_palette():
-    assert len(BAKED) == 35
+    assert len(REALISM) == 35 and len(CITY_NEW) == 28 and set(CITY_NEW) <= set(BAKED) and len(BAKED) == 35 + 28
     for must in ("kano_mosque_grand_a", "rg_ngn_mosque_traditional_b", "kano_shopping_parade_a", "kano_office_block_a", "kano_midrise_apartments_a", "rg_ngn_warehouse_hall_a", "kano_bus_terminal_hall_a", "aro_container_stack_3"): assert must in BAKED, must
     for must_not in ("aro_bus_shelter_a", "kano_bus_shelter_long_a", "aro_streetlight_arm_single_a", "aro_road_sign_stop_a", "aro_noise_wall_set", "aro_guardrail_post_set"): assert must_not not in BAKED, must_not
     for a in BAKED: assert all(32 <= s <= 2048 and s & (s - 1) == 0 for s in SPECS[a]["surface"]) and len(SPECS[a]["surface"]) == 3, a
@@ -115,7 +118,8 @@ def test_versions_baked_assets_are_v002_in_a_fresh_workspace_and_the_rest_v001(t
     from transport_kit.build_transport import next_version
     from aro_blender import workspace as ws
     monkeypatch.delenv("ARO_VERSION_FLOOR", raising=False)
-    assert all(SPECS[a]["version"] == 2 for a in BAKED) and all(sp["version"] == 1 for a, sp in SPECS.items() if a not in BAKED)
+    assert all(SPECS[a]["version"] == 2 for a in REALISM) and all(sp["version"] == 1 for a, sp in SPECS.items() if a not in REALISM)
+    assert next_version(tmp_path, SPECS["kano_fuel_station_large_a"]) == 1                                               # a new family starts at v001 even though it is baked
     assert next_version(tmp_path, SPECS["kano_mosque_grand_a"]) == 2 and next_version(tmp_path, SPECS["aro_bus_shelter_a"]) == 1
     v, d = ws.new_version_dir(tmp_path, "buildings", "kano_mosque_grand_a", floor=2); assert v == 2 and d.name == "v002"
     assert next_version(tmp_path, SPECS["kano_mosque_grand_a"]) == 3

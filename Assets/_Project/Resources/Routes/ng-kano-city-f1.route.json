@@ -672,7 +672,7 @@
    "mix": [
     {
      "prop": "kano_office_block_a",
-     "weight": 1.0,
+     "weight": 1.1,
      "widthM": 22.56,
      "depthM": 21.25,
      "tag": "office"
@@ -686,10 +686,66 @@
     },
     {
      "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
+     "weight": 1.0,
      "widthM": 36.68,
      "depthM": 17.04,
      "tag": "shopping_parade"
+    },
+    {
+     "prop": "kano_hotel_a",
+     "weight": 0.5,
+     "widthM": 36.0,
+     "depthM": 32.0,
+     "tag": "hotel"
+    },
+    {
+     "prop": "kano_hospital_general_a",
+     "weight": 0.35,
+     "widthM": 48.63,
+     "depthM": 38.58,
+     "tag": "hospital"
+    },
+    {
+     "prop": "kano_government_offices_a",
+     "weight": 0.15,
+     "widthM": 48.44,
+     "depthM": 34.58,
+     "tag": "government"
+    },
+    {
+     "prop": "kano_shopping_plaza_a",
+     "weight": 0.35,
+     "widthM": 42.0,
+     "depthM": 25.05,
+     "tag": "shopping_plaza"
+    },
+    {
+     "prop": "kano_bank_a",
+     "weight": 0.5,
+     "widthM": 28.0,
+     "depthM": 24.0,
+     "tag": "bank"
+    },
+    {
+     "prop": "kano_supermarket_a",
+     "weight": 0.3,
+     "widthM": 44.44,
+     "depthM": 36.12,
+     "tag": "supermarket"
+    },
+    {
+     "prop": "kano_police_division_a",
+     "weight": 0.2,
+     "widthM": 28.44,
+     "depthM": 24.58,
+     "tag": "police"
+    },
+    {
+     "prop": "kano_fire_station_a",
+     "weight": 0.15,
+     "widthM": 30.44,
+     "depthM": 24.12,
+     "tag": "fire_station"
     },
     {
      "prop": "aro_villa_2storey_hip_a",
@@ -699,15 +755,50 @@
      "tag": "villa"
     },
     {
-     "prop": "aro_villa_2storey_hip_b",
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.3,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "rg_ngn_pharmacy_a",
      "weight": 0.5,
+     "widthM": 14.0,
+     "depthM": 13.05,
+     "tag": "pharmacy"
+    },
+    {
+     "prop": "rg_ngn_phone_shops_a",
+     "weight": 0.5,
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
+    },
+    {
+     "prop": "kano_restaurant_a",
+     "weight": 0.3,
+     "widthM": 24.44,
+     "depthM": 22.12,
+     "tag": "restaurant"
+    },
+    {
+     "prop": "kano_fastfood_a",
+     "weight": 0.3,
+     "widthM": 26.0,
+     "depthM": 24.0,
+     "tag": "fast_food"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 0.4,
      "widthM": 16.48,
      "depthM": 13.2,
      "tag": "villa"
     },
     {
      "prop": "rg_ngn_hausa_compound_a",
-     "weight": 0.5,
+     "weight": 0.3,
      "widthM": 20.14,
      "depthM": 16.18,
      "tag": "hausa_compound"
@@ -751,7 +842,7 @@
    "corridor": "",
    "zones": "highway",
    "profiles": "",
-   "side": "both",
+   "side": "left",
    "sFrom": 0.0,
    "sTo": 0.0,
    "setbackMin": 34.0,
@@ -769,53 +860,291 @@
    "rowGap": 8.0,
    "mix": [
     {
-     "prop": "aro_villa_2storey_hip_a",
-     "weight": 1.2,
-     "widthM": 13.6,
-     "depthM": 12.9,
-     "tag": "villa"
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.6,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
     },
     {
-     "prop": "aro_villa_2storey_hip_b",
-     "weight": 1.2,
-     "widthM": 16.48,
-     "depthM": 13.2,
-     "tag": "villa"
+     "prop": "kano_fuel_station_medium_a",
+     "weight": 0.5,
+     "widthM": 32.44,
+     "depthM": 26.14,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "kano_car_showroom_a",
+     "weight": 0.4,
+     "widthM": 36.0,
+     "depthM": 30.0,
+     "tag": "car_showroom"
+    },
+    {
+     "prop": "rg_ngn_factory_a",
+     "weight": 0.4,
+     "widthM": 46.44,
+     "depthM": 34.58,
+     "tag": "factory"
+    },
+    {
+     "prop": "rg_ngn_wholesale_depot_a",
+     "weight": 0.5,
+     "widthM": 32.44,
+     "depthM": 24.58,
+     "tag": "wholesale"
     },
     {
      "prop": "rg_ngn_hausa_compound_a",
-     "weight": 1.0,
+     "weight": 0.6,
      "widthM": 20.14,
      "depthM": 16.18,
      "tag": "hausa_compound"
     },
     {
-     "prop": "rg_ngn_hausa_compound_b",
-     "weight": 1.2,
-     "widthM": 14.14,
-     "depthM": 12.18,
-     "tag": "hausa_compound"
-    },
-    {
-     "prop": "rg_ngn_house_mudbrick_a",
-     "weight": 1.2,
-     "widthM": 8.84,
-     "depthM": 7.92,
-     "tag": "house"
-    },
-    {
-     "prop": "rg_ngn_house_mudbrick_b",
-     "weight": 1.0,
-     "widthM": 10.84,
-     "depthM": 7.49,
-     "tag": "house"
+     "prop": "rg_ngn_bungalow_a",
+     "weight": 0.6,
+     "widthM": 24.44,
+     "depthM": 24.58,
+     "tag": "bungalow"
     },
     {
      "prop": "rg_ngn_house_block_corrugated_a",
-     "weight": 1.0,
+     "weight": 0.5,
      "widthM": 10.24,
      "depthM": 7.24,
      "tag": "house"
+    },
+    {
+     "prop": "rg_ngn_lowcost_row_a",
+     "weight": 0.5,
+     "widthM": 22.0,
+     "depthM": 14.0,
+     "tag": "lowcost"
+    },
+    {
+     "prop": "rg_ngn_auto_workshop_a",
+     "weight": 0.4,
+     "widthM": 22.44,
+     "depthM": 18.12,
+     "tag": "workshop"
+    },
+    {
+     "prop": "kano_motor_park_a",
+     "weight": 0.3,
+     "widthM": 46.44,
+     "depthM": 36.12,
+     "tag": "motor_park"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.72,
+     "depthM": 16.7,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.72,
+     "depthM": 16.7,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.72,
+     "depthM": 12.9,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.01,
+     "depthM": 15.95,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 4,
+   "anchorPhase": -1
+  },
+  {
+   "id": "flank_edge_west",
+   "corridor": "",
+   "zones": "highway",
+   "profiles": "",
+   "side": "right",
+   "sFrom": 0.0,
+   "sTo": 480.0,
+   "setbackMin": 34.0,
+   "setbackMax": 50.0,
+   "gapMin": 6.0,
+   "gapMax": 20.0,
+   "blockLength": 150.0,
+   "blockMargin": 3.0,
+   "presence": 0.7,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_school_a",
+     "weight": 1.0,
+     "widthM": 50.44,
+     "depthM": 36.58,
+     "tag": "school"
+    },
+    {
+     "prop": "kano_government_offices_a",
+     "weight": 1.8,
+     "widthM": 48.44,
+     "depthM": 34.58,
+     "tag": "government"
+    },
+    {
+     "prop": "kano_hospital_general_a",
+     "weight": 0.6,
+     "widthM": 48.63,
+     "depthM": 38.58,
+     "tag": "hospital"
+    },
+    {
+     "prop": "rg_ngn_factory_a",
+     "weight": 0.8,
+     "widthM": 46.44,
+     "depthM": 34.58,
+     "tag": "factory"
+    },
+    {
+     "prop": "kano_mansion_a",
+     "weight": 0.8,
+     "widthM": 42.44,
+     "depthM": 36.58,
+     "tag": "mansion"
+    },
+    {
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.5,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "rg_ngn_bungalow_a",
+     "weight": 0.6,
+     "widthM": 24.44,
+     "depthM": 24.58,
+     "tag": "bungalow"
+    }
+   ],
+   "anchors": [
+    {
+     "prop": "rg_ngn_mosque_small_a",
+     "weight": 1.0,
+     "widthM": 18.72,
+     "depthM": 16.7,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_b",
+     "weight": 1.0,
+     "widthM": 20.72,
+     "depthM": 16.7,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_small_c",
+     "weight": 1.0,
+     "widthM": 14.72,
+     "depthM": 12.9,
+     "tag": "mosque_small"
+    },
+    {
+     "prop": "rg_ngn_mosque_traditional_b",
+     "weight": 1.0,
+     "widthM": 17.01,
+     "depthM": 15.95,
+     "tag": "mosque_traditional"
+    }
+   ],
+   "anchorEveryBlocks": 4,
+   "anchorPhase": -1
+  },
+  {
+   "id": "flank_edge_east",
+   "corridor": "",
+   "zones": "highway",
+   "profiles": "",
+   "side": "right",
+   "sFrom": 1450.0,
+   "sTo": 0.0,
+   "setbackMin": 34.0,
+   "setbackMax": 50.0,
+   "gapMin": 6.0,
+   "gapMax": 20.0,
+   "blockLength": 150.0,
+   "blockMargin": 3.0,
+   "presence": 0.7,
+   "clearance": 2.5,
+   "maxHeightRange": 1.6,
+   "yawJitterDeg": 1.5,
+   "fixedDensity": false,
+   "rows": 1,
+   "rowGap": 8.0,
+   "mix": [
+    {
+     "prop": "kano_school_a",
+     "weight": 1.0,
+     "widthM": 50.44,
+     "depthM": 36.58,
+     "tag": "school"
+    },
+    {
+     "prop": "kano_government_offices_a",
+     "weight": 1.8,
+     "widthM": 48.44,
+     "depthM": 34.58,
+     "tag": "government"
+    },
+    {
+     "prop": "kano_hospital_general_a",
+     "weight": 0.6,
+     "widthM": 48.63,
+     "depthM": 38.58,
+     "tag": "hospital"
+    },
+    {
+     "prop": "rg_ngn_factory_a",
+     "weight": 0.8,
+     "widthM": 46.44,
+     "depthM": 34.58,
+     "tag": "factory"
+    },
+    {
+     "prop": "kano_mansion_a",
+     "weight": 0.8,
+     "widthM": 42.44,
+     "depthM": 36.58,
+     "tag": "mansion"
+    },
+    {
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.5,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "rg_ngn_bungalow_a",
+     "weight": 0.6,
+     "widthM": 24.44,
+     "depthM": 24.58,
+     "tag": "bungalow"
     }
    ],
    "anchors": [
@@ -875,7 +1204,7 @@
    "mix": [
     {
      "prop": "kano_office_block_a",
-     "weight": 1.0,
+     "weight": 1.1,
      "widthM": 22.56,
      "depthM": 21.25,
      "tag": "office"
@@ -889,10 +1218,66 @@
     },
     {
      "prop": "kano_shopping_parade_a",
-     "weight": 1.2,
+     "weight": 1.0,
      "widthM": 36.68,
      "depthM": 17.04,
      "tag": "shopping_parade"
+    },
+    {
+     "prop": "kano_hotel_a",
+     "weight": 0.5,
+     "widthM": 36.0,
+     "depthM": 32.0,
+     "tag": "hotel"
+    },
+    {
+     "prop": "kano_hospital_general_a",
+     "weight": 0.35,
+     "widthM": 48.63,
+     "depthM": 38.58,
+     "tag": "hospital"
+    },
+    {
+     "prop": "kano_government_offices_a",
+     "weight": 0.15,
+     "widthM": 48.44,
+     "depthM": 34.58,
+     "tag": "government"
+    },
+    {
+     "prop": "kano_shopping_plaza_a",
+     "weight": 0.35,
+     "widthM": 42.0,
+     "depthM": 25.05,
+     "tag": "shopping_plaza"
+    },
+    {
+     "prop": "kano_bank_a",
+     "weight": 0.5,
+     "widthM": 28.0,
+     "depthM": 24.0,
+     "tag": "bank"
+    },
+    {
+     "prop": "kano_supermarket_a",
+     "weight": 0.3,
+     "widthM": 44.44,
+     "depthM": 36.12,
+     "tag": "supermarket"
+    },
+    {
+     "prop": "kano_police_division_a",
+     "weight": 0.2,
+     "widthM": 28.44,
+     "depthM": 24.58,
+     "tag": "police"
+    },
+    {
+     "prop": "kano_fire_station_a",
+     "weight": 0.15,
+     "widthM": 30.44,
+     "depthM": 24.12,
+     "tag": "fire_station"
     },
     {
      "prop": "aro_villa_2storey_hip_a",
@@ -902,15 +1287,50 @@
      "tag": "villa"
     },
     {
-     "prop": "aro_villa_2storey_hip_b",
+     "prop": "kano_fuel_station_large_a",
+     "weight": 0.3,
+     "widthM": 46.82,
+     "depthM": 36.15,
+     "tag": "fuel_station"
+    },
+    {
+     "prop": "rg_ngn_pharmacy_a",
      "weight": 0.5,
+     "widthM": 14.0,
+     "depthM": 13.05,
+     "tag": "pharmacy"
+    },
+    {
+     "prop": "rg_ngn_phone_shops_a",
+     "weight": 0.5,
+     "widthM": 20.6,
+     "depthM": 12.2,
+     "tag": "phone_shops"
+    },
+    {
+     "prop": "kano_restaurant_a",
+     "weight": 0.3,
+     "widthM": 24.44,
+     "depthM": 22.12,
+     "tag": "restaurant"
+    },
+    {
+     "prop": "kano_fastfood_a",
+     "weight": 0.3,
+     "widthM": 26.0,
+     "depthM": 24.0,
+     "tag": "fast_food"
+    },
+    {
+     "prop": "aro_villa_2storey_hip_b",
+     "weight": 0.4,
      "widthM": 16.48,
      "depthM": 13.2,
      "tag": "villa"
     },
     {
      "prop": "rg_ngn_hausa_compound_a",
-     "weight": 0.5,
+     "weight": 0.3,
      "widthM": 20.14,
      "depthM": 16.18,
      "tag": "hausa_compound"

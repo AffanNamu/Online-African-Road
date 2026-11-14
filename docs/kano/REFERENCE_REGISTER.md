@@ -283,6 +283,15 @@ Supplied by the owner on 2026-11-09 for the Kano city densification and mosque i
 * Flags: Gantry text 'Kano City Centre', 'Airport', 'Fagge' is illustrative; text comes from verified route data (RB-07). Billboard content, the banner emblem and the bus lettering are generated and must not be used. The tall tower with a lantern crown and the skyline are generic, not identified buildings.
 * Usable for: flyover driving view: what the player must see from the cab: skyline composition, mosque visibility, building heights and density, parapet and rail height, street life below, signage and lighting.
 
+## 2e. Fuel station reference (R-040)
+
+**R-040 (Modern Kano filling station at dusk: lit navy-and-yellow canopy on white columns, four numbered pump islands, a convenience mart, a price totem, a mosque behind)**
+* File as received 2026-11-14: SHA-256 `ed99c496246112c3fd295ea3f7244962405f2836c2150bdb5f557971e929da44`, 1,927,206 bytes, 1672x941 px. Not stored in any repository.
+* Owner: "Build this as a complete 3D fuel station in Blender, including the canopy structure, columns, pumps, shop, signage, forecourt and entrance/exit. Don't reproduce it as a flat image."
+* Observed and requirements: the station, its fittings and setting are described in `reference_register.json`.
+* Flags: the brand 'KanoOil' is generated and treated as a FICTIONAL chain; check against trademarks before a public release. The mark in the models is a generic flame drawn by code. Prices, people and vehicles are illustrative.
+* Usable for: layout, proportions, colours and fittings of a modern station. Not usable for: textures, tracing, logos, or any claim of a real company or station.
+
 ## 2b. Documentary sources (R-024 to R-029)
 
 Text and scholarly sources for traditional Hausa building, registered 2026-11-08 to start answering gap M-01. **Not images, not photographs of any asset's subject; nothing is stored.** Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.

@@ -53,7 +53,8 @@ def built():
 
 def test_the_approved_families_are_all_present():
     ids = set(SPECS)
-    assert len(ids) == 78                                                       # 64 of families A to D + the ten mosques of family E + the four city assets of family F (tests/test_mosque_family.py and test_city_family.py have their own checks)
+    assert len(ids) == 106                                                      # 64 of families A to D + the ten mosques of family E + the four city assets of family F + 28 of families G to J (city construction, 2026-11-14)
+    assert sum(1 for a in ids if C.EXTRAS[a]["family"] in "GHIJ") == 28                                                                                                    # (tests/test_city_families.py checks them one by one) (tests/test_mosque_family.py and test_city_family.py have their own checks)
     for must in ("rg_ngn_warehouse_hall_a", "rg_ngn_warehouse_hall_b", "rg_ngn_warehouse_cold_a", "aro_dock_leveller_set", "aro_weighbridge_a", "aro_fuel_island_truck", "aro_gate_sliding_a",
                  "kano_bus_terminal_hall_a", "kano_bus_shelter_long_a", "aro_bus_shelter_a", "kano_ticket_kiosk_a", "kano_departure_board_a", "kano_minibus_stand_canopy_a", "kano_tricycle_rank_a",
                  "aro_streetlight_arm_single_a", "aro_streetlight_double_median_a", "aro_streetlight_ornamental_a", "aro_road_sign_direction_a", "aro_gantry_sign_a", "aro_traffic_signal_a",
@@ -68,7 +69,7 @@ def test_the_approved_families_are_all_present():
 def test_every_asset_ids_in_the_breakdown_rows():
     """The ids built are the approved ids, except where a 'set' row was realised as several single ids (the road signs)."""
     for aid in ALL:
-        if C.EXTRAS[aid]["family"] in ("E", "F"): continue                    # families E and F are the owner's densification directive, not rows of the transport breakdown
+        if C.EXTRAS[aid]["family"] in ("E", "F", "G", "H", "I", "J"): continue  # families E and F (densification) and G to J (city construction) are owner directives, not rows of the transport breakdown
         base = re.sub(r"_[abc]$", "", aid)
         ok = aid in BREAKDOWN or base in BREAKDOWN or re.sub(r"_(a|b|c|ab|abc)$", "", aid) in BREAKDOWN or aid.startswith("aro_road_sign_") or aid.startswith("aro_container_") or aid.startswith("aro_truck_trailer_") or aid.startswith("aro_planter_island_")
         assert ok, f"{aid} is not an approved id"
@@ -79,7 +80,7 @@ def test_naming_class_and_registration(aid):
     x = C.EXTRAS.get(aid)
     assert x, f"{aid}: no catalogue extras registered"
     assert aid.startswith(CLASS_PREFIX[x["class"]]), f"{aid}: class {x['class']} needs the prefix {CLASS_PREFIX[x['class']]}"
-    assert x["family"] in "ABCDEF" and x["ref"], aid
+    assert x["family"] in "ABCDEFGHIJ" and x["ref"], aid
     assert not BRANDS.search(aid) and not BRANDS.search(SPECS[aid]["note"]), f"{aid}: a brand name"
     assert re.fullmatch(r"[a-z0-9]+(_[a-z0-9]+)*", aid)
 

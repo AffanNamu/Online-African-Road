@@ -1500,6 +1500,39 @@
     "publicDocumentation": "NO by default (the owner has not cleared public use). The review page that shows them is private.",
     "productionRedistribution": "NO as texture or image: never a plane, billboard, decal, baked texture source or part of a build. The DESIGN is reproduced in 3D; the picture is not shipped."
    }
+  },
+  {
+   "id": "R-040",
+   "kind": "generated_city_reference",
+   "label": "Modern Kano filling station at dusk: lit navy-and-yellow canopy on white columns, four numbered pump islands, a convenience mart, a price totem, a mosque behind",
+   "ownerInterpretation": "Owner directive of 2026-11-14 (Kano city full-scale construction): build this as a complete 3D fuel station in Blender, canopy structure, columns, pumps, shop, signage, forecourt and entrance/exit; not a flat image.",
+   "observed": "A large forecourt station beside a divided urban road at dusk. A long canopy with a navy fascia, a warm yellow light strip along its foot and a raised brand box (a flame-in-a-drop mark and the name 'KanoOil'); white soffit with round downlights; four white columns with navy panels and numbered boxes (1 to 4); white dispensers with navy and yellow panels on kerbed islands with yellow U-shaped barriers; a convenience mart ('KanoOil Mart') with full-height lit glazing and shelves; a vertical services board (Shop, ATM, Air, Toilets); a tall price totem (brand, Petrol 945.00, Diesel 1,089.00, Kerosene 785.00, '24 Hours', service icons); a paved forecourt, kerbed planters with black-and-white painted kerbs, shrubs and red flowers, short bollard lights; attendants in uniform, customers in robes and caps, a saloon car, a pick-up, a white articulated truck; a mosque with green domes and minarets and low cream buildings behind; trees; a pink and violet sky.",
+   "visualRequirements": [
+    "a canopy long enough for four islands, its underside about 5.5 to 6 m above the forecourt (a truck passes), a navy fascia with a glowing strip and a raised brand box on the road side",
+    "four numbered pump islands with two dispensers each, kerbs with yellow ends and impact barriers",
+    "a convenience mart with a lit glazed front showing shelves, a fascia sign, a services board",
+    "a tall price totem: brand, three fuel prices, 24 HOURS, services",
+    "a paved forecourt with an entrance and an exit to the road, kerbed planters with painted kerbs and bollard lights",
+    "the station sits in the city: buildings and a mosque behind it"
+   ],
+   "flags": [
+    "The brand 'KanoOil' and its mark are generated; treated as a FICTIONAL chain name (the owner's concept). Before a public release the name must be checked against registered trademarks; the mark used in the models is a generic flame-in-a-drop drawn by code, not a copy of the image's mark.",
+    "Prices, the people, the vehicles and the sky are illustrative; the mosque is a generic skyline mosque (owner decision C1)."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised scene.",
+   "verificationNeeded": "owner approval after in-game screenshots; trademark check of the fictional brand name before a public release",
+   "usableFor": "the layout, proportions, colour scheme and fittings of a modern station: canopy, columns, islands, dispensers, mart, totem, services board, forecourt, planters, entrance and exit",
+   "notUsableFor": "textures, tracing, reference planes, logos, or any claim that this is a real company or a real station",
+   "file": {
+    "sha256": "ed99c496246112c3fd295ea3f7244962405f2836c2150bdb5f557971e929da44",
+    "bytes": 1927206,
+    "pixels": [
+     1672,
+     941
+    ],
+    "stored": "not stored in any repository"
+   },
+   "received": "2026-11-14"
   }
  ],
  "missingReferences": [

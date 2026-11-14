@@ -23,7 +23,7 @@ def build_scene(sp, version=None):
     a.bake = {}
     for lv, fn in sorted(sp["lods"].items()):
         part = fn()
-        if sp.get("surface"): a.bake[lv] = SB.apply(part, sp["id"], lv, sp["surface"][min(lv, len(sp["surface"]) - 1)], sp.get("ground", True), a.version)      # painted atlas: one material per LOD (transport_kit.surface)
+        if sp.get("surface"): a.bake[lv] = SB.apply(part, sp["id"], lv, sp["surface"][min(lv, len(sp["surface"]) - 1)], sp.get("ground", True), a.version, sp.get("bake_rules", 1))      # painted atlas: one material per LOD (transport_kit.surface)
         else: PAL.palettize(part)                                               # flat colours go to the shared palette materials (at most 4 materials per asset)
         a.lod(lv, part)
     textures.apply_pbr(); PAL.apply_palettes()
@@ -71,7 +71,7 @@ def produce(root: Path, sp: dict, do_export: bool = True) -> dict:
 
 
 def load_all():
-    from . import logistics, terminal, furniture, island, mosque, city        # noqa: F401  (importing registers the specs)
+    from . import logistics, terminal, furniture, island, mosque, city, fuel, blocks  # noqa: F401  (importing registers the specs)
     from . import specs                                        # noqa: F401
     return SPECS
 
