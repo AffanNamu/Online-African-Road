@@ -135,4 +135,50 @@ public class SkyGradientModelTests
         Assert.True(dusk >= 2.2f, $"sunset band R/B {dusk:0.00} (CI criterion 1.8)");
         Assert.True(dusk - dawn >= 0.6f, $"sunset is only {dusk - dawn:0.00} warmer than dawn (CI criterion 0.5)");
     }
+    // ---- the clouds of ARO/SkyClouds (owner direction of 2026-11-15: a realistic sky)
+    static SkyCloudState Clouds(float hour, float overcast = 0f) { var st = LightingModel.Evaluate(hour, overcast); return SkyCloudModel.Evaluate(st, SkyGradientModel.Evaluate(st)); }
+
+    [Fact] public void CloudsAreWhiteOverGreyBlueBasesByDayAndNeverClip()
+    {
+        var c = Clouds(12f);
+        Assert.InRange(Luma(c.Light), 0.90f, 0.95f); Assert.True(Math.Max(c.Light.R, Math.Max(c.Light.G, c.Light.B)) * 255f < 245f, "sunlit white stays clear of the blown-out count (250 of 255)");
+        Assert.InRange(Luma(c.Dark), 0.45f, 0.65f); Assert.True(c.Dark.B > c.Dark.R + 0.1f, "the bases are grey-blue");
+        Assert.Equal(SkyCloudModel.FairCover, c.Cover, 3); Assert.Equal(0f, c.Stars, 3);
+    }
+
+    [Fact] public void TheLowSunPaintsTheCloudsWarmAndDawnDiffersFromDusk()
+    {
+        var dawn = Clouds(6.4f); var dusk = Clouds(17.6f);
+        Assert.True(dawn.Light.R > dawn.Light.B + 0.15f && dusk.Light.R > dusk.Light.B + 0.25f, "warm sunlit sides");
+        Assert.True(dusk.Light.B < dawn.Light.B, "dusk is more orange than dawn");
+        Assert.True(Luma(dawn.Light) > Luma(dawn.Dark) + 0.2f && Luma(dusk.Light) > Luma(dusk.Dark) + 0.2f);
+        Assert.True(Luma(dawn.Light) > 0.7f && Luma(dusk.Light) > 0.65f, "the low sun lights the clouds brightly");
+        Assert.True(Math.Max(dawn.Light.R, dusk.Light.R) * 255f < 250f, "and never to a blown-out pixel");
+        Assert.True(dawn.Stars < 0.05f && dusk.Stars < 0.05f, "no stars in a golden sky");
+    }
+
+    [Fact] public void AtNightTheCloudsAreDimShapesUnderStars()
+    {
+        var n = Clouds(23f);
+        Assert.InRange(Luma(n.Light), 0.2f, 0.4f); Assert.InRange(Luma(n.Dark), 0.08f, 0.2f); Assert.InRange(n.Stars, 0.8f, 0.9f);
+        Assert.True(Clouds(23f, 1f).Stars < 0.1f, "no stars through an overcast sky");
+    }
+
+    [Fact] public void OvercastFillsTheSkyWithFlatGrey()
+    {
+        var o = Clouds(12f, 1f);
+        Assert.True(o.Cover > 1.1f); Assert.True(Math.Abs(o.Light.R - o.Light.B) < 0.08f, "grey, not blue or warm"); Assert.True(Luma(o.Light) < Luma(Clouds(12f).Light));
+    }
+
+    [Fact] public void TheCloudColoursMoveSmoothlyThroughTheDay()
+    {
+        // Dawn and dusk are fast (the clouds go from night blue to sunlit gold in about half an hour) but never a jump: at steps of 18 seconds nothing moves by more than a fiftieth.
+        var prev = Clouds(0f);
+        for (float h = 0.005f; h <= 24f; h += 0.005f)
+        {
+            var c = Clouds(h); Assert.True(c.Light.IsFinite && c.Dark.IsFinite);
+            Assert.True(Math.Abs(Luma(c.Light) - Luma(prev.Light)) < 0.02f && Math.Abs(Luma(c.Dark) - Luma(prev.Dark)) < 0.02f && Math.Abs(c.Stars - prev.Stars) < 0.03f, $"a jump at hour {h:0.000}");
+            Assert.True(Luma(c.Light) >= Luma(c.Dark)); prev = c;
+        }
+    }
 }

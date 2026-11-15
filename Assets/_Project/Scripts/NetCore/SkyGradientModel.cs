@@ -90,4 +90,46 @@ namespace ARO.NetCore
             return s;
         }
     }
+    /// <summary>What the clouds of ARO/SkyClouds are painted with at one moment.</summary>
+    public sealed class SkyCloudState
+    {
+        /// <summary>The sunlit side of a cloud and its shaded base.</summary>
+        public Rgb Light, Dark;
+        /// <summary>How much of the sky is cloud: about 0.6 on a fair day (scattered cumulus), over 1 when the weather is overcast.</summary>
+        public float Cover;
+        /// <summary>How strongly the stars show (0 by day and under cloud).</summary>
+        public float Stars;
+    }
+
+    /// <summary>
+    /// Cloud colours for the hour and the weather (owner direction of 2026-11-15: a realistic sky). White sunlit tops over grey-blue bases by day; lit by the horizon's own colour in the golden
+    /// hours (peach at dawn, orange at dusk); dim blue-grey shapes under the moon; flat grey when overcast. Derived from the same <see cref="LightingState"/> and gradient as the rest of the sky,
+    /// so nothing drifts apart. Sunlit white is 0.93, not 1: the lighting checks count pixels of 250 and over (of 255) as blown out, and a sky full of bright cloud must not read as a clipped frame.
+    /// </summary>
+    public static class SkyCloudModel
+    {
+        static readonly Rgb DayLight = new Rgb(0.93f, 0.93f, 0.92f), DayDark = new Rgb(0.50f, 0.57f, 0.70f);
+        static readonly Rgb GoldDark = new Rgb(0.42f, 0.40f, 0.56f);
+        static readonly Rgb NightLight = new Rgb(0.26f, 0.31f, 0.45f), NightDark = new Rgb(0.10f, 0.13f, 0.24f);
+        static readonly Rgb GreyLight = new Rgb(0.72f, 0.74f, 0.77f), GreyDark = new Rgb(0.40f, 0.42f, 0.46f);
+        public const float FairCover = 0.62f, OvercastCover = 1.15f;
+
+        static float Clamp01(float v) => float.IsNaN(v) ? 0f : v < 0f ? 0f : v > 1f ? 1f : v;
+
+        public static SkyCloudState Evaluate(LightingState st, SkyGradientState sky)
+        {
+            float oc = Clamp01(st.OvercastIn), day = Clamp01(st.Day), golden = Clamp01(1.25f * st.Golden);
+            var goldLight = Rgb.Lerp(DayLight, sky.Horizon, 0.55f);                   // the low sun paints the clouds with the horizon's colour
+            // the same order as the gradient: night to day by the daylight, then the golden palette over it (at the golden hours the low sun lights the clouds fully, although the day weight is still rising)
+            var light = Rgb.Lerp(Rgb.Lerp(NightLight, DayLight, day), goldLight, golden);
+            var dark = Rgb.Lerp(Rgb.Lerp(NightDark, DayDark, day), GoldDark, golden);
+            float dim = 0.30f + 0.70f * day;                                           // an overcast sky darkens with the light, like the gradient's grey
+            return new SkyCloudState
+            {
+                Light = Rgb.Lerp(light, GreyLight * dim, 0.8f * oc), Dark = Rgb.Lerp(dark, GreyDark * dim, 0.8f * oc),
+                Cover = FairCover + (OvercastCover - FairCover) * oc,
+                Stars = 0.9f * (1f - day) * (1f - golden) * (1f - 0.9f * oc),
+            };
+        }
+    }
 }

@@ -24,7 +24,7 @@ namespace ARO.World
         public bool LampsAreOn { get; private set; }
         public event Action<bool> LampsChanged;
 
-        Material _sky, _gradient; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
+        Material _sky, _gradient; bool _clouds; bool _wasNight; string _source = LightingHour.SourceClock; float _nextLog;
         /// <summary>Where the current hour comes from: url, setting, clock or accelerated.</summary>
         public string HourSource => _source;
         /// <summary>The lighting for the current hour and weather (sun, moon, sky, ambient, fog, grade). Read by the rendering rig for the post-processing grade.</summary>
@@ -36,6 +36,7 @@ namespace ARO.World
             _sky = new Material(Shader.Find("Skybox/Procedural"));
             RenderSettings.skybox = _sky; RenderSettings.sun = sun;
             if (ARO.Core.RuntimeSettings.TestSkyGradient) UseGradientSky();
+            else if (!ARO.Core.RuntimeSettings.TestSkyProcedural) UseCloudSky();
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
             // The moon: a second, shadowless directional light that only lights the world while the sun is down, so a night road keeps its shape.
@@ -56,9 +57,36 @@ namespace ARO.World
             Debug.Log("[Light] sky=gradient (ARO/SkyGradient)");
         }
 
+        /// <summary>
+        /// The game's sky (owner direction of 2026-11-15: a realistic sky): the gradient with cumulus clouds, haze and stars (Resources/Sky/ARO_SkyClouds, made by SceneBuilder). If the material or
+        /// its shader is missing or unsupported the procedural sky stays and the log says so. Ambient light, fog and the sun are untouched either way: only what the sky looks like changes.
+        /// </summary>
+        void UseCloudSky()
+        {
+            var template = Resources.Load<Material>("Sky/ARO_SkyClouds");
+            if (template == null || template.shader == null || !template.shader.isSupported) { Debug.LogWarning($"[Light] cloud sky unavailable (material found={template != null}, shader supported={(template != null && template.shader != null && template.shader.isSupported)}); the procedural sky stays"); return; }
+            _gradient = new Material(template); _clouds = true; RenderSettings.skybox = _gradient;
+            Debug.Log("[Light] sky=clouds (ARO/SkyClouds)");
+        }
+
+        /// <summary>The low quality tier draws the clouds with fewer noise layers.</summary>
+        public void SetSkyQuality(bool low)
+        {
+            if (!_clouds || _gradient == null) return;
+            if (low) _gradient.EnableKeyword("ARO_SKY_LOW"); else _gradient.DisableKeyword("ARO_SKY_LOW");
+            Debug.Log("[Light] cloud sky detail=" + (low ? "low" : "full"));
+        }
+
         void ApplyGradient(LightingState st)
         {
             var g = SkyGradientModel.Evaluate(st);
+            if (_clouds)
+            {
+                var k = SkyCloudModel.Evaluate(st, g);
+                _gradient.SetColor("_CloudLight", new Color(k.Light.R, k.Light.G, k.Light.B)); _gradient.SetColor("_CloudDark", new Color(k.Dark.R, k.Dark.G, k.Dark.B));
+                _gradient.SetFloat("_CloudCover", k.Cover); _gradient.SetFloat("_StarStrength", k.Stars);
+                _gradient.SetFloat("_CloudTime", (float)((DateTime.UtcNow - DateTime.UtcNow.Date).TotalSeconds));      // the clouds drift with the day's clock: the same sky for every player
+            }
             _gradient.SetColor("_Zenith", new Color(g.Zenith.R, g.Zenith.G, g.Zenith.B)); _gradient.SetColor("_Mid", new Color(g.Mid.R, g.Mid.G, g.Mid.B));
             _gradient.SetColor("_Horizon", new Color(g.Horizon.R, g.Horizon.G, g.Horizon.B)); _gradient.SetColor("_Ground", new Color(g.Ground.R, g.Ground.G, g.Ground.B));
             _gradient.SetColor("_GlowColor", new Color(g.Glow.R, g.Glow.G, g.Glow.B));
@@ -122,7 +150,7 @@ namespace ARO.World
         {
             if (Time.unscaledTime < _nextLog) return; _nextLog = Time.unscaledTime + 5f;
             Debug.Log($"[Light] hour={F(hour)} source={_source} night={IsNight} elev={F(elev)} sun={(sun != null && sun.enabled ? "on" : "off")} sunIntensity={F(sun != null ? sun.intensity : 0f)} sunColor={C(sun != null ? sun.color : Color.black)} " +
-                      $"sky={(_gradient != null ? "gradient" : "procedural")} skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
+                      $"sky={(_clouds ? "clouds" : _gradient != null ? "gradient" : "procedural")} skyExposure={F(_sky.GetFloat("_Exposure"))} ambientSky={C(RenderSettings.ambientSkyColor)} ambientEquator={C(RenderSettings.ambientEquatorColor)} ambientGround={C(RenderSettings.ambientGroundColor)} " +
                       $"fogDensity={F(RenderSettings.fogDensity)} overcast={F(overcast)} moon={(_moon != null && _moon.enabled ? "on" : "off")} moonIntensity={F(_moon != null ? _moon.intensity : 0f)} golden={F(State.Golden)} postExposure={F(State.PostExposure)} atmosphere={F(_sky.GetFloat("_AtmosphereThickness"))} skyTint={C(_sky.GetColor("_SkyTint"))} fogColor={C(RenderSettings.fogColor)} fogDensityExact={RenderSettings.fogDensity.ToString("0.00000", CultureInfo.InvariantCulture)}");
         }
     }

@@ -1,5 +1,15 @@
 # Status
 
+## 2026-11-15: the realistic look (read this first; `docs/REALISTIC_LOOK.md`)
+
+| Area | State |
+|---|---|
+| **Owner direction** | The reference picture sets the bar: realistic sky, colour and people with real faces. The code-built figures were rejected. |
+| **Sky with clouds** (`ARO/SkyClouds`) | **Level 1 and 2.** Cumulus bank, overhead cloud, haze, sun behind cloud, stars; cloud colours by hour and weather (`SkyCloudModel`, 5 tests; 1,452 .NET tests). Prototyped as pictures outside the game. Not yet seen in the game: CI builds it next. |
+| **People with real faces** | Not started. Needs a real human base (see the document). |
+| **Ground, vegetation, the real models in the playable build** | Not started; the last one is the owner's decision. |
+| **CI run 43648608469 (2026-11-14)** | Green on every job. The refuel worked end to end against the test backend (90 L, 180 coins), the Kano switch reloaded into the city, the crowd was drawn. `main` moved to that commit. |
+
 ## 2026-11-14: refuel at a pump (P1 of the functional places; `docs/REFUEL_AT_A_PUMP.md`) and Kano in the route selection
 
 | Area | State |

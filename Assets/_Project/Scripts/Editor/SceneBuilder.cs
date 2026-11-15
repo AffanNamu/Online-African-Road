@@ -31,6 +31,7 @@ namespace ARO.Editor
 
             EnsureUrp();
             EnsureSkyGradientMaterial();
+            EnsureSkyMaterial("ARO/SkyClouds", "ARO_SkyClouds");
             EnsureLightingMaterials();
             var mats = new
             {
@@ -166,6 +167,19 @@ namespace ARO.Editor
                 Debug.Log($"[Lamp] material ready (Resources/Lighting/ARO_{name}), shader supported={shader.isSupported}");
             }
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>A sky material in Resources/Sky, so its shader (with every variant of its multi_compile keywords) is part of the build and the game can load it by name.</summary>
+        static void EnsureSkyMaterial(string shaderName, string asset)
+        {
+            var shader = Shader.Find(shaderName);
+            if (shader == null) { Debug.LogWarning($"[Render] shader {shaderName} not found; that sky will be unavailable"); return; }
+            Directory.CreateDirectory($"{Root}/Resources/Sky");
+            string path = $"{Root}/Resources/Sky/{asset}.mat";
+            var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (m == null) { m = new Material(shader); AssetDatabase.CreateAsset(m, path); }
+            m.shader = shader; EditorUtility.SetDirty(m); AssetDatabase.SaveAssets();
+            Debug.Log($"[Render] sky material ready (Resources/Sky/{asset})");
         }
 
         static void EnsureSkyGradientMaterial()
