@@ -18,7 +18,7 @@ public class PeopleTests
     static PropDef Def(string id) => id != null && Defs.TryGetValue(id, out var d) ? d : null;
     static readonly Dictionary<string, RouteModel> Models = new Dictionary<string, RouteModel>();
     static RouteModel Model(string id) { lock (Models) { if (!Models.TryGetValue(id, out var m)) Models[id] = m = RouteModel.Build(JsonSerializer.Deserialize<RouteSpec>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, id + ".route.json")), Opt)); return m; } }
-    public static IEnumerable<object[]> Routes => new[] { "ng-kano-city-e1", "ng-kano-city-f1", "ng-lagos-ibadan" }.Select(r => new object[] { r });
+    public static IEnumerable<object[]> Routes => new[] { "ng-kano-city-e1", "ng-kano-city-f1", "ng-kano-city-p1", "ng-lagos-ibadan" }.Select(r => new object[] { r });
 
     static IEnumerable<(float x0, float z0)> Chunks(RouteModel m, float pad = 300f)
     {

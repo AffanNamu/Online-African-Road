@@ -464,7 +464,7 @@ namespace ARO.Game
                     y = Para(p, reg.Note + (reg.Jobs ? "" : " Jobs, bus routes and convoys here come with the server's Kano data."), 15, Muted, W, y);
                     y = Btn(p, "Btn_Drive_" + rid.Replace('-', '_'), here ? "Drive" : "Drive " + reg.Name, W, y + 2, true, true, () => _act.DriveRegion(rid));
                 }
-                if (regions.Any(r => !r.Jobs)) y = Para(p, "Prototype: in the public build the city's buildings are simple blocks of their real size; the fuel station pumps work.", 14, Muted, W, y);
+                if (regions.Any(r => !r.Jobs)) y = Para(p, "Free drive: the city's buildings are the real models (owner decision of 2026-11-16) and the fuel station pumps work.", 14, Muted, W, y);
             }
             return y;
         }

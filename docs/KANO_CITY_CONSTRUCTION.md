@@ -106,4 +106,4 @@ The 28 v001 assets are staged into ARO-CONTENT `assets/transport-kit-v1` (commit
 * Universities as a separate design: the school generator could make one.
 * A vehicle inspection centre, markets with stalls (the market shed exists), hotels beyond the one design, and banks, supermarkets and restaurants in a second design each.
 * Interiors (the shop windows are painted), people, and parked vehicles inside the lots.
-* A longer district-by-district Kano route: the two test routes are 1.5 and 1.8 km.
+* ~~A longer district-by-district Kano route~~: **Kano City Phase 1** (2026-11-16, after the owner's World Design Reference R-041): 10.6 km, 4 roundabouts, 604 buildings in 11 district stretches (`docs/KANO_CITY_PHASE1.md`). The whole ring road loop is the next step.

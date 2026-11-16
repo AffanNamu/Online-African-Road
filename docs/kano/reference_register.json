@@ -1533,6 +1533,39 @@
     "stored": "not stored in any repository"
    },
    "received": "2026-11-14"
+  },
+  {
+   "id": "R-041",
+   "kind": "generated_city_reference",
+   "label": "Kano City World Design Reference (Phase 1 board): a 10 x 10 km map of 11 districts round a ring road with arterials and roundabouts, and twelve panels showing the look of each part of the city",
+   "ownerInterpretation": "Supplied by the owner on 2026-11-16, right after asking whether Kano city is finished (it is not: two test roads and the asset library). Read as the owner's target for building the city: the district layout and the look of each district; the old city, Kurmi market and Dala Hill are marked Pending on the board itself, as in the master plan.",
+   "observed": "Centre: an aerial-style map, north up, 'Kano City (Phase 1)', area 10 km x 10 km, 11 districts: Central District inside an inner ring; round it Modern Estate District (north), Institutional District (north-east), Industrial District (east), Transport District (east), Gateway District (south-east), Commercial Belt (south), Mixed Residential (south-west), Traditional Suburb (west), Old City (west, Pending), Kurmi Market (north-west, Pending), Dala Hill (north-west, Pending, outside the ring). A yellow ring road with roundabout dots where arterials cross; major arterials radiate; expressways and flyovers in the legend; 'Asset Library: 157+'. Panels: Expressway and Flyover (Gateway) with a mosque and skyline; Grand Mosque (Central District, green domes, four minarets); Fuel Station (city wide, the KanoOil station of R-040); Commercial Belt (a mall and shop row with brand signs); Market Area (Kurmi style, Pending: arcaded market hall, umbrellas, stalls); Ring Road (divided road with palms, flowered median, lights, mid-rise blocks, an ARO bus, a green direction sign 'Kano City Centre / Bompai / Zaria A2'); Premium Residential Estate (two-storey villas, walls and gates); Middle-Class Residential (red-roofed houses with walls and gates); Local / Traditional Houses (Hausa style: red-brown mud-rendered walls with relief and pinnacles); Hospital (Institutional District: a white-and-blue general hospital with an ambulance); Bus Terminal (Transport District: a canopy over bays with ARO buses).",
+   "visualRequirements": [
+    "the district arrangement round a ring road, roundabouts where arterials meet it, a gateway expressway with a flyover",
+    "each district built from its own building family (estates: walled villas; middle class: bungalows and semi-detached houses; institutional: hospital, schools, government; industrial: warehouses; transport: the bus terminal and motor parks; commercial belt: shops and malls; central: the grand mosque, offices, hotels; traditional suburb: Hausa compounds)",
+    "a divided ring road with a planted median, palms and street lights",
+    "fuel stations throughout the city"
+   ],
+   "flags": [
+    "The shop signs name real brands (Tecno, Infinix, Konga): no real brand is modelled; shop signs stay generic or fictional.",
+    "The direction sign names real places (Kano City Centre, Bompai, Zaria A2): sign text must come from verified route data (RB-07), not from the board.",
+    "'Kano Mall', 'Kano General Hospital' and 'Kano Central Bus Terminal' are illustrative names, not real institutions to reproduce.",
+    "KanoOil is the fictional chain of R-040 (trademark search before a public release).",
+    "The map is a stylised diagram: district positions are the owner's intended arrangement, not survey; the real old city and Dala Hill positions come from the master plan's frame (docs/kano/COORDINATES.md).",
+    "The traditional houses and the market are generated concepts: usable as the design target, but they do not answer M-01, M-04 or M-11 (authentic references) for the old city, Kurmi market and the landmarks, which stay Pending as the board itself says.",
+    "The ARO bus livery is the game's own."
+   ],
+   "actualLocation": "NOT APPLICABLE: a generated, idealised board. Place names are illustrative.",
+   "verificationNeeded": "owner approval of the in-game result after looking at screenshots",
+   "usableFor": "the Phase 1 city layout (districts, ring road, arterials, roundabouts, gateway expressway and flyover) and the target look of each district",
+   "notUsableFor": "textures, tracing, logos, brand names, real sign text, or any claim that these are real Kano places",
+   "file": {
+    "sha256": "a6b6f63cc047253c11db46d2e49aa3c0b5d47e30bc1d0faa53cd30e84c5128b6",
+    "bytes": 2779948,
+    "pixels": "1672x941",
+    "note": "the image as received (webp); NOT stored in this public repository"
+   },
+   "received": "2026-11-16"
   }
  ],
  "missingReferences": [

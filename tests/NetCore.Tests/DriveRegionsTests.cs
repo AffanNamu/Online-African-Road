@@ -19,7 +19,7 @@ public class DriveRegionsTests
     public void KanoIsFreeDriveOnTwoCityRoutesUntilTheServerHasKanoData()
     {
         var kano = DriveRegions.InCity("kano").ToList();
-        Assert.Equal(new[] { "ng-kano-city-e1", "ng-kano-city-f1" }, kano.Select(r => r.RouteId).ToArray());
+        Assert.Equal(new[] { "ng-kano-city-p1", "ng-kano-city-e1", "ng-kano-city-f1" }, kano.Select(r => r.RouteId).ToArray());
         foreach (var r in kano)
         {
             Assert.False(r.Jobs || r.Bus || r.Convoy, r.RouteId);

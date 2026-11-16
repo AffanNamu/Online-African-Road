@@ -292,6 +292,15 @@ Supplied by the owner on 2026-11-09 for the Kano city densification and mosque i
 * Flags: the brand 'KanoOil' is generated and treated as a FICTIONAL chain; check against trademarks before a public release. The mark in the models is a generic flame drawn by code. Prices, people and vehicles are illustrative.
 * Usable for: layout, proportions, colours and fittings of a modern station. Not usable for: textures, tracing, logos, or any claim of a real company or station.
 
+## 2f. Kano City World Design Reference (R-041)
+
+**R-041 (Kano City World Design Reference, Phase 1 board: 11 districts round a ring road, and the look of each part of the city)**
+* File as received 2026-11-16: SHA-256 `a6b6f63cc047253c11db46d2e49aa3c0b5d47e30bc1d0faa53cd30e84c5128b6`, 2,779,948 bytes, 1672x941 px (webp). Not stored in this public repository.
+* Supplied by the owner right after asking whether Kano city is finished. Read as the target for building the city: the district layout round a ring road with roundabouts, a gateway expressway with a flyover, and the look of each district (estates, middle class, institutional, industrial, transport, commercial belt, central district with the grand mosque, traditional suburb). The old city, Kurmi market and Dala Hill are marked **Pending** on the board itself, as in the master plan.
+* Flags: real brands on the shop signs (Tecno, Infinix, Konga) are not modelled; the direction sign's real place names come from verified route data, not from the board; hospital, mall and terminal names are illustrative; KanoOil is the fictional chain of R-040; the map is a stylised diagram (district positions are intent, not survey); the traditional houses and the market are generated concepts and do not answer M-01, M-04 or M-11.
+* Usable for: the Phase 1 layout and the target look of each district. Not usable for: textures, tracing, logos, brand names, real sign text, or any claim of real places. Full entry in `reference_register.json`.
+* Build plan: `docs/KANO_CITY_PHASE1.md`.
+
 ## 2b. Documentary sources (R-024 to R-029)
 
 Text and scholarly sources for traditional Hausa building, registered 2026-11-08 to start answering gap M-01. **Not images, not photographs of any asset's subject; nothing is stored.** Summarised by a web search on 2026-11-08; the full page was NOT opened (the cloud network blocked the host). Check the source before relying on a figure.
