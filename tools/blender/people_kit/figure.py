@@ -138,7 +138,8 @@ class Figure:
 
     def add_body(self, show, colours):
         """The skin that shows: the named regions, and the base of the neck down to just under the neckline (so no gap opens between the neck and a collar)."""
-        v0 = self.h.verts; throat = (v0[:, 1] > self.shoulder_y - 0.045 * self.k) & ~(self._arm_param(v0) > 0.12)
+        v0 = self.h.verts; n0 = self.h.joint("neck")
+        throat = (v0[:, 1] > self.shoulder_y - 0.045 * self.k) & ~(self._arm_param(v0) > 0.12) & (np.hypot(v0[:, 0] - n0[0], v0[:, 2] - n0[2]) < 0.085 * self.k)   # round the neck only: under a shoulder it pokes through
         v, f, c, ids = _sub(self.h.verts, self.body_faces, (show | throat) & self.h.mask("body"), colours)
         self._add("body", v, f, c, "skin", ids=ids)
 
@@ -382,9 +383,9 @@ HANDS = ["hand", "thumb", "index", "middle", "ring", "pinky"]
 # The ten people of the game's crowd (the same ids as ARO.NetCore.PeopleKit.Designs, so the game can swap the figures one for one). Each takes a colourway (garment colours) and a skin tone.
 def man_shirt_trousers(seed=1, skin=1, c=((0.30, 0.48, 0.70), (0.13, 0.15, 0.22), (0.07, 0.055, 0.05))):
     f = Figure(Human(gender=1.0, age=0.5, weight=0.5, height=0.46, seed=seed), skin)
-    f.add_body(f.head | _region(HANDS + ["lowerarm", "upperarm"]), f.skin_colours()); f.add_eyes()
-    f.garment("shirt", ["spine", "clavicle", "upperarm", "pelvis", "neck"], c[0], 0.020, hem=f.waist_y - 0.01 * f.k, neck=0.072 * f.k, sleeve=0.62, smoothing=3)      # tucked in
-    f.garment("trousers", ["pelvis", "thigh", "calf", "spine_01"], c[1], 0.024, top=f.waist_y + 0.035 * f.k, leg_to=f.ankle_y + 0.012, smoothing=3, straight_leg=0.088)
+    f.add_body(f.head | _region(HANDS + ["lowerarm"]) | (f._arm_param(f.h.verts) > 0.45), f.skin_colours()); f.add_eyes()     # the arm below the sleeve (0.62) only: a deltoid under the shirt pokes through it
+    f.garment("shirt", ["spine", "clavicle", "upperarm", "pelvis", "neck"], c[0], 0.020, hem=f.waist_y + 0.02 * f.k, neck=0.072 * f.k, sleeve=0.62, smoothing=3)      # tucked in 1.5 cm
+    f.garment("trousers", ["pelvis", "thigh", "calf", "spine_01"], c[1], 0.034, top=f.waist_y + 0.035 * f.k, leg_to=f.ankle_y + 0.012, smoothing=3, straight_leg=0.088)   # 14 mm outside the shirt: no poke-through after the reduction
     f.shoes(c[2]); return f
 
 
@@ -434,9 +435,9 @@ def woman_long(seed=3, skin=1, c=((0.10, 0.36, 0.38), (0.86, 0.80, 0.68), (0.06,
 
 def boy_school(seed=8, skin=0, c=((0.93, 0.93, 0.91), (0.12, 0.16, 0.34), (0.30, 0.18, 0.10))):
     f = Figure(Human(gender=1.0, age=0.19, weight=0.45, height=0.5, seed=seed, face_strength=0.3), skin)
-    f.add_body(f.head | _region(HANDS + ["lowerarm", "upperarm", "calf"]) | (f.h.verts[:, 1] < f.knee_y + 0.03), f.skin_colours()); f.add_eyes()
-    f.garment("shirt", ["spine", "clavicle", "upperarm", "pelvis", "neck"], c[0], 0.016, hem=f.waist_y - 0.01 * f.k, neck=0.066 * f.k, sleeve=0.6, smoothing=3)
-    f.garment("shorts", ["pelvis", "thigh", "spine_01"], c[1], 0.020, top=f.waist_y + 0.03 * f.k, leg_to=f.knee_y + 0.04, smoothing=3, straight_leg=0.07)
+    f.add_body(f.head | _region(HANDS + ["lowerarm", "calf"]) | (f._arm_param(f.h.verts) > 0.43) | (f.h.verts[:, 1] < f.knee_y + 0.03), f.skin_colours()); f.add_eyes()
+    f.garment("shirt", ["spine", "clavicle", "upperarm", "pelvis", "neck"], c[0], 0.016, hem=f.waist_y + 0.016 * f.k, neck=0.066 * f.k, sleeve=0.6, smoothing=3)
+    f.garment("shorts", ["pelvis", "thigh", "spine_01"], c[1], 0.028, top=f.waist_y + 0.03 * f.k, leg_to=f.knee_y + 0.04, smoothing=3, straight_leg=0.07)
     f.bag(c[2]); f.shoes((0.05, 0.05, 0.05)); return f
 
 

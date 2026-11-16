@@ -29,6 +29,7 @@ WALK_FRAMES, IDLE_FRAMES = 8, 4
 TILE, ATLAS = 256, 2048
 POS_SCALE = 4.0 / 32767.0                                   # int16 positions: +-4 m at 0.12 mm
 AO_RAYS, AO_DIST, AO_STRENGTH = 28, 0.22, 0.55
+AO_SKIP, AO_FLOOR = 0.015, 0.35                            # hits nearer than this are the layer under a garment, not occlusion; nothing bakes darker than the floor
 HEAD_UV_SCALE = 1.9                                         # the face gets this much more texture (linear) than its size alone would give
 
 COLOURWAYS = {                                              # three per design (the game's CrowdAgent.Colourway is 0..2), colours in sRGB
@@ -277,12 +278,12 @@ def occlusion(fig, lod, src):
     pv = pose_lod(fig, lod, src, standing(), rig); n = vertex_normals(pv, lod.t)
     rng = np.random.default_rng(7); d = rng.normal(size=(AO_RAYS, 3)); d /= np.linalg.norm(d, axis=1, keepdims=True); out = np.ones(len(pv))
     for i, (p, nn) in enumerate(zip(pv, n)):
-        o = Vector(p + nn * 0.004); hit = 0.0; cnt = 0
+        hit = 0.0; cnt = 0
         for r in d:
             if r @ nn < 0: r = -r
-            c = r @ nn; cnt += c; h = bvh.ray_cast(o, Vector(r), AO_DIST)
+            c = r @ nn; cnt += c; o = Vector(p + r * AO_SKIP); h = bvh.ray_cast(o, Vector(r), AO_DIST)          # rays start past the layer underneath (a reduced garment can dip under it)
             if h[0] is not None: hit += c * (1 - (h[3] / AO_DIST) ** 2)
-        out[i] = 1 - hit / max(cnt, 1e-6)
+        out[i] = max(AO_FLOOR, 1 - hit / max(cnt, 1e-6))
     return out
 
 
