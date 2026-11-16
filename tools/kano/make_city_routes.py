@@ -140,14 +140,22 @@ def catalog_entries():
     for r in (city_e1(), city_f1()):
         for fr in r["frontage"]:
             for l in fr["mix"] + fr["anchors"]: used[l["prop"]] = l
+    city = ROUTES / "ng-kano-city.route.json"                                     # the city (tools/kano/make_city.py) also places ids of its own: family K (university, market, parked cars)
+    if city.is_file():
+        cj = json.loads(city.read_text())
+        for fr in cj["frontage"]:
+            for l in fr["mix"] + fr["anchors"]: used.setdefault(l["prop"], l)
+        for pr in cj["propRules"]:
+            if pr["prop"] in D and D[pr["prop"]][4] is not None: used.setdefault(pr["prop"], pr)
     out = []
     for pid in sorted(used):
         w, d, h, lods, entry = D[pid]
         cull = CULL["grand"] if "grand" in pid else CULL["medium"] if "medium" in pid else CULL["small"] if "small" in pid else CULL["trad"] if "traditional" in pid else CULL["city"] if pid.startswith("kano_") else CULL["warehouse"] if ("warehouse" in pid or "factory" in pid or "depot" in pid) else CULL["villa"] if "villa" in pid else CULL["house"]
-        e = {"id": pid, "category": "buildings", "status": "dev",
+        if pid.startswith("aro_car_"): cull = 160.0                                # parked cars: street furniture distance
+        e = {"id": pid, "category": (entry or {}).get("category", "buildings") if pid.startswith("aro_car_") else "buildings", "status": "dev",
              "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
              "source": "dev:" + pid, "collider": "box", "heightM": round(h, 2), "widthM": round(w, 2), "depthM": round(d, 2), "cullDistance": float(cull), "lodTriangles": lods, "castShadow": True,
-             "tags": sorted(set((entry or {}).get("tags", []) + ["kano_city_test"]))}
+             "tags": sorted(set((entry or {}).get("tags", []) + (["kano_city"] if pid.startswith("aro_car_") else ["kano_city_test"])))}      # kano_city_test marks the city BUILDINGS
         if pid in SERVICE:
             e["description"] = e["description"].replace("(a box of the real footprint)", "(its collision boxes over a forecourt slab)")
             e["sockets"], e["boxes"] = SERVICE[pid]

@@ -44,7 +44,8 @@ E.P.update(PROF); E.G.update({k: E.geom(v) for k, v in PROF.items()})
 HW = {k: E.G[k]["paved"] for k in PROF}                                            # paved half width: where a joining road's end sits
 
 
-def cp(i, x, z, profile, zone="urban"): return E.cp(i, i, x, z, Y, profile, zone)
+def cp(i, x, z, profile, zone="urban"):
+    d = E.cp(i, i, x, z, Y, profile, zone); del d["name"]; return d                    # no name: it repeated the id, nothing reads it, and the city must fit the 1.5 MB / 6 MB Resources budget
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------ geometry
@@ -277,10 +278,16 @@ def build():
         dict(base, id=rid, prop=prop, profiles=prof, side="both", offsetMin=omin, offsetMax=omax, spacingMin=smin, spacingMax=smax, presence=pres, scaleMin=0.85, scaleMax=1.15,
              yawJitterDeg=180.0, faceRoad=False, fixedDensity=False, exclusionMargin=-1.0, allRoads=True)
         for rid, prop, prof, omin, omax, smin, smax, pres in [
-            ("trees_local_a", "rg_ngn_tree_street_broadleaf_a", "kano_local", 1.8, 3.2, 26.0, 38.0, 0.45),
-            ("trees_local_b", "rg_ngn_tree_street_broadleaf_b", "kano_local", 1.8, 3.2, 31.0, 45.0, 0.35),
-            ("trees_collector", "rg_ngn_tree_large_shade_a", "kano_collector", 2.0, 3.4, 55.0, 85.0, 0.4),
-            ("trees_service", "rg_ngn_tree_street_broadleaf_b", "kano_service", 1.8, 3.2, 40.0, 60.0, 0.3)]]
+            ("trees_local_a", "rg_ngn_tree_street_broadleaf_a", "kano_local", 1.8, 3.2, 26.0, 38.0, 0.7),
+            ("trees_local_b", "rg_ngn_tree_street_broadleaf_b", "kano_local", 1.8, 3.2, 31.0, 45.0, 0.5),
+            ("trees_collector", "rg_ngn_tree_large_shade_a", "kano_collector", 2.0, 3.4, 55.0, 85.0, 0.6),
+            ("trees_service", "rg_ngn_tree_street_broadleaf_b", "kano_service", 1.8, 3.2, 40.0, 60.0, 0.45)]] + [
+        # family K: three parked cars (one asset, lengthwise, so facing the road parks them parallel to the kerb) on the right kerb of the neighbourhood streets; lights and trees take the left
+        dict(base, id="cars_parked", prop="aro_car_parked_set_a", profiles="kano_local", side="right", offsetMin=1.05, offsetMax=1.25, spacingMin=55.0, spacingMax=95.0, presence=0.4,
+             scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=0.3, clearLength=16.0, clearDepth=1.4, allRoads=True)]     # the body reaches 2.25 m from the road edge; people at a lot front stand 2.8 m or more out (setbacks >= 5 m)
+    for p in r["propRules"]:
+        if p["id"].startswith("trees_") and p["id"] != "trees_arterial": p["side"] = "left"       # the palms of the arterials keep both sides (no parked cars there)
+        if p["id"] == "lights_local": p["side"] = "left"                                          # the neighbourhood streets: lights and trees on the left kerb, parked cars on the right
     global ALL_ROADS; ALL_ROADS = all_roads
     fab_roads = [(a.id, a.s[-1], "ring") for a in ring_arcs] + [(a.id, a.s[-1], "middle") for a in mid_arcs] + [(a.id, a.s[-1], "wall") for a in inner_arcs] + \
                 [(x["id"], rd_len(x), "radial") for x in radials] + [(x["id"], rd_len(x), "sub") for x in subs] + [(ROUTE_ID, a2_len, "main")]
@@ -350,17 +357,19 @@ def estate(ring_arc_at, mid_arcs, radials, subs, cross):
     for n, (mix, side) in enumerate(plan):
         i = min(n, 3); a = streets[i]
         front.append(rule("d06_street_%d%s" % (i + 1, "" if side == "both" else "_" + side), mix, C.LOCAL_MOSQUES if n % 2 == 0 else None, 4 if n % 2 == 0 else 0, corridor=a.id, side=side,
-                          s_from=END_CLEAR, s_to=a.s[-1] - END_CLEAR, setback=(3.0, 5.0), gap=(1.0, 3.0), block=150.0, presence=0.95))
+                          s_from=END_CLEAR, s_to=a.s[-1] - END_CLEAR, setback=(5.0, 7.0), gap=(1.0, 3.0), block=150.0, presence=0.95))      # 5 m: room for the parked cars at the kerb in front of the gates
     return est, front
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------ the other districts
 E1_SITES = {x["id"]: x for x in e1["sites"]}                                          # the logistics yard and bus terminal plates of the E2 kit, reused as district sites
 INSTITUTIONAL = [C.L("kano_hospital_general_a", 0.7, "hospital"), C.L("kano_school_a", 1.4, "school"), C.L("kano_government_offices_a", 1.2, "government"),
-                 C.L("kano_police_division_a", 0.6, "police"), C.L("kano_hotel_a", 0.5, "hotel"), C.L("rg_ngn_clinic_a", 0.6, "clinic")]
+                 C.L("kano_police_division_a", 0.6, "police"), C.L("kano_hotel_a", 0.5, "hotel"), C.L("rg_ngn_clinic_a", 0.6, "clinic"),
+                 C.L("kano_university_faculty_a", 0.6, "university")]                                     # family K (2026-11-16): a university faculty campus
+MARKET = [C.L("kano_market_neighbourhood_a", 0.8, "market")]                                           # family K: the neighbourhood market (generic; Kurmi stays pending)
 DISTRICTS = [
     dict(id="d05", name="Commercial belt (D05)", a0=22.5, a1=45.0, start="sub_0225", end="radial_045", fs=[0.2, 0.45, 0.7], profile="kano_collector", cross=6,
-         plan=[(0, "COMMERCIAL", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
+         plan=[(0, "COMMERCIAL+MARKET", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
                (2, "MAJOR", "both", "GRAND", 3, (8.0, 12.0), 150.0, 0.95)]),
     dict(id="d08", name="Institutional corridor (D08)", a0=67.5, a1=90.0, start="sub_0675", end="radial_090", fs=[0.25, 0.6], profile="kano_collector", cross=5,
          plan=[(0, "INSTITUTIONAL", "both", "LOCAL_MOSQUES", 4, (10.0, 16.0), 160.0, 0.85), (1, "INSTITUTIONAL", "both", None, 0, (10.0, 16.0), 160.0, 0.85)]),
@@ -383,22 +392,22 @@ for k in range(16):
     _q += 1
     DISTRICTS.append(dict(id="fo%02d" % _q, band="outer", name="Mixed urban quarter %d (F-MID)" % _q, a0=a0, a1=a1, start=_bounds_outer(a0), end=_bounds_outer(a1), fs=[0.27, 0.62],
                           profile="kano_local", cross=4,
-                          plan=[(0, "MIDDLE", "both", "LOCAL_MOSQUES", 4, (4.0, 8.0), 120.0, 0.9),
-                                (1, "MIDDLE+COMMERCIAL" if _q % 2 else "COMMERCIAL", "both", "NEIGHBOURHOOD" if _q % 2 else None, 4 if _q % 2 else 0, (4.0, 8.0), 120.0, 0.9)]))
+                          plan=[(0, "MIDDLE", "both", "LOCAL_MOSQUES", 4, (5.0, 9.0), 120.0, 0.9),
+                                (1, "MIDDLE+COMMERCIAL" if _q % 2 else "COMMERCIAL+MARKET", "both", "NEIGHBOURHOOD" if _q % 2 else None, 4 if _q % 2 else 0, (5.0, 9.0), 120.0, 0.9)]))
 for k in range(8):
     a0, a1 = 45.0 * k, 45.0 * (k + 1)
     second = {2: "INSTITUTIONAL", 6: "PREMIUM"}.get(k, "MIDDLE")
     DISTRICTS.append(dict(id="fi%02d" % (k + 1), band="inner", name="Mixed urban quarter %d (F-MID, inside the middle ring)" % (_q + k + 1), a0=a0, a1=a1,
                           start="radial_%03d" % a0, end="radial_%03d" % (a1 % 360), fs=[-0.68, -0.34], profile="kano_local", cross=7,
-                          plan=[(0, "MIDDLE+COMMERCIAL", "both", "GRAND" if k in (0, 3, 5) else "NEIGHBOURHOOD", 6 if k in (0, 3, 5) else 4, (4.0, 8.0), 120.0, 0.9),     # Friday mosques on three quarters' main streets
-                                (1, second, "both", "LOCAL_MOSQUES" if second != "INSTITUTIONAL" else None, 4 if second != "INSTITUTIONAL" else 0, (4.0, 8.0) if second != "INSTITUTIONAL" else (10.0, 16.0),
+                          plan=[(0, "MIDDLE+COMMERCIAL+MARKET", "both", "GRAND" if k in (0, 3, 5) else "NEIGHBOURHOOD", 6 if k in (0, 3, 5) else 4, (5.0, 9.0), 120.0, 0.9),     # Friday mosques on three quarters' main streets
+                                (1, second, "both", "LOCAL_MOSQUES" if second != "INSTITUTIONAL" else None, 4 if second != "INSTITUTIONAL" else 0, (5.0, 9.0) if second != "INSTITUTIONAL" else (10.0, 16.0),
                                  120.0 if second != "INSTITUTIONAL" else 160.0, 0.9 if second != "INSTITUTIONAL" else 0.85)]))
 
 
 def mixof(names):
     if names is None: return None
     out = []
-    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else fewer_stations(getattr(C, n), 0.3)
+    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else MARKET if n == "MARKET" else fewer_stations(getattr(C, n), 0.3)
     return out
 
 
@@ -477,7 +486,7 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
     for si, mix, side, anchors, every, setback, block, presence in d["plan"]:
         st = streets[si]
         front.append(C.rule("%s_street_%d" % (d["id"], si + 1), mixof(mix), mixof(anchors), every if anchors else 0, corridor=st.id, side=side, s_from=END_CLEAR, s_to=st.s[-1] - END_CLEAR,
-                            setback=setback, gap=(1.5, 5.0) if d["id"].startswith("f") else (2.0, 8.0), block=block, presence=presence))     # the filler packs its plots closer (F-MID: 12 plots/ha)
+                            setback=setback, gap=(1.2, 4.0) if d["id"].startswith("f") else (2.0, 8.0), block=block, presence=min(0.95, presence + 0.05) if d["id"].startswith("f") else presence))     # the filler packs its plots closer and fuller (F-MID: 12 plots/ha)
     return [x.spec() for x in streets] + roads, front, sites
 
 
@@ -545,7 +554,7 @@ def fabric(roads, a2_len):
         "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25), C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),
         "wall": (fewer_stations(C.COMMERCIAL, 0.2), None, 0, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city
         "radial": (fewer_stations(C.MAJOR + C.COMMERCIAL, 0.3), C.GRAND, 3, (10.0, 15.0), (2.0, 8.0), 150.0, 0.9, "both"),
-        "sub": (C.MIDDLE, C.LOCAL_MOSQUES, 3, (4.0, 7.0), (1.5, 6.0), 110.0, 0.9, "both"),
+        "sub": (C.MIDDLE, C.LOCAL_MOSQUES, 3, (5.0, 8.0), (1.5, 6.0), 110.0, 0.9, "both"),          # 5 m: parked cars at the kerb (family K)
         "main": (fewer_stations(C.HIGHWAY, 0.4), C.GRAND, 4, (14.0, 22.0), (6.0, 18.0), 180.0, 0.6, "both"),
     }
     for rid, length, kind in roads:
@@ -559,7 +568,7 @@ def fabric(roads, a2_len):
 
 def main():
     r = build(); p = C.ROUTES / (ROUTE_ID + ".route.json")
-    text = json.dumps(r, indent=1, ensure_ascii=False) + "\n"
+    text = json.dumps(r, separators=(",", ":"), ensure_ascii=False) + "\n"          # compact: the city is the largest file under Resources (budget 1.5 MB per file, 6 MB in all)
     if "--check" in sys.argv:
         ok = p.is_file() and p.read_text() == text; print(("up to date: " if ok else "OUT OF DATE: ") + p.name); return 0 if ok else 1
     p.write_text(text)

@@ -87,7 +87,7 @@ def test_a_bake_that_cannot_fit_says_so():
 
 
 def test_the_baked_assets_are_the_solid_ones_and_the_glass_shelters_stay_on_the_palette():
-    assert len(REALISM) == 35 and len(CITY_NEW) == 28 and set(CITY_NEW) <= set(BAKED) and len(BAKED) == 35 + 28
+    assert len(REALISM) == 35 and len(CITY_NEW) == 28 and set(CITY_NEW) <= set(BAKED) and len(BAKED) == 35 + 28 + 3          # + family K (university, market, parked cars; 2026-11-16), baked at v001
     for must in ("kano_mosque_grand_a", "rg_ngn_mosque_traditional_b", "kano_shopping_parade_a", "kano_office_block_a", "kano_midrise_apartments_a", "rg_ngn_warehouse_hall_a", "kano_bus_terminal_hall_a", "aro_container_stack_3"): assert must in BAKED, must
     for must_not in ("aro_bus_shelter_a", "kano_bus_shelter_long_a", "aro_streetlight_arm_single_a", "aro_road_sign_stop_a", "aro_noise_wall_set", "aro_guardrail_post_set"): assert must_not not in BAKED, must_not
     for a in BAKED: assert all(32 <= s <= 2048 and s & (s - 1) == 0 for s in SPECS[a]["surface"]) and len(SPECS[a]["surface"]) == 3, a

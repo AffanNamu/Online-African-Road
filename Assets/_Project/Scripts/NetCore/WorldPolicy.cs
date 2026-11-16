@@ -459,6 +459,7 @@ namespace ARO.NetCore
                             float x = pos.X + right.X * side * off, z = pos.Z + right.Z * side * off;
                             if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
                             if (m.Terrain.InsideFormation(x, z, margin)) continue;
+                            if (r.clearLength > 0f && !ClearAlong(m, c, s, side * off, r.clearLength, margin + r.clearDepth * 0.5f)) continue;
                             float towardRoad = (float)(Math.Atan2(-right.X * side, -right.Z * side) * 180.0 / Math.PI);
                             float yaw = (r.faceRoad ? towardRoad : Mathx.Hash01(seed, k, 5) * 360f) + (Mathx.Hash01(seed, k, side + 13) * 2f - 1f) * r.yawJitterDeg;
                             res.Add(new PropInstance { Prop = r.prop, Origin = r.id, Pos = new V3(x, m.Terrain.HeightAt(x, z), z), YawDeg = yaw, Scale = Mathx.Lerp(r.scaleMin, r.scaleMax, Mathx.Hash01(seed, k, side + 19)) });
@@ -466,6 +467,19 @@ namespace ARO.NetCore
                     }
                 }
             }
+        }
+
+        /// <summary>A long prop standing at lateral `lat` of corridor c around s: its points at -1/2, -1/4, 0, 1/4 and 1/2 of `length` along the road (each at the same lateral) are clear of every road,
+        /// island and plate by `margin`. A row of parked cars at a corner otherwise reaches into the cross street.</summary>
+        static bool ClearAlong(RouteModel m, RoadCorridor c, float s, float lat, float length, float margin)
+        {
+            for (int i = -2; i <= 2; i++)
+            {
+                float si = s + i * length * 0.25f; if (si < 0f || si > c.Length) return false;
+                c.Spline.FrameAt(si, out var p, out _, out var right);
+                if (m.Terrain.InsideFormation(p.X + right.X * lat, p.Z + right.Z * lat, margin)) return false;
+            }
+            return true;
         }
 
         /// <summary>FNV-1a of a road id: stable across runs, processes and platforms (string.GetHashCode is randomised per process in .NET).</summary>

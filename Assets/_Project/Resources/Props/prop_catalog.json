@@ -2515,7 +2515,7 @@
    ],
    "castShadow": true,
    "tags": [
-    "kano_city_test"
+    "kano_city"
    ]
   },
   {
@@ -2536,7 +2536,7 @@
    ],
    "castShadow": true,
    "tags": [
-    "kano_city_test"
+    "kano_city"
    ]
   },
   {
@@ -2557,7 +2557,83 @@
    ],
    "castShadow": true,
    "tags": [
-    "kano_city_test"
+    "kano_city"
+   ]
+  },
+  {
+   "id": "aro_car_parked_set_a",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:aro_car_parked_set_a",
+   "collider": "box",
+   "heightM": 1.44,
+   "widthM": 15.65,
+   "depthM": 2.0,
+   "cullDistance": 160.0,
+   "lodTriangles": [
+    720,
+    306,
+    60
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city",
+    "parked_cars",
+    "street",
+    "vehicle"
+   ]
+  },
+  {
+   "id": "kano_market_neighbourhood_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_market_neighbourhood_a",
+   "collider": "box",
+   "heightM": 6.75,
+   "widthM": 40.44,
+   "depthM": 30.58,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    2353,
+    650,
+    76
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "kano_city_test",
+    "market",
+    "stalls"
+   ]
+  },
+  {
+   "id": "kano_university_faculty_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_university_faculty_a",
+   "collider": "box",
+   "heightM": 14.15,
+   "widthM": 60.44,
+   "depthM": 44.58,
+   "cullDistance": 500.0,
+   "lodTriangles": [
+    2144,
+    504,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "campus",
+    "education",
+    "generic_design",
+    "kano_city_test",
+    "public",
+    "university"
    ]
   }
  ]

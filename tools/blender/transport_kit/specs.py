@@ -180,7 +180,19 @@ _BLD = [  # id, builder, collision boxes, note, target, atlas sizes
 ]
 for _aid, _fn, _cols, _note, _tgt, _sz in _BLD: spec(_aid, "buildings", _fn, _cols, _note, target=_tgt, surface=_sz, version=1)
 
+# family K (owner directive of 2026-11-16: markets, parked vehicles, universities, placed in the city the day they are made)
+from . import family_k as K
+_KB = [
+    ("kano_university_faculty_a", K.university_faculty_a, [(-22.0, 6.0, 0.0, 22.0, 18.0, 11.6), (-29.0, -8.0, 0.0, -21.0, 6.0, 7.8), (21.0, -8.0, 0.0, 29.0, 6.0, 7.8)] + _walls(-30.0, -22.0, 30.0, 22.0, 2.4, 0.0, 8.0),
+     "university faculty campus: a three-storey teaching block with terracotta sun fins and a columned portico at the head of a lawn quad, two two-storey wings, paths, trees, a flag, staff parking, a walled lot, a gate and a generic UNIVERSITY sign (no real institution)", [60, 44, 14], (1024, 512, 128)),
+    ("kano_market_neighbourhood_a", K.market_neighbourhood_a, [(-18.0, 10.5, 0.0, 18.0, 15.0, 4.0)] + _walls(-20.0, -15.0, 20.0, 15.0, 1.4, 0.0, 10.0)[1:],
+     "neighbourhood market: three rows of open zinc sheds on posts with trading tables, sacks and produce, umbrellas in the front yard, four lock-up shops at the back, a MARKET sign over the gate, a low wall (generic; not Kurmi market)", [40, 30, 6], (1024, 512, 128)),
+]
+for _aid, _fn, _cols, _note, _tgt, _sz in _KB: spec(_aid, "buildings", _fn, _cols, _note, target=_tgt, surface=_sz, version=1)
+spec("aro_car_parked_set_a", "props", K.car_parked_set_a, [(_cx - K.CAR_L / 2, -K.CAR_W / 2, 0.0, _cx + K.CAR_L / 2, K.CAR_W / 2, K.CAR_H) for _cx, _ in K.CARS],
+     "three generic saloon cars parked in a row (white, blue, red; no make, badge or plate text), lengthwise along x so that a road-facing placement parks them parallel to the kerb", target=[16.0, 1.9, 1.5], surface=(256, 128, 64), version=1)
+
 # the bake rules of the new families (surface.separate_coplanar rules 2); the realism-pass assets keep rules 1 so that they rebuild exactly as frozen in v002
 from . import common as _CM
 for _id in _S:
-    if _CM.EXTRAS.get(_id, {}).get("family") in ("G", "H", "I", "J"): _S[_id]["bake_rules"] = 2
+    if _CM.EXTRAS.get(_id, {}).get("family") in ("G", "H", "I", "J", "K"): _S[_id]["bake_rules"] = 2

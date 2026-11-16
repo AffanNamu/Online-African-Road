@@ -52,6 +52,7 @@ namespace ARO.NetCore
                 default:
                     if (def.category == "buildings" && def.HasBoxes) Site(mb, def, detail);      // a place a vehicle drives into (a fuel station): its collision boxes, a canopy over the columns, the forecourt
                     else if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
+                    else if (def.id.StartsWith("aro_car_")) ParkedCars(mb, w, d, h, detail);        // parked cars (family K, 2026-11-16) until their prefab is staged
                     else if (def.category == "vegetation" && lod < 2) Tree(mb, h, w, detail);       // any other tree id (the environment kit's street trees, 2026-11-16): the generic tree until its prefab is staged
                     else if (def.category == "vegetation") Box(mb, PropSub.Foliage, 0, h * 0.45f, 0, w * 0.7f, h * 0.5f, w * 0.7f);   // and a crown box far away
                     else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
@@ -355,6 +356,19 @@ namespace ARO.NetCore
         static float Lerp(float a, float b, float t) => a + (b - a) * t;
 
         /// <summary>Open-bottom box. (cx, y0, cz) is the centre of the base; faces wind outwards.</summary>
+        /// <summary>A row of three parked cars lengthwise along x (the set's width): bodies and cabins up close, bodies alone further, one low block far away.</summary>
+        static void ParkedCars(MeshBuffers mb, float w, float d, float h, int detail)
+        {
+            if (detail == 0) { Box(mb, PropSub.Accent, 0, 0f, 0, w, h * 0.6f, d); return; }
+            float car = (w - 2.4f) / 3f;
+            for (int i = 0; i < 3; i++)
+            {
+                float cx = -w / 2 + car / 2 + i * (car + 1.2f);
+                Box(mb, PropSub.Accent, cx, 0f, 0, car, h * 0.6f, d * 0.92f);                     // the body down to the road (the wheels are not modelled in a placeholder)
+                if (detail == 2) Box(mb, PropSub.Glass, cx - car * 0.05f, h * 0.6f, 0, car * 0.5f, h * 0.4f, d * 0.8f);
+            }
+        }
+
         public static void Box(MeshBuffers mb, int sub, float cx, float y0, float cz, float w, float h, float d)
             => RoadGeometry.AddBox(mb, sub, new V3(cx, y0, cz), w, h, d, new V3(0, 0, 1), new V3(1, 0, 0));
 

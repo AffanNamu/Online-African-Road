@@ -4390,6 +4390,144 @@
      }
     ]
    }
+  },
+  {
+   "id": "kano_university_faculty_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family K, class CITY_SPECIFIC: university faculty campus: a three-storey teaching block with terracotta sun fins and a columned portico at the head of a lawn quad, two two-storey wings, paths, trees, a flag, staff parking, a walled lot, a gate and a generic UNIVERSITY sign (no real institution) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_university_faculty_a",
+   "collider": "box",
+   "heightM": 14.15,
+   "widthM": 60.44,
+   "depthM": 44.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2144,
+    504,
+    40
+   ],
+   "castShadow": true,
+   "tags": [
+    "campus",
+    "education",
+    "generic_design",
+    "public",
+    "university"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 6.6,
+      "z": -2.8
+     },
+     {
+      "x": -9.0,
+      "y": 2.6,
+      "z": 20.0
+     },
+     {
+      "x": 20.0,
+      "y": 3.0,
+      "z": 9.0
+     },
+     {
+      "x": -20.0,
+      "y": 3.0,
+      "z": 9.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "kano_market_neighbourhood_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family K, class CITY_SPECIFIC: neighbourhood market: three rows of open zinc sheds on posts with trading tables, sacks and produce, umbrellas in the front yard, four lock-up shops at the back, a MARKET sign over the gate, a low wall (generic; not Kurmi market) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/kano_market_neighbourhood_a",
+   "collider": "box",
+   "heightM": 6.75,
+   "widthM": 40.44,
+   "depthM": 30.58,
+   "cullDistance": 250,
+   "lodTriangles": [
+    2353,
+    650,
+    76
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "market",
+    "stalls"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 1.0,
+    "range": 12,
+    "haloSize": 1.6,
+    "poolRadius": 4.0,
+    "poolShift": 1.6,
+    "realLight": false,
+    "shiftFront": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 3.6,
+      "z": 14.0
+     },
+     {
+      "x": 9.0,
+      "y": 3.2,
+      "z": -10.0
+     },
+     {
+      "x": -9.0,
+      "y": 3.2,
+      "z": -10.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_car_parked_set_a",
+   "category": "props",
+   "status": "production",
+   "description": "Blender-authored transport kit, family K, class GLOBAL: three generic saloon cars parked in a row (white, blue, red; no make, badge or plate text), lengthwise along x so that a road-facing placement parks them parallel to the kerb References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/aro_car_parked_set_a",
+   "collider": "box",
+   "heightM": 1.44,
+   "widthM": 15.65,
+   "depthM": 2.0,
+   "cullDistance": 140,
+   "lodTriangles": [
+    720,
+    306,
+    60
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "parked_cars",
+    "street",
+    "vehicle"
+   ]
   }
  ],
  "bounds": {
@@ -5664,6 +5802,42 @@
     18.22,
     8.061
    ]
+  ],
+  "kano_university_faculty_a": [
+   [
+    -30.22,
+    -22.36,
+    -0.003
+   ],
+   [
+    30.22,
+    22.22,
+    14.15
+   ]
+  ],
+  "kano_market_neighbourhood_a": [
+   [
+    -20.22,
+    -15.36,
+    0.0
+   ],
+   [
+    20.22,
+    15.22,
+    6.75
+   ]
+  ],
+  "aro_car_parked_set_a": [
+   [
+    -7.82,
+    -1.0,
+    0.016
+   ],
+   [
+    7.83,
+    1.0,
+    1.46
+   ]
   ]
  },
  "sockets": {
@@ -6175,6 +6349,32 @@
     0.15,
     1.0,
     0.15
+   ]
+  ],
+  "aro_car_parked_set_a": [
+   [
+    3.4,
+    0.0,
+    -0.88,
+    7.8,
+    1.46,
+    0.88
+   ],
+   [
+    -2.2,
+    0.0,
+    -0.88,
+    2.2,
+    1.46,
+    0.88
+   ],
+   [
+    -7.8,
+    0.0,
+    -0.88,
+    -3.4,
+    1.46,
+    0.88
    ]
   ],
   "aro_container_20ft_a": [
@@ -7149,6 +7349,48 @@
     18.2
    ]
   ],
+  "kano_market_neighbourhood_a": [
+   [
+    -18.0,
+    0.0,
+    -15.0,
+    18.0,
+    4.0,
+    -10.5
+   ],
+   [
+    19.8,
+    0.0,
+    -15.0,
+    20.2,
+    1.4,
+    15.0
+   ],
+   [
+    -20.2,
+    0.0,
+    -15.0,
+    -19.8,
+    1.4,
+    15.0
+   ],
+   [
+    5.0,
+    0.0,
+    14.8,
+    20.0,
+    1.4,
+    15.2
+   ],
+   [
+    -20.0,
+    0.0,
+    14.8,
+    -5.0,
+    1.4,
+    15.2
+   ]
+  ],
   "kano_midrise_apartments_a": [
    [
     -12.0,
@@ -7599,6 +7841,72 @@
     1.0,
     2.8,
     0.35
+   ]
+  ],
+  "kano_university_faculty_a": [
+   [
+    -22.0,
+    0.0,
+    -18.0,
+    22.0,
+    11.6,
+    -6.0
+   ],
+   [
+    21.0,
+    0.0,
+    -6.0,
+    29.0,
+    7.8,
+    8.0
+   ],
+   [
+    -29.0,
+    0.0,
+    -6.0,
+    -21.0,
+    7.8,
+    8.0
+   ],
+   [
+    -30.0,
+    0.0,
+    -22.2,
+    30.0,
+    2.4,
+    -21.8
+   ],
+   [
+    29.8,
+    0.0,
+    -22.0,
+    30.2,
+    2.4,
+    22.0
+   ],
+   [
+    -30.2,
+    0.0,
+    -22.0,
+    -29.8,
+    2.4,
+    22.0
+   ],
+   [
+    4.0,
+    0.0,
+    21.8,
+    30.0,
+    2.4,
+    22.2
+   ],
+   [
+    -30.0,
+    0.0,
+    21.8,
+    -4.0,
+    2.4,
+    22.2
    ]
   ],
   "lmk_kano_roundabout_monument_a": [

@@ -60,6 +60,19 @@ public class RoadScatterTests
         Assert.True(n > 50, $"only {n} road props checked");
     }
 
+    [Fact] public void ARowOfParkedCarsNeverReachesIntoARoadAlongItsLength()
+    {
+        var m = City; int n = 0;
+        var boxes = new List<(float, float)> { (X0, Z0), (X0 - 2400f, Z0 - 600f), (-2800f, -1800f), (600f, -3600f), (-1600f, 1600f) };
+        foreach (var (x, z) in boxes)
+            foreach (var p in PropScatter.PlaceChunk(m, x, z, x + 400f, z + 400f).Where(p => p.Prop == "aro_car_parked_set_a"))
+            {
+                n++; double a = p.YawDeg * Math.PI / 180.0; float rx = (float)Math.Cos(a), rz = (float)-Math.Sin(a);          // the set's own x axis (the cars' length) in the world
+                for (int i = -2; i <= 2; i++) { float t = i * 3.9f; Assert.False(m.Terrain.InsideFormation(p.Pos.X + rx * t, p.Pos.Z + rz * t, 0f), $"cars at ({p.Pos.X:0.0}, {p.Pos.Z:0.0}) reach into a road {t:0.0} m along"); }
+            }
+        Assert.True(n >= 5, $"only {n} rows of parked cars checked");
+    }
+
     static bool InsideRing(Roundabout rb, PropInstance p) => Math.Sqrt((p.Pos.X - rb.Cx) * (p.Pos.X - rb.Cx) + (p.Pos.Z - rb.Cz) * (p.Pos.Z - rb.Cz)) <= rb.CentreRadius;
 
     [Fact] public void ARuleWithoutTheFlagStillPlacesOnTheMainRoadOnly()
