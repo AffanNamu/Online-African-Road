@@ -167,7 +167,7 @@ async function run() {
     await p.check('#f_published'); await p.click('#savecontent'); await p.waitForSelector('#contentout.ok');
     check(await served('news', 'e2e-news'), 'a published item reaches players');
     check(db(`select title from content_items where id = 'e2e-news'`) === 'E2E inews/i', 'the title was cleaned by the server (< > removed)');
-    await p.click('[data-toggle="e2e-news"]'); await askReason(p, 'e2e: pulling it'); await p.waitForSelector('[data-toggle="e2e-news"]:has-text("Publish")');
+    await p.click('[data-toggle="e2e-news"]'); await askReason(p, 'e2e: pulling it'); await p.waitForSelector('[data-toggle="e2e-news"]:text-is("Publish")');      // exact: :has-text("Publish") also matches "Unpublish", so it returned at once and the check below raced the server (CI run 363)
     check(!(await served('news', 'e2e-news')), 'unpublishing removes it from players');
     await p.click('[data-edit="e2e-news"]'); await p.waitForSelector('#contentform'); check(await p.isDisabled('#f_kind') && await p.$eval('#f_id', e => e.readOnly), 'an existing item cannot change its kind or id');
     await p.click('button:has-text("Cancel")');

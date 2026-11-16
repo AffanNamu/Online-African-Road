@@ -54,6 +54,7 @@ namespace ARO.NetCore
                     else if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
                     else if (def.id.StartsWith("aro_car_")) ParkedCars(mb, w, d, h, detail);        // parked cars (family K, 2026-11-16) until their prefab is staged
                     else if (def.category == "lights" && def.light != null && def.light.heads != null && def.light.heads.Length > 0) KitLight(mb, def, detail);   // the kit's street lights until their prefab is staged
+                    else if (def.tags != null && Array.IndexOf(def.tags, "bus_stop") >= 0) KitShelter(mb, def, detail);     // the kit's bus shelter (2026-11-16) until its prefab is staged: an open shelter, not a solid box
                     else if (def.category == "vegetation" && lod < 2) Tree(mb, h, w, detail);       // any other tree id (the environment kit's street trees, 2026-11-16): the generic tree until its prefab is staged
                     else if (def.category == "vegetation") Box(mb, PropSub.Foliage, 0, h * 0.45f, 0, w * 0.7f, h * 0.5f, w * 0.7f);   // and a crown box far away
                     else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
@@ -258,6 +259,20 @@ namespace ARO.NetCore
             Box(mb, PropSub.Roof, 0, h, 0, w * 1.1f, 0.15f, d);
             FlatDown(mb, PropSub.Glow, 0, h - 0.01f, 0, w * 0.5f, 0.3f);                                   // the shelter light under the roof
             if (detail == 2) { Box(mb, PropSub.Trunk, 0, 0.45f, -d * 0.25f, w * 0.7f, 0.08f, 0.4f); Slab(mb, PropSub.Glass, -w * 0.5f + 0.2f, 0.4f, -d * 0.5f + 0.01f, w - 0.4f, h - 0.7f); }
+        }
+
+        /// <summary>
+        /// A bus shelter of the transport kit (tagged bus_stop) until its prefab is staged: open at the front (+z, the road), posts and a glass panel at the back, a bench, the roof, and its
+        /// light glowing under each head of the catalogue entry. Far away only the roof, the back panel and the glow.
+        /// </summary>
+        static void KitShelter(MeshBuffers mb, PropDef def, int detail)
+        {
+            float w = def.widthM, d = def.depthM, h = def.heightM;
+            Box(mb, PropSub.Roof, 0, h - 0.12f, 0, w, 0.12f, d);
+            Slab(mb, PropSub.Glass, -w * 0.5f + 0.15f, 0.3f, -d * 0.5f + 0.05f, w - 0.3f, h - 0.6f);
+            if (detail >= 1) foreach (int sx in new[] { -1, 1 }) Box(mb, PropSub.Metal, sx * (w * 0.5f - 0.12f), 0, -d * 0.5f + 0.12f, 0.1f, h - 0.12f, 0.1f);
+            if (detail == 2) Box(mb, PropSub.Trunk, 0, 0.42f, -d * 0.25f, w * 0.75f, 0.06f, 0.4f);           // the bench
+            if (def.light != null && def.light.heads != null) foreach (var hd in def.light.heads) FlatDown(mb, PropSub.Glow, hd.x, h - 0.125f, hd.z - 0.2f, Math.Min(1.6f, w * 0.3f), 0.25f);
         }
 
         static void Pole(MeshBuffers mb, float h, float r, int detail)

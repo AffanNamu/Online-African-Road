@@ -312,6 +312,13 @@ def build():
              scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=0.3, clearLength=16.0, clearDepth=1.4, allRoads=True)]     # the body reaches 2.25 m from the road edge; people at a lot front stand 2.8 m or more out (setbacks >= 5 m)
     r["propRules"].append(dict(base, id="trees_fields", prop="rg_ngn_tree_large_shade_a", zones="rural", profiles="", side="both", offsetMin=55.0, offsetMax=90.0, spacingMin=30.0, spacingMax=55.0,
                                presence=0.55, scaleMin=0.8, scaleMax=1.25, yawJitterDeg=180.0, faceRoad=False, fixedDensity=False, exclusionMargin=-1.0, allRoads=True))      # farm trees of the fringe
+    # bus shelters (the transport kit's real model, tagged bus_stop: the crowd seats people waiting under it) instead of the E1 placeholder rule, whose 1 to 1.6 m offset lies inside
+    # the default 3 m clearance and so placed nothing. Behind the kerb lamps (0.6 to 1 m out) with the front of the shelter at 1.2 m or more, the back short of the 5 m setback of the
+    # lots, so nobody at a shop front stands in it; on the collectors on the right kerb only (their shade trees stand on the left); never across a junction's mouth (clearLength).
+    r["propRules"] = [p for p in r["propRules"] if p["id"] not in ("busstops_collector", "kiosks_collector")]     # kiosks: a 3 m box fits nowhere between the lamps and the shop-front people
+    for rid, prof, side, smin, smax, pres in [("shelters_collector", "kano_collector", "right", 180.0, 260.0, 0.85), ("shelters_arterial", "kano_arterial", "both", 250.0, 350.0, 0.8)]:
+        r["propRules"].append(dict(base, id=rid, prop="aro_bus_shelter_a", profiles=prof, side=side, offsetMin=2.2, offsetMax=2.5, spacingMin=smin, spacingMax=smax, presence=pres,
+                                   scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=1.0, clearLength=5.7, clearDepth=2.0, allRoads=True))
     lights_service = next(p for p in r["propRules"] if p["id"] == "lights_service")
     r["propRules"].append(dict(lights_service, id="lights_ramp", profiles="kano_ramp", allRoads=True))                # the A2 interchange's slip ramps
     for p in r["propRules"]:

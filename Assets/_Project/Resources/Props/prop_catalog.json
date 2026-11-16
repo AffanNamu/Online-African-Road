@@ -2820,6 +2820,48 @@
     "roadside_trade",
     "stalls"
    ]
+  },
+  {
+   "id": "aro_bus_shelter_a",
+   "category": "props",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules.",
+   "source": "dev:aro_bus_shelter_a",
+   "collider": "none",
+   "heightM": 3.04,
+   "widthM": 5.67,
+   "depthM": 2.04,
+   "cullDistance": 200.0,
+   "lodTriangles": [
+    346,
+    164,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "bus_stop",
+    "kano_city",
+    "transport"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 2.76,
+      "z": 0.96
+     }
+    ]
+   }
   }
  ]
 }

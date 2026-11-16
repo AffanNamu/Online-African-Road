@@ -129,8 +129,8 @@ namespace ARO.NetCore
                 return;
             }
             bool mosque = Has(d, "mosque"), busy = Busy.Any(t => Has(d, t)) || d.id == "shop_row" || d.id.Contains("market"), home = Has(d, "residential");
-            if (d.id == "bus_stop")
-            {   // people waiting under the shelter, facing the road (or the bays), and someone walking behind it
+            if (d.id == "bus_stop" || Has(d, "bus_stop"))
+            {   // people waiting under the shelter, facing the road (or the bays), and someone walking behind it (the placeholder stop, or a real shelter model tagged bus_stop)
                 int n = 2 + (int)(U(h, 3) * 5f);
                 for (int k = 0; k < n; k++) Idle(L((k + 0.5f) / n * (w - 0.8f) - (w - 0.8f) * 0.5f, -dep * 0.25f + U(h, 20 + k) * 0.4f), U(h, 30 + k) * 50f - 25f, k, "stop");
                 var b0 = L(-w * 0.5f - 1.5f, -dep * 0.5f - 0.9f); var b1 = L(w * 0.5f + 1.5f, -dep * 0.5f - 0.9f);

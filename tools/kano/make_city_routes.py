@@ -154,6 +154,7 @@ def catalog_entries():
         furniture = (entry or {}).get("category", "buildings") in ("props", "lights")         # parked cars, the kit's street lights (the city's scatter rules)
         if pid.startswith("aro_car_"): cull = 160.0                                # parked cars: street furniture distance
         if (entry or {}).get("category") == "lights": cull = 260.0                 # street lights: as the placeholder lamps they replace
+        if "bus_stop" in (entry or {}).get("tags", []): cull = 200.0               # bus shelters: street furniture, seen a block ahead
         e = {"id": pid, "category": entry["category"] if furniture else "buildings", "status": "dev",
              "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
              "source": "dev:" + pid, "collider": "box", "heightM": round(h, 2), "widthM": round(w, 2), "depthM": round(d, 2), "cullDistance": float(cull), "lodTriangles": lods, "castShadow": True,
