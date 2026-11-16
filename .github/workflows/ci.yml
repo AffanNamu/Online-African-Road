@@ -233,7 +233,7 @@ jobs:
       - name: "Drive scenario in KANO CITY (the actual city on the master plan: the A2 through the gateway towards the ring road; the truck must land on the road, accelerate and drive; informational until two runs agree)"
         if: always()
         continue-on-error: true
-        env: { DRIVE_QUERY: "&route=ng-kano-city&start=2900" }
+        env: { DRIVE_QUERY: "&route=ng-kano-city&start=2200" }
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive-city
       - name: "Refuel at a pump without a server (P1: the truck beside the first pump of the Kano city E1 route and of the shipped route; the prompt, the Refuel button, the offline notice, no fuel added; informational until two runs agree)"
         if: always()

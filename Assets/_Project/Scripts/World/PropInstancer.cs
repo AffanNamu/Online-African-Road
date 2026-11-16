@@ -33,30 +33,33 @@ namespace ARO.World
         readonly Dictionary<Vector2Int, List<Inst>> _chunks = new Dictionary<Vector2Int, List<Inst>>();
         readonly Dictionary<(Mesh, int, Material, ShadowCastingMode), Batch> _batches = new Dictionary<(Mesh, int, Material, ShadowCastingMode), Batch>();
         readonly Plane[] _planes = new Plane[6];
-        float _nextLog;
+        float _nextLog; bool _drawFailed;
 
         /// <summary>The instancing plan of a prefab, or null when it must be instantiated (it carries something the instancer does not draw, or has no valid LODGroup).</summary>
         public static Plan PlanFor(GameObject prefab, string id)
         {
             if (prefab == null || _refused.Contains(prefab)) return null;
             if (_plans.TryGetValue(prefab, out var p)) return p;
-            p = BuildPlan(prefab, id); if (p == null) { _refused.Add(prefab); Debug.Log($"[Instancing] '{id}' is drawn as a prefab (not instanceable)"); return null; }
+            p = BuildPlan(prefab, id, out string why); if (p == null) { _refused.Add(prefab); Debug.Log($"[Instancing] '{id}' is drawn as a prefab: {why}"); return null; }
             return _plans[prefab] = p;
         }
 
-        static Plan BuildPlan(GameObject prefab, string id)
+        static Plan BuildPlan(GameObject prefab, string id, out string why)
         {
-            if (prefab.GetComponentInChildren<Light>(true) != null || prefab.GetComponentInChildren<ParticleSystem>(true) != null || prefab.GetComponentInChildren<SkinnedMeshRenderer>(true) != null) return null;
+            why = null;
+            if (prefab.GetComponentInChildren<Light>(true) != null) { why = "it holds a light"; return null; }
+            if (prefab.GetComponentInChildren<ParticleSystem>(true) != null) { why = "it holds a particle system"; return null; }
+            if (prefab.GetComponentInChildren<SkinnedMeshRenderer>(true) != null) { why = "it holds a skinned mesh"; return null; }
             var lg = prefab.GetComponent<LODGroup>(); var root = prefab.transform; var toRoot = root.worldToLocalMatrix;
             var inLods = new HashSet<Renderer>(); Part[][] lods; float[] heights; float size; Vector3 refPoint;
             if (lg != null)
             {
-                var src = lg.GetLODs(); if (src.Length == 0) return null;
+                var src = lg.GetLODs(); if (src.Length == 0) { why = "its LODGroup is empty"; return null; }
                 lods = new Part[src.Length][]; heights = new float[src.Length];
                 for (int i = 0; i < src.Length; i++)
                 {
                     heights[i] = src[i].screenRelativeTransitionHeight; var parts = new List<Part>();
-                    foreach (var r in src[i].renderers) { if (r == null) continue; inLods.Add(r); if (!AddParts(r, toRoot, parts)) return null; }
+                    foreach (var r in src[i].renderers) { if (r == null) continue; inLods.Add(r); if (!AddParts(r, toRoot, parts)) { why = "LOD " + i + " has a renderer that is not a MeshRenderer (" + r.GetType().Name + ")"; return null; } }
                     lods[i] = parts.ToArray();
                 }
                 size = lg.size; refPoint = lg.localReferencePoint;
@@ -64,14 +67,14 @@ namespace ARO.World
             else
             {   // a prefab without LODs: one level, culled by the catalogue distance only
                 var parts = new List<Part>();
-                foreach (var r in prefab.GetComponentsInChildren<MeshRenderer>(true)) { inLods.Add(r); if (!AddParts(r, toRoot, parts)) return null; }
-                if (parts.Count == 0) return null;
+                foreach (var r in prefab.GetComponentsInChildren<MeshRenderer>(true)) { inLods.Add(r); if (!AddParts(r, toRoot, parts)) { why = "a renderer is not a MeshRenderer"; return null; } }
+                if (parts.Count == 0) { why = "no mesh to draw"; return null; }
                 lods = new[] { parts.ToArray() }; heights = new[] { 1e-6f }; var b = new Bounds(); bool first = true;
                 foreach (var r in prefab.GetComponentsInChildren<MeshRenderer>(true)) { var mf = r.GetComponent<MeshFilter>(); if (mf == null || mf.sharedMesh == null) continue; var wb = mf.sharedMesh.bounds; if (first) { b = wb; first = false; } else b.Encapsulate(wb); }
                 size = Mathf.Max(b.size.x, b.size.y, b.size.z); refPoint = b.center;
             }
-            foreach (var r in prefab.GetComponentsInChildren<Renderer>(true)) if (!inLods.Contains(r)) return null;      // a renderer outside the LODs: keep the prefab
-            if (!InstancedLod.ValidThresholds(heights)) return null;
+            foreach (var r in prefab.GetComponentsInChildren<Renderer>(true)) if (!inLods.Contains(r)) { why = "renderer '" + r.name + "' is outside its LODs"; return null; }      // keep the prefab
+            if (!InstancedLod.ValidThresholds(heights)) { why = "its LOD thresholds are not a valid descending set (" + string.Join(", ", heights) + ")"; return null; }
             return new Plan { Lods = lods, Heights = heights, Size = size, RefPoint = refPoint, Id = id };
         }
 
@@ -109,13 +112,14 @@ namespace ARO.World
             var cam = Camera.main; if (cam == null) return;
             foreach (var b in _batches.Values) b.N = 0;
             var cp = cam.transform.position; float fov = cam.fieldOfView, bias = QualitySettings.lodBias; GeometryUtility.CalculateFrustumPlanes(cam, _planes);
-            int instances = 0;
+            int instances = 0, registered = 0, beyond = 0, outOfView = 0;
             foreach (var list in _chunks.Values)
                 foreach (var it in list)
                 {
+                    registered++;
                     float d = Vector3.Distance(cp, it.Ref);
-                    int lod = InstancedLod.Choose(it.Size, d, fov, bias, it.P.Heights, it.Cull); if (lod < 0) continue;
-                    if (!GeometryUtility.TestPlanesAABB(_planes, new Bounds(it.Ref, Vector3.one * it.Size))) continue;
+                    int lod = InstancedLod.Choose(it.Size, d, fov, bias, it.P.Heights, it.Cull); if (lod < 0) { beyond++; continue; }
+                    if (!GeometryUtility.TestPlanesAABB(_planes, new Bounds(it.Ref, Vector3.one * it.Size))) { outOfView++; continue; }
                     instances++;
                     foreach (var part in it.P.Lods[lod])
                     {
@@ -133,12 +137,13 @@ namespace ARO.World
                 for (int start = 0; start < b.N; start += InstancedLod.MaxPerDraw)
                 {
                     int n = Mathf.Min(InstancedLod.MaxPerDraw, b.N - start);
-                    Graphics.RenderMeshInstanced(rp, b.Part.Mesh, b.Part.Sub, b.M, n, start); draws++;
+                    try { Graphics.RenderMeshInstanced(rp, b.Part.Mesh, b.Part.Sub, b.M, n, start); draws++; }
+                    catch (System.Exception e) { if (!_drawFailed) { _drawFailed = true; Debug.LogError($"[Instancing] draw failed for '{b.Part.Mesh.name}' / '{b.Part.Mat.name}': {e.GetType().Name}: {e.Message}"); } }
                 }
                 tris += (long)b.Part.Tris * b.N;
             }
             LastDrawCalls = draws; LastTriangles = tris; LastInstances = instances;
-            if (Time.unscaledTime >= _nextLog) { _nextLog = Time.unscaledTime + 10f; Debug.Log($"[Instancing] buildings={instances} draws={draws} tris={tris} chunks={_chunks.Count} plans={_plans.Count} prefabFallback={_refused.Count}"); }
+            if (Time.unscaledTime >= _nextLog) { _nextLog = Time.unscaledTime + 10f; Debug.Log($"[Instancing] buildings={instances} draws={draws} tris={tris} registered={registered} beyondLodOrCull={beyond} outOfView={outOfView} chunks={_chunks.Count} plans={_plans.Count} prefabFallback={_refused.Count} lodBias={bias:0.##} fov={fov:0}"); }
         }
     }
 }

@@ -174,6 +174,7 @@ namespace ARO.NetCore
         public bool faceRoad = true;
         public bool fixedDensity;               // true = the quality tier's prop density does not thin this rule (street lights keep their regular spacing on every tier); a density of 0 still removes everything
         public float exclusionMargin = -1f;     // metres of clearance kept beyond the road formation; -1 = the engine default (PropScatter.ExclusionMargin, 3 m). Street lights stand close to the road and ask for less
+        public bool allRoads;                   // opt-in (the Kano city): the rule also runs along every road of the network (E5 roads, junction side roads; not roundabout rings), over each road's whole length (sFrom/sTo are main-road stations). False = the main road only, as every route before it
     }
 
     /// <summary>A hand-placed set piece (sign, fuel station, bus stop). lateral is from the road centre line, positive = right.</summary>

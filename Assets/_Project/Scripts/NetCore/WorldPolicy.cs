@@ -352,7 +352,7 @@ namespace ARO.NetCore
             var res = new List<PropInstance>();
             var main = m.Main; var spec = m.Spec; float L = main.Length;
             bool nearMain = SRange(main, minX, minZ, maxX, maxZ, 130f, out float sLo, out float sHi);
-            if (!nearMain) { AddSideProps(m, minX, minZ, maxX, maxZ, res); FrontagePlacer.AddToChunk(m, minX, minZ, maxX, maxZ, density, res); return res; }      // side roads and site plates can lie farther from the main road than the scatter reaches
+            if (!nearMain) { AddRoadRules(m, minX, minZ, maxX, maxZ, density, res); AddSideProps(m, minX, minZ, maxX, maxZ, res); FrontagePlacer.AddToChunk(m, minX, minZ, maxX, maxZ, density, res); return res; }      // side roads and site plates can lie farther from the main road than the scatter reaches
 
             var rules = spec.propRules ?? new PropRule[0];
             for (int ri = 0; ri < rules.Length; ri++)
@@ -403,9 +403,75 @@ namespace ARO.NetCore
                 float y = Math.Abs(p.lateral) < main.HalfFormationAt(Mathx.Clamp(p.s, 0f, L)) ? main.SurfaceY(Mathx.Clamp(p.s, 0f, L), p.lateral) : m.Terrain.HeightAt(x, z);   // a piece placed on the road itself (a median light) stands on the surface, not on the terrain 0.35 m below it
                 res.Add(new PropInstance { Prop = p.prop, Origin = p.id, Text = p.text, Pos = new V3(x, y, z), YawDeg = heading + p.yawDeg, Scale = p.scale });
             }
+            AddRoadRules(m, minX, minZ, maxX, maxZ, density, res);
             AddSideProps(m, minX, minZ, maxX, maxZ, res);
             FrontagePlacer.AddToChunk(m, minX, minZ, maxX, maxZ, density, res);
             return res;
+        }
+
+        /// <summary>
+        /// Rules with `allRoads` (opt-in; the Kano city is the first route to set it) also run along every road of the network: the E5 roads and junction side roads, not the roundabout rings
+        /// (their islands carry their own props). Each road uses the same slots, sides, offsets, spacing, presence and checks as the main road, over its whole length, and hashes its slots
+        /// with a stable hash of its own id, so a slot's outcome never depends on which chunks are loaded or in which order (every client places the same props). A route whose rules do not
+        /// set it places exactly what it placed before.
+        /// </summary>
+        static void AddRoadRules(RouteModel m, float minX, float minZ, float maxX, float maxZ, float density, List<PropInstance> res)
+        {
+            var rules = m.Spec.propRules; if (rules == null) return;
+            bool any = false; foreach (var r in rules) if (r.allRoads) { any = true; break; }
+            if (!any) return;
+            var near = new HashSet<RoadCorridor>();
+            for (float x = minX - 130f; x <= maxX + 130f + 1f; x += 64f) for (float z = minZ - 130f; z <= maxZ + 130f + 1f; z += 64f) foreach (var c in m.CorridorsNear(x, z)) near.Add(c);
+            var rings = new HashSet<RoadCorridor>(); foreach (var rb in m.Rings) if (rb.Corridor != null) rings.Add(rb.Corridor);
+            foreach (var c in m.Sides)                                                       // in the spec's order, never the set's: the result is the same list on every client
+            {
+                if (!near.Contains(c) || rings.Contains(c)) continue;
+                if (!SRange(c, minX, minZ, maxX, maxZ, 130f, out float sLo, out float sHi)) continue;
+                int cid = StableHash(c.Id); float L = c.Length;
+                for (int ri = 0; ri < rules.Length; ri++)
+                {
+                    var r = rules[ri]; if (!r.allRoads) continue;
+                    float size = (r.spacingMin + r.spacingMax) * 0.5f, jitter = (r.spacingMax - r.spacingMin) * 0.25f;
+                    var zones = ParseZones(r.zones); var profiles = ParseProfiles(r.profiles);
+                    bool median = r.side == "median"; float dens = r.fixedDensity && density > 0f ? 1f : density, margin = r.exclusionMargin >= 0f ? r.exclusionMargin : ExclusionMargin;
+                    int seed = unchecked(m.Spec.seed + ri * 7919 + cid);
+                    int k0 = Math.Max(0, (int)Math.Floor(sLo / size) - 1), k1 = (int)Math.Ceiling(sHi / size) + 1;
+                    for (int k = k0; k <= k1; k++)
+                    {
+                        float s = (k + 0.5f) * size + (Mathx.Hash01(seed, k, 11) * 2f - 1f) * jitter;
+                        if (s < 0f || s > L) continue;
+                        if (zones != null && !zones.Contains(c.ZoneAt(s))) continue;
+                        if (c.InBridge(s, out _)) continue;
+                        if (profiles != null && !profiles.Contains(c.SectionAt(s).Spec.id)) continue;
+                        if (median && !c.SectionAt(s).HasMedian) continue;
+                        foreach (int side in median ? MedianSide : SidesOf(r.side))
+                        {
+                            if (Mathx.Hash01(seed, k, side + 3) > r.presence * dens) continue;
+                            c.Spline.FrameAt(s, out var pos, out var fwd, out var right);
+                            if (median)
+                            {
+                                if (pos.X < minX || pos.X >= maxX || pos.Z < minZ || pos.Z >= maxZ) continue;
+                                float headingM = (float)(Math.Atan2(fwd.X, fwd.Z) * 180.0 / Math.PI) + (Mathx.Hash01(seed, k, 13) * 2f - 1f) * r.yawJitterDeg;
+                                res.Add(new PropInstance { Prop = r.prop, Origin = r.id, Pos = new V3(pos.X, c.SurfaceY(s, 0f), pos.Z), YawDeg = headingM, Scale = Mathx.Lerp(r.scaleMin, r.scaleMax, Mathx.Hash01(seed, k, 19)) });
+                                continue;
+                            }
+                            float off = c.HalfFormationAt(s) + r.offsetMin + Mathx.Hash01(seed + 104729, k, side + 7) * (r.offsetMax - r.offsetMin);
+                            float x = pos.X + right.X * side * off, z = pos.Z + right.Z * side * off;
+                            if (x < minX || x >= maxX || z < minZ || z >= maxZ) continue;
+                            if (m.Terrain.InsideFormation(x, z, margin)) continue;
+                            float towardRoad = (float)(Math.Atan2(-right.X * side, -right.Z * side) * 180.0 / Math.PI);
+                            float yaw = (r.faceRoad ? towardRoad : Mathx.Hash01(seed, k, 5) * 360f) + (Mathx.Hash01(seed, k, side + 13) * 2f - 1f) * r.yawJitterDeg;
+                            res.Add(new PropInstance { Prop = r.prop, Origin = r.id, Pos = new V3(x, m.Terrain.HeightAt(x, z), z), YawDeg = yaw, Scale = Mathx.Lerp(r.scaleMin, r.scaleMax, Mathx.Hash01(seed, k, side + 19)) });
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>FNV-1a of a road id: stable across runs, processes and platforms (string.GetHashCode is randomised per process in .NET).</summary>
+        static int StableHash(string id)
+        {
+            unchecked { uint h = 2166136261u; if (id != null) foreach (char ch in id) { h ^= ch; h *= 16777619u; } return (int)h; }
         }
 
         /// <summary>Hand-placed pieces measured from a side road (PropPlacementSpec.corridor) and the props of every site plate. Independent of the main road's scatter range, so a yard 250 m down a stub is furnished.</summary>

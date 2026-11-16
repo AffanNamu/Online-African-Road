@@ -371,7 +371,8 @@ public class FrontageTests
         // 2026-11-14, deliberate: the city construction directive gave every road class a district mix with the new fuel stations, commercial, public and residential families (was 17f062f1c1b0a646 / 4f24743abe3955be;
         // 2026-11-13 the realism pass changed the mosque footprints: was afc3661a654d088b / 175daddbe5a0cc47)
         // 2026-11-16: ng-kano-city-p1 (Kano City Phase 1 after the owner's World Design Reference R-041) recorded for the first time
-        string want = id == "ng-kano-city-e1" ? "2120f589e9978f8d" : id == "ng-kano-city-p1" ? "9d3a13b2d5416d97" : id == "ng-kano-city" ? "80985138ac835be3" : "7a796a2923dbbd77";      // ng-kano-city: the actual city (owner directive 2026-11-16), first recorded
+        string want = id == "ng-kano-city-e1" ? "2120f589e9978f8d" : id == "ng-kano-city-p1" ? "9d3a13b2d5416d97" : id == "ng-kano-city" ? "0eed381b5df15aee" : "7a796a2923dbbd77";      // ng-kano-city: the actual city (owner directive 2026-11-16), first recorded
+        // as 80985138ac835be3 (network + D06); 2026-11-16, deliberate: D05, D08, D09, D10, D11 and the F-MID filler of both bands added
         Assert.Equal(want, Digest(All(Model(id))));
     }
 }

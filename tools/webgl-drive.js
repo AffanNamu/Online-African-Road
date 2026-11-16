@@ -61,6 +61,9 @@ function serve() {
   samples.filter((_, i) => i % 3 === 0).forEach(s => console.log(`  t=${s.t} pos=(${s.x}, ${s.y}, ${s.z}) kmh=${s.kmh} dist=${s.dist}`));
   console.log('--- [Drive]/[World]/[Smoke] lines ---');
   logs.filter(l => /\[(Drive|World|Smoke)\]/.test(l) && !/\[Drive\] t=/.test(l)).slice(0, 20).forEach(l => console.log(l.slice(0, 300)));
+  console.log('--- [Instancing] lines (RB-15: what the instancer drew, culled or refused) ---');
+  logs.filter(l => /\[Instancing\]/.test(l)).slice(0, 16).forEach(l => console.log(l.slice(0, 400)));
+  const errs = logs.filter(l => /Exception|\[Instancing\] draw failed/.test(l)); if (errs.length) { console.log(`--- ${errs.length} exception line(s), first 6 ---`); errs.slice(0, 6).forEach(l => console.log(l.slice(0, 400))); }
 
   if (samples.length < 5) failures.push(`only ${samples.length} telemetry samples (expected many)`);
   else {

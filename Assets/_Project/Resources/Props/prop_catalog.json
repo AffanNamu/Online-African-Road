@@ -2496,6 +2496,69 @@
     "public",
     "security"
    ]
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_a",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built tree of the environment kit (private library, ARO-CONTENT), staged by the playable and review builds. Street trees of the Kano city (rules with allRoads).",
+   "source": "dev:rg_ngn_tree_street_broadleaf_a",
+   "collider": "none",
+   "heightM": 8.6,
+   "widthM": 7.11,
+   "depthM": 6.8,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    2364,
+    213,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_street_broadleaf_b",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built tree of the environment kit (private library, ARO-CONTENT), staged by the playable and review builds. Street trees of the Kano city (rules with allRoads).",
+   "source": "dev:rg_ngn_tree_street_broadleaf_b",
+   "collider": "none",
+   "heightM": 9.46,
+   "widthM": 5.79,
+   "depthM": 5.51,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    2364,
+    213,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
+  },
+  {
+   "id": "rg_ngn_tree_large_shade_a",
+   "category": "vegetation",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built tree of the environment kit (private library, ARO-CONTENT), staged by the playable and review builds. Street trees of the Kano city (rules with allRoads).",
+   "source": "dev:rg_ngn_tree_large_shade_a",
+   "collider": "none",
+   "heightM": 11.87,
+   "widthM": 11.76,
+   "depthM": 11.41,
+   "cullDistance": 350.0,
+   "lodTriangles": [
+    1404,
+    213,
+    22
+   ],
+   "castShadow": true,
+   "tags": [
+    "kano_city_test"
+   ]
   }
  ]
 }

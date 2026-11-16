@@ -52,6 +52,8 @@ namespace ARO.NetCore
                 default:
                     if (def.category == "buildings" && def.HasBoxes) Site(mb, def, detail);      // a place a vehicle drives into (a fuel station): its collision boxes, a canopy over the columns, the forecourt
                     else if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
+                    else if (def.category == "vegetation" && lod < 2) Tree(mb, h, w, detail);       // any other tree id (the environment kit's street trees, 2026-11-16): the generic tree until its prefab is staged
+                    else if (def.category == "vegetation") Box(mb, PropSub.Foliage, 0, h * 0.45f, 0, w * 0.7f, h * 0.5f, w * 0.7f);   // and a crown box far away
                     else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
                     break;
             }
