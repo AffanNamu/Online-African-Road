@@ -58,6 +58,7 @@ namespace ARO.NetCore
         readonly float[] _x, _z, _y, _s, _tx, _tz;     // dense polyline
         readonly float[] _knotS;                        // arc length at each control point
         readonly Dictionary<long, List<int>> _grid = new Dictionary<long, List<int>>();
+        readonly float _minX, _maxX, _minZ, _maxZ;      // bounds of the dense polyline: Nearest answers "nothing within reach" at once for a point far outside them
         const float Cell = 40f;
 
         public int PointCount => _s.Length;
@@ -101,6 +102,7 @@ namespace ARO.NetCore
 
             int m = px.Count;
             _x = px.ToArray(); _z = pz.ToArray(); _y = new float[m]; _s = new float[m]; _tx = new float[m]; _tz = new float[m];
+            Bounds(_x, _z, out _minX, out _maxX, out _minZ, out _maxZ);
             for (int i = 1; i < m; i++) _s[i] = _s[i - 1] + (float)Dist(_x[i - 1], _z[i - 1], _x[i], _z[i]);
             _knotS = new float[n]; for (int i = 0; i < n; i++) _knotS[i] = _s[knot[i]];
 
@@ -157,10 +159,17 @@ namespace ARO.NetCore
             }
         }
 
+        static void Bounds(float[] x, float[] z, out float minX, out float maxX, out float minZ, out float maxZ)
+        {
+            minX = maxX = x[0]; minZ = maxZ = z[0];
+            for (int i = 1; i < x.Length; i++) { minX = Math.Min(minX, x[i]); maxX = Math.Max(maxX, x[i]); minZ = Math.Min(minZ, z[i]); maxZ = Math.Max(maxZ, z[i]); }
+        }
+
         /// <summary>A spline from a ready-made dense polyline with its own unit tangents (E5: a circle for a roundabout, whose tangent is known exactly, so it closes without a kink). Knots are the first and last point.</summary>
         RoadSpline(float[] x, float[] z, float[] y, float[] tx, float[] tz)
         {
             int m = x.Length; _x = x; _z = z; _y = y; _tx = tx; _tz = tz; _s = new float[m];
+            Bounds(_x, _z, out _minX, out _maxX, out _minZ, out _maxZ);                    // every constructor sets the bounds Nearest relies on
             for (int i = 1; i < m; i++) _s[i] = _s[i - 1] + (float)Dist(x[i - 1], z[i - 1], x[i], z[i]);
             _knotS = new[] { 0f, _s[m - 1] };
             BuildGrid();
@@ -275,6 +284,8 @@ namespace ARO.NetCore
         public bool Nearest(float x, float z, float maxDist, out float s, out float lateral, out float dist)
         {
             s = 0f; lateral = 0f; dist = float.MaxValue; bool found = false;
+            float far = maxDist + 0.01f;                    // every point of the polyline lies inside its bounds, so a point more than maxDist outside them has no segment within reach (the 1 cm keeps rounding out of it)
+            if (x < _minX - far || x > _maxX + far || z < _minZ - far || z > _maxZ + far) return false;
             int cx0 = (int)Math.Floor((x - maxDist) / Cell), cx1 = (int)Math.Floor((x + maxDist) / Cell);
             int cz0 = (int)Math.Floor((z - maxDist) / Cell), cz1 = (int)Math.Floor((z + maxDist) / Cell);
             float best = maxDist * maxDist;

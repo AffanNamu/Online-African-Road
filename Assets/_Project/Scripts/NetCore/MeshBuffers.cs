@@ -21,6 +21,16 @@ namespace ARO.NetCore
         public bool IsEmpty => TriangleCount == 0;
 
         public int Add(V3 p, V2 uv) { Vertices.Add(p); Uvs.Add(uv); return Vertices.Count - 1; }
+
+        /// <summary>Appends another mesh: its vertices and UVs after these, its triangles (re-indexed) onto the same submesh slots. The result draws exactly what the two drew separately, in one mesh
+        /// (RB-15: a chunk draws all its road surfaces with one renderer, one draw per material, instead of one renderer per corridor).</summary>
+        public void Append(MeshBuffers o)
+        {
+            if (o.Triangles.Length > Triangles.Length) throw new ArgumentException("the appended mesh has more submeshes (" + o.Triangles.Length + ") than this one (" + Triangles.Length + ")");
+            int baseIndex = Vertices.Count;
+            Vertices.AddRange(o.Vertices); Uvs.AddRange(o.Uvs);
+            for (int sub = 0; sub < o.Triangles.Length; sub++) { var t = Triangles[sub]; foreach (int i in o.Triangles[sub]) t.Add(baseIndex + i); }
+        }
         public void Tri(int sub, int a, int b, int c) { var t = Triangles[sub]; t.Add(a); t.Add(b); t.Add(c); }
 
         /// <summary>Adds the standard quad pattern (a,c,b),(b,c,d) for corners a,b (near edge, left to right) and c,d (far edge).</summary>

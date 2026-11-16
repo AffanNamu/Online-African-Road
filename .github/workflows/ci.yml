@@ -238,12 +238,12 @@ jobs:
       - name: "Drive scenario in a KANO CITY neighbourhood street at Medium quality (the main street of an inner mixed quarter: houses, shops, mosques, street lights, trees, parked cars, people; informational)"
         if: always()
         continue-on-error: true
-        env: { DRIVE_QUERY: "&route=ng-kano-city&corridor=fi02_street_1&start=400&quality=medium" }
+        env: { DRIVE_QUERY: "&route=ng-kano-city&corridor=fi02_street_1&start=400&quality=medium&hour=11" }      # late morning: the game clock otherwise follows the real Kano time, and a run after 18:00 UTC films the street at night
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive-city-street
       - name: "Drive over the A2 FLYOVER in Kano City at Medium quality (up the approach, over the Ring Road interchange roundabout on the deck, down towards the middle ring; informational)"
         if: always()
         continue-on-error: true
-        env: { DRIVE_QUERY: "&route=ng-kano-city&start=2950&quality=medium" }
+        env: { DRIVE_QUERY: "&route=ng-kano-city&start=2950&quality=medium&hour=11" }
         run: node tools/webgl-drive.js Builds/WebGL webgl-drive-city-flyover
       - name: "Refuel at a pump without a server (P1: the truck beside the first pump of the Kano city E1 route and of the shipped route; the prompt, the Refuel button, the offline notice, no fuel added; informational until two runs agree)"
         if: always()

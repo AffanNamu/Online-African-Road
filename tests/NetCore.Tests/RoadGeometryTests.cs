@@ -249,4 +249,25 @@ public class RoadGeometryTests
         var centre = new V3(5, 1.5f, 5);
         foreach (var (n, c) in Fx.Tris(mb, 0)) Assert.True(MeshBuffers.Dot(n, c - centre) > 0f, "a box face points inwards");
     }
+
+    [Fact] public void AppendingTheCorridorsOfAChunkDrawsExactlyWhatTheyDrewSeparately()
+    {
+        // RB-15: the streamer draws all road surfaces of a chunk with one renderer (MeshBuffers.Append); the merged mesh must hold every triangle of every corridor, unchanged, on its own submesh
+        var m = RouteModel.Build(System.Text.Json.JsonSerializer.Deserialize<RouteSpec>(System.IO.File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "ng-kano-city.route.json")), new System.Text.Json.JsonSerializerOptions { IncludeFields = true }));
+        var c0 = m.CorridorById("fi02_street_1"); var p = c0.Spline.PositionAt(400f);
+        float x0 = (float)Math.Floor(p.X / 200f) * 200f, z0 = (float)Math.Floor(p.Z / 200f) * 200f; var org = new V3(x0, 0, z0);
+        var parts = m.AllCorridors.Select(c => RoadGeometry.BuildChunk(c, x0, z0, x0 + 200f, z0 + 200f, org, (x, z) => m.Terrain.HeightAt(x, z))).Where(b => !b.IsEmpty).ToList();
+        Assert.True(parts.Count >= 3, $"{parts.Count} corridors in the chunk of a quarter street");
+        var all = new MeshBuffers(parts[0].Triangles.Length); foreach (var b in parts) all.Append(b);
+        Assert.True(all.Validate(out var err), err);
+        Assert.Equal(parts.Sum(b => b.VertexCount), all.VertexCount);
+        string Key(MeshBuffers b, int sub, int t) { var tr = b.Triangles[sub]; return string.Join(";", Enumerable.Range(0, 3).Select(k => { var v = b.Vertices[tr[t * 3 + k]]; var uv = b.Uvs[tr[t * 3 + k]]; return $"{v.X:R},{v.Y:R},{v.Z:R},{uv.X:R},{uv.Y:R}"; })); }
+        for (int sub = 0; sub < all.Triangles.Length; sub++)
+        {
+            var want = parts.SelectMany(b => Enumerable.Range(0, b.Triangles[sub].Count / 3).Select(t => Key(b, sub, t))).ToList();
+            var got = Enumerable.Range(0, all.Triangles[sub].Count / 3).Select(t => Key(all, sub, t)).ToList();
+            Assert.Equal(want, got);                                                                        // the same triangles, in the same order, on the same material
+        }
+        Assert.Throws<ArgumentException>(() => new MeshBuffers(1).Append(parts[0]));
+    }
 }

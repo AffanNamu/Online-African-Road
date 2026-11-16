@@ -459,11 +459,15 @@ namespace ARO.NetCore
         }
 
         /// <summary>Hills minus any bridge valley.</summary>
+        int _valleys;       // 0 = not looked at yet, 1 = a bridge of the main road digs a valley, 2 = none does (only flyover decks over roads, valleyDepth 0)
+
         public float NaturalAt(float x, float z)
         {
             float h = HillsAt(x, z);
             var bridges = _route.Main.Bridges;
-            if (bridges != null && bridges.Length > 0 && _route.Main.Spline.Nearest(x, z, 140f, out float s, out float lat, out _))
+            if (bridges != null && bridges.Length > 0 && _valleys == 0) _valleys = bridges.Any(b => b.valleyDepth != 0f) ? 1 : 2;
+            // the 140 m search for the valley under a bridge is skipped when no bridge digs one: it would subtract exactly 0 (the Kano city's flyover asked it for every height in the city)
+            if (bridges != null && bridges.Length > 0 && _valleys == 1 && _route.Main.Spline.Nearest(x, z, 140f, out float s, out float lat, out _))
                 foreach (var b in bridges)
                     if (s > b.startS && s < b.endS) h -= b.valleyDepth * ValleyAlong(b, s) * (1f - Mathx.SmoothStep(Math.Abs(lat) / 80f));
             return h;

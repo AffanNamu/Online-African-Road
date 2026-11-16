@@ -188,7 +188,7 @@ namespace ARO.World
             }
             if (ring <= 2 && !ch.hasCollision) Enqueue(ch.id, Stage.Collision);
             else if (ring >= 4 && ch.hasCollision) DropCollision(ch);
-            foreach (var r in ch.roads) { if (r == null) continue; var mc = r.GetComponent<MeshCollider>(); if (mc != null) mc.enabled = ring <= 3; r.GetComponent<MeshRenderer>().shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off; }
+            foreach (var r in ch.roads) { if (r == null) continue; var mc = r.GetComponent<MeshCollider>(); if (mc != null) mc.enabled = ring <= 3; var mr = r.GetComponent<MeshRenderer>(); if (mr != null) mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off; }     // the chunk's one road renderer and its collider-only objects
             if (ch.instances != null)
             {
                 int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
@@ -257,51 +257,49 @@ namespace ARO.World
         {
             if (ch.roads.Count > 0) return;
             var m = route.Model; var o = Origin(ch.id); var org = new V3(o.x, 0, o.z); int ring = RingOf(ch.id);
+            // RB-15 (batching): every road surface of the chunk (corridors, roundabout islands and splitters, site plates) is appended into ONE mesh drawn by one renderer, one draw per material,
+            // instead of a renderer per corridor (a chunk of the Kano city's street grid holds six to eight corridors, each with five to eight materials: the draw calls of a neighbourhood
+            // street doubled when the grid was built). The geometry and materials are exactly those of the separate meshes. Collision is unchanged: each corridor, island and plate keeps its
+            // own collision mesh on a collider-only object.
+            MeshBuffers all = null;
+            void Collision(string name, MeshBuffers mb, params int[] subs)
+            {
+                var cm = MeshUtil.ToCollisionMesh(mb, name, subs);
+                var go = new GameObject(name); go.transform.SetParent(ch.root.transform, false);
+                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
+                go.isStatic = true; ch.roads.Add(go); ch.owned.Add(cm);
+            }
+            void Surface(MeshBuffers mb) { if (all == null) all = new MeshBuffers(mb.Triangles.Length); all.Append(mb); }
             foreach (var cor in m.AllCorridors)
             {
                 var mb = RoadGeometry.BuildChunk(cor, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org, (x, z) => m.Terrain.HeightAt(x, z));
                 if (mb.IsEmpty) continue;
-                var mesh = MeshUtil.ToMesh(mb, "Road_" + cor.Id, out var used);
-                var go = new GameObject("Road_" + cor.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
-                go.GetComponent<MeshFilter>().sharedMesh = mesh;
-                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
-                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
                 // E1 strips (kerb, walkway, planter, gutter) exist only in the mesh of a corridor that uses them; they are driveable/solid like the rest of the road surface
-                var cm = mb.Triangles.Length > RoadSub.Kerb
-                    ? MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter, RoadSub.Drain)
-                    : MeshUtil.ToCollisionMesh(mb, "RoadCollision_" + cor.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
-                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
-                go.isStatic = true;
-                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+                if (mb.Triangles.Length > RoadSub.Kerb) Collision("RoadCollision_" + cor.Id, mb, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter, RoadSub.Drain);
+                else Collision("RoadCollision_" + cor.Id, mb, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Verge, RoadSub.Concrete, RoadSub.Metal);
+                Surface(mb);
             }
             foreach (var rb in m.Rings)          // E5: the central island (core and apron) and the splitter islands of every roundabout. Same materials and collision slots as the E1 strips.
             {
                 var mb = RingGeometry.BuildChunk(rb, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org, id => m.CorridorById(id));
                 if (mb.IsEmpty) continue;
-                var mesh = MeshUtil.ToMesh(mb, "Ring_" + rb.Id, out var used);
-                var go = new GameObject("Ring_" + rb.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
-                go.GetComponent<MeshFilter>().sharedMesh = mesh;
-                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
-                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
-                var cm = MeshUtil.ToCollisionMesh(mb, "RingCollision_" + rb.Id, RoadSub.Verge, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter);
-                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
-                go.isStatic = true;
-                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+                Collision("RingCollision_" + rb.Id, mb, RoadSub.Verge, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Planter);
+                Surface(mb);
             }
             foreach (var plate in m.Sites)       // E2 site plates: paved yards, terminals, forecourts. Same materials, same collision slots as the roads.
             {
                 var mb = SiteGeometry.BuildChunk(plate, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org);
                 if (mb.IsEmpty) continue;
-                var mesh = MeshUtil.ToMesh(mb, "Site_" + plate.Id, out var used);
-                var go = new GameObject("Site_" + plate.Id, typeof(MeshFilter), typeof(MeshRenderer)); go.transform.SetParent(ch.root.transform, false);
-                go.GetComponent<MeshFilter>().sharedMesh = mesh;
-                var mr = go.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
-                mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
-                var cm = MeshUtil.ToCollisionMesh(mb, "SiteCollision_" + plate.Id, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Concrete, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk);
-                var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
-                go.isStatic = true;
-                ch.roads.Add(go); ch.owned.Add(mesh); ch.owned.Add(cm); ch.roadTris += MeshUtil.Triangles(mesh);
+                Collision("SiteCollision_" + plate.Id, mb, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Concrete, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk);
+                Surface(mb);
             }
+            if (all == null || all.IsEmpty) return;
+            var mesh = MeshUtil.ToMesh(all, "Roads", out var used);
+            var r = new GameObject("Roads", typeof(MeshFilter), typeof(MeshRenderer)); r.transform.SetParent(ch.root.transform, false);
+            r.GetComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = r.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
+            mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            r.isStatic = true; ch.roads.Add(r); ch.owned.Add(mesh); ch.roadTris += MeshUtil.Triangles(mesh);
         }
 
         Material TerrainMaterial(Chunk ch)

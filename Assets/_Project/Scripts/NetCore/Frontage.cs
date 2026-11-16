@@ -245,21 +245,26 @@ namespace ARO.NetCore
             float cx = pos.X + right.X * side * off, cz = pos.Z + right.Z * side * off;
             float yaw = (float)(Math.Atan2(-right.X * side, -right.Z * side) * 180.0 / Math.PI) + (Mathx.Hash01(seed, hk, 5) * 2f - 1f) * r.yawJitterDeg;
             p = new FrontagePlacement { Prop = lot.prop, Rule = r.id, Tag = lot.tag, Block = bi, Side = side, Slot = slot, Anchor = anchor, X = cx, Z = cz, YawDeg = yaw, Width = w, Depth = d, S = sC };
-            // the footprint is sampled on a grid (and its edges): every sample must be clear of every road, plate and island, and the ground under it must be nearly level
+            // The tests in order of cost (the outcome is the same in any order: a lot is built only when it passes all of them): the lots already in this block, then every sample of the
+            // footprint grid (and its edges) clear of every road, plate and island, starting with the row nearest the road, and only then the ground under it, which must be nearly level.
+            foreach (var o in placed) if (FrontagePlacement.Overlap(p, o, 0.5f)) return false;
             float a = yaw * (float)(Math.PI / 180.0), fx = (float)Math.Sin(a), fz = (float)Math.Cos(a), rx = fz, rz = -fx;
             int nu = Math.Max(2, (int)Math.Ceiling(w / SampleStep) + 1), nv = Math.Max(2, (int)Math.Ceiling(d / SampleStep) + 1);
+            for (int j = nv - 1; j >= 0; j--)
+                for (int i = 0; i < nu; i++)
+                {
+                    float u = -w * 0.5f + w * i / (nu - 1), v = -d * 0.5f + d * j / (nv - 1);
+                    if (m.Terrain.InsideFormation(cx + rx * u + fx * v, cz + rz * u + fz * v, r.clearance)) return false;
+                }
             float lo = float.MaxValue, hi = float.MinValue;
             for (int i = 0; i < nu; i++)
                 for (int j = 0; j < nv; j++)
                 {
                     float u = -w * 0.5f + w * i / (nu - 1), v = -d * 0.5f + d * j / (nv - 1);
-                    float x = cx + rx * u + fx * v, z = cz + rz * u + fz * v;
-                    if (m.Terrain.InsideFormation(x, z, r.clearance)) return false;
-                    float h = m.Terrain.HeightAt(x, z); lo = Math.Min(lo, h); hi = Math.Max(hi, h);
+                    float h = m.Terrain.HeightAt(cx + rx * u + fx * v, cz + rz * u + fz * v); lo = Math.Min(lo, h); hi = Math.Max(hi, h);
                 }
             if (hi - lo > r.maxHeightRange) return false;
             p.Y = lo;
-            foreach (var o in placed) if (FrontagePlacement.Overlap(p, o, 0.5f)) return false;
             return true;
         }
 
