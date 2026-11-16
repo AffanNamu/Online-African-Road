@@ -7,7 +7,7 @@
 | **Owner direction** | The reference picture sets the bar: realistic sky, colour and people with real faces. The code-built figures were rejected. |
 | **Sky with clouds** (`ARO/SkyClouds`) | **Level 1 and 2.** Cumulus bank, overhead cloud, haze, sun behind cloud, stars; cloud colours by hour and weather (`SkyCloudModel`, 5 tests; 1,452 .NET tests). **Level 3 reached:** seen in the game in CI run 349 (all jobs green, lighting checks included); the low tier's smeared clouds got a fourth noise octave on 2026-11-16. |
 | **People with real faces** (`docs/PEOPLE_AND_CROWDS.md` section 0) | **Level 1 and 2.** Ten designs on the CC0 MakeHuman body and face with Kano dress by our code, 3 skin tones x 3 colourways, textured, about 3,200 / 900 triangles, walk and idle frames; 8 Blender and 13 .NET tests. Generated and drawn in the review build only (the public build keeps the code-built figures until the owner decides). Not yet seen in the game. |
-| **Ground, vegetation, the real models in the playable build** | Not started; the last one is the owner's decision. |
+| **Ground, vegetation, the real models in the playable build** | Ground started: savanna texture over 64 m (`docs/REALISTIC_LOOK.md` section 5), level 1 and 2, not yet seen in the game. Standing vegetation not started. The real models in the playable build are the owner's decision. |
 | **CI run 43648608469 (2026-11-14)** | Green on every job. The refuel worked end to end against the test backend (90 L, 180 coins), the Kano switch reloaded into the city, the crowd was drawn. `main` moved to that commit. |
 
 ## 2026-11-14: refuel at a pump (P1 of the functional places; `docs/REFUEL_AT_A_PUMP.md`) and Kano in the route selection

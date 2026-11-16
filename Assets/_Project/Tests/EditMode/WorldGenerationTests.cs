@@ -183,6 +183,25 @@ namespace ARO.Tests
             finally { Object.DestroyImmediate(t); Object.DestroyImmediate(lean); }
         }
 
+        [Test] public void TheGroundIsOneSeamlessSavannaTextureOver64Metres()
+        {
+            // the realistic ground (2026-11-16): seamless at its edges like the other procedural textures, and tiled once per 64 m on both terrain materials
+            var t = ProcTex.Ground(64, new Color(0.44f, 0.38f, 0.21f), new Color(0.21f, 0.30f, 0.10f), new Color(0.44f, 0.29f, 0.18f), new Color(0.33f, 0.22f, 0.14f), 0.10f, 21, keepReadable: true);
+            var w = WorldMaterials.Create(null);
+            try
+            {
+                var px = t.GetPixels32(); float seam = 0f, interior = 0f;
+                for (int y = 0; y < 64; y++) { seam += Mathf.Abs(px[y * 64].g - px[y * 64 + 63].g); interior += Mathf.Abs(px[y * 64 + 31].g - px[y * 64 + 32].g); }
+                Assert.LessOrEqual(seam, interior * 2f + 64f * 8f, "left and right edges must continue into each other (per-pixel grain and pebbles aside)");
+                foreach (var m in new[] { w.TerrainLush, w.TerrainDry })
+                {
+                    Assert.AreEqual(768, m.GetTexture("_BaseMap").width, m.name);
+                    Assert.AreEqual(WorldMaterials.GroundTiling, m.GetTextureScale("_BaseMap").x, 1e-6f, m.name); Assert.AreEqual(0.25f, WorldMaterials.GroundTiling, 1e-6f);
+                }
+            }
+            finally { Object.DestroyImmediate(t); w.DestroyAll(); }
+        }
+
         [Test] public void ProductionPrefabsOverrideThePlaceholderForThatPropOnly()
         {
             PropLibrary.EnsureLoaded(); var stand = new GameObject("stand-in");

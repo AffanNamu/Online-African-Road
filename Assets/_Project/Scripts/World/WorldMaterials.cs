@@ -6,13 +6,15 @@ namespace ARO.World
     /// <summary>
     /// Materials for the generated world. Everything derives from one URP Lit template (so the shader is guaranteed to be in the player build)
     /// and uses small PROCEDURAL tiling textures (no external art). These are development materials: production PBR sets replace the textures
-    /// without any code change. Texture memory: about 0.7 MB asphalt, 0.7 MB per terrain set, the rest below 0.25 MB each.
+    /// without any code change. Texture memory: about 0.7 MB asphalt, 3.1 MB per ground texture (768 px with mipmaps), the rest below 0.25 MB each.
     /// </summary>
     public sealed class WorldMaterials
     {
         public readonly Material[] Road = new Material[RoadSub.CountE1];     // slots 0..6 are the original road strips; 7..11 (kerb, painted kerb, walkway, planter, gutter) exist only in the mesh of a corridor that uses them
         public readonly Material[] Prop = new Material[PropSub.Count];
         public Material TerrainLush, TerrainDry;
+        /// <summary>The ground texture covers 1 / GroundTiling terrain UV tiles (16 m each): 64 m.</summary>
+        public const float GroundTiling = 0.25f;
         /// <summary>True when the three emissive prop slots (lamp, glow, beacon) use the unlit ARO/LampEmit material that StreetLightSystem drives; false when they are the plain lit fallback.</summary>
         public bool Emissive { get; private set; }
 
@@ -45,8 +47,12 @@ namespace ARO.World
             w.Road[RoadSub.Sidewalk] = Make("Sidewalk", Color.white, 0.08f, 0f, ProcTex.Grain(128, new Color(0.60f, 0.58f, 0.54f), new Color(0.74f, 0.72f, 0.67f), 3, 15, 0.05f));
             w.Road[RoadSub.Planter] = Make("Planter", Color.white, 0.04f, 0f, ProcTex.Patchy(128, new Color(0.18f, 0.30f, 0.08f), new Color(0.30f, 0.42f, 0.13f), new Color(0.36f, 0.27f, 0.16f), 16));
             w.Road[RoadSub.Drain] = Make("Drain", Color.white, 0.10f, 0f, ProcTex.Grain(128, new Color(0.26f, 0.26f, 0.26f), new Color(0.36f, 0.36f, 0.35f), 3, 17, 0.05f));
-            w.TerrainLush = Make("TerrainLush", Color.white, 0.04f, 0f, ProcTex.Patchy(256, new Color(0.16f, 0.28f, 0.09f), new Color(0.30f, 0.40f, 0.13f), new Color(0.36f, 0.27f, 0.16f), 21));
-            w.TerrainDry = Make("TerrainDry", Color.white, 0.04f, 0f, ProcTex.Patchy(256, new Color(0.46f, 0.35f, 0.22f), new Color(0.58f, 0.46f, 0.30f), new Color(0.30f, 0.36f, 0.14f), 22));
+            // The ground (owner direction of 2026-11-15, realistic look): savanna, not a 16 m carpet. One 768 px texture covers 64 m (the material tiles it at a quarter of the terrain's 16 m UV
+            // tile: 12 px per metre, repeating four times less often than before; 768 rather than 1024 px because WebGL builds it at start-up, about 0.2 s natively), with grass patches over laterite at three scales, tufts with darker hollows and pebbles in the bare soil.
+            // Prototyped as pictures first; the mean brightness stays within 10% of the old textures, so the measured lighting checks hold.
+            w.TerrainLush = Make("TerrainLush", Color.white, 0.04f, 0f, ProcTex.Ground(768, new Color(0.44f, 0.38f, 0.21f), new Color(0.21f, 0.30f, 0.10f), new Color(0.44f, 0.29f, 0.18f), new Color(0.33f, 0.22f, 0.14f), 0.10f, 21));
+            w.TerrainDry = Make("TerrainDry", Color.white, 0.04f, 0f, ProcTex.Ground(768, new Color(0.62f, 0.53f, 0.33f), new Color(0.36f, 0.40f, 0.18f), new Color(0.60f, 0.42f, 0.27f), new Color(0.44f, 0.31f, 0.20f), -0.12f, 22));
+            foreach (var t in new[] { w.TerrainLush, w.TerrainDry }) { t.mainTextureScale = new Vector2(GroundTiling, GroundTiling); if (t.HasProperty("_BaseMap")) t.SetTextureScale("_BaseMap", new Vector2(GroundTiling, GroundTiling)); }
             w.Prop[PropSub.Wall] = Make("PropWall", new Color(0.80f, 0.74f, 0.64f), 0.08f, 0f, null);
             w.Prop[PropSub.Roof] = Make("PropRoof", new Color(0.46f, 0.30f, 0.24f), 0.30f, 0.25f, null);
             w.Prop[PropSub.Foliage] = Make("PropFoliage", new Color(0.13f, 0.31f, 0.09f), 0.05f, 0f, null);
@@ -159,6 +165,31 @@ namespace ARO.World
                     px[y * size + x] = new Color32(Cb(c.r + g), Cb(c.g + g), Cb(c.b + g), 255);
                 }
             return Finish(px, size, "ProcPatchy" + seed, keepReadable);
+        }
+
+        static float Smooth(float e0, float e1, float x) { float t = Mathf.Clamp01((x - e0) / (e1 - e0)); return t * t * (3f - 2f * t); }
+
+        /// <summary>
+        /// Savanna ground: patches of grass (dry gold to green) over laterite soil at three scales (about 20 m, 5 m and 0.7 m over a 64 m texture), grass tufts with lit tops and darker hollows,
+        /// pebbles in the bare soil. `cover` shifts the share of grass (+ more, - less). Seamless (periodic noise). The same formulas were prototyped as pictures before this was written.
+        /// </summary>
+        public static Texture2D Ground(int size, Color dryGrass, Color greenGrass, Color soil, Color darkSoil, float cover, int seed, bool keepReadable = false)
+        {
+            var px = new Color32[size * size]; int tuftA = Mathf.Max(4, size / 6), tuftB = Mathf.Max(8, size / 3);
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    float u = x / (float)size, v = y / (float)size;
+                    float macro = Fbm(u, v, 3, 3, seed), mid = Fbm(u, v, 12, 3, seed + 100), fine = Fbm(u, v, 96, 2, seed + 200);
+                    float tuft = Noise(u, v, tuftA, seed + 300) * 0.55f + Noise(u, v, tuftB, seed + 301) * 0.45f;
+                    float grass = Smooth(0.42f - cover, 0.62f - cover, macro * 0.55f + mid * 0.45f + (fine - 0.5f) * 0.25f);
+                    var g = Color.Lerp(dryGrass, greenGrass, Smooth(0.45f, 0.75f, mid * 0.7f + macro * 0.3f)) * (0.80f + 0.32f * tuft);
+                    var so = Color.Lerp(soil, darkSoil, Smooth(0.25f, 0.85f, mid * 0.6f + fine * 0.4f) * 0.8f);
+                    float peb = Hash(seed + 7, x, y); if (peb > 0.985f) so *= 1.35f; else if (peb < 0.012f) so *= 0.7f;
+                    var c = Color.Lerp(so, g, grass * (0.75f + 0.25f * tuft)); float n = 1f + (Hash(seed + 9, x, y) - 0.5f) * 0.07f;
+                    px[y * size + x] = new Color32(Cb(c.r * n), Cb(c.g * n), Cb(c.b * n), 255);
+                }
+            return Finish(px, size, "ProcGround" + seed, keepReadable);
         }
 
         static byte Cb(float v) => (byte)Mathf.Clamp(Mathf.RoundToInt(v * 255f), 0, 255);

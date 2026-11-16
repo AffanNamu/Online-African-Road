@@ -7,7 +7,7 @@ The owner sent a reference picture (a rendered tropical island: deep blue sky wi
 | What | State on 2026-11-14 | Against the reference |
 |---|---|---|
 | Sky | A plain blue gradient, no clouds | **Replaced (section 2):** cumulus, haze, stars; seen in the game (CI run 349). |
-| Ground | Flat brown terrain with one texture | Far. Not started. |
+| Ground | Flat brown terrain with one texture | **Started (section 5):** savanna ground over 64 m instead of a 16 m carpet; not yet seen in the game. |
 | Vegetation | A few palms and bushes | Far. Not started. |
 | Buildings in the review build | The Blender models with painted surfaces | Closer, but lit flat and standing on bare ground. |
 | Buildings in the playable public build | Grey boxes of the right size | Far. The real models are not shipped: they wait for the owner's approval and a decision on shipping them (section 4). |
@@ -29,6 +29,12 @@ The owner sent a reference picture (a rendered tropical island: deep blue sky wi
 
 ## 3. People (built 2026-11-16; review build only)
 Real faces need a real human base: anatomy and a face cannot be drawn convincingly from tubes and boxes. The ten crowd designs now have realistic versions: the **CC0 MakeHuman** body and face (fetched at a pinned commit, never committed), shaped per person, with **Kano dress made by our code** (kaftans with thread work, babban riga, ankara wrappers, hijab, abaya, caps, head-tie and basin), three skin tones and three colourways, textured from the full model and reduced to about 3,200 and 900 triangles with walk and idle frames. Details, tests and limits: `docs/PEOPLE_AND_CROWDS.md`, section 0. The review build generates and draws them; the playable build keeps the code-built figures until the owner decides (section 4).
+
+## 5. The ground (started 2026-11-16)
+* The terrain was one 256 px patchy texture repeating every 16 m: from the road it read as a flat brown carpet. Both terrain materials now use `ProcTex.Ground` (`World/WorldMaterials.cs`): one 768 px texture over 64 m with grass patches (dry gold to green) over red-brown laterite at three scales (about 20 m, 5 m and 0.7 m), tufts with darker hollows and pebbles in bare soil. Out of town there is more grass; in town (urban, commercial and industrial zones) mostly laterite with sparse grass.
+* Prototyped as pictures first (the same formulas in Python); the mean brightness is within 10% of the old textures, so the measured lighting checks should still hold. One edit-mode test (seamless edges, size, 64 m tiling).
+* Cost: about 3 MB of texture memory per material and about 0.2 s (native) to build each at start-up.
+* Not done yet: grass and shrubs standing on the ground, more trees, and blending the ground into the verges. Standing vegetation needs an alpha-clipped material whose shader variant must be kept in the build: that comes with a short proposal, because it touches how the world is drawn.
 
 ## 4. Decisions that are the owner's
 1. **Ship the real models in the playable build.** Today the playable build draws grey boxes; the Blender models appear only in the review build. Approving them (after looking at the review pictures) and shipping them is the largest single step towards the reference look.
