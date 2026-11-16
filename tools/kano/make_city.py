@@ -39,6 +39,7 @@ NODE = {n["id"]: tuple(n["xz"]) for n in PLAN["nodes"]}
 e1 = json.loads((C.ROUTES / "ng-kano-city-e1.route.json").read_text())
 PROF = {p["id"]: dict(p) for p in e1["profiles"]}                                 # kano_arterial (divided, planter median), kano_collector, kano_local, kano_service
 PROF["kano_expressway"] = E.prof("kano_expressway", 2, 3.65, 2.5, 1.2, median=4.0, inner_shoulder=0.6, cls="expressway", centre="none", median_style="planter")
+PROF["kano_ramp"] = E.prof("kano_ramp", 1, 4.2, 1.8, 1.2, 0.0, "none", 0.0, 0.0, "dashed", "yellow", cls="collector")          # the slip ramps of the A2 interchange (as F1's ramps)
 for k in ("ring_large", "ring_modern", "ring_landmark"): PROF[k] = E.P[k]
 E.P.update(PROF); E.G.update({k: E.geom(v) for k, v in PROF.items()})
 HW = {k: E.G[k]["paved"] for k in PROF}                                            # paved half width: where a joining road's end sits
@@ -134,9 +135,13 @@ def join(end, corridor, s, side, gap=14.0): return dict(end=end, corridor=corrid
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------ the network
-RING_RBT = {0: "rr_e", 90: "rr_n", 180: "rr_w", 225: "rr_a2", 270: "rr_s"}           # ring road roundabouts (225: the A2 interchange of the plan, at grade for now)
+RING_RBT = {0: "rr_e", 90: "rr_n", 180: "rr_w", 225: "rr_a2", 270: "rr_s"}           # ring road roundabouts (225: the A2 interchange of the plan: the A2 flies over it, four ramps)
 GATE_RBT = {0: "gate_e", 90: "gate_n", 180: "gate_w", 270: "gate_s"}                 # roundabouts where the radials meet the wall road
 RING_DESIGN = dict(design="large", profile="ring_large", radius=30.0, apron=0.0, island="planter", splitter=(22.0, 4.0), flare=0.0, mouth=1.8)
+A2_RING_DESIGN = dict(RING_DESIGN, radius=45.0)                                     # the A2 interchange: a larger ground roundabout under the flyover (six legs: two ring-road arcs, four slip ramps)
+KIT_LIGHT = {"highway_light": "aro_streetlight_double_median_a", "street_light": "aro_streetlight_arm_single_a",         # the transport kit's street lights (family C), with their night
+             "street_light_village": "aro_streetlight_ornamental_a"}                                                      # light heads, instead of the code-built placeholder lamps
+DECK_Y = 17.8                                                                        # the A2 deck over the interchange roundabout (7.8 m over the ground, as F1)
 GATE_DESIGN = dict(design="modern", profile="ring_modern", radius=24.0, apron=2.0, island="planter", splitter=(14.0, 3.0), flare=0.0, mouth=1.9)
 ESTATE_F = [0.18, 0.345, 0.51, 0.675]                                                # the estate's concentric streets between the middle ring (0) and the ring road (1): about 92 m apart, so
                                                                                      # two rows of compounds fit back to back, and the outer rows clear the shops of both rings
@@ -166,9 +171,12 @@ def build():
                      "traditional suburb (blocked on references). Positions are the plan's (indicative, not survey).", 6201, dict(E.TERRAIN))
     r = E.fix_meta(r)
     r["meta"].update({"from": "A2 from Zaria (city edge)", "to": "Kano city", "status": "planned", "elevationSource": "design (near-flat city)", "notes": "The Kano city route (owner directive 2026-11-16). docs/KANO_CITY.md."})
-    r["traffic"] = dict(densityScale=0.0, speedLimitScale=1.0, vehicleMix=[])          # traffic on roundabouts and T joins is not modelled yet
+    r["traffic"] = dict(densityScale=0.8, speedLimitScale=1.0, vehicleMix=["saloon_car", "minibus", "motorcycle", "tricycle_taxi", "truck"])
+    # traffic (the engine's existing 1-D model) runs along the main road: the A2 from the gateway, over the flyover to the middle ring roundabout. Traffic through junctions and round
+    # the roundabouts is new engine behaviour: proposed in docs/TRAFFIC_NETWORK_PROPOSAL.md, waiting for the owner's approval.
     roads, rings = [], []
-    ring_r = rout_of(RING_DESIGN); gate_r = rout_of(GATE_DESIGN)
+    ring_r = rout_of(RING_DESIGN); gate_r = rout_of(GATE_DESIGN); a2_r = rout_of(A2_RING_DESIGN); mid_r = rout_of(GATE_DESIGN)
+    ring_r_at = lambda a: a2_r if a % 360.0 == 225.0 else ring_r
 
     # ---- the ring road: arcs between its roundabouts, control points at every T bearing and at the estate's cross streets
     est_cross = estate_cross_bearings()
@@ -178,7 +186,7 @@ def build():
     ring_arcs = []
     for i, a0 in enumerate(ring_bounds):
         a1 = ring_bounds[(i + 1) % len(ring_bounds)] + (360.0 if i + 1 == len(ring_bounds) else 0.0)
-        d0 = angle_at_distance("ring", a0, ring_r, +1); d1 = angle_at_distance("ring", a1, ring_r, -1)
+        d0 = angle_at_distance("ring", a0, ring_r_at(a0), +1); d1 = angle_at_distance("ring", a1, ring_r_at(a1), -1)
         stops = [a0 + 22.5 * k for k in range(1, 8) if a0 + 22.5 * k < a1] + [b for b in outer_cross if a0 < b < a1] + [b + 360.0 for b in outer_cross if a0 < b + 360.0 < a1]
         arc = Arc("ring_%03d_%03d" % (a0, a1 % 360), "Ring Road (%d to %d degrees)" % (a0, a1 % 360), "ring", d0, d1, "kano_arterial", stops)
         ring_arcs.append(arc)
@@ -193,7 +201,7 @@ def build():
     mid_arcs = []
     for k in range(8):
         a0, a1 = 45.0 * k, 45.0 * (k + 1)
-        d0 = angle_at_distance("middle", a0, HW["kano_arterial"] + 0.3, +1); d1 = angle_at_distance("middle", a1, HW["kano_arterial"] + 0.3, -1)
+        d0 = angle_at_distance("middle", a0, mid_r if a0 == 225.0 else HW["kano_arterial"] + 0.3, +1); d1 = angle_at_distance("middle", a1, mid_r if a1 == 225.0 else HW["kano_arterial"] + 0.3, -1)
         arc = Arc("mid_%03d" % a0, "Middle ring (%d to %d degrees)" % (a0, a1), "middle", d0, d1, "kano_collector", [a0 + 22.5] + [b for b in outer_cross + inner_cross if a0 < b < a1])
         mid_arcs.append(arc)
 
@@ -216,6 +224,10 @@ def build():
         else:
             arc = inner_arcs[int(a // 90)]; end = add(g, outward("inner", a), HW["kano_collector"]); joins.append(join("end", arc.id, arc.station(a), +1, 18.0))
         rid = "radial_%03d" % a
+        if a == 225.0:                                                               # the A2 continues as this radial's outer part (over the flyover) and ends at a roundabout on the middle ring
+            mm = ell("middle", a); s0 = add(mm, u, mid_r)
+            radials.append(straight(rid, "Radial arterial %d degrees (from the A2's middle ring roundabout)" % a, [s0, ((s0[0] + end[0]) / 2, (s0[1] + end[1]) / 2), end], "kano_arterial", [j for j in joins if j["end"] == "end"]))
+            continue
         radials.append(straight(rid, "Radial arterial %d degrees" % a, [start, ma, end], "kano_arterial", joins))
         # the middle ring arcs end on this radial: the arc leaving counter-clockwise is on its right, the arc arriving on its left
         L = dist(start, ma)
@@ -230,12 +242,13 @@ def build():
                              [join("start", arc.id, arc.station(deg), -1), join("end", mid_arcs[k].id, mid_arcs[k].station(a), +1)]))
 
     # ---- the A2 (main road): from the study area's south-west edge through the gateway to the A2 roundabout on the ring road
-    a2c = ell("ring", 225.0); last = NODE["X_LOG"]; u = ((a2c[0] - last[0]) / dist(last, a2c), (a2c[1] - last[1]) / dist(last, a2c))
-    a2_end = add(a2c, u, -ring_r)
-    r["controlPoints"] = [cp("a2_%d" % i, x, z, "kano_expressway", "highway" if i < 2 else "urban") for i, (x, z) in enumerate([NODE["X_T1"], NODE["X_GW"], last, a2_end])]
-    a2_len = dist(NODE["X_T1"], NODE["X_GW"]) + dist(NODE["X_GW"], last) + dist(last, a2_end)
+    a2c = ell("ring", 225.0); last = NODE["X_LOG"]
+    ix = a2_interchange(a2c, last, a2_r, mid_r)
+    r["controlPoints"] = ix["cps"]; r["bridges"] = [ix["deck"]]
+    a2_len = ix["main_len"]; a2_end = ix["xz"][3]
+    global MAIN_PSEUDO; MAIN_PSEUDO = dict(id=ROUTE_ID, controlPoints=ix["cps"])
     r["waypoints"] = [dict(id="wp_a2", name="A2 from Zaria", kind="district", s=0.0), dict(id="wp_gateway", name="Kano gateway (D11)", kind="district", s=round(dist(NODE["X_T1"], NODE["X_GW"]), 1)),
-                      dict(id="wp_ring", name="Ring Road", kind="district", s=round(a2_len, 1))]
+                      dict(id="wp_ring", name="Ring Road flyover", kind="district", s=round(ix["s_c"], 1)), dict(id="wp_middle", name="Middle ring", kind="district", s=round(a2_len, 1))]
 
     # ---- district D06: the modern residential estate
     est_roads, est_frontage = estate(ring_arc_at, mid_arcs, radials, subs, est_cross)
@@ -245,7 +258,7 @@ def build():
         rds, fr, st = district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs)
         est_roads += rds; est_frontage += fr; r["sites"] += st
     # ---- along the A2: D11 gateway services and D10 industrial and logistics roads
-    rds, fr, st = a2_districts([NODE["X_T1"], NODE["X_GW"], last, a2_end])
+    rds, fr, st = a2_districts(ix["xz"][:4])
     est_roads += rds; est_frontage += fr; r["sites"] += st
 
     # ---- roundabouts
@@ -255,11 +268,19 @@ def build():
             c = rd["controlPoints"]
             if dist((c[0]["x"], c[0]["z"]), centre) < rad + 1.0 or dist((c[-1]["x"], c[-1]["z"]), centre) < rad + 1.0: out.append(rd["id"])
         return out
-    all_roads = [a.spec() for a in ring_arcs] + [a.spec() for a in mid_arcs] + [a.spec() for a in inner_arcs] + radials + subs + est_roads
+    all_roads = [a.spec() for a in ring_arcs] + [a.spec() for a in mid_arcs] + [a.spec() for a in inner_arcs] + radials + subs + est_roads + ix["ramps"]
     for a, rid in RING_RBT.items():
-        c = ell("ring", a); con = ends_at(all_roads, c, ring_r) + ([ROUTE_ID] if a == 225 else [])
+        c = ell("ring", a); con = ends_at(all_roads, c, ring_r_at(a))
+        if a == 225:                                                                  # trees of the island, none under the deck
+            props = [("t%d" % i, "tropical_tree", 28 * math.cos(math.radians(15 * i)), 28 * math.sin(math.radians(15 * i)), 0) for i in range(24)
+                     if abs(28 * math.cos(math.radians(15 * i)) * ix["R"][0] + 28 * math.sin(math.radians(15 * i)) * ix["R"][1]) > 18.0]
+            rings.append(ring_spec(rid, "Ring Road A2 interchange roundabout (under the A2 flyover)", c, A2_RING_DESIGN, con, props))
+            continue
         props = [("t%d" % i, "tropical_tree", 16 * math.cos(math.radians(30 * i)), 16 * math.sin(math.radians(30 * i)), 0) for i in range(12)]
-        rings.append(ring_spec(rid, "Ring Road roundabout %d degrees%s" % (a, " (A2)" if a == 225 else ""), c, RING_DESIGN, con, props))
+        rings.append(ring_spec(rid, "Ring Road roundabout %d degrees" % a, c, RING_DESIGN, con, props))
+    c = ell("middle", 225.0); con = ends_at(all_roads, c, mid_r) + [ROUTE_ID]
+    props = [("p%d" % i, "palm_tree", 9 * math.cos(math.radians(45 * i)), 9 * math.sin(math.radians(45 * i)), 0) for i in range(8)]
+    rings.append(ring_spec("mid_a2", "Middle ring roundabout at the end of the A2", c, GATE_DESIGN, con, props))
     for a, rid in GATE_RBT.items():
         c = ell("inner", a); con = ends_at(all_roads, c, gate_r)
         props = [("p%d" % i, "palm_tree", 9 * math.cos(math.radians(45 * i)), 9 * math.sin(math.radians(45 * i)), 0) for i in range(8)]
@@ -270,7 +291,7 @@ def build():
     for g in rings:
         prof = g["profile"]; rc = g["radius"] + E.G[prof]["formation"]; n_l = max(6, int(round(2 * math.pi * rc / 32.0))); L = 2 * math.pi * rc
         for k in range(n_l):
-            r["props"].append(dict(id="%s_light%d" % (g["id"], k), prop="street_light", text="", corridor=g["id"], s=round((k + 0.5) * L / n_l, 2), lateral=round(E.G[prof]["formation"] + 0.6, 2), yawDeg=-90.0, scale=1.0))
+            r["props"].append(dict(id="%s_light%d" % (g["id"], k), prop=KIT_LIGHT["street_light"], text="", corridor=g["id"], s=round((k + 0.5) * L / n_l, 2), lateral=round(E.G[prof]["formation"] + 0.6, 2), yawDeg=-90.0, scale=1.0))
     # street lights, palms, kiosks, bus stops by cross-section (the E1 rules), and the expressway's median lights
     # the E1 street rules, on EVERY road of the city (allRoads: lights, palms on the arterials, kiosks, bus stops), and street trees of the environment kit on the city streets
     base = dict(e1["propRules"][0])
@@ -285,12 +306,16 @@ def build():
         # family K: three parked cars (one asset, lengthwise, so facing the road parks them parallel to the kerb) on the right kerb of the neighbourhood streets; lights and trees take the left
         dict(base, id="cars_parked", prop="aro_car_parked_set_a", profiles="kano_local", side="right", offsetMin=1.05, offsetMax=1.25, spacingMin=55.0, spacingMax=95.0, presence=0.4,
              scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=0.3, clearLength=16.0, clearDepth=1.4, allRoads=True)]     # the body reaches 2.25 m from the road edge; people at a lot front stand 2.8 m or more out (setbacks >= 5 m)
+    lights_service = next(p for p in r["propRules"] if p["id"] == "lights_service")
+    r["propRules"].append(dict(lights_service, id="lights_ramp", profiles="kano_ramp", allRoads=True))                # the A2 interchange's slip ramps
     for p in r["propRules"]:
+        p["prop"] = KIT_LIGHT.get(p["prop"], p["prop"])                                           # the transport kit's real street lights instead of the placeholder lamps
         if p["id"].startswith("trees_") and p["id"] != "trees_arterial": p["side"] = "left"       # the palms of the arterials keep both sides (no parked cars there)
         if p["id"] == "lights_local": p["side"] = "left"                                          # the neighbourhood streets: lights and trees on the left kerb, parked cars on the right
     global ALL_ROADS; ALL_ROADS = all_roads
     fab_roads = [(a.id, a.s[-1], "ring") for a in ring_arcs] + [(a.id, a.s[-1], "middle") for a in mid_arcs] + [(a.id, a.s[-1], "wall") for a in inner_arcs] + \
-                [(x["id"], rd_len(x), "radial") for x in radials] + [(x["id"], rd_len(x), "sub") for x in subs] + [(ROUTE_ID, a2_len, "main")]
+                [(x["id"], rd_len(x), "radial") for x in radials] + [(x["id"], rd_len(x), "sub") for x in subs] + \
+                [(ROUTE_ID, a2_len, "main", 0.0, ix["s_in"]), (ROUTE_ID, a2_len, "radial", ix["s_out"], a2_len)]
     r["frontage"] = fabric(fab_roads, a2_len) + est_frontage
     total = a2_len + sum(rd_len(x) for x in all_roads)
     r["meta"]["gameLengthKm"] = round(a2_len / 1000.0, 2)                            # the main road; the network's total is in the doc
@@ -353,12 +378,54 @@ def estate(ring_arc_at, mid_arcs, radials, subs, cross):
     lowcost = [l for l in C.TRADITIONAL if l["tag"] in ("lowcost", "house")] + [l for l in C.MIDDLE if l["tag"] in ("bungalow", "semi_detached")]
     front = []
     no_mansion = [l for l in C.PREMIUM if l["tag"] != "mansion"]                    # a mansion's 36.6 m compound needs the deep plots on the estate's outer edge
-    plan = [(lowcost, "both"), (C.MIDDLE, "both"), (C.MIDDLE + no_mansion, "both"), (no_mansion, "left"), (C.PREMIUM, "right")]
+    homes = [l for l in C.MIDDLE if l["tag"] != "school"]                          # a 36 m school lot does not fit back to back between estate streets 92 m apart (schools stand on the rings and collectors)
+    plan = [(lowcost, "both"), (homes, "both"), (homes + no_mansion, "both"), (no_mansion, "left"), (C.PREMIUM, "right")]
     for n, (mix, side) in enumerate(plan):
         i = min(n, 3); a = streets[i]
         front.append(rule("d06_street_%d%s" % (i + 1, "" if side == "both" else "_" + side), mix, C.LOCAL_MOSQUES if n % 2 == 0 else None, 4 if n % 2 == 0 else 0, corridor=a.id, side=side,
                           s_from=END_CLEAR, s_to=a.s[-1] - END_CLEAR, setback=(5.0, 7.0), gap=(1.0, 3.0), block=150.0, presence=0.95))      # 5 m: room for the parked cars at the kerb in front of the gates
     return est, front
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------ the A2 interchange
+MAIN_PSEUDO = None
+
+
+def a2_interchange(c, last, a2_r, mid_r):
+    """The A2 flyover over the ring road (F1's verified layout, compressed to the 552 m between the ring road and the middle ring at 225 degrees): the A2 rises at 2.7 percent, crosses
+    the interchange roundabout on a deck 7.8 m up (piers every 24 m, none over the ring carriageway), comes down at 6 percent and runs on the ground to a roundabout on the middle ring.
+    Four ground-level slip ramps make a diamond: inbound off (before the rise, right side) and on (after the descent, right side), outbound off and on on the left side. Local frame: z along
+    the A2's travel at the roundabout, x to its right."""
+    mm = ell("middle", 225.0); a_in = math.atan2(c[1] - last[1], c[0] - last[0]); a_rad = math.atan2(mm[1] - c[1], mm[0] - c[0])
+    t = (a_in + a_rad) / 2; F = (math.cos(t), math.sin(t)); R = (F[1], -F[0])
+    L = lambda x, z: (c[0] + R[0] * x + F[0] * z, c[1] + R[1] * x + F[1] * z)
+    v = ((mm[0] - c[0]) / dist(c, mm), (mm[1] - c[1]) / dist(c, mm))
+    z_in, z_up, z_top1, z_down, z_out = -430.0, -110.0, 80.0, 250.0, 280.0
+    head = [NODE["X_T1"], NODE["X_GW"], last, L(0, -600)]
+    xz = head + [L(0, z_in), L(0, z_up), L(0, z_top1), L(0, z_down), L(0, z_out), add(mm, v, -(mid_r + 100.0)), add(mm, v, -mid_r)]
+    ys = [Y, Y, Y, Y, Y, DECK_Y, DECK_Y, Y, Y, Y, Y]
+    cps = [dict(cp("a2_%d" % i, x, z, "kano_expressway", "highway" if i <= 4 else "urban"), elevation=round(y, 3)) for i, ((x, z), y) in enumerate(zip(xz, ys))]   # an expressway up to the interchange (traffic at 90 km/h), urban beyond
+    s_at = [0.0]
+    for i in range(1, len(xz)): s_at.append(s_at[-1] + dist(xz[i - 1], xz[i]))
+    s600 = s_at[3]; S = lambda z: s600 + 600.0 + z; s_c = S(0.0)
+    rc, rout = E.ring_dims(A2_RING_DESIGN["profile"], A2_RING_DESIGN["radius"]); f = E.G[A2_RING_DESIGN["profile"]]["formation"]; ring_in, ring_out = rc - f, rc + f
+    gaps = [{"from": round(s_c - (ring_out + 4.0), 1), "to": round(s_c - (ring_in - 4.0), 1)}, {"from": round(s_c + (ring_in - 4.0), 1), "to": round(s_c + (ring_out + 4.0), 1)}]
+    deck = dict(id="a2_flyover", name="A2 flyover over the Ring Road interchange roundabout", startS=round(S(-150.0), 1), endS=round(S(85.0), 1), valleyDepth=0.0, deckThickness=1.2,
+                pierSpacing=24.0, pierGaps=gaps, overRoad=True)
+    pav = HW["kano_expressway"]; at = lambda deg, r_: (r_ * math.cos(math.radians(deg)), r_ * math.sin(math.radians(deg)))
+    def ramp(rid, name, pts, start_join=None, end_join=None):
+        wpts = [L(x, z) for x, z in pts]; joins = []
+        if start_join is not None: joins.append(join("start", ROUTE_ID, S(start_join[0]), start_join[1], 30.0))
+        if end_join is not None: joins.append(join("end", ROUTE_ID, S(end_join[0]), end_join[1], 30.0))
+        return dict(id=rid, name=name, role="ramp", controlPoints=[cp("%s_%d" % (rid, i), x, z, "kano_ramp") for i, (x, z) in enumerate(wpts)], decks=[], joins=joins)
+    off = [(pav, z_in), (26.0, -390.0), (44.0, -330.0), (52.0, -260.0), at(290, rout + 100.0), at(290, rout + 45.0), at(290, rout)]
+    on = [at(70, rout), at(70, rout + 45.0), at(70, rout + 100.0), (52.0, 200.0), (36.0, 245.0), (pav, z_out)]
+    mirror = lambda pts: [(-x, z) for x, z in pts]
+    ramps = [ramp("a2_ramp_in_off", "A2 inbound off ramp (to the Ring Road roundabout)", off, start_join=(z_in, +1)),
+             ramp("a2_ramp_in_on", "A2 inbound on ramp (from the Ring Road roundabout)", on, end_join=(z_out, +1)),
+             ramp("a2_ramp_out_off", "A2 outbound off ramp (to the Ring Road roundabout)", mirror(list(reversed(on))), start_join=(z_out, -1)),
+             ramp("a2_ramp_out_on", "A2 outbound on ramp (from the Ring Road roundabout)", mirror(list(reversed(off))), end_join=(z_in, -1))]
+    return dict(cps=cps, xz=xz, main_len=s_at[-1], s_c=s_c, s_in=S(z_in), s_out=S(z_out), deck=deck, ramps=ramps, R=R, F=F)
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------ the other districts
@@ -367,14 +434,15 @@ INSTITUTIONAL = [C.L("kano_hospital_general_a", 0.7, "hospital"), C.L("kano_scho
                  C.L("kano_police_division_a", 0.6, "police"), C.L("kano_hotel_a", 0.5, "hotel"), C.L("rg_ngn_clinic_a", 0.6, "clinic"),
                  C.L("kano_university_faculty_a", 0.6, "university")]                                     # family K (2026-11-16): a university faculty campus
 MARKET = [C.L("kano_market_neighbourhood_a", 0.8, "market")]                                           # family K: the neighbourhood market (generic; Kurmi stays pending)
+ROADSIDE = [C.L("rg_ngn_roadside_stalls_a", 0.9, "stalls"), C.L("rg_ngn_container_shops_a", 0.9, "container_shops")]   # family K: the informal roadside trade of the shop streets
 DISTRICTS = [
     dict(id="d05", name="Commercial belt (D05)", a0=22.5, a1=45.0, start="sub_0225", end="radial_045", fs=[0.2, 0.45, 0.7], profile="kano_collector", cross=6,
-         plan=[(0, "COMMERCIAL+MARKET", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
+         plan=[(0, "COMMERCIAL+MARKET+ROADSIDE", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
                (2, "MAJOR", "both", "GRAND", 3, (8.0, 12.0), 150.0, 0.95)]),
     dict(id="d08", name="Institutional corridor (D08)", a0=67.5, a1=90.0, start="sub_0675", end="radial_090", fs=[0.25, 0.6], profile="kano_collector", cross=5,
          plan=[(0, "INSTITUTIONAL", "both", "LOCAL_MOSQUES", 4, (10.0, 16.0), 160.0, 0.85), (1, "INSTITUTIONAL", "both", None, 0, (10.0, 16.0), 160.0, 0.85)]),
-    dict(id="d09", name="Transport hub (D09)", a0=202.5, a1=225.0, start="sub_2025", end="radial_225", fs=[0.25, 0.6], profile="kano_collector", cross=5,
-         plan=[(0, "TRANSPORT", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 140.0, 0.9), (1, "TRANSPORT+COMMERCIAL", "both", None, 0, (8.0, 12.0), 140.0, 0.9)],
+    dict(id="d09", name="Transport hub (D09)", a0=202.5, a1=225.0, start="sub_2025", end="radial_225", fs=[0.16, 0.40], profile="kano_collector", cross=5,
+         plan=[(0, "TRANSPORT", "right", "NEIGHBOURHOOD", 4, (8.0, 12.0), 140.0, 0.9), (1, "TRANSPORT+COMMERCIAL", "both", None, 0, (8.0, 12.0), 140.0, 0.9)],     # street 1 is 88 m from the middle ring: its inner side faces the ring's own buildings
          site=("site_terminal", 1, 40.0)),
 ]
 
@@ -390,25 +458,26 @@ for k in range(16):
     a0, a1 = 22.5 * k, 22.5 * (k + 1)
     if any(t0 <= a0 < t1 for t0, t1 in _taken): continue
     _q += 1
-    DISTRICTS.append(dict(id="fo%02d" % _q, band="outer", name="Mixed urban quarter %d (F-MID)" % _q, a0=a0, a1=a1, start=_bounds_outer(a0), end=_bounds_outer(a1), fs=[0.27, 0.62],
+    DISTRICTS.append(dict(id="fo%02d" % _q, band="outer", name="Mixed urban quarter %d (F-MID)" % _q, a0=a0, a1=a1, start=_bounds_outer(a0), end=_bounds_outer(a1), fs=[0.16, 0.40] if a0 == 225.0 else [0.27, 0.62],
                           profile="kano_local", cross=4,
-                          plan=[(0, "MIDDLE", "both", "LOCAL_MOSQUES", 4, (5.0, 9.0), 120.0, 0.9),
-                                (1, "MIDDLE+COMMERCIAL" if _q % 2 else "COMMERCIAL+MARKET", "both", "NEIGHBOURHOOD" if _q % 2 else None, 4 if _q % 2 else 0, (5.0, 9.0), 120.0, 0.9)]))
+                          plan=[(0, "MIDDLE", "right" if a0 == 225.0 else "both", "LOCAL_MOSQUES", 4, (5.0, 9.0), 120.0, 0.9),
+                                (1, "MIDDLE+COMMERCIAL" if _q % 2 else "COMMERCIAL+MARKET+ROADSIDE", "both", "NEIGHBOURHOOD" if _q % 2 else "GRAND", 4 if _q % 2 else 6, (5.0, 9.0), 120.0, 0.9)]))
 for k in range(8):
     a0, a1 = 45.0 * k, 45.0 * (k + 1)
     second = {2: "INSTITUTIONAL", 6: "PREMIUM"}.get(k, "MIDDLE")
     DISTRICTS.append(dict(id="fi%02d" % (k + 1), band="inner", name="Mixed urban quarter %d (F-MID, inside the middle ring)" % (_q + k + 1), a0=a0, a1=a1,
                           start="radial_%03d" % a0, end="radial_%03d" % (a1 % 360), fs=[-0.68, -0.34], profile="kano_local", cross=7,
-                          plan=[(0, "MIDDLE+COMMERCIAL+MARKET", "both", "GRAND" if k in (0, 3, 5) else "NEIGHBOURHOOD", 6 if k in (0, 3, 5) else 4, (5.0, 9.0), 120.0, 0.9),     # Friday mosques on three quarters' main streets
+                          plan=[(0, "MIDDLE+COMMERCIAL+MARKET+ROADSIDE", "both", "GRAND", 7, (5.0, 9.0), 120.0, 0.9),     # a Friday mosque every seventh block of each inner quarter's main street
                                 (1, second, "both", "LOCAL_MOSQUES" if second != "INSTITUTIONAL" else None, 4 if second != "INSTITUTIONAL" else 0, (5.0, 9.0) if second != "INSTITUTIONAL" else (10.0, 16.0),
                                  120.0 if second != "INSTITUTIONAL" else 160.0, 0.9 if second != "INSTITUTIONAL" else 0.85)]))
 
 
-def mixof(names):
+def mixof(names, local=False):
+    """A district street's building mix from mix names joined by '+'. On a neighbourhood (local) street there are no fuel stations: Kano's stations stand on the arterials and collectors."""
     if names is None: return None
     out = []
-    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else MARKET if n == "MARKET" else fewer_stations(getattr(C, n), 0.3)
-    return out
+    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else MARKET if n == "MARKET" else ROADSIDE if n == "ROADSIDE" else fewer_stations(getattr(C, n), 0.0 if local else 0.3)
+    return [l for l in out if l["weight"] > 0]
 
 
 def _raw_bearings(d):
@@ -446,7 +515,9 @@ def cross_point(pts, f):
 def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
     """A district in a sector of the band between the middle ring and the ring road, between two boundary roads that run inwards (a sub-radial or a radial): concentric district
     streets and cross streets, as the estate, with the district's own building mixes and, where it has one, a site plate (the bus terminal) at the end of a short road."""
-    by_id = {x["id"]: x for x in radials + subs}; a, b = by_id[d["start"]], by_id[d["end"]]
+    by_id = {x["id"]: x for x in radials + subs}
+    if d.get("band", "outer") == "outer": by_id["radial_225"] = MAIN_PSEUDO                       # the A2 is the 225-degree arterial between the ring road and the middle ring
+    a, b = by_id[d["start"]], by_id[d["end"]]
     pa = [(c["x"], c["z"]) for c in a["controlPoints"]]; pb = [(c["x"], c["z"]) for c in b["controlPoints"]]
     bear = district_bearings(d); streets, roads, sites = [], [], []
     site_br = (bear[len(bear) // 2 - 1] + bear[len(bear) // 2]) / 2 if d.get("site") else None      # the site road leaves a street half way between two cross streets
@@ -485,7 +556,7 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
     front = []
     for si, mix, side, anchors, every, setback, block, presence in d["plan"]:
         st = streets[si]
-        front.append(C.rule("%s_street_%d" % (d["id"], si + 1), mixof(mix), mixof(anchors), every if anchors else 0, corridor=st.id, side=side, s_from=END_CLEAR, s_to=st.s[-1] - END_CLEAR,
+        front.append(C.rule("%s_street_%d" % (d["id"], si + 1), mixof(mix, local=d["profile"] == "kano_local"), mixof(anchors), every if anchors else 0, corridor=st.id, side=side, s_from=END_CLEAR, s_to=st.s[-1] - END_CLEAR,
                             setback=setback, gap=(1.2, 4.0) if d["id"].startswith("f") else (2.0, 8.0), block=block, presence=min(0.95, presence + 0.05) if d["id"].startswith("f") else presence))     # the filler packs its plots closer and fuller (F-MID: 12 plots/ha)
     return [x.spec() for x in streets] + roads, front, sites
 
@@ -551,23 +622,38 @@ def fabric(roads, a2_len):
         for j in rd["joins"]: cuts.setdefault(j["corridor"], []).append(j["s"])
     style = {
         "ring": (fewer_stations(C.COMMERCIAL + C.MIDDLE + C.MAJOR, 0.25), C.NEIGHBOURHOOD, 4, (10.0, 15.0), (2.0, 8.0), 150.0, 0.85, "both"),
-        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25), C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),
-        "wall": (fewer_stations(C.COMMERCIAL, 0.2), None, 0, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city
+        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25) + ROADSIDE, C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),
+        "wall": (fewer_stations(C.COMMERCIAL, 0.2) + ROADSIDE + ROADSIDE, C.NEIGHBOURHOOD, 4, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city; the busiest roadside trade
         "radial": (fewer_stations(C.MAJOR + C.COMMERCIAL, 0.3), C.GRAND, 3, (10.0, 15.0), (2.0, 8.0), 150.0, 0.9, "both"),
         "sub": (C.MIDDLE, C.LOCAL_MOSQUES, 3, (5.0, 8.0), (1.5, 6.0), 110.0, 0.9, "both"),          # 5 m: parked cars at the kerb (family K)
         "main": (fewer_stations(C.HIGHWAY, 0.4), C.GRAND, 4, (14.0, 22.0), (6.0, 18.0), 180.0, 0.6, "both"),
     }
-    for rid, length, kind in roads:
+    for item in roads:
+        rid, length, kind = item[:3]; lo, hi = (item[3], item[4]) if len(item) > 3 else (0.0, length)
         mix, anchors, every, setback, gap, block, presence, side = style[kind]
         start = 200.0 if kind == "main" else END_CLEAR
-        for n, (s0, s1) in enumerate(pieces(length, cuts.get(rid, []), start, END_CLEAR)):
-            out.append(rule("fab_%s_%d" % (rid if kind != "main" else "a2", n), mix, anchors if (s1 - s0) > 2 * block else None, every if (s1 - s0) > 2 * block else 0,
+        ps = [(max(a, lo + (END_CLEAR if lo > 0 else 0.0)), min(b, hi - (END_CLEAR if hi < length else 0.0))) for a, b in pieces(length, cuts.get(rid, []), start, END_CLEAR)]
+        for n, (s0, s1) in enumerate([q for q in ps if q[1] - q[0] >= 70.0]):
+            out.append(rule("fab_%s_%d" % (rid if rid != ROUTE_ID else ("a2" if kind == "main" else "a2in"), n), mix, anchors if (s1 - s0) > 1.5 * block else None, every if (s1 - s0) > 1.5 * block else 0,
                             corridor=rid, side=side, s_from=round(s0, 1), s_to=round(s1, 1), setback=setback, gap=gap, block=block, presence=presence))
     return out
 
 
+FRONTAGE_DEFAULTS = dict(zones="", profiles="", side="both", setbackMin=5.0, setbackMax=9.0, gapMin=1.5, gapMax=6.0, blockLength=120.0, blockMargin=3.0, presence=0.9, clearance=2.5,
+                         maxHeightRange=1.6, yawJitterDeg=1.5, fixedDensity=False, rows=1, rowGap=8.0, anchorEveryBlocks=0, anchorPhase=-1)          # NetCore.FrontageRule's own defaults
+
+
+def compact(r):
+    """Leaves out of every frontage rule the fields that equal the engine's own defaults (the game and the tests fill them back from NetCore.FrontageRule): the city must stay inside the
+    Resources budget (1.5 MB per file, 6 MB in all). The lots are exactly the same."""
+    for f in r["frontage"]:
+        for k, v in FRONTAGE_DEFAULTS.items():
+            if k in f and f[k] == v: del f[k]
+    return r
+
+
 def main():
-    r = build(); p = C.ROUTES / (ROUTE_ID + ".route.json")
+    r = compact(build()); p = C.ROUTES / (ROUTE_ID + ".route.json")
     text = json.dumps(r, separators=(",", ":"), ensure_ascii=False) + "\n"          # compact: the city is the largest file under Resources (budget 1.5 MB per file, 6 MB in all)
     if "--check" in sys.argv:
         ok = p.is_file() and p.read_text() == text; print(("up to date: " if ok else "OUT OF DATE: ") + p.name); return 0 if ok else 1

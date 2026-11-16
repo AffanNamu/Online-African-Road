@@ -55,12 +55,14 @@ namespace ARO.Editor.BlenderImport
         }
 
         /// <summary>Imports one asset's FBX, builds its production prefab and saves it under Resources/Props. Returns the saved prefab, or null with a message.</summary>
-        public static GameObject BuildPrefab(string id, MaterialKitFile kit, List<string> notes)
+        public static GameObject BuildPrefab(string id, MaterialKitFile kit, List<string> notes, float gameCullDistance = 0f)
         {
             string fbx = LatestFbx(id); if (fbx == null) { notes.Add(id + ": no FBX under " + Root + "/Models"); return null; }
             AssetDatabase.ImportAsset(fbx, ImportAssetOptions.ForceSynchronousImport);
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbx); if (model == null) { notes.Add(id + ": " + fbx + " did not import as a GameObject"); return null; }
-            var built = BlenderAssetBuilder.Build(model, DefFor(fbx, id), kit, Root + "/Materials");
+            var def = DefFor(fbx, id);
+            if (gameCullDistance > 0f) def.cullDistance = gameCullDistance;            // the playable build: the LODs end where the GAME's catalogue culls the prop, not at the kit's review distance
+            var built = BlenderAssetBuilder.Build(model, def, kit, Root + "/Materials");
             foreach (var n in built.Notes) notes.Add(id + ": " + n);
             foreach (var m in built.UnmatchedMaterials) notes.Add(id + ": material '" + m + "' is not in the kit");
             Directory.CreateDirectory(PrefabFolder); string path = PrefabFolder + "/" + id + ".prefab";
@@ -70,7 +72,7 @@ namespace ARO.Editor.BlenderImport
             return saved;
         }
 
-        [Serializable] class CatalogId { public string id; }
+        [Serializable] class CatalogId { public string id; public float cullDistance; }
         [Serializable] class CatalogIds { public CatalogId[] props; }
         public const string GameCatalogPath = "Assets/_Project/Resources/Props/prop_catalog.json";
 
@@ -87,11 +89,12 @@ namespace ARO.Editor.BlenderImport
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             var cat = JsonUtility.FromJson<CatalogIds>(File.ReadAllText(GameCatalogPath));
             var ids = (cat?.props ?? new CatalogId[0]).Select(p => p.id).Where(i => !string.IsNullOrEmpty(i)).Distinct().OrderBy(i => i, StringComparer.Ordinal).ToList();
+            var cull = (cat?.props ?? new CatalogId[0]).Where(p => !string.IsNullOrEmpty(p.id)).GroupBy(p => p.id).ToDictionary(g => g.Key, g => g.First().cullDistance);
             int built = 0; var without = new List<string>(); var failed = new List<string>();
             foreach (var id in ids)
             {
                 if (LatestFbx(id) == null) { without.Add(id); continue; }
-                if (BuildPrefab(id, kit, notes) != null) built++; else failed.Add(id);
+                if (BuildPrefab(id, kit, notes, cull.TryGetValue(id, out var cd) ? cd : 0f) != null) built++; else failed.Add(id);
             }
             notes.Add($"production prefabs: {built} of {ids.Count} catalogue props have their real model; {without.Count} keep the placeholder ({string.Join(", ", without)}); failed: {(failed.Count == 0 ? "none" : string.Join(", ", failed))}");
             return notes;

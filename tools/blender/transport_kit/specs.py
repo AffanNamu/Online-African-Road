@@ -188,6 +188,12 @@ _KB = [
     ("kano_market_neighbourhood_a", K.market_neighbourhood_a, [(-18.0, 10.5, 0.0, 18.0, 15.0, 4.0)] + _walls(-20.0, -15.0, 20.0, 15.0, 1.4, 0.0, 10.0)[1:],
      "neighbourhood market: three rows of open zinc sheds on posts with trading tables, sacks and produce, umbrellas in the front yard, four lock-up shops at the back, a MARKET sign over the gate, a low wall (generic; not Kurmi market)", [40, 30, 6], (1024, 512, 128)),
 ]
+_KB += [
+    ("rg_ngn_roadside_stalls_a", K.roadside_stalls_a, [(6.0, -0.8, 0.0, 7.9, 1.6, 2.5)],
+     "roadside stalls: four timber stalls under zinc and tarpaulin canopies with produce, a lock-up kiosk, umbrellas at the kerb side, a beaten-earth forecourt (generic)", [16, 7, 3], (512, 256, 64)),
+    ("rg_ngn_container_shops_a", K.container_shops_a, [(-6.6, -0.6, 0.0, 6.6, 1.8, 2.7)],
+     "container shops: four painted converted containers (recharge cards, tailor, barber, provisions) under a shared zinc awning on posts (generic, hand-painted words)", [14, 6, 3], (512, 256, 64)),
+]
 for _aid, _fn, _cols, _note, _tgt, _sz in _KB: spec(_aid, "buildings", _fn, _cols, _note, target=_tgt, surface=_sz, version=1)
 spec("aro_car_parked_set_a", "props", K.car_parked_set_a, [(_cx - K.CAR_L / 2, -K.CAR_W / 2, 0.0, _cx + K.CAR_L / 2, K.CAR_W / 2, K.CAR_H) for _cx, _ in K.CARS],
      "three generic saloon cars parked in a row (white, blue, red; no make, badge or plate text), lengthwise along x so that a road-facing placement parks them parallel to the kerb", target=[16.0, 1.9, 1.5], surface=(256, 128, 64), version=1)

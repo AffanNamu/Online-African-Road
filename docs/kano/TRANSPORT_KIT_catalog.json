@@ -4528,6 +4528,102 @@
     "street",
     "vehicle"
    ]
+  },
+  {
+   "id": "rg_ngn_roadside_stalls_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family K, class REGIONAL: roadside stalls: four timber stalls under zinc and tarpaulin canopies with produce, a lock-up kiosk, umbrellas at the kerb side, a beaten-earth forecourt (generic) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_roadside_stalls_a",
+   "collider": "box",
+   "heightM": 2.7,
+   "widthM": 16.0,
+   "depthM": 7.7,
+   "cullDistance": 250,
+   "lodTriangles": [
+    577,
+    254,
+    32
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "roadside_trade",
+    "stalls"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.8,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -6.95,
+      "y": 2.4,
+      "z": 1.0
+     },
+     {
+      "x": 3.0,
+      "y": 2.2,
+      "z": 0.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_container_shops_a",
+   "category": "buildings",
+   "status": "production",
+   "description": "Blender-authored transport kit, family K, class REGIONAL: container shops: four painted converted containers (recharge cards, tailor, barber, provisions) under a shared zinc awning on posts (generic, hand-painted words) References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "source": "Props/rg_ngn_container_shops_a",
+   "collider": "box",
+   "heightM": 3.0,
+   "widthM": 14.0,
+   "depthM": 6.0,
+   "cullDistance": 250,
+   "lodTriangles": [
+    348,
+    158,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "container_shops",
+    "generic_design",
+    "roadside_trade"
+   ],
+   "light": {
+    "kind": "glow",
+    "r": 1.0,
+    "g": 0.9,
+    "b": 0.7,
+    "intensity": 0.9,
+    "range": 8,
+    "haloSize": 1.5,
+    "poolRadius": 3.0,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": 3.3,
+      "y": 2.8,
+      "z": 1.5
+     },
+     {
+      "x": -3.3,
+      "y": 2.8,
+      "z": 1.5
+     }
+    ]
+   }
   }
  ],
  "bounds": {
@@ -5837,6 +5933,30 @@
     7.83,
     1.0,
     1.46
+   ]
+  ],
+  "rg_ngn_roadside_stalls_a": [
+   [
+    -8.0,
+    -4.2,
+    0.0
+   ],
+   [
+    8.0,
+    3.5,
+    2.7
+   ]
+  ],
+  "rg_ngn_container_shops_a": [
+   [
+    -7.0,
+    -3.0,
+    0.0
+   ],
+   [
+    7.0,
+    3.0,
+    3.0
    ]
   ]
  },
@@ -8619,6 +8739,26 @@
     -4.0,
     2.6,
     12.2
+   ]
+  ],
+  "rg_ngn_container_shops_a": [
+   [
+    -6.6,
+    0.0,
+    -1.8,
+    6.6,
+    2.7,
+    0.6
+   ]
+  ],
+  "rg_ngn_roadside_stalls_a": [
+   [
+    -7.9,
+    0.0,
+    -1.6,
+    -6.0,
+    2.5,
+    0.8
    ]
   ]
  }

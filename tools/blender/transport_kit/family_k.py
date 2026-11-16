@@ -133,6 +133,60 @@ def car_parked_set_a(lod):
     return p
 
 
+# ---------------------------------------------------------------------------------------------------------------------------------------- roadside trade
+S_CONT = [S("sign_container_recharge", (0.95, 0.80, 0.10), (0.10, 0.10, 0.12), ["RECHARGE CARDS"]), S("sign_container_tailor", (0.18, 0.40, 0.70), WHITE_C, ["TAILOR"]),
+          S("sign_container_barber", (0.70, 0.12, 0.12), WHITE_C, ["BARBER"]), S("sign_container_provisions", (0.10, 0.45, 0.26), WHITE_C, ["PROVISIONS"])]
+CONT_COLOURS = ["container_blue", "container_red", "container_green", "plaster_ochre"]
+
+
+def roadside_stalls_a(lod):
+    """A 16 x 7 m stretch of roadside trade: four timber stalls under zinc and tarpaulin canopies with produce, sacks and basins, a painted lock-up kiosk at one end, two umbrellas
+    at the kerb side, a beaten-earth forecourt. The informal trade of every Kano shop street (generic; no brand)."""
+    p = Part("stalls"); paving(p, -8.0, -3.5, 8.0, 3.5, "dry_earth", h=0.05)
+    if lod >= 2:                                                                    # far away: one canopy over the row and the kiosk
+        prism_x(p, [(-1.6, 2.25), (1.4, 2.65), (1.4, 2.7), (-1.6, 2.3)], -7.75, 5.75, "roof_zinc_rust"); p.box(6.0, -0.8, 0.0, 7.9, 1.6, 2.5, CONT_COLOURS[0], skip=("bottom",)); return p
+    goods = ["flower_red", "leaf_green", "plaster_ochre", "paint_orange", "leaf_green_dark", "burlap"]
+    for k in range(4):
+        x0 = -7.6 + k * 3.3; x1 = x0 + 2.9
+        if lod <= 1:
+            for x in (x0 + 0.1, x1 - 0.1):
+                for y in (-1.3, 1.1): p.box(x - 0.05, y - 0.05, 0.0, x + 0.05, y + 0.05, 2.3 if y < 0 else 2.6, "timber_weathered", skip=("bottom",))
+        prism_x(p, [(-1.6, 2.25), (1.4, 2.65), (1.4, 2.7), (-1.6, 2.3)], x0 - 0.15, x1 + 0.15, "roof_zinc_rust" if k % 2 == 0 else "tarp_olive")
+        p.box(x0 + 0.1, -1.1, 0.0, x1 - 0.1, 0.4, 0.85, "timber_weathered", skip=("bottom",))                                  # the trading table
+        if lod == 0:
+            for g in range(3): p.blob((x0 + 0.55 + g * 0.9, -0.35, 1.0), (0.38, 0.38, 0.17), goods[(k * 3 + g) % len(goods)], subdiv=0, jitter=0.2, seed=k * 11 + g)
+            p.box(x0 + 0.2, 0.7, 0.0, x0 + 0.8, 1.3, 0.7, "burlap", skip=("bottom",))                                           # a sack behind
+    p.box(6.0, -0.8, 0.0, 7.9, 1.6, 2.5, CONT_COLOURS[0], skip=("bottom",))                                                       # lock-up kiosk
+    p.box(6.1, -0.83, 0.9, 7.8, -0.8, 2.0, "shutter_steel", skip=("back",)); sign(p, "-y", 6.95, -0.8, 2.05, 1.8, 0.4, S_CONT[0])
+    if lod == 0:
+        for k, x in enumerate((-5.0, 2.0)):
+            p.tube((x, -3.0, 0.05), (x, -3.0, 2.3), 0.035, 0.035, 6, GAL, caps=(False, False))
+            p.frustum(x - 1.2, -4.2, 2.2, x + 1.2, -1.8, 2.6, "fabric_red" if k else "fabric_white", inset=1.05, skip=("bottom",))
+            p.box(x - 0.6, -3.5, 0.0, x + 0.6, -2.5, 0.7, "timber_weathered", skip=("bottom",))
+    return p
+
+
+def container_shops_a(lod):
+    """A 14 x 6 m row of four converted container shops (2.4 x 3 m each, painted red, blue, green and ochre, open doors and hand-painted signs: recharge cards, tailor, barber,
+    provisions) under a shared zinc awning on posts, a step and a concrete apron."""
+    p = Part("containers"); paving(p, -7.0, -3.0, 7.0, 3.0, CON, h=0.08)
+    if lod >= 2: p.box(-6.6, -0.6, 0.08, 6.6, 1.8, 2.7, CONT_COLOURS[1], skip=("bottom",)); return p              # far away: one block
+    for k in range(4):
+        x0 = -6.6 + k * 3.3; x1 = x0 + 3.0; key = CONT_COLOURS[k]
+        p.box(x0, -0.6, 0.08, x1, 1.8, 2.7, key, skip=("bottom",))
+        if lod <= 1:
+            p.box(x0 + 0.5, -0.63, 0.2, x1 - 0.5, -0.6, 2.3, "interior_dark", skip=("back",))                                     # the open door
+            sign(p, "-y", (x0 + x1) / 2, -0.6, 2.32, 2.6, 0.36, S_CONT[k])
+        if lod == 0:
+            for r in range(5): p.box(x0 + 0.1 + r * 0.6, 1.8, 0.2, x0 + 0.14 + r * 0.6, 1.84, 2.6, key, skip=("front",))          # corrugation ribs at the back
+    prism_y(p, [(-7.0, 2.9), (7.0, 2.9), (7.0, 3.0), (-7.0, 3.0)], -2.2, -0.6, "roof_zinc")                                     # the awning
+    for x in (-6.8, -2.3, 2.3, 6.8): p.box(x - 0.05, -2.15, 0.08, x + 0.05, -2.05, 2.9, GAL, skip=("bottom",))
+    if lod == 0:
+        p.box(-6.6, -1.0, 0.08, 6.6, -0.6, 0.25, CON, skip=("bottom",))                                                           # the step
+        p.box(-1.0, -2.6, 0.08, 0.0, -1.8, 0.5, "plaster_white", skip=("bottom",)); p.box(3.0, -2.5, 0.08, 3.6, -1.9, 0.9, "paint_blue_bus", skip=("bottom",))   # a bench, a cool box
+    return p
+
+
 # ---------------------------------------------------------------------------------------------------------------------------------------- registration (catalogue extras: lamp heads, tags)
 REF_K = REF_STREET
 extra("kano_university_faculty_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, 2.8, 6.6), (9.0, -20.0, 2.6), (-20.0, -9.0, 3.0), (20.0, -9.0, 3.0)], preset="glow_door",
@@ -140,3 +194,5 @@ extra("kano_university_faculty_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, 2.8
 extra("kano_market_neighbourhood_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, -14.0, 3.6), (-9.0, 10.0, 3.2), (9.0, 10.0, 3.2)], preset="glow_door",
       tags=["commercial", "market", "stalls", "generic_design"], intensity=1.0, range=12, poolRadius=4.0)
 extra("aro_car_parked_set_a", "K", "GLOBAL", REF_K, tags=["vehicle", "parked_cars", "street", "generic_design"])
+extra("rg_ngn_roadside_stalls_a", "K", "REGIONAL", REF_K, heads=[(6.95, -1.0, 2.4), (-3.0, -0.5, 2.2)], preset="glow", tags=["commercial", "stalls", "roadside_trade", "generic_design"], intensity=0.8, range=8)
+extra("rg_ngn_container_shops_a", "K", "REGIONAL", REF_K, heads=[(-3.3, -1.5, 2.8), (3.3, -1.5, 2.8)], preset="glow", tags=["commercial", "container_shops", "roadside_trade", "generic_design"], intensity=0.9, range=8)

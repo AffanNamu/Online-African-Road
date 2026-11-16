@@ -21,7 +21,7 @@ KIT = {
     "rg_ngn_house_mudbrick_a": (8.84, 7.92, 4.46, [582, 38]), "rg_ngn_house_mudbrick_b": (10.84, 7.49, 3.96, [776, 30]), "rg_ngn_house_block_corrugated_a": (10.24, 7.24, 4.26, [1022, 34]),
     "rg_ngn_shop_row_roadside_a": (15.806, 6.77, 3.403, [1304, 28]), "rg_ngn_shed_market_corrugated_a": (15.4, 9.44, 4.36, [2708, 92]),
 }
-CULL = {"grand": 600, "medium": 450, "small": 350, "trad": 350, "city": 500, "warehouse": 300, "villa": 260, "house": 220}
+CULL = {"grand": 800, "medium": 550, "small": 450, "trad": 450, "city": 600, "warehouse": 450, "villa": 420, "house": 400}      # raised 2026-11-16: with the buildings instanced (RB-15) a street is drawn to its end, not to the next 100 m
 
 
 def lot(prop, w, d, weight, tag): return {"prop": prop, "weight": weight, "widthM": w, "depthM": d, "tag": tag}
@@ -151,11 +151,16 @@ def catalog_entries():
     for pid in sorted(used):
         w, d, h, lods, entry = D[pid]
         cull = CULL["grand"] if "grand" in pid else CULL["medium"] if "medium" in pid else CULL["small"] if "small" in pid else CULL["trad"] if "traditional" in pid else CULL["city"] if pid.startswith("kano_") else CULL["warehouse"] if ("warehouse" in pid or "factory" in pid or "depot" in pid) else CULL["villa"] if "villa" in pid else CULL["house"]
+        furniture = (entry or {}).get("category", "buildings") in ("props", "lights")         # parked cars, the kit's street lights (the city's scatter rules)
         if pid.startswith("aro_car_"): cull = 160.0                                # parked cars: street furniture distance
-        e = {"id": pid, "category": (entry or {}).get("category", "buildings") if pid.startswith("aro_car_") else "buildings", "status": "dev",
+        if (entry or {}).get("category") == "lights": cull = 260.0                 # street lights: as the placeholder lamps they replace
+        e = {"id": pid, "category": entry["category"] if furniture else "buildings", "status": "dev",
              "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
              "source": "dev:" + pid, "collider": "box", "heightM": round(h, 2), "widthM": round(w, 2), "depthM": round(d, 2), "cullDistance": float(cull), "lodTriangles": lods, "castShadow": True,
-             "tags": sorted(set((entry or {}).get("tags", []) + (["kano_city"] if pid.startswith("aro_car_") else ["kano_city_test"])))}      # kano_city_test marks the city BUILDINGS
+             "tags": sorted(set((entry or {}).get("tags", []) + (["kano_city"] if furniture else ["kano_city_test"])))}      # kano_city_test marks the city BUILDINGS
+        if furniture and (entry or {}).get("collider") == "none": e["collider"] = "none"
+        if furniture and (entry or {}).get("light"): e["light"] = entry["light"]; e["castShadow"] = bool(entry.get("castShadow", True))      # the street lights' heads (the buildings' glow heads stay in the private catalogue)
+        if furniture: e["description"] = "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules."
         if pid in SERVICE:
             e["description"] = e["description"].replace("(a box of the real footprint)", "(its collision boxes over a forecourt slab)")
             e["sockets"], e["boxes"] = SERVICE[pid]

@@ -820,7 +820,7 @@
    "heightM": 10.45,
    "widthM": 13.6,
    "depthM": 12.9,
-   "cullDistance": 260.0,
+   "cullDistance": 420.0,
    "lodTriangles": [
     4802,
     965,
@@ -841,7 +841,7 @@
    "heightM": 9.11,
    "widthM": 16.48,
    "depthM": 13.2,
-   "cullDistance": 260.0,
+   "cullDistance": 420.0,
    "lodTriangles": [
     4289,
     803,
@@ -862,7 +862,7 @@
    "heightM": 19.2,
    "widthM": 24.49,
    "depthM": 17.95,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1368,
     612,
@@ -887,7 +887,7 @@
    "heightM": 33.2,
    "widthM": 46.72,
    "depthM": 40.4,
-   "cullDistance": 600.0,
+   "cullDistance": 800.0,
    "lodTriangles": [
     4936,
     1487,
@@ -912,7 +912,7 @@
    "heightM": 30.02,
    "widthM": 60.61,
    "depthM": 42.4,
-   "cullDistance": 600.0,
+   "cullDistance": 800.0,
    "lodTriangles": [
     5109,
     1737,
@@ -937,7 +937,7 @@
    "heightM": 34.6,
    "widthM": 22.56,
    "depthM": 21.25,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     870,
     232,
@@ -962,7 +962,7 @@
    "heightM": 17.7,
    "widthM": 36.68,
    "depthM": 17.04,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1194,
     280,
@@ -987,7 +987,7 @@
    "heightM": 7.21,
    "widthM": 20.14,
    "depthM": 16.18,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     2364,
     108
@@ -1007,7 +1007,7 @@
    "heightM": 4.59,
    "widthM": 14.14,
    "depthM": 12.18,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     1958,
     96
@@ -1027,7 +1027,7 @@
    "heightM": 4.26,
    "widthM": 10.24,
    "depthM": 7.24,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     1022,
     34
@@ -1047,7 +1047,7 @@
    "heightM": 4.46,
    "widthM": 8.84,
    "depthM": 7.92,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     582,
     38
@@ -1067,7 +1067,7 @@
    "heightM": 3.96,
    "widthM": 10.84,
    "depthM": 7.49,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     776,
     30
@@ -1087,7 +1087,7 @@
    "heightM": 19.42,
    "widthM": 26.72,
    "depthM": 26.4,
-   "cullDistance": 450.0,
+   "cullDistance": 550.0,
    "lodTriangles": [
     2923,
     867,
@@ -1111,7 +1111,7 @@
    "heightM": 20.48,
    "widthM": 30.89,
    "depthM": 24.4,
-   "cullDistance": 450.0,
+   "cullDistance": 550.0,
    "lodTriangles": [
     2833,
     992,
@@ -1135,7 +1135,7 @@
    "heightM": 19.42,
    "widthM": 28.72,
    "depthM": 28.4,
-   "cullDistance": 450.0,
+   "cullDistance": 550.0,
    "lodTriangles": [
     3309,
     1073,
@@ -1159,7 +1159,7 @@
    "heightM": 13.06,
    "widthM": 18.72,
    "depthM": 16.7,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1694,
     525,
@@ -1183,7 +1183,7 @@
    "heightM": 12.0,
    "widthM": 20.72,
    "depthM": 16.7,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1654,
     573,
@@ -1207,7 +1207,7 @@
    "heightM": 9.88,
    "widthM": 14.72,
    "depthM": 12.9,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1477,
     542,
@@ -1231,7 +1231,7 @@
    "heightM": 15.9,
    "widthM": 26.01,
    "depthM": 22.45,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1358,
     268,
@@ -1256,7 +1256,7 @@
    "heightM": 11.4,
    "widthM": 17.01,
    "depthM": 15.95,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     753,
     216,
@@ -1281,7 +1281,7 @@
    "heightM": 4.36,
    "widthM": 15.4,
    "depthM": 9.44,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     2708,
     92
@@ -1301,7 +1301,7 @@
    "heightM": 3.4,
    "widthM": 15.81,
    "depthM": 6.77,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     1304,
     28
@@ -1321,7 +1321,7 @@
    "heightM": 9.97,
    "widthM": 30.66,
    "depthM": 18.02,
-   "cullDistance": 300.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     952,
     192,
@@ -1345,7 +1345,7 @@
    "heightM": 10.1,
    "widthM": 49.0,
    "depthM": 24.92,
-   "cullDistance": 300.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1060,
     290,
@@ -1369,7 +1369,7 @@
    "heightM": 8.0,
    "widthM": 36.4,
    "depthM": 21.04,
-   "cullDistance": 300.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     744,
     272,
@@ -1393,7 +1393,7 @@
    "heightM": 11.63,
    "widthM": 28.0,
    "depthM": 24.0,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     550,
     116,
@@ -1418,7 +1418,7 @@
    "heightM": 8.7,
    "widthM": 36.0,
    "depthM": 30.0,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     340,
     86,
@@ -1443,7 +1443,7 @@
    "heightM": 11.03,
    "widthM": 30.44,
    "depthM": 28.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1112,
     238,
@@ -1468,7 +1468,7 @@
    "heightM": 6.8,
    "widthM": 26.0,
    "depthM": 24.0,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     616,
     158,
@@ -1493,7 +1493,7 @@
    "heightM": 14.3,
    "widthM": 30.44,
    "depthM": 24.12,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     376,
     124,
@@ -1518,7 +1518,7 @@
    "heightM": 9.65,
    "widthM": 46.82,
    "depthM": 36.15,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     4406,
     796,
@@ -1709,7 +1709,7 @@
    "heightM": 7.25,
    "widthM": 32.44,
    "depthM": 26.14,
-   "cullDistance": 450.0,
+   "cullDistance": 550.0,
    "lodTriangles": [
     2610,
     544,
@@ -1845,7 +1845,7 @@
    "heightM": 13.2,
    "widthM": 48.44,
    "depthM": 34.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     2043,
     316,
@@ -1895,7 +1895,7 @@
    "heightM": 34.2,
    "widthM": 36.0,
    "depthM": 32.0,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     2473,
     412,
@@ -1920,7 +1920,7 @@
    "heightM": 8.06,
    "widthM": 42.44,
    "depthM": 36.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1486,
     218,
@@ -1946,7 +1946,7 @@
    "heightM": 7.73,
    "widthM": 46.44,
    "depthM": 36.12,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     916,
     182,
@@ -1996,7 +1996,7 @@
    "heightM": 7.65,
    "widthM": 24.44,
    "depthM": 22.12,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1135,
     82,
@@ -2021,7 +2021,7 @@
    "heightM": 9.0,
    "widthM": 50.44,
    "depthM": 36.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1476,
     262,
@@ -2046,7 +2046,7 @@
    "heightM": 8.8,
    "widthM": 26.44,
    "depthM": 22.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     932,
     202,
@@ -2071,7 +2071,7 @@
    "heightM": 11.25,
    "widthM": 42.0,
    "depthM": 25.05,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1038,
     216,
@@ -2096,7 +2096,7 @@
    "heightM": 8.2,
    "widthM": 44.44,
    "depthM": 36.12,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     1086,
     204,
@@ -2121,7 +2121,7 @@
    "heightM": 6.2,
    "widthM": 22.44,
    "depthM": 18.12,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     764,
     128,
@@ -2146,7 +2146,7 @@
    "heightM": 8.66,
    "widthM": 24.44,
    "depthM": 24.58,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     829,
     148,
@@ -2171,7 +2171,7 @@
    "heightM": 6.31,
    "widthM": 24.44,
    "depthM": 20.58,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     688,
     138,
@@ -2196,7 +2196,7 @@
    "heightM": 20.0,
    "widthM": 46.44,
    "depthM": 34.58,
-   "cullDistance": 300.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     856,
     338,
@@ -2220,7 +2220,7 @@
    "heightM": 4.9,
    "widthM": 20.44,
    "depthM": 16.12,
-   "cullDistance": 350.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     1046,
     136,
@@ -2330,7 +2330,7 @@
    "heightM": 4.0,
    "widthM": 22.0,
    "depthM": 14.0,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     324,
     76,
@@ -2355,7 +2355,7 @@
    "heightM": 9.75,
    "widthM": 14.0,
    "depthM": 13.05,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     242,
     68,
@@ -2380,7 +2380,7 @@
    "heightM": 5.2,
    "widthM": 20.6,
    "depthM": 12.2,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     376,
     88,
@@ -2406,7 +2406,7 @@
    "heightM": 5.2,
    "widthM": 22.6,
    "depthM": 10.7,
-   "cullDistance": 220.0,
+   "cullDistance": 400.0,
    "lodTriangles": [
     776,
     88,
@@ -2432,7 +2432,7 @@
    "heightM": 8.4,
    "widthM": 32.44,
    "depthM": 24.58,
-   "cullDistance": 300.0,
+   "cullDistance": 450.0,
    "lodTriangles": [
     580,
     146,
@@ -2457,7 +2457,7 @@
    "heightM": 19.2,
    "widthM": 48.63,
    "depthM": 38.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     2687,
     414,
@@ -2482,7 +2482,7 @@
    "heightM": 9.95,
    "widthM": 28.44,
    "depthM": 24.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     892,
     198,
@@ -2564,7 +2564,7 @@
    "id": "aro_car_parked_set_a",
    "category": "props",
    "status": "dev",
-   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules.",
    "source": "dev:aro_car_parked_set_a",
    "collider": "box",
    "heightM": 1.44,
@@ -2595,7 +2595,7 @@
    "heightM": 6.75,
    "widthM": 40.44,
    "depthM": 30.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     2353,
     650,
@@ -2620,7 +2620,7 @@
    "heightM": 14.15,
    "widthM": 60.44,
    "depthM": 44.58,
-   "cullDistance": 500.0,
+   "cullDistance": 600.0,
    "lodTriangles": [
     2144,
     504,
@@ -2634,6 +2634,191 @@
     "kano_city_test",
     "public",
     "university"
+   ]
+  },
+  {
+   "id": "aro_streetlight_arm_single_a",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules.",
+   "source": "dev:aro_streetlight_arm_single_a",
+   "collider": "none",
+   "heightM": 9.37,
+   "widthM": 0.48,
+   "depthM": 3.29,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    356,
+    106,
+    34
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "industrial",
+    "kano_city",
+    "residential",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 1.0,
+    "range": 24,
+    "haloSize": 1.8,
+    "poolRadius": 5.5,
+    "poolShift": 3.0,
+    "realLight": true,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 8.9,
+      "z": 2.2
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_streetlight_double_median_a",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules.",
+   "source": "dev:aro_streetlight_double_median_a",
+   "collider": "none",
+   "heightM": 12.17,
+   "widthM": 5.2,
+   "depthM": 0.9,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    542,
+    132,
+    44
+   ],
+   "castShadow": true,
+   "tags": [
+    "expressway",
+    "kano_city",
+    "median",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.78,
+    "b": 0.5,
+    "intensity": 1.15,
+    "range": 30,
+    "haloSize": 1.8,
+    "poolRadius": 6.5,
+    "poolShift": 1.8,
+    "realLight": true,
+    "heads": [
+     {
+      "x": 2.55,
+      "y": 11.5,
+      "z": -0.0
+     },
+     {
+      "x": -2.55,
+      "y": 11.5,
+      "z": -0.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "aro_streetlight_ornamental_a",
+   "category": "lights",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER until the production prefab with this id is staged: the Blender-built model of the transport kit (private library, ARO-CONTENT), staged by the playable and review builds. Placed by the Kano city's scatter rules.",
+   "source": "dev:aro_streetlight_ornamental_a",
+   "collider": "none",
+   "heightM": 6.1,
+   "widthM": 0.93,
+   "depthM": 0.8,
+   "cullDistance": 260.0,
+   "lodTriangles": [
+    358,
+    150,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "island",
+    "kano_city",
+    "plaza",
+    "street_lighting"
+   ],
+   "light": {
+    "kind": "lamp",
+    "r": 1.0,
+    "g": 0.72,
+    "b": 0.38,
+    "intensity": 0.9,
+    "range": 18,
+    "haloSize": 1.5,
+    "poolRadius": 4.5,
+    "poolShift": 0.0,
+    "realLight": false,
+    "heads": [
+     {
+      "x": -0.0,
+      "y": 5.4,
+      "z": -0.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "rg_ngn_container_shops_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_container_shops_a",
+   "collider": "box",
+   "heightM": 3.0,
+   "widthM": 14.0,
+   "depthM": 6.0,
+   "cullDistance": 400.0,
+   "lodTriangles": [
+    348,
+    158,
+    20
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "container_shops",
+    "generic_design",
+    "kano_city_test",
+    "roadside_trade"
+   ]
+  },
+  {
+   "id": "rg_ngn_roadside_stalls_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:rg_ngn_roadside_stalls_a",
+   "collider": "box",
+   "heightM": 2.7,
+   "widthM": 16.0,
+   "depthM": 7.7,
+   "cullDistance": 400.0,
+   "lodTriangles": [
+    577,
+    254,
+    32
+   ],
+   "castShadow": true,
+   "tags": [
+    "commercial",
+    "generic_design",
+    "kano_city_test",
+    "roadside_trade",
+    "stalls"
    ]
   }
  ]

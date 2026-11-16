@@ -1,6 +1,6 @@
 """Family K of the city construction (owner directive of 2026-11-16: markets, parked vehicles, universities, each placed in the city the day it is made; transport_kit.family_k). Real Blender geometry (bpy).
 What is checked: the three assets build, are baked and pass the toolchain validator within their budgets; the lots match their declared sizes and stand on their centre; every sign carries generic words (no real
-university, market or brand); the parked cars lie lengthwise along x (so a road-facing placement parks them parallel to the kerb), each with its own collision box, and the city places all three.
+university, market or brand); the parked cars lie lengthwise along x (so a road-facing placement parks them parallel to the kerb), each with its own collision box, and the city places every one of them.
 Run from tools/blender:  PYTHONPATH=. ~/.aro/venv/bin/python -m pytest tests/test_family_k.py -q"""
 from __future__ import annotations
 import json
@@ -27,8 +27,8 @@ def built():
 
 
 def test_the_family():
-    assert FAM == ["aro_car_parked_set_a", "kano_market_neighbourhood_a", "kano_university_faculty_a"]
-    assert SPECS["kano_university_faculty_a"]["kind"] == SPECS["kano_market_neighbourhood_a"]["kind"] == "buildings" and SPECS["aro_car_parked_set_a"]["kind"] == "props"
+    assert FAM == ["aro_car_parked_set_a", "kano_market_neighbourhood_a", "kano_university_faculty_a", "rg_ngn_container_shops_a", "rg_ngn_roadside_stalls_a"]
+    assert all(SPECS[a]["kind"] == "buildings" for a in FAM if a != "aro_car_parked_set_a") and SPECS["aro_car_parked_set_a"]["kind"] == "props"
     assert all(SPECS[a]["version"] == 1 and SPECS[a]["surface"] for a in FAM)
 
 
@@ -45,7 +45,7 @@ def test_each_asset_passes_the_validator_baked_within_budget_and_matches_its_lot
 
 
 def test_signs_carry_generic_words_only():
-    words = [w for k in (K.S_UNI, K.S_UNI_GATE, K.S_MARKET, *K.S_SHOPS) for w in C_lines(k)]
+    words = [w for k in (K.S_UNI, K.S_UNI_GATE, K.S_MARKET, *K.S_SHOPS, *K.S_CONT) for w in C_lines(k)]
     assert words and all(w.replace("&", "").replace(" ", "").isalpha() for w in words), words
     for bad in ("BAYERO", "KURMI", "SABON GARI", "SHOPRITE", "KFC", "MTN"): assert not any(bad in w for w in words), bad
 
@@ -61,7 +61,7 @@ def test_the_parked_cars_lie_along_x_each_with_its_box():
     assert all(abs(K.CARS[i + 1][0] - K.CARS[i][0]) >= K.CAR_L + 1.0 for i in range(len(K.CARS) - 1)), "a gap between the cars"
 
 
-def test_the_city_places_all_three():
+def test_the_city_places_every_family_k_asset():
     r = json.loads((ROOT / "Assets" / "_Project" / "Resources" / "Routes" / "ng-kano-city.route.json").read_text())
     lots = {l["prop"] for f in r["frontage"] for l in f["mix"] + f["anchors"]}; rules = {p["prop"] for p in r["propRules"]}
-    assert "kano_university_faculty_a" in lots and "kano_market_neighbourhood_a" in lots and "aro_car_parked_set_a" in rules
+    assert {"kano_university_faculty_a", "kano_market_neighbourhood_a", "rg_ngn_roadside_stalls_a", "rg_ngn_container_shops_a"} <= lots and "aro_car_parked_set_a" in rules

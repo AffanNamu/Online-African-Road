@@ -18,7 +18,8 @@ function renderAndPerfChecks(logs, failures, label) {
   if (over.length) failures.push(over.length + ' performance budget violation(s), first: ' + over[0].slice(0, 200));
   const bad = logs.filter(l => /\[World\].*failed|\[Route\] (invalid|could not)|\[Props\] invalid/.test(l));
   if (bad.length) failures.push('world generation reported: ' + bad[0].slice(0, 250));
-  const route = logs.find(l => /^\[Route\] ng-lagos-ibadan:/.test(l)); console.log(label + ' route: ' + (route || 'NO [Route] LINE'));
+  // the shipped road logs its [Route] summary; a test corridor or the Kano city (?route=) logs that the game loaded its data from Resources ("[Smoke] driving the test corridor <id>", only when the asset exists)
+  const route = logs.find(l => /^\[Route\] ng-lagos-ibadan:/.test(l)) || logs.find(l => /^\[Smoke\] driving the test corridor [a-z0-9-]+/.test(l)); console.log(label + ' route: ' + (route || 'NO [Route] LINE'));
   if (!route) failures.push('the route was not built from data (no [Route] summary line)');
 }
 module.exports = { renderAndPerfChecks };

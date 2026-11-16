@@ -53,6 +53,7 @@ namespace ARO.NetCore
                     if (def.category == "buildings" && def.HasBoxes) Site(mb, def, detail);      // a place a vehicle drives into (a fuel station): its collision boxes, a canopy over the columns, the forecourt
                     else if (def.category == "buildings") CityBuilding(mb, w, d, h, detail);       // any other building id (the Kano city buildings): a plain volume of its footprint until its production prefab is staged
                     else if (def.id.StartsWith("aro_car_")) ParkedCars(mb, w, d, h, detail);        // parked cars (family K, 2026-11-16) until their prefab is staged
+                    else if (def.category == "lights" && def.light != null && def.light.heads != null && def.light.heads.Length > 0) KitLight(mb, def, detail);   // the kit's street lights until their prefab is staged
                     else if (def.category == "vegetation" && lod < 2) Tree(mb, h, w, detail);       // any other tree id (the environment kit's street trees, 2026-11-16): the generic tree until its prefab is staged
                     else if (def.category == "vegetation") Box(mb, PropSub.Foliage, 0, h * 0.45f, 0, w * 0.7f, h * 0.5f, w * 0.7f);   // and a crown box far away
                     else Box(mb, PropSub.Wall, 0, 0, 0, w, h, d);
@@ -356,6 +357,20 @@ namespace ARO.NetCore
         static float Lerp(float a, float b, float t) => a + (b - a) * t;
 
         /// <summary>Open-bottom box. (cx, y0, cz) is the centre of the base; faces wind outwards.</summary>
+        /// <summary>A street light of the transport kit: a pole, an arm to each lamp head (from the catalogue's light heads) and the lit head itself; one pole far away.</summary>
+        static void KitLight(MeshBuffers mb, PropDef def, int detail)
+        {
+            float h = def.heightM;
+            if (detail == 0) { Box(mb, PropSub.Metal, 0, 0, 0, 0.22f, h, 0.22f); return; }
+            Box(mb, PropSub.Metal, 0, 0, 0, 0.22f, h * 0.97f, 0.22f);
+            if (detail == 2) Box(mb, PropSub.Metal, 0, 0, 0, 0.5f, 0.6f, 0.5f);                 // the base plinth up close
+            foreach (var hd in def.light.heads)
+            {
+                Box(mb, PropSub.Lamp, hd.x, hd.y - 0.2f, hd.z, 0.45f, 0.22f, 0.6f);
+                if (detail == 2 && (Math.Abs(hd.x) > 0.3f || Math.Abs(hd.z) > 0.3f)) Box(mb, PropSub.Metal, hd.x * 0.5f, hd.y + 0.02f, hd.z * 0.5f, Math.Max(0.1f, Math.Abs(hd.x)), 0.08f, Math.Max(0.1f, Math.Abs(hd.z)));
+            }
+        }
+
         /// <summary>A row of three parked cars lengthwise along x (the set's width): bodies and cabins up close, bodies alone further, one low block far away.</summary>
         static void ParkedCars(MeshBuffers mb, float w, float d, float h, int detail)
         {

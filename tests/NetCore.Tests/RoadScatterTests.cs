@@ -27,9 +27,10 @@ public class RoadScatterTests
         var m = City; var rules = RoadRules(m);
         Assert.Contains("lights_local", rules); Assert.Contains("trees_local_a", rules); Assert.Contains("trees_collector", rules);
         var got = PropScatter.PlaceChunk(m, X0, Z0, X0 + 400f, Z0 + 400f).Where(p => rules.Contains(p.Origin)).ToList();
-        Assert.True(got.Count(p => p.Prop.StartsWith("street_light")) >= 20, $"{got.Count(p => p.Prop.StartsWith("street_light"))} street lights in 400 x 400 m of streets");
+        Assert.True(got.Count(p => p.Prop.StartsWith("aro_streetlight_")) >= 20, $"{got.Count(p => p.Prop.StartsWith("aro_streetlight_"))} street lights (the kit's models) in 400 x 400 m of streets");
         Assert.True(got.Count(p => p.Prop.StartsWith("rg_ngn_tree_")) >= 10, $"{got.Count(p => p.Prop.StartsWith("rg_ngn_tree_"))} trees in 400 x 400 m of streets");
-        m.Main.Spline.Nearest(X0 + 200f, Z0 + 200f, 100000f, out _, out float lat, out _); Assert.True(Math.Abs(lat) > 1000f, "the square lies far from the main road");
+        float best = float.MaxValue; for (float s = 0f; s <= m.Main.Length; s += 10f) { var q = m.Main.Spline.PositionAt(s); best = Math.Min(best, (float)Math.Sqrt((q.X - X0 - 200f) * (q.X - X0 - 200f) + (q.Z - Z0 - 200f) * (q.Z - Z0 - 200f))); }
+        Assert.True(best > 1000f, $"the square lies far from the main road ({best:0} m)");
     }
 
     [Fact] public void AChunkPlacesTheSameRoadPropsWhateverItsNeighbours()
