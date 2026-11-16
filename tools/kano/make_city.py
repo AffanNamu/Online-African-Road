@@ -628,6 +628,7 @@ def seg_hit(p, q, f):
 # ------------------------------------------------------------------------------------------------------------------------------------------------ the city fabric
 def scaled(mix, **k): return [dict(l, weight=round(l["weight"] * k.get(l["tag"], 1.0), 3)) for l in mix]
 def fewer_stations(mix, k=0.3): return scaled(mix, fuel_station=k)
+def scaled_all(mix, k): return [dict(l, weight=round(l["weight"] * k, 3)) for l in mix]
 # the test-road mixes had to show every design on 1.5 km; a city street has a school or a clinic among dozens of homes, and markets on their own sites
 C.MIDDLE = scaled(C.MIDDLE, school=0.12, clinic=0.3)
 C.COMMERCIAL = scaled(C.COMMERCIAL, market_shed=0.35, clinic=0.4)
@@ -650,8 +651,8 @@ def fabric(roads, a2_len):
     for rd in ALL_ROADS:
         for j in rd["joins"]: cuts.setdefault(j["corridor"], []).append(j["s"])
     style = {
-        "ring": (fewer_stations(C.COMMERCIAL + C.MIDDLE + C.MAJOR, 0.25), C.NEIGHBOURHOOD, 4, (10.0, 15.0), (2.0, 8.0), 150.0, 0.85, "both"),
-        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25) + ROADSIDE, C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),
+        "ring": (fewer_stations(C.COMMERCIAL + C.MIDDLE + C.MAJOR, 0.25) + scaled_all(C.LOCAL_MOSQUES[:1], 0.3), C.NEIGHBOURHOOD, 4, (10.0, 15.0), (2.0, 8.0), 150.0, 0.85, "both"),
+        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25) + ROADSIDE + scaled_all(C.LOCAL_MOSQUES[:1], 0.45), C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),     # roadside mosques as ordinary lots: the ring's stretches between junctions are too short for anchors
         "wall": (fewer_stations(C.COMMERCIAL, 0.2) + ROADSIDE + ROADSIDE, C.NEIGHBOURHOOD, 4, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city; the busiest roadside trade
         "radial": (fewer_stations(C.MAJOR + C.COMMERCIAL, 0.3), C.GRAND, 3, (10.0, 15.0), (2.0, 8.0), 150.0, 0.9, "both"),
         "sub": (C.MIDDLE, C.LOCAL_MOSQUES, 3, (5.0, 8.0), (1.5, 6.0), 110.0, 0.9, "both"),          # 5 m: parked cars at the kerb (family K)
