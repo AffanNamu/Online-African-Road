@@ -18,6 +18,15 @@ namespace ARO.Editor
             Build(BuildTarget.WebGL, "Builds/WebGL");
         }
 
+        /// <summary>The playable build with the real content (owner decision of 2026-11-16): the real building models staged by tools/blender/build_content.sh become the production prefabs of the
+        /// route props that have one, and the realistic people staged under Resources/People ship with it. Without staged content it builds exactly what BuildWebGL builds.</summary>
+        public static void BuildWebGLWithContent()
+        {
+            foreach (var n in ARO.Editor.BlenderImport.KanoReviewBuilder.BuildProductionPrefabs()) Console.WriteLine("[Content] " + n);
+            Console.WriteLine("[Content] realistic people " + (System.IO.File.Exists("Assets/ThirdParty/ARO/Resources/People/people.bytes") ? "staged" : "NOT staged: the code-built figures ship"));
+            Build(BuildTarget.WebGL, "Builds/WebGL");
+        }
+
         public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Builds/Windows/AfricanRoads.exe");
 
         /// <summary>

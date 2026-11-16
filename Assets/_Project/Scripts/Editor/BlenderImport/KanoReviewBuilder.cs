@@ -70,6 +70,33 @@ namespace ARO.Editor.BlenderImport
             return saved;
         }
 
+        [Serializable] class CatalogId { public string id; }
+        [Serializable] class CatalogIds { public CatalogId[] props; }
+        public const string GameCatalogPath = "Assets/_Project/Resources/Props/prop_catalog.json";
+
+        /// <summary>
+        /// The PLAYABLE build (owner decision of 2026-11-16: the real building models go into the playable build): a production prefab for every prop of the game's own catalogue that has a staged
+        /// model (tools/blender/build_content.sh), and nothing else. Everything under a Resources folder ships with the game, so the review scenes are not built here. A prop without a model keeps
+        /// its placeholder. Returns the log lines (the last one counts what was built).
+        /// </summary>
+        public static List<string> BuildProductionPrefabs()
+        {
+            var notes = new List<string>();
+            if (!Directory.Exists(Root + "/Models")) { notes.Add("no staged models under " + Root + "/Models: the playable build keeps the placeholders"); return notes; }
+            var kit = File.Exists(KitPath) ? BlenderAssetBuilder.LoadKit(KitPath) : null; if (kit == null) notes.Add("no material kit at " + KitPath + ": the imported materials are kept");
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            var cat = JsonUtility.FromJson<CatalogIds>(File.ReadAllText(GameCatalogPath));
+            var ids = (cat?.props ?? new CatalogId[0]).Select(p => p.id).Where(i => !string.IsNullOrEmpty(i)).Distinct().OrderBy(i => i, StringComparer.Ordinal).ToList();
+            int built = 0; var without = new List<string>(); var failed = new List<string>();
+            foreach (var id in ids)
+            {
+                if (LatestFbx(id) == null) { without.Add(id); continue; }
+                if (BuildPrefab(id, kit, notes) != null) built++; else failed.Add(id);
+            }
+            notes.Add($"production prefabs: {built} of {ids.Count} catalogue props have their real model; {without.Count} keep the placeholder ({string.Join(", ", without)}); failed: {(failed.Count == 0 ? "none" : string.Join(", ", failed))}");
+            return notes;
+        }
+
         /// <summary>Builds the prefabs for every asset the placement files use, then the review prefab (and the merged variant when its placements exist). Returns the log lines.</summary>
         public static List<string> BuildReview()
         {

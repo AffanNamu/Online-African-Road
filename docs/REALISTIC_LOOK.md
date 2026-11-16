@@ -37,6 +37,8 @@ Real faces need a real human base: anatomy and a face cannot be drawn convincing
 * Not done yet: grass and shrubs standing on the ground, more trees, and blending the ground into the verges. Standing vegetation needs an alpha-clipped material whose shader variant must be kept in the build: that comes with a short proposal, because it touches how the world is drawn.
 
 ## 4. Decisions that are the owner's
+**Decided 2026-11-16 (owner):** the real people and the real building models go into the playable build, now (the owner first chose "after the review pictures", then approved everything in `docs/DECISIONS.md`: "Let's just build it"). How: `tools/blender/build_content.sh` builds the kits and the people from the code in the playable build's CI job (after the edit-mode tests), and `BuildScript.BuildWebGLWithContent` makes production prefabs only for the route props that have a model (about 53 of 74; the generic props such as palms, lamps and signs keep their placeholders). About 10 more minutes per CI run.
+
 1. **Ship the real models in the playable build.** Today the playable build draws grey boxes; the Blender models appear only in the review build. Approving them (after looking at the review pictures) and shipping them is the largest single step towards the reference look.
 2. **The human base** (section 3): the CC0 MakeHuman base replaces "built by code" for the body and the face (`docs/DECISIONS.md`, 2026-11-16). If the owner does not want a public-domain base, the code-built figures stay.
 3. **Real people in the playable build**: the same question as item 1, for the people (the review pictures come first).
