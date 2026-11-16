@@ -197,6 +197,13 @@ jobs:
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws-tk", PYTHONPATH: tools/blender }
         run: python -m transport_kit.stage_unity --out Assets/ThirdParty/ARO
+      - name: Review - build the realistic people of the crowd FROM THE CODE (tools/blender/people_kit) on the CC0 MakeHuman base data (mpfb2 assets at a pinned commit; no MPFB code) and stage them under Assets/ThirdParty/ARO/Resources/People (git-ignored), where the game loads them in place of the code-built figures
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        env: { PYTHONPATH: tools/blender }
+        run: |
+          export ARO_MAKEHUMAN_DATA="$(tools/blender/people_kit/fetch_makehuman.sh "$RUNNER_TEMP/mpfb2" | tail -1)"
+          python -m people_kit.export --out Assets/ThirdParty/ARO/Resources/People
+          ls -la Assets/ThirdParty/ARO/Resources/People
       - name: Review - pre-pull the Unity WebGL editor image (retry with backoff)
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: |

@@ -75,6 +75,14 @@ Shader "ARO/SkyClouds"
             // fractal noise, normalised to 0..1; each octave is shifted so the layers do not line up
             float fbm2(float3 p) { float s = 0.5 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7); s += 0.25 * noise3(p); return s / 0.75; }
             float fbm3(float3 p) { float s = 0.5 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7); s += 0.25 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7); s += 0.125 * noise3(p); return s / 0.875; }
+            float fbm4(float3 p)
+            {
+                float s = 0.5 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7);
+                s += 0.25 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7);
+                s += 0.125 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7);
+                s += 0.0625 * noise3(p);
+                return s / 0.9375;
+            }
             float fbm5(float3 p)
             {
                 float s = 0.5 * noise3(p); p = p * 2.03 + float3(17.3, 9.1, 5.7);
@@ -85,7 +93,7 @@ Shader "ARO/SkyClouds"
                 return s / 0.96875;
             }
             #ifdef ARO_SKY_LOW
-                #define FBM_SHAPE fbm3
+                #define FBM_SHAPE fbm4      // four octaves: with three the heaps read as smeared blobs (CI run 349, low-tier pictures)
                 #define FBM_LIGHT fbm2
             #else
                 #define FBM_SHAPE fbm5

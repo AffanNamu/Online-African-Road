@@ -59,6 +59,8 @@ const fuelOf = line => { const m = /fuel=([\d.]+)/.exec(line || ''); return m ? 
     const crowd = await waitFor(/\[Crowd\] agents=\d+ visible=[1-9]/, 20);
     const cl = logs.filter(l => /\[Crowd\] agents=/.test(l)).pop() || 'no [Crowd] line';
     console.log(`  ${crowd ? 'PASS' : 'INFO'}  ${route}: people are drawn near the station (${cl.slice(0, 140)})`);
+    const real = logs.find(l => /\[Crowd\] real people:/.test(l)), refused = logs.find(l => /real people file was refused|real people lack/.test(l));
+    console.log(`  INFO  ${route}: ${real ? 'REAL people (' + real.slice(real.indexOf('real people:') + 13, real.indexOf('real people:') + 90) + ')' : refused ? 'real people REFUSED: ' + refused.slice(0, 160) : 'code-built people (no real people staged)'}`);
     if (crowd) fs.writeFileSync(`${prefix}-${route}-people.png`, await page.screenshot());
     check(`${route}: the vehicle did not leave the world`, !has(/left the world/), '');
     const bad = logs.filter(l => /exception|NullReference|IndexOutOfRange|invalid route data|could not build/i.test(l) && !/GLib|swiftshader/i.test(l));

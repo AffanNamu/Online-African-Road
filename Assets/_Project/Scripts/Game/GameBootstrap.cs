@@ -91,6 +91,7 @@ namespace ARO.Game
             {   // P2: the people you can see (deterministic crowd of the loaded chunks; the bus fills up with the server's numbers)
                 crowd = new GameObject("Crowd").AddComponent<CrowdRenderer>(); crowd.streamer = streamer; crowd.timeOfDay = tod; crowd.tier = tier;
                 crowd.Init(worldMats.Prop[ARO.NetCore.PropSub.Wall]); if (SmokeMode.People) crowd.DensityOverride = 1f;
+                LoadRealPeople(crowd);
                 bus.StopServed += v => { if (crowd != null && drive.Vehicle != null) { var vp = drive.Vehicle.transform.position; crowd.BusStop(drive.Vehicle.transform, 5.0f, v.boarded, v.alighted, route.GroundY(vp.x, vp.z)); } };
             }
             var probe = new GameObject("PerfProbe").AddComponent<PerfProbe>(); probe.streamer = streamer; probe.tier = tier;
@@ -100,6 +101,16 @@ namespace ARO.Game
             // Menu backdrop camera position: above the start of the route.
             var n0 = route.nodes[0].position; streamer.target = new GameObject("MenuFocus").transform; streamer.target.position = n0;
             Camera.main.transform.position = n0 + new Vector3(-20, 12, -30); Camera.main.transform.LookAt(n0 + Vector3.up * 3);
+        }
+
+        /// <summary>The realistic people (docs/PEOPLE_AND_CROWDS.md): staged under a Resources/People folder by the review build (built from the code and the CC0 MakeHuman base; this public
+        /// repository holds no binaries). Absent or unreadable: the code-built figures stay, and the log says why.</summary>
+        static void LoadRealPeople(CrowdRenderer crowd)
+        {
+            var bytes = Resources.Load<TextAsset>("People/people"); var atlas = Resources.Load<Texture2D>("People/people_atlas");
+            if (bytes == null || atlas == null) { Debug.Log("[Crowd] no real people staged: the code-built figures are drawn"); return; }
+            try { crowd.UseReal(ARO.NetCore.PeopleAsset.Parse(bytes.bytes), atlas); }
+            catch (System.FormatException e) { Debug.LogWarning($"[Crowd] the real people file was refused ({e.Message}): the code-built figures are drawn"); }
         }
     }
 }

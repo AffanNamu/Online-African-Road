@@ -10,11 +10,17 @@ namespace ARO.World
     /// P2 of docs/FUNCTIONAL_PLACES_PROPOSAL.md (approved by the owner on 2026-11-14): the people you can see. The crowd of the loaded chunks (CrowdPlanner, deterministic: every client sees the
     /// same people at the same places) plus the passengers of a bus stop are drawn as ONE mesh with ONE material (a small palette texture), rebuilt from pre-posed frames each frame: the nearest
     /// people first, at most 60 (20 on the low tier), within 140 m, two levels of detail. People are visual only: no collider, nothing networked.
+    /// REAL PEOPLE (owner direction of 2026-11-15): when the realistic figures are staged (Resources/People/people.bytes and people_atlas.png, built from the CC0 MakeHuman base by
+    /// tools/blender/people_kit; see docs/PEOPLE_AND_CROWDS.md), UseReal swaps every design for its real body, face and dress (one atlas texture, the same single mesh and material); the nearest
+    /// people get the detailed level. Without the files, or if they do not hold every design, the code-built figures are drawn.
     /// </summary>
     public class CrowdRenderer : MonoBehaviour
     {
         public ChunkStreamer streamer; public TimeOfDay timeOfDay; public Transform eye; public QualityTier tier = QualityTiers.Medium;
         public const float MaxDistance = 140f, Lod1Beyond = 35f;
+        /// <summary>Real people: the detailed level (about 3,200 triangles) for at most this many of the nearest, within RealLod0Within metres; the rest get the light level (about 900).</summary>
+        public const int RealLod0Max = 14; public const float RealLod0Within = 22f;
+        public bool Real => _real != null;
         public int Cap => tier != null && tier.Name == "low" ? 20 : 60;
         public int Visible { get; private set; }
         public int Triangles { get; private set; }
@@ -22,6 +28,7 @@ namespace ARO.World
         public float DensityOverride = -1f;
 
         Mesh _mesh; MeshRenderer _mr; Material _mat; Texture2D _palette;
+        PeopleAsset _real; PeopleAsset.RealDesign[] _realOf;
         readonly List<CrowdAgent> _agents = new List<CrowdAgent>();
         readonly List<CrowdAgent> _transient = new List<CrowdAgent>(); double _transientUntil;
         readonly List<Vector3> _v = new List<Vector3>(); readonly List<Vector3> _n = new List<Vector3>(); readonly List<Vector2> _uv = new List<Vector2>(); readonly List<int> _t = new List<int>();
@@ -50,6 +57,23 @@ namespace ARO.World
             Debug.Log($"[Crowd] ready: {PeopleKit.Designs.Length} designs, budget {Cap} people within {MaxDistance:0} m");
         }
 
+        /// <summary>Draws the realistic people instead of the code-built figures. False (nothing changes) when the asset lacks a design of the crowd or the atlas is missing.</summary>
+        public bool UseReal(PeopleAsset asset, Texture2D atlas)
+        {
+            if (asset == null || atlas == null || _mat == null) return false;
+            var of = new PeopleAsset.RealDesign[PeopleKit.Designs.Length];
+            for (int i = 0; i < of.Length; i++)
+            {
+                of[i] = asset.Find(PeopleKit.Designs[i].Id);
+                if (of[i] == null) { Debug.LogWarning($"[Crowd] the real people lack '{PeopleKit.Designs[i].Id}': the code-built figures are drawn"); return false; }
+            }
+            _real = asset; _realOf = of; _normals.Clear();
+            _mat.mainTexture = atlas; if (_mat.HasProperty("_BaseMap")) _mat.SetTexture("_BaseMap", atlas);
+            if (_mat.HasProperty("_Smoothness")) _mat.SetFloat("_Smoothness", 0.12f);
+            Debug.Log($"[Crowd] real people: {asset.Designs.Count} designs, atlas {atlas.width} px, LOD0 {of[0].Lods[0].TriangleCount} / LOD1 {of[0].Lods[of[0].Lods.Length - 1].TriangleCount} triangles");
+            return true;
+        }
+
         /// <summary>A bus stop: the server's boarded and alighted numbers walk between the kerb and the door (first off, then on).</summary>
         public void BusStop(Transform bus, float halfLength, int boarded, int alighted, float groundY)
         {
@@ -74,8 +98,22 @@ namespace ARO.World
             // The mesh is written relative to the chunk under the eye (the object sits there): the road is over 100 km long and a float is 8 mm coarse out there, which would make people shimmer.
             var org = new Vector3(Mathf.Floor(p.x / 200f) * 200f, 0f, Mathf.Floor(p.z / 200f) * 200f); transform.position = org;
             _v.Clear(); _n.Clear(); _uv.Clear(); _t.Clear(); int tris = 0;
+            int near = 0;
             foreach (var (a, pos, yaw, frame, dist) in vis)
             {
+                if (_real != null)
+                {   // the realistic figure: posed frame, its own normals, the atlas tiles of this person's skin tone and colourway
+                    var D = _realOf[((a.Design % _realOf.Length) + _realOf.Length) % _realOf.Length]; int rl = near < RealLod0Max && dist < RealLod0Within ? 0 : D.Lods.Length - 1; if (rl == 0) near++;
+                    var L = D.Lods[rl]; int fr = ((frame % _real.FrameCount) + _real.FrameCount) % _real.FrameCount; var P = L.Pos[fr]; var N = L.Nrm[fr]; var U = D.AtlasUv(rl, a.Skin, a.Colourway);
+                    float rr = yaw * Mathf.Deg2Rad, rc = Mathf.Cos(rr), rs = Mathf.Sin(rr), rx = pos.X - org.x, ry = pos.Y, rz = pos.Z - org.z; int rb = _v.Count;
+                    for (int i = 0; i < P.Length; i++)
+                    {
+                        var q = P[i]; var k = N[i];
+                        _v.Add(new Vector3(rx + q.X * rc + q.Z * rs, ry + q.Y, rz - q.X * rs + q.Z * rc)); _n.Add(new Vector3(k.X * rc + k.Z * rs, k.Y, -k.X * rs + k.Z * rc)); _uv.Add(new Vector2(U[i].X, U[i].Y));
+                    }
+                    for (int i = 0; i < L.Tris.Length; i++) _t.Add(rb + L.Tris[i]);
+                    tris += L.TriangleCount; continue;
+                }
                 int lod = dist < Lod1Beyond ? 0 : 1;
                 var m = PeopleKit.Mesh(a.Design, a.Colourway, a.Skin, lod); var f = PeopleKit.Frame(a.Design, a.Colourway, a.Skin, lod, frame); var nrm = Normals(a.Design, lod, frame, f, m);
                 float r = yaw * Mathf.Deg2Rad, c = Mathf.Cos(r), sn = Mathf.Sin(r), ox = pos.X - org.x, oy = pos.Y, oz = pos.Z - org.z; int b = _v.Count;      // a turn about the vertical axis only
@@ -89,7 +127,7 @@ namespace ARO.World
             }
             _mesh.Clear(); _mesh.SetVertices(_v); _mesh.SetNormals(_n); _mesh.SetUVs(0, _uv); _mesh.SetTriangles(_t, 0, false); _mesh.RecalculateBounds();
             Visible = vis.Count; Triangles = tris;
-            if (Time.unscaledTime >= _nextLog) { _nextLog = Time.unscaledTime + 5f; Debug.Log($"[Crowd] agents={_agents.Count} visible={vis.Count} tris={tris} density={density:0.00} hour={hour:0.0} transient={_transient.Count}"); }
+            if (Time.unscaledTime >= _nextLog) { _nextLog = Time.unscaledTime + 5f; Debug.Log($"[Crowd] agents={_agents.Count} visible={vis.Count} tris={tris} density={density:0.00} hour={hour:0.0} transient={_transient.Count} people={(_real != null ? "real" : "code-built")}"); }
         }
 
         /// <summary>Smooth normals of a posed frame (computed once per design, level and frame: the colourway and the skin tone do not change the shape).</summary>

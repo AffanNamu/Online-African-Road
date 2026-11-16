@@ -1,0 +1,2 @@
+"""Realistic people for the crowd (owner direction of 2026-11-15: real bodies and faces). The human base is the public-domain (CC0) MakeHuman base mesh and its shape targets, read from a checkout of
+makehumancommunity/mpfb2 (ARO_MAKEHUMAN_DATA or ~/makehumancommunity/mpfb2/src/mpfb/data); nothing of it is stored in this repository. Shaping, skin, hair, eyes, clothes, rig poses and export are our code."""

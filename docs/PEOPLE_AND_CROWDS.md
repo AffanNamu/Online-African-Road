@@ -4,6 +4,20 @@ The owner's words: *"bus terminal ... put some people, visuals of people moving 
 
 **State:** level 1 (implemented) and level 2 (17 .NET tests, and the figures checked by eye in Blender renders). Level 3 (Unity compile and the browser check) waits for CI. Levels 4 and 5 are not reached. **Nothing is approved.**
 
+## 0. Realistic people (2026-11-16, after the owner rejected the code-built figures)
+
+The owner's words (2026-11-15): *"the people also, their face have to show like real people ... Why are you designing something unrealistic? Just plain 2D."* The ten designs of section 1 now have **realistic versions**: a real human body and face, with Kano dress made by our code. The crowd system (where people stand and walk, the hours, the bus) is unchanged; only the figures it draws are replaced.
+
+**State:** level 1 (implemented) and level 2 (tests: 8 Blender, 13 .NET; every design checked in renders of the exported game meshes). Level 3 (the review build compiles, generates and draws them) waits for CI. Levels 4 and 5 not reached. **Nothing is approved.**
+
+* **Body and face:** the CC0 MakeHuman base (`docs/ASSET_LICENSES.md`), shaped per design (sex, age, weight, height, an African ethnic blend, a seeded individual face from 31 face sliders) and posed by its game rig (53 bones, skin weights for every vertex). Lips, eyelids, nails, brows, cropped hair and the elder's grey beard are painted on the skin. Three skin tones (deep, medium, lighter brown).
+* **Dress (our code, `tools/blender/people_kit/figure.py`):** fitted from the base mesh's own clothing helpers, so it follows the body: shirts, trousers and shorts; kaftans with thread work on the chest; the wide babban riga with open sleeves over trousers; a blouse and a wax-print (ankara) wrapper; a long dress and an abaya; a hijab that frames the face with a clean oval and a cape fitted over the clothes as people stand (it falls over the shoulders and the arms swing under it); woven caps, a head-tie with an enamel basin of produce on it, a school bag, closed shoes. Three colourways per design.
+* **The ten designs** have the ids of `PeopleKit.Designs` (tested), so the crowd swaps them one for one: man in kaftan and cap, man in babban riga, man in shirt and trousers, older man with grey beard, woman in hijab with blouse and wrapper, woman in long dress and long hijab, woman in abaya, market woman with head-tie and basin, schoolboy, schoolgirl in white hijab. Adults 1.57 to 1.79 m, children 1.32 and 1.40 m.
+* **Game form (`tools/blender/people_kit/export.py`):** two levels of detail reduced by Blender (about **3,200** and **900** triangles; small parts like caps, capes and shoes are kept whole); one **2048 px atlas** of 256 px tiles (a tile per skin tone and per colourway of each design, so any skin tone wears any colourway) painted texel by texel from the full figure, so the face, the prints and the thread work stay sharp, times ambient occlusion of the standing figure; **8 walk and 4 idle frames** with their normals. One file (`people.bytes`, 5.6 MB) and the atlas (2.8 MB). Deterministic: the same code and data give the same bytes (checked).
+* **In the game (`NetCore/PeopleAsset.cs`, `World/CrowdRenderer.cs`, `Game/GameBootstrap.cs`):** when `Resources/People/people.bytes` and `people_atlas.png` are present and hold every design, the crowd draws the real people with the same single mesh and material (the atlas replaces the palette): the detailed level for the 14 nearest within 22 m, the light level beyond. A missing, damaged or incomplete file is refused with a reason in the log, and the code-built figures are drawn.
+* **Where they are built:** nothing of this is committed (no binaries in this public repository; the MakeHuman data is fetched at a pinned commit by `tools/blender/people_kit/fetch_makehuman.sh`). The **review build** (`blender-unity.yml`) generates the people from the code and stages them under the git-ignored `Assets/ThirdParty/ARO/Resources/People`. The **playable public build keeps the code-built figures** until the owner decides (`docs/REALISTIC_LOOK.md`, section 4).
+* **Known limits:** the faces are good at crowd distance but coarse at arm's length (a 256 px tile per skin tone); cloth is a single surface, so the inside of a hem or sleeve is not drawn; the hijab can show a sliver of the dress at the side of the neck from close up; no hair other than cropped and grey; a walking robe follows the legs rather than swinging like cloth.
+
 ## 1. What is in the game
 
 * **Ten figures in Kano dress**, built by code (`NetCore/People.cs`):
@@ -53,7 +67,7 @@ The owner's words: *"bus terminal ... put some people, visuals of people moving 
 In the browser, `tools/webgl-pump.js` (public build, and review build with the real models) logs the crowd at the station and takes a picture of it (informational).
 
 ## 4. Not done
-* A Blender production family (realistic textures; the same rig).
+* The realistic people (section 0) in the playable public build: the owner's decision after the review pictures.
 * Crowds at mosques by prayer time, attendants at every pump, market bustle (P4).
 * People stepping aside for vehicles.
 * The kit's bus terminal and shelters in the game's routes, with their boarding points.
