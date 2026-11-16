@@ -66,6 +66,16 @@ const fuelOf = line => { const m = /fuel=([\d.]+)/.exec(line || ''); return m ? 
     const bad = logs.filter(l => /exception|NullReference|IndexOutOfRange|invalid route data|could not build/i.test(l) && !/GLib|swiftshader/i.test(l));
     check(`${route}: no exception`, bad.length === 0 && errors.length === 0, bad[0] ? bad[0].slice(0, 200) : errors[0] ? errors[0].slice(0, 200) : '');
     await page.close();
+    // P2, the faces (informational): a second visit with the people camera, which parks the camera in front of the most crowded group near the station (a close shot, then a group shot)
+    const cam = await browser.newPage({ viewport: { width: 1024, height: 576 } }); const clog = []; cam.on('console', m => clog.push(m.text()));
+    const cwait = async (re, secs) => { for (let i = 0; i < secs * 4; i++) { if (clog.some(l => re.test(l))) return true; await cam.waitForTimeout(250); } return false; };
+    await cam.goto(`http://127.0.0.1:${port}/index.html?smoke=drive&pump=1&people=1&peoplecam=1&quality=medium&hour=noon${q}`);
+    for (const [n, what] of [[1, 'close'], [2, 'group']]) {
+      const ok = await cwait(new RegExp(`\\[PeopleCam\\] shot ${n} `), n === 1 ? 240 : 30);
+      if (ok) { await cam.waitForTimeout(1500); fs.writeFileSync(`${prefix}-${route}-people-${what}.png`, await cam.screenshot()); }
+      console.log(`  INFO  ${route}: people camera, ${what} shot: ${ok ? (clog.find(l => new RegExp(`\\[PeopleCam\\] shot ${n} `).test(l)) || '').slice(0, 160) : 'not taken (no people drawn near the station)'}`);
+    }
+    await cam.close();
   }
   await browser.close(); server.close();
   const failed = results.filter(r => !r.ok);

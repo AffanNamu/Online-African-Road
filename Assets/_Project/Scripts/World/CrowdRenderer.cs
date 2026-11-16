@@ -23,6 +23,8 @@ namespace ARO.World
         public bool Real => _real != null;
         public int Cap => tier != null && tier.Name == "low" ? 20 : 60;
         public int Visible { get; private set; }
+        /// <summary>The people drawn this frame, nearest first: world position, facing (degrees, 0 = +z) and whether they stand (idle frames). Test pages read it to frame them (PeopleCam).</summary>
+        public readonly List<(Vector3 pos, float yaw, bool standing)> Shown = new List<(Vector3, float, bool)>();
         public int Triangles { get; private set; }
         /// <summary>Test pages: the hour's density can be forced (?people=1 shows the day's crowd at any hour).</summary>
         public float DensityOverride = -1f;
@@ -98,9 +100,10 @@ namespace ARO.World
             // The mesh is written relative to the chunk under the eye (the object sits there): the road is over 100 km long and a float is 8 mm coarse out there, which would make people shimmer.
             var org = new Vector3(Mathf.Floor(p.x / 200f) * 200f, 0f, Mathf.Floor(p.z / 200f) * 200f); transform.position = org;
             _v.Clear(); _n.Clear(); _uv.Clear(); _t.Clear(); int tris = 0;
-            int near = 0;
+            int near = 0; Shown.Clear();
             foreach (var (a, pos, yaw, frame, dist) in vis)
             {
+                Shown.Add((new Vector3(pos.X, pos.Y, pos.Z), yaw, frame >= PeopleKit.WalkFrames));
                 if (_real != null)
                 {   // the realistic figure: posed frame, its own normals, the atlas tiles of this person's skin tone and colourway
                     var D = _realOf[((a.Design % _realOf.Length) + _realOf.Length) % _realOf.Length]; int rl = near < RealLod0Max && dist < RealLod0Within ? 0 : D.Lods.Length - 1; if (rl == 0) near++;

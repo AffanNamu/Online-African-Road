@@ -92,6 +92,7 @@ namespace ARO.Game
                 crowd = new GameObject("Crowd").AddComponent<CrowdRenderer>(); crowd.streamer = streamer; crowd.timeOfDay = tod; crowd.tier = tier;
                 crowd.Init(worldMats.Prop[ARO.NetCore.PropSub.Wall]); if (SmokeMode.People) crowd.DensityOverride = 1f;
                 LoadRealPeople(crowd);
+                if (SmokeMode.PeopleCam) crowd.gameObject.AddComponent<PeopleCam>().crowd = crowd;      // test pages: the camera frames the people for the review pictures
                 bus.StopServed += v => { if (crowd != null && drive.Vehicle != null) { var vp = drive.Vehicle.transform.position; crowd.BusStop(drive.Vehicle.transform, 5.0f, v.boarded, v.alighted, route.GroundY(vp.x, vp.z)); } };
             }
             var probe = new GameObject("PerfProbe").AddComponent<PerfProbe>(); probe.streamer = streamer; probe.tier = tier;
