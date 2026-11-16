@@ -260,6 +260,9 @@ def build():
     # ---- along the A2: D11 gateway services and D10 industrial and logistics roads
     rds, fr, st = a2_districts(ix["xz"][:4])
     est_roads += rds; est_frontage += fr; r["sites"] += st
+    # ---- beyond the ring road: the plan's peri-urban fringe (F-OUT) along roads leaving the city from the ring road roundabouts
+    rds, fr = fringe(ring_r)
+    est_roads += rds; est_frontage += fr
 
     # ---- roundabouts
     def ends_at(rd_list, centre, rad):
@@ -306,6 +309,8 @@ def build():
         # family K: three parked cars (one asset, lengthwise, so facing the road parks them parallel to the kerb) on the right kerb of the neighbourhood streets; lights and trees take the left
         dict(base, id="cars_parked", prop="aro_car_parked_set_a", profiles="kano_local", side="right", offsetMin=1.05, offsetMax=1.25, spacingMin=55.0, spacingMax=95.0, presence=0.4,
              scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=0.3, clearLength=16.0, clearDepth=1.4, allRoads=True)]     # the body reaches 2.25 m from the road edge; people at a lot front stand 2.8 m or more out (setbacks >= 5 m)
+    r["propRules"].append(dict(base, id="trees_fields", prop="rg_ngn_tree_large_shade_a", zones="rural", profiles="", side="both", offsetMin=55.0, offsetMax=90.0, spacingMin=30.0, spacingMax=55.0,
+                               presence=0.55, scaleMin=0.8, scaleMax=1.25, yawJitterDeg=180.0, faceRoad=False, fixedDensity=False, exclusionMargin=-1.0, allRoads=True))      # farm trees of the fringe
     lights_service = next(p for p in r["propRules"] if p["id"] == "lights_service")
     r["propRules"].append(dict(lights_service, id="lights_ramp", profiles="kano_ramp", allRoads=True))                # the A2 interchange's slip ramps
     for p in r["propRules"]:
@@ -559,6 +564,30 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
         front.append(C.rule("%s_street_%d" % (d["id"], si + 1), mixof(mix, local=d["profile"] == "kano_local"), mixof(anchors), every if anchors else 0, corridor=st.id, side=side, s_from=END_CLEAR, s_to=st.s[-1] - END_CLEAR,
                             setback=setback, gap=(1.2, 4.0) if d["id"].startswith("f") else (2.0, 8.0), block=block, presence=min(0.95, presence + 0.05) if d["id"].startswith("f") else presence))     # the filler packs its plots closer and fuller (F-MID: 12 plots/ha)
     return [x.spec() for x in streets] + roads, front, sites
+
+
+FRINGE = [(0.0, "Road east out of the city (F-OUT)"), (90.0, "Road north out of the city (F-OUT)"), (270.0, "Road south out of the city (F-OUT)")]   # 180 crosses D07 (blocked)
+FRINGE_LEN = 1300.0
+
+
+def fringe(ring_r):
+    """The plan's filler zone F-OUT, the peri-urban fringe beyond the ring road ("low-density plots, farmland and scrub"): a road leaving each ring road roundabout outwards (not at 180
+    degrees: the D07 traditional suburb, blocked on references, lies there; not at 225: the A2) with a gentle bend every 200 m, traditional compounds, mud-brick houses and low-cost rows
+    set far back from the road among farm trees, small mosques, roadside trade and the odd fuel station. Rural zone: big shade trees in the fields (trees_fields)."""
+    roads, front = [], []
+    trad = [l for l in C.TRADITIONAL if l["tag"] in ("hausa_compound", "house", "lowcost", "fuel_station")] + ROADSIDE
+    for a, name in FRINGE:
+        c = ell("ring", a); o = ((c[0] - CX) / dist(c, (CX, CZ)), (c[1] - CZ) / dist(c, (CX, CZ))); side = (o[1], -o[0])
+        start = add(c, o, ring_r); pts = [start]
+        for k in range(1, int(FRINGE_LEN // 200.0) + 1):
+            wig = 18.0 * math.sin(k * 1.7 + a)                                             # a country road is never ruler-straight
+            pts.append(add(add(start, o, 200.0 * k), side, wig if k > 1 else 0.0))
+        rid = "fringe_%03d" % a
+        roads.append(dict(id=rid, name=name, role="road", controlPoints=[cp("%s_%d" % (rid, i), x, z, "kano_collector", "urban" if i < 2 else "rural") for i, (x, z) in enumerate(pts)],
+                          decks=[], joins=[]))
+        front.append(C.rule("fringe_%03d" % a, trad, C.LOCAL_MOSQUES, 5, corridor=rid, s_from=END_CLEAR + 40.0, s_to=FRINGE_LEN - 40.0, setback=(8.0, 22.0), gap=(6.0, 28.0),
+                            block=150.0, presence=0.55))
+    return roads, front
 
 
 def a2_districts(a2pts):
