@@ -51,6 +51,8 @@ namespace ARO.World
                 var mf = r.GetComponent<MeshFilter>(); if (mf == null || mf.sharedMesh == null) continue;
                 visible++; tris += TrisOf(mf.sharedMesh); draws += Mathf.Min(r.sharedMaterials.Length, mf.sharedMesh.subMeshCount);
             }
+            // RB-15: the instanced buildings have no renderer of their own; their draws and triangles are counted from the instancer, so the budget gate still sees them
+            draws += PropInstancer.LastDrawCalls; tris += PropInstancer.LastTriangles;
             long texBytes = 0; int texCount = 0;
             foreach (var t in Resources.FindObjectsOfTypeAll<Texture>()) { texBytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t); texCount++; }
             var s = new PerfSample
@@ -59,7 +61,7 @@ namespace ARO.World
                 TextureMb = texBytes / 1048576f, HeapMb = System.GC.GetTotalMemory(false) / 1048576f, FrameMs = _frames > 0 ? _frameMs / _frames : 0f
             };
             _frameMs = 0f; _frames = 0; Last = s;
-            string rec = _draws.Valid && _draws.LastValue > 0 ? $"engineDraws={_draws.LastValue} engineTris={_tris.LastValue} setPass={_setPass.LastValue}" : "engineCounters=unavailable";
+            string rec = (_draws.Valid && _draws.LastValue > 0 ? $"engineDraws={_draws.LastValue} engineTris={_tris.LastValue} setPass={_setPass.LastValue}" : "engineCounters=unavailable") + $" instancedBuildings={PropInstancer.LastInstances} instancedDraws={PropInstancer.LastDrawCalls}";
             string world = streamer != null ? $" terrainTris={streamer.TerrainTriangles} roadTris={streamer.RoadTriangles} propTris={streamer.PropTriangles} props={streamer.PropCount} pending={streamer.PendingWork} buildMs={streamer.Stats.BuildMsTotal:0} worstStageMs={streamer.Stats.WorstStageMs:0}" : "";
             Debug.Log($"[Perf] tier={tier.Name} visibleTris={s.Triangles} drawEstimate={s.DrawCalls} visibleRenderers={s.ActiveRenderers} chunks={s.LoadedChunks} textures={texCount} textureMB={s.TextureMb:0.0} heapMB={s.HeapMb:0.0} avgFrameMs={s.FrameMs:0.0} {rec}{world}");
             var judged = s; if (!PerfProbeSettings.JudgeFrameTime) judged.FrameMs = 0f;

@@ -1,6 +1,8 @@
 # Engine batching: technical proposal (RB-15) for the owner's decision
 
-**Status: PROPOSAL ONLY. Nothing in this document has been implemented, and nothing in it will be implemented without the owner's explicit approval.** No driving physics, road generation, weather, vehicle behaviour, rendering configuration or production setting was changed to write it. The only code added in the investigation that led here is review-only diagnostics (`KanoReviewStats`, `DrawBreakdown`) that count what the game already renders and change nothing in the scene.
+**Status (2026-11-16): APPROVED by the owner and IMPLEMENTED (option E), see section 7.** The text below is the proposal as it was written.
+
+**Original status: PROPOSAL ONLY. Nothing in this document has been implemented, and nothing in it will be implemented without the owner's explicit approval.** No driving physics, road generation, weather, vehicle behaviour, rendering configuration or production setting was changed to write it. The only code added in the investigation that led here is review-only diagnostics (`KanoReviewStats`, `DrawBreakdown`) that count what the game already renders and change nothing in the scene.
 
 ## 1. The problem, with the numbers
 `PerfBudget` for the desktop WebGL tier allows 400 draw calls. In the first in-game review of the residential kit (run 41391901470, `KANO_RESIDENTIAL_MILESTONE.md` section 11) four of six views exceeded it (618 to 690), two did not (107 and 331). The game's figure counts one draw per material slot of every visible mesh renderer, nothing batched.
@@ -41,3 +43,14 @@ Stage the work, cheapest and least risky first, and re-measure with the same rev
 
 ## 6. What I need from the owner
 Approve, change or reject a stage (the options are independent; A and B need no engine change and no approval beyond the content review). Until then: **no engine batching work is done.**
+
+## 7. Implementation (owner approval of 2026-11-16: "proceed with the RB-15 batching implementation as part of the city construction, provided it preserves the appearance of buildings, multiplayer consistency, LOD behaviour and existing gameplay")
+* **Option E, instancing.** `World/PropInstancer.cs` draws the real building models of the loaded chunks with `Graphics.RenderMeshInstanced`, one draw per (mesh, sub-mesh, material, shadow mode) and up to 511 instances per draw (`InstancedLod.MaxPerDraw`, safe for the WebGL 2 uniform-buffer limit).
+* **Appearance:** the same meshes and materials as the prefabs (read from each prefab's LODGroup once), the same transform of every part inside its prefab, the same shadow flags. The kit materials already had GPU instancing enabled.
+* **LOD behaviour:** each building picks its LOD with Unity's own LODGroup rule (`NetCore/InstancedLod.cs`: relative height = size x lodBias / (2 x distance x tan(fov / 2)), first threshold reached, culled below the last; 5 .NET tests), and is culled at its catalogue cull distance for the quality tier and by the camera's view.
+* **Multiplayer:** placement is unchanged (the same deterministic instances on every client); only how they are drawn changes.
+* **Gameplay:** buildings near the vehicle keep their colliders (collider-only objects copied from the prefab's box colliders, or the catalogue boxes), pumps, labels, lamps and the crowd read the same instances as before.
+* **Fallback:** a prefab with a light, a particle system, a skinned mesh or a renderer outside its LODs is instantiated as before; `?instancing=0` on a test page turns the path off for comparison. EditMode tests check the plan and the refusals.
+* **Honest counting:** the performance probe adds the instancer's draws and triangles to its estimate (`instancedBuildings`, `instancedDraws` in the `[Perf]` line), so the budget gate still sees the buildings.
+* **A visible improvement:** before, real buildings beyond two chunks were not drawn at all (only within ring 2); instanced buildings are drawn to their cull distance.
+* **Still to measure:** frame time on a real phone and a real desktop GPU (criterion 3); the CI software rasteriser shows that it draws and counts, not how fast a phone runs.

@@ -49,6 +49,10 @@ namespace ARO.Game
             var streamer = new GameObject("ChunkStreamer").AddComponent<ChunkStreamer>();
             streamer.route = route; streamer.roadGood = roadGood; streamer.roadWorn = roadWorn; streamer.roadDamaged = roadDamaged;
             streamer.groundMat = ground; streamer.buildingMats = buildingMats; streamer.materials = worldMats; streamer.tier = tier;
+            // RB-15 (owner approval 2026-11-16): the real buildings are drawn with GPU instancing; ?instancing=0 on a test page draws them as prefab instances for comparison
+            PropInstancer.Enabled = !(Application.absoluteURL != null && Application.absoluteURL.Contains("smoke=") && Application.absoluteURL.Contains("instancing=0"));
+            streamer.instancer = new GameObject("PropInstancer").AddComponent<PropInstancer>(); streamer.instancer.tier = tier;
+            Debug.Log("[Instancing] " + (PropInstancer.Enabled ? "on: real buildings are drawn with GPU instancing" : "off (?instancing=0): real buildings are prefab instances"));
 
             var defs = new Dictionary<string, VehicleDefinition>();
             foreach (var d in vehicleDefinitions) defs[d.id] = d;

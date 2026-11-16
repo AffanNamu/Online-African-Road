@@ -24,6 +24,8 @@ namespace ARO.World
         public int unloadRadius = 5;
         public float frameBudgetMs = 3f;
         public Material roadGood, roadWorn, roadDamaged, groundMat;   // legacy materials
+        /// <summary>RB-15: draws the real buildings of the loaded chunks with GPU instancing (null: every building is a prefab instance, as before).</summary>
+        public PropInstancer instancer;
         public Material[] buildingMats;
         public WorldMaterials materials;
         public QualityTier tier = QualityTiers.Medium;
@@ -380,10 +382,24 @@ namespace ARO.World
                     }
                 }
             }
+            // RB-15: real buildings that can be instanced go to the instancer at every distance (it culls by the catalogue distance and picks LODs like their LODGroup); near the vehicle
+            // they get collider-only objects, so physics is as before. Anything else is instantiated as before (within two rings).
+            var instanced = new List<(PropInstancer.Plan, Vector3, float, float, float)>(); var asPrefab = new List<PropInstance>();
+            foreach (var inst in prod)
+            {
+                var prefab = PropLibrary.ProductionPrefab(inst.Prop); var def = PropLibrary.Def(inst.Prop);
+                var plan = instancer != null && PropInstancer.Enabled ? PropInstancer.PlanFor(prefab, inst.Prop) : null;
+                if (plan == null) { asPrefab.Add(inst); continue; }
+                var lp = new Vector3(inst.Pos.X - o.x, inst.Pos.Y, inst.Pos.Z - o.z);
+                instanced.Add((plan, lp, inst.YawDeg, inst.Scale, def != null ? LodPolicy.PropCullDistance(def, tier) : 600f));
+                if (ring <= 1) ColliderOnly(ch, inst, prefab, def, lp);
+                if (ring <= 2 && !string.IsNullOrEmpty(inst.Text)) MakeLabel(ch, inst, o);
+            }
+            if (instancer != null) { if (instanced.Count > 0) instancer.Register(ch.id, ch.root.transform, instanced); else instancer.Unregister(ch.id); }
             if (ring <= 2)
             {
                 foreach (var inst in dev) if (!string.IsNullOrEmpty(inst.Text) && inRange(inst)) MakeLabel(ch, inst, o);
-                foreach (var inst in prod)
+                foreach (var inst in asPrefab)
                 {
                     var go = Instantiate(PropLibrary.ProductionPrefab(inst.Prop), ch.root.transform);
                     go.transform.localPosition = new Vector3(inst.Pos.X - o.x, inst.Pos.Y, inst.Pos.Z - o.z); go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg, 0f); go.transform.localScale *= inst.Scale;
@@ -401,8 +417,31 @@ namespace ARO.World
             ch.propLod = lod;
         }
 
+        /// <summary>RB-15: the colliders of an instanced building without its renderers: the prefab's own box colliders, or (for a catalogued solid without any) its catalogue boxes or size.</summary>
+        void ColliderOnly(Chunk ch, PropInstance inst, GameObject prefab, PropDef def, Vector3 localPos)
+        {
+            var src = prefab.GetComponentsInChildren<BoxCollider>(true);
+            if (src.Length == 0 && (def == null || def.collider != "box")) return;
+            var go = new GameObject("Solid_" + inst.Prop); go.transform.SetParent(ch.root.transform, false);
+            go.transform.localPosition = localPos; go.transform.localRotation = Quaternion.Euler(0f, inst.YawDeg, 0f); go.transform.localScale = prefab.transform.localScale * inst.Scale;
+            if (src.Length > 0)
+            {
+                var toRoot = prefab.transform.worldToLocalMatrix;
+                foreach (var c in src)
+                {
+                    var m = toRoot * c.transform.localToWorldMatrix; var child = new GameObject("Box"); child.transform.SetParent(go.transform, false);
+                    child.transform.localPosition = m.GetColumn(3); child.transform.localRotation = m.rotation; child.transform.localScale = m.lossyScale;
+                    var bc = child.AddComponent<BoxCollider>(); bc.center = c.center; bc.size = c.size; bc.isTrigger = c.isTrigger; bc.sharedMaterial = c.sharedMaterial;
+                }
+            }
+            else if (def.HasBoxes) foreach (var b in def.boxes) { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(b.x1 - b.x0, b.y1 - b.y0, b.z1 - b.z0); bc.center = new Vector3((b.x0 + b.x1) * 0.5f, (b.y0 + b.y1) * 0.5f, (b.z0 + b.z1) * 0.5f); }
+            else { var bc = go.AddComponent<BoxCollider>(); bc.size = new Vector3(def.widthM, def.heightM, def.depthM); bc.center = new Vector3(0f, def.heightM * 0.5f, 0f); }
+            ch.productionProps.Add(go);
+        }
+
         void ClearProps(Chunk ch)
         {
+            if (instancer != null) instancer.Unregister(ch.id);
             if (ch.props != null) { var mf = ch.props.GetComponent<MeshFilter>(); if (mf.sharedMesh != null) { ch.owned.Remove(mf.sharedMesh); Destroy(mf.sharedMesh); } Destroy(ch.props); ch.props = null; }
             if (ch.propColliders != null) { Destroy(ch.propColliders); ch.propColliders = null; }
             if (ch.labels != null) { Destroy(ch.labels); ch.labels = null; }
@@ -439,6 +478,7 @@ namespace ARO.World
             _chunks.Remove(c);
             if (ch.facesReported && FacesUnloaded != null) FacesUnloaded(c);
             if (lamps != null && ch.lampsRegistered) lamps.UnregisterChunk(c);
+            if (instancer != null) instancer.Unregister(c);
             if (UsesRouteModel)
             {
                 foreach (var o in ch.owned) if (o != null) Destroy(o);
