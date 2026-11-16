@@ -16,6 +16,7 @@ namespace ARO.NetCore
         {
             var e = new List<string>();
             if (spec == null) { e.Add("route spec is null"); return e; }
+            FrontageShared.Resolve(spec, e);                // shared frontage mixes into the rules that name them (once per spec; nothing to do for a route without them)
             if (spec.schemaVersion < 1 || spec.schemaVersion > 3) e.Add("schemaVersion must be 1, 2 or 3 (got " + spec.schemaVersion + ")");
             if (string.IsNullOrEmpty(spec.routeId) || !IdRx.IsMatch(spec.routeId)) e.Add("routeId must be lowercase letters, digits and dashes");
             if (string.IsNullOrWhiteSpace(spec.name)) e.Add("name is required");

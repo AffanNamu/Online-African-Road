@@ -49,8 +49,55 @@ namespace ARO.NetCore
         public float rowGap = 8f;               // metres of open ground (a back lane) between one row and the next
         public FrontageLot[] mix;
         public FrontageLot[] anchors;           // civic lots, e.g. the mosques; optional
+        public string mixId = "", anchorsId = "";   // optional, instead of mix / anchors: the id of a shared lot list of the route (RouteSpec.mixes; see FrontageShared)
         public int anchorEveryBlocks = 0;       // 0 = no anchors; N = one anchor in every N-th block on each side
         public int anchorPhase = -1;            // -1 = the phase of each side comes from a hash; 0..N-1 = chosen by the designer: the left side uses it, the right side is staggered by half a period
+    }
+
+    /// <summary>A named lot list that frontage rules share (RouteSpec.mixes): the same designs, footprints and weights as a rule's own mix.</summary>
+    [Serializable]
+    public class FrontageMixSpec
+    {
+        public string id;
+        public FrontageLot[] lots;
+    }
+
+    /// <summary>
+    /// Route data packing (2026-11-16, the Kano city: its 238 frontage rules use 23 distinct mixes, and repeating them took half of the route file and of the Resources download budget). A rule may name a
+    /// shared lot list (`mixId`, `anchorsId`) instead of repeating its own; <see cref="Resolve"/> copies the named list into the rule (a copy per rule: no lot object is shared between rules), so the rest of
+    /// the engine only ever sees rules with their own mix and anchors, exactly as if the route had written them out. RouteSpecValidator.Validate calls it first (RouteModel.Build validates, so a built model
+    /// is always resolved). It runs once per spec. A route without shared mixes and without ids is not touched (every route before the city).
+    /// </summary>
+    public static class FrontageShared
+    {
+        public static void Resolve(RouteSpec spec, List<string> e)
+        {
+            if (spec == null || spec.SharedResolved) return;
+            spec.SharedResolved = true;
+            bool named = spec.frontage != null && spec.frontage.Any(r => r != null && (!string.IsNullOrEmpty(r.mixId) || !string.IsNullOrEmpty(r.anchorsId)));
+            if (!named && (spec.mixes == null || spec.mixes.Length == 0)) return;
+            var byId = new Dictionary<string, FrontageLot[]>();
+            foreach (var m in spec.mixes ?? new FrontageMixSpec[0])
+            {
+                if (m == null || string.IsNullOrEmpty(m.id) || byId.ContainsKey(m.id)) { e?.Add("a shared mix id is missing or duplicate"); continue; }
+                if (m.lots == null || m.lots.Length == 0 || m.lots.Any(l => l == null)) e?.Add("shared mix '" + m.id + "' needs at least one lot and no empty entry");
+                byId[m.id] = (m.lots ?? new FrontageLot[0]).Where(l => l != null).ToArray();
+            }
+            foreach (var r in spec.frontage ?? new FrontageRule[0])
+            {
+                if (r == null) continue;
+                r.mix = Take(r, r.mix, r.mixId, "mix", byId, e);
+                r.anchors = Take(r, r.anchors, r.anchorsId, "anchors", byId, e);
+            }
+        }
+
+        static FrontageLot[] Take(FrontageRule r, FrontageLot[] own, string id, string what, Dictionary<string, FrontageLot[]> byId, List<string> e)
+        {
+            if (string.IsNullOrEmpty(id)) return own;
+            if (own != null && own.Length > 0) { e?.Add("frontage rule '" + r.id + "': give " + what + " or " + what + "Id, not both"); return own; }
+            if (!byId.TryGetValue(id, out var lots)) { e?.Add("frontage rule '" + r.id + "': shared mix '" + id + "' does not exist"); return own; }
+            return lots.Select(l => new FrontageLot { prop = l.prop, weight = l.weight, widthM = l.widthM, depthM = l.depthM, tag = l.tag }).ToArray();
+        }
     }
 
     /// <summary>A lot the engine decided to build: where, which way it faces, how big, and why it is there.</summary>

@@ -142,9 +142,9 @@ def catalog_entries():
             for l in fr["mix"] + fr["anchors"]: used[l["prop"]] = l
     city = ROUTES / "ng-kano-city.route.json"                                     # the city (tools/kano/make_city.py) also places ids of its own: family K (university, market, parked cars)
     if city.is_file():
-        cj = json.loads(city.read_text())
+        cj = json.loads(city.read_text()); shared = {m["id"]: m["lots"] for m in cj.get("mixes", [])}     # the city names shared lot lists (mixId, anchorsId)
         for fr in cj["frontage"]:
-            for l in fr["mix"] + fr["anchors"]: used.setdefault(l["prop"], l)
+            for l in (fr.get("mix") or shared[fr["mixId"]]) + (fr.get("anchors") or shared.get(fr.get("anchorsId", ""), [])): used.setdefault(l["prop"], l)
         for pr in cj["propRules"]:
             if pr["prop"] in D and D[pr["prop"]][4] is not None: used.setdefault(pr["prop"], pr)
     out = []

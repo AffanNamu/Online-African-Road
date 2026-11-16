@@ -146,6 +146,7 @@ GATE_DESIGN = dict(design="modern", profile="ring_modern", radius=24.0, apron=2.
 ESTATE_F = [0.18, 0.345, 0.51, 0.675]                                                # the estate's concentric streets between the middle ring (0) and the ring road (1): about 92 m apart, so
                                                                                      # two rows of compounds fit back to back, and the outer rows clear the shops of both rings
 JUNCTION_CLEAR = 58.0                                                                # buildings of a road keep this far (along it) from a junction on it: corner lots of two roads never meet
+CORNER_CLEAR = 20.0                                                                  # a shallower road's window round a junction: clear of the joining road's formation and mouth (see fabric)
 END_CLEAR = 52.0                                                                     # and this far from a joined or roundabout end
 EST_A0, EST_A1 = 45.0, 67.5                                                          # the estate lies between the 45 degree arterial and the 67.5 degree sub-radial
 
@@ -490,13 +491,20 @@ def _raw_bearings(d):
 
 
 def district_bearings(d):
-    """The bearings of a district's cross streets. Inside the middle ring they leave out any bearing within 1.5 degrees (about 70 m) of a street or road meeting the middle ring from
-    outside, so the junctions on its two sides never fall a few metres apart."""
+    """The bearings of a district's cross streets. Inside the middle ring a cross street that falls near a street or road meeting the middle ring from outside is moved onto that
+    street's bearing, so the two meet the ring at the same point and cross it as a crossroads (a connected grid through the middle ring); one that cannot be moved (its partner lies
+    too close to the quarter's own boundary roads) is left out when it is within 1.5 degrees (about 70 m), so the junctions on the ring's two sides never fall a few metres apart."""
     raw = _raw_bearings(d)
     if d.get("band", "outer") == "outer": return raw
     outside = estate_cross_bearings()["middle"] + [b for e in DISTRICTS if e.get("band", "outer") == "outer" for b in _raw_bearings(e)] + [22.5 + 45.0 * k for k in range(8)]
-    near = lambda b: min(min(abs(b - o) % 360.0, 360.0 - abs(b - o) % 360.0) for o in outside) < 1.5
-    return [b for b in raw if not near(b)]
+    gap = lambda a, b: min(abs(a - b) % 360.0, 360.0 - abs(a - b) % 360.0)
+    spacing = (d["a1"] - d["a0"]) / d["cross"]; out = []
+    for b in raw:
+        o = min(outside, key=lambda o: gap(b, o))
+        if gap(b, o) < 0.45 * spacing and d["a0"] + 3.0 <= o <= d["a1"] - 3.0: b = o        # a crossroads with the street outside
+        elif gap(b, o) < 1.5: continue
+        if all(gap(b, x) > 0.5 * spacing for x in out): out.append(b)
+    return out
 
 
 def station_on(rd, p):
@@ -524,7 +532,7 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
     if d.get("band", "outer") == "outer": by_id["radial_225"] = MAIN_PSEUDO                       # the A2 is the 225-degree arterial between the ring road and the middle ring
     a, b = by_id[d["start"]], by_id[d["end"]]
     pa = [(c["x"], c["z"]) for c in a["controlPoints"]]; pb = [(c["x"], c["z"]) for c in b["controlPoints"]]
-    bear = district_bearings(d); streets, roads, sites = [], [], []
+    bear = district_bearings(d); streets, roads, sites, crosses = [], [], [], []
     site_br = (bear[len(bear) // 2 - 1] + bear[len(bear) // 2]) / 2 if d.get("site") else None      # the site road leaves a street half way between two cross streets
     for i, f in enumerate(d["fs"]):
         x0 = cross_point(pa, f); x1 = cross_point(pb, f)
@@ -552,6 +560,7 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
             s_in = inner.station(s_in); s_out = outer.station(s_out)
             roads.append(straight("%s_cross_%d_%d" % (d["id"], k + 1, j), "%s, cross street" % d["name"], [p0, ((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2), p1], "kano_local",
                                   [join("start", inner.id, s_in, +1, 10.0), join("end", outer.id, s_out, -1, 10.0)]))
+            crosses.append(("%s_cross_%d_%d" % (d["id"], k + 1, j), dist(p0, p1), None if n0 else j - 1, None if n1 else j))     # the district street at each end (None: a ring or the wall road)
     if d.get("site"):                                                                # a short road from a street outwards, ending at the site plate, half way between two cross streets
         sid, si, length = d["site"]; st = streets[si]; br = st.angles[min(range(len(st.angles)), key=lambda k: abs(st.angles[k] - site_br))]
         p0 = add(ell(None, br, st.f), outward(None, br, st.f), HW[d["profile"]]); p1 = add(p0, outward(None, br, st.f), length)
@@ -563,6 +572,14 @@ def district(d, ring_arc_at, mid_arcs, inner_arcs, radials, subs):
         st = streets[si]
         front.append(C.rule("%s_street_%d" % (d["id"], si + 1), mixof(mix, local=d["profile"] == "kano_local"), mixof(anchors), every if anchors else 0, corridor=st.id, side=side, s_from=END_CLEAR, s_to=st.s[-1] - END_CLEAR,
                             setback=setback, gap=(1.2, 4.0) if d["id"].startswith("f") else (2.0, 8.0), block=block, presence=min(0.95, presence + 0.05) if d["id"].startswith("f") else presence))     # the filler packs its plots closer and fuller (F-MID: 12 plots/ha)
+    if d["id"].startswith("f"):
+        # the side streets of the mixed quarters: houses and compounds with the odd kiosk, between the corner lots. A district street's buildings fill it right up to the cross street, so a
+        # side street's own lots start beyond the deepest of them (setback + depth + 4 m); at a ring or the wall road the junction window of that road keeps the corners apart.
+        reach = {si: setback[1] + max(l["depthM"] for l in (mixof(mix, local=True) or []) + (mixof(anchors) or [])) + 4.0 for si, mix, side, anchors, every, setback, block, presence in d["plan"]}
+        for rid, length, at0, at1 in crosses:
+            s0 = END_CLEAR if at0 is None else max(END_CLEAR, reach.get(at0, END_CLEAR)); s1 = length - (END_CLEAR if at1 is None else max(END_CLEAR, reach.get(at1, END_CLEAR)))
+            if s1 - s0 < 40.0: continue
+            front.append(C.rule("%s_side" % rid, SIDE_STREET, None, 0, corridor=rid, side="both", s_from=round(s0, 1), s_to=round(s1, 1), setback=(5.0, 8.0), gap=(1.2, 4.0), block=100.0, presence=0.95))
     return [x.spec() for x in streets] + roads, front, sites
 
 
@@ -629,18 +646,20 @@ def seg_hit(p, q, f):
 def scaled(mix, **k): return [dict(l, weight=round(l["weight"] * k.get(l["tag"], 1.0), 3)) for l in mix]
 def fewer_stations(mix, k=0.3): return scaled(mix, fuel_station=k)
 def scaled_all(mix, k): return [dict(l, weight=round(l["weight"] * k, 3)) for l in mix]
+SIDE_STREET = [l for l in C.MIDDLE if l["tag"] in ("bungalow", "semi_detached", "villa", "house")] + scaled_all([l for l in C.TRADITIONAL if l["tag"] in ("hausa_compound", "lowcost")], 0.5) + \
+    scaled_all(ROADSIDE, 0.25)                                                       # a side street of a mixed quarter: houses and compounds, the odd kiosk (no school, duplex or fuel station: short blocks)
 # the test-road mixes had to show every design on 1.5 km; a city street has a school or a clinic among dozens of homes, and markets on their own sites
 C.MIDDLE = scaled(C.MIDDLE, school=0.12, clinic=0.3)
 C.COMMERCIAL = scaled(C.COMMERCIAL, market_shed=0.35, clinic=0.4)
 C.TRADITIONAL = scaled(C.TRADITIONAL, fuel_station=0.3)
 
 
-def pieces(length, cuts, start_clear=END_CLEAR, end_clear=END_CLEAR, shortest=70.0):
+def pieces(length, cuts, start_clear=END_CLEAR, end_clear=END_CLEAR, shortest=70.0, window=JUNCTION_CLEAR):
     """The stretches of a road that get buildings: its length less its ends and a window round every junction on it."""
     out, s0 = [], start_clear
     for c in sorted(cuts):
-        if c - JUNCTION_CLEAR > s0 + shortest: out.append((s0, c - JUNCTION_CLEAR))
-        s0 = max(s0, c + JUNCTION_CLEAR)
+        if c - window > s0 + shortest: out.append((s0, c - window))
+        s0 = max(s0, c + window)
     if length - end_clear > s0 + shortest: out.append((s0, length - end_clear))
     return out
 
@@ -662,7 +681,12 @@ def fabric(roads, a2_len):
         rid, length, kind = item[:3]; lo, hi = (item[3], item[4]) if len(item) > 3 else (0.0, length)
         mix, anchors, every, setback, gap, block, presence, side = style[kind]
         start = 200.0 if kind == "main" else END_CLEAR
-        ps = [(max(a, lo + (END_CLEAR if lo > 0 else 0.0)), min(b, hi - (END_CLEAR if hi < length else 0.0))) for a, b in pieces(length, cuts.get(rid, []), start, END_CLEAR)]
+        # Every road joining this one keeps its own buildings END_CLEAR (52 m) from this road's edge. When this road's deepest lot (setback + depth, with 4 m to spare) stays inside that,
+        # the two roads' lots can never meet, and the window round the junction only has to clear the joining road itself: the corner building then stands at the corner, as in the
+        # city, instead of a 116 m gap at every side street (the wall road lost most of its frontage to the side streets of the inner quarters before this).
+        reach = setback[1] + max(l["depthM"] for l in mix + (anchors or [])) + 4.0
+        window = CORNER_CLEAR if reach <= END_CLEAR else JUNCTION_CLEAR
+        ps = [(max(a, lo + (END_CLEAR if lo > 0 else 0.0)), min(b, hi - (END_CLEAR if hi < length else 0.0))) for a, b in pieces(length, cuts.get(rid, []), start, END_CLEAR, window=window)]
         for n, (s0, s1) in enumerate([q for q in ps if q[1] - q[0] >= 70.0]):
             out.append(rule("fab_%s_%d" % (rid if rid != ROUTE_ID else ("a2" if kind == "main" else "a2in"), n), mix, anchors if (s1 - s0) > 1.5 * block else None, every if (s1 - s0) > 1.5 * block else 0,
                             corridor=rid, side=side, s_from=round(s0, 1), s_to=round(s1, 1), setback=setback, gap=gap, block=block, presence=presence))
@@ -679,6 +703,22 @@ def compact(r):
     for f in r["frontage"]:
         for k, v in FRONTAGE_DEFAULTS.items():
             if k in f and f[k] == v: del f[k]
+    return pack_mixes(r)
+
+
+def pack_mixes(r):
+    """Route data packing: every distinct lot list (a mix or an anchor list) is written once under `mixes` and the rules name it (mixId, anchorsId); the game copies it back into each rule on load
+    (NetCore FrontageShared.Resolve, run by the validator). The city's 566 rules use 26 distinct lists; repeating them took half of the file. The lots are exactly the same."""
+    ids, mixes = {}, []
+    def name(lots):
+        key = json.dumps(lots, sort_keys=True)
+        if key not in ids: ids[key] = "m%02d" % len(ids); mixes.append({"id": ids[key], "lots": lots})
+        return ids[key]
+    for f in r["frontage"]:
+        f["mixId"] = name(f.pop("mix"))
+        anchors = f.pop("anchors", None)
+        if anchors: f["anchorsId"] = name(anchors)
+    r["mixes"] = mixes
     return r
 
 

@@ -63,5 +63,6 @@ def test_the_parked_cars_lie_along_x_each_with_its_box():
 
 def test_the_city_places_every_family_k_asset():
     r = json.loads((ROOT / "Assets" / "_Project" / "Resources" / "Routes" / "ng-kano-city.route.json").read_text())
-    lots = {l["prop"] for f in r["frontage"] for l in f["mix"] + f["anchors"]}; rules = {p["prop"] for p in r["propRules"]}
+    shared = {m["id"]: m["lots"] for m in r.get("mixes", [])}                     # the rules name shared lot lists (mixId, anchorsId)
+    lots = {l["prop"] for f in r["frontage"] for l in (f.get("mix") or shared[f["mixId"]]) + (f.get("anchors") or shared.get(f.get("anchorsId", ""), []))}; rules = {p["prop"] for p in r["propRules"]}
     assert {"kano_university_faculty_a", "kano_market_neighbourhood_a", "rg_ngn_roadside_stalls_a", "rg_ngn_container_shops_a"} <= lots and "aro_car_parked_set_a" in rules

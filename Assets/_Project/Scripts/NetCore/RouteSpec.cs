@@ -233,6 +233,9 @@ namespace ARO.NetCore
         public RoadSpec[] roads;                // optional (E5, schemaVersion 3): additional roads (flyover road, ramps, cross roads); null = none
         public RingSpec[] rings;                // optional (E5, schemaVersion 3): roundabouts on the main road; null = none
         public FrontageRule[] frontage;         // optional (schemaVersion 3): blocks and lots of buildings along a road (Frontage.cs); null = none
+        public FrontageMixSpec[] mixes;         // optional: lot lists that frontage rules share by id (FrontageRule.mixId, anchorsId) instead of each repeating its own (FrontageShared); null = none
+
+        [NonSerialized] internal bool SharedResolved;   // FrontageShared.Resolve has run on this spec (not route data: neither serializer writes or reads it)
     }
 
     public enum Zone { Urban, Commercial, Industrial, Rural, Highway }
