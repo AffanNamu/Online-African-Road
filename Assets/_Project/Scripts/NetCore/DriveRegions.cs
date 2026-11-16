@@ -23,7 +23,7 @@ namespace ARO.NetCore
         public static readonly IReadOnlyList<DriveRegion> All = new[]
         {
             new DriveRegion { RouteId = Shipped, Name = "Lagos – Ibadan", CityId = "lagos", Jobs = true, Bus = true, Convoy = true, Note = "The production corridor: jobs, bus routes, convoys and free drive." },
-            new DriveRegion { RouteId = "ng-kano-city-p1", Name = "Kano City (Phase 1)", CityId = "kano", Note = "The city laid out after the World Design Reference: the A2 gateway, the ring road, the transport district, the commercial belt, the central district with its grand mosques, estates and the traditional suburb (10.6 km, four roundabouts). Free drive; no jobs or bus routes here yet." },
+            new DriveRegion { RouteId = "ng-kano-city", Name = "Kano City", CityId = "kano", Note = "The city on the master plan: the A2 from Zaria through the gateway onto the ring road, the middle ring, the road along the old city wall, the radial arterials and the modern residential estate, with shops, homes, mosques and fuel stations along every road (77 km of streets). The old city inside the wall is not built yet. Free drive; no jobs or bus routes here yet." },
             new DriveRegion { RouteId = "ng-kano-city-e1", Name = "Kano city streets", CityId = "kano", Note = "Arterial, collector and estate streets with their districts, mosques and twelve fuel stations. Free drive." },
             new DriveRegion { RouteId = "ng-kano-city-f1", Name = "Kano flyover interchange", CityId = "kano", Note = "The expressway on a flyover over a roundabout, with the city around it. Free drive." },
         };

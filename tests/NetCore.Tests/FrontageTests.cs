@@ -216,7 +216,7 @@ public class FrontageTests
     static RouteSpec LoadRoute(string id) => JsonSerializer.Deserialize<RouteSpec>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, id + ".route.json")), Opt);
     static readonly Dictionary<string, RouteModel> Models = new Dictionary<string, RouteModel>();
     static RouteModel Model(string id) { lock (Models) { if (!Models.TryGetValue(id, out var m)) Models[id] = m = RouteModel.Build(LoadRoute(id)); return m; } }
-    public static IEnumerable<object[]> Cities() { yield return new object[] { "ng-kano-city-e1" }; yield return new object[] { "ng-kano-city-f1" }; yield return new object[] { "ng-kano-city-p1" }; }
+    public static IEnumerable<object[]> Cities() { yield return new object[] { "ng-kano-city-e1" }; yield return new object[] { "ng-kano-city-f1" }; yield return new object[] { "ng-kano-city-p1" }; yield return new object[] { "ng-kano-city" }; }
 
     [Theory, MemberData(nameof(Cities))] public void TheCityRoutePassesTheGamesOwnValidatorWithTheShippedCatalogue(string id)
     {
@@ -346,7 +346,7 @@ public class FrontageTests
         Assert.True(sw.ElapsedMilliseconds < 3000, $"all lots took {sw.ElapsedMilliseconds} ms");
         double km = m.Spec.meta.gameLengthKm;
         if (km <= 2.5) Assert.InRange(lots.Count, 100, 600);                                                     // a few hundred buildings on 1.5 to 2 km of road: well inside the draw-call budget with LODs and culling
-        else Assert.InRange(lots.Count / km, 30.0, 300.0);                                                       // a long city route (Phase 1, 10.6 km): the same density per km of road, so a loaded area costs what a test road does
+        else { double net = m.AllCorridors.Sum(c => (double)c.Length) / 1000.0; Assert.InRange(lots.Count / net, 30.0, 300.0); }   // a long route (Phase 1, the city): the same density per km of its whole network, so a loaded area costs what a test road does
         var worst = 0L;
         foreach (var l in lots.Take(40)) { int cx = (int)Math.Floor(l.X / 200f), cz = (int)Math.Floor(l.Z / 200f); var t = System.Diagnostics.Stopwatch.StartNew(); PropScatter.PlaceChunk(m, cx * 200f, cz * 200f, (cx + 1) * 200f, (cz + 1) * 200f); worst = Math.Max(worst, t.ElapsedMilliseconds); }
         Assert.True(worst < 600, $"one chunk took {worst} ms");
@@ -371,7 +371,7 @@ public class FrontageTests
         // 2026-11-14, deliberate: the city construction directive gave every road class a district mix with the new fuel stations, commercial, public and residential families (was 17f062f1c1b0a646 / 4f24743abe3955be;
         // 2026-11-13 the realism pass changed the mosque footprints: was afc3661a654d088b / 175daddbe5a0cc47)
         // 2026-11-16: ng-kano-city-p1 (Kano City Phase 1 after the owner's World Design Reference R-041) recorded for the first time
-        string want = id == "ng-kano-city-e1" ? "2120f589e9978f8d" : id == "ng-kano-city-p1" ? "9d3a13b2d5416d97" : "7a796a2923dbbd77";
+        string want = id == "ng-kano-city-e1" ? "2120f589e9978f8d" : id == "ng-kano-city-p1" ? "9d3a13b2d5416d97" : id == "ng-kano-city" ? "80985138ac835be3" : "7a796a2923dbbd77";      // ng-kano-city: the actual city (owner directive 2026-11-16), first recorded
         Assert.Equal(want, Digest(All(Model(id))));
     }
 }

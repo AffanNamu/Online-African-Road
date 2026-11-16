@@ -1,5 +1,7 @@
 # Kano City Phase 1 (after the owner's World Design Reference, R-041)
 
+**Superseded on 2026-11-16 by the actual city (`docs/KANO_CITY.md`, route `ng-kano-city`): Phase 1 stays as a test route and is no longer on the world map.**
+
 The owner sent the **Kano City World Design Reference** board on 2026-11-16 (registered as R-041, `docs/kano/REFERENCE_REGISTER.md`): a 10 km x 10 km map of 11 districts round a ring road with arterials and roundabouts, and a panel for the look of each part of the city. The old city, Kurmi market and Dala Hill are marked **Pending** on the board itself. This is the first drivable piece of that city.
 
 **State:** level 1 (implemented: `tools/kano/make_city_p1.py` writes `Resources/Routes/ng-kano-city-p1.route.json`) and level 2 (the game's own route builder and network checks, and every city test of E1 and F1 now also run on Phase 1; 1,479 .NET tests pass). Level 3 (WebGL build and drive) waits for CI. **Nothing is approved.**

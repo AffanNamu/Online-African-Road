@@ -18,7 +18,7 @@ public class ServicePointsTests
     static PropDef Def(string id) => id != null && Defs.TryGetValue(id, out var d) ? d : null;
     static readonly string[] Stations = { "fuel_station", "kano_fuel_station_large_a", "kano_fuel_station_medium_a", "rg_ngn_fuel_station_small_a" };
     public static IEnumerable<object[]> StationIds => Stations.Select(s => new object[] { s });
-    public static IEnumerable<object[]> RoutesWithStations => new[] { "ng-kano-city-e1", "ng-kano-city-f1", "ng-kano-city-p1", "ng-lagos-ibadan" }.Select(r => new object[] { r });
+    public static IEnumerable<object[]> RoutesWithStations => new[] { "ng-kano-city-e1", "ng-kano-city-f1", "ng-kano-city-p1", "ng-kano-city", "ng-lagos-ibadan" }.Select(r => new object[] { r });
 
     static readonly Dictionary<string, RouteModel> Models = new Dictionary<string, RouteModel>();
     static RouteModel Model(string id)

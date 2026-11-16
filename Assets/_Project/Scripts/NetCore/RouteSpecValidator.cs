@@ -241,13 +241,17 @@ namespace ARO.NetCore
         static readonly string[] RoadRoles = { "road", "ramp", "flyover" }, IslandCovers = { "planter", "paved", "grass", "earth" };
 
         /// <summary>E5 (schemaVersion 3): extra roads, ring roads. Data ranges and references only; geometry (legs meeting rings, overlaps, clearance) is checked when the model is built.</summary>
+        public const int MaxRoads = 600, MaxRings = 80;
+
         static void ValidateE5(RouteSpec spec, List<JunctionSpec> junctions, HashSet<string> profileIds, Dictionary<string, RoadCrossSection> sections, float mainLength, ISet<string> knownProps, List<string> e)
         {
             bool hasRoads = spec.roads != null && spec.roads.Length > 0, hasRings = spec.rings != null && spec.rings.Length > 0;
             if (!hasRoads && !hasRings) return;
             if (spec.schemaVersion < 3) { e.Add("roads and rings need schemaVersion 3"); return; }
-            if ((spec.roads?.Length ?? 0) > 60) e.Add("at most 60 extra roads per route");
-            if ((spec.rings?.Length ?? 0) > 12) e.Add("at most 12 roundabouts per route");
+            // caps against runaway data; raised from 60 roads and 12 roundabouts (sized for the E5 test routes) for the Kano city network (owner directive 2026-11-16); the build time of the
+            // largest route is held by a test (CityTests)
+            if ((spec.roads?.Length ?? 0) > MaxRoads) e.Add("at most " + MaxRoads + " extra roads per route");
+            if ((spec.rings?.Length ?? 0) > MaxRings) e.Add("at most " + MaxRings + " roundabouts per route");
             var used = new HashSet<string> { spec.routeId };
             foreach (var j in junctions) foreach (var c in JunctionCorridors(j)) used.Add(c.id);
             bool Claim(string id, string what) { if (string.IsNullOrEmpty(id) || !IdRx.IsMatch(id)) { e.Add(what + ": id must be lowercase letters, digits, dashes or underscores"); return false; } if (!used.Add(id)) { e.Add(what + ": id '" + id + "' is already used by another corridor"); return false; } return true; }
