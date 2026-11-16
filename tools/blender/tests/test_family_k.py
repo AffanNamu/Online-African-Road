@@ -27,7 +27,7 @@ def built():
 
 
 def test_the_family():
-    assert FAM == ["aro_car_parked_set_a", "kano_market_neighbourhood_a", "kano_university_faculty_a", "rg_ngn_container_shops_a", "rg_ngn_roadside_stalls_a"]
+    assert FAM == ["aro_car_parked_set_a", "kano_keke_rank_a", "kano_market_neighbourhood_a", "kano_university_faculty_a", "rg_ngn_container_shops_a", "rg_ngn_roadside_stalls_a"]
     assert all(SPECS[a]["kind"] == "buildings" for a in FAM if a != "aro_car_parked_set_a") and SPECS["aro_car_parked_set_a"]["kind"] == "props"
     assert all(SPECS[a]["version"] == 1 and SPECS[a]["surface"] for a in FAM)
 
@@ -42,6 +42,14 @@ def test_each_asset_passes_the_validator_baked_within_budget_and_matches_its_lot
     assert abs((hi[0] - lo[0]) - tx) <= 0.1 * tx + 1.0 and abs((hi[1] - lo[1]) - ty) <= 0.1 * ty + 1.0, (aid, hi[0] - lo[0], hi[1] - lo[1])
     assert abs((lo[0] + hi[0]) / 2) <= 1.5 and abs((lo[1] + hi[1]) / 2) <= 1.5 and lo[2] >= -0.05, f"{aid}: origin at the lot centre, nothing below the ground"
     assert entry["id"] == aid and entry["collider"] == "box"
+
+
+def test_the_keke_rank_parks_three_tricycles_nose_out_in_front_of_the_passengers_canopy():
+    cols = SPECS["kano_keke_rank_a"]["cols"]; assert len(cols) == len(K.KEKES) == 3                      # one collision box per tricycle: the passengers stand under the canopy, not in a box
+    for x0, y0, z0, x1, y1, z1 in cols: assert y1 <= -1.5 and y0 >= -4.5 and (y1 - y0) > 1.5 * (x1 - x0) and z1 <= 1.9   # in the front strip of the lot (-Y is the road), lengthwise towards the road (a keke is 2.7 x 1.4 m)
+    assert all(K.KEKES[i + 1] - K.KEKES[i] >= K.KEKE_W + 1.5 for i in range(len(K.KEKES) - 1)), "room to walk between the tricycles"
+    assert C.EXTRAS["kano_keke_rank_a"]["light"]["heads"][0]["z"] < -0.8, "the canopy light is behind the tricycles (game axes: +z is the road), over the bench"
+    assert "keke_rank" in C.EXTRAS["kano_keke_rank_a"]["tags"]                                           # the crowd seats waiting passengers at it (NetCore Crowd)
 
 
 def test_signs_carry_generic_words_only():

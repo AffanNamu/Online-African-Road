@@ -448,14 +448,15 @@ INSTITUTIONAL = [C.L("kano_hospital_general_a", 0.7, "hospital"), C.L("kano_scho
                  C.L("kano_university_faculty_a", 0.6, "university")]                                     # family K (2026-11-16): a university faculty campus
 MARKET = [C.L("kano_market_neighbourhood_a", 0.8, "market")]                                           # family K: the neighbourhood market (generic; Kurmi stays pending)
 ROADSIDE = [C.L("rg_ngn_roadside_stalls_a", 0.9, "stalls"), C.L("rg_ngn_container_shops_a", 0.9, "container_shops")]   # family K: the informal roadside trade of the shop streets
+KEKE = [C.L("kano_keke_rank_a", 0.35, "keke_rank")]                                                      # family K: a keke (tricycle taxi) rank, tricycles waiting for passengers on the busy roads
 DISTRICTS = [
     dict(id="d05", name="Commercial belt (D05)", a0=22.5, a1=45.0, start="sub_0225", end="radial_045", fs=[0.2, 0.45, 0.7], profile="kano_collector", cross=6,
-         plan=[(0, "COMMERCIAL+MARKET+ROADSIDE", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
+         plan=[(0, "COMMERCIAL+MARKET+ROADSIDE+KEKE", "both", "NEIGHBOURHOOD", 3, (6.0, 10.0), 140.0, 0.95), (1, "COMMERCIAL+MAJOR", "both", "NEIGHBOURHOOD", 4, (8.0, 12.0), 150.0, 0.95),
                (2, "MAJOR", "both", "GRAND", 3, (8.0, 12.0), 150.0, 0.95)]),
     dict(id="d08", name="Institutional corridor (D08)", a0=67.5, a1=90.0, start="sub_0675", end="radial_090", fs=[0.25, 0.6], profile="kano_collector", cross=5,
          plan=[(0, "INSTITUTIONAL", "both", "LOCAL_MOSQUES", 4, (10.0, 16.0), 160.0, 0.85), (1, "INSTITUTIONAL", "both", None, 0, (10.0, 16.0), 160.0, 0.85)]),
     dict(id="d09", name="Transport hub (D09)", a0=202.5, a1=225.0, start="sub_2025", end="radial_225", fs=[0.16, 0.40], profile="kano_collector", cross=5,
-         plan=[(0, "TRANSPORT", "right", "NEIGHBOURHOOD", 4, (8.0, 12.0), 140.0, 0.9), (1, "TRANSPORT+COMMERCIAL", "both", None, 0, (8.0, 12.0), 140.0, 0.9)],     # street 1 is 88 m from the middle ring: its inner side faces the ring's own buildings
+         plan=[(0, "TRANSPORT+KEKE", "right", "NEIGHBOURHOOD", 4, (8.0, 12.0), 140.0, 0.9), (1, "TRANSPORT+COMMERCIAL+KEKE", "both", None, 0, (8.0, 12.0), 140.0, 0.9)],     # street 1 is 88 m from the middle ring: its inner side faces the ring's own buildings
          site=("site_terminal", 1, 40.0)),
 ]
 
@@ -489,7 +490,7 @@ def mixof(names, local=False):
     """A district street's building mix from mix names joined by '+'. On a neighbourhood (local) street there are no fuel stations: Kano's stations stand on the arterials and collectors."""
     if names is None: return None
     out = []
-    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else MARKET if n == "MARKET" else ROADSIDE if n == "ROADSIDE" else fewer_stations(getattr(C, n), 0.0 if local else 0.3)
+    for n in names.split("+"): out += INSTITUTIONAL if n == "INSTITUTIONAL" else MARKET if n == "MARKET" else ROADSIDE if n == "ROADSIDE" else KEKE if n == "KEKE" else fewer_stations(getattr(C, n), 0.0 if local else 0.3)
     return [l for l in out if l["weight"] > 0]
 
 
@@ -677,10 +678,10 @@ def fabric(roads, a2_len):
     for rd in ALL_ROADS:
         for j in rd["joins"]: cuts.setdefault(j["corridor"], []).append(j["s"])
     style = {
-        "ring": (fewer_stations(C.COMMERCIAL + C.MIDDLE + C.MAJOR, 0.25) + scaled_all(C.LOCAL_MOSQUES[:1], 0.3), C.NEIGHBOURHOOD, 4, (10.0, 15.0), (2.0, 8.0), 150.0, 0.85, "both"),
-        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25) + ROADSIDE + scaled_all(C.LOCAL_MOSQUES[:1], 0.45), C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),     # roadside mosques as ordinary lots: the ring's stretches between junctions are too short for anchors
-        "wall": (fewer_stations(C.COMMERCIAL, 0.2) + ROADSIDE + ROADSIDE, C.NEIGHBOURHOOD, 4, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city; the busiest roadside trade
-        "radial": (fewer_stations(C.MAJOR + C.COMMERCIAL, 0.3), C.GRAND, 3, (10.0, 15.0), (2.0, 8.0), 150.0, 0.9, "both"),
+        "ring": (fewer_stations(C.COMMERCIAL + C.MIDDLE + C.MAJOR, 0.25) + scaled_all(C.LOCAL_MOSQUES[:1], 0.3) + KEKE, C.NEIGHBOURHOOD, 4, (10.0, 15.0), (2.0, 8.0), 150.0, 0.85, "both"),
+        "middle": (fewer_stations(C.MIDDLE + C.COMMERCIAL, 0.25) + ROADSIDE + scaled_all(C.LOCAL_MOSQUES[:1], 0.45) + KEKE, C.NEIGHBOURHOOD, 3, (5.0, 9.0), (1.5, 6.0), 130.0, 0.88, "both"),     # roadside mosques as ordinary lots: the ring's stretches between junctions are too short for anchors
+        "wall": (fewer_stations(C.COMMERCIAL, 0.2) + ROADSIDE + ROADSIDE + scaled_all(KEKE, 1.5), C.NEIGHBOURHOOD, 4, (5.0, 9.0), (1.5, 6.0), 120.0, 0.85, "right"),      # outside the wall only: nothing is built in the old city; the busiest roadside trade and keke ranks
+        "radial": (fewer_stations(C.MAJOR + C.COMMERCIAL, 0.3) + KEKE, C.GRAND, 3, (10.0, 15.0), (2.0, 8.0), 150.0, 0.9, "both"),
         "sub": (C.MIDDLE, C.LOCAL_MOSQUES, 3, (5.0, 8.0), (1.5, 6.0), 110.0, 0.9, "both"),          # 5 m: parked cars at the kerb (family K)
         "main": (fewer_stations(C.HIGHWAY, 0.4), C.GRAND, 4, (14.0, 22.0), (6.0, 18.0), 180.0, 0.6, "both"),
     }

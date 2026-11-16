@@ -6,6 +6,9 @@ Do not keep creating models without integrating them into the actual city."). Ev
                               a MARKET sign at the gate (the commercial belt and the shop streets; not Kurmi market, which stays pending on references)
   aro_car_parked_set_a        three generic saloon cars parked in a row (white, blue, red; no make, no badge, no plate text), built lengthwise along the lot's width so that, placed facing a road
                               by a scatter rule, they stand parallel to it at the kerb (the city streets)
+  rg_ngn_roadside_stalls_a,   the informal roadside trade of the shop streets (timber stalls under zinc and tarpaulin; painted converted containers)
+  rg_ngn_container_shops_a
+  kano_keke_rank_a            a keke (tricycle taxi) rank on a 12 x 9 m roadside lot: three generic tricycles nose-out at the front, a zinc canopy with a bench behind them (the busy roads)
 All GENERIC designs in the language of the registered street references (R-006, R-009, R-016, R-022, R-039). Real metres, front (road side) at -Y, origin on the ground at the lot centre, three LODs."""
 from __future__ import annotations
 from kano_kit.geo import Part
@@ -187,6 +190,54 @@ def container_shops_a(lod):
     return p
 
 
+# ---------------------------------------------------------------------------------------------------------------------------------------- the keke rank
+KEKE_L, KEKE_W, KEKE_H = 2.7, 1.36, 1.78
+KEKES = [-3.6, 0.0, 3.6]                                                                              # centre x of the three tricycles (they face the road, -Y)
+KEKE_Y = -3.0                                                                                         # their centre y: the front strip of the lot
+
+
+def _keke(p: Part, cx, cy, lod):
+    """A generic tricycle taxi (keke), facing -Y: a yellow tub with a green band, a narrow nose with the single front wheel, two rear wheels, a black canvas roof on posts, a windscreen.
+    No make, badge or plate text. LOD2 is two boxes."""
+    hw = KEKE_W / 2; yf, yb = cy - KEKE_L / 2, cy + KEKE_L / 2
+    if lod >= 2: p.box(cx - hw, yf + 0.3, 0.28, cx + hw, yb, KEKE_H, "warning_yellow", skip=("bottom",)); return               # far away: one block
+    p.box(cx - hw, yf + 0.55, 0.28, cx + hw, yb, 0.78, "warning_yellow", skip=("bottom",))                                     # the passenger tub
+    prism_x(p, [(yf + 0.04, 0.50), (yf + 0.62, 0.42), (yf + 0.62, 1.04), (yf + 0.14, 0.97)], cx - 0.34, cx + 0.34, "warning_yellow")   # the nose (the driver's cowl), the front wheel below it
+    p.box(cx - hw - 0.04, yf + 0.3, 1.62, cx + hw + 0.04, yb + 0.05, KEKE_H, "rubber", skip=())                                # the canvas roof
+    for x in (cx - hw + 0.04, cx + hw - 0.04):
+        for y in (yf + 0.62, yb - 0.06): p.box(x - 0.025, y - 0.025, 0.78, x + 0.025, y + 0.025, 1.62, "metal_gate_black", skip=("bottom", "top"))
+    p.box(cx - 0.42, yf + 0.55, 1.0, cx + 0.42, yf + 0.58, 1.6, "glass_dark", skip=("back",))                                 # the windscreen
+    seg = 10 if lod == 0 else 6
+    p.tube((cx - 0.06, yf + 0.25, 0.22), (cx + 0.06, yf + 0.25, 0.22), 0.22, 0.22, seg, "rubber")                             # the front wheel
+    p.box(cx - 0.1, yf + 0.06, 0.44, cx + 0.1, yf + 0.46, 0.5, "metal_gate_black", skip=("bottom",))                        # its mudguard
+    for x in (cx - hw - 0.02, cx + hw - 0.14): p.tube((x, yb - 0.6, 0.24), (x + 0.16, yb - 0.6, 0.24), 0.24, 0.24, seg, "rubber")   # the rear wheels
+    if lod == 0:
+        for x0, x1 in ((cx - hw - 0.01, cx - hw + 0.01), (cx + hw - 0.01, cx + hw + 0.01)): p.box(x0, yf + 0.6, 0.55, x1, yb - 0.05, 0.66, "railing_green", skip=("bottom",))   # the green band
+        p.box(cx - hw + 0.08, yb - 0.75, 0.78, cx + hw - 0.08, yb - 0.1, 1.15, "metal_gate_black", skip=("bottom",))           # the passengers' bench back
+        p.box(cx - 0.12, yf + 0.02, 0.74, cx + 0.12, yf + 0.08, 0.86, "lantern_glow")                                          # the head lamp
+        for x in (cx - 0.09, cx + 0.09): p.box(x - 0.02, yf + 0.22, 0.22, x + 0.02, yf + 0.28, 0.5, GAL, skip=("bottom", "top"))   # the fork
+        p.box(cx - 0.36, yf + 0.66, 1.08, cx + 0.36, yf + 0.7, 1.11, "metal_gate_black", skip=("bottom",))                   # the handlebar
+        for x in (cx - hw + 0.12, cx + hw - 0.22): p.box(x, yb - 0.01, 0.5, x + 0.1, yb + 0.02, 0.6, "signal_red")             # tail lamps
+
+
+def keke_rank_a(lod):
+    """A keke (tricycle taxi) rank on a 12 x 9 m roadside lot, as at every busy junction and market of Kano: three tricycles parked nose-out at the front waiting for passengers, a zinc
+    canopy on posts with a bench behind them where the passengers wait, a painted kerb and a beaten-earth apron. Generic: no make, badge, plate or union lettering."""
+    p = Part("keke_rank"); paving(p, -6.0, -4.5, 6.0, 4.5, "dry_earth", h=0.05)
+    for cx in KEKES: _keke(p, cx, KEKE_Y, lod)
+    if lod >= 2:
+        prism_y(p, [(-5.0, 2.6), (5.0, 2.6), (5.0, 2.7), (-5.0, 2.7)], 0.8, 4.2, "roof_zinc_rust"); return p
+    prism_y(p, [(-5.0, 2.55), (5.0, 2.55), (5.0, 2.65), (-5.0, 2.65)], 0.8, 4.2, "roof_zinc_rust")                         # the canopy
+    for x in (-4.85, 0.0, 4.85):
+        for y in (1.0, 4.0): p.box(x - 0.06, y - 0.06, 0.05, x + 0.06, y + 0.06, 2.55, GAL, skip=("bottom",))
+    p.box(-4.0, 3.2, 0.05, 4.0, 3.65, 0.48, "timber_weathered", skip=("bottom",))                                             # the bench
+    if lod == 0:
+        p.box(-4.0, 3.6, 0.48, 4.0, 3.7, 0.95, "timber_weathered", skip=("bottom",))                                          # its back
+        for k in range(12): p.box(-5.9 + k, -4.5, 0.05, -5.4 + k, -4.35, 0.18, "kerb_black" if k % 2 else "kerb_white", skip=("bottom",))   # the painted kerb
+        p.box(4.3, 1.4, 0.05, 4.9, 2.0, 0.85, "paint_blue_bus", skip=("bottom",))                                             # a cool box of drinks
+    return p
+
+
 # ---------------------------------------------------------------------------------------------------------------------------------------- registration (catalogue extras: lamp heads, tags)
 REF_K = REF_STREET
 extra("kano_university_faculty_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, 2.8, 6.6), (9.0, -20.0, 2.6), (-20.0, -9.0, 3.0), (20.0, -9.0, 3.0)], preset="glow_door",
@@ -195,4 +246,5 @@ extra("kano_market_neighbourhood_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, -
       tags=["commercial", "market", "stalls", "generic_design"], intensity=1.0, range=12, poolRadius=4.0)
 extra("aro_car_parked_set_a", "K", "GLOBAL", REF_K, tags=["vehicle", "parked_cars", "street", "generic_design"])
 extra("rg_ngn_roadside_stalls_a", "K", "REGIONAL", REF_K, heads=[(6.95, -1.0, 2.4), (-3.0, -0.5, 2.2)], preset="glow", tags=["commercial", "stalls", "roadside_trade", "generic_design"], intensity=0.8, range=8)
+extra("kano_keke_rank_a", "K", "CITY_SPECIFIC", REF_K, heads=[(0.0, 2.5, 2.45)], preset="glow", tags=["transport", "tricycle", "keke_rank", "generic_design"], intensity=0.8, range=8)
 extra("rg_ngn_container_shops_a", "K", "REGIONAL", REF_K, heads=[(-3.3, -1.5, 2.8), (3.3, -1.5, 2.8)], preset="glow", tags=["commercial", "container_shops", "roadside_trade", "generic_design"], intensity=0.9, range=8)

@@ -53,7 +53,7 @@ def built():
 
 def test_the_approved_families_are_all_present():
     ids = set(SPECS)
-    assert len(ids) == 111                                                      # 64 of families A to D + the ten mosques of family E + the four city assets of family F + 28 of families G to J (city construction, 2026-11-14) + 5 of family K (university, market, parked cars, roadside stalls, container shops: 2026-11-16)
+    assert len(ids) == 112                                                      # 64 of families A to D + the ten mosques of family E + the four city assets of family F + 28 of families G to J (city construction, 2026-11-14) + 6 of family K (university, market, parked cars, roadside stalls, container shops, keke rank: 2026-11-16)
     assert sum(1 for a in ids if C.EXTRAS[a]["family"] in "GHIJ") == 28                                                                                                    # (tests/test_city_families.py checks them one by one) (tests/test_mosque_family.py and test_city_family.py have their own checks)
     for must in ("rg_ngn_warehouse_hall_a", "rg_ngn_warehouse_hall_b", "rg_ngn_warehouse_cold_a", "aro_dock_leveller_set", "aro_weighbridge_a", "aro_fuel_island_truck", "aro_gate_sliding_a",
                  "kano_bus_terminal_hall_a", "kano_bus_shelter_long_a", "aro_bus_shelter_a", "kano_ticket_kiosk_a", "kano_departure_board_a", "kano_minibus_stand_canopy_a", "kano_tricycle_rank_a",

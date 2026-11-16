@@ -2862,6 +2862,31 @@
      }
     ]
    }
+  },
+  {
+   "id": "kano_keke_rank_a",
+   "category": "buildings",
+   "status": "dev",
+   "description": "DEVELOPMENT PLACEHOLDER (a box of the real footprint) until the production prefab with this id is staged: the Blender-built asset of the private library (ARO-CONTENT), staged by the review build. Used only by the Kano city test routes (frontage rules). The night light heads of the private catalogue entry are not copied here: a development placeholder has no lamp head of its own.",
+   "source": "dev:kano_keke_rank_a",
+   "collider": "box",
+   "heightM": 2.65,
+   "widthM": 12.0,
+   "depthM": 9.0,
+   "cullDistance": 600.0,
+   "lodTriangles": [
+    854,
+    450,
+    52
+   ],
+   "castShadow": true,
+   "tags": [
+    "generic_design",
+    "kano_city_test",
+    "keke_rank",
+    "transport",
+    "tricycle"
+   ]
   }
  ]
 }
