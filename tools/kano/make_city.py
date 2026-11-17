@@ -319,11 +319,18 @@ def build():
     for rid, prof, side, smin, smax, pres in [("shelters_collector", "kano_collector", "right", 180.0, 260.0, 0.85), ("shelters_arterial", "kano_arterial", "both", 250.0, 350.0, 0.8)]:
         r["propRules"].append(dict(base, id=rid, prop="aro_bus_shelter_a", profiles=prof, side=side, offsetMin=2.2, offsetMax=2.5, spacingMin=smin, spacingMax=smax, presence=pres,
                                    scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=1.0, clearLength=5.7, clearDepth=2.0, allRoads=True))
+    # the A2 is the city's entrance: shade trees and palms along both sides (it had no tree rule: bare ground on both sides up to the interchange, seen from the cab and from the flyover deck),
+    # outside the shoulders and short of the frontage of its lots (setbacks of 14 m and more), none on the deck; street trees along the four slip ramps of the interchange
+    for rid, prop, prof, omin, omax, smin, smax, pres, on_all in [("trees_expressway", "rg_ngn_tree_large_shade_a", "kano_expressway", 7.0, 11.0, 34.0, 50.0, 0.75, False),
+                                                                     ("palms_expressway", "palm_tree", "kano_expressway", 3.5, 5.0, 40.0, 56.0, 0.6, False),
+                                                                     ("trees_ramp", "rg_ngn_tree_street_broadleaf_a", "kano_ramp", 4.0, 9.0, 22.0, 32.0, 0.7, True)]:
+        r["propRules"].append(dict(base, id=rid, prop=prop, profiles=prof, side="both", offsetMin=omin, offsetMax=omax, spacingMin=smin, spacingMax=smax, presence=pres, scaleMin=0.85, scaleMax=1.15,
+                                   yawJitterDeg=180.0, faceRoad=False, fixedDensity=False, exclusionMargin=-1.0, allRoads=on_all))
     lights_service = next(p for p in r["propRules"] if p["id"] == "lights_service")
     r["propRules"].append(dict(lights_service, id="lights_ramp", profiles="kano_ramp", allRoads=True))                # the A2 interchange's slip ramps
     for p in r["propRules"]:
         p["prop"] = KIT_LIGHT.get(p["prop"], p["prop"])                                           # the transport kit's real street lights instead of the placeholder lamps
-        if p["id"].startswith("trees_") and p["id"] != "trees_arterial": p["side"] = "left"       # the palms of the arterials keep both sides (no parked cars there)
+        if p["id"].startswith("trees_") and p["id"] not in ("trees_arterial", "trees_expressway", "trees_ramp"): p["side"] = "left"       # the palms of the arterials, the A2 and its ramps keep both sides (no parked cars there)
         if p["id"] == "lights_local": p["side"] = "left"                                          # the neighbourhood streets: lights and trees on the left kerb, parked cars on the right
     global ALL_ROADS; ALL_ROADS = all_roads
     fab_roads = [(a.id, a.s[-1], "ring") for a in ring_arcs] + [(a.id, a.s[-1], "middle") for a in mid_arcs] + [(a.id, a.s[-1], "wall") for a in inner_arcs] + \
