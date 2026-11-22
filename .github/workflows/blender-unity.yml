@@ -105,6 +105,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           testMode: editmode
+          cliVersion: v0.1.76          # pinned (see ci.yml): "latest" is resolved through the GitHub API, which answered 403 on CI runs 362 and 367
           customParameters: -testFilter ARO.Tests.BlenderAssetImportTests
       - uses: actions/upload-artifact@v4
         if: ${{ always() && steps.gate.outputs.on != 'true' }}
