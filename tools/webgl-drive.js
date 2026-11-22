@@ -92,7 +92,17 @@ function serve() {
   const logFrom = (from, re) => logs.slice(from).find(l => re.test(l));
   async function waitLogFrom(from, re, seconds) { for (let i = 0; i < seconds * 4; i++) { const l = logFrom(from, re); if (l) return l; await page.waitForTimeout(250); } return null; }
   // An edge-triggered key must be held across at least one rendered frame (software WebGL runs slowly), and is repeated only when nothing at all was logged.
-  async function tapUntil(key, re, tries = 3, secs = 5) { for (let i = 0; i < tries; i++) { const mark = logs.length; await page.keyboard.press(key, { delay: 350 }); const l = await waitLogFrom(mark, re, secs); if (l) return l; } return null; }
+  // A heavy scene (the Kano city at Medium: 0.6 to 0.9 s a frame in software WebGL) can log the camera's answer after `secs`; the key used to be pressed again then, which moved
+  // the view a second time (CI runs 366 and 368: "Shift+C from the cockpit did not wrap back", "C ... did not skip the driver cabin", while run 365 passed the same code). So after
+  // `secs` it waits longer for the game's answer to THIS press and judges that answer (a wrong view is a failure, never a reason to press again); only a press nothing answered is repeated.
+  async function tapUntil(key, re, tries = 3, secs = 5) {
+    for (let i = 0; i < tries; i++) {
+      const mark = logs.length; await page.keyboard.press(key, { delay: 1000 });      // held for a whole second: longer than one slow frame (0.9 s), so the game sees it pressed
+      const l = await waitLogFrom(mark, re, secs); if (l) return l;
+      if (await waitLogFrom(mark, /\[Camera\] (view=|unavailable )/, 3 * secs)) return logFrom(mark, re);
+    }
+    return null;
+  }
   const viewLine = (v, n) => new RegExp(`\\[Camera\\] view=${v} number=${n} `);
   // The acceptance windows below are measured on the GAME clock (the t= of the [Drive] telemetry, Time.time), not on a wall-clock timer. The same physical drive
   // takes a different number of wall-clock seconds on a software renderer (about 140-180 ms per frame, and it varies with what the renderer is doing), which is what made
@@ -162,7 +172,9 @@ function serve() {
     { const l = await tapUntil('c', viewLine('Cockpit', 1)); if (!l) failures.push('C from the bumper view (8) did not wrap to the cockpit (1)'); else ok('C wraps 8 -> 1 (cockpit)');
       const p = await tapUntil('Shift+C', viewLine('FrontBumper', 8)); if (!p) failures.push('Shift+C from the cockpit did not wrap back to the bumper view'); else ok('Shift+C wraps 1 -> 8 (bumper)');
       const n2 = await tapUntil('c', viewLine('Cockpit', 1)); const n3 = await tapUntil('c', viewLine('RearChase', 3));
-      if (!n2 || !n3) failures.push('C from the cockpit did not skip the unavailable driver cabin and land on the chase view'); else ok('C skips the unavailable driver cabin: 1 -> 3'); }
+      if (!n2 || !n3) failures.push('C from the cockpit did not skip the unavailable driver cabin and land on the chase view'); else ok('C skips the unavailable driver cabin: 1 -> 3');
+      if (!l || !p || !n2 || !n3)                                                          // what the game answered to each press, to tell a lost or late press from a wrong view
+        console.log('  camera lines since the page loaded:\n' + logs.slice(boot).filter(x => /\[Camera\] (view=|unavailable )/.test(x)).slice(-16).map(x => '    ' + x.replace(/^.*\[Camera\]/, '[Camera]').slice(0, 140)).join('\n')); }
 
     // 3. the on-screen button: top right, left of the minimap, and it changes the view when clicked
     { const b = logs.slice(boot).map(l => /\[Hud\] camera button x=([\d.]+) y=([\d.]+)/.exec(l)).find(Boolean);
