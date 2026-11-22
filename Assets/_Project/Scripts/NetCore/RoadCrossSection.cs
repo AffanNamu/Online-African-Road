@@ -15,6 +15,21 @@ namespace ARO.NetCore
 
         /// <summary>True for the strips of the kerb, walkway, planter and gutter (no wear is applied to them, a dropped kerb turns them into paving).</summary>
         public static bool IsE1(int sub) => sub >= Kerb && sub < CountE1;
+
+        /// <summary>
+        /// The material a strip is drawn with in a distant road chunk on the Low tier (LodPolicy.SimpleRoadMaterials, approved by the owner on 2026-11-22): asphalt, verge or concrete only,
+        /// so such a chunk costs three draw calls instead of up to twelve. The geometry is unchanged: the markings take the asphalt's colour (they disappear at that distance), the kerbs,
+        /// walkways, gutters and barriers the concrete's, the planters the verge's.
+        /// </summary>
+        public static int FarSlot(int sub)
+        {
+            switch (sub)
+            {
+                case Asphalt: case Shoulder: case MarkWhite: case MarkYellow: return Asphalt;
+                case Verge: case Planter: return Verge;
+                default: return Concrete;
+            }
+        }
     }
 
     /// <summary>One vertex of the cross-section polyline. Strip = submesh of the surface between this point and the next. Y is relative to the centre-line elevation.</summary>

@@ -64,6 +64,7 @@ namespace ARO.World
             public List<ServicePoint> services;          // the sockets of the chunk's props (pumps, entries, exits): P1 refuel at a pump
             public List<CrowdAgent> crowd;               // the people anchored in the chunk (P2): deterministic, from the props and the walkways
             public int terrainCells, propLod = -1, terrainTris, roadTris, propTris;
+            public Mesh roadMesh; public MeshRenderer roadRenderer; public int[] roadSlots; public int[][] roadIndices; public bool roadSimple, roadDetailSet;   // the chunk's one road mesh, its material slots and their triangles (to switch the Low tier's distant detail)
             public bool hasCollision, lampsRegistered, facesReported;
             public readonly List<GameObject> props_legacy = new List<GameObject>();   // legacy cubes
         }
@@ -189,6 +190,7 @@ namespace ARO.World
             if (ring <= 2 && !ch.hasCollision) Enqueue(ch.id, Stage.Collision);
             else if (ring >= 4 && ch.hasCollision) DropCollision(ch);
             foreach (var r in ch.roads) { if (r == null) continue; var mc = r.GetComponent<MeshCollider>(); if (mc != null) mc.enabled = ring <= 3; var mr = r.GetComponent<MeshRenderer>(); if (mr != null) mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off; }     // the chunk's one road renderer and its collider-only objects
+            ApplyRoadDetail(ch, LodPolicy.SimpleRoadMaterials(ring, tier));
             if (ch.instances != null)
             {
                 int lod = ring <= 1 ? 0 : ring == 2 ? 1 : 2;
@@ -300,6 +302,32 @@ namespace ARO.World
             var mr = r.GetComponent<MeshRenderer>(); mr.sharedMaterials = MeshUtil.Pick(materials.Road, used);
             mr.shadowCastingMode = ring <= 1 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             r.isStatic = true; ch.roads.Add(r); ch.owned.Add(mesh); ch.roadTris += MeshUtil.Triangles(mesh);
+            if (!LodPolicy.SimplifiesDistantRoads(tier)) return;           // only the Low tier keeps the triangle lists (memory) to switch the distant detail
+            ch.roadMesh = mesh; ch.roadRenderer = mr; ch.roadSlots = used; ch.roadIndices = new int[used.Length][];
+            for (int i = 0; i < used.Length; i++) ch.roadIndices[i] = all.Triangles[used[i]].ToArray();
+            ch.roadDetailSet = true; ch.roadSimple = false; ApplyRoadDetail(ch, LodPolicy.SimpleRoadMaterials(ring, tier));
+        }
+
+        /// <summary>
+        /// The Low tier's distant road detail (owner approval of 2026-11-22): a chunk two or more rings away draws its road with three materials (asphalt, verge, concrete: RoadSub.FarSlot) instead
+        /// of up to twelve; when it comes nearer, its own materials come back from the stored triangle lists. Only the grouping of the triangles changes, never the vertices or the collision.
+        /// </summary>
+        void ApplyRoadDetail(Chunk ch, bool simple)
+        {
+            if (ch.roadMesh == null || ch.roadSlots == null || (ch.roadDetailSet && ch.roadSimple == simple)) return;
+            ch.roadDetailSet = true; ch.roadSimple = simple;
+            var slots = new List<int>();
+            if (simple) { foreach (int sl in ch.roadSlots) { int f = RoadSub.FarSlot(sl); if (!slots.Contains(f)) slots.Add(f); } slots.Sort(); }
+            else slots.AddRange(ch.roadSlots);
+            ch.roadMesh.subMeshCount = slots.Count;
+            for (int k = 0; k < slots.Count; k++)
+            {
+                if (!simple) { ch.roadMesh.SetTriangles(ch.roadIndices[k], k, false); continue; }
+                var tris = new List<int>();
+                for (int i = 0; i < ch.roadSlots.Length; i++) if (RoadSub.FarSlot(ch.roadSlots[i]) == slots[k]) tris.AddRange(ch.roadIndices[i]);
+                ch.roadMesh.SetTriangles(tris, k, false);
+            }
+            ch.roadRenderer.sharedMaterials = MeshUtil.Pick(materials.Road, slots.ToArray());
         }
 
         Material TerrainMaterial(Chunk ch)

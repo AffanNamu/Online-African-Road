@@ -158,6 +158,41 @@ public class QualityAndLodTests
         Assert.Equal(2, LodPolicy.Ring(5, -3, 3, -3)); Assert.Equal(4, LodPolicy.Ring(-1, 3, 3, 0));
     }
 
+    [Fact] public void OnlyTheLowTierDrawsDistantRoadsWithThreeMaterials()
+    {
+        // Owner approval of 2026-11-22: on phones a road chunk two or more rings away draws with asphalt, verge and concrete only; the nearer chunks and every other tier keep every material
+        Assert.False(LodPolicy.SimpleRoadMaterials(0, QualityTiers.Low)); Assert.False(LodPolicy.SimpleRoadMaterials(1, QualityTiers.Low)); Assert.True(LodPolicy.SimpleRoadMaterials(2, QualityTiers.Low));
+        foreach (var t in new[] { QualityTiers.Medium, QualityTiers.High }) for (int ring = 0; ring <= 6; ring++) Assert.False(LodPolicy.SimpleRoadMaterials(ring, t), t.Name + " ring " + ring);
+        Assert.False(LodPolicy.SimpleRoadMaterials(5, null)); Assert.True(LodPolicy.SimplifiesDistantRoads(QualityTiers.Low)); Assert.False(LodPolicy.SimplifiesDistantRoads(QualityTiers.High));
+        Assert.True(QualityTiers.Low.LoadRadiusChunks >= 2, "the Low tier must load the ring it simplifies");
+    }
+
+    [Fact] public void TheDistantMaterialOfEveryRoadStripIsAsphaltVergeOrConcrete()
+    {
+        var far = new[] { RoadSub.Asphalt, RoadSub.Verge, RoadSub.Concrete };
+        for (int s = 0; s < RoadSub.CountE1; s++) Assert.Contains(RoadSub.FarSlot(s), far);
+        foreach (int s in far) Assert.Equal(s, RoadSub.FarSlot(s));                                                     // the three kept materials stay themselves
+        Assert.Equal(RoadSub.Asphalt, RoadSub.FarSlot(RoadSub.MarkWhite)); Assert.Equal(RoadSub.Asphalt, RoadSub.FarSlot(RoadSub.MarkYellow)); Assert.Equal(RoadSub.Asphalt, RoadSub.FarSlot(RoadSub.Shoulder));
+        Assert.Equal(RoadSub.Verge, RoadSub.FarSlot(RoadSub.Planter));
+        foreach (int s in new[] { RoadSub.Metal, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk, RoadSub.Drain }) Assert.Equal(RoadSub.Concrete, RoadSub.FarSlot(s));
+    }
+
+    [Fact] public void ADistantCityChunkOnThePhoneTierCostsAtMostThreeDrawsAndKeepsEveryTriangle()
+    {
+        // The chunk of a quarter street (the street grid had the most materials per chunk): regrouping by RoadSub.FarSlot must keep every triangle and leave at most three submeshes
+        var m = RouteModel.Build(System.Text.Json.JsonSerializer.Deserialize<RouteSpec>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ng-kano-city.route.json")), new System.Text.Json.JsonSerializerOptions { IncludeFields = true }));
+        var p = m.CorridorById("fi02_street_1").Spline.PositionAt(400f);
+        float x0 = (float)Math.Floor(p.X / 200f) * 200f, z0 = (float)Math.Floor(p.Z / 200f) * 200f; var org = new V3(x0, 0, z0);
+        MeshBuffers all = null;
+        foreach (var c in m.AllCorridors) { var b = RoadGeometry.BuildChunk(c, x0, z0, x0 + 200f, z0 + 200f, org, (x, z) => m.Terrain.HeightAt(x, z)); if (b.IsEmpty) continue; if (all == null) all = new MeshBuffers(b.Triangles.Length); all.Append(b); }
+        Assert.NotNull(all);
+        var used = Enumerable.Range(0, all.Triangles.Length).Where(s => all.Triangles[s].Count > 0).ToArray();
+        var farSlots = used.Select(RoadSub.FarSlot).Distinct().ToArray();
+        Assert.True(used.Length >= 6, $"{used.Length} materials in a city street chunk");
+        Assert.InRange(farSlots.Length, 1, 3);
+        Assert.Equal(used.Sum(s => all.Triangles[s].Count), farSlots.Sum(f => used.Where(s => RoadSub.FarSlot(s) == f).Sum(s => all.Triangles[s].Count)));
+    }
+
     [Fact] public void PropLodLevelsStepDownWithDistance()
     {
         var def = new PropDef { id = "x", cullDistance = 300f, lodTriangles = new[] { 900, 300, 60 } };

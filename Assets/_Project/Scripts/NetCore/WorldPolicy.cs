@@ -98,6 +98,12 @@ namespace ARO.NetCore
         public static bool CollidersEnabled(int ring) => ring <= 2;
         public static int CollisionCells => 20;     // 10 m cells: plenty for wheel contact on smooth terrain; the road mesh carries the precise surface
 
+        /// <summary>Low tier (phones) only: a road chunk two or more rings from the player draws its surface with three materials (RoadSub.FarSlot); nearer chunks and every other tier keep them all.</summary>
+        public static bool SimpleRoadMaterials(int ring, QualityTier tier) => SimplifiesDistantRoads(tier) && ring >= 2;
+
+        /// <summary>Whether this tier ever switches a road chunk to its three distant materials (the streamer keeps each chunk's triangle lists to switch back only on such a tier).</summary>
+        public static bool SimplifiesDistantRoads(QualityTier tier) => tier != null && tier.Name == "low";
+
         public static bool ShadowsEnabled(int ring, QualityTier tier) => ring <= Math.Max(1, tier.LoadRadiusChunks - 1) && tier.ShadowCascades > 0;
 
         public static float PropCullDistance(PropDef def, QualityTier tier) => Math.Max(20f, def.cullDistance * tier.PropCullScale);
