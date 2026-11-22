@@ -248,7 +248,8 @@ METALS = ("metal_galvanised", "metal_gate_black", "metal_gate_blue", "frame_alum
 PATTERN = {"stone_ivory": _stone, "kasa_render": _earth, "mud_brick": _earth, "laterite": _earth, "dry_earth": _earth, "concrete": _concrete, "concrete_dark": _concrete, "pavement_grey": lambda X, c: _pavers(X, c, 97, 0.6, 0.012),
            "tile_floor": lambda X, c: _pavers(X, c, 101, 0.45, 0.01), "paver_red": _pavers, "wood_door": _door, "timber_light": _wood, "timber_weathered": _wood, "shutter_steel": _shutter, "glass": _glazing, "glass_dark": _glazing,
            "interior_dark": _void, "board_dark": _signboard, "dome_green": _dome, "trim_gold": _gold, "hedge_green": _foliage, "leaf_green": _foliage, "leaf_green_dark": _foliage, "flower_red": _foliage, "flower_bougainvillea": _foliage,
-           "water_pool": _water, "lantern_glow": _lamp, "roof_tile_red": _roof_tile, "burlap": _cloth, "fabric_red": _cloth, "fabric_white": _cloth, "tarp_olive": _cloth}
+           "water_pool": _water, "lantern_glow": _lamp, "roof_tile_red": _roof_tile, "burlap": _cloth, "fabric_red": _cloth, "fabric_white": _cloth, "tarp_olive": _cloth, "canvas_charcoal": _cloth,
+           "seat_vinyl_brown": lambda X, c: _flat(X, c, 89, 0.45)}
 for _k in PLASTERS: PATTERN[_k] = _plaster
 for _k in SHEETS: PATTERN[_k] = (lambda X, c, _r=(0.5 if "rust" in _k else 0.22 if "container" in _k else 0.15), _p=(0.28 if "container" in _k else 0.2): _sheet(X, c, 23, _p, _r))
 for _k in METALS: PATTERN[_k] = _painted_metal

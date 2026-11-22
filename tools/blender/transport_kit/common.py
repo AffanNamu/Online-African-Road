@@ -22,6 +22,8 @@ NEW_MATERIALS = {
     "signal_green":     ((0.06, 0.62, 0.22), 0.4, 0.0, 0.0, "traffic signal green lens (static)"),
     "sign_yellow":      ((0.88, 0.70, 0.06), 0.45, 0.0, 0.0, "warning sign yellow"),
     "pavement_grey":    ((0.40, 0.40, 0.39), 0.9, 0.0, 0.3, "light grey pavement slab"),
+    "canvas_charcoal":  ((0.17, 0.17, 0.18), 0.85, 0.0, 0.0, "dark grey canvas hood of a tricycle taxi (keke)"),
+    "seat_vinyl_brown": ((0.27, 0.15, 0.09), 0.45, 0.0, 0.0, "brown vinyl seat upholstery"),
 }
 for _k, _v in NEW_MATERIALS.items(): AM.LIBRARY.setdefault(_k, _v)
 

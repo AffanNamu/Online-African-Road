@@ -4629,7 +4629,7 @@
    "id": "kano_keke_rank_a",
    "category": "buildings",
    "status": "production",
-   "description": "Blender-authored transport kit, family K, class CITY_SPECIFIC: keke rank: three generic tricycle taxis (yellow with a green band, black canvas roofs; no make, badge, plate or union lettering) parked nose-out at the front of a 12 x 9 m roadside lot, a zinc canopy on posts with a bench behind them where passengers wait, a painted kerb References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
+   "description": "Blender-authored transport kit, family K, class CITY_SPECIFIC: keke rank: three generic tricycle taxis after the owner's reference of 2026-11-22 (a rounded yellow cowl with a black panel and two round headlamps, a sprung front wheel under a curved mudguard, a raked windscreen with a black header, a rounded dark-grey canvas hood wrapped round the back, brown vinyl seats, a chequered footboard, rear wheels under black arches, a side stripe; no make, badge, scheme lettering or plate text) parked nose-out at the front of a 12 x 9 m roadside lot, a zinc canopy on posts with a bench behind them where passengers wait, a painted kerb References: R-006, R-009, R-016, R-022, R-039. No brand, plate or logo.",
    "source": "Props/kano_keke_rank_a",
    "collider": "box",
    "heightM": 2.65,
@@ -4637,9 +4637,9 @@
    "depthM": 9.0,
    "cullDistance": 250,
    "lodTriangles": [
-    854,
-    450,
-    52
+    3440,
+    2078,
+    82
    ],
    "castShadow": true,
    "tags": [
@@ -6005,7 +6005,7 @@
   "kano_keke_rank_a": [
    [
     -6.0,
-    -4.5,
+    -4.504,
     0.0
    ],
    [
@@ -8820,26 +8820,26 @@
    [
     2.87,
     0.0,
-    1.65,
+    1.575,
     4.33,
-    1.78,
-    4.35
+    1.86,
+    4.425
    ],
    [
     -0.73,
     0.0,
-    1.65,
+    1.575,
     0.73,
-    1.78,
-    4.35
+    1.86,
+    4.425
    ],
    [
     -4.33,
     0.0,
-    1.65,
+    1.575,
     -2.87,
-    1.78,
-    4.35
+    1.86,
+    4.425
    ]
   ]
  }

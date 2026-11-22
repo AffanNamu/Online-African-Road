@@ -196,7 +196,7 @@ _KB += [
 ]
 _KB += [
     ("kano_keke_rank_a", K.keke_rank_a, [(_cx - K.KEKE_W / 2 - 0.05, K.KEKE_Y - K.KEKE_L / 2, 0.0, _cx + K.KEKE_W / 2 + 0.05, K.KEKE_Y + K.KEKE_L / 2, K.KEKE_H) for _cx in K.KEKES],
-     "keke rank: three generic tricycle taxis (yellow with a green band, black canvas roofs; no make, badge, plate or union lettering) parked nose-out at the front of a 12 x 9 m roadside lot, a zinc canopy on posts with a bench behind them where passengers wait, a painted kerb", [12, 9, 3], (512, 256, 64)),
+     "keke rank: three generic tricycle taxis after the owner's reference of 2026-11-22 (a rounded yellow cowl with a black panel and two round headlamps, a sprung front wheel under a curved mudguard, a raked windscreen with a black header, a rounded dark-grey canvas hood wrapped round the back, brown vinyl seats, a chequered footboard, rear wheels under black arches, a side stripe; no make, badge, scheme lettering or plate text) parked nose-out at the front of a 12 x 9 m roadside lot, a zinc canopy on posts with a bench behind them where passengers wait, a painted kerb", [12, 9, 3], (512, 256, 64)),
 ]
 for _aid, _fn, _cols, _note, _tgt, _sz in _KB: spec(_aid, "buildings", _fn, _cols, _note, target=_tgt, surface=_sz, version=1)
 spec("aro_car_parked_set_a", "props", K.car_parked_set_a, [(_cx - K.CAR_L / 2, -K.CAR_W / 2, 0.0, _cx + K.CAR_L / 2, K.CAR_W / 2, K.CAR_H) for _cx, _ in K.CARS],

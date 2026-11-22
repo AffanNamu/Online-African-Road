@@ -8,9 +8,12 @@ Do not keep creating models without integrating them into the actual city."). Ev
                               by a scatter rule, they stand parallel to it at the kerb (the city streets)
   rg_ngn_roadside_stalls_a,   the informal roadside trade of the shop streets (timber stalls under zinc and tarpaulin; painted converted containers)
   rg_ngn_container_shops_a
-  kano_keke_rank_a            a keke (tricycle taxi) rank on a 12 x 9 m roadside lot: three generic tricycles nose-out at the front, a zinc canopy with a bench behind them (the busy roads)
+  kano_keke_rank_a            a keke (tricycle taxi) rank on a 12 x 9 m roadside lot: three generic tricycles nose-out at the front, a zinc canopy with a bench behind them (the busy roads);
+                              the tricycle redrawn on 2026-11-22 after the owner's reference photograph (cowl, lamp panel, canvas hood, seats; no make or lettering)
 All GENERIC designs in the language of the registered street references (R-006, R-009, R-016, R-022, R-039). Real metres, front (road side) at -Y, origin on the ground at the lot centre, three LODs."""
 from __future__ import annotations
+import math
+from mathutils import Vector
 from kano_kit.geo import Part
 from .common import prism_x, prism_y, extra
 from .city import tank
@@ -191,33 +194,100 @@ def container_shops_a(lod):
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------------- the keke rank
-KEKE_L, KEKE_W, KEKE_H = 2.7, 1.36, 1.78
+KEKE_L, KEKE_W, KEKE_H = 2.85, 1.36, 1.86
 KEKES = [-3.6, 0.0, 3.6]                                                                              # centre x of the three tricycles (they face the road, -Y)
 KEKE_Y = -3.0                                                                                         # their centre y: the front strip of the lot
+YELLOW, CANVAS, SEAT, BLACK = "warning_yellow", "canvas_charcoal", "seat_vinyl_brown", "metal_gate_black"
+
+
+def _rr(cx, y, hx, z0, z1, r, n):
+    """A rounded rectangle across X-Z at depth y (half width hx, from z0 to z1, corner radius r, n segments a corner), in the ring order Part.tube uses along +Y: from +X down,
+    along the bottom, up -X and back along the top. Rings of the same n loft into a smooth shell (Part.ring_tube)."""
+    r = min(r, hx * 0.95, (z1 - z0) * 0.475); pts = []
+    for ox, oz, a0 in ((cx + hx - r, z0 + r, 0.0), (cx - hx + r, z0 + r, -90.0), (cx - hx + r, z1 - r, -180.0), (cx + hx - r, z1 - r, -270.0)):
+        for k in range(n + 1):
+            a = math.radians(a0 - 90.0 * k / n); pts.append(Vector((ox + r * math.cos(a), y, oz + r * math.sin(a))))
+    return pts
+
+
+def _shell(p: Part, cx, y0, sections, key, n):
+    """A lofted shell along +Y: sections are (dy from y0, half width, z0, z1, corner radius); both ends capped."""
+    p.ring_tube([_rr(cx, y0 + dy, hx, z0, z1, r, n) for dy, hx, z0, z1, r in sections], key, caps=(True, True), smooth=True)
+
+
+def _arc(cy, cz, r_in, r_out, a0, a1, n):
+    """An arc band in the Y-Z plane round (cy, cz) from angle a0 to a1 (degrees, 0 = towards +Y, 90 = up): the profile of a mudguard or a wheel arch for prism_x."""
+    outer = [(cy + r_out * math.cos(math.radians(a0 + (a1 - a0) * k / n)), cz + r_out * math.sin(math.radians(a0 + (a1 - a0) * k / n))) for k in range(n + 1)]
+    inner = [(cy + r_in * math.cos(math.radians(a0 + (a1 - a0) * k / n)), cz + r_in * math.sin(math.radians(a0 + (a1 - a0) * k / n))) for k in range(n + 1)]
+    return outer + inner[::-1]
+
+
+def _wheel(p: Part, x0, x1, cy, r, lod, hub_side):
+    """A tyre (axis along X from x0 to x1) with a pressed-steel rim on the outer face."""
+    seg = 14 if lod == 0 else 8
+    p.tube((x0, cy, r), (x1, cy, r), r, r, seg, "rubber")
+    if lod == 0:
+        xo = x1 if hub_side > 0 else x0; d = 0.012 * hub_side
+        p.tube((xo, cy, r), (xo + d, cy, r), r * 0.56, r * 0.56, 10, "metal_galvanised")              # the rim
+        p.tube((xo + d, cy, r), (xo + 2 * d, cy, r), r * 0.2, r * 0.2, 6, BLACK)                       # the hub
 
 
 def _keke(p: Part, cx, cy, lod):
-    """A generic tricycle taxi (keke), facing -Y: a yellow tub with a green band, a narrow nose with the single front wheel, two rear wheels, a black canvas roof on posts, a windscreen.
-    No make, badge or plate text. LOD2 is two boxes."""
-    hw = KEKE_W / 2; yf, yb = cy - KEKE_L / 2, cy + KEKE_L / 2
-    if lod >= 2: p.box(cx - hw, yf + 0.3, 0.28, cx + hw, yb, KEKE_H, "warning_yellow", skip=("bottom",)); return               # far away: one block
-    p.box(cx - hw, yf + 0.55, 0.28, cx + hw, yb, 0.78, "warning_yellow", skip=("bottom",))                                     # the passenger tub
-    prism_x(p, [(yf + 0.04, 0.50), (yf + 0.62, 0.42), (yf + 0.62, 1.04), (yf + 0.14, 0.97)], cx - 0.34, cx + 0.34, "warning_yellow")   # the nose (the driver's cowl), the front wheel below it
-    p.box(cx - hw - 0.04, yf + 0.3, 1.62, cx + hw + 0.04, yb + 0.05, KEKE_H, "rubber", skip=())                                # the canvas roof
-    for x in (cx - hw + 0.04, cx + hw - 0.04):
-        for y in (yf + 0.62, yb - 0.06): p.box(x - 0.025, y - 0.025, 0.78, x + 0.025, y + 0.025, 1.62, "metal_gate_black", skip=("bottom", "top"))
-    p.box(cx - 0.42, yf + 0.55, 1.0, cx + 0.42, yf + 0.58, 1.6, "glass_dark", skip=("back",))                                 # the windscreen
-    seg = 10 if lod == 0 else 6
-    p.tube((cx - 0.06, yf + 0.25, 0.22), (cx + 0.06, yf + 0.25, 0.22), 0.22, 0.22, seg, "rubber")                             # the front wheel
-    p.box(cx - 0.1, yf + 0.06, 0.44, cx + 0.1, yf + 0.46, 0.5, "metal_gate_black", skip=("bottom",))                        # its mudguard
-    for x in (cx - hw - 0.02, cx + hw - 0.14): p.tube((x, yb - 0.6, 0.24), (x + 0.16, yb - 0.6, 0.24), 0.24, 0.24, seg, "rubber")   # the rear wheels
+    """A generic tricycle taxi (keke) after the owner's reference of 2026-11-22, facing -Y: a rounded yellow front cowl with a black panel carrying two round chrome headlamps, a
+    small grille and a blank plate; the single front wheel on a sprung fork under a curved yellow mudguard; a raked windscreen with a black header and a wiper; a rounded dark-grey
+    canvas hood that closes down over the back; the driver's seat and a passenger bench in brown vinyl; a chequered steel footboard; the rear body over two wheels under black arches,
+    with a side stripe and tail lamps. No make, badge, scheme lettering or plate text. LOD1 drops the small parts, LOD2 is two blocks."""
+    L, hw = KEKE_L, 0.63; yf = cy - L / 2
+    def Y(t): return yf + t
+    if lod >= 2:
+        p.box(cx - hw, Y(0.05), 0.30, cx + hw, Y(2.80), 1.05, YELLOW, skip=("bottom",)); p.box(cx - hw - 0.04, Y(0.55), 1.05, cx + hw + 0.04, Y(2.84), KEKE_H, CANVAS, skip=("bottom",)); return
+    n = 3 if lod == 0 else 2
+    # the front cowl (the driver's apron) and its black face with the lamps
+    _shell(p, cx, yf, [(0.02, 0.44, 0.50, 1.02, 0.15), (0.10, 0.53, 0.44, 1.06, 0.17), (0.30, 0.60, 0.40, 1.08, 0.14), (0.58, 0.62, 0.38, 1.08, 0.10)], YELLOW, n)
+    p.box(cx - 0.42, Y(0.004), 0.57, cx + 0.42, Y(0.03), 0.81, BLACK, skip=("back",))
+    for sx in (-1, 1):
+        p.tube((cx + sx * 0.29, Y(0.03), 0.69), (cx + sx * 0.29, Y(-0.02), 0.69), 0.082, 0.082, 12 if lod == 0 else 8, "metal_galvanised")   # the chrome lamp bezel
+        p.tube((cx + sx * 0.29, Y(-0.02), 0.69), (cx + sx * 0.29, Y(-0.03), 0.69), 0.066, 0.066, 12 if lod == 0 else 8, "lantern_glow")      # the head lamp
+    # the front wheel, its fork and the mudguard
+    _wheel(p, cx - 0.06, cx + 0.06, Y(0.22), 0.24, lod, 1)
+    prism_x(p, _arc(Y(0.22), 0.24, 0.285, 0.31, 25.0, 165.0, 8 if lod == 0 else 5), cx - 0.11, cx + 0.11, YELLOW)
+    for sx in (-1, 1): p.tube((cx + sx * 0.085, Y(0.22), 0.24), (cx + sx * 0.07, Y(0.40), 0.62), 0.022, 0.022, 6, "metal_galvanised")
+    # the floor, the chequered footboard and the step-in sill
+    p.box(cx - 0.58, Y(0.50), 0.32, cx + 0.58, Y(2.10), 0.40, BLACK, skip=("bottom",))
+    p.box(cx - 0.62, Y(0.62), 0.40, cx + 0.62, Y(1.20), 0.43, "metal_galvanised", skip=("bottom",))
+    _shell(p, cx, yf, [(1.15, 0.60, 0.34, 0.58, 0.06), (2.08, 0.62, 0.34, 0.58, 0.06)], YELLOW, n)
+    # the rear body over the wheels, the passenger bench and its back
+    _shell(p, cx, yf, [(2.04, 0.62, 0.34, 0.74, 0.08), (2.20, 0.63, 0.33, 0.76, 0.10), (2.70, 0.63, 0.33, 0.80, 0.12), (2.84, 0.58, 0.38, 0.78, 0.16)], YELLOW, n)
+    p.box(cx - 0.58, Y(2.06), 0.74, cx + 0.58, Y(2.56), 0.84, SEAT, skip=("bottom",))                                               # the passenger bench
+    p.box(cx - 0.58, Y(2.56), 0.80, cx + 0.58, Y(2.68), 1.30, SEAT, skip=("bottom",))                                               # its back
+    p.box(cx - 0.62, Y(2.66), 0.76, cx + 0.62, Y(2.84), 1.02, YELLOW, skip=("bottom",))                                             # the rear panel
+    for sx in (-1, 1):
+        _wheel(p, cx + sx * 0.55 - 0.08, cx + sx * 0.55 + 0.08, Y(2.20), 0.25, lod, sx)
+        prism_x(p, _arc(Y(2.20), 0.25, 0.29, 0.34, 0.0, 180.0, 8 if lod == 0 else 5), cx + sx * 0.66 - 0.06, cx + sx * 0.66 + 0.06, BLACK)   # the wheel arch
+    # the driver's seat, handlebar and windscreen
+    p.box(cx - 0.20, Y(0.80), 0.43, cx + 0.20, Y(1.04), 0.62, BLACK, skip=("bottom",))
+    p.box(cx - 0.26, Y(0.76), 0.62, cx + 0.26, Y(1.08), 0.72, SEAT, skip=("bottom",))
+    p.box(cx - 0.24, Y(1.06), 0.72, cx + 0.24, Y(1.14), 1.06, SEAT, skip=("bottom",))
+    prism_x(p, [(Y(0.47), 1.07), (Y(0.50), 1.07), (Y(0.64), 1.63), (Y(0.61), 1.63)], cx - 0.56, cx + 0.56, "glass_dark")            # the raked windscreen
+    for sx in (-1, 1): p.tube((cx + sx * 0.58, Y(0.47), 1.06), (cx + sx * 0.60, Y(0.62), 1.66), 0.025, 0.025, 6, BLACK)             # its pillars
+    p.box(cx - 0.64, Y(0.56), 1.60, cx + 0.64, Y(0.68), 1.73, BLACK, skip=("bottom",))                                              # the header strip
+    # the canvas hood: rounded, closing down over the back and the rear quarters
+    _shell(p, cx, yf, [(0.54, 0.62, 1.64, 1.74, 0.05), (0.66, 0.68, 1.67, 1.84, 0.09), (1.40, 0.69, 1.70, 1.86, 0.10), (2.30, 0.69, 1.70, 1.86, 0.10)], CANVAS, n)
+    _shell(p, cx, yf, [(2.30, 0.675, 0.98, 1.85, 0.10), (2.74, 0.675, 0.98, 1.84, 0.13), (2.88, 0.63, 1.00, 1.72, 0.18)], CANVAS, n)        # the canvas wrapped round the back
+    for sx in (-1, 1):
+        p.tube((cx + sx * 0.64, Y(1.24), 0.56), (cx + sx * 0.64, Y(1.24), 1.71), 0.024, 0.024, 6, YELLOW)                           # the pillar behind the driver
     if lod == 0:
-        for x0, x1 in ((cx - hw - 0.01, cx - hw + 0.01), (cx + hw - 0.01, cx + hw + 0.01)): p.box(x0, yf + 0.6, 0.55, x1, yb - 0.05, 0.66, "railing_green", skip=("bottom",))   # the green band
-        p.box(cx - hw + 0.08, yb - 0.75, 0.78, cx + hw - 0.08, yb - 0.1, 1.15, "metal_gate_black", skip=("bottom",))           # the passengers' bench back
-        p.box(cx - 0.12, yf + 0.02, 0.74, cx + 0.12, yf + 0.08, 0.86, "lantern_glow")                                          # the head lamp
-        for x in (cx - 0.09, cx + 0.09): p.box(x - 0.02, yf + 0.22, 0.22, x + 0.02, yf + 0.28, 0.5, GAL, skip=("bottom", "top"))   # the fork
-        p.box(cx - 0.36, yf + 0.66, 1.08, cx + 0.36, yf + 0.7, 1.11, "metal_gate_black", skip=("bottom",))                   # the handlebar
-        for x in (cx - hw + 0.12, cx + hw - 0.22): p.box(x, yb - 0.01, 0.5, x + 0.1, yb + 0.02, 0.6, "signal_red")             # tail lamps
+        p.box(cx - 0.08, Y(-0.005), 0.62, cx + 0.08, Y(0.004), 0.70, "metal_galvanised", skip=("back",))                            # the grille slot
+        p.box(cx - 0.13, Y(0.0), 0.84, cx + 0.13, Y(0.015), 0.94, "paint_white", skip=("back",))                                   # the plate (blank)
+        p.tube((cx - 0.30, Y(0.66), 1.10), (cx + 0.30, Y(0.66), 1.10), 0.016, 0.016, 6, BLACK)                                      # the handlebar
+        p.tube((cx - 0.45, Y(0.47), 1.09), (cx - 0.05, Y(0.60), 1.52), 0.008, 0.008, 4, BLACK)                                      # the wiper
+        p.tube((cx - 0.58, Y(0.50), 1.30), (cx - 0.72, Y(0.46), 1.40), 0.012, 0.012, 4, BLACK); p.box(cx - 0.76, Y(0.43), 1.34, cx - 0.68, Y(0.47), 1.48, BLACK)   # mirror
+        for sx in (-1, 1):
+            xs = cx + sx * 0.632
+            p.face_n([(xs, Y(2.22), 0.46), (xs, Y(2.78), 0.62), (xs, Y(2.78), 0.67), (xs, Y(2.22), 0.51)], "paint_red", (sx, 0, 0))     # the side stripe
+            p.face_n([(xs, Y(2.22), 0.53), (xs, Y(2.78), 0.69), (xs, Y(2.78), 0.72), (xs, Y(2.22), 0.56)], "frame_aluminium_dark", (sx, 0, 0))
+            p.box(cx + sx * 0.56 - 0.04, Y(2.84), 0.84, cx + sx * 0.56 + 0.04, Y(2.86), 0.92, "signal_red", skip=("front",))       # tail lamp
+            p.tube((cx + sx * 0.085, Y(0.30), 0.38), (cx + sx * 0.078, Y(0.36), 0.52), 0.034, 0.034, 6, BLACK)                     # the fork springs
 
 
 def keke_rank_a(lod):

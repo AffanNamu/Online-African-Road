@@ -2875,9 +2875,9 @@
    "depthM": 9.0,
    "cullDistance": 600.0,
    "lodTriangles": [
-    854,
-    450,
-    52
+    3440,
+    2078,
+    82
    ],
    "castShadow": true,
    "tags": [
