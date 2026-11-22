@@ -193,6 +193,7 @@ namespace ARO.NetCore
         public float densityScale = 1f;                 // multiplies the quality-tier traffic density on this route
         public float speedLimitScale = 1f;
         public string[] vehicleMix = new string[0];     // catalog vehicle ids / categories, informational until production traffic models exist
+        public bool network;                            // traffic on every road and roundabout of the route (NetTrafficSim, docs/TRAFFIC_NETWORK_PROPOSAL.md); false = the single-corridor model on the main road, as always
     }
 
     /// <summary>Navigation data: named places along the route (distance from the start). Not yet shown in the HUD.</summary>

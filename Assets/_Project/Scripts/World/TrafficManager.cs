@@ -8,7 +8,9 @@ namespace ARO.World
     /// Drives ambient traffic along a RouteDefinition using the unit-tested TrafficSim (IDM car following, two-way lanes,
     /// spawn/despawn windows around the player). Vehicles are pooled kinematic bodies: the player can collide with them
     /// (and takes damage via VehicleController), and traffic brakes for the player in the same lane.
-    /// Intersections and traffic lights are NOT implemented (route is a single corridor).
+    /// A route whose data asks for network traffic (traffic.network, the Kano city) runs NetTrafficSim instead: every road and roundabout carries traffic, vehicles turn at junctions, give way
+    /// when joining a road or entering a roundabout (docs/TRAFFIC_NETWORK_PROPOSAL.md, approved by the owner on 2026-11-22). Every other route keeps the single-corridor model, unchanged.
+    /// Traffic lights are NOT implemented.
     /// </summary>
     public class TrafficManager : MonoBehaviour
     {
@@ -23,6 +25,7 @@ namespace ARO.World
         public int PooledCount => _pool.Count;
 
         TrafficSim _sim;
+        NetTrafficSim _net;        // network traffic (traffic.network routes only)
         readonly Dictionary<int, View> _views = new Dictionary<int, View>();
         readonly Stack<View> _pool = new Stack<View>();
         float[] _limits;           // per segment speed limit (m/s)
@@ -38,16 +41,24 @@ namespace ARO.World
         {
             int q = QualitySettings.GetQualityLevel(), n = QualitySettings.names.Length;
             quality = n <= 1 ? 1 : Mathf.Clamp(Mathf.RoundToInt(2f * q / (n - 1)), 0, 2);
-            if (_sim == null) return;
-            if (tier != null) { _sim.Cfg.DensityPerKmPerDir = tier.TrafficDensity * (route.Spec?.traffic?.densityScale ?? 1f); _sim.Cfg.MaxAgents = tier.MaxTrafficAgents; return; }
-            _sim.Cfg.DensityPerKmPerDir = quality == 0 ? 3f : quality == 1 ? 5f : 8f;
-            _sim.Cfg.MaxAgents = quality == 0 ? 20 : quality == 1 ? 40 : 80;
+            var cfg = _sim != null ? _sim.Cfg : _net != null ? _net.Cfg : null;
+            if (cfg == null) return;
+            if (tier != null) { cfg.DensityPerKmPerDir = tier.TrafficDensity * (route.Spec?.traffic?.densityScale ?? 1f); cfg.MaxAgents = tier.MaxTrafficAgents; return; }
+            cfg.DensityPerKmPerDir = quality == 0 ? 3f : quality == 1 ? 5f : 8f;
+            cfg.MaxAgents = quality == 0 ? 20 : quality == 1 ? 40 : 80;
         }
 
         void Start()
         {
             if (route == null || route.nodes.Length < 2) { enabled = false; return; }
             route.Rebuild(); _mpb = new MaterialPropertyBlock();
+            if (route.Model != null && route.Spec?.traffic != null && route.Spec.traffic.network)
+            {
+                var t0 = Time.realtimeSinceStartup; var net = TrafficNet.Build(route.Model, route.Spec.traffic.speedLimitScale);
+                _net = new NetTrafficSim(net, new TrafficConfig { Seed = route.seed }); ApplyQuality();
+                Debug.Log($"[TrafficNet] {route.Spec.routeId}: {net.Lanes.Count} lanes and junction connectors, built in {(Time.realtimeSinceStartup - t0) * 1000f:0} ms; cap {_net.Cfg.MaxAgents} vehicles");
+                return;
+            }
             _cum = new float[route.nodes.Length];
             for (int i = 1; i < route.nodes.Length; i++) _cum[i] = _cum[i - 1] + Vector3.Distance(route.nodes[i - 1].position, route.nodes[i].position);
             _limits = new float[route.nodes.Length - 1];
@@ -62,7 +73,7 @@ namespace ARO.World
         /// the route lands on one of them (CI runs 319 and 321 froze it 0.9 m above the road, perched on a car, at 398 m). Clearing the agents lets the sim spawn around the new position instead
         /// (never closer than 350 m ahead or 120 m behind). The next Sync returns their bodies to the pool.
         /// </summary>
-        public void ClearAgents() { if (_sim != null) _sim.Agents.Clear(); }
+        public void ClearAgents() { if (_sim != null) _sim.Agents.Clear(); if (_net != null) _net.Agents.Clear(); }
 
         int SegIndex(float s) { int i = 0; while (i < _cum.Length - 2 && s > _cum[i + 1]) i++; return i; }
 
@@ -84,6 +95,7 @@ namespace ARO.World
         float _nextTrafficLog;
         void FixedUpdate()
         {
+            if (_net != null) { NetStep(); return; }
             if (_sim == null) return;
             if (Time.unscaledTime >= _nextTrafficLog && !string.IsNullOrEmpty(Application.absoluteURL) && Application.absoluteURL.Contains("smoke="))
             {   // smoke pages only: how many traffic bodies are alive and whether they carry the shared lit lamp materials (CI reads this)
@@ -100,6 +112,36 @@ namespace ARO.World
             }
             _sim.Step(Time.fixedDeltaTime, ps);
             Sync();
+        }
+
+        float _nextNetLog;
+        void NetStep()
+        {
+            if (player != null)
+            {
+                var f = player.forward; float speed = player.TryGetComponent(out Rigidbody prb) ? prb.linearVelocity.magnitude : 0f;
+                _net.SetPlayer(player.position.x, player.position.z, f.x, f.z, speed, 8f);
+            }
+            else { var p0 = route.PositionAt(0f); _net.ClearPlayer(); _net.SetPlayerPosition(p0.x, p0.z); }
+            _net.Step(Time.fixedDeltaTime);
+            if (Time.unscaledTime >= _nextNetLog && !string.IsNullOrEmpty(Application.absoluteURL) && Application.absoluteURL.Contains("smoke="))
+            {   // smoke pages only: where the traffic is (the CI city drives read this)
+                _nextNetLog = Time.unscaledTime + 5f; var st = _net.Stats(); int lamps = 0; foreach (var v in _views.Values) if (v.go != null) lamps += v.go.transform.childCount;
+                Debug.Log($"[Traffic] active={_views.Count} pooled={_pool.Count} lampBoxes={lamps} lampMaterials={(StreetLightSystem.TrafficHead != null ? "ok" : "none")}");
+                Debug.Log($"[TrafficNet] agents={st.Agents} main={st.OnMain} roads={st.OnRoads} rings={st.OnRings} junctions={st.InJunctions} waiting={st.Waiting} target={_net.Target}");
+            }
+            var alive = new HashSet<int>();
+            foreach (var a in _net.Agents)
+            {
+                alive.Add(a.Id); _net.Pose(a, out var p, out var fw);
+                var pos = new Vector3(p.X, p.Y, p.Z); var rot = Quaternion.LookRotation(new Vector3(fw.X, 0f, fw.Z), Vector3.up);
+                if (!_views.TryGetValue(a.Id, out var v)) { v = Rent(a.Kind, a.Id, pos, rot); _views[a.Id] = v; }
+                pos.y += v.go.transform.localScale.y * 0.5f + 0.35f;
+                v.rb.MovePosition(pos); v.rb.MoveRotation(rot);
+            }
+            List<int> gone = null;
+            foreach (var id in _views.Keys) if (!alive.Contains(id)) (gone ?? (gone = new List<int>())).Add(id);
+            if (gone != null) foreach (var id in gone) { Return(_views[id]); _views.Remove(id); }
         }
 
         void Sync()
@@ -124,15 +166,20 @@ namespace ARO.World
 
         View Rent(TrafficAgent a)
         {
+            var centre = a.S - a.Dir * a.P.Length * 0.5f; var tan = route.TangentAt(centre) * a.Dir;
+            return Rent(a.Kind, a.Id, route.PositionAt(centre), Quaternion.LookRotation(tan, Vector3.up));
+        }
+
+        View Rent(TrafficKind kind, int id, Vector3 pos, Quaternion rot)
+        {
             View v = null;
-            while (_pool.Count > 0 && v == null) { var c = _pool.Pop(); if (c.go != null && c.kind == a.Kind) v = c; else if (c.go != null) Destroy(c.go); }
-            if (v == null) v = Build(a.Kind);
+            while (_pool.Count > 0 && v == null) { var c = _pool.Pop(); if (c.go != null && c.kind == kind) v = c; else if (c.go != null) Destroy(c.go); }
+            if (v == null) v = Build(kind);
             v.go.SetActive(true);
-            var col = a.Kind == TrafficKind.Taxi || a.Kind == TrafficKind.Minibus ? new Color(0.95f, 0.75f, 0.1f) : CarColours[a.Id % CarColours.Length];
+            var col = kind == TrafficKind.Taxi || kind == TrafficKind.Minibus ? new Color(0.95f, 0.75f, 0.1f) : CarColours[id % CarColours.Length];
             Tint(v, col);
             // teleport so the kinematic body does not sweep across the world from its old position
-            var centre = a.S - a.Dir * a.P.Length * 0.5f; var tan = route.TangentAt(centre) * a.Dir;
-            v.go.transform.SetPositionAndRotation(route.PositionAt(centre), Quaternion.LookRotation(tan, Vector3.up));
+            v.go.transform.SetPositionAndRotation(pos, rot);
             return v;
         }
 

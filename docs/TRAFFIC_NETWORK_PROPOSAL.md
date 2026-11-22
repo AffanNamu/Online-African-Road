@@ -1,6 +1,8 @@
 # Traffic through junctions and roundabouts: technical proposal for the owner's decision
 
-**Status (2026-11-16): PROPOSAL. Nothing in this document is implemented.** The owner asked on 2026-11-16 to "improve traffic activity across junctions and roundabouts". Traffic is vehicle behaviour, which the project rules (`CLAUDE.md`) do not let me change without a written proposal and the owner's explicit approval. This is that proposal.
+**Status (2026-11-22): APPROVED by the owner on 2026-11-22 ("I approve every step") and implemented as stage 1: `NetCore/TrafficNetwork.cs` (`TrafficNet`, `NetTrafficSim`), `World/TrafficManager.cs` (used when the route sets `traffic.network`; only `ng-kano-city` does), tests in `tests/NetCore.Tests/TrafficNetworkTests.cs`. Verified in .NET; not yet seen in the game. What differs from the text below: free road ends (site roads, the city's edges) get a turning round, and a vehicle that reaches one out of sight leaves the map instead; a left turn off the priority road gives way to the oncoming lane; only one yielding vehicle crosses a junction box at a time. The text below is the proposal as written on 2026-11-16.**
+
+**Original status (2026-11-16): PROPOSAL. Nothing in this document is implemented.** The owner asked on 2026-11-16 to "improve traffic activity across junctions and roundabouts". Traffic is vehicle behaviour, which the project rules (`CLAUDE.md`) do not let me change without a written proposal and the owner's explicit approval. This is that proposal.
 
 ## 1. What the game does today (read from the code)
 * `NetCore/Traffic.cs` (`TrafficSim`): one-dimensional traffic on **one corridor**, the route's main road. Each vehicle has a position `S` along it and a direction; car following uses the Intelligent Driver Model (IDM); vehicles are spawned 350 to 800 m ahead and 120 to 250 m behind the player and removed beyond 1,100 m or past either end of the road. It is pure C# with unit tests.

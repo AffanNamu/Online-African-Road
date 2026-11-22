@@ -172,9 +172,9 @@ def build():
                      "traditional suburb (blocked on references). Positions are the plan's (indicative, not survey).", 6201, dict(E.TERRAIN))
     r = E.fix_meta(r)
     r["meta"].update({"from": "A2 from Zaria (city edge)", "to": "Kano city", "status": "planned", "elevationSource": "design (near-flat city)", "notes": "The Kano city route (owner directive 2026-11-16). docs/KANO_CITY.md."})
-    r["traffic"] = dict(densityScale=0.8, speedLimitScale=1.0, vehicleMix=["saloon_car", "minibus", "motorcycle", "tricycle_taxi", "truck"])
-    # traffic (the engine's existing 1-D model) runs along the main road: the A2 from the gateway, over the flyover to the middle ring roundabout. Traffic through junctions and round
-    # the roundabouts is new engine behaviour: proposed in docs/TRAFFIC_NETWORK_PROPOSAL.md, waiting for the owner's approval.
+    r["traffic"] = dict(densityScale=0.8, speedLimitScale=1.0, vehicleMix=["saloon_car", "minibus", "motorcycle", "tricycle_taxi", "truck"], network=True)
+    # network traffic (NetTrafficSim, docs/TRAFFIC_NETWORK_PROPOSAL.md, approved by the owner on 2026-11-22): every road and roundabout of the city carries traffic, vehicles turn at the
+    # junctions, give way when joining a road and when entering a roundabout. Every other route keeps the single-corridor model on its main road.
     roads, rings = [], []
     ring_r = rout_of(RING_DESIGN); gate_r = rout_of(GATE_DESIGN); a2_r = rout_of(A2_RING_DESIGN); mid_r = rout_of(GATE_DESIGN)
     ring_r_at = lambda a: a2_r if a % 360.0 == 225.0 else ring_r

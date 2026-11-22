@@ -274,6 +274,16 @@ function serve() {
     if (camErrors.length) failures.push('the game reported an invalid camera profile: ' + camErrors[0].slice(0, 250));
   } catch (e) { failures.push('the camera scenario could not complete: ' + String(e).slice(0, 250)); }
 
+  // Network traffic (the Kano city, traffic.network): where the vehicles were during the run. Every road and roundabout carries traffic, so some must be off the main road.
+  const net = logs.filter(l => /\[TrafficNet\] agents=/.test(l)).map(l => { const v = k => +((new RegExp(k + '=(\\d+)')).exec(l) || [0, 0])[1]; return { agents: v('agents'), main: v('main'), roads: v('roads'), rings: v('rings'), junctions: v('junctions'), waiting: v('waiting') }; });
+  if (net.length) {
+    const max = k => Math.max(...net.map(x => x[k]));
+    console.log(`\n--- network traffic: ${net.length} samples; at most ${max('agents')} vehicles, ${max('main')} on the A2, ${max('roads')} on other roads, ${max('rings')} on roundabouts, ${max('junctions')} in junctions, ${max('waiting')} waiting at a line`);
+    const built = logs.find(l => /\[TrafficNet\] .*lanes and junction connectors/.test(l)); if (built) console.log('  ' + built.replace(/^.*\[TrafficNet\]/, '[TrafficNet]').slice(0, 200));
+    if (max('agents') < 1) failures.push('network traffic: no vehicle was ever alive');
+    else if (max('roads') + max('rings') < 1) failures.push('network traffic: no vehicle ever left the main road');
+  }
+
   renderAndPerfChecks(logs, failures, 'drive');
   if (has(/left the world/)) failures.push('the vehicle left the world and had to be recovered');
   if (errors.length) failures.push(`${errors.length} page error(s): ${errors[0].slice(0, 200)}`);
