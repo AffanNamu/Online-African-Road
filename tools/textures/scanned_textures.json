@@ -1,0 +1,103 @@
+{
+ "source": "Poly Haven (https://polyhaven.com), every texture CC0 1.0; authors listed per entry",
+ "resolution": "1k jpg, albedo only",
+ "note": "normal maps need a Resources material that keeps the _NORMALMAP shader variant in the WebGL build: not done yet",
+ "textures": [
+  {
+   "slot": "Asphalt",
+   "asset": "asphalt_02",
+   "name": "Asphalt 02",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/asphalt_02",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+   "md5": "fa19772d4817754c3efab708c651f5a8",
+   "sha256": "1aa5ce99f58a625c71d48cfc3e68b65ca85ccb00f39e045c0a928608a0ea25ed",
+   "bytes": 731707,
+   "metres": 3.0,
+   "tint": 0.6
+  },
+  {
+   "slot": "Shoulder",
+   "asset": "gravel_road",
+   "name": "Gravel Road",
+   "authors": [
+    "Amal Kumar"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/gravel_road",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/gravel_road/gravel_road_diff_1k.jpg",
+   "md5": "d259491a6cb5ca0e96d3941758f8bb47",
+   "sha256": "bccbb077a825bdd0eb6f607939578a6ee549822824278fb3a828f6eed3d05d45",
+   "bytes": 684038,
+   "metres": 2.0,
+   "tint": 0.8017
+  },
+  {
+   "slot": "Verge",
+   "asset": "dry_ground_rocks",
+   "name": "Dry Ground Rocks",
+   "authors": [
+    "Rob Tuytel"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/dry_ground_rocks",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_ground_rocks/dry_ground_rocks_diff_1k.jpg",
+   "md5": "7cc10e3eb12ce7bb8235d3e3c3041ded",
+   "sha256": "491ac5be54859171730c620ad768a615f600b81ce00d83bbeab8a7aed7b199d8",
+   "bytes": 826834,
+   "metres": 4.0,
+   "tint": 0.6
+  },
+  {
+   "slot": "Concrete",
+   "asset": "rough_concrete",
+   "name": "Rough Concrete",
+   "authors": [
+    "Dimitrios Savva"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/rough_concrete",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rough_concrete/rough_concrete_diff_1k.jpg",
+   "md5": "82909f2db1e0453500703ae54e806f5c",
+   "sha256": "dd7fc03e152eb8c2fd511248aa2e9bf7428a645bd0e0b74ac1d887ad136cb0bc",
+   "bytes": 1042065,
+   "metres": 1.23,
+   "tint": 0.8145
+  },
+  {
+   "slot": "Kerb",
+   "asset": "rough_concrete",
+   "name": "Rough Concrete",
+   "authors": [
+    "Dimitrios Savva"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/rough_concrete",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rough_concrete/rough_concrete_diff_1k.jpg",
+   "md5": "82909f2db1e0453500703ae54e806f5c",
+   "sha256": "dd7fc03e152eb8c2fd511248aa2e9bf7428a645bd0e0b74ac1d887ad136cb0bc",
+   "bytes": 1042065,
+   "metres": 1.23,
+   "tint": 0.929
+  },
+  {
+   "slot": "Sidewalk",
+   "asset": "concrete_pavement_02",
+   "name": "Concrete Pavement 02",
+   "authors": [
+    "Charlotte Baglioni"
+   ],
+   "licence": "CC0-1.0",
+   "page": "https://polyhaven.com/a/concrete_pavement_02",
+   "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_pavement_02/concrete_pavement_02_diff_1k.jpg",
+   "md5": "bdee8d4deebb78609414453a5fb299e2",
+   "sha256": "e129ee6b59b6ed7f65b4c4c5ba9eb583d13d040ec26bef5d5d4e0080fe342e7a",
+   "bytes": 1052909,
+   "metres": 1.8,
+   "tint": 1.5
+  }
+ ]
+}

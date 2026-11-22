@@ -45,6 +45,7 @@ namespace ARO.Game
             var rig = new GameObject("RenderingRig").AddComponent<RenderingRig>(); rig.Init(Camera.main, sun);
             var tier = rig.Tier;
             var worldMats = haveModel ? WorldMaterials.Create(roadGood) : null;
+            if (worldMats != null) StartCoroutine(ScannedTextures.Load(worldMats, tier.Name == "low"));     // real scanned road surfaces, streamed after start-up (CC0, fetched by CI)
 
             var streamer = new GameObject("ChunkStreamer").AddComponent<ChunkStreamer>();
             streamer.route = route; streamer.roadGood = roadGood; streamer.roadWorn = roadWorn; streamer.roadDamaged = roadDamaged;

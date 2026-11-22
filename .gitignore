@@ -45,3 +45,6 @@ tools/semcheck/bin/
 __pycache__/
 admin/config.js
 advertise/config.js
+# real scanned textures (CC0, Poly Haven): downloaded by CI with tools/textures/fetch_scanned.py, never committed (binaries live in ARO-CONTENT)
+/Assets/StreamingAssets/Scanned/
+/Assets/StreamingAssets/Scanned.meta

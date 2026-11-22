@@ -205,6 +205,11 @@ jobs:
           export ARO_MAKEHUMAN_DATA="$(tools/blender/people_kit/fetch_makehuman.sh "$RUNNER_TEMP/mpfb2" | tail -1)"
           python -m people_kit.export --out Assets/ThirdParty/ARO/Resources/People
           ls -la Assets/ThirdParty/ARO/Resources/People
+      - name: Review - real scanned road textures (CC0, Poly Haven), downloaded and checked into the git-ignored Assets/StreamingAssets/Scanned (tools/textures/fetch_scanned.py)
+        if: ${{ steps.gate.outputs.on == 'true' }}
+        run: |
+          sudo mkdir -p Assets/StreamingAssets && sudo chown -R "$(id -u):$(id -g)" Assets/StreamingAssets
+          python3 tools/textures/fetch_scanned.py || echo "::warning::scanned road textures not downloaded: this build draws the procedural textures"
       - name: Review - pre-pull the Unity WebGL editor image (retry with backoff)
         if: ${{ steps.gate.outputs.on == 'true' }}
         run: |

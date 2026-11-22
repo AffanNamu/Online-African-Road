@@ -171,6 +171,10 @@ jobs:
           pip install --no-input -r tools/blender/requirements.txt
           sudo mkdir -p Assets/ThirdParty && sudo chown -R "$(id -u):$(id -g)" Assets/ThirdParty     # the tests ran Unity as root in a container
           tools/blender/build_content.sh Assets/ThirdParty/ARO
+      - name: Real scanned road textures (CC0, Poly Haven; owner 2026-11-22) - downloaded and checked against tools/textures/scanned_textures.json into the git-ignored Assets/StreamingAssets/Scanned; the game streams them after start-up and keeps its procedural textures without them
+        run: |
+          sudo mkdir -p Assets/StreamingAssets && sudo chown -R "$(id -u):$(id -g)" Assets/StreamingAssets
+          python3 tools/textures/fetch_scanned.py || echo "::warning::scanned road textures not downloaded: this build draws the procedural textures"
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
