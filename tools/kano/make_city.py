@@ -319,10 +319,10 @@ def build():
     for rid, prof, side, smin, smax, pres in [("shelters_collector", "kano_collector", "right", 180.0, 260.0, 0.85), ("shelters_arterial", "kano_arterial", "both", 250.0, 350.0, 0.8)]:
         r["propRules"].append(dict(base, id=rid, prop="aro_bus_shelter_a", profiles=prof, side=side, offsetMin=2.2, offsetMax=2.5, spacingMin=smin, spacingMax=smax, presence=pres,
                                    scaleMin=1.0, scaleMax=1.0, yawJitterDeg=0.0, faceRoad=True, fixedDensity=False, exclusionMargin=1.0, clearLength=5.7, clearDepth=2.0, allRoads=True))
-    # the A2 is the city's entrance: shade trees and palms along both sides (it had no tree rule: bare ground on both sides up to the interchange, seen from the cab and from the flyover deck),
+    # the A2 is the city's entrance: shade trees (the environment kit's real model, instanced) along both sides; no placeholder palms: at the spawn on the Low tier their
+    # placeholder mesh took the start view's draw calls to 152 against the mobile budget of 150 (CI run 366) (it had no tree rule: bare ground on both sides up to the interchange, seen from the cab and from the flyover deck),
     # outside the shoulders and short of the frontage of its lots (setbacks of 14 m and more), none on the deck; street trees along the four slip ramps of the interchange
     for rid, prop, prof, omin, omax, smin, smax, pres, on_all in [("trees_expressway", "rg_ngn_tree_large_shade_a", "kano_expressway", 7.0, 11.0, 34.0, 50.0, 0.75, False),
-                                                                     ("palms_expressway", "palm_tree", "kano_expressway", 3.5, 5.0, 40.0, 56.0, 0.6, False),
                                                                      ("trees_ramp", "rg_ngn_tree_street_broadleaf_a", "kano_ramp", 4.0, 9.0, 22.0, 32.0, 0.7, True)]:
         r["propRules"].append(dict(base, id=rid, prop=prop, profiles=prof, side="both", offsetMin=omin, offsetMax=omax, spacingMin=smin, spacingMax=smax, presence=pres, scaleMin=0.85, scaleMax=1.15,
                                    yawJitterDeg=180.0, faceRoad=False, fixedDensity=False, exclusionMargin=-1.0, allRoads=on_all))
