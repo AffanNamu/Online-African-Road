@@ -245,6 +245,34 @@ public class TrafficNetworkTests
         Assert.True(behind > 0, "no vehicle ever queued behind the stationary player");
     }
 
+    [Fact] public void NothingDrivesIntoThePlayerStoppedInAJunctionBox()
+    {
+        // CI run 370: the truck, stopped on the A2, could not be steered away; traffic bodies are kinematic, and a vehicle finishing a turn did not look for a player standing in the box.
+        // The player now stands still across the busiest crossroads of the street grid; no vehicle may come within touching distance of its footprint, from any side.
+        var net = Net; var cn = net.Connectors.Where(c => c.Move == NetMove.Straight && net.Lanes[c.Priority[0]].Corridor.Id.StartsWith("fi02_street")).OrderBy(c => c.Index).First();
+        var through = net.Lanes[cn.Priority[0]]; var at = through.Corridor.Spline.PositionAt(through.S(cn.PriorityU[0]));
+        through.Corridor.Spline.TangentAt(through.S(cn.PriorityU[0]), out float tx, out float tz);
+        float fx = -tz, fz = tx;                                                       // across the through road: the truck blocks the box
+        var sim = new NetTrafficSim(net, new TrafficConfig { MaxAgents = 40, Seed = 11 }); int near = 0, checks = 0; float closest = float.MaxValue;
+        for (int k = 0; k < 6000; k++)
+        {
+            sim.SetPlayer(at.X, at.Z, fx, fz, 0f, 8f); sim.Step(0.05f);
+            foreach (var a in sim.Agents)
+            {
+                sim.Pose(a, out var p, out var f);
+                foreach (float along in new[] { 0f, a.Len * 0.5f })
+                {
+                    float px = p.X + f.X * along - at.X, pz = p.Z + f.Z * along - at.Z, t = Math.Clamp(px * fx + pz * fz, -4f, 4f);
+                    float ex = px - fx * t, ez = pz - fz * t, d = (float)Math.Sqrt(ex * ex + ez * ez); checks++;
+                    if (d < closest) closest = d;
+                    if (d < NetTrafficSim.PlayerHalfWidth + NetTrafficSim.TrafficHalfWidth) near++;
+                }
+            }
+        }
+        _out.WriteLine($"closest approach {closest:0.00} m over {checks} checks");
+        Assert.True(checks > 1000, $"{checks} checks"); Assert.Equal(0, near);
+    }
+
     [Fact] public void OnlyTheKanoCityAsksForNetworkTraffic()
     {
         Assert.True(Load("ng-kano-city").traffic.network);

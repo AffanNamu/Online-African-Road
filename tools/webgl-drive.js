@@ -61,6 +61,8 @@ function serve() {
   samples.filter((_, i) => i % 3 === 0).forEach(s => console.log(`  t=${s.t} pos=(${s.x}, ${s.y}, ${s.z}) kmh=${s.kmh} dist=${s.dist}`));
   console.log('--- [Drive]/[World]/[Smoke] lines ---');
   logs.filter(l => /\[(Drive|World|Smoke)\]/.test(l) && !/\[Drive\] t=/.test(l)).slice(0, 20).forEach(l => console.log(l.slice(0, 300)));
+  console.log('--- [Materials] lines (the real scanned road textures, streamed after start-up) ---');
+  logs.filter(l => /\[Materials\]/.test(l)).slice(0, 6).forEach(l => console.log(l.slice(0, 300)));
   console.log('--- [Instancing] lines (RB-15: what the instancer drew, culled or refused) ---');
   logs.filter(l => /\[Instancing\]/.test(l)).slice(0, 16).forEach(l => console.log(l.slice(0, 400)));
   const errs = logs.filter(l => /Exception|\[Instancing\] draw failed/.test(l)); if (errs.length) { console.log(`--- ${errs.length} exception line(s), first 6 ---`); errs.slice(0, 6).forEach(l => console.log(l.slice(0, 400))); }
@@ -240,7 +242,10 @@ function serve() {
       const ss = parseDrive(mark).filter(s => s.cam === 'Overhead');
       if (ss.length < 3) failures.push(`only ${ss.length} samples while steering in the overhead view`);
       else { const d = yawDelta(ss[0].yaw, ss[ss.length - 1].yaw); console.log(`  steering in the overhead view: heading changed ${d.toFixed(0)} deg over ${ss.length} samples`);
-        if (Math.abs(d) < 5) failures.push(`holding D in the overhead view did not turn the truck (heading changed ${d.toFixed(1)} deg)`); else ok(`steering works in the overhead view (${d.toFixed(0)} deg)`); } }
+        if (Math.abs(d) < 5) { failures.push(`holding D in the overhead view did not turn the truck (heading changed ${d.toFixed(1)} deg)`);
+          console.log('    samples while steering (game t, position, km/h, yaw): ' + ss.map(x => `${x.t.toFixed(1)} (${x.x.toFixed(1)}, ${x.z.toFixed(1)}) ${x.kmh.toFixed(0)} ${x.yaw.toFixed(0)}`).join(' | '));
+          const tr = logs.slice(mark).filter(l => /\[Traffic(Net)?\] /.test(l)).slice(-2); if (tr.length) console.log('    traffic then: ' + tr.map(l => l.replace(/^.*\[Traffic/, '[Traffic').slice(0, 160)).join(' | ')); }
+        else ok(`steering works in the overhead view (${d.toFixed(0)} deg)`); } }
 
     // 5. a gamepad Y press, where the game can see a pad. The Gamepad API is faked, so this proves nothing about a real pad, and it can never fail the run by itself
     //    being unsupported: if the game does not detect the pad the step says SKIPPED.

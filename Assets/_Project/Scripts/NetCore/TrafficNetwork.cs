@@ -304,7 +304,8 @@ namespace ARO.NetCore
         /// <summary>The player's vehicle at (x, z) heading (fx, fz): it is put on the lane of the nearest road (its direction from the heading) so traffic brakes for it and waits for it at junctions.</summary>
         public void SetPlayer(float x, float z, float fx, float fz, float speed, float length)
         {
-            _px = x; _pz = z; NetLane best = null; float bestU = 0f, bestD = float.MaxValue;
+            _px = x; _pz = z; float fl = (float)Math.Sqrt(fx * fx + fz * fz); _pfx = fl > 1e-4f ? fx / fl : 0f; _pfz = fl > 1e-4f ? fz / fl : 1f; _plen = length; _hasPlayerBody = true;
+            NetLane best = null; float bestU = 0f, bestD = float.MaxValue;
             foreach (var c in Net.Model.CorridorsNear(x, z))
             {
                 if (!c.Spline.Nearest(x, z, c.MaxFormationHalf + 2f, out float s, out _, out float dist) || dist >= bestD) continue;
@@ -319,8 +320,48 @@ namespace ARO.NetCore
         }
 
         /// <summary>Only the player's position (no obstacle): used before the player's vehicle exists.</summary>
-        public void SetPlayerPosition(float x, float z) { _px = x; _pz = z; }
-        public void ClearPlayer() { _player = null; }
+        public void SetPlayerPosition(float x, float z) { _px = x; _pz = z; _hasPlayerBody = false; }
+        public void ClearPlayer() { _player = null; _hasPlayerBody = false; }
+        float _pfx, _pfz = 1f, _plen = 8f; bool _hasPlayerBody;
+        public const float PlayerHalfWidth = 1.25f, TrafficHalfWidth = 0.9f, BodyClearance = 0.5f;     // reach 2.65 m: a vehicle in the next lane (3.5 m away) still passes the player
+
+        /// <summary>
+        /// The player's vehicle wherever it is (in a junction box, across a lane, on a roundabout): a vehicle near it looks along the next 24 m of its own path and stops short of the player's
+        /// footprint (a segment of the player's length along its heading, widened by half a vehicle and a margin). Traffic bodies are kinematic: driven into the player, they would push or pin it
+        /// (CI run 370: the truck stopped on the A2 could not be steered away). Returns the distance to stop in, or infinity.
+        /// </summary>
+        float PlayerAhead(NetAgent a)
+        {
+            if (!_hasPlayerBody) return float.PositiveInfinity;
+            var c = Net.CentrePoint(Net.Lanes[a.Lane], a.U); float dx0 = c.X - _px, dz0 = c.Z - _pz;
+            if (dx0 * dx0 + dz0 * dz0 > 60f * 60f) return float.PositiveInfinity;
+            float half = _plen * 0.5f, reach = PlayerHalfWidth + TrafficHalfWidth + BodyClearance;
+            for (float d = 0f; d <= 24f; d += 1.5f)
+            {
+                if (!PointAhead(a, d, out var p)) break;
+                float rx = p.X - _px, rz = p.Z - _pz, t = Mathx.Clamp(rx * _pfx + rz * _pfz, -half, half);
+                float ex = rx - _pfx * t, ez = rz - _pfz * t;
+                if (ex * ex + ez * ez < reach * reach) return Math.Max(0.01f, d - 1.0f);
+            }
+            return float.PositiveInfinity;
+        }
+
+        /// <summary>The point `d` metres ahead of the front of agent a along the path it will drive (its lane, then its planned connector, then that connector's lane), in its own lane.</summary>
+        bool PointAhead(NetAgent a, float d, out V3 p)
+        {
+            var lane = Net.Lanes[a.Lane]; float u = a.U + d; p = default;
+            if (lane.Kind == NetLaneKind.Connector)
+            {
+                if (u <= lane.Length) { Net.PoseOn(lane, u, a.Id, out p, out _); return true; }
+                var t = Net.Lanes[lane.To]; float tu = lane.ToU + (u - lane.Length); if (!t.IsLoop && tu > t.Length) return false;
+                Net.PoseOn(t, t.IsLoop ? TrafficNet.Wrap(tu, t.Length) : tu, a.Id, out p, out _); return true;
+            }
+            if (a.Next < 0 || d <= a.ToGo) { if (!lane.IsLoop && u > lane.Length) return false; Net.PoseOn(lane, lane.IsLoop ? TrafficNet.Wrap(u, lane.Length) : u, a.Id, out p, out _); return true; }
+            var cn = Net.Lanes[a.Next]; float cu = d - a.ToGo;
+            if (cu <= cn.Length) { Net.PoseOn(cn, cu, a.Id, out p, out _); return true; }
+            var t2 = Net.Lanes[cn.To]; float u2 = cn.ToU + (cu - cn.Length); if (!t2.IsLoop && u2 > t2.Length) return false;
+            Net.PoseOn(t2, t2.IsLoop ? TrafficNet.Wrap(u2, t2.Length) : u2, a.Id, out p, out _); return true;
+        }
         public NetAgent Player => _player;
 
         // ------------------------------------------------------------------ step
@@ -408,6 +449,7 @@ namespace ARO.NetCore
                 if (cn.Yield && !a.Committed && a.ToGo < 4f && a.Speed < 1f) a.Wait += dt;
             }
             float gap = Leader(a, out float lv);
+            float pg = PlayerAhead(a); if (pg < gap) { gap = pg; lv = 0f; }
             return Idm.Acceleration(a.P, a.Speed, desired, gap, lv);
         }
 

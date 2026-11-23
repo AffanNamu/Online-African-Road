@@ -177,7 +177,7 @@ jobs:
           print(f"{len(r)} E4 assets built; failed validation: {bad or 'none'}")
           sys.exit(1 if bad or len(r) != 6 else 0)
           PY
-      - name: Review - build the transport kit (families A logistics, B bus terminals, C road furniture, D roundabout and flyover components, E mosques, F city buildings, G fuel stations, H commercial, I public, J residential; 106 assets) FROM THE CODE in its own workspace (toolchain validation and the 4-material cap must pass for every one)
+      - name: Review - build the transport kit (families A logistics, B bus terminals, C road furniture, D roundabout and flyover components, E mosques, F city buildings, G fuel stations, H commercial, I public, J residential, K campus, market, parked cars and keke; 112 assets) FROM THE CODE in its own workspace (toolchain validation and the 4-material cap must pass for every one)
         if: ${{ steps.gate.outputs.on == 'true' }}
         env: { ARO_WORKSPACE: "${{ runner.temp }}/aro-ws-tk", PYTHONPATH: tools/blender }
         run: |
@@ -188,7 +188,7 @@ jobs:
           bad = [x["id"] for x in r if not x["passed"]]
           for x in r: print(("PASS " if x["passed"] else "FAIL ") + x["id"], x["stats"].get("lod_triangles"), "materials", len(x["stats"].get("materials", [])))
           print(f"{len(r)} transport-kit assets built; failed validation: {bad or 'none'}")
-          sys.exit(1 if bad or len(r) != 106 else 0)
+          sys.exit(1 if bad or len(r) != 112 else 0)      # 112 since family K (university, market, parked cars, keke): the count tools/blender/tests/test_transport_kit.py pins
           PY
       - name: Review - stage the exports where the game's editor code looks for them (Assets/ThirdParty is git-ignored)
         if: ${{ steps.gate.outputs.on == 'true' }}
