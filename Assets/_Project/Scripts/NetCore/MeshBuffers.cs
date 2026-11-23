@@ -33,6 +33,20 @@ namespace ARO.NetCore
         }
         public void Tri(int sub, int a, int b, int c) { var t = Triangles[sub]; t.Add(a); t.Add(b); t.Add(c); }
 
+        /// <summary>
+        /// One mesh from several (RB-15: every road surface of a chunk). The result has as many submesh slots as the largest part, and at least `minSubmeshes`, so parts may come in any order:
+        /// a corridor without the E1 strips has 7 slots, one with them, a roundabout island or a site plate 12 (review run 68: the streamer sized the buffer from the first part, and a chunk
+        /// whose first part was a plain road lost its whole road surface when a kerbed one followed). Empty parts are skipped. Null when there is nothing to draw.
+        /// </summary>
+        public static MeshBuffers Merge(IEnumerable<MeshBuffers> parts, int minSubmeshes = 1)
+        {
+            var list = new List<MeshBuffers>(); int subs = Math.Max(1, minSubmeshes);
+            foreach (var p in parts) { if (p == null || p.IsEmpty) continue; list.Add(p); subs = Math.Max(subs, p.Triangles.Length); }
+            if (list.Count == 0) return null;
+            var all = new MeshBuffers(subs); foreach (var p in list) all.Append(p);
+            return all;
+        }
+
         /// <summary>Adds the standard quad pattern (a,c,b),(b,c,d) for corners a,b (near edge, left to right) and c,d (far edge).</summary>
         public void Quad(int sub, int a, int b, int c, int d) { Tri(sub, a, c, b); Tri(sub, b, c, d); }
 

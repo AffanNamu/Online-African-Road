@@ -57,7 +57,8 @@ namespace ARO.NetCore
     {
         readonly float[] _x, _z, _y, _s, _tx, _tz;     // dense polyline
         readonly float[] _knotS;                        // arc length at each control point
-        readonly Dictionary<long, List<int>> _grid = new Dictionary<long, List<int>>();
+        int[][] _cells; int _gx0, _gz0, _gnx, _gnz;     // the segments crossing each 40 m cell of the polyline's bounds, as a flat array (a dictionary lookup per cell cost most of the
+                                                        // Kano city's building placement: 1.25 million searches of about 25 cells each, CI run 371), in the same order as before
         readonly float _minX, _maxX, _minZ, _maxZ;      // bounds of the dense polyline: Nearest answers "nothing within reach" at once for a point far outside them
         const float Cell = 40f;
 
@@ -145,6 +146,9 @@ namespace ARO.NetCore
         void BuildGrid()
         {
             int m = _x.Length;
+            _gx0 = (int)Math.Floor(_minX / Cell); _gz0 = (int)Math.Floor(_minZ / Cell);
+            _gnx = (int)Math.Floor(_maxX / Cell) - _gx0 + 1; _gnz = (int)Math.Floor(_maxZ / Cell) - _gz0 + 1;
+            var lists = new List<int>[_gnx * _gnz];
             for (int i = 0; i < m - 1; i++)
             {
                 int cx0 = (int)Math.Floor(Math.Min(_x[i], _x[i + 1]) / Cell), cx1 = (int)Math.Floor(Math.Max(_x[i], _x[i + 1]) / Cell);
@@ -152,11 +156,12 @@ namespace ARO.NetCore
                 for (int cx = cx0; cx <= cx1; cx++)
                     for (int cz = cz0; cz <= cz1; cz++)
                     {
-                        long key = Key(cx, cz);
-                        if (!_grid.TryGetValue(key, out var list)) _grid[key] = list = new List<int>();
-                        list.Add(i);
+                        int k = (cx - _gx0) * _gnz + (cz - _gz0);
+                        (lists[k] ?? (lists[k] = new List<int>())).Add(i);
                     }
             }
+            _cells = new int[lists.Length][];
+            for (int k = 0; k < lists.Length; k++) if (lists[k] != null) _cells[k] = lists[k].ToArray();
         }
 
         static void Bounds(float[] x, float[] z, out float minX, out float maxX, out float minZ, out float maxZ)
@@ -201,7 +206,6 @@ namespace ARO.NetCore
 
         static double Dist(double ax, double az, double bx, double bz) => Math.Sqrt((bx - ax) * (bx - ax) + (bz - az) * (bz - az));
         static double Lerp(double a, double b, double ta, double tb, double t) => tb - ta < 1e-9 ? a : (tb - t) / (tb - ta) * a + (t - ta) / (tb - ta) * b;
-        static long Key(int cx, int cz) => ((long)cx << 32) ^ (uint)cz;
 
         int SegmentFor(float s)
         {
@@ -286,13 +290,13 @@ namespace ARO.NetCore
             s = 0f; lateral = 0f; dist = float.MaxValue; bool found = false;
             float far = maxDist + 0.01f;                    // every point of the polyline lies inside its bounds, so a point more than maxDist outside them has no segment within reach (the 1 cm keeps rounding out of it)
             if (x < _minX - far || x > _maxX + far || z < _minZ - far || z > _maxZ + far) return false;
-            int cx0 = (int)Math.Floor((x - maxDist) / Cell), cx1 = (int)Math.Floor((x + maxDist) / Cell);
-            int cz0 = (int)Math.Floor((z - maxDist) / Cell), cz1 = (int)Math.Floor((z + maxDist) / Cell);
-            float best = maxDist * maxDist;
+            int cx0 = Math.Max(_gx0, (int)Math.Floor((x - maxDist) / Cell)), cx1 = Math.Min(_gx0 + _gnx - 1, (int)Math.Floor((x + maxDist) / Cell));     // cells outside the bounds hold no segment
+            int cz0 = Math.Max(_gz0, (int)Math.Floor((z - maxDist) / Cell)), cz1 = Math.Min(_gz0 + _gnz - 1, (int)Math.Floor((z + maxDist) / Cell));
+            float best = maxDist * maxDist, bdx = 0f, bdz = 0f;
             for (int cx = cx0; cx <= cx1; cx++)
                 for (int cz = cz0; cz <= cz1; cz++)
                 {
-                    if (!_grid.TryGetValue(Key(cx, cz), out var list)) continue;
+                    var list = _cells[(cx - _gx0) * _gnz + (cz - _gz0)]; if (list == null) continue;
                     foreach (int i in list)
                     {
                         float ax = _x[i], az = _z[i], bx = _x[i + 1] - ax, bz = _z[i + 1] - az;
@@ -301,11 +305,10 @@ namespace ARO.NetCore
                         float qx = ax + bx * t, qz = az + bz * t, dx = x - qx, dz = z - qz, d2 = dx * dx + dz * dz;
                         if (d2 > best) continue;
                         best = d2; found = true; dist = (float)Math.Sqrt(d2);
-                        s = _s[i] + t * (float)Math.Sqrt(len2);
-                        TangentAt(s, out float tx, out float tz);
-                        lateral = dx * tz - dz * tx;
+                        s = _s[i] + t * (float)Math.Sqrt(len2); bdx = dx; bdz = dz;
                     }
                 }
+            if (found) { TangentAt(s, out float tx, out float tz); lateral = bdx * tz - bdz * tx; }      // once, for the nearest point (the same value the last improvement gave)
             return found;
         }
     }

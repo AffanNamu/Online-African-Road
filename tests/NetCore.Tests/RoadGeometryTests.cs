@@ -270,4 +270,30 @@ public class RoadGeometryTests
         }
         Assert.Throws<ArgumentException>(() => new MeshBuffers(1).Append(parts[0]));
     }
+
+    [Fact] public void AChunkWhoseFirstRoadHasFewerMaterialsThanALaterOneKeepsItsWholeSurface()
+    {
+        // Review run 68 (the A2 flyover): "Road stage of chunk (0, -1) failed: the appended mesh has more submeshes (12) than this one (7)". The streamer sized the merged mesh from the chunk's
+        // first part; a plain road (7 slots) followed by a kerbed road, a roundabout island or a site plate (12 slots) threw, and the chunk had no road surface at all. MeshBuffers.Merge sizes
+        // the mesh from every part. Every chunk of the review's flyover interchange (the city test route F1, where run 68 failed at chunks (0, -1) and (-1, 0)), in the streamer's order
+        // (corridors, then rings, then site plates):
+        var m = RouteModel.Build(System.Text.Json.JsonSerializer.Deserialize<RouteSpec>(System.IO.File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "ng-kano-city-f1.route.json")), new System.Text.Json.JsonSerializerOptions { IncludeFields = true }));
+        int mixed = 0, chunks = 0;
+        for (int i = -6; i <= 5; i++)
+            for (int j = -6; j <= 5; j++)
+            {
+                float x0 = i * 200f, z0 = j * 200f; var org = new V3(x0, 0, z0);
+                var parts = m.AllCorridors.Select(c => RoadGeometry.BuildChunk(c, x0, z0, x0 + 200f, z0 + 200f, org, (x, z) => m.Terrain.HeightAt(x, z)))
+                    .Concat(m.Rings.Select(r => RingGeometry.BuildChunk(r, x0, z0, x0 + 200f, z0 + 200f, org, id => m.CorridorById(id))))
+                    .Concat(m.Sites.Select(p => SiteGeometry.BuildChunk(p, x0, z0, x0 + 200f, z0 + 200f, org))).Where(b => !b.IsEmpty).ToList();
+                if (parts.Count == 0) continue; chunks++;
+                if (parts[0].Triangles.Length < parts.Max(b => b.Triangles.Length)) { mixed++; Assert.Throws<ArgumentException>(() => { var old = new MeshBuffers(parts[0].Triangles.Length); foreach (var b in parts) old.Append(b); }); }
+                var all = MeshBuffers.Merge(parts, RoadSub.CountE1);
+                Assert.True(all.Validate(out var err), err);
+                Assert.Equal(parts.Sum(b => b.VertexCount), all.VertexCount);
+                for (int sub = 0; sub < all.Triangles.Length; sub++) Assert.Equal(parts.Sum(b => sub < b.Triangles.Length ? b.Triangles[sub].Count : 0), all.Triangles[sub].Count);
+            }
+        Assert.True(mixed > 0, $"no chunk of the {chunks} of the interchange starts with a plain road and holds a kerbed one: the case of run 68 is not exercised");
+        Assert.Null(MeshBuffers.Merge(new MeshBuffers[0])); Assert.Null(MeshBuffers.Merge(new[] { new MeshBuffers(7) }));
+    }
 }

@@ -263,7 +263,7 @@ namespace ARO.World
             // instead of a renderer per corridor (a chunk of the Kano city's street grid holds six to eight corridors, each with five to eight materials: the draw calls of a neighbourhood
             // street doubled when the grid was built). The geometry and materials are exactly those of the separate meshes. Collision is unchanged: each corridor, island and plate keeps its
             // own collision mesh on a collider-only object.
-            MeshBuffers all = null;
+            var parts = new List<MeshBuffers>();
             void Collision(string name, MeshBuffers mb, params int[] subs)
             {
                 var cm = MeshUtil.ToCollisionMesh(mb, name, subs);
@@ -271,7 +271,7 @@ namespace ARO.World
                 var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cm; mc.enabled = ring <= 3;
                 go.isStatic = true; ch.roads.Add(go); ch.owned.Add(cm);
             }
-            void Surface(MeshBuffers mb) { if (all == null) all = new MeshBuffers(mb.Triangles.Length); all.Append(mb); }
+            void Surface(MeshBuffers mb) => parts.Add(mb);
             foreach (var cor in m.AllCorridors)
             {
                 var mb = RoadGeometry.BuildChunk(cor, o.x, o.z, o.x + chunkSize, o.z + chunkSize, org, (x, z) => m.Terrain.HeightAt(x, z));
@@ -295,6 +295,7 @@ namespace ARO.World
                 Collision("SiteCollision_" + plate.Id, mb, RoadSub.Asphalt, RoadSub.Shoulder, RoadSub.Concrete, RoadSub.Kerb, RoadSub.KerbPainted, RoadSub.Sidewalk);
                 Surface(mb);
             }
+            var all = MeshBuffers.Merge(parts, RoadSub.CountE1);         // as many slots as the richest part: plain roads (7), kerbed roads, islands and plates (12) in any order
             if (all == null || all.IsEmpty) return;
             var mesh = MeshUtil.ToMesh(all, "Roads", out var used);
             var r = new GameObject("Roads", typeof(MeshFilter), typeof(MeshRenderer)); r.transform.SetParent(ch.root.transform, false);
